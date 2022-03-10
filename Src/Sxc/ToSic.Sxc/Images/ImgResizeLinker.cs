@@ -34,16 +34,16 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object srcSet = null // can be a string or a bool:true 
+            object srcset = null // can be a string or a bool:true 
             )
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcSet)}:{srcSet}");
+            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcset)}:{srcset}");
 
             if (!(settings is IResizeSettings resizeSettings))
                 resizeSettings = ResizeParamMerger.BuildResizeSettings(
                     settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                     scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-                    parameters: parameters, srcSet: srcSet);
+                    parameters: parameters, srcset: srcset);
 
             var result = GenerateFinalUrlOrSrcSet(url, resizeSettings);
 

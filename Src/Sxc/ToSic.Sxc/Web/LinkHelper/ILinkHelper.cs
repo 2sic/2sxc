@@ -97,7 +97,6 @@ namespace ToSic.Sxc.Web
         /// History
         /// - New in 2sxc 12.03
         /// - type added ca. v12.08
-        /// - srcSet added v13.01
         /// </remarks>
         /// <returns></returns>
         ///// <param name="part">

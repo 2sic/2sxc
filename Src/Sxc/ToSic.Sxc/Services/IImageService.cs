@@ -7,6 +7,9 @@ namespace ToSic.Sxc.Services
     /// <summary>
     /// Service to help create responsive `img` and `picture` tags the best possible way.
     /// </summary>
+    /// <remarks>
+    /// History: Released in 2sxc 13.03
+    /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
     public interface IImageService
     {
@@ -39,9 +42,9 @@ namespace ToSic.Sxc.Services
         /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
         /// <param name="parameters">
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
-        ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
+        ///     - it can also be an <see cref="Context.IParameters"/>
         /// </param>
-        /// <param name="srcSet"></param>
+        /// <param name="srcset">The Source-Set to be used if the resizing (note it's `srcset`, not `srcSet`)</param>
         /// <returns>A settings object which has all the parameters as configured</returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
@@ -58,7 +61,7 @@ namespace ToSic.Sxc.Services
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object srcSet = null);
+            object srcset = null);
 
         /// <summary>
         /// Generate a `srcset` attribute for an image, containing various sizes as specified by the image itself
@@ -72,7 +75,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet)</param>
+        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
         /// <returns></returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
@@ -99,7 +102,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet)</param>
+        /// <param name="srcset">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
@@ -111,7 +114,7 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Eav.Parameters.Protector,
             object settings = null,
             object factor = null,
-            string srcSet = null,
+            string srcset = null,
             string imgAlt = null,
             string imgClass = null
         );
@@ -130,7 +133,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet)</param>
+        /// <param name="srcset">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
         /// <returns>A ResponsiveImage object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
@@ -142,7 +145,7 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Eav.Parameters.Protector,
             object settings = null,
             object factor = null,
-            string srcSet = null,
+            string srcset = null,
             string imgAlt = null,
             string imgClass = null);
             

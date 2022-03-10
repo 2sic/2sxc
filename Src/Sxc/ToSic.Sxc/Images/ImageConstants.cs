@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Images
         internal const string DontSetParam = "(none)";
 
         /// <summary>
-        /// In case a srcSet is being generated with a '*' factor and we don't have a number, assume 1200.
+        /// In case a srcset is being generated with a '*' factor and we don't have a number, assume 1200.
         /// This is an ideal number, as it's quite big but not huge, and will usually be easily divisible by 2,3,4,6 etc.
         /// </summary>
         public const int FallbackWidthForSrcSet = 1200;

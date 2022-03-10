@@ -47,20 +47,20 @@ namespace ToSic.Sxc.Images
             string noParamOrder = Parameters.Protector,
             object settings = null,
             object factor = null, 
-            string srcSet = null, 
+            string srcset = null, 
             string imgAlt = null, 
             string imgClass = null
-        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, srcSet: srcSet);
+        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, srcSet: srcset);
 
         public IResponsiveImage Img(
             string url,
             string noParamOrder = Parameters.Protector,
             object settings = null,
             object factor = null,
-            string srcSet = null,
+            string srcset = null,
             string imgAlt = null,
             string imgClass = null
-        ) => new ResponsiveImage(this, url, GetBestSettings(settings), factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass);
+        ) => new ResponsiveImage(this, url, GetBestSettings(settings), factor: factor, srcSet: srcset, imgAlt: imgAlt, imgClass: imgClass);
 
         public IHybridHtmlString SrcSet(
             string url, 
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Images
             string noParamOrder = Parameters.Protector,
             object factor = null, 
             string srcSet = null
-        ) => new HybridHtmlString(ImgLinker.Image(url, GetBestSettings(settings), factor: factor, srcSet: (srcSet as object) ?? true));
+        ) => new HybridHtmlString(ImgLinker.Image(url, GetBestSettings(settings), factor: factor, srcset: (srcSet as object) ?? true));
 
     }
 }

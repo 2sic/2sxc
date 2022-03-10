@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Images
         }
         private readonly IFeaturesService _featuresService;
 
-        public Img ImgTag
+        public Img Img
         {
             get
             {
@@ -46,10 +46,10 @@ namespace ToSic.Sxc.Images
 
         private Img _imgTag;
 
-        public Picture PictureTag => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Url, Settings), ImgTag));
+        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Url, Settings), Img));
         private Picture _pictureTag;
 
-        public TagList SourceTags => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
+        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
         private TagList _sourceTags;
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
@@ -77,6 +77,6 @@ namespace ToSic.Sxc.Images
         }
 
 
-        public override string ToString() => PictureTag.ToString();
+        public override string ToString() => Picture.ToString();
     }
 }

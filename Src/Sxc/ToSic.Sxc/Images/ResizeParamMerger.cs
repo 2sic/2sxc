@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
     /// </summary>
-    internal class ResizeParamMerger: HasLog<ResizeParamMerger>
+    internal class ResizeParamMerger: HasLog // <ResizeParamMerger>
     {
         private const string ResizeModeField = "ResizeMode";
         private const string ScaleModeField = "ScaleMode";
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object srcSet = null
+            object srcset = null
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
@@ -75,9 +75,9 @@ namespace ToSic.Sxc.Images
             resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            resizeParams.SrcSet = (srcSet is string srcSetString)
+            resizeParams.SrcSet = srcset is string srcSetString
                 ? srcSetString
-                : srcSet is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
+                : srcset is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
             
             return resizeParams;
         }

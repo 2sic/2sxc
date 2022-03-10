@@ -39,19 +39,19 @@ namespace ToSic.Sxc.Images
         internal IResizeSettings Settings { get; }
 
 
-        protected IResizeSettings PrepareResizeSettings(object settings, object factor, string srcSet)
+        protected IResizeSettings PrepareResizeSettings(object settings, object factor, string srcset)
         {
             // 1. Prepare Settings
             if (!(settings is IResizeSettings resizeSettings))
             {
-                resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcSet: true);
+                resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcset: true);
             }
             else
             {
                 // TODO: STILL USE THE FACTOR!
             }
 
-            if (srcSet != null) (resizeSettings as ResizeSettings).SrcSet = srcSet;
+            if (srcset != null) ((ResizeSettings)resizeSettings).SrcSet = srcset;
 
             return resizeSettings;
         }

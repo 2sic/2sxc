@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlySrcSet()
         {
-            var settings = Build<IImageService>().ResizeSettings(srcSet: "100,200,300");
+            var settings = Build<IImageService>().ResizeSettings(srcset: "100,200,300");
             Assert.AreEqual("100,200,300", settings.SrcSet);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.SrcSet));
         }
