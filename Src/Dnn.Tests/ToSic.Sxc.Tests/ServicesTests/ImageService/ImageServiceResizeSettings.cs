@@ -2,7 +2,6 @@
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using System.Linq;
-using System.Web.Http.Routing;
 using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Tests.ServicesTests
@@ -60,11 +59,21 @@ namespace ToSic.Sxc.Tests.ServicesTests
         }
 
         [TestMethod]
-        public void EmptyOnlyQuality()
+        public void EmptyOnlyQuality75()
         {
             // todo: if quality < 1, like 0.5, convert to better value somewhere deeper!
             // then write tests to confirm
             var settings = Build<IImageService>().ResizeSettings(quality: 75);
+            Assert.AreEqual(75, settings.Quality);
+            AssertAllEmptyExceptSpecified(settings, nameof(settings.Quality));
+        }
+
+        [TestMethod]
+        public void EmptyOnlyQualityDot75()
+        {
+            // todo: if quality < 1, like 0.5, convert to better value somewhere deeper!
+            // then write tests to confirm
+            var settings = Build<IImageService>().ResizeSettings(quality: .75f);
             Assert.AreEqual(75, settings.Quality);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Quality));
         }

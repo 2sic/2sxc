@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Services
         /// <param name="srcSet"></param>
         /// <returns>A settings object which has all the parameters as configured</returns>
         /// <remarks>
-        /// History: Added in 2sxc 13.01
+        /// History: Added in 2sxc 13.03
         /// </remarks>
         IResizeSettings ResizeSettings(
             object settings = null,
@@ -74,6 +74,9 @@ namespace ToSic.Sxc.Services
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
         /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet)</param>
         /// <returns></returns>
+        /// <remarks>
+        /// History: Added in 2sxc 13.03
+        /// </remarks>
         IHybridHtmlString SrcSet(
             string url,
             object settings = null,
@@ -98,6 +101,9 @@ namespace ToSic.Sxc.Services
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
+        /// <remarks>
+        /// History: Added in 2sxc 13.03
+        /// </remarks>
         IResponsivePicture Picture(
             string url,
             string noParamOrder = Eav.Parameters.Protector,
@@ -124,6 +130,9 @@ namespace ToSic.Sxc.Services
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
         /// <returns>A ResponsiveImage object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
+        /// <remarks>
+        /// History: Added in 2sxc 13.03
+        /// </remarks>
         IResponsiveImage Img(
             string url,
             string noParamOrder = Eav.Parameters.Protector,
