@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         public void ScriptOnlyBlacklistAttributesTests()
         {
             var expected = new Dictionary<string, string>() { };
-            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes("<script id='id' src='src' data-enableoptimizations='true' ></script>"));
+            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes("<script id='id' src='src' data-enableoptimizations='true'></script>"));
         }
 
         [TestMethod()]
@@ -138,7 +138,30 @@ namespace ToSic.Sxc.Tests.Blocks.Output
                 { "async", "" },
                 { "defer", "" }
             };
-            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes("<script id='id' async src='src' defer data-enableoptimizations='true' ></script>"));
+            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes("<script id='id' async src='src' defer data-enableoptimizations='true'></script>"));
+        }
+
+        [TestMethod()]
+        public void ScriptEventsTests()
+        {
+            var expected = new Dictionary<string, string>()
+            {
+                { "onload", "loaded=1" },
+                { "onerror", "return false;" }
+            };
+            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes("<script src='src' onload=\"loaded=1\" onerror=\"return false;\"></script>"));
+        }
+
+
+        [TestMethod()]
+        [Ignore("ATM not ready, complicated value extraction is not working")]
+        public void ScriptEventsThatFailsTests()
+        {
+            var expected = new Dictionary<string, string>()
+            {
+                { "onerror", "alert('error!')" }
+            };
+            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes("<script src='src' onerror=\"alert('error!')\"></script>"));
         }
     }
 }
