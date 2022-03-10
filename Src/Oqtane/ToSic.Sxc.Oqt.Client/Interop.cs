@@ -39,13 +39,13 @@ namespace ToSic.Sxc.Oqt.Client
             }
         }
 
-        public async Task IncludeClientScripts(IEnumerable<SxcResource> clientAssets)
+        public async Task IncludeScriptsWithAttributes(object[] scripts)
         {
             try
             {
                 await _jsRuntime.InvokeVoidAsync(
-                    "ToSic.Sxc.includeClientScripts",
-                    (object)clientAssets);
+                    "ToSic.Sxc.includeScriptsWithAttributes",
+                    (object)scripts);
             }
             catch
             {
