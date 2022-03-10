@@ -128,8 +128,13 @@ namespace ToSic.Sxc.Dnn.Services
         /// Register JS script with additional html attributes.
         /// </summary>
         /// <remarks>
-        /// Our implementation is necessary because it is not possible to provide
-        /// additional html attributes with DNN ClientResourceManager.RegisterScript.
+        /// Our implementation that is almost exactly the same as DNN ClientResourceManager.RegisterScript
+        /// https://github.com/dnnsoftware/Dnn.Platform/blob/62b82997fbd5338fc9468ad82f3eb7191433b542/DNN%20Platform/DotNetNuke.Web.Client/ClientResourceManager.cs#L231
+        /// is necessary because we provide additional html attributes.
+        /// As usual The Client Resource Management framework will automatically
+        /// minify and combine JS files (when enabled in DNN and DNN is not in debug mode)
+        /// because we still use DotNetNuke.Web.Client.DnnJsInclude class
+        /// to register our js script with additional attributes. 
         /// </remarks>
         /// <param name="page"></param>
         /// <param name="clientAsset"></param>
@@ -146,7 +151,9 @@ namespace ToSic.Sxc.Dnn.Services
             {
                 // Convert HtmlAttributes dictionary to string.
                 // The syntax for the string must be: key1:value1, key2:value2   etc...
-                // Used to set the HtmlAttributes on DnnJsInclude class via a string which is parsed.
+                // Used to set the HtmlAttributes on DnnJsInclude class via a string.
+                // This is DNN (and ClientDependency) supported way to provide additional HtmlAttributes
+                // https://github.com/Shazwazza/ClientDependency/wiki/Html-Attributes
                 var list = clientAsset.HtmlAttributes.Select(a => $"{a.Key}:{(!string.IsNullOrEmpty(a.Value) ? a.Value : a.Key)}").ToList();
                 var htmlAttributesAsString = string.Join(",", list);
                 include.HtmlAttributesAsString = htmlAttributesAsString;
