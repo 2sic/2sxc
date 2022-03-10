@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
@@ -35,7 +34,7 @@ namespace ToSic.Sxc.Blocks.Output
         /// that we need to skip from adding in general HtmlAttributes dictionary
         /// because this special attributes are handled in custom way.
         /// </summary>
-        private List<string> SkipHtmlAttributes = new List<string>() { "src", "id", "data-enableoptimizations" };
+        private static List<string> SkipHtmlAttributes = new List<string>() { "src", "id", "data-enableoptimizations" };
 
         #endregion
 
@@ -147,7 +146,7 @@ namespace ToSic.Sxc.Blocks.Output
                 }
 
                 // get all Attributes
-                var attributes = GetAttributes(match);
+                var attributes = GetHtmlAttributes(match.Value);
 
                 // Register, then add to remove-queue
                 Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url, HtmlAttributes = attributes });
@@ -160,9 +159,16 @@ namespace ToSic.Sxc.Blocks.Output
             return wrapLog(null, renderedTemplate);
         }
 
-        private Dictionary<string, string> GetAttributes(Match match)
+        /// <summary>
+        /// Extract dictionary of html attributes
+        /// </summary>
+        /// <param name="htmlTag"></param>
+        /// <returns></returns>
+        public static IDictionary<string, string> GetHtmlAttributes(string htmlTag)
         {
-            var attributesMatch = AttributesDetection.Matches(match.Value);
+            if (string.IsNullOrWhiteSpace(htmlTag)) return null;
+
+            var attributesMatch = AttributesDetection.Matches(htmlTag);
 
             if (attributesMatch.Count == 0) return null;
 
@@ -170,14 +176,14 @@ namespace ToSic.Sxc.Blocks.Output
             foreach (Match attributeMatch in attributesMatch)
             {
                 if (!attributeMatch.Success) continue;
-                var name = attributeMatch.Groups["Name"].Value;
+                var key = attributeMatch.Groups["Key"].Value;
 
                 // skip special attributes like "src", "id", "data-enableoptimizations"
-                if (SkipHtmlAttributes.Contains(name)) continue;
+                if (SkipHtmlAttributes.Contains(key)) continue;
 
                 var value = attributeMatch.Groups["Value"]?.Value;
 
-                attributes.Add(name, value);
+                attributes[key] = value; // add or update
             }
             return attributes;
         }
@@ -252,7 +258,7 @@ namespace ToSic.Sxc.Blocks.Output
         private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
         private const string IdFormula = "('|\"|\\s)id=('|\")(?<Id>.*?)('|\")";
         private const string AttributesFormula =
-            "[ ](?<Name>[\\w-]+(?=[^<]*>))=['|\"](?<Value>.*?)['|\"]|[ ](?<Name>[\\w-]+(?=.*?))";
+            "[ ](?<Key>[\\w-]+(?=[^<]*>))=['|\"](?<Value>.*?)['|\"]|[ ](?<Key>[\\w-]+(?=.*?))";
 
         internal static readonly Regex ScriptSrcDetection = new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
         internal static readonly Regex ScriptContentDetection = new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);

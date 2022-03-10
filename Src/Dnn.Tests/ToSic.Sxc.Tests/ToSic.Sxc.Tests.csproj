@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Adam\AdamSecurity.cs" />
+    <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="DynamicData\SimpleObject.cs" />
