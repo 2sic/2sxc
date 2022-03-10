@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         }
 
         [DataRow("", SrcSetNone, "No Src Set")]
-        [DataRow(ImgTagJpg12, SrcSet12, "With Src Set 1,2")]
+        [DataRow(Img120x24x + ",\n" + Img240x48x, SrcSet12, "With Src Set 1,2")]
         [TestMethod]
         public void ImageSrcSetMultiTest(string expected, string srcset, string testName)
         {
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 var settings = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height, srcset: test.Set.Srcset);
                 var img = svc.Img(ImgUrl, settings: settings, srcset: test.Pic.Srcset);
 
-                Assert.AreEqual(expected, img.Srcset, $"Failed: {test.Name}");
+                Assert.AreEqual(expected.Replace("&amp;", "&"), img.Srcset, $"Failed: {test.Name}");
             }
         }
     }

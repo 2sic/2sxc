@@ -6,12 +6,16 @@ namespace ToSic.Sxc.Tests.ServicesTests
     public abstract class ImageServiceTagsBase: TestBaseSxcDb
     {
         protected const string ImgUrl = "/abc/def/test.jpg";
+        protected const string Img120x24 = ImgUrl + "?w=120&amp;h=24";
+        protected const string Img120x24x = Img120x24 + " 1x";
+        protected const string Img240x48 = ImgUrl + "?w=240&amp;h=48";
+        protected const string Img240x48x = Img240x48 + " 2x";
         protected const string SrcSet12 = "1,2";
-        protected const string SrcSet12ResultWebP = "srcset='" + ImgUrl + "?w=120&amp;h=24&amp;format=webp 1x," + ImgUrl + "?w=240&amp;h=48&amp;format=webp 2x'";
-        protected const string SrcSet12ResultJpg = "srcset='" + ImgUrl + "?w=120&amp;h=24 1x," + ImgUrl + "?w=240&amp;h=48 2x'";
+        protected const string SrcSet12ResultWebP = "srcset='" + Img120x24 + "&amp;format=webp 1x," + ImgUrl + "?w=240&amp;h=48&amp;format=webp 2x'";
+        protected const string SrcSet12ResultJpg = "srcset='" + Img120x24x + "," + Img240x48x + "'";
         protected const string SrcWebP12 = "<source type='image/webp' " + SrcSet12ResultWebP + ">";
         protected const string SrcJpg12 = "<source type='image/jpeg' " + SrcSet12ResultJpg + ">";
-        protected const string ImgTagJpg12 = "<img src='" + ImgUrl + "?w=120&amp;h=24' " + SrcSet12ResultJpg + ">";
+        protected const string ImgTagJpg12 = "<img src='" + Img120x24 + "' " + SrcSet12ResultJpg + ">";
 
         protected const string SrcSetNone = null;
         protected const string SrcWebPNone = "<source type='image/webp' srcset='" + ImgUrl + "?w=120&amp;h=24&amp;format=webp'>";

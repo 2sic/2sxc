@@ -69,8 +69,8 @@ namespace ToSic.Sxc.Images
                 {
                     var formatSettings = new ResizeSettings(resizeSettings, true);
                     if (resizeFormat != defFormat) formatSettings.Format = resizeFormat.Format;
-                    return Tag.Source().Type(resizeFormat.MimeType)
-                        .Srcset(ImgLinker.Image(url, formatSettings));
+                    var srcSet = ImgLinker.Image(url, formatSettings);
+                    return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 });
             var result = Tag.TagList(sources);
             return result;
