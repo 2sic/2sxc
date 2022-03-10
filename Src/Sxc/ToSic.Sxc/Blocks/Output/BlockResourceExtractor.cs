@@ -259,9 +259,8 @@ namespace ToSic.Sxc.Blocks.Output
         private const string StyleSrcFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/?>)";
         private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
         private const string IdFormula = "('|\"|\\s)id=('|\")(?<Id>.*?)('|\")";
-        private const string AttributesFormula =
-            "[ ](?<Key>[\\w-]+(?=[^<]*>))=['|\"](?<Value>.*?)['|\"]|[ ](?<Key>[\\w-]+(?=.*?))";
-
+        private const string AttributesFormula = "\\s(?<Key>[\\w-]+(?=[^<]*>))=([\"'])(?<Value>.*?[^\\1][\\s\\S]+?)\\1|\\s(?<Key>[\\w-]+(?=.*?))";
+        
         internal static readonly Regex ScriptSrcDetection = new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
         internal static readonly Regex ScriptContentDetection = new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);
         internal static readonly Regex StyleDetection = new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);

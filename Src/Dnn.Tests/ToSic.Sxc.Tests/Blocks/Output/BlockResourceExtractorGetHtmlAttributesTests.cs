@@ -162,11 +162,9 @@ namespace ToSic.Sxc.Tests.Blocks.Output
             CollectionAssert.AreEquivalent(expected, GetHtmlAttributes(htmlTag));
         }
 
-
         [TestMethod()]
         [DataRow("<script src='src' onerror=\"alert('error!')\"></script>")]
-        [Ignore("ATM not ready, javascript value extraction is not working")]
-        public void ScriptEventsThatFailsTests(string htmlTag)
+        public void ScriptEventsWithQuotesTests(string htmlTag)
         {
             var expected = new Dictionary<string, string>()
             {
@@ -176,27 +174,62 @@ namespace ToSic.Sxc.Tests.Blocks.Output
         }
 
         [TestMethod()]
-        [DataRow("<script src='src' data-edit-context=\"{\"Environment\":{\"WebsiteId\":74,\"WebsiteUrl\":\"//2sxc-dnn742.dnndev.me/script-extractor/\",\"PageId\":2406,\"PageUrl\":\"http://2sxc-dnn742.dnndev.me/script-extractor/t2\",\"parameters\":[],\"InstanceId\":4140,\"SxcVersion\":\"13.3.0.1646933502\",\"SxcRootUrl\":\"/\",\"IsEditable\":true},\"User\":{\"CanDevelop\":true,\"CanAdmin\":true},\"Language\":{\"Current\":\"en-us\",\"Primary\":\"en-us\",\"All\":[]},\"contentBlockReference\":{\"publishingMode\":\"DraftOptional\",\"id\":4140,\"parentIndex\":0,\"partOfPage\":true},\"contentBlock\":{\"IsCreated\":false,\"IsList\":false,\"TemplateId\":80573,\"QueryId\":null,\"ContentTypeName\":\"\",\"AppUrl\":\"/Portals/script-extractor/2sxc/ScriptExtractorAndBoundlingTest\",\"AppSettingsId\":null,\"AppResourcesId\":null,\"IsContent\":false,\"HasContent\":false,\"SupportsAjax\":false,\"TemplatePath\":\"/_v2.cshtml\",\"TemplateIsShared\":false,\"ZoneId\":77,\"AppId\":853,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Id\":0},\"error\":{\"type\":null},\"Ui\":{\"AutoToolbar\":true}}\"></script>")]
-        [Ignore("ATM not ready, JSON value extraction is not working")]
-        public void ScriptAttributeWithJsonThatFailsTests(string htmlTag)
-        {
-            var expected = new Dictionary<string, string>()
-            {
-                { "data-edit-context", "{\"Environment\":{\"WebsiteId\":74,\"WebsiteUrl\":\"//2sxc-dnn742.dnndev.me/script-extractor/\",\"PageId\":2406,\"PageUrl\":\"http://2sxc-dnn742.dnndev.me/script-extractor/t2\",\"parameters\":[],\"InstanceId\":4140,\"SxcVersion\":\"13.3.0.1646933502\",\"SxcRootUrl\":\"/\",\"IsEditable\":true},\"User\":{\"CanDevelop\":true,\"CanAdmin\":true},\"Language\":{\"Current\":\"en-us\",\"Primary\":\"en-us\",\"All\":[]},\"contentBlockReference\":{\"publishingMode\":\"DraftOptional\",\"id\":4140,\"parentIndex\":0,\"partOfPage\":true},\"contentBlock\":{\"IsCreated\":false,\"IsList\":false,\"TemplateId\":80573,\"QueryId\":null,\"ContentTypeName\":\"\",\"AppUrl\":\"/Portals/script-extractor/2sxc/ScriptExtractorAndBoundlingTest\",\"AppSettingsId\":null,\"AppResourcesId\":null,\"IsContent\":false,\"HasContent\":false,\"SupportsAjax\":false,\"TemplatePath\":\"/_v2.cshtml\",\"TemplateIsShared\":false,\"ZoneId\":77,\"AppId\":853,\"Guid\":\"00000000-0000-0000-0000-000000000000\",\"Id\":0},\"error\":{\"type\":null},\"Ui\":{\"AutoToolbar\":true}}" }
-            };
-            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes(htmlTag));
-        }
-
-        [TestMethod()]
         [DataRow("<script src='src' multiline=\"line1\nline2\nline3\"></script>")]
-        [Ignore("ATM not ready, multiline value extraction is not working")]
-        public void ScriptMultilineAttributeThatFailsTests(string htmlTag)
+        public void ScriptMultilineAttributeTests(string htmlTag)
         {
             var expected = new Dictionary<string, string>()
             {
                 { "multiline", "line1\nline2\nline3" }
             };
             CollectionAssert.AreEquivalent(expected, GetHtmlAttributes(htmlTag));
+        }
+
+        [TestMethod()]
+        [DataRow("<script json=\"{&quot;Environment&quot;:{&quot;WebsiteId&quot;:74}}\"></script>")]
+        public void ScriptAttributeWithDoubleQuoteSimpleJsonTests(string htmlTag)
+        {
+            var expected = new Dictionary<string, string>()
+            {
+                { "json", "{&quot;Environment&quot;:{&quot;WebsiteId&quot;:74}}" }
+            };
+            var actual = GetHtmlAttributes(htmlTag);
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [TestMethod()]
+        [DataRow("<script json=\"{'Environment':{'WebsiteId':74}}\"></script>")]
+        public void ScriptAttributeWithSingleQuoteSimpleJsonTests(string htmlTag)
+        {
+            var expected = new Dictionary<string, string>()
+            {
+                { "json", "{'Environment':{'WebsiteId':74}}" }
+            };
+            var actual = GetHtmlAttributes(htmlTag);
+            CollectionAssert.AreEquivalent(expected, actual);
+        }
+
+        [TestMethod()]
+        [DataRow("<script json=\"{'Environment':{'WebsiteId':74,'WebsiteUrl':'//2sxc-dnn742.dnndev.me/script-extractor/','PageId':2376,'PageUrl':'http://2sxc-dnn742.dnndev.me/script-extractor','parameters':[],'InstanceId':4139,'SxcVersion':'13.3.0.1646939878','SxcRootUrl':'/','IsEditable':true},'User':{'CanDevelop':true,'CanAdmin':true},'Language':{'Current':'en-us','Primary':'en-us','All':[]},'contentBlockReference':{'publishingMode':'DraftOptional','id':4139,'parentIndex':0,'partOfPage':true},'contentBlock':{'IsCreated':false,'IsList':false,'TemplateId':80568,'QueryId':null,'ContentTypeName':'','AppUrl':'/Portals/script-extractor/2sxc/ScriptExtractorTest','AppSettingsId':null,'AppResourcesId':null,'IsContent':false,'HasContent':false,'SupportsAjax':false,'TemplatePath':'/_v1.cshtml','TemplateIsShared':false,'ZoneId':77,'AppId':852,'Guid':'00000000-0000-0000-0000-000000000000','Id':0},'error':{'type':null},'Ui':{'AutoToolbar':true}}\"></script>")]
+        public void ScriptAttributeWithSingleQuoteSxcJsonTests(string htmlTag)
+        {
+            var expected = new Dictionary<string, string>()
+            {
+                { "json", "{'Environment':{'WebsiteId':74,'WebsiteUrl':'//2sxc-dnn742.dnndev.me/script-extractor/','PageId':2376,'PageUrl':'http://2sxc-dnn742.dnndev.me/script-extractor','parameters':[],'InstanceId':4139,'SxcVersion':'13.3.0.1646939878','SxcRootUrl':'/','IsEditable':true},'User':{'CanDevelop':true,'CanAdmin':true},'Language':{'Current':'en-us','Primary':'en-us','All':[]},'contentBlockReference':{'publishingMode':'DraftOptional','id':4139,'parentIndex':0,'partOfPage':true},'contentBlock':{'IsCreated':false,'IsList':false,'TemplateId':80568,'QueryId':null,'ContentTypeName':'','AppUrl':'/Portals/script-extractor/2sxc/ScriptExtractorTest','AppSettingsId':null,'AppResourcesId':null,'IsContent':false,'HasContent':false,'SupportsAjax':false,'TemplatePath':'/_v1.cshtml','TemplateIsShared':false,'ZoneId':77,'AppId':852,'Guid':'00000000-0000-0000-0000-000000000000','Id':0},'error':{'type':null},'Ui':{'AutoToolbar':true}}" }
+            };
+            CollectionAssert.AreEquivalent(expected, GetHtmlAttributes(htmlTag));
+        }
+
+        [TestMethod()]
+        [DataRow("<script json=\"{&quot;Environment&quot;:{&quot;WebsiteI&quot;:74,&quot;WebsiteUrl&quot;:&quot;//2sxc-dnn742.dnndev.me/script-extractor/&quot;,&quot;PageId&quot;:2376,&quot;PageUrl&quot;:&quot;http://2sxc-dnn742.dnndev.me/script-extractor&quot;,&quot;parameters&quot;:[],&quot;InstanceId&quot;:4139,&quot;SxcVersion&quot;:&quot;13.3.0.1646939878&quot;,&quot;SxcRootUrl&quot;:&quot;/&quot;,&quot;IsEditable&quot;:true},&quot;User&quot;:{&quot;CanDevelop&quot;:true,&quot;CanAdmin&quot;:true},&quot;Language&quot;:{&quot;Current&quot;:&quot;en-us&quot;,&quot;Primary&quot;:&quot;en-us&quot;,&quot;All&quot;:[]},&quot;contentBlockReference&quot;:{&quot;publishingMode&quot;:&quot;DraftOptional&quot;,&quot;id&quot;:4139,&quot;parentIndex&quot;:0,&quot;partOfPage&quot;:true},&quot;contentBlock&quot;:{&quot;IsCreated&quot;:false,&quot;IsList&quot;:false,&quot;TemplateId&quot;:80568,&quot;QueryId&quot;:null,&quot;ContentTypeName&quot;:&quot;&quot;,&quot;AppUrl&quot;:&quot;/Portals/script-extractor/2sxc/ScriptExtractorTest&quot;,&quot;AppSettingsId&quot;:null,&quot;AppResourcesId&quot;:null,&quot;IsContent&quot;:false,&quot;HasContent&quot;:false,&quot;SupportsAjax&quot;:false,&quot;TemplatePath&quot;:&quot;/_v1.cshtml&quot;,&quot;TemplateIsShared&quot;:false,&quot;ZoneId&quot;:77,&quot;AppId&quot;:852,&quot;Guid&quot;:&quot;00000000-0000-0000-0000-000000000000&quot;,&quot;Id&quot;:0},&quot;error&quot;:{&quot;type&quot;:null},&quot;Ui&quot;:{&quot;AutoToolbar&quot;:true}}\"></script>")]
+        [Ignore("ATM not ready, Sxc JSON value extraction is not working")]
+        public void ScriptAttributeWithDoubleQuoteSxcJsonTests(string htmlTag)
+        {
+            var expected = new Dictionary<string, string>()
+            {
+                { "json", "{&quot;Environment&quot;:{&quot;WebsiteId&quot;:74,&quot;WebsiteUrl&quot;:&quot;//2sxc-dnn742.dnndev.me/script-extractor/&quot;,&quot;PageId&quot;:2376,&quot;PageUrl&quot;:&quot;http://2sxc-dnn742.dnndev.me/script-extractor&quot;,&quot;parameters&quot;:[],&quot;InstanceId&quot;:4139,&quot;SxcVersion&quot;:&quot;13.3.0.1646939878&quot;,&quot;SxcRootUrl&quot;:&quot;/&quot;,&quot;IsEditable&quot;:true},&quot;User&quot;:{&quot;CanDevelop&quot;:true,&quot;CanAdmin&quot;:true},&quot;Language&quot;:{&quot;Current&quot;:&quot;en-us&quot;,&quot;Primary&quot;:&quot;en-us&quot;,&quot;All&quot;:[]},&quot;contentBlockReference&quot;:{&quot;publishingMode&quot;:&quot;DraftOptional&quot;,&quot;id&quot;:4139,&quot;parentIndex&quot;:0,&quot;partOfPage&quot;:true},&quot;contentBlock&quot;:{&quot;IsCreated&quot;:false,&quot;IsList&quot;:false,&quot;TemplateId&quot;:80568,&quot;QueryId&quot;:null,&quot;ContentTypeName&quot;:&quot;&quot;,&quot;AppUrl&quot;:&quot;/Portals/script-extractor/2sxc/ScriptExtractorTest&quot;,&quot;AppSettingsId&quot;:null,&quot;AppResourcesId&quot;:null,&quot;IsContent&quot;:false,&quot;HasContent&quot;:false,&quot;SupportsAjax&quot;:false,&quot;TemplatePath&quot;:&quot;/_v1.cshtml&quot;,&quot;TemplateIsShared&quot;:false,&quot;ZoneId&quot;:77,&quot;AppId&quot;:852,&quot;Guid&quot;:&quot;00000000-0000-0000-0000-000000000000&quot;,&quot;Id&quot;:0},&quot;error&quot;:{&quot;type&quot;:null},&quot;Ui&quot;:{&quot;AutoToolbar&quot;:true}}" }
+            };
+            var actual = GetHtmlAttributes(htmlTag);
+            CollectionAssert.AreEquivalent(expected, actual);
         }
     }
 }
