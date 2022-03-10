@@ -1,7 +1,5 @@
 ﻿using Microsoft.JSInterop;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client
 {
@@ -39,6 +37,15 @@ namespace ToSic.Sxc.Oqt.Client
             }
         }
 
+        /// <summary>
+        /// IncludeScriptsWithAttributes is fork of
+        /// Oqtane.Interop.IncludeScripts from Oqtane v3.0.3
+        /// with addition of httpAttributes support
+        /// </summary>
+        /// <param name="scripts"> scripts (object[]),
+        /// script (object) is with optional property httpAttributes (object)
+        /// </param>
+        /// <returns></returns>
         public async Task IncludeScriptsWithAttributes(object[] scripts)
         {
             try
