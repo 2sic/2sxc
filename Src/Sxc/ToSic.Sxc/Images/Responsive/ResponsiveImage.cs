@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Images
                 if (_imgTag != null) return _imgTag;
 
                 _imgTag = Tag.Img()
-                    .Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false), null));
+                    .Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false)));
                 var srcSetValue = Srcset;
                 if (!string.IsNullOrEmpty(srcSetValue))
                     _imgTag = _imgTag.Srcset(srcSetValue);
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Images
         private Img _imgTag;
 
         /// <inheritdoc />
-        public string Srcset => _srcSetCache ?? (_srcSetCache = Settings.SrcSet == null ? "" : ImgLinker.Image(Url, Settings, srcset: true));
+        public string Srcset => _srcSetCache ?? (_srcSetCache = Settings.SrcSet == null ? "" : ImgLinker.Image(Url, Settings));
         private string _srcSetCache;
 
         public override string ToString() => Img.ToString();

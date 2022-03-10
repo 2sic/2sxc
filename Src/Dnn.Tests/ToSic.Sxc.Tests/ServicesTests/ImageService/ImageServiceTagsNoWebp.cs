@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
         [DataRow(SrcJpgNone, SrcSetNone, "No Src Set")]
         [DataRow(SrcJpg12, SrcSet12, "With Src Set 1,2")]
-        [TestMethod]
+        [DataTestMethod]
         public void SourceTagsMultiTests(string expected, string srcset, string name) => SourceTagsMultiTest(expected, srcset, name);
 
 
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataRow(SrcJpgNone, SrcSetNone, false, "No Src Set, in-settings")]
         [DataRow(SrcJpg12, SrcSet12, true, "With Src Set 1,2, in-pic")]
         [DataRow(SrcJpg12, SrcSet12, false, "With Src Set 1,2, in-settings")]
-        [TestMethod]
+        [DataTestMethod]
         public void PictureTags(string expected, string srcset, bool inPicTag, string name) 
             => PictureTagInner(expected, srcset, inPicTag, name);
     }

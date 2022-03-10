@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav;
+using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Images
             string imgAlt = null,
             string imgClass = null,
             string logName = Constants.SxcLogName + ".IPSBas"
-            ) : base(logName)
+            ) : base()
         {
             ImgService = imgService;
             FactorParam = factor;
@@ -48,7 +49,9 @@ namespace ToSic.Sxc.Images
             }
             else
             {
+                ((ResizeSettings)resizeSettings).Factor = ParseObject.DoubleOrNullWithCalculation(factor) ?? resizeSettings.Factor;
                 // TODO: STILL USE THE FACTOR!
+                // resizeSettings.Factor
             }
 
             if (srcset != null) ((ResizeSettings)resizeSettings).SrcSet = srcset;

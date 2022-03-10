@@ -7,7 +7,7 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
     [TestClass]
-    public class ImgResizeLinkerInternals: LinkImageTestBase
+    public class ResizeParamsBestWh: LinkImageTestBase
     {
 
 
@@ -33,27 +33,34 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             IsTrue(TestBestWH(s, s, width: s, height: s), "W & H only");
         }
 
-        [TestMethod]
-        public void FigureOutBestWidthAndHeight_Factors()
-        {
-            // W / Factor - factor shouldn't apply
-            IsTrue(TestBestWH(s, 0, width: s, factor: 1), "W/F only");
-            IsTrue(TestBestWH(s, 0, width: s, factor: .5), "W/F only");
-            IsTrue(TestBestWH(s, 0, width: s, factor: 2), "W/F only");
-            IsTrue(TestBestWH(s, 0, width: s, factor: 1.5), "W/F only");
 
-            // H / Factor - factor shouldn't apply
-            IsTrue(TestBestWH(0, s, height: s, factor: 1), "H/F only");
-            IsTrue(TestBestWH(0, s, height: s, factor: .5), "H/F only");
-            IsTrue(TestBestWH(0, s, height: s, factor: 2), "H/F only");
-            IsTrue(TestBestWH(0, s, height: s, factor: 1.5), "H/F only");
+        // W / Factor - factor should apply now 13.03
+        [DataRow(s, 0, s, 1, "W/F only")]
+        [DataRow(s * .5, 0, s, .5, "W/F only")]
+        [DataRow(s * 2, 0, s, 2, "W/F only")]
+        [DataRow(s * 1.5, 0, s, 1.5, "W/F only")]
+        [DataTestMethod]
+        public void FigureOutBestWidthAndHeight_Width(double expW, int expH, int w, double f, string name) 
+            => IsTrue(TestBestWH((int)expW, expH, width: w, factor: f), name);
 
-            // H / W / Factor - factor shouldn't apply
-            IsTrue(TestBestWH(s, s, width: s, height: s, factor: 1), "W/H/F");
-            IsTrue(TestBestWH(s, s, width: s, height: s, factor: .5), "W/H/F");
-            IsTrue(TestBestWH(s, s, width: s, height: s, factor: 2), "W/H/F");
-            IsTrue(TestBestWH(s, s, width: s, height: s, factor: 1.5), "W/H/F");
-        }
+        // H / W / Factor - factor should  apply now 13.03
+        [DataRow(s, s, 1, "W/H/F")]
+        [DataRow(s * 0.5, s, .5, "W/H/F")]
+        [DataRow(s * 2, s, 2, "W/H/F")]
+        [DataRow(s * 1.5, s, 1.5, "W/H/F")]
+        [DataTestMethod]
+        public void FigureOutBestWidthAndHeight_Square(double exp, int x, double f, string name) 
+            => IsTrue(TestBestWH((int)exp, (int)exp, width: x, height: x, factor: f), name);
+
+
+        // W / Factor - factor should apply now 13.03
+        [DataRow(s, 0, s, 1, "W/F only")]
+        [DataRow(s * .5, 0, s, .5, "W/F only")]
+        [DataRow(s * 2, 0, s, 2, "W/F only")]
+        [DataRow(s * 1.5, 0, s, 1.5, "W/F only")]
+        [DataTestMethod]
+        public void FigureOutBestWidthAndHeight_Height(double expH, int expW, int h, double f, string name) 
+            => IsTrue(TestBestWH(expW, (int)expH, height: h, factor: f), "H/F only");
 
         [TestMethod]
         public void FigureOutBestWidthAndHeight_SettingsWH()

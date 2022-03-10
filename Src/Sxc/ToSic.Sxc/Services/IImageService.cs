@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
-        /// <param name="srcSet">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
+        /// <param name="srcset">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
         /// <returns></returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Services
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
-            string srcSet = null
+            string srcset = null
         );
 
         /// <summary>

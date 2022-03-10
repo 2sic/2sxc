@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Images
                 if (_imgTag != null)
                     return _imgTag;
 
-                _imgTag = Tag.Img().Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false), null));
+                _imgTag = Tag.Img().Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false)));
                 // Only add these if they were really specified
                 if (ImgAlt != null) _imgTag.Alt(ImgAlt);
                 if (ImgClass != null) _imgTag.Class(ImgClass);

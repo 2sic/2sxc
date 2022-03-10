@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
         [DataRow(ImgTagJpgNone, SrcSetNone, "No Src Set")]
         [DataRow(ImgTagJpg12, SrcSet12, "With Src Set 1,2")]
-        [TestMethod]
+        [DataTestMethod]
         public void ImageTagMultiTest(string expected, string srcset, string testName)
         {
             var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, srcset);
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
         [DataRow("", SrcSetNone, "No Src Set")]
         [DataRow(Img120x24x + ",\n" + Img240x48x, SrcSet12, "With Src Set 1,2")]
-        [TestMethod]
+        [DataTestMethod]
         public void ImageSrcSetMultiTest(string expected, string srcset, string testName)
         {
             var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, srcset);

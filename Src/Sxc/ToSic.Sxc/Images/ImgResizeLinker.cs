@@ -50,6 +50,8 @@ namespace ToSic.Sxc.Images
             return wrapLog(result, result);
         }
 
+        public string Image(string url, IResizeSettings settings) => GenerateFinalUrlOrSrcSet(url, settings);
+
         private string GenerateFinalUrlOrSrcSet(string url, IResizeSettings originalSettings)
         {
             var srcSetConfig = SrcSetParser.ParseSet(originalSettings.SrcSet);
@@ -58,26 +60,32 @@ namespace ToSic.Sxc.Images
             if ((srcSetConfig?.Length ?? 0) == 0)
                 return ConstructUrl(url, originalSettings);
 
-            var results = srcSetConfig.Select(part =>
+            var results = srcSetConfig.Select(ssConfig =>
             {
-                if (part.SizeType == SizeDefault)
+                if (ssConfig.SizeType == SizeDefault)
                     return ConstructUrl(url, originalSettings);
 
                 // Copy the params so we can optimize based on the expected SrcSet specs
-                var partParams = new ResizeSettings(originalSettings, false);
-                
-                partParams.Width = BestSrcSetDimension(partParams.Width, part.Width, part, FallbackWidthForSrcSet);
-                partParams.Height = BestSrcSetDimension(partParams.Height, part.Height, part, FallbackHeightForSrcSet);
+                var srcResize = new ResizeSettings(originalSettings, false);
 
-                var size = part.Size;
-                var sizeTypeCode = part.SizeType;
+                // Factor is usually 1, but in srcSet scenarios it can have another value
+                // Because the settings that made it didn't get incorporated first
+                var f = originalSettings.Factor;
+                srcResize.Width = BestSrcSetDimension(srcResize.Width, ssConfig.Width, ssConfig, FallbackWidthForSrcSet);
+                srcResize.Height = BestSrcSetDimension(srcResize.Height, ssConfig.Height, ssConfig, FallbackHeightForSrcSet);
+
+                srcResize.Width = (int)(f * srcResize.Width);
+                srcResize.Height = (int)(f * srcResize.Height);
+
+                var size = ssConfig.Size;
+                var sizeTypeCode = ssConfig.SizeType;
                 if (sizeTypeCode == SizeFactorOf)
                 {
-                    size = partParams.Width;
+                    size = srcResize.Width;
                     sizeTypeCode = SizeWidth;
                 }
 
-                return $"{ConstructUrl(url, partParams)} {size.ToString(CultureInfo.InvariantCulture)}{sizeTypeCode}";
+                return $"{ConstructUrl(url, srcResize)} {size.ToString(CultureInfo.InvariantCulture)}{sizeTypeCode}";
             });
             var result = string.Join(",\n", results);
 
@@ -98,7 +106,7 @@ namespace ToSic.Sxc.Images
             // If we're doing a factor-of, we always need an original value. If it's missing, use the fallback
             if (part.SizeType == SizeFactorOf && original == 0) original = fallbackIfNoOriginal;
 
-            // Calculate the expected size based on the original and factor
+            // Calculate the expected value based on Size=Scale-Factor * original
             return (int)(part.Size * original);
         }
 

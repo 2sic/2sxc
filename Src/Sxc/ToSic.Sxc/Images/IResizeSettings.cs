@@ -48,6 +48,9 @@ namespace ToSic.Sxc.Images
         /// </summary>
         string Format { get; }
 
+        [PrivateApi("WIP")]
+        double Factor { get; }
+
         /// <summary>
         /// SrcSet to generate.
         /// </summary>

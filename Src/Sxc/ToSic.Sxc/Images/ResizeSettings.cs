@@ -18,6 +18,8 @@ namespace ToSic.Sxc.Images
 
         public string Format { get; set; }
 
+        public double Factor { get; set; } = 1;
+
         public string SrcSet { get; set; }
 
         public NameValueCollection Parameters { get; set; }
@@ -32,6 +34,7 @@ namespace ToSic.Sxc.Images
             ResizeMode=original.ResizeMode;
             ScaleMode=original.ScaleMode;
             Format=original.Format;
+            Factor=original.Factor;
             Parameters=original.Parameters;
             if (keepSourceSet)
                 SrcSet = original.SrcSet;

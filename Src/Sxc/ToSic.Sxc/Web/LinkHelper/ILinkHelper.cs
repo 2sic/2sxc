@@ -68,17 +68,18 @@ namespace ToSic.Sxc.Web
         /// <param name="settings">
         /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
+        /// - Or a specially prepared <see cref="Images.IResizeSettings"/> object containing all settings.
+        ///   If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
         /// </param>
-        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. It only affects sizes from the settings.</param>
+        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="width">Optional width parameter. Cannot be used if `factor` is set. Usually takes the default from the `settings`.</param>
-        /// <param name="height">Optional height parameter. Can only be 0 if `factor` is set, no not specify a height. Usually takes the default from the `settings`.</param>
+        /// <param name="width">Optional width parameter. Usually takes the default from the `settings`.</param>
+        /// <param name="height">Optional height parameter. Usually takes the default from the `settings`.</param>
         /// <param name="quality">Optional quality parameter. Usually takes the default from the `settings`.</param>
         /// <param name="resizeMode">Optional resize-mode, like `crop` or `max`. Usually takes the default from the `settings`.</param>
         /// <param name="scaleMode">Optional scale-mode to allow up-scaling images like `up` or `both`. Usually takes the default from the `settings`.</param>
         /// <param name="format">Optional file format like `jpg` or `png`</param>
-        /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `factor` is supplied. Usually takes default from the `settings` or is ignored. </param>
+        /// <param name="aspectRatio">Aspect Ratio width/height, only relevant if a `width` is supplied. Can't be used together with height. Usually takes default from the `settings` or is ignored. </param>
         /// <param name="type">
         ///     Optional type changes how the link is generated. Possible values are:
         /// 
@@ -97,8 +98,11 @@ namespace ToSic.Sxc.Web
         /// History
         /// - New in 2sxc 12.03
         /// - type added ca. v12.08
+        /// - Option to use <see cref="Images.IResizeSettings"/> added in v13.03
+        /// - Factor originally didn't influence width/height if provided here, updated it v13.03 to influence that as well
         /// </remarks>
         /// <returns></returns>
+        // Test comments, probably remove soon as this was never implemented like this
         ///// <param name="part">
         ///// _This is a proposal, it's not final yet_
         ///// - null/empty/default means that the link is returned as given - as provided by the 'url' parameter. if none was provided, it's a root-absolute link like `/xyz/abc?stuff#stuff`
