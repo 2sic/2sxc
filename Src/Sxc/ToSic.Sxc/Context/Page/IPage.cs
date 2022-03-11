@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
-
-namespace ToSic.Sxc.Context
+﻿namespace ToSic.Sxc.Context
 {
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
     public interface IPage
@@ -25,10 +22,6 @@ namespace ToSic.Sxc.Context
         /// </summary>
         IParameters Parameters { get; }
 
-        /// <summary>
-        /// These parameters can reconfigure what view is used or change
-        /// </summary>
-        [PrivateApi("wip")] List<KeyValuePair<string, string>> ParametersInternalOld { get; set; }
 
         IPage Init(int id);
 

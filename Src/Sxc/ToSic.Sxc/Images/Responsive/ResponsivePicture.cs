@@ -29,14 +29,14 @@ namespace ToSic.Sxc.Images
         }
         private readonly IFeaturesService _featuresService;
 
-        public Img ImgTag
+        public Img Img
         {
             get
             {
                 if (_imgTag != null)
                     return _imgTag;
 
-                _imgTag = Tag.Img().Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false), null));
+                _imgTag = Tag.Img().Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false)));
                 // Only add these if they were really specified
                 if (ImgAlt != null) _imgTag.Alt(ImgAlt);
                 if (ImgClass != null) _imgTag.Class(ImgClass);
@@ -46,10 +46,10 @@ namespace ToSic.Sxc.Images
 
         private Img _imgTag;
 
-        public Picture PictureTag => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Url, Settings), ImgTag));
+        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Url, Settings), Img));
         private Picture _pictureTag;
 
-        public TagList SourceTags => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
+        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
         private TagList _sourceTags;
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
@@ -69,14 +69,14 @@ namespace ToSic.Sxc.Images
                 {
                     var formatSettings = new ResizeSettings(resizeSettings, true);
                     if (resizeFormat != defFormat) formatSettings.Format = resizeFormat.Format;
-                    return Tag.Source().Type(resizeFormat.MimeType)
-                        .Srcset(ImgLinker.Image(url, formatSettings));
+                    var srcSet = ImgLinker.Image(url, formatSettings);
+                    return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 });
             var result = Tag.TagList(sources);
             return result;
         }
 
 
-        public override string ToString() => PictureTag.ToString();
+        public override string ToString() => Picture.ToString();
     }
 }

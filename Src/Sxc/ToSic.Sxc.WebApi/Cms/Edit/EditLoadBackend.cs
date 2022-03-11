@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Admin.Features;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
@@ -23,7 +25,9 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         #region DI Constructor
 
-        public EditLoadBackend(EntityApi entityApi, ContentGroupList contentGroupList, 
+        public EditLoadBackend(EntityApi entityApi, 
+            ContentGroupList contentGroupList, 
+            EntityBuilder entityBuilder,
             IServiceProvider serviceProvider, 
             IUiContextBuilder contextBuilder, 
             IContextResolver ctxResolver, 
@@ -34,6 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
+            _entityBuilder = entityBuilder;
             _contextBuilder = contextBuilder;
             _ctxResolver = ctxResolver;
             _mdTargetTypes = mdTargetTypes;
@@ -44,6 +49,7 @@ namespace ToSic.Sxc.WebApi.Cms
         
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
+        private readonly EntityBuilder _entityBuilder;
         private readonly IUiContextBuilder _contextBuilder;
         private readonly IContextResolver _ctxResolver;
         private readonly ITargetTypes _mdTargetTypes;
@@ -118,7 +124,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
-            result.Features = FeaturesHelpers.FeatureListWithPermissionCheck(_features, permCheck).ToList();
+            result.Features = FeaturesHelpers.FeaturesUiBasedOnPermissions(_features, permCheck.UserMayOnAll(GrantSets.WritePublished)).ToList();
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.InitApp(context.AppState, Log)

@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Version>13.02.00</Version>
+    <Version>13.03.00</Version>
     <Product>ToSic.Sxc</Product>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
@@ -27,15 +27,19 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>-->
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Apps\**" />
     <Compile Remove="Engines\**" />
     <Compile Remove="RazorPartialToString\**" />
     <Compile Remove="wwwroot\Modules\ToSic.Sxc\**" />
+    <Content Remove="Apps\**" />
     <Content Remove="Engines\**" />
     <Content Remove="RazorPartialToString\**" />
     <Content Remove="wwwroot\Modules\ToSic.Sxc\**" />
+    <EmbeddedResource Remove="Apps\**" />
     <EmbeddedResource Remove="Engines\**" />
     <EmbeddedResource Remove="RazorPartialToString\**" />
     <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc\**" />
+    <None Remove="Apps\**" />
     <None Remove="Engines\**" />
     <None Remove="RazorPartialToString\**" />
     <None Remove="wwwroot\Modules\ToSic.Sxc\**" />

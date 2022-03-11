@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -19,116 +19,84 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     // we can't set this globally (only needed for imports)
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/admin/app/[action]")]
-    public class AppController : OqtStatefulControllerBase, IAppController
+    public class AppController : OqtStatefulControllerBase<AppControllerReal<IActionResult>>, IAppController<IActionResult>
     {
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        private AppControllerReal<IActionResult> RealController { get; }
-        protected override string HistoryLogName => "Api.App";
+        public AppController(): base(AppControllerReal<IActionResult>.LogSuffix) { }
 
-        public AppController(AppControllerReal<IActionResult> appControllerReal)
-        {
-            RealController = appControllerReal.Init(PreventServerTimeout300, Log);
-        }
-
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public List<AppDto> List(int zoneId)
-            => RealController.List(zoneId);
+        public List<AppDto> List(int zoneId) => Real.List(zoneId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Host)]
-        public List<AppDto> InheritableApps()
-            => RealController.InheritableApps();
+        public List<AppDto> InheritableApps() => Real.InheritableApps();
 
-
+        /// <inheritdoc />
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public void App(int zoneId, int appId, bool fullDelete = true)
-            => RealController.App(zoneId, appId, fullDelete);
+        public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
 
+        /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public void App(int zoneId, string name, int? inheritAppId = null)
-            => RealController.App(zoneId, name, inheritAppId);
+        public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public List<SiteLanguageDto> Languages(int appId) 
-            => RealController.Languages(appId);
+        public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/GetAppInfo
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public AppExportInfoDto Statistics(int zoneId, int appId)
-            => RealController.Statistics( zoneId, appId);
+        public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
-
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public bool FlushCache(int zoneId, int appId)
-            => RealController.FlushCache(zoneId, appId);
+        public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportApp
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
-        public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid) 
-            => RealController.Export(appId, zoneId, includeContentGroups, resetAppGuid);
+        public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid) 
+            => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportForVersionControl
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
-        public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => RealController.SaveData(appId, zoneId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
-            => RealController.GetStack(appId, part, key, view);
+            => Real.GetStack(appId, part, key, view);
 
         /// <inheritdoc />
         [HttpPost]
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId) 
-            => RealController.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
+        public ImportResultDto Reset(int zoneId, int appId) => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
 
-        /// <summary>
-        /// Used to be POST ImportExport/ImportApp
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
@@ -136,10 +104,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             // Ensure that Hot Reload is not enabled or try to disable it.
             HotReloadEnabledCheck.Check();
-            var request = HttpContext.Request.Form;
-            return request.Files.Count <= 0 
-                ? new ImportResultDto(false, "no files uploaded") 
-                : RealController.Import(zoneId, request["Name"], request.Files[0].OpenReadStream());
+            return Real.Import(new HttpUploadedFile(Request), zoneId);
         }
     }
 }

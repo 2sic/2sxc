@@ -1,27 +1,29 @@
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System.IO;
+using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Adam;
-using ToSic.Sxc.Oqt.Server.Apps;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
-    public abstract class AppAssetsControllerBase : OqtControllerBase
+    public abstract class AppAssetsControllerBase : OqtControllerBase<DummyControllerReal>
     {
-        public virtual string Route => "default";
-        private readonly Lazy<OqtAppFolder> _oqtAppFolderLazy;
+        private string Route { get; }
+
+        private readonly LazyInitLog<AppFolder> _appFolder;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly SiteState _siteState;
 
-        protected AppAssetsControllerBase(AppAssetsDependencies dependencies)
+        protected AppAssetsControllerBase(AppAssetsDependencies dependencies, string route, string logSuffix): base(logSuffix)
         {
             _hostingEnvironment = dependencies.HostingEnvironment;
-            _oqtAppFolderLazy = dependencies.OqtAppFolderLazy;
+            _appFolder = dependencies.AppFolder.SetLog(Log);
             _siteState = dependencies.SiteState;
+            Route = route;
         }
 
         [HttpGet("{*filePath}")]
@@ -29,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         {
             try
             {
-                if (appName == WebApiConstants.Auto) appName = _oqtAppFolderLazy.Value.GetAppFolder();
+                if (appName == WebApiConstants.Auto) appName = _appFolder.Ready.GetAppFolder();
 
                 var alias = _siteState.Alias;
                 var fullFilePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, Route, appName, filePath);

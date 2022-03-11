@@ -1,19 +1,15 @@
 ﻿@page
-@using Microsoft.Extensions.Configuration
 @using ToSic.Eav.Apps
-@model PrivacyModel
-@inject IConfiguration Config
+@inject IAppStates AppStates
 @{
     ViewData["Title"] = "First Read Data from EAV";
 
-    // Adjust these values to your testing environment
-    var zoneId = 2;
-    var appId = 78;
-  #pragma warning disable 618
-  // var appState = ToSic.Eav.Factory.ObsoleteBuild<IAppStates>()/* State*/.Get(appId);
-  #pragma warning restore 618
-  // var firstItem = appState.List.FirstOrDefault();
+    // #2sxcIntegration
+    var appIdentity = IntegrationConstants.AppIdentity;
+    var appState = AppStates.Get(appIdentity);
+    var firstItem = appState.List.FirstOrDefault();
 }
+
 <h1>@ViewData["Title"]</h1>
 
 <p>
@@ -21,16 +17,14 @@
 </p>
 
 <div>
-  Reading data from EAV Zone/App: @zoneId / @appId
+  Reading data from EAV Zone/App: @appIdentity.ZoneId / @appIdentity.AppId
 </div>
 
-@{
-}
 <ol>
-  <li>State Object: @@appState</li>
-  <li>List Object: @@appState.List</li>
-  <li>List Count: @@appState.List.Count</li>
-  <li>First: @@firstItem</li>
-  <li>Title of first item: @@firstItem?.GetBestTitle()</li>
-  <li>FirstItem modified: @@firstItem?.Modified</li>
+  <li>State Object: @appState</li>
+  <li>List Object: @appState.List</li>
+  <li>List Count: @appState.List.Count</li>
+  <li>First: @firstItem</li>
+  <li>Title of first item: @firstItem?.GetBestTitle()</li>
+  <li>FirstItem modified: @firstItem?.Modified</li>
 </ol>

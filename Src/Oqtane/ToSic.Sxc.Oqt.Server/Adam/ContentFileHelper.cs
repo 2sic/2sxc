@@ -11,6 +11,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 {
     public static class ContentFileHelper
     {
+        public const string RouteAdam = "adam";
+        public const string RouteAssets = "assets";
+
         public static readonly Regex RiskyDetector = ToSic.Eav.Security.Files.FileNames.RiskyDownloadDetector;
 
         public const string FallbackMimeType = MimeHelper.FallbackType;
@@ -49,8 +52,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var fullFilePath = route switch
             {
                 "" => AdamPathWithoutAppName(contentRootPath, alias, filePath),
-                "adam" => AdamPath(contentRootPath, alias, appName, filePath),
-                "sxc" => SxcPath(contentRootPath, alias, appName, filePath),
+                RouteAdam => AdamPath(contentRootPath, alias, appName, filePath),
+                RouteAssets => SxcPath(contentRootPath, alias, appName, filePath),
                 _ => SxcPath(contentRootPath, alias, appName, filePath),
             };
 

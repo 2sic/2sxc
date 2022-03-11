@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Server.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
@@ -8,20 +8,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     // TODO: 2DM please check permissions
 
     // Release routes
-    [Route(WebApiConstants.AppRoot + "/{appName}/assets")]
-    [Route(WebApiConstants.AppRoot2 + "/{appName}/assets")]
-    [Route(WebApiConstants.AppRoot3 + "/{appName}/assets")]
+    [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/assets")]
+    [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/assets")]
+    [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/assets")]
 
     // Beta routes
     [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
-    public class AppAssetsController: WebApi.AppAssetsControllerBase
+    public class AppAssetsController: AppAssetsControllerBase
     {
-        protected override string HistoryLogName => "Oqt.AppAst";
-
-        public override string Route => "assets";
-
-        public AppAssetsController(AppAssetsDependencies dependencies) : base(dependencies)
-        { }
-
+        public AppAssetsController(AppAssetsDependencies dependencies) 
+            : base(dependencies, ContentFileHelper.RouteAssets, "Assets") { }
     }
 }

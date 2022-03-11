@@ -1,5 +1,7 @@
 ﻿@page
+@using Microsoft.Extensions.Configuration
 @model IndexModel
+@inject IConfiguration Configuration;
 @{
     ViewData["Title"] = "2sxc Integration - Read-Only Implementation";
 }
@@ -8,24 +10,39 @@
   <h1 class="display-4">2sxc Integration - Read-Only Implementation</h1>
 </div>
 <div>
-  <p>
-    This should be the most basic integration possible, where we only read 2sxc data, but do nothing else.
-  </p>
+    <p>
+        This should be the most basic integration possible, where we only read 2sxc data, but do nothing else.
+    </p>
   
-  <h2>Basics</h2>
-  <p>
-    The following projects / solutions were added. If doing this from an external system, make sure you have the right DLLs.
-  </p>
-  <ol>
-    <li>Eav</li>
-    <li>Eav.Core</li>
+    <h2>Basics</h2>
+    <p>
+        The following projects / solutions were added. If doing this from an external system, make sure you have the right DLLs.
+    </p>
+    <ol>
+        <li>Eav with all EAV parts (Core, Repository, WebApi etc.)</li>
+    </ol>
 
-  </ol>
-  
-  
-  <h2>DB Connection</h2>
-  <ol>
-    <li>Add DB Connection String to appsettings.json</li>
-    <li>Create StartupEavAndSxc and add the ConfigureConnectionString - then call it from the normal Startup.cs</li>
-  </ol>
+    <h2>DB Connection</h2>
+    <p>
+        In this demo the DB Connection String is in <code>appsettings.json</code> - it will be loaded by the Startup.cs 
+    </p>
+    <ol>
+        <li>
+            ATM it's set to: <code>@Configuration.GetConnectionString("SiteSqlServer")</code>
+        </li>
+    </ol>
+
+    <h2>App Identity</h2>
+    <p>
+        In this demo we are using a fixed app identity. It is <code>@IntegrationConstants.ZoneId / @IntegrationConstants.AppId</code>
+    </p>
+    
+    <h2>Functionality</h2>
+    <p>
+        This is a super-basic demo. ATM it has only these features
+    </p>
+    <ol>
+        <li>You can read the data from an App out of an existing DB</li>
+        <li>Insights works, so you can see logs of what happens internally and also see what objects were used in the <code>Unknown</code> implementation.</li>
+    </ol>
 </div>

@@ -1,5 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.WebApi;
@@ -13,16 +14,16 @@ namespace ToSic.Sxc.WebApi
     /// But it will NOT provide an App or anything like that
     /// </summary>
     [DnnLogExceptions]
-    public class SxcApiControllerBase: DnnApiControllerWithFixes
+    [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
+    public abstract class SxcApiControllerBase<TRealController>: DnnApiControllerWithFixes<TRealController> where TRealController : class, IHasLog<TRealController>
     {
-        protected override string HistoryLogName => "Api.CntBas";
+        protected SxcApiControllerBase(string logSuffix) : base(logSuffix) { }
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
             SharedContextResolver = GetService<IContextResolver>();
             SharedContextResolver.AttachRealBlock(() => BlockOfRequest);
-            //SharedContextResolver.AttachBlockContext(() => BlockOfRequest?.Context);
         }
 
         protected IContextResolver SharedContextResolver;

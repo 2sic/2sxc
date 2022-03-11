@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Threading.Tasks;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Eav.Logging.Simple.Log;
@@ -21,18 +18,25 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [NewtonsoftJsonFormatter] // This is needed to preserve compatibility with previous api usage
     [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
     [ServiceFilter(typeof(HttpResponseExceptionFilter))]
-    public abstract class OqtControllerBase : Controller, IHasLog
+    public abstract class OqtControllerBase<TRealController> : Controller, IHasLog where TRealController : class, IHasLog<TRealController>
     {
-        protected OqtControllerBase()
+        protected OqtControllerBase(string logSuffix)
         {
             // ReSharper disable once VirtualMemberCallInConstructor
-            Log = new Log(HistoryLogName, null, GetType().Name);
+            Log = new Log($"Api.{logSuffix}", null, GetType().Name);
+            _helper = new NetCoreControllersHelper(this);
         }
 
-        protected IServiceProvider ServiceProvider;
+        protected IServiceProvider ServiceProvider => _helper.ServiceProvider;
 
         /// <inheritdoc />
         public ILog Log { get; }
+
+        /// <summary>
+        /// The helper to assist in timing and common operations of WebApi Controllers
+        /// </summary>
+        private readonly NetCoreControllersHelper _helper;
+
 
         /// <summary>
         /// The group name for log entries in insights.
@@ -41,31 +45,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <summary>
-        /// The name of the logger in insights.
-        /// The inheriting class should provide the real name to be used.
-        /// </summary>
-        protected abstract string HistoryLogName { get; }
-
-        private Action<string> ActionTimerWrap; // it is used across events to track action execution total time
-
-        /// <summary>
         /// Initializer - just ensure SiteState is initialized thanks to our paths
         /// </summary>
         /// <param name="context"></param>
         [NonAction]
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            ActionTimerWrap = Log.Call($"action executing url: {context.HttpContext.Request.GetDisplayUrl()}", useTimer: true);
-
             base.OnActionExecuting(context);
-
-            ServiceProvider = context.HttpContext.RequestServices;
-
-            // add log
-            ServiceProvider.Build<LogHistory>().Add(HistoryLogGroup, Log);
+            _helper.OnActionExecuting(context, HistoryLogGroup);
 
             // background processes can pass in an alias using the SiteState service
-            ServiceProvider.Build<SiteStateInitializer>().InitIfEmpty();
+            GetService<SiteStateInitializer>().InitIfEmpty();
         }
 
         #region Extend Time so Web Server doesn't time out - not really implemented ATM
@@ -79,27 +69,16 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             base.OnActionExecuted(context);
-
-            if (context.ActionDescriptor is ControllerActionDescriptor actionDescriptor)
-            {
-                // If the api endpoint method return type is "void" or "Task", Web API will return HTTP response with status code 204 (No Content).
-                // This changes aspnetcore default behavior in Oqtane that returns HTTP 200 OK, with no body so it is same as in ASP.NET MVC2 in DNN. 
-                // This is helpful for jQuery Ajax issue that on HTTP 200 OK with empty body throws json parse error.
-                // https://docs.microsoft.com/en-us/aspnet/web-api/overview/getting-started-with-aspnet-web-api/action-results#void
-                // https://github.com/dotnet/aspnetcore/issues/16944
-                // https://github.com/2sic/2sxc/issues/2555
-                var returnType = actionDescriptor.MethodInfo.ReturnType;
-                if (returnType == typeof(void) || returnType == typeof(Task))
-                {
-                    if (context.HttpContext.Response.StatusCode == 200)
-                        context.HttpContext.Response.StatusCode = 204; // NoContent (instead of HTTP 200 OK)
-                }
-            }
-
-            ActionTimerWrap("ok");
-            ActionTimerWrap = null; // just to mark that Action Delegate is not in use any more, so GC can collect it
+            _helper.OnActionExecuted(context);
         }
+
+        protected TService GetService<TService>() => _helper.GetService<TService>();
+
+        /// <summary>
+        /// The RealController which is the full backend of this controller.
+        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
+        /// </summary>
+        protected virtual TRealController Real => _real ??= _helper.Real<TRealController>();
+        private TRealController _real;
     }
-
-
 }

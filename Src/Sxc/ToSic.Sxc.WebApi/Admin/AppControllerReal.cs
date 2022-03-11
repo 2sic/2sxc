@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Logging;
@@ -9,10 +9,10 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
-
 
 namespace ToSic.Sxc.WebApi.Admin
 {
@@ -22,16 +22,7 @@ namespace ToSic.Sxc.WebApi.Admin
     /// </summary>
     public class AppControllerReal<THttpResponseType> : HasLog<AppControllerReal<THttpResponseType>> where THttpResponseType : class
     {
-        private readonly LazyInitLog<AppsBackend> _appsBackendLazy;
-        private readonly Lazy<CmsZones> _cmsZonesLazy;
-        private readonly LazyInitLog<ExportApp> _exportAppLazy;
-        private readonly LazyInitLog<ImportApp> _importAppLazy;
-        private readonly Lazy<AppCreator> _appBuilderLazy;
-        private readonly LazyInitLog<ResetApp> _resetAppLazy;
-        private readonly LazyInitLog<SystemManager> _systemManagerLazy;
-        private readonly LazyInitLog<LanguagesBackend> _languagesBackendLazy;
-        private readonly Lazy<IAppStates> _appStatesLazy;
-        private readonly LazyInitLog<AppStackBackend> _appStackBackendLazy;
+        public const string LogSuffix = "AppCon";
 
         public AppControllerReal(
             LazyInitLog<AppsBackend> appsBackendLazy,
@@ -44,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Admin
             LazyInitLog<LanguagesBackend> languagesBackendLazy,
             Lazy<IAppStates> appStatesLazy,
             LazyInitLog<AppStackBackend> appStackBackendLazy
-            ) : base("Api.AppCon")
+            ) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
             _appsBackendLazy = appsBackendLazy.SetLog(Log);
             _cmsZonesLazy = cmsZonesLazy;
@@ -58,14 +49,17 @@ namespace ToSic.Sxc.WebApi.Admin
             _appStackBackendLazy = appStackBackendLazy.SetLog(Log);
         }
 
-        private Action _preventServerTimeout300;
+        private readonly LazyInitLog<AppsBackend> _appsBackendLazy;
+        private readonly Lazy<CmsZones> _cmsZonesLazy;
+        private readonly LazyInitLog<ExportApp> _exportAppLazy;
+        private readonly LazyInitLog<ImportApp> _importAppLazy;
+        private readonly Lazy<AppCreator> _appBuilderLazy;
+        private readonly LazyInitLog<ResetApp> _resetAppLazy;
+        private readonly LazyInitLog<SystemManager> _systemManagerLazy;
+        private readonly LazyInitLog<LanguagesBackend> _languagesBackendLazy;
+        private readonly Lazy<IAppStates> _appStatesLazy;
+        private readonly LazyInitLog<AppStackBackend> _appStackBackendLazy;
 
-        public AppControllerReal<THttpResponseType> Init(Action preventServerTimeout300, ILog parent)
-        {
-            _preventServerTimeout300 = preventServerTimeout300;
-            base.Init(parent);
-            return this;
-        }
 
         public List<AppDto> List(int zoneId) => _appsBackendLazy.Ready.Apps();
 
@@ -80,8 +74,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public List<SiteLanguageDto> Languages(int appId)
             => _languagesBackendLazy.Ready.GetLanguagesOfApp(_appStatesLazy.Value.Get(appId), true);
 
-        public AppExportInfoDto Statistics(int zoneId, int appId)
-            => _exportAppLazy.Ready.GetAppInfo(appId, zoneId);
+        public AppExportInfoDto Statistics(int zoneId, int appId) => _exportAppLazy.Ready.GetAppInfo(zoneId, appId);
 
         public bool FlushCache(int zoneId, int appId)
         {
@@ -90,25 +83,29 @@ namespace ToSic.Sxc.WebApi.Admin
             return wrapLog("ok", true);
         }
 
-        public THttpResponseType Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Ready.Export(appId, zoneId, includeContentGroups, resetAppGuid) as THttpResponseType;
+        public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => _exportAppLazy.Ready.Export(zoneId, appId, includeContentGroups, resetAppGuid) as THttpResponseType;
 
-        public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Ready.SaveDataForVersionControl(appId, zoneId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => _exportAppLazy.Ready.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid);
 
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
             => _appStackBackendLazy.Ready.GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
 
-        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage)
-        {
-            _preventServerTimeout300();
-            return _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage);
-        }
+        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage) => _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage);
 
-        public ImportResultDto Import(int zoneId, string name, Stream stream)
+        public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId)
         {
-            _preventServerTimeout300();
-            return _importAppLazy.Ready.Import(zoneId, name, stream);
+            var wrapLog = Log.Call<ImportResultDto>();
+
+            if (!uploadInfo.HasFiles())
+                return new ImportResultDto(false, "no files uploaded");
+
+            var (fileName, stream) = uploadInfo.GetStream(0);
+
+            var result = _importAppLazy.Ready.Import(zoneId, fileName, stream);
+
+            return wrapLog("ok", result);
         }
     }
 }

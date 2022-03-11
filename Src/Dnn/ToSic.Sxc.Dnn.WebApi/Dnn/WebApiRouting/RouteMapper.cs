@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Dnn.Providers;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Admin;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         // app-query    will try to request a query
         // app-api      will call custom c# web-apis of a specific app
 
-        static readonly string[] StdNsWebApi = {typeof(AppContentController).Namespace /* "ToSic.Sxc.WebApi.App" */};
+        static readonly string[] StdNsWebApi = {typeof(AppDataController).Namespace /* "ToSic.Sxc.WebApi.App" */};
         static readonly string[] AdamNamespace = {typeof(AdamController).Namespace};
         private IMapRoute _mapRouteManager;
         private static readonly object appContentDefs = new {controller = ControllerNames.AppContent, id = RouteParameter.Optional };
@@ -42,18 +43,18 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             #region new API routes after 08.10
 
             // ADAM routes
-            AddWD("adam-auto", Roots.ContentAuto + "/" + TokenSet.TypeGuidField, ControllerNames.Adam, AdamNamespace);
-            AddWD("adam2-auto", Roots.ContentAuto + "/" + TokenSet.TypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
-            AddWD("adam3-auto", Roots.DataAuto + "/" + TokenSet.TypeGuidField, ControllerNames.Adam, AdamNamespace); // new, v13
-            AddWD("adam4-auto", Roots.DataAuto + "/" + TokenSet.TypeGuidFieldAction, ControllerNames.Adam, AdamNamespace); // new, v13
+            AddWD("adam-auto", AppRoots.AppAutoContent + "/" + ValueTokens.SetTypeGuidField, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam2-auto", AppRoots.AppAutoContent + "/" + ValueTokens.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam3-auto", AppRoots.AppAutoData + "/" + ValueTokens.SetTypeGuidField, ControllerNames.Adam, AdamNamespace); // new, v13
+            AddWD("adam4-auto", AppRoots.AppAutoData + "/" + ValueTokens.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace); // new, v13
 
             // App Content routes - for GET/DELETE/PUT entities using REST
             // 1. Type and null or int-id
             // 2. Type and guid-id
             foreach (var part in Roots.Content)
             {
-                AddWC("2sxc-" + part.Name,      $"{part.Path}/{TokenSet.TypeId}", appContentDefs, idNullOrNumber, StdNsWebApi);
-                AddWD("2sxc-guid-" + part.Name, $"{part.Path}/{TokenSet.TypeGuid}",  ControllerNames.AppContent, StdNsWebApi);
+                AddWC("2sxc-" + part.Name,      $"{part.Path}/{ValueTokens.SetTypeAndId}", appContentDefs, idNullOrNumber, StdNsWebApi);
+                AddWD("2sxc-guid-" + part.Name, $"{part.Path}/{ValueTokens.SetTypeAndGuid}",  ControllerNames.AppContent, StdNsWebApi);
             }
 
             // App-API routes - for the custom code API calls of an app
@@ -65,9 +66,9 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             // new routes, v08.10+
             foreach (var part in Roots.QueryRoots)
             {
-                AddWD("2sxc-auto-" + part.Name,        $"{part.Path}/{Token.Name}", ControllerNames.AppQuery, StdNsWebApi);
-                AddWD("2sxc-auto-slash" + part.Name,   $"{part.Path}/{Token.Name}/", ControllerNames.AppQuery, StdNsWebApi);
-                AddWD("2sxc-auto-stream" + part.Name,  $"{part.Path}/{Token.Name}/{Token.Stream}", ControllerNames.AppQuery, StdNsWebApi);
+                AddWD("2sxc-auto-" + part.Name,        $"{part.Path}/{ValueTokens.Name}", ControllerNames.AppQuery, StdNsWebApi);
+                AddWD("2sxc-auto-slash" + part.Name,   $"{part.Path}/{ValueTokens.Name}/", ControllerNames.AppQuery, StdNsWebApi);
+                AddWD("2sxc-auto-stream" + part.Name,  $"{part.Path}/{ValueTokens.Name}/{ValueTokens.Stream}", ControllerNames.AppQuery, StdNsWebApi);
             }
             #endregion
 
@@ -76,20 +77,20 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             // /Sys/ Part 1: Special update v13 - all the insights-commands go through "Details?view=xyz
             // It's important that this comes first, otherwise the second /sys/ will capture this as well
-            _mapRouteManager.MapHttpRoute(Mod2Sxc, "2sxc-sys-new", $"{Root.Sys}/Insights/{{View}}",
+            _mapRouteManager.MapHttpRoute(Mod2Sxc, "2sxc-sys-new", $"{Areas.Sys}/Insights/{{View}}",
                 new { controller = "Insights", action = nameof(InsightsController.Details) }, new[] { typeof(InsightsController).Namespace });
 
             // /Sys/ Part 2: All others
-            AddTy("2sxc-sys",     Root.Sys + "/" + TokenSet.ConAct,           typeof(InstallController));
+            AddTy("2sxc-sys",     Areas.Sys + "/" + ValueTokens.SetControllerAction,           typeof(InstallController));
 
 
-            AddTy("2sxc-cms",     Root.Cms + "/" + TokenSet.ConAct,           typeof(BlockController));
-            AddTy("2sic-admin",   Root.Admin + "/" + TokenSet.ConAct,         typeof(MetadataController));
+            AddTy("2sxc-cms",     Areas.Cms + "/" + ValueTokens.SetControllerAction,           typeof(BlockController));
+            AddTy("2sic-admin",   Areas.Admin + "/" + ValueTokens.SetControllerAction,         typeof(MetadataController));
 
             #endregion
 
             // DNN: System calls to dnn - this is just for module delete
-            AddTy("dnn", "dnn/" + TokenSet.ConAct, typeof(ModuleController));
+            AddTy("dnn", "dnn/" + ValueTokens.SetControllerAction, typeof(ModuleController));
 
 
             // Add custom service locator into the chain of service-locators
@@ -106,24 +107,24 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
         {
             // ADAM routes
             var oldContentRoot = "app-content";
-            AddWD("adam-old-81", oldContentRoot + "/" + TokenSet.TypeGuidField, ControllerNames.Adam, AdamNamespace);
-            AddWD("adam", oldContentRoot + "/" + TokenSet.TypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam-old-81", oldContentRoot + "/" + ValueTokens.SetTypeGuidField, ControllerNames.Adam, AdamNamespace);
+            AddWD("adam", oldContentRoot + "/" + ValueTokens.SetTypeGuidFieldAction, ControllerNames.Adam, AdamNamespace);
 
             // App Content routes - for GET/DELETE/PUT entities using REST
             // 1. Type and null or int-id
             // 2. Type and guid-id
             var idNullOrNumber = new {id = @"^\d*$"}; // Only matches if "id" is null, or built only with digits.
-            AddWC("app-content", $"{oldContentRoot}/{TokenSet.TypeId}", appContentDefs, idNullOrNumber, StdNsWebApi);
-            AddWD("app-content-guid", $"{oldContentRoot}/{TokenSet.TypeGuid}", ControllerNames.AppContent, StdNsWebApi);
+            AddWC("app-content", $"{oldContentRoot}/{ValueTokens.SetTypeAndId}", appContentDefs, idNullOrNumber, StdNsWebApi);
+            AddWD("app-content-guid", $"{oldContentRoot}/{ValueTokens.SetTypeAndGuid}", ControllerNames.AppContent, StdNsWebApi);
 
             // App-API routes - for the custom code API calls of an app
             // these are the old routes, before 2sxc v08.10
-            AddWD(Mod2Sxc, "app-api-old-81", "app-api/" + TokenSet.ConAct, StdNsWebApi);
+            AddWD(Mod2Sxc, "app-api-old-81", "app-api/" + ValueTokens.SetControllerAction, StdNsWebApi);
 
             // App-Query routes - to access designed queries
             // these are the old routes, before 2sxc v08.10
             const string rootQueryPre0810 = "app-query";
-            AddWD("app-query-old-81", $"{rootQueryPre0810}/{Token.Name}", ControllerNames.AppQuery, StdNsWebApi);
+            AddWD("app-query-old-81", $"{rootQueryPre0810}/{ValueTokens.Name}", ControllerNames.AppQuery, StdNsWebApi);
             // Note 2020-04-09 - this had "appname" instead of "apppath" in it - probably for 2 years! only 1 app (Manor) now had trouble, so I think this is not in use elsewhere
             // 2020-11-12 will turn off for now - leave comment in till 2021-03
             //AddWD("app-query-nomod-old-81", $"{rootQueryPre0810}/{Token.AppPath}/{Token.Name}", ControllerNames.AppQuery, StdNsWebApi); // keep for backward compatibility...

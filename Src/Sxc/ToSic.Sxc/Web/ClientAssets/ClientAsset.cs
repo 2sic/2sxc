@@ -1,10 +1,10 @@
-﻿namespace ToSic.Sxc.Web
+﻿using System.Collections.Generic;
+
+namespace ToSic.Sxc.Web
 {
     public class ClientAsset : IClientAsset
     {
-        /// <summary>
-        /// Asset ID for use in HTML - ideally should ensure that this asset is only loaded once
-        /// </summary>
+        /// <inheritdoc />
         public string Id { get; set; }
         
         public bool IsJs { get; set; }= true;
@@ -15,5 +15,8 @@
 
         public bool IsExternal { get; set; } = true;
         public string Content { get; set; } = null;
+
+        /// <inheritdoc />
+        public IDictionary<string, string> HtmlAttributes { get; set; } = null;
     }
 }

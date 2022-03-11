@@ -1,31 +1,24 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
 using System.Collections.Generic;
-using ToSic.Eav.WebApi.Licenses;
+using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
-    public class LicenseController : OqtStatefulControllerBase
+    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>, ILicenseController
     {
-        private readonly Lazy<LicenseBackend> _licenseBackendLazy;
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public LicenseController(Lazy<LicenseBackend> licenseBackendLazy )
-        {
-            _licenseBackendLazy = licenseBackendLazy;
-        }
+        public LicenseController(): base("License") { }
 
-        protected override string HistoryLogName => "Api.License";
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
@@ -35,14 +28,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
         #region License
 
-        /// <summary>
-        /// Gives an array of License (sort by priority)
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [Authorize(Roles = RoleNames.Host)]
-        public IEnumerable<LicenseDto> Summary() => _licenseBackendLazy.Value.Init(Log).Summary();
+        public IEnumerable<LicenseDto> Summary() => Real.Summary();
 
         #endregion
        

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -53,12 +54,14 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
+            services.TryAddTransient<BlockBase.Dependencies>();
             services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
 #pragma warning disable CS0618
             services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618
 
             // Configuration Provider WIP
+            services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<AppConfigDelegate>();
             services.TryAddTransient<App>();
             services.TryAddTransient<ImportExportEnvironmentBase.Dependencies>();
@@ -146,9 +149,9 @@ namespace ToSic.Sxc
             services.TryAddScoped(typeof(PageScopedService<>));
 
             // v13 DynamicCodeService
-            services.TryAddTransient<DynamicCodeService.Dependencies>();
-
             services.TryAddTransient<IInPageEditingSystem, InPageEditingHelper>();
+            services.TryAddTransient<DynamicCodeService.Dependencies>();
+            services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

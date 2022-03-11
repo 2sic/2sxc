@@ -11,11 +11,7 @@ namespace ToSic.Sxc.Blocks
     /// </summary>
     internal class BlockViewLoader: HasLog
     {
-        public BlockViewLoader(ILog parentLog) : base("Blk.ViewLd", parentLog)
-        {
-
-        }
-
+        public BlockViewLoader(ILog parentLog) : base("Blk.ViewLd", parentLog) { }
 
         internal IView PickView(IBlock block, IView configView, IContextOfBlock context, CmsRuntime cms)
         {
@@ -31,9 +27,9 @@ namespace ToSic.Sxc.Blocks
         private IView TryToGetTemplateBasedOnUrlParams(IContextOfBlock context, CmsRuntime cms)
         {
             var wrapLog = Log.Call<IView>("template override - check");
-            if (context.Page.ParametersInternalOld == null) return wrapLog("no params", null);
+            if (context.Page.Parameters == null) return wrapLog("no params", null);
 
-            var urlParameterDict = context.Page.ParametersInternalOld.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
+            var urlParameterDict = context.Page.Parameters.ToDictionary(pair => pair.Key?.ToLowerInvariant() ?? "", pair =>
                 $"{pair.Key}/{pair.Value}".ToLowerInvariant());
 
             var allTemplates = cms.Views.GetAll();

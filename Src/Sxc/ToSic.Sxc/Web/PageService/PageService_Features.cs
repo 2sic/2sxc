@@ -21,7 +21,15 @@ namespace ToSic.Sxc.Web.PageService
 
             // 2. If any keys are left, they are probably preconfigured keys, so add them now
             if (keys.Any())
-                PageServiceShared.Activate(keys);
+            {
+                var added = PageServiceShared.Activate(keys);
+
+                // 2022-03-03 2dm - moving special properties to page-activate features #pageActivate
+                // WIP, if all is good, remove these comments end of March
+
+                // also add to this specific module, as we need a few module-level features to activate in case...
+                CodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
+            }
             
             wrapLog(null);
         }
@@ -33,14 +41,12 @@ namespace ToSic.Sxc.Web.PageService
             foreach (var key in keys)
             {
                 Log.Add($"Key: {key}");
-                var resConfig = WebResources.Get(key) as DynamicEntity;
-                if (resConfig is null) continue; // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
+                if (!(WebResources.Get(key) is DynamicEntity resConfig)) continue; // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
 
                 var enabled = resConfig.Get(WebResourceEnabledField) as bool?;
                 if (enabled == false) continue;
 
-                var html = resConfig.Get(WebResourceHtmlField) as string;
-                if (html == null) continue;
+                if (!(resConfig.Get(WebResourceHtmlField) is string html)) continue;
 
                 Log.Add("Found html and everything, will register");
                 // all ok so far

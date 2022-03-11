@@ -4,8 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Apps.Paths;
 
 namespace ToSic.Sxc.Apps
 {
@@ -13,7 +11,7 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IServiceProvider serviceProvider, IAppStates appStates, ISite site, AppPaths appPaths) : base(serviceProvider, "Cms.AppsRt")
+        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
         {
             _zoneManagerLazy = zoneManagerLazy;
             _appStates = appStates;

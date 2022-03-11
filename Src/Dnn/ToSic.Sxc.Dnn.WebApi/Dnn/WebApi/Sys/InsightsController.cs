@@ -1,14 +1,26 @@
 ﻿using System.Web.Http;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi.Sys;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnLogExceptions]
-    public class InsightsController : DnnApiControllerWithFixes
+    public class InsightsController : DnnApiControllerWithFixes<InsightsControllerReal>
     {
-        #region Logging
-        protected override string HistoryLogName => "Api.Debug";
+        public InsightsController() : base(InsightsControllerReal.LogSuffix) { }
+
+        /// <summary>
+        /// Single-Point-Of-Entry
+        /// The insights handle all their work in the backend, incl. view-switching.
+        /// This is important for many reasons, inc. the fact that this will always be the first endpoint to implement
+        /// on any additional system. 
+        /// </summary>
+        [HttpGet] // Will do security checks internally
+        public string Details(string view, int? appId = null, string key = null, int? position = null, string type = null, bool? toggle = null, string nameId = null)
+            => Real.Details(view, appId, key, position, type, toggle, nameId);
+
+
+        #region Controll Logging of Requests on Insights for special debugging, usually disabled to not clutter the logs
 
         /// <summary>
         /// Enable/disable logging of access to insights
@@ -16,6 +28,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// </summary>
         internal const bool InsightsLoggingEnabled = false;
 
+        /// <summary>
+        /// Special detection for the AppApiController to skip these requests?
+        /// </summary>
         internal const string InsightsUrlFragment = "/sys/insights/";
 
         /// <summary>
@@ -25,18 +40,5 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         protected override string HistoryLogGroup => "web-api.insights";
 
         #endregion
-
-        /// <summary>
-        /// Single-Point-Of-Entry
-        /// The insights handle all their work in the backend, incl. view-switching.
-        /// This is important for many reasons, inc. the fact that this will always be the first endpoint to implement
-        /// on any additional system. 
-        /// </summary>
-        [HttpGet]
-        public string Details(string view, int? appId = null, string key = null, int? position = null, string type = null, bool? toggle = null, string nameId = null)
-            => GetService<Insights>().Init(Log)
-                .Details(view, appId, key, position, type, toggle, nameId);
-
-        
     }
 }

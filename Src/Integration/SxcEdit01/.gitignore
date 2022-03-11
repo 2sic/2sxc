@@ -2,3 +2,4 @@
 # don't include the js / data files which should always come from elsewhere
 
 /wwwroot/system
+/sys-2sxc/

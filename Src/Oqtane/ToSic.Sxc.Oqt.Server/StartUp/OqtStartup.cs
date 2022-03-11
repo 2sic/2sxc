@@ -9,20 +9,21 @@ using Oqtane.Infrastructure;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.WebApi;
-using WebApiConstants = ToSic.Sxc.Oqt.Shared.WebApiConstants;
+using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     public class OqtStartup : IServerStartup
     {
         public IConfiguration Configuration { get; }
-        public IWebHostEnvironment HostEnvironment { get; set; }
+        //public IWebHostEnvironment HostEnvironment { get; set; }
 
         public OqtStartup()
         {
@@ -34,14 +35,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // try to enable dynamic razor compiling - still WIP
+            // 1. Enable dynamic razor compiling
             services.AddRazorPages()            
                 .AddRazorRuntimeCompilation(options =>
                 {
-                    // Add razor pages dynamic compilation WIP
-                    //var ContentRootPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, OqtConstants.ContentSubfolder));
-                    //options.FileProviders.Add(new PhysicalFileProvider(ContentRootPath));
-
                     var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
                     var dllPath = Path.GetDirectoryName(dllLocation);
                     foreach (var dllFile in Directory.GetFiles(dllPath, "*.dll"))
@@ -49,30 +46,18 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 });
 
             // TODO: STV - MAKE SURE OUR CONTROLLERS RULES ONLY APPLY TO OURS, NOT TO override rules on normal Oqtane controllers
-            // enable webapi - include all controllers in the Sxc.Mvc assembly
-            //services
-            //    .AddControllers(options =>
-            //    {
-            //        // options.AllowEmptyInputInBodyModelBinding = true; // Added with attribute
-            //        // options.Filters.Add(new HttpResponseExceptionFilter()); // Added with attribute
-            //    });
-            // This is needed to preserve compatibility with previous api usage
-            //.AddNewtonsoftJson(options =>
-            //{
-            //    // this ensures that c# objects with Pascal-case keep that
-            //    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-            //    Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings);
-            //});
 
+            // 2. Register EAV & 2sxc
             services
-                .AddSxcOqtane()
-                .AddSxcRazor()
-                .AddAdamWebApi<int, int>()
-                .AddSxcWebApi<IActionResult>()
-                .AddSxcCore()
-                .AddEav()
-                .AddAppApi() // 2sxc Oqtane dyncode app api.
-                .AddRazorBlade();
+                .AddSxcOqtane()                 // Always first add your override services
+                .AddSxcRazor()                  // this is the .net core Razor compiler
+                .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
+                .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
+                .AddSxcCore()                   // Core 2sxc services
+                .AddEav()                       // Core EAV services
+                .AddEavWebApiTypedAfterEav<IActionResult>()
+                .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
+                .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 
             // 2sxc Oqtane blob services for Imageflow.
             services.AddImageflowOqtaneBlobService();
@@ -86,14 +71,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            HostEnvironment = env;
+            //HostEnvironment = env;
 
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
 
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
-            globalConfig.GlobalFolder = Path.Combine(HostEnvironment.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+            globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
@@ -105,8 +90,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var sysLoader = serviceProvider.Build<SystemLoader>();
             sysLoader.StartUp();
 
+            // TODO: @STV - should we really add an error handler? I assume Oqtane has this already
             app.UseExceptionHandler("/error");
-            //app.UseDeveloperExceptionPage();
 
             // routing middleware
             app.UseRouting();
@@ -118,12 +103,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             app.UseEndpoints(endpoints =>
             {
                 // Release routes
-                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot2 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRoot3 + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
 
                 // Beta routes
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);

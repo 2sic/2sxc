@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Oqtane.Shared;
+using System.Collections.Generic;
 using System.Linq;
-using Oqtane.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
                 Url = a.Url,
                 IsExternal = a.IsExternal,
                 Content = a.Content,
-                UniqueId = a.Id
+                UniqueId = a.Id,
+                HtmlAttributes = a.HtmlAttributes // will copy HtmlAttributes and also try to set Integrity and CrossOrigin properties
             }).ToList();
             return resources;
         }

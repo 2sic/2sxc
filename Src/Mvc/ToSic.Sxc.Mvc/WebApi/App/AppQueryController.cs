@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.WebApi.App;
-using ToSic.Sxc.WebApi.PublicApi;
-using NotImplementedException = System.NotImplementedException;
+using ToSic.Eav.WebApi.Admin.App;
 
 // TODO: #MissingFeature
 // 1. Query from context / header

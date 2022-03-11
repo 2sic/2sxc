@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn940
                    (IHttpController)ActivatorUtilities.CreateInstance(Dnn9DependencyProvider, controllerType);
         }
 
-        public IServiceProvider Dnn9DependencyProvider
+        private IServiceProvider Dnn9DependencyProvider
         {
             get
             {

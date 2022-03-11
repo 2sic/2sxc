@@ -3,14 +3,10 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Features;
 using ToSic.Eav.WebApi.ImportExport;
-using ToSic.Eav.WebApi.Languages;
-using ToSic.Eav.WebApi.Licenses;
-using ToSic.Eav.WebApi.Zone;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.ImportExport;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Data;
@@ -19,6 +15,8 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
+using ToSic.Sxc.WebApi.Admin.AppFiles;
+using ToSic.Sxc.WebApi.Admin.Query;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.Cms;
@@ -29,12 +27,13 @@ using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Sys;
 using ToSic.Sxc.WebApi.Usage;
+using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.WebApi
 {
     public static class StartupWebApi
     {
-        public static IServiceCollection AddSxcWebApi<THttpResponseType>(this IServiceCollection services)
+        public static IServiceCollection AddSxcWebApi(this IServiceCollection services)
         {
             // The top version should be deprecated soon, so we just use DataToDictionary or an Interface instead
             services.TryAddTransient<ConvertToEavLight, ConvertToEavLightWithCmsInfo>(); // this is needed for all the EAV uses of conversion
@@ -48,6 +47,8 @@ namespace ToSic.Sxc.WebApi
             // These are usually replaced by the target platform
             services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();
             
+            // Real Controllers
+
             // Backends
             services.TryAddTransient<AppsBackend>();
             services.TryAddTransient<EntityPickerBackend>();
@@ -56,24 +57,23 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<AppViewPickerBackend>();
             services.TryAddTransient<ContentBlockBackend>();
-            services.TryAddTransient<FeaturesBackend>();
-            services.TryAddTransient<LicenseBackend>();
+            //services.TryAddTransient<FeaturesBackend>();
+            //services.TryAddTransient<LicenseBackend>();
             services.TryAddTransient<UsageBackend>();
-            services.TryAddTransient<LanguagesBackend>();
-            services.TryAddTransient<QueryBackend>();
-
-            // APIs
-            services.TryAddTransient<ApiExplorerBackend<THttpResponseType>>();
+            //services.TryAddTransient<LanguagesBackend>();
 
             // Internal API helpers
-            services.TryAddTransient<Insights>();
+            //services.TryAddTransient<Insights>();
             services.TryAddTransient<AppContent>();
             services.TryAddTransient<SxcPagePublishing>();
             services.TryAddTransient<ExportApp>();
             services.TryAddTransient<ImportApp>();
             services.TryAddTransient<ImportContent>();
+            services.TryAddTransient(typeof(ExportContent<>));
             services.TryAddTransient<ResetApp>();
             services.TryAddTransient<AppStackBackend>();
+            services.TryAddTransient<AppFolder>();
+            services.TryAddTransient(typeof(ViewsExportImport<>));
 
             // Small WebApi Helpers
             services.TryAddTransient<IdentifierHelper>();
@@ -90,10 +90,25 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<AdamCode>();
 
             // new v13
-            services.TryAddTransient<ZoneBackend>();
+            //services.TryAddTransient<ZoneBackend>();
 
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
+            services.TryAddTransient(typeof(AdamControllerReal<>));
+            services.TryAddTransient<AppFilesControllerReal>();
+            services.TryAddTransient<QueryControllerReal>();
             services.TryAddTransient(typeof(AppControllerReal<>));
+            services.TryAddTransient(typeof(AppPartsControllerReal<>));
+            services.TryAddTransient<DialogControllerReal>();
+            services.TryAddTransient(typeof(TypeControllerReal<>));
+            services.TryAddTransient(typeof(ViewControllerReal<>));
+            services.TryAddTransient<AppDataControllerReal>();
+            services.TryAddTransient<AppQueryControllerReal>();
+            services.TryAddTransient<ContentGroupControllerReal>();
+            services.TryAddTransient<EditControllerReal>();
+            services.TryAddTransient<HistoryControllerReal>();
+            services.TryAddTransient<ListControllerReal>();
+            services.TryAddTransient(typeof(InstallControllerReal<>));
+            services.TryAddTransient<BlockControllerReal>();
 
             return services;
         }

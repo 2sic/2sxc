@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
@@ -29,6 +30,13 @@ namespace ToSic.Sxc.Blocks.Output
         /// Extract only script tags which are marked for extraction
         /// </summary>
         public bool ExtractOnlyEnableOptimization = true;
+
+        /// <summary>
+        /// List of special attributes like "src", "id", "data-enableoptimizations"
+        /// that we need to skip from adding in general HtmlAttributes dictionary
+        /// because this special attributes are handled in custom way.
+        /// </summary>
+        private static List<string> SkipHtmlAttributes = new List<string>() { "src", "id", "data-enableoptimizations" };
 
         #endregion
 
@@ -114,7 +122,7 @@ namespace ToSic.Sxc.Blocks.Output
                     scriptMatchesToRemove.Add(match);
                     continue;
                 }
-                
+
                 // Also get the ID (new in v12)
                 var idMatches = IdDetection.Match(match.Value);
                 var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
@@ -139,8 +147,11 @@ namespace ToSic.Sxc.Blocks.Output
                     if (priority <= 0) continue; // don't register/remove if not within specs
                 }
 
+                // get all Attributes
+                var attributes = GetHtmlAttributes(match.Value);
+
                 // Register, then add to remove-queue
-                Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url });
+                Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url, HtmlAttributes = attributes });
                 scriptMatchesToRemove.Add(match);
             }
 
@@ -148,6 +159,35 @@ namespace ToSic.Sxc.Blocks.Output
             scriptMatchesToRemove.Reverse();
             scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
             return wrapLog(null, renderedTemplate);
+        }
+
+        /// <summary>
+        /// Extract dictionary of html attributes
+        /// </summary>
+        /// <param name="htmlTag"></param>
+        /// <returns></returns>
+        public static IDictionary<string, string> GetHtmlAttributes(string htmlTag)
+        {
+            if (string.IsNullOrWhiteSpace(htmlTag)) return null;
+
+            var attributesMatch = AttributesDetection.Matches(htmlTag);
+
+            if (attributesMatch.Count == 0) return null;
+
+            var attributes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (Match attributeMatch in attributesMatch)
+            {
+                if (!attributeMatch.Success) continue;
+                var key = attributeMatch.Groups["Key"]?.Value.ToLowerInvariant();
+
+                // skip special attributes like "src", "id", "data-enableoptimizations"
+                if (string.IsNullOrEmpty(key) || SkipHtmlAttributes.Contains(key, StringComparer.InvariantCultureIgnoreCase)) continue;
+
+                var value = attributeMatch.Groups["Value"]?.Value;
+
+                attributes[key] = value; // add or update
+            }
+            return attributes;
         }
 
 
@@ -219,13 +259,15 @@ namespace ToSic.Sxc.Blocks.Output
         private const string StyleSrcFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/?>)";
         private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
         private const string IdFormula = "('|\"|\\s)id=('|\")(?<Id>.*?)('|\")";
-
+        private const string AttributesFormula = "\\s(?<Key>[\\w-]+(?=[^<]*>))=([\"'])(?<Value>.*?[^\\1][\\s\\S]+?)\\1|\\s(?<Key>[\\w-]+(?=.*?))";
+        
         internal static readonly Regex ScriptSrcDetection = new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
         internal static readonly Regex ScriptContentDetection = new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);
         internal static readonly Regex StyleDetection = new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
         internal static readonly Regex StyleRelDetect = new Regex(StyleRelFormula, RegexOptions.IgnoreCase);
         internal static readonly Regex OptimizeDetection = new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase);
         internal static readonly Regex IdDetection = new Regex(IdFormula, RegexOptions.IgnoreCase);
+        internal static readonly Regex AttributesDetection = new Regex(AttributesFormula, RegexOptions.IgnoreCase);
 
         #endregion
 

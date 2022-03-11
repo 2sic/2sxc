@@ -3,10 +3,10 @@ using System.IO;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Dnn.WebApiRouting;
@@ -21,11 +21,26 @@ namespace ToSic.Sxc.WebApi
     /// For others, please use the SxiApiControllerBase, which doesn't have all that, and is usually then
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
-    [PrivateApi]
+    [PrivateApi("This is an internal base class used for the App ApiControllers. Make sure the implementations don't break")]
+    // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
     [DnnLogExceptions]
-    public abstract class DynamicApiController : SxcApiControllerBase, ICreateInstance, IHasDynamicCodeRoot
+    public abstract class DynamicApiController : SxcApiControllerBase<DummyControllerReal>, ICreateInstance, IHasDynamicCodeRoot
     {
-        protected override string HistoryLogName => "Api.DynApi";
+        /// <summary>
+        /// Empty constructor is important for inheriting classes
+        /// </summary>
+        protected DynamicApiController() : base("DynApi") { }
+        protected DynamicApiController(string logSuffix): base(logSuffix) { }
+
+        /// <summary>
+        /// The name of the logger in insights.
+        /// The inheriting class should provide the real name to be used.
+        /// </summary>
+        [Obsolete("Deprecated in v13.03 - doesn't serve a purpose any more. Will just remain to avoid breaking public uses of this property.")]
+        // Note: Probably almost never used, except by 2sic. Must determine if we just remove it
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
+        protected virtual string HistoryLogName { get; }
+
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {

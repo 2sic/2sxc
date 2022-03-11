@@ -3,78 +3,34 @@ namespace ToSic.Sxc.Blocks
 {
     public partial class BlockBuilder
     {
+        // 2022-03-03 2dm - moving special properties to page-activate features #pageActivate
+        // WIP, if all is good, remove these comments end of March
         ///// <summary>
-        ///// Activate the normal 2sxc read-js API - the $2sxc
+        ///// 
         ///// </summary>
-        //internal bool UiAddJsApi
+        //internal bool UiAddEditContext
         //{
-        //    get => _uiAddJsApi ?? Block.Context.UserMayEdit;
+        //    get => _uiAddEditContext ?? Block.Context.UserMayEdit;
         //    set
         //    {
-        //        Log.Add($"UiAddJsApi:{value}");
-        //        _uiAddJsApi = value;
+        //        Log.Add($"UiAddEditContext:{value}");
+        //        _uiAddEditContext = value;
         //    }
         //}
 
-        //private bool? _uiAddJsApi;
+        //private bool? _uiAddEditContext;
 
-
-        ///// <summary>
-        ///// Activate the 2sxc commands API, the $2sxc(...).manage
-        ///// </summary>
-        //internal bool UiAddEditApi
+        //internal bool UiAutoToolbar
         //{
-        //    get => _uiAddEditApi ?? Block.Context.UserMayEdit;
+        //    get => _uiAutoToolbar ?? Block.Context.UserMayEdit;
         //    set
         //    {
-        //        Log.Add($"UiAddEditApi:{value}");
-        //        _uiAddEditApi = value;
+        //        Log.Add($"UiAutoToolbar:{value}");
+        //        _uiAutoToolbar = value;
         //    }
         //}
 
-        //private bool? _uiAddEditApi;
-
-        ///// <summary>
-        ///// Activate the toolbar
-        ///// </summary>
-        //internal bool UiAddEditUi
-        //{
-        //    get => _uiAddEditUi ?? Block.Context.UserMayEdit;
-        //    set
-        //    {
-        //        Log.Add($"UiAddEditApi:{value}");
-        //        _uiAddEditUi = value;
-        //    }
-        //}
-
-        //private bool? _uiAddEditUi;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        internal bool UiAddEditContext
-        {
-            get => _uiAddEditContext ?? Block.Context.UserMayEdit;
-            set
-            {
-                Log.Add($"UiAddEditContext:{value}");
-                _uiAddEditContext = value;
-            }
-        }
-
-        private bool? _uiAddEditContext;
-
-        internal bool UiAutoToolbar
-        {
-            get => _uiAutoToolbar ?? Block.Context.UserMayEdit;
-            set
-            {
-                Log.Add($"UiAutoToolbar:{value}");
-                _uiAutoToolbar = value;
-            }
-        }
-
-        private bool? _uiAutoToolbar;
+        //private bool? _uiAutoToolbar;
 
     }
 }

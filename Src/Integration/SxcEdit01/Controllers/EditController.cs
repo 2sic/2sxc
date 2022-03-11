@@ -1,70 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using IntegrationSamples.SxcEdit01.Integration;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
-using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.WebApi.Cms;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
     //[AutoValidateAntiforgeryToken]
-    [Route(WebApiConstants.DefaultRouteRoot + "/cms" + WebApiConstants.DefaultRouteControllerAction)]
+    [Route(IntegrationConstants.DefaultRouteRoot + AreaRoutes.Cms)]
     [ApiController]
-    public class EditController: IntStatefulControllerBase, IEditController
+    public class EditController: IntControllerBase<EditControllerReal>, IEditController
     {
-        #region DI
-        protected override string HistoryLogName => IntConstants.LogPrefix + ".UiCntr";
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public EditController(Dependencies dependencies,
-            Lazy<EntityPickerBackend> entityBackend,
-            Lazy<EditLoadBackend> loadBackend,
-            Lazy<EditSaveBackend> saveBackendLazy,
-            Lazy<HyperlinkBackend<int, int>> linkBackendLazy) : base(dependencies)
-        {
-            _entityBackend = entityBackend;
-            _loadBackend = loadBackend;
-            _saveBackendLazy = saveBackendLazy;
-            _linkBackendLazy = linkBackendLazy;
-        }
-
-        private readonly Lazy<EntityPickerBackend> _entityBackend;
-        private readonly Lazy<EditLoadBackend> _loadBackend;
-        private readonly Lazy<EditSaveBackend> _saveBackendLazy;
-        private readonly Lazy<HyperlinkBackend<int, int>> _linkBackendLazy;
-        private EntityPickerBackend EntityBackend => _entityBackend.Value;
-
-        #endregion
+        public EditController() : base(EditControllerReal.LogSuffix) { }
 
 
         [HttpPost]
-        [AllowAnonymous]   // will check security internally, so assume no requirements
+        [AllowAnonymous] // Anonymous is ok, security check happens internally
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-        {
-            var result = _loadBackend.Value
-                .Init(Log)
-                .Load(appId, items);
-            return result;
-        }
+            => Real.Load(items, appId);
 
         [HttpPost]
         // todo #mvcSec [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
+            => Real.Save(package, appId, partOfPage);
 
         [HttpGet]
         [HttpPost]
-        [AllowAnonymous] // security check happens internally
+        [AllowAnonymous] // Anonymous is ok, security check happens internally
         public IEnumerable<EntityForPickerDto> EntityPicker(int appId, [FromBody] string[] items, string contentTypeName = null)
-            => EntityBackend.Init(Log).GetAvailableEntities(appId, items, contentTypeName);
+            => Real.EntityPicker(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => _linkBackendLazy.Value.Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
+            => Real.LinkInfo(link, appId, contentType, guid, field);
 
+        /// <inheritdoc />
+        [HttpPost]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public bool Publish(int id)
+            => Real.Publish(id);
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
@@ -21,10 +22,10 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Api12 : OqtStatefulControllerBase, IDynamicWebApi, IDynamicCode12
+    public abstract partial class Api12 : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IDynamicCode12
     {
-        [PrivateApi]
-        protected override string HistoryLogName => EavWebApiConstants.HistoryNameWebApi;
+        protected Api12() : base(EavWebApiConstants.HistoryNameWebApi) { }
+        protected Api12(string logSuffix): base(logSuffix) { }
 
         /// <summary>
         /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -35,9 +36,11 @@ namespace Custom.Hybrid
         {
             base.OnActionExecuting(context);
 
+            // Use the ServiceProvider of the current request to build DynamicCodeRoot
             // Note that BlockOptional was already retrieved in the base class
-            _DynCodeRoot = ServiceProvider.Build<DynamicCodeRoot>().Init(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
-            _AdamCode = ServiceProvider.Build<AdamCode>().Init(_DynCodeRoot, Log);
+            _DynCodeRoot = context.HttpContext.RequestServices.Build<DynamicCodeRoot>().Init(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
+
+            _AdamCode = GetService<AdamCode>().Init(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
@@ -89,10 +92,10 @@ namespace Custom.Hybrid
         {
             var wrapLog = Log.Call<IApp>($"{appId}");
             var showDrafts = false;
-            var app = ServiceProvider.Build<ToSic.Sxc.Apps.App>();
+            var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                ServiceProvider.Build<AppConfigDelegate>().Init(Log).Build(showDrafts),
+                GetService<AppConfigDelegate>().Init(Log).Build(showDrafts),
                 Log);
             return wrapLog(null, appStuff);
         }

@@ -6,7 +6,6 @@ using System.Linq;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
@@ -95,7 +94,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         private readonly ISite _site;
         private readonly IZoneMapper _zoneMapper;
 
-		private ImmutableArray<IEntity> GetList()
+        private ImmutableArray<IEntity> GetList()
 		{
             Configuration.Parse();
 			var realTenant = _site.Id != Eav.Constants.NullId ? _site : _zoneMapper.Init(Log).SiteOfApp(AppId);
@@ -115,6 +114,9 @@ namespace ToSic.Sxc.Dnn.DataSources
 				foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
 					users.Add(user);
 			}
+
+			// Create the type
+            var userType = DataBuilder.Type(ContentType);
 
 			// convert Profiles to Entities
 			var result = new List<IEntity>();
@@ -151,7 +153,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 				}
 
 				// create Entity and add to result
-				var entity = new Entity(Eav.Constants.TransientAppId, user.UserID, ContentTypeBuilder.Fake(ContentType) , values, TitleField);
+				var entity = new Entity(Eav.Constants.TransientAppId, user.UserID, userType , values, TitleField);
 				result.Add(entity);
 			}
 

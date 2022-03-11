@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Code
                 History = history;
                 User = user;
             }
-            public IServiceProvider ServiceProvider { get; }
+            internal IServiceProvider ServiceProvider { get; }
             public Lazy<LogHistory> History { get; }
             public Lazy<IUser> User { get; }
         }
@@ -73,6 +73,9 @@ namespace ToSic.Sxc.Code
         public IDynamicCode12 OfApp(int appId) => OfAppInternal(appId: appId);
         /// <inheritdoc />
         public IDynamicCode12 OfApp(int zoneId, int appId) => OfAppInternal(zoneId: zoneId, appId: appId);
+
+        /// <inheritdoc />
+        public IDynamicCode12 OfApp(IAppIdentity appIdentity) => OfAppInternal(zoneId: appIdentity.ZoneId, appId: appIdentity.AppId);
 
         private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
         {

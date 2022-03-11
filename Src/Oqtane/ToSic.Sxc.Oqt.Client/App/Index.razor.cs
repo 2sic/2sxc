@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.App
         public NavigationManager NavigationManager { get; set; }
 
         [Inject]
-        public IPrerenderService PrerenderService { get; set; }
+        public IOqtPrerenderService OqtPrerenderService { get; set; }
 
         private string RenderedUri { get; set; }
         private string RenderedPage { get; set; }
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Oqt.App
                     : NavigationManager.Uri;
                 await Initialize2sxcContentBlock();
                 NewDataArrived = true;
-                ViewResults.SystemHtml = PrerenderService.Init(PageState, logger).GetSystemHtml();
+                ViewResults.SystemHtml = OqtPrerenderService.Init(PageState, logger).GetSystemHtml();
             }
 
             await base.OnParametersSetAsync();

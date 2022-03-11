@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #endregion
 
-        public AppExportInfoDto GetAppInfo(int appId, int zoneId)
+        public AppExportInfoDto GetAppInfo(int zoneId, int appId)
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
             var contextZoneId = _site.ZoneId;
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             };
         }
 
-        public bool SaveDataForVersionControl(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+        public bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
         {
             Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
@@ -92,9 +92,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
 #if NETSTANDARD
-        public IActionResult Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+        public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
 #else
-        public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
+        public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
 #endif
 
         {

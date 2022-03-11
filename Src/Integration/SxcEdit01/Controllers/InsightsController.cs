@@ -1,52 +1,29 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
-    [Route(WebApiConstants.DefaultRouteRoot + "/sys/[controller]/[action]")]
+    [Route(IntegrationConstants.DefaultRouteRoot + Areas.Sys + "/[controller]")]
     [ApiController]
-    public class InsightsController : IntStatelessControllerBase
+    public class InsightsController : IntControllerBase<InsightsControllerReal>
     {
-        private readonly Lazy<Insights> _lazyInsights;
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public InsightsController(Lazy<Insights> lazyInsights) : base()
-        {
-            _lazyInsights = lazyInsights;
-        }
-
-
-        #region Logging aspects
-
-        protected override string HistoryLogName => "Api.Debug";
+        public InsightsController(): base(InsightsControllerReal.LogSuffix) {}
 
         /// <summary>
-        /// Make sure that these requests don't land in the normal api-log.
-        /// Otherwise each log-access would re-number what item we're looking at
+        /// The main call on this controller, will return all kinds of views with information
         /// </summary>
-        protected override string HistoryLogGroup { get; } = "web-api.insights";
-
-        #endregion
-
-        /// <summary>
-        /// Enable/disable logging of access to insights
-        /// Only enable this if you have trouble developing insights, otherwise it clutters our logs
-        /// </summary>
-        internal const bool InsightsLoggingEnabled = false;
-
-        //internal const string InsightsUrlFragment = "/sys/insights/";
-
-
-        #region Construction and Security
-
-        protected Insights Insights =>
-            _insights ??= _lazyInsights.Value.Init(Log);
-        private Insights _insights;
-
-
-        #endregion
-
-        private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
-
-        
+        [HttpGet("{view}")]
+        public ContentResult Details(
+            [FromRoute] string view,
+            [FromQuery] int? appId = null,
+            [FromQuery] string key = null,
+            [FromQuery] int? position = null,
+            [FromQuery] string type = null,
+            [FromQuery] bool? toggle = null,
+            [FromQuery] string nameId = null
+        ) => Content(Real.Details(view, appId, key, position, type, toggle, nameId), "text/html");
     }
 }

@@ -2,90 +2,64 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
-using ToSic.Eav.Plumbing;
+using System.Reflection;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Sxc.Oqt.Server.Apps;
+using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Routing;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
-using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
-    
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
 
-    public class ApiExplorerController : OqtStatefulControllerBase
+    public class ApiExplorerController : OqtStatefulControllerBase<ApiExplorerControllerReal<IActionResult>>, IApiExplorerController<IActionResult>
     {
-        protected override string HistoryLogName => "Api.Explorer";
+        public ApiExplorerController() : base(ApiExplorerControllerReal<IActionResult>.LogSuffix) { }
 
         [HttpGet]
         public IActionResult Inspect(string path)
         {
-            var wrapLog = Log.Call<IActionResult>();
-
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)ServiceProvider.Build<ResponseMaker<IActionResult>>() ;
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
             responseMaker.Init(this);
-            
-            var backend = ServiceProvider.Build<ApiExplorerBackend<IActionResult>>();
-            if (backend.PreCheckAndCleanPath(ref path, out var error)) return error;
 
-            try
-            {
-                var pathFromRoot = GetPathFromRoot(path);
-                Log.Add($"Controller path from root: {pathFromRoot}");
-
-                var apiFile = GetFullPath(pathFromRoot);
-                if (!System.IO.File.Exists(apiFile))
-                {
-                    var msg = $"Error: can't find controller file: {pathFromRoot}";
-                    return wrapLog(msg, responseMaker.InternalServerError(msg));
-                }
-
-                var dllName = GetDllName(pathFromRoot, apiFile);
-
-                var assembly = new Compiler().Compile(apiFile, dllName);
-
-                return wrapLog(null, backend.AnalyzeClassAndCreateDto(path, assembly));
-            }
-            catch (Exception exc)
-            {
-                return wrapLog($"Error: {exc.Message}.", responseMaker.InternalServerError(exc));
-            }
+            return Real.Inspect(path, GetCompiledAssembly);
         }
 
-        private string GetPathFromRoot(string path)
+        private Assembly GetCompiledAssembly(string path)
         {
-            var siteStateInitializer = ServiceProvider.Build<SiteStateInitializer>();
+            // get path from root
+            var siteStateInitializer = GetService<SiteStateInitializer>();
             var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
+            var appFolder = GetService<AppFolder>().GetAppFolder();
+            var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
+            Log.Add($"Controller path from root: {pathFromRoot}");
 
-            var oqtAppFolder = ServiceProvider.Build<OqtAppFolder>();
-            var appFolder = oqtAppFolder.GetAppFolder();
+            // get full path
+            var oqtServerPaths = GetService<IServerPaths>();
+            var apiFile = oqtServerPaths.FullContentPath(pathFromRoot);
 
-            return OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
-        }
+            if (!System.IO.File.Exists(apiFile))
+                throw new Exception($"Error: can't find controller file: {pathFromRoot}");
 
-        private string GetFullPath(string pathFromRoot)
-        {
-            var oqtServerPaths = ServiceProvider.Build<IServerPaths>();
-            return oqtServerPaths.FullContentPath(pathFromRoot);
-        }
+            // get dll name
+            var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));
+            var dllName = AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
 
-        private static string GetDllName(string controllerVirtualPath, string apiFile)
-        {
-            var controllerFolder = controllerVirtualPath.Substring(0, controllerVirtualPath.LastIndexOf(@"\"));
-            return AppApiDynamicRouteValueTransformer.GetDllName(controllerFolder, apiFile);
+            return new Compiler().Compile(apiFile, dllName);
         }
     }
 

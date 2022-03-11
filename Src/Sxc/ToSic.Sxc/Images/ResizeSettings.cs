@@ -12,11 +12,13 @@ namespace ToSic.Sxc.Images
 
         public int Quality { get; set; }
 
-        public string Mode { get; set; }
+        public string ResizeMode { get; set; }
 
-        public string Scale { get; set; }
+        public string ScaleMode { get; set; }
 
         public string Format { get; set; }
+
+        public double Factor { get; set; } = 1;
 
         public string SrcSet { get; set; }
 
@@ -29,9 +31,10 @@ namespace ToSic.Sxc.Images
             Width=original.Width;
             Height=original.Height;
             Quality=original.Quality;
-            Mode=original.Mode;
-            Scale=original.Scale;
+            ResizeMode=original.ResizeMode;
+            ScaleMode=original.ScaleMode;
             Format=original.Format;
+            Factor=original.Factor;
             Parameters=original.Parameters;
             if (keepSourceSet)
                 SrcSet = original.SrcSet;

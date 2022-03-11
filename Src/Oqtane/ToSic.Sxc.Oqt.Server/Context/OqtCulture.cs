@@ -8,6 +8,9 @@ using ToSic.Eav.Apps.Languages;
 
 namespace ToSic.Sxc.Oqt.Server.Context
 {
+    /// <summary>
+    /// Manage oqtane site culture info
+    /// </summary>
     public class OqtCulture
     {
         public OqtCulture(Lazy<ILocalizationManager> localizationManager, Lazy<ILanguageRepository> languageRepository)

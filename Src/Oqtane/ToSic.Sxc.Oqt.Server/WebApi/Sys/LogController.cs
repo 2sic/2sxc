@@ -1,42 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Integration;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/sys/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/sys/[controller]/[action]")]
-
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/sys/[controller]/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
+    [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
-    public class LogController: OqtStatefulControllerBase
+    public class LogController: OqtStatefulControllerBase<LogControllerReal>, ILogController
     {
-        protected override string HistoryLogName => "Api.Log";
+        public LogController() : base(LogControllerReal.LogSuffix) { }
 
-        #region Enable extended logging
 
-        /// <summary>
-        /// Used to be GET System/ExtendedLogging
-        /// </summary>
-        /// <param name="duration"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
-        public string EnableDebug([FromQuery] int duration = 1)
-        {
-            Log.Add("Extended logging will set for duration:" + duration);
-            var msg = OqtLogging.ActivateForDuration(duration);
-            Log.Add(msg);
-            return msg;
-        }
-
-        #endregion
+        public string EnableDebug(int duration = 1) => Real.EnableDebug(OqtLogging.ActivateForDuration, duration);
     }
 }

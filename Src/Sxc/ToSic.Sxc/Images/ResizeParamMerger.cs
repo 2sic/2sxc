@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
     /// </summary>
-    internal class ResizeParamMerger: HasLog<ResizeParamMerger>
+    internal class ResizeParamMerger: HasLog // <ResizeParamMerger>
     {
         private const string ResizeModeField = "ResizeMode";
         private const string ScaleModeField = "ScaleMode";
@@ -24,6 +24,9 @@ namespace ToSic.Sxc.Images
 
         public bool Debug = false;
 
+
+
+
         internal IResizeSettings BuildResizeSettings(
             object settings = null,
             object factor = null,
@@ -36,7 +39,7 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object srcSet = null
+            object srcset = null
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
@@ -63,13 +66,21 @@ namespace ToSic.Sxc.Images
             resizeParams.Format = FindKnownFormatOrNull(RealStringOrNull(format));
 
             // Aspects which aren't affected by scale
-            resizeParams.Quality = IntOrZeroAsNull(quality) ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? 0;
-            resizeParams.Mode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
-            resizeParams.Scale = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
+            var qParamDouble = DoubleOrNull(quality);
+            if (qParamDouble.HasValue)
+                qParamDouble = DNearZero(qParamDouble.Value)  // ignore if basically 0
+                    ? null
+                    : qParamDouble.Value > 1
+                        ? qParamDouble
+                        : qParamDouble * 100;
+            var qParamInt = (int?)qParamDouble;
+            resizeParams.Quality = qParamInt ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? 0;
+            resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
+            resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            resizeParams.SrcSet = (srcSet is string srcSetString)
+            resizeParams.SrcSet = srcset is string srcSetString
                 ? srcSetString
-                : srcSet is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
+                : srcset is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
             
             return resizeParams;
         }
@@ -78,14 +89,14 @@ namespace ToSic.Sxc.Images
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets
-            var parms = new Tuple<int?, int?>(IntOrNull(width), IntOrNull(height));
+            (int? W, int? H) parms = (IntOrNull(width), IntOrNull(height));
             IfDebugLogPair("Params", parms);
 
             // Pre-Clean the values - all as strings
-            var set = new Tuple<dynamic, dynamic>(settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
+            (dynamic W, dynamic H) set = (settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
             if (settingsOrNull != null) IfDebugLogPair("Settings", set);
 
-            var safe = new Tuple<int, int>(parms.Item1 ?? IntOrZeroAsNull(set.Item1) ?? 0, parms.Item2 ?? IntOrZeroAsNull(set.Item2) ?? 0);
+            (int, int) safe = (parms.W ?? IntOrZeroAsNull(set.W) ?? 0, parms.H ?? IntOrZeroAsNull(set.H) ?? 0);
             IfDebugLogPair("Safe", safe);
 
 
@@ -96,9 +107,9 @@ namespace ToSic.Sxc.Images
 
             // if either param h/w was null, then do a rescaling on the param which comes from the settings
             // But ignore the other one!
-            var rescale = (!DNearZero(factorFinal) || !DNearZero(arFinal)) && (parms.Item1 == null || parms.Item2 == null);
-            Tuple<int, int> resizedNew = rescale
-                ? Rescale(safe, factorFinal, arFinal, parms.Item1 == null, parms.Item2 == null)
+            var rescale = (!DNearZero(factorFinal) || !DNearZero(arFinal));
+            var resizedNew = rescale
+                ? Rescale(safe, factorFinal, arFinal, parms.H == null)
                 : safe;
             IfDebugLogPair("Rescale", resizedNew);
 
@@ -110,70 +121,59 @@ namespace ToSic.Sxc.Images
 
 
 
-        internal Tuple<int, int> Rescale(Tuple<int, int> dims, double factor, double aspectRatio, bool scaleW, bool scaleH)
+        internal (int W, int H) Rescale((int W, int H) dims, double factor, double aspectRatio, bool heightNotOverriden)
         {
             var maybeLog = Debug ? Log : null;
-            var wrapLog = maybeLog.SafeCall<Tuple<int, int>>();
+            var wrapLog = maybeLog.SafeCall<(int, int)>();
 
             var useAspectRatio = !DNearZero(aspectRatio);
 
             // 1. Check if we have nothing to rescale
             string msgWhyNoRescale = null;
-            if (dims.Item1 == 0 && dims.Item2 == 0) msgWhyNoRescale = "w/h == 0";
+            if (dims.W == 0 && dims.H == 0) 
+                msgWhyNoRescale = "w/h == 0";
             if (DNearZero(factor) || DNearZero(factor - 1)) // Factor is 0 or 1
             {
                 factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
                 if (!useAspectRatio) msgWhyNoRescale = "Factor is 0 or 1 and no AspectRatio";
             }
-            if (!scaleW && !scaleH) msgWhyNoRescale = "h/w shouldn't be scaled";
             if (msgWhyNoRescale != null)
                 return wrapLog(msgWhyNoRescale + ", no changes", dims);
 
             // 2. Figure out height/width, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
-            // Width should only be calculated, if it wasn't explicitly provided (so only if coming from the settings)
-            var newW = !scaleW ? dims.Item1 : dims.Item1 * factor;
+            // Old: Width should only be calculated, if it wasn't explicitly provided (so only if coming from the settings)
+            var newW = dims.W * factor;
 
             // Height should only get Aspect Ratio if the Height wasn't specifically provided
-            // and if useAR is true and Width is useful
-            var applyAspectRatio = scaleH && useAspectRatio;
-            var newH = applyAspectRatio
+            var newH = heightNotOverriden && useAspectRatio
                 ? newW / aspectRatio
-                : dims.Item2;
-
-            // Should we scale height? Only if AspectRatio wasn't applied as then the scale factor was already in there
-            var doScaleH = !useAspectRatio && scaleH;
-
-            maybeLog.SafeAdd($"ScaleW: {scaleW}, ScaleH: {scaleH}, Really-ScaleH:{doScaleH}, Use Aspect Ratio:{useAspectRatio}, Use AR on H: {applyAspectRatio}");
-
-            if (doScaleH) newH = dims.Item2 * factor;
-
-            // new - don't check here
-            var intW = (int)newW;
-            var intH = (int)newH;
-            return wrapLog($"W:{intW}, H:{intH}", new Tuple<int, int>(intW, intH));
+                : dims.H * factor;
+            
+            var final = ((int)newW, (int)newH);
+            return wrapLog($"W:{final.Item1}, H:{final.Item2}", final);
         }
 
 
-        internal Tuple<int, int> KeepInRangeProportional(Tuple<int, int> original)
+        internal (int W, int H) KeepInRangeProportional((int W, int H) original)
         {
             var maybeLog = Debug ? Log : null;
-            var wrapLog = maybeLog.SafeCall<Tuple<int, int>>();
+            var wrapLog = maybeLog.SafeCall<(int, int)>();
 
             // Simple case - it fits into the max-range
-            if (original.Item1 <= MaxSize && original.Item2 <= MaxSize)
+            if (original.W <= MaxSize && original.H <= MaxSize)
                 return wrapLog("is already within bounds", original);
 
             // Harder - at least one doesn't fit - must figure out multiplier and adjust
-            var correctionFactor = (float)Math.Max(original.Item1, original.Item2) / MaxSize;
-            var newW = (int)Math.Min(original.Item1 / correctionFactor, MaxSize);   // use Math.Min to avoid rounding errors leading to > 3200
-            var newH = (int)Math.Min(original.Item2 / correctionFactor, MaxSize);
+            var correctionFactor = (float)Math.Max(original.W, original.H) / MaxSize;
+            var newW = (int)Math.Min(original.W / correctionFactor, MaxSize);   // use Math.Min to avoid rounding errors leading to > 3200
+            var newH = (int)Math.Min(original.H / correctionFactor, MaxSize);
 
-            return wrapLog($"W:{newW}, H:{newH}", new Tuple<int, int>(newW, newH));
+            return wrapLog($"W:{newW}, H:{newH}", (newW, newH));
         }
 
-        protected void IfDebugLogPair<T>(string prefix, Tuple<T, T> values)
+        protected void IfDebugLogPair<T>(string prefix, (T W, T H) values)
         {
-            if (Debug) Log.Add($"{prefix}: W:{values.Item1}, H:{values.Item2}");
+            if (Debug) Log.Add($"{prefix}: W:{values.W}, H:{values.H}");
         }
 
     }

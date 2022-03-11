@@ -4,7 +4,7 @@ using ToSic.Eav.Run;
 namespace ToSic.Sxc.Adam
 {
     /// <summary>
-    /// Basic AdamPaths resolver, assumes that files are in wwwroot/adam for now
+    /// Basic AdamPaths resolver, assumes that files are in wwwroot/adam for now.
     /// </summary>
     public class AdamPathsWwwroot: AdamPathsBase
     {
@@ -12,6 +12,11 @@ namespace ToSic.Sxc.Adam
         {
         }
 
+        /// <summary>
+        /// This will just assume that the path - containing 'wwwroot' will not have the 'wwwroot' in the link from outside
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public override string Url(string path)
         {
             var original = base.Url(path);

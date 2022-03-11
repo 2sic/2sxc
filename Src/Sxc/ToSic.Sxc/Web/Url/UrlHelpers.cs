@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Web.Url
         /// </summary>
         /// <param name="nvc"></param>
         /// <returns></returns>
-        public static string NvcToString(NameValueCollection nvc)
+        public static string NvcToString(this NameValueCollection nvc)
         {
             var allPairs = nvc.AllKeys
                 .SelectMany(key =>

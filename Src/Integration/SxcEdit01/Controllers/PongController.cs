@@ -1,17 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ToSic.Eav.WebApi;
 
 namespace IntegrationSamples.SxcEdit01.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class PongController : IntStatelessControllerBase
+    public class PongController : IntControllerBase<DummyControllerReal>
     {
-        [HttpGet]
-        public string Pong()
-        {
-            return "pong";
-        }
+        public PongController() : base("Pong") { }
 
-        protected override string HistoryLogName => "Int.Pong";
+        [HttpGet]
+        public string Pong() => "pong";
     }
 }

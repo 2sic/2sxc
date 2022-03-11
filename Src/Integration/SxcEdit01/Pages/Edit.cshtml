@@ -1,106 +1,96 @@
 ﻿@page
-@using Microsoft.Extensions.Configuration
 @using ToSic.Eav.Apps
 @using ToSic.Eav.Data
 @using ToSic.Eav.Logging.Simple
-@using ToSic.Sxc.Adam
-@using ToSic.Sxc.Context
-@model PrivacyModel
-@inject IConfiguration Config
+@using ToSic.Eav.Metadata
+@using ToSic.Eav.Plumbing
+@using ToSic.Sxc.Services
+@inject IAppStates AppStates
+@inject IServiceProvider ServiceProvider;
 @{
   ViewData["Title"] = "Edit 2sxc data";
 
   // Adjust these values to your testing environment
-  var zoneId = 145; //2;
-  var appId = 1369; // 78;
-  var pageId = 4427;
-  var moduleId = 9771;
-  #pragma warning disable 618
-  // var appState = ToSic.Eav.Factory.ObsoleteBuild<IAppStates>()/* State*/.Get(appId);
-  #pragma warning restore 618
-  // var firstItem = appState.List.FirstOrDefault();
-
-  var itemWithImagesId = 128280;
+  var appIdentity = IntegrationConstants.AppIdentity;
+  var appState = AppStates.Get(appIdentity);
+  var firstItem = appState.List.First();
 }
 <h1>@ViewData["Title"]</h1>
 
 <script language="javascript">
-  function getSxc() {
-    return $2sxc({ zoneId: @zoneId, appId: @appId, pageId: @pageId, moduleId: @moduleId });
-  }
+    // Important note
+    // This requires that the JS is loaded on the page. In this sample it's done in the _Layout.cshtml
+    // It also requires some environment properties to be set - which is also done in _Layout.cshtml
+    function getSxc() {
+        return $2sxc({ zoneId: @appIdentity.ZoneId, appId: @appIdentity.AppId });
+    }
 </script>
 <p>
-  Try using the $2sxc js api for @zoneId/@appId and page @pageId and module @moduleId - first item @@firstItem.EntityId <br />
+  Try using the $2sxc js api for @appIdentity.ZoneId/@appIdentity.AppId - first item @firstItem.EntityId <br />
 </p>
 
 <ol>
   <li>Check api works - <a href="/api/pong/pong" target="_blank">Test</a></li>
   <li><a href="/api/sxc/sys/insights/help" target="_blank">Insights</a></li>
-  <li><a href="/api/sxc/Dialog/Settings?appId=@appId" target="_blank">Call Dialog/Settings?appId=@appId</a></li>
+  <li><a href="/api/sxc/Dialog/Settings?appId=@appIdentity.AppId" target="_blank">Call Dialog/Settings?appId=@appIdentity.AppId</a></li>
   <li><a href="#" onclick="getSxc().manage.run('app')">Click to open app-dialog</a></li>
-  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @@firstItem.EntityId })">Click to open edit dialog</a></li>
+  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @firstItem.EntityId })">Click to open edit dialog</a></li>
 </ol>
 
 <hr />
 <h2>ADAM Images / Files</h2>
 <ol>
-  <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @itemWithImagesId })">Edit something with images!</a></li>
+    <!-- TODO: check if it should be CMS.run -->
+    <li><a href="#" onclick="getSxc().manage.run('edit', { entityId: @IntegrationConstants.ItemWithImagesId })">Edit something with images!</a></li>
 </ol>
 @{
-  // This is the same as the AsAdam implementation
+    // Create a log-object (optional) which is used to track what the code does
+    // could also just be null
+    var log = new Log("My.Log");
 
-  // Create a log-object (optional) which is used to track what the code does
-  // could also just be null
-  var log = new Log("My.Log");
+    // Get the App execution context since our code here doesn't have it
+    var dynCodeSvc = ServiceProvider.Build<IDynamicCodeService>();
+    var dynCode = dynCodeSvc.OfApp(appIdentity);
 
-  // Get the App execution context since our code here doesn't have it
-  //var appContext = ToSic.Eav.Factory.Resolve<IContextOfApp>();
-  //appContext.Init(log);
-  //appContext.ResetApp(appId);
-
-  //// Now get the adam-manager, which will give us the AdamFolder object
-  //var adamManager = ToSic.Eav.Factory.Resolve<AdamManager<string, string>>();
-  //adamManager.Init(appContext, ToSic.Sxc.Constants.CompatibilityLevel10, log);
-
-  //// Now get the folder (which is what AsAdam would return)
-  //var entityWithAdam = appState.List.One(itemWithImagesId);
-  //var folder = adamManager.Folder(entityWithAdam, "ImageLibrary");
+    var entityWithAdam = dynCode.App.Data.List.One(IntegrationConstants.ItemWithImagesId);
+    var folder2 = dynCode.AsAdam(entityWithAdam, IntegrationConstants.ImagesField);
 }
-<h3>Files</h3>
+<h3>Files in @dynCode.AsDynamic(entityWithAdam).EntityTitle </h3>
 <ol>
-  @@foreach (var img in folder.Files)
+  @foreach (var img in folder2.Files)
   {
-    <li>@@img.Url</li>
+    <li>@img.Url</li>
   }
 </ol>
 
 <hr />
 <h2>Metadata</h2>
 @{
-var targetType = 10; // CMS object, maybe better something else, officially should be > 100
+  var targetType = (int)TargetTypes.CmsItem; // 10;
   var myItemId = 1234;
-  //var md = appState.GetMetadata(targetType, myItemId);
+  var md = appState.GetMetadata(targetType, myItemId);
 }
-Found Metadata: @@md.Count()
+Found Metadata: @md.Count()
 <ol>
-  @@foreach (var m in md)
+  @foreach (var m in md)
   {
-    <li onclick="getSxc().manage.run('edit', { entityId: @@m.EntityId })">@@m.Type.Name: @@m.GetBestTitle()</li>
+    <li onclick="getSxc().manage.run('edit', { entityId: @m.EntityId })">@m.Type.Name: @m.GetBestTitle()</li>
   }
 </ol>
 
 
 <script>
-  function openMetadata(targetId) {
-    console.log('test1');
-    const forRef = { Number: targetId, Target: 'CmsObject', Singleton: true };
-    getSxc().manage.run('edit', {
-      items: [
-        { ContentTypeName: 'MetadataGps', For: forRef, Operations: "mdsingleton", Prefill: { Color: "super-pink" } },
-        { ContentTypeName: 'MetadataCar', For: forRef, Sfx: "mdsingleton" }
-      ]
-    });
-  }
+    function openMetadata(targetId) {
+        console.log('test1');
+        // TODO: CHECK Target property - was this public API? how can we prevent breaks?
+        const forRef = { Number: targetId, TargetType: @targetType, Singleton: true };
+        getSxc().manage.run('edit', {
+            items: [
+                { ContentTypeName: 'MetadataGps', For: forRef, Operations: "singleton", Prefill: { Color: "super-pink" } },
+                { ContentTypeName: 'MetadataCar', For: forRef, Sfx: "singleton" }
+            ]
+        });
+    }
 </script>
 
 wip
@@ -119,10 +109,10 @@ wip
 <p>
   <!-- Note to myself: key seems to have a bug, if it's not a string-->
   <a href="#" onclick="getSxc().manage.run('edit', {
-  items: [
-    { ContentTypeName: 'MetadataGps', EntityId: 0, Metadata: { targetType: 10, keyType: 'number', key: @myItemId } },
-    { ContentTypeName: 'MetadataCar', EntityId: 0, For: { targetType: 10, Number: @myItemId } }
-  ]
+    items: [
+        { ContentTypeName: 'MetadataGps', EntityId: 0, Metadata: { targetType: 10, keyType: 'number', key: @myItemId } },
+        { ContentTypeName: 'MetadataCar', EntityId: 0, For: { targetType: 10, Number: @myItemId } }
+    ]
 })">Edit Test</a>
 </p>
 

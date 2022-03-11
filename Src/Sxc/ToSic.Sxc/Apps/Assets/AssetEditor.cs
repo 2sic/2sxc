@@ -87,12 +87,10 @@ namespace ToSic.Sxc.Apps.Assets
         public void EnsureUserMayEditAssetOrThrow(string fullPath = null)
         {
             // check super user permissions - then all is allowed
-            if (_user.IsSuperUser)// _userIsSuperUser)
-                return;
+            if (_user.IsSuperUser) return;
 
             // ensure current user is admin - this is the minimum of not super-user
-            if (!_user.IsAdmin) // _userIsAdmin)
-                throw new AccessViolationException("current user may not edit templates, requires admin rights");
+            if (!_user.IsAdmin) throw new AccessViolationException("current user may not edit templates, requires admin rights");
 
             // if not super user, check if razor (not allowed; super user only)
             if (!EditInfo.IsSafe)

@@ -19,10 +19,20 @@ namespace ToSic.Sxc.Beta.LightSpeed
 
         public void Add(int moduleId, OutputCacheItem data)
         {
-            var expiration = new TimeSpan(0, 0, 30);
-            var policy = new CacheItemPolicy { SlidingExpiration = expiration };
-            Cache.Add(new CacheItem(GlobalCacheRoot + moduleId, data), policy);
-            CachedIds[moduleId] = true;
+            try
+            {
+                var expiration = new TimeSpan(0, 0, 30);
+                var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+                Cache.Add(new CacheItem(GlobalCacheRoot + moduleId, data), policy);
+                // Note: we've had someone report that this threw an index-out-of-bounds
+                // https://stackoverflow.com/questions/71329719/2sxc-index-was-outside-the-bounds-of-the-array
+                // Can't imagine how, but must wrap in try catch for now
+                CachedIds[moduleId] = true;
+            }
+            catch
+            {
+                /* ignore for now */
+            }
         }
 
         public OutputCacheItem Get(int moduleId) => Cache[GlobalCacheRoot + moduleId] as OutputCacheItem;

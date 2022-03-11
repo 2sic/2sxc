@@ -30,7 +30,8 @@ namespace ToSic.Sxc.Oqt.Client
                 .ToArray());
 
             // 2. Scripts - usually libraries etc.
-            // Important: the IncludeScripts works very different from LoadScript - it uses LoadJS and bundles
+            // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
+            // it uses LoadJS and bundles
             var bundleId = "module-bundle-" + pageState.ModuleId;
             var includeScripts = externalResources
                 .Where(r => r.ResourceType == ResourceType.Script)
@@ -40,12 +41,13 @@ namespace ToSic.Sxc.Oqt.Client
                     bundle = "", // not working when bundleId is provided
                     id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
                     location = a.Location,
-                    integrity = "", // bug in Oqtane, needs to be an empty string to not throw errors
-                    crossorigin = ""
+                    htmlAttributes = a.HtmlAttributes,
+                    integrity = a.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
+                    crossorigin = a.CrossOrigin ?? "",
                 })
                 .Cast<object>()
                 .ToArray();
-            if (includeScripts.Any()) await interop.IncludeScripts(includeScripts);
+            if (includeScripts.Any()) await interop.IncludeScriptsWithAttributes(includeScripts);
 
             // 3. Inline JS code which was extracted from the template
             var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();

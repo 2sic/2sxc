@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -17,34 +16,20 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [AutoValidateAntiforgeryToken]
 
     // Release routes
-    [Route(WebApiConstants.ApiRoot + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot2 + "/admin/[controller]/[action]")]
-    [Route(WebApiConstants.ApiRoot3 + "/admin/[controller]/[action]")]
-
-    // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/admin/dialog/[action]")]
+    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
     [ApiController]
 
-    public class DialogController : OqtStatefulControllerBase
+    public class DialogController : OqtStatefulControllerBase<DialogControllerReal>, IDialogController
     {
-        protected override string HistoryLogName => "Api.SysCnt";
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        #region Dialog Helpers
-        /// <summary>
-        /// This is the subsystem which delivers the getting-started app-iframe with instructions etc.
-        /// Used to be GET System/DialogSettings
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <returns></returns>
+        public DialogController() : base(DialogControllerReal.LogSuffix) { }
+        
         [HttpGet]
-        public DialogContextStandalone Settings(int appId)
-        {
-            return HttpContext.RequestServices.Build<AdminBackend>().Init(Log)
-                .DialogSettings(appId);
-        }
-
-        #endregion
-
+        public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
+        
     }
 }

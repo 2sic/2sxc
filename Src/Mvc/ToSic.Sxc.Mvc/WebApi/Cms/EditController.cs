@@ -80,5 +80,11 @@ namespace ToSic.Sxc.Mvc.WebApi.Cms
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
             => _linkBackendLazy.Value.Init(Log).LookupHyperlink(appId, link, contentType, guid, field);
 
+        /// <inheritdoc />
+        [HttpPost]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        public bool Publish(int id)
+            => false /*Real.Publish(id)*/; // TODO
+
     }
 }

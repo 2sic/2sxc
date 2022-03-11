@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="@Echo Configuration='$(Configuration)'&#xD;&#xA;@Echo StartWith ='$(Configuration.StartsWith('Debug'))'&#xD;&#xA;@Echo Platform ='$(Platform)'&#xD;&#xA;@Echo ProjectDir '$(ProjectDir)'&#xD;&#xA;@SET BuildTarget=$(ProjectDir)sys-2sxc&#xD;&#xA;@Echo BuildTarget '%25BuildTarget%25'&#xD;&#xA;&#xD;&#xA;@REM Copy the data folders&#xD;&#xA;robocopy /mir &quot;$(ProjectDir)..\..\Data\.data\ &quot; &quot;%25BuildTarget%25\.data\ &quot;&#xD;&#xA;" />
+  </Target>
+
 </Project>

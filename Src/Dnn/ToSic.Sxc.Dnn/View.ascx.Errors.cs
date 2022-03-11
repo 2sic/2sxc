@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -33,7 +31,7 @@ namespace ToSic.Sxc.Dnn
                     // 2. Try to show nice message on screen
 
                     // first get a rendering helper - but since BlockBuilder may be null, create a new one
-                    var renderingHelper = ServiceProvider.Build<IRenderingHelper>().Init(Block, Log);
+                    var renderingHelper = GetService<IRenderingHelper>().Init(Block, Log);
                     var msg = renderingHelper.DesignErrorMessage(ex, true, null, false, true);
                     try
                     {

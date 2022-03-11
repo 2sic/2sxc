@@ -2,30 +2,23 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.WebApi.Licenses;
+using ToSic.Eav.WebApi.Sys.Licenses;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
-    public class LicenseController : DnnApiControllerWithFixes
+    [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
+    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>, ILicenseController
     {
-        protected override string HistoryLogName => "Api.License";
+        public LicenseController() : base("License") { }
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
         /// Otherwise each log-access would re-number what item we're looking at
         /// </summary>
-        protected override string HistoryLogGroup { get; } = "web-api.license";
+        protected override string HistoryLogGroup => "web-api.license";
 
-        #region License
-
-        /// <summary>
-        /// Gives an array of License (sort by priority)
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public IEnumerable<LicenseDto> Summary() => GetService<LicenseBackend>().Init(Log).Summary();
+        public IEnumerable<LicenseDto> Summary() => Real.Summary();
 
-        #endregion
     }
 }

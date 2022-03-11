@@ -18,21 +18,18 @@ namespace ToSic.Sxc.WebApi.Cms
         /// Get Serialized entity or create a new one, and assign metadata
         /// based on the header (if none already existed)
         /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="bundle"></param>
-        /// <param name="jsonSerializer"></param>
-        /// <param name="typeRead"></param>
         /// <returns></returns>
-        internal static JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
+        internal JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
             ContentTypeRuntime typeRead, AppState appState)
         {
+            var wrapLog = Log.Call<JsonEntity>();
             // attach original metadata assignment when creating a new one
             JsonEntity ent;
             if (bundle.Entity != null)
-                ent = jsonSerializer.ToJson(bundle.Entity);
+                ent = jsonSerializer.ToJson(bundle.Entity, 1);
             else
             {
-                ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, typeRead));
+                ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, typeRead), 0);
 
                 // only attach metadata, if no metadata already exists
                 if (ent.For == null && bundle.Header?.For != null) ent.For = bundle.Header.For;
@@ -56,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             catch { /* ignore experimental */ }
 
-            return ent;
+            return wrapLog(null, ent);
         }
 
         internal static List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, ContentTypeRuntime typeRead)
@@ -102,11 +99,12 @@ namespace ToSic.Sxc.WebApi.Cms
             return wrapLog($"{found.Count}", found);
         }
 
-        internal static IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
+        internal IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
         {
+            var wrapLog = Log.Call<IEntity>();
             var type = typeRead.Get(header.ContentTypeName);
-            var ent = EntityBuilder.EntityTemplate(appId, header.Guid, header.EntityId, 0, type);
-            return ent;
+            var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, 0, type);
+            return wrapLog(null, ent);
         }
     }
 }

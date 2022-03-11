@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
@@ -132,11 +133,27 @@ namespace ToSic.Sxc.Blocks
                 #endregion
 
                 #region Wrap it all up into a nice wrapper tag
+
+                // Figure out some if we should add the edit context
+                // by default the editors will get it
+                // in special cases the razor requests it to added as well
+                var addEditCtx = Block.Context.UserMayEdit;
+                if (!addEditCtx && Block.BlockFeatureKeys.Any())
+                {
+                    var features = Block.Context.PageServiceShared.Features.GetWithDependents(Block.BlockFeatureKeys, Log);
+                    addEditCtx = features.Contains(BuiltInFeatures.ModuleContext);
+                }
+
+                // 2022-03-03 2dm - moving special properties to page-activate features #pageActivate
+                // WIP, if all is good, remove these comments end of March
+                //addEditCtx = UiAddEditContext;
+
+                // Wrap
                 var result = WrapInDiv
                     ? RenderingHelper.WrapInContext(body,
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
-                        editContext: UiAddEditContext)
+                        editContext: addEditCtx)
                     : body;
                 #endregion
 

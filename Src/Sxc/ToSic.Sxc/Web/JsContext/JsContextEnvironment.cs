@@ -26,22 +26,14 @@ namespace ToSic.Sxc.Web.JsContext
         public JsContextEnvironment(string systemRootUrl, IContextOfBlock ctx)
         {
             WebsiteId = ctx.Site.Id;
-
             WebsiteUrl = "//" + ctx.Site.UrlRoot + "/";
-
             PageId = ctx.Page.Id;
             PageUrl = ctx.Page.Url;
-
             InstanceId = ctx.Module.Id;
-
             SxcVersion = Settings.Version.ToString();
-
             SxcRootUrl = systemRootUrl;
-
-            var userMayEdit = ctx.UserMayEdit;
-
-            IsEditable = userMayEdit;
-            parameters = ctx.Page.ParametersInternalOld?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
+            IsEditable = ctx.UserMayEdit;
+            parameters = ctx.Page.Parameters?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
         }
     }
 

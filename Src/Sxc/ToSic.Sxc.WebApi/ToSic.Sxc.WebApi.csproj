@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
-    <Version>13.02.00</Version>
+    <Version>13.03.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -44,6 +44,10 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Routing\" />
   </ItemGroup>
 
 </Project>

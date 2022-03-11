@@ -21,5 +21,7 @@ namespace ToSic.Sxc.WebApi.InPage
         public string Type { get; set; } = "js";
 
         public string Contents { get; set; }
+
+        public IDictionary<string, string> Attributes { get; set; }
     }
 }

@@ -1,7 +1,10 @@
-﻿using System;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
-using ToSic.Sxc.WebApi.Plumbing;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
+using System;
+using System.IO;
+using System.Text;
+using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
@@ -15,21 +18,27 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
                                            throw new Exception(
                                                $"Accessing the {nameof(ApiController)} in the {nameof(OqtResponseMaker)} requires it to be Init first.");
 
-        public override IActionResult InternalServerError(string message) 
-            => Error((int)HttpStatusCode.InternalServerError, message);
-
-        public override IActionResult InternalServerError(Exception exception)
-            => Error((int)HttpStatusCode.InternalServerError, exception);
-
         public override IActionResult Error(int statusCode, string message)
             => ApiController.Problem(message, null, statusCode); 
 
         public override IActionResult Error(int statusCode, Exception exception)
             => ApiController.Problem(exception.Message, null, statusCode);
 
-        public override IActionResult Json(object json)
+        public override IActionResult Json(object json) => ApiController.Json(json);
+
+        public override IActionResult Ok() => ApiController.Ok();
+
+        public override IActionResult File(Stream fileContent, string fileName, string fileType)
         {
-            return ApiController.Json(json);
+            using var memoryStream = new MemoryStream();
+            fileContent.CopyTo(memoryStream);
+            return new FileContentResult(memoryStream.ToArray(), fileType) { FileDownloadName = fileName };
+        }
+
+        public override IActionResult File(string fileContent, string fileName)
+        {
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out var contentType);
+            return File(fileContent, fileName, contentType ?? MimeHelper.FallbackType);
         }
     }
 }

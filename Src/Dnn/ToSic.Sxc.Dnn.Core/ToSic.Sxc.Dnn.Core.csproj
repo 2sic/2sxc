@@ -54,6 +54,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ClientDependency.Core">
+      <HintPath>..\..\..\Dependencies\Dnn742\ClientDependency.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DotNetNuke">
       <HintPath>..\..\..\Dependencies\Dnn742\DotNetNuke.dll</HintPath>
       <Private>False</Private>
@@ -105,7 +109,6 @@
     <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
     <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
-    <Compile Include="Dnn\Code\DnnDynamicCodeService.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
@@ -145,7 +148,6 @@
     <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
     <Compile Include="Dnn\DnnBusinessController.cs" />
     <Compile Include="Dnn\Context\DnnModule.cs" />
-    <Compile Include="Dnn\Run\DnnPermissionCheck.cs" />
     <Compile Include="Dnn\Context\DnnSite.cs" />
     <Compile Include="Dnn\Run\DnnValueConverter.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.Factory.cs" />

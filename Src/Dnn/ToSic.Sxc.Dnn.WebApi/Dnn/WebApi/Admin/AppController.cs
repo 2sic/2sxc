@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
-using ToSic.Sxc.WebApi.ImportExport;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -20,118 +20,94 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     [DnnLogExceptions]
-    public class AppController : SxcApiControllerBase, IAppController
+    public class AppController : SxcApiControllerBase<AppControllerReal<HttpResponseMessage>>, IAppController<HttpResponseMessage>
     {
-        protected override string HistoryLogName => "Api.App";
+        public AppController() : base(AppControllerReal<HttpResponseMessage>.LogSuffix) { }
 
-        private AppControllerReal<HttpResponseMessage> RealController 
-            => GetService<AppControllerReal<HttpResponseMessage>>().Init(PreventServerTimeout300, Log);
-
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public List<AppDto> List(int zoneId)
-            => RealController.List(zoneId);
+        public List<AppDto> List(int zoneId) => Real.List(zoneId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public List<AppDto> InheritableApps()
-            => RealController.InheritableApps();
+        public List<AppDto> InheritableApps() => Real.InheritableApps();
 
+        /// <inheritdoc />
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void App(int zoneId, int appId, bool fullDelete = true)
-            => RealController.App(zoneId, appId, fullDelete);
+        public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
 
+        /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void App(int zoneId, string name, int? inheritAppId = null)
-            => RealController.App(zoneId, name, inheritAppId);
+        public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules("2sxc,2sxc-app")]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public List<SiteLanguageDto> Languages(int appId) 
-            => RealController.Languages(appId);
+        public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/GetAppInfo
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public AppExportInfoDto Statistics(int zoneId, int appId)
-            => RealController.Statistics(zoneId, appId);
+        public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
 
 
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool FlushCache(int zoneId, int appId)
-            => RealController.FlushCache(zoneId, appId);
+        public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportApp
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
-        public HttpResponseMessage Export(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => RealController.Export(appId, zoneId, includeContentGroups, resetAppGuid);
+        public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
 
-        /// <summary>
-        /// Used to be GET ImportExport/ExportForVersionControl
-        /// </summary>
-        /// <param name="appId"></param>
-        /// <param name="zoneId"></param>
-        /// <param name="includeContentGroups"></param>
-        /// <param name="resetAppGuid"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
-        public bool SaveData(int appId, int zoneId, bool includeContentGroups, bool resetAppGuid)
-            => RealController.SaveData(appId, zoneId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
 
+        /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) 
-            => RealController.GetStack(appId, part, key, view);
+            => Real.GetStack(appId, part, key, view);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId) 
-            => RealController.Reset(zoneId, appId, PortalSettings.DefaultLanguage);
+        public ImportResultDto Reset(int zoneId, int appId)
+        {
+            PreventServerTimeout300();
+            return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage);
+        }
 
-        /// <summary>
-        /// Used to be POST ImportExport/ImportApp
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId)
         {
-            var request = HttpContext.Current.Request;
-            return request.Files.Count <= 0 
-                ? new ImportResultDto(false, "no files uploaded") 
-                : RealController.Import(zoneId, request["Name"], request?.Files[0]?.InputStream);
+            PreventServerTimeout300();
+            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId);
         }
     }
 }

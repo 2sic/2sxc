@@ -12,19 +12,18 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 namespace ToSic.Sxc.Dnn.WebApi
 {
     [DnnLogWebApi, JsonResponse]
-    public abstract class DnnApiControllerWithFixes: DnnApiController, IHasLog
+    public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog<TRealController>
     {
-        protected DnnApiControllerWithFixes() 
+        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
+        protected DnnApiControllerWithFixes(string logSuffix) 
 	    {
-            // ReSharper disable once VirtualMemberCallInConstructor
-            Log = new Log(HistoryLogName, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+            Log = new Log("Api." + logSuffix, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
             TimerWrapLog = Log.Call(message: "timer", useTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
-	        if (HistoryLogGroup != null)
-                GetService<LogHistory>().Add(HistoryLogGroup, Log);
+            GetService<LogHistory>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
             // ReSharper restore VirtualMemberCallInConstructor
-
         }
 
         // ReSharper disable once InconsistentNaming
@@ -53,13 +52,6 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <summary>
-        /// The name of the logger in insights.
-        /// The inheriting class should provide the real name to be used.
-        /// </summary>
-        protected abstract string HistoryLogName { get; }
-
-
-        /// <summary>
         ///  Extend Time so Web Server doesn't time out
         /// </summary>
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
@@ -68,6 +60,15 @@ namespace ToSic.Sxc.Dnn.WebApi
         public TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider())).Build<TService>();
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
         private IServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// The RealController which is the full backend of this controller.
+        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
+        /// </summary>
+        protected virtual TRealController Real
+            => _real ?? (_real = GetService<TRealController>().Init(Log)
+                                 ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
+        private TRealController _real;
 
     }
 }

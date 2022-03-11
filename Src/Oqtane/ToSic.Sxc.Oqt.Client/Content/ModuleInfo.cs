@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Content
         /// Merge versions for use in Oqtane version list
         /// </summary>
         /// <returns></returns>
-        internal static string GetVersionList()
+        internal static string GetSqlAndLatestVersions()
         {
             var versionsWithDot = SqlScriptVersions
                 .Select(v => v.Replace('-', '.'))
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Content
             Name = name,
             Description = description,
             Categories = "Common",
-            Version = "13.02.00",
+            Version = "13.03.00",
             Owner = "2sic Internet Solutions",
             Url = "https://2sxc.org",
             Contact = "@iJungleboy",
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Content
             // ControlTypeRoutes = "",
             // This must contain all versions with a SQL script and current/latest version
             // list versions with sql scripts in \ToSic.Sxc.Oqt.Server\Scripts\
-            ReleaseVersions = GetVersionList(),
+            ReleaseVersions = GetSqlAndLatestVersions(),
             // DefaultAction = "",
             // SettingsType = "",
             PackageName = "ToSic.Sxc",

@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -31,16 +32,18 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies
         {
-            public IServiceProvider ServiceProvider { get; }
-            public ICmsContext CmsContext { get; }
-            public Lazy<CodeCompiler> CodeCompilerLazy { get; }
-
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, Lazy<CodeCompiler> codeCompilerLazy)
+            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, Lazy<CodeCompiler> codeCompilerLazy, AppSettingsStack settingsStack)
             {
                 ServiceProvider = serviceProvider;
                 CmsContext = cmsContext;
                 CodeCompilerLazy = codeCompilerLazy;
+                SettingsStack = settingsStack;
             }
+            internal IServiceProvider ServiceProvider { get; }
+            public ICmsContext CmsContext { get; }
+            public Lazy<CodeCompiler> CodeCompilerLazy { get; }
+            public AppSettingsStack SettingsStack { get; }
+
         }
 
         [PrivateApi]

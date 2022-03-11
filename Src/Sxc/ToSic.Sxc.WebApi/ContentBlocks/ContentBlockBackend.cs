@@ -85,7 +85,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 // Note: Url can be empty if it has contents
                 Url = string.IsNullOrWhiteSpace(asset.Url) ? null : UrlHelpers.QuickAddUrlParameter(asset.Url, "v", ver), 
                 Type = asset.IsJs ? "js" : "css",
-                Contents = asset.Content
+                Contents = asset.Content,
+                Attributes = asset.HtmlAttributes,
             }));
 
             Log.Add("3. Add manual resources (fancybox etc.)");
@@ -104,7 +105,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             resources.AddRange(optimizer.Assets.Select(asset => new AjaxResourceDtoWIP
             {
                 Url = asset.Url,
-                Type = asset.IsJs ? "js" : "css"
+                Type = asset.IsJs ? "js" : "css",
+                Attributes = asset.HtmlAttributes,
             }));
 
             return wrapLog("ok", new AjaxRenderDto

@@ -10,18 +10,19 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <summary>
         /// used to be GET Module/GenerateContentBlock
         /// </summary>
-        /*new*/ string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null);
+        string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null);
 
-        ///// <summary>
-        ///// used to be GET Module/AddItem
-        ///// </summary>
-        // void Item(int? index = null);
+        /// <summary>
+        /// used to be GET Module/AddItem
+        /// </summary>
+        void Item(int? index = null);
 
         /// <summary>
         /// used to be GET Module/SetAppId
         /// </summary>
         /// <param name="appId"></param>
-        /*new*/ void App(int? appId);
+        /*new*/
+        void App(int? appId);
 
         /// <summary>
         /// used to be GET Module/GetSelectableApps

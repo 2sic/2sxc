@@ -13,7 +13,12 @@
         /// <summary>
         /// Internal feature, not published ATM
         /// </summary>
-        public static PageFeature PageContext = new PageFeature("2sxc.PageContext", "the $2sxc headers in the page so everything works");
+        public static PageFeature PageContext = new PageFeature("2sxc.ContextPage", "the $2sxc headers in the page so everything works");
+
+        /// <summary>
+        /// Internal feature, not published ATM
+        /// </summary>
+        public static PageFeature ModuleContext = new PageFeature("2sxc.ContextModule", "the $2sxc headers in the module tag");
 
         /// <summary>
         /// The core 2sxc JS libraries
@@ -42,7 +47,8 @@
         /// </remarks>
         public static PageFeature JsCms = new PageFeature("2sxc.JsCms", "2sxc inpage editing APIs", requires: new[]
         {
-            JsCore.Key
+            JsCore.Key,
+            ModuleContext.Key,
         });
 
         /// <summary>

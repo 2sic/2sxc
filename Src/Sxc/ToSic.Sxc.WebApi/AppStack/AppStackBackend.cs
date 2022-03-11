@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
@@ -17,12 +18,15 @@ namespace ToSic.Sxc.WebApi.AppStack
 
         #region Constructor / DI
 
-        public AppStackBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppStackBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver, AppSettingsStack settingsStack) : base(serviceProvider, "Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
+            _settingsStack = settingsStack;
         }
 
         private readonly IContextResolver _ctxResolver;
+        private readonly AppSettingsStack _settingsStack;
+
         #endregion
 
         public List<StackInfoDto> GetAll(int appId, string part, string key, Guid? viewGuid, string[] languages)
@@ -72,7 +76,9 @@ namespace ToSic.Sxc.WebApi.AppStack
             }
 
             // Build Sources List
-            var sources = (part == AppConstants.RootNameSettings ? appState.SettingsInApp : appState.ResourcesInApp).GetStack(ServiceProvider, viewStackPart);
+            var sources = _settingsStack.Init(Log).Init(appState).GetStack(part == AppConstants.RootNameSettings ? ConfigurationConstants.Settings : ConfigurationConstants.Resources, viewStackPart);
+            // (part == AppConstants.RootNameSettings ? appState.SettingsInApp : appState.ResourcesInApp).GetStack(ServiceProvider, viewStackPart);
+            //var sources = (part == AppConstants.RootNameSettings ? appState.SettingsInApp : appState.ResourcesInApp).GetStack(ServiceProvider, viewStackPart);
             var settings = new PropertyStack();
             settings.Init(part, sources.ToArray());
 

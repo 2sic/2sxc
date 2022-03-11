@@ -102,7 +102,6 @@
     <Compile Include="Custom\Hybrid\Api12_DynamicWebApi.cs" />
     <Compile Include="Custom\Hybrid\Api12_Obsolete.cs" />
     <Compile Include="Custom\Hybrid\Api12_Responses.cs" />
-    <Compile Include="Dnn\DnnResponseMaker.cs" />
     <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
     <Compile Include="Dnn\ApiController.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
     <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
-    <Compile Include="Dnn\WebApi\Cms\ItemController.cs" />
     <Compile Include="Dnn\WebApi\IDnnDynamicWebApi.cs" />
     <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
     <Compile Include="Dnn\WebApi\Context\DnnUiContextBuilder.cs" />
@@ -134,7 +132,7 @@
     <Compile Include="Dnn\WebApi\Adam\AdamController.cs" />
     <Compile Include="Dnn\WebApiRouting\AppApiControllerSelector.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppFilesController.cs" />
-    <Compile Include="Dnn\WebApi\App\AppContentController.cs" />
+    <Compile Include="Dnn\WebApi\App\AppDataController.cs" />
     <Compile Include="Dnn\WebApi\App\AppQueryController.cs" />
     <Compile Include="Dnn\WebApi\Cms\ContentGroupController.cs" />
     <Compile Include="Dnn\WebApi\DnnApiControllerWithFixes.cs" />

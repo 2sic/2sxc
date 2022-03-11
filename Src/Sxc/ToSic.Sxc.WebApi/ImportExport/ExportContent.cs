@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Http;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ExportContent: HasLog<ExportContent>
+    public class ExportContent<THttpResponseType> : HasLog<ExportContent<THttpResponseType>>
     {
         #region Constructor / DI
 
-        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user) : base("Bck.Export")
+        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user, ResponseMaker<THttpResponseType> responseMaker) : base("Bck.Export")
         {
             _xmlExporter = xmlExporter;
             _cmsRuntime = cmsRuntime;
             _site = site;
             _user = user;
+            _responseMaker = responseMaker;
         }
 
         private readonly XmlExporter _xmlExporter;
@@ -31,10 +31,11 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly ISite _site;
         private CmsRuntime CmsRuntime => _cmsRuntime.Value;
         private readonly IUser _user;
+        private readonly ResponseMaker<THttpResponseType> _responseMaker;
 
         #endregion
 
-        public ExportPartsOverviewDto PreExportSummary(int appId, int zoneId, string scope)
+        public ExportPartsOverviewDto PreExportSummary(int zoneId, int appId, string scope)
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSuperUser}");
             var contextZoneId = _site.ZoneId;
@@ -77,7 +78,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
 
-        public HttpResponseMessage Export(int appId, int zoneId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
+        public THttpResponseType Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString,
+            string templateIdsString)
         {
             Log.Add($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
@@ -93,11 +95,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 Log
             ).GenerateNiceXml();
 
-            return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, "text/xml", fileXml);
+            return _responseMaker.File(fileXml, fileName, "text/xml");
         }
-
-
-
-
     }
 }

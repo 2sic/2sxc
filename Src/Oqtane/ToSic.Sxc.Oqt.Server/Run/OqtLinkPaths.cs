@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -11,15 +10,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtLinkPaths: ILinkPaths
     {
-        public OqtLinkPaths(IHttpContextAccessor contextAccessor, IWebHostEnvironment hostingEnvironment, SiteStateInitializer siteStateInitializer)
+        public OqtLinkPaths(IHttpContextAccessor contextAccessor, SiteStateInitializer siteStateInitializer)
         {
             _contextAccessor = contextAccessor;
-            _hostingEnvironment = hostingEnvironment;
             _siteStateInitializer = siteStateInitializer;
         }
 
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly SiteStateInitializer _siteStateInitializer;
         public HttpContext Current => _contextAccessor.HttpContext;
 

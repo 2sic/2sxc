@@ -13,7 +13,6 @@ using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -37,6 +36,7 @@ namespace ToSic.SexyContent.WebApi
     /// </summary>
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.")]
+    [PrivateApi("This was the official base class a long time ago, Name & APIs must remain stable")]
     public abstract partial class SxcApiController : 
         DynamicApiController, 
         IDnnDynamicWebApi,
@@ -46,6 +46,8 @@ namespace ToSic.SexyContent.WebApi
         IAppAndDataHelpers
 #pragma warning restore 618
     {
+        protected SxcApiController() : base("OldApi") { }
+
         public new IDnnContext Dnn => base.Dnn;
 
         [Obsolete]

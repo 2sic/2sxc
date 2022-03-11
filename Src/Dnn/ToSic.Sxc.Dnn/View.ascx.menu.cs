@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -21,13 +20,13 @@ namespace ToSic.Sxc.Dnn
             {
                 try
                 {
+                    if (_moduleActions != null) return _moduleActions;
+
+                    // Don't offer options if it's from another portal
                     if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
                         _moduleActions = new ModuleActionCollection();
 
-                    if (_moduleActions != null) return _moduleActions;
-
-                    InitModuleActions();
-                    return _moduleActions;
+                    return _moduleActions = InitModuleActions();
                 }
                 catch (Exception e)
                 {
@@ -37,10 +36,10 @@ namespace ToSic.Sxc.Dnn
             }
         }
 
-        private void InitModuleActions()
+        private ModuleActionCollection InitModuleActions()
         {
-            _moduleActions = new ModuleActionCollection();
-            var actions = _moduleActions;
+            var actions = new ModuleActionCollection();
+            if (Block == null) return actions;
             var block = Block;
             var appIsKnown = block.AppId > 0;
             if (appIsKnown)
@@ -57,27 +56,31 @@ namespace ToSic.Sxc.Dnn
                     SecurityAccessLevel.Edit, true, false);
             }
 
-            if (DnnSecurity.SexyContentDesignersGroupConfigured(PortalId) &&
-                !new DnnUser().IsDesigner) return;
+            var user = new DnnUser();
+
+            //if (DnnSecurity.PortalHasGroup(PortalId, Sxc.Settings.DnnGroupSxcDesigners) &&
+            //    !new DnnUser().IsDesigner) return;
 
             // Edit Template Button
-            if (appIsKnown && block.View != null)
+            if (user.IsDesigner && appIsKnown && block.View != null)
                 actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                     "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
                     true,
                     SecurityAccessLevel.Edit, true, false);
 
             // App management
-            if (appIsKnown)
+            if (user.IsAdmin && appIsKnown)
                 actions.Add(GetNextActionID(), "Admin" + (block.IsContentApp ? "" : " " + block.App?.Name), "",
                     "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
                     SecurityAccessLevel.Admin, true, false);
 
             // Zone management (app list)
-            if (!block.IsContentApp)
+            if (user.IsAdmin)
                 actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
                     "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
                     SecurityAccessLevel.Admin, true, false);
+            
+            return actions;
         }
 
         #endregion
