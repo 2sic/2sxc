@@ -2,6 +2,7 @@
 using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             _userRepository = userRepository;
         }
 
-        public override string PlatformIdentityTokenPrefix() => "Oqt:";
+        public override string PlatformIdentityTokenPrefix() => $"{OqtConstants.UserTokenPrefix}:";
 
         public override UserInformationDto Find(string identityToken)
         {

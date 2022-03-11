@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Services
         public DnnUserInformationService(LazyInitLog<IContextOfSite> context) : base(context)
         { }
 
-        public override string PlatformIdentityTokenPrefix() => "dnn:userid=";
+        public override string PlatformIdentityTokenPrefix() => DnnConstants.UserTokenPrefix;
 
         public override UserInformationDto Find(string identityToken)
         {

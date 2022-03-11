@@ -44,5 +44,7 @@ namespace ToSic.Sxc
         public const int MaxLevelForEntityDotRender = CompatibilityLevel9Old;
 
         public const int MaxLevelForStaticRender = CompatibilityLevel10;
+
+        public const string Anonymous = "anonymous";
     }
 }

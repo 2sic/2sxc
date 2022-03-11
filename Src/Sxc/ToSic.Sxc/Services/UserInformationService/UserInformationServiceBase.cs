@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services
     public abstract class UserInformationServiceBase : HasLog, IUserInformationService
     {
         public static readonly UserInformationDto UserUnknown = new UserInformationDto() { Id = -1, Name = "unknown" };
-        public const string Anonymous = "anonymous";
+        
         public const StringComparison StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
 
         protected UserInformationServiceBase(LazyInitLog<IContextOfSite> context) : base($"{Constants.SxcLogName}.UsrInfoSrv")
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Services
         {
             var wrapLog = Log.Call<int>($"t:{identityToken}");
 
-            if (string.IsNullOrEmpty(identityToken) || identityToken.Equals(Anonymous, StringComparison))
+            if (string.IsNullOrEmpty(identityToken) || identityToken.Equals(Constants.Anonymous, StringComparison))
                 return wrapLog("Ok (anonymous/null)", -1);
 
             if (identityToken.StartsWith(PlatformIdentityTokenPrefix(), StringComparison))
