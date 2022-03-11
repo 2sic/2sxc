@@ -1,0 +1,17 @@
+﻿using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
+using ToSic.Eav.Run.Unknown;
+
+namespace ToSic.Sxc.Services
+{
+    public class UserInformationServiceUnknown : UserInformationServiceBase, IIsUnknown
+    {
+        public UserInformationServiceUnknown(WarnUseOfUnknown<UserInformationServiceUnknown> warn, LazyInitLog<IContextOfSite> context) : base(context)
+        { }
+
+        public override string PlatformIdentityTokenPrefix() => throw new System.NotImplementedException();
+
+        public override UserInformationDto Find(string identityToken) => throw new System.NotImplementedException();
+    }
+}

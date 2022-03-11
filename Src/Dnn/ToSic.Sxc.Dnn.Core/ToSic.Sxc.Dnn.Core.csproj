@@ -133,6 +133,7 @@
     <Compile Include="Dnn\Run\DnnEnvironmentPermission.cs" />
     <Compile Include="Dnn\Services\DnnPageChanges.cs" />
     <Compile Include="Dnn\Services\DnnLogService.cs" />
+    <Compile Include="Dnn\Services\DnnUserInformationService.cs" />
     <Compile Include="Dnn\Web\DnnHttp.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />

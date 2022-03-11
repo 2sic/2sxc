@@ -17,7 +17,6 @@ using ToSic.Eav.Security;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Context;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
@@ -201,6 +200,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v13
             services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
+
+            // v13.04
+            services.TryAddTransient<IUserInformationService, DnnUserInformationService>();
 
             return services;
         }

@@ -61,6 +61,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<ILinkPaths, LinkPathsUnknown>();
             services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
+            // v13.04
+            services.TryAddTransient<IUserInformationService, UserInformationServiceUnknown>();
+
             return services;
         }
     }
