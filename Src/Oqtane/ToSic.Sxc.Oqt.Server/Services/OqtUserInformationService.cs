@@ -22,13 +22,13 @@ namespace ToSic.Sxc.Oqt.Server.Services
         {
             var wrapLog = Log.Call<UserInformationDto>($"t:{identityToken}");
             var user = _userRepository.Value.GetUser(UserId(identityToken), false);
-            return (user == null)
-                ? wrapLog("Err", UserUnknown)
-                : wrapLog("Ok", new UserInformationDto()
-                {
-                    Id = user.UserId,
-                    Name = user.Username
-                });
+            return wrapLog("Ok", (user == null)
+                                    ? UserUnknown
+                                    : new UserInformationDto()
+                                    {
+                                        Id = user.UserId,
+                                        Name = user.Username
+                                    });
         }
     }
 }
