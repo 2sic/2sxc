@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Services
         public UserInformationServiceUnknown(WarnUseOfUnknown<UserInformationServiceUnknown> warn, LazyInitLog<IContextOfSite> context) : base(context)
         { }
 
-        public override string PlatformIdentityTokenPrefix() => throw new System.NotImplementedException();
+        public override string PlatformIdentityTokenPrefix() => Unknown;
 
-        public override UserInformationDto Find(string identityToken) => throw new System.NotImplementedException();
+        public override UserInformationDto Find(string identityToken) => UserUnknown; // return default object
     }
 }

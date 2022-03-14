@@ -8,7 +8,8 @@ namespace ToSic.Sxc.Services
 {
     public abstract class UserInformationServiceBase : HasLog, IUserInformationService
     {
-        public static readonly UserInformationDto UserUnknown = new UserInformationDto() { Id = -1, Name = "unknown" };
+        public static readonly UserInformationDto UserUnknown = new UserInformationDto() { Id = -1, Name = Unknown };
+        internal const string Unknown = "unknown";
         
         public const StringComparison StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
 
