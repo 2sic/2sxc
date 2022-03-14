@@ -17,13 +17,13 @@ namespace ToSic.Sxc.Dnn.Services
         {
             var wrapLog = Log.Call<UserInformationDto>($"t:{identityToken}");
             var user = UserController.Instance.GetUserById(SiteId, UserId(identityToken));
-            return wrapLog("OK", (user == null) 
-                                    ?  UserUnknown 
-                                    : new UserInformationDto()
-                                    {
-                                        Id = user.UserID,
-                                        Name = user.Username
-                                    });
+            return (user == null) 
+                ? wrapLog("Err", UserUnknown) 
+                : wrapLog("Ok", new UserInformationDto()
+                {
+                    Id = user.UserID,
+                    Name = user.Username
+                });
         }
     }
 }
