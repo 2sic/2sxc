@@ -56,5 +56,19 @@ namespace ToSic.Sxc.Tests.ServicesTests
             Assert.AreEqual(expectedF, fm.Factor, name);
             Assert.AreEqual(expectedW, fm.Width, name);
         }
+
+
+        [DataRow("0.5=600;1x,2x", "1x,2x", "double")]
+        [DataRow("1/2=600", "", "/")]
+        [DataRow("1:2=600", "", ":")]
+        [DataRow(" 1 / 2=600", "", "/ with spaces")]
+        [DataTestMethod]
+        public void WithSrcMap(string original, string srcSet, string name)
+        {
+            var fm = FactorMapHelper.CreateFromString(original);
+            Assert.AreEqual(1, fm.Length, name);
+            AssertFandW(0.5, 600, fm[0], name);
+            Assert.AreEqual(srcSet, fm[0].SrcSet, name + " srcSet");
+        }
     }
 }

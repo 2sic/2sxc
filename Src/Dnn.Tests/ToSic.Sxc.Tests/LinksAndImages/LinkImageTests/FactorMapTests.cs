@@ -16,12 +16,12 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             var l = GetLinker();
             var settings = (ResizeSettings)l.ResizeParamMerger.BuildResizeSettings(width: 1000);
-            var f1 = new ResizeSettings(settings).ApplyFactor();
+            var f1 = l.DimGen.ResizeDimensions(new ResizeSettings(settings));
             Assert.AreEqual(1000, f1.Width);
 
             var f2 = new ResizeSettings(settings) { Factor = 0.5 };
-            f2.ApplyFactor();
-            Assert.AreEqual(500, f2.Width);
+            var dims = l.DimGen.ResizeDimensions(f2);
+            Assert.AreEqual(500, dims.Width);
         }
 
         [DataRow(W100, 1, "1 should be changed too")]
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             var l = GetLinker();
             var settings = (ResizeSettings)l.ResizeParamMerger.BuildResizeSettings(width: 1000, factorMap: $"1={W100}\n0.75={W75}\n0.5={W50}\n0.25={W25}");
-            var f1 = new ResizeSettings(settings).ApplyFactor(factor);
+            var f1 = l.DimGen.ResizeDimensions(new ResizeSettings(settings) { Factor = factor });
             Assert.AreEqual(expected, f1.Width, name);
         }
     }

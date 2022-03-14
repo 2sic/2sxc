@@ -25,8 +25,6 @@ namespace ToSic.Sxc.Images
         public bool Debug = false;
 
 
-
-
         internal IResizeSettings BuildResizeSettings(
             object settings = null,
             object factor = null,
@@ -58,7 +56,7 @@ namespace ToSic.Sxc.Images
             var getSettings = settings as ICanGetNameNotFinal;
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
-            var resizeParams = FigureOutBestWidthAndHeight(width, height, factor, aspectRatio, getSettings);
+            var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, getSettings);
 
             // Add parameters if known
             if (!string.IsNullOrWhiteSpace(parameters))
@@ -88,7 +86,7 @@ namespace ToSic.Sxc.Images
             return resizeParams;
         }
 
-        internal ResizeSettings FigureOutBestWidthAndHeight(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal settingsOrNull)
+        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, ICanGetNameNotFinal settingsOrNull)
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets
@@ -99,75 +97,29 @@ namespace ToSic.Sxc.Images
             (dynamic W, dynamic H) set = (settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
             if (settingsOrNull != null) IfDebugLogPair("Settings", set);
 
-            (int, int) safe = (parms.W ?? IntOrZeroAsNull(set.W) ?? 0, parms.H ?? IntOrZeroAsNull(set.H) ?? 0);
+            (int W, int H) safe = (parms.W ?? IntOrZeroAsNull(set.W) ?? 0, parms.H ?? IntOrZeroAsNull(set.H) ?? 0);
             IfDebugLogPair("Safe", safe);
-
 
             var factorFinal = DoubleOrNullWithCalculation(factor) ?? 0; // 0 = ignore
             double arFinal = DoubleOrNullWithCalculation(aspectRatio)
                              ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0; // 0=ignore
             if (Debug) Log.Add($"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
-            var resizedNew = Rescale(safe, factorFinal, arFinal, parms.H == null);
-            IfDebugLogPair("Rescale", resizedNew);
-
-            var resizeParams = new ResizeSettings
+            var resizeSettings = new ResizeSettings
             {
+                Width = safe.W,
+                Height = safe.H,
+                Factor = factorFinal,
                 // If the width was given by the parameters, then don't use FactorMap
-                UseFactorMap = parms.W != null
+                UseFactorMap = parms.W != null,
+                // If the height was supplied by parameters, don't use aspect ratio
+                UseAspectRatio = parms.H == null,
+                AspectRatio = arFinal,
             };
-            (resizeParams.Width, resizeParams.Height) = KeepInRangeProportional(resizedNew);
 
-            return resizeParams;
+            return resizeSettings;
         }
-
-
-
-        private (int W, int H) Rescale((int W, int H) dims, double factor, double aspectRatio, bool heightNotOverriden)
-        {
-            var maybeLog = Debug ? Log : null;
-            var wrapLog = maybeLog.SafeCall<(int, int)>();
-
-            var useAspectRatio = !DNearZero(aspectRatio);
-            if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
-
-            // 1. Check if we have nothing to rescale
-            string msgWhyNoRescale = null;
-            if (dims.W == 0 && dims.H == 0) msgWhyNoRescale = "W and H == 0";
-            if (DNearZero(factor - 1) && !useAspectRatio) msgWhyNoRescale = "Factor is 1 and no AspectRatio";
-            if (msgWhyNoRescale != null)
-                return wrapLog(msgWhyNoRescale + ", no changes", dims);
-
-            // 2. Figure out height/width, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
-            // Old: Width should only be calculated, if it wasn't explicitly provided (so only if coming from the settings)
-            var newW = dims.W * factor;
-
-            // Height should only get Aspect Ratio if the Height wasn't specifically provided
-            var newH = heightNotOverriden && useAspectRatio
-                ? newW / aspectRatio
-                : dims.H * factor;  // Note that often dims.H is 0, so this will still be 0
-
-            var final = ((int)newW, (int)newH);
-            return wrapLog($"W:{final.Item1}, H:{final.Item2}", final);
-        }
-
-
-        internal (int W, int H) KeepInRangeProportional((int W, int H) original)
-        {
-            var maybeLog = Debug ? Log : null;
-            var wrapLog = maybeLog.SafeCall<(int, int)>();
-
-            // Simple case - it fits into the max-range
-            if (original.W <= MaxSize && original.H <= MaxSize)
-                return wrapLog("is already within bounds", original);
-
-            // Harder - at least one doesn't fit - must figure out multiplier and adjust
-            var correctionFactor = (float)Math.Max(original.W, original.H) / MaxSize;
-            var newW = (int)Math.Min(original.W / correctionFactor, MaxSize);   // use Math.Min to avoid rounding errors leading to > 3200
-            var newH = (int)Math.Min(original.H / correctionFactor, MaxSize);
-
-            return wrapLog($"W:{newW}, H:{newH}", (newW, newH));
-        }
+        
 
         protected void IfDebugLogPair<T>(string prefix, (T W, T H) values)
         {

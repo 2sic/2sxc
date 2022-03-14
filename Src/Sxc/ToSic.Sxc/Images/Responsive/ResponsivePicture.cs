@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Images
                 {
                     var formatSettings = new ResizeSettings(resizeSettings, true);
                     if (resizeFormat != defFormat) formatSettings.Format = resizeFormat.Format;
-                    var srcSet = ImgLinker.ImageOrSrcSet(url, formatSettings);
+                    var srcSet = ImgLinker.SrcSet(url, formatSettings);
                     return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 });
             var result = Tag.TagList(sources);

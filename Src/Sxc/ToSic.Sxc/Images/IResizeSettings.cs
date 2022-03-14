@@ -51,6 +51,9 @@ namespace ToSic.Sxc.Images
         [PrivateApi("WIP")]
         double Factor { get; }
 
+        [PrivateApi("WIP")]
+        double AspectRatio { get; }
+
         /// <summary>
         /// SrcSet to generate.
         /// </summary>

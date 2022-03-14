@@ -38,10 +38,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 var imgSetFactor = svc.Img(ImgUrl, settings: settingsWithFactor, srcset: test.Pic.Srcset);
                 AreEqual(expected, imgSetFactor.ToString(), $"Failed (factor on settings): {test.Name}");
 
-                // Factor on both - should not equal, because the factor is applied 2x
+                // Factor on both - should not equal, because the factor is only applied 1x
                 if (factor == null) return; // Skip if the factor has no effect
                 var imgBothFactors = svc.Img(ImgUrl, settings: settingsWithFactor, factor: factor, srcset: test.Pic.Srcset);
-                AreNotEqual(expected, imgBothFactors.ToString(), $"Failed (factor on both): {test.Name}");
+                AreEqual(expected, imgBothFactors.ToString(), $"Failed (factor on both): {test.Name}");
             }
         }
 

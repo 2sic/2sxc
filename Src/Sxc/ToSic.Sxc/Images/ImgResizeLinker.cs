@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -14,9 +13,14 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Internal stuff")]
     public class ImgResizeLinker : HasLog<ImgResizeLinker>
     {
-        public ImgResizeLinker() : base($"{Constants.SxcLogName}.ImgRes") { }
+        public ImgResizeLinker() : base($"{Constants.SxcLogName}.ImgRes")
+        {
+            DimGen = new ResizeDimensionGenerator().Init(Log);
+        }
 
         public bool Debug = false;
+
+        public readonly ResizeDimensionGenerator DimGen;
 
         /// <summary>
         /// Make sure this is in sync with the Link.Image
@@ -41,7 +45,7 @@ namespace ToSic.Sxc.Images
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is IResizeSettings resizeSettings)
             {
-                var basic = ImageOrSrcSet(url, new ResizeSettings(resizeSettings, false));
+                var basic = ImageOnly(url, new ResizeSettings(resizeSettings, false));
                 return wrapLog("prepared:" + basic, basic);
             }
 
@@ -50,18 +54,55 @@ namespace ToSic.Sxc.Images
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                 parameters: parameters, srcset: false);
 
-            var result = ImageOrSrcSet(url, resizeSettings);
+            var result = ImageOnly(url, resizeSettings);
             return wrapLog("built:" + result, result);
         }
 
-        public string ImageOrSrcSet(string url, IResizeSettings settings)
+        public string ImageOnly(string url, IResizeSettings settings)
+        {
+            var wrapLog = Log.Call<string>();
+            //var srcSetConfig = SrcSetParser.ParseSet(settings.SrcSet);
+
+            // Basic case - no srcSet config
+            //if ((srcSetConfig?.Length ?? 0) == 0)
+                return wrapLog("no srcset", ConstructUrl(url, new ResizeSettings(settings)).Url);
+
+            //var results = srcSetConfig.Select(ssConfig =>
+            //{
+            //    // Copy the params so we can optimize based on the expected SrcSet specs
+            //    var currentSet = new ResizeSettings(settings, false);
+
+            //    if (ssConfig.SizeType == SizeDefault)
+            //        return ConstructUrl(url, currentSet).Url;
+                
+            //    // Factor is usually 1, but in srcSet scenarios it can have another value
+            //    // Because the settings that made it didn't get incorporated first
+            //    var f = settings.Factor;
+            //    currentSet.Width = BestSrcSetDimension(currentSet.Width, ssConfig.Width, ssConfig,
+            //        FallbackWidthForSrcSet);
+            //    currentSet.Height = BestSrcSetDimension(currentSet.Height, ssConfig.Height, ssConfig,
+            //        FallbackHeightForSrcSet);
+
+            //    //ApplyFactorAndAll(currentSet);
+            //    var one = ConstructUrl(url, currentSet);
+            //    one.Suffix = SrcSetParser.SrcSetSuffix(ssConfig, one.Width);
+            //    return one.Url + one.Suffix;
+            //});
+            //var result = string.Join(",\n", results);
+
+            //return wrapLog("srcset", result);
+        }
+
+
+        public string SrcSet(string url, IResizeSettings settings)
         {
             var wrapLog = Log.Call<string>();
             var srcSetConfig = SrcSetParser.ParseSet(settings.SrcSet);
 
-            // Basic case - no srcSet config
+            // Basic case -no srcSet config
+            // TODO: NOT sure if this is actually valid for srcset
             if ((srcSetConfig?.Length ?? 0) == 0)
-                return wrapLog("no srcset", ConstructUrl(url, new ResizeSettings(settings).ApplyFactor()));
+                return wrapLog("no srcset", ConstructUrl(url, new ResizeSettings(settings)).Url);
 
             var results = srcSetConfig.Select(ssConfig =>
             {
@@ -69,7 +110,7 @@ namespace ToSic.Sxc.Images
                 var currentSet = new ResizeSettings(settings, false);
 
                 if (ssConfig.SizeType == SizeDefault)
-                    return ConstructUrl(url, currentSet.ApplyFactor());
+                    return ConstructUrl(url, currentSet).Url;
                 
                 // Factor is usually 1, but in srcSet scenarios it can have another value
                 // Because the settings that made it didn't get incorporated first
@@ -79,9 +120,10 @@ namespace ToSic.Sxc.Images
                 currentSet.Height = BestSrcSetDimension(currentSet.Height, ssConfig.Height, ssConfig,
                     FallbackHeightForSrcSet);
 
-                currentSet.ApplyFactor();
-
-                return ConstructUrl(url, currentSet) + SrcSetParser.SrcSetSuffix(ssConfig, currentSet.Width);
+                //ApplyFactorAndAll(currentSet);
+                var one = ConstructUrl(url, currentSet);
+                one.Suffix = SrcSetParser.SrcSetSuffix(ssConfig, one.Width);
+                return one.Url + one.Suffix;
             });
             var result = string.Join(",\n", results);
 
@@ -107,11 +149,13 @@ namespace ToSic.Sxc.Images
             return (int)(part.Size * original);
         }
 
-        private string ConstructUrl(string url, IResizeSettings resizeSettings)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings)
         {
+            var one = DimGen.ResizeDimensions(resizeSettings);
+
             var resizerNvc = new NameValueCollection();
-            ImgAddIfRelevant(resizerNvc, "w", resizeSettings.Width, "0");
-            ImgAddIfRelevant(resizerNvc, "h", resizeSettings.Height, "0");
+            ImgAddIfRelevant(resizerNvc, "w", one.Width, "0");
+            ImgAddIfRelevant(resizerNvc, "h", one.Height, "0");
             ImgAddIfRelevant(resizerNvc, "quality", resizeSettings.Quality, "0");
             ImgAddIfRelevant(resizerNvc, "mode", resizeSettings.ResizeMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "scale", resizeSettings.ScaleMode, DontSetParam);
@@ -123,7 +167,8 @@ namespace ToSic.Sxc.Images
                 url = UrlHelpers.AddQueryString(url, resizeSettings.Parameters);
 
             var result = Tags.SafeUrl(url).ToString();
-            return result;
+            one.Url = result;
+            return one;
         }
 
 
