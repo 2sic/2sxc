@@ -1,8 +1,8 @@
 ﻿using Custom.Hybrid;
-using Microsoft.AspNetCore.Http;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
+using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
@@ -22,20 +22,20 @@ namespace ToSic.Sxc.Oqt.Server.Services
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
-        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly Lazy<IAliasRepository> _aliasRepositoryLazy;
         private Sxc.Context.IContextOfBlock _context;
 
         public OqtLinkHelper(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
-            IHttpContextAccessor contextAccessor, 
             ImgResizeLinker imgLinker,
-            Lazy<ILinkPaths> linkPathsLazy
+            Lazy<ILinkPaths> linkPathsLazy,
+            Lazy<IAliasRepository> aliasRepositoryLazy
         ) : base(imgLinker, linkPathsLazy)
         {
             _pageRepository = pageRepository;
             _siteStateInitializer = siteStateInitializer;
-            _contextAccessor = contextAccessor;
+            _aliasRepositoryLazy = aliasRepositoryLazy;
         }
 
         private new OqtLinkPaths LinkPaths => (OqtLinkPaths)base.LinkPaths;
@@ -71,16 +71,22 @@ namespace ToSic.Sxc.Oqt.Server.Services
             // Use current pageId, if pageId is not specified.
             var currentPageId = _context?.Page?.Id;
             var pid = pageId ?? currentPageId;
+
             if (pid == null)
                 throw new Exception($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");
 
-            var page = _pageRepository.GetPage(pid.Value);
+            var page = _pageRepository.GetPage(pid.Value, false);
 
-            // if pageId is invalid, fallback to currentPageId
-            if (page == null && currentPageId.HasValue && pid != currentPageId)
-                page = _pageRepository.GetPage(currentPageId.Value);
+            if (page == null) return null; 
+   
+            var alias = _aliasRepositoryLazy.Value.GetAliases()
+                    .OrderByDescending(a => /*a.IsDefault*/  a.Name.Length) // TODO: a.IsDefault DESC after upgrade to Oqt v3.0.3+
+                    //.ThenByDescending(a => a.Name.Length)
+                    .ThenBy(a => a.Name)
+                    .FirstOrDefault(a => a.SiteId == page.SiteId);
 
-            var alias = _siteStateInitializer.InitializedState.Alias;
+            if (alias == null)
+                throw new Exception($"Error, Alias is unknown, pageId: {pageId}, siteId: {page.SiteId} .");
 
             // for invalid page numbers just skip that part 
             var relativePath = Utilities.NavigateUrl(alias.Path, page?.Path ?? string.Empty, parameters ?? string.Empty); // NavigateUrl do not works with absolute links

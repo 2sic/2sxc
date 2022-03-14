@@ -42,6 +42,8 @@ namespace ToSic.Sxc.Web
             string language = null
             )
         {
+            var wrapLog = Log.Call<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
+
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
@@ -50,19 +52,24 @@ namespace ToSic.Sxc.Web
                 throw new ArgumentException($"Only one of the parameters '{nameof(api)}' or '{nameof(pageId)}' can have a value.");
 
             var strParams = ParametersToString(parameters);
-
+            Log.Add($"parameters:{strParams}");
+ 
             // TODO: unclear what would happen if a new parameter would replace an existing - would it just append? that wouldn't be good
             var url = api == null
                 ? ToPage(pageId, strParams, language)
                 : ToApi(api, strParams);
+            Log.Add($"url:{url}");
 
             var processed = ExpandUrlIfNecessary(type, url);
+            Log.Add($"expandUrl:{processed}, t:{type}");
 
-            return Tags.SafeUrl(processed).ToString();
+            return wrapLog("Ok", Tags.SafeUrl(processed).ToString());
         }
 
         private string ExpandUrlIfNecessary(string type, string url)
         {
+            if (url == null) return null;
+
             // Short-Circuit to really not do anything if the type isn't specified
             if (string.IsNullOrEmpty(type)) return url;
 
@@ -83,7 +90,7 @@ namespace ToSic.Sxc.Web
                     return url;
             }
         }
-        
+     
 
         protected abstract string ToApi(string api, string parameters = null);
 
