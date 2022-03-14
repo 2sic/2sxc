@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Images
             string srcset = null, 
             string imgAlt = null, 
             string imgClass = null
-        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, srcSet: srcset);
+        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, srcSet: srcset, imgAlt: imgAlt, imgClass: imgClass);
 
         public IResponsiveImage Img(
             string url,

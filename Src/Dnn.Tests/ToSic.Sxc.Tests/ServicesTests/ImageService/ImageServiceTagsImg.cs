@@ -16,21 +16,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformNoLicense>();
         }
 
-        [TestMethod]
-        public void ImgAlt()
-        {
-            var svc = Build<IImageService>();
-            var img = svc.Img(ImgUrl, imgAlt: "test-alt");
-            AreEqual($"<img src='{ImgUrl}' alt='test-alt'>", img.ToString());
-        }
-
-        [TestMethod]
-        public void ImgClass()
-        {
-            var svc = Build<IImageService>();
-            var img = svc.Img(ImgUrl, imgClass: "class-dummy");
-            AreEqual($"<img src='{ImgUrl}' class='class-dummy'>", img.ToString());
-        }
+        protected override bool TestModeImg => true;
 
         [DataRow(ImgTagJpgNone, SrcSetNone, null, "No Src Set")]
         [DataRow(ImgTagJpg12, SrcSet12, null, "With Src Set 1,2")]
@@ -53,6 +39,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 AreEqual(expected, imgSetFactor.ToString(), $"Failed (factor on settings): {test.Name}");
 
                 // Factor on both - should not equal, because the factor is applied 2x
+                if (factor == null) return; // Skip if the factor has no effect
                 var imgBothFactors = svc.Img(ImgUrl, settings: settingsWithFactor, factor: factor, srcset: test.Pic.Srcset);
                 AreNotEqual(expected, imgBothFactors.ToString(), $"Failed (factor on both): {test.Name}");
             }

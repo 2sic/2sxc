@@ -16,6 +16,9 @@ namespace ToSic.Sxc.Tests.ServicesTests
             return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformWithLicense>();
         }
 
+        protected override bool TestModeImg => false;
+
+
         [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, "No Src Set")]
         [DataRow(SrcWebP12 + SrcJpg12, SrcSet12, "With Src Set 1,2")]
         [DataTestMethod]

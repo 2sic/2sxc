@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Services;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
@@ -23,6 +24,41 @@ namespace ToSic.Sxc.Tests.ServicesTests
         protected const string ImgTagJpgNone = "<img src='" + Img120x24 + "'>";
         protected const string ImgTagJpgNoneF05 = "<img src='" + ImgUrl + "?w=60&amp;h=12'>";
 
+        #region Tests which both Img and Picture should do
+
+        protected virtual bool TestModeImg => true;
+
+        [TestMethod]
+        public void UrlResized()
+        {
+            var svc = Build<IImageService>();
+            var url = TestModeImg ? svc.Img(ImgUrl).Url : svc.Picture(ImgUrl).Url;
+            AreEqual(ImgUrl, url);
+        }
+
+        [TestMethod]
+        public void ImgAlt()
+        {
+            var svc = Build<IImageService>();
+            var imgAlt = "test-alt";
+            var result = TestModeImg 
+                ? svc.Img(ImgUrl, imgAlt: imgAlt).ToString()
+                : svc.Picture(ImgUrl, imgAlt: imgAlt).Img.ToString();
+            AreEqual($"<img src='{ImgUrl}' alt='{imgAlt}'>", result);
+        }
+
+        [TestMethod]
+        public void ImgClass()
+        {
+            var svc = Build<IImageService>();
+            var cls = "class-dummy";
+            var result = TestModeImg
+                ? svc.Img(ImgUrl, imgClass: cls).ToString()
+                : svc.Picture(ImgUrl, imgClass: cls).Img.ToString();
+            AreEqual($"<img src='{ImgUrl}' class='{cls}'>", result);
+        }
+
+        #endregion
 
 
         protected void PictureTagInner(string expectedParts, string srcset, bool inPicTag, string testName)
@@ -32,7 +68,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var pic = svc.Picture(ImgUrl, settings: settings, srcset: inPicTag ? srcset : null);
 
             var expected = $"<picture>{expectedParts}<img src='{ImgUrl}?w=120&amp;h=24'></picture>";
-            Assert.AreEqual(expected, pic.ToString(), $"Test failed: {testName}");
+            AreEqual(expected, pic.ToString(), $"Test failed: {testName}");
         }
 
 
@@ -48,7 +84,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 var settings = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height, srcset: test.Set.Srcset);
                 var sources = svc.Picture(ImgUrl, settings: settings, srcset: test.Pic.Srcset).Sources;
 
-                Assert.AreEqual(expected, sources.ToString(), $"Failed: {test.Name}");
+                AreEqual(expected, sources.ToString(), $"Failed: {test.Name}");
             }
         }
 
