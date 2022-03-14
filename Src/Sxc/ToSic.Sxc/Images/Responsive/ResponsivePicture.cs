@@ -23,33 +23,17 @@ namespace ToSic.Sxc.Images
             string srcSet = null,
             string imgAlt = null,
             string imgClass = null
-            ) : base(imgService, url, settings, factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
+            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
         {
             _featuresService = featuresService;
         }
         private readonly IFeaturesService _featuresService;
 
-        public Img Img
-        {
-            get
-            {
-                if (_imgTag != null)
-                    return _imgTag;
 
-                _imgTag = Tag.Img().Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false)));
-                // Only add these if they were really specified
-                if (ImgAlt != null) _imgTag.Alt(ImgAlt);
-                if (ImgClass != null) _imgTag.Class(ImgClass);
-                return _imgTag;
-            }
-        }
-
-        private Img _imgTag;
-
-        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Url, Settings), Img));
+        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(UrlOriginal, Settings), Img));
         private Picture _pictureTag;
 
-        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(Url, Settings));
+        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(UrlOriginal, Settings));
         private TagList _sourceTags;
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)

@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Images
 
         public ResizeSettings() {}
 
-        public ResizeSettings(IResizeSettings original, bool keepSourceSet)
+        public ResizeSettings(IResizeSettings original, bool keepSourceSet = true)
         {
             Width=original.Width;
             Height=original.Height;
@@ -38,6 +38,15 @@ namespace ToSic.Sxc.Images
             Parameters=original.Parameters;
             if (keepSourceSet)
                 SrcSet = original.SrcSet;
+        }
+
+
+        internal ResizeSettings ApplyFactor()
+        {
+            Width = (int)(Factor * Width);
+            Height = (int)(Factor * Height);
+            Factor = 1;
+            return this;
         }
     }
 }

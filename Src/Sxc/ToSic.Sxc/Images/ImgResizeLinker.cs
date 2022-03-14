@@ -58,39 +58,33 @@ namespace ToSic.Sxc.Images
 
             // Basic case - no srcSet config
             if ((srcSetConfig?.Length ?? 0) == 0)
-                return ConstructUrl(url, originalSettings);
+                return ConstructUrl(url, new ResizeSettings(originalSettings).ApplyFactor());
 
             var results = srcSetConfig.Select(ssConfig =>
             {
-                if (ssConfig.SizeType == SizeDefault)
-                    return ConstructUrl(url, originalSettings);
-
                 // Copy the params so we can optimize based on the expected SrcSet specs
-                var srcResize = new ResizeSettings(originalSettings, false);
+                var currentSet = new ResizeSettings(originalSettings, false);
 
+                if (ssConfig.SizeType == SizeDefault)
+                    return ConstructUrl(url, currentSet.ApplyFactor());
+                
                 // Factor is usually 1, but in srcSet scenarios it can have another value
                 // Because the settings that made it didn't get incorporated first
                 var f = originalSettings.Factor;
-                srcResize.Width = BestSrcSetDimension(srcResize.Width, ssConfig.Width, ssConfig, FallbackWidthForSrcSet);
-                srcResize.Height = BestSrcSetDimension(srcResize.Height, ssConfig.Height, ssConfig, FallbackHeightForSrcSet);
+                currentSet.Width = BestSrcSetDimension(currentSet.Width, ssConfig.Width, ssConfig,
+                    FallbackWidthForSrcSet);
+                currentSet.Height = BestSrcSetDimension(currentSet.Height, ssConfig.Height, ssConfig,
+                    FallbackHeightForSrcSet);
 
-                srcResize.Width = (int)(f * srcResize.Width);
-                srcResize.Height = (int)(f * srcResize.Height);
+                currentSet.ApplyFactor();
 
-                var size = ssConfig.Size;
-                var sizeTypeCode = ssConfig.SizeType;
-                if (sizeTypeCode == SizeFactorOf)
-                {
-                    size = srcResize.Width;
-                    sizeTypeCode = SizeWidth;
-                }
-
-                return $"{ConstructUrl(url, srcResize)} {size.ToString(CultureInfo.InvariantCulture)}{sizeTypeCode}";
+                return ConstructUrl(url, currentSet) + SrcSetParser.SrcSetSuffix(ssConfig, currentSet.Width);
             });
             var result = string.Join(",\n", results);
 
             return result;
         }
+
 
         /// <summary>
         /// Get the best matching dimension (width/height) based on what's specified

@@ -18,9 +18,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
         protected const string ImgTagJpg12 = "<img src='" + Img120x24 + "' " + SrcSet12ResultJpg + ">";
 
         protected const string SrcSetNone = null;
-        protected const string SrcWebPNone = "<source type='image/webp' srcset='" + ImgUrl + "?w=120&amp;h=24&amp;format=webp'>";
-        protected const string SrcJpgNone = "<source type='image/jpeg' srcset='" + ImgUrl + "?w=120&amp;h=24'>";
-        protected const string ImgTagJpgNone = "<img src='" + ImgUrl + "?w=120&amp;h=24'>";
+        protected const string SrcWebPNone = "<source type='image/webp' srcset='" + Img120x24 + "&amp;format=webp'>";
+        protected const string SrcJpgNone = "<source type='image/jpeg' srcset='" + Img120x24 + "'>";
+        protected const string ImgTagJpgNone = "<img src='" + Img120x24 + "'>";
+        protected const string ImgTagJpgNoneF05 = "<img src='" + ImgUrl + "?w=60&amp;h=12'>";
 
 
 

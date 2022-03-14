@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using static ToSic.Sxc.Plumbing.ParseObject;
+using static ToSic.Sxc.Images.SrcSetPart;
 
 namespace ToSic.Sxc.Images
 {
@@ -71,6 +73,20 @@ namespace ToSic.Sxc.Images
 
         private const char PartSeparator = ',';
         private const char MoreSeparator = ':';
+
+        public static string SrcSetSuffix(SrcSetPart ssConfig, int finalWidth)
+        {
+            var srcSetSize = ssConfig.Size;
+            var srcSetSizeTypeCode = ssConfig.SizeType;
+            if (srcSetSizeTypeCode == SizeFactorOf)
+            {
+                srcSetSize = finalWidth;
+                srcSetSizeTypeCode = SizeWidth;
+            }
+
+            var suffix = $" {srcSetSize.ToString(CultureInfo.InvariantCulture)}{srcSetSizeTypeCode}";
+            return suffix;
+        }
 
     }
 }
