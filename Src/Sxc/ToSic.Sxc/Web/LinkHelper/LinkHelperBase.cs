@@ -147,7 +147,7 @@ namespace ToSic.Sxc.Web
             // Note that srcset is false, so it won't generate a bunch of sources, just one - which is how the API works
             // Anybody that wants a srcset must use the new IImageService for that
             var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams, srcset: false);
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams);
 
             return imageUrl;
         }

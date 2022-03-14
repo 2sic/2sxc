@@ -39,7 +39,8 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object srcset = null
+            object srcset = null,
+            string factorMap = null
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
@@ -81,6 +82,8 @@ namespace ToSic.Sxc.Images
             resizeParams.SrcSet = srcset is string srcSetString
                 ? srcSetString
                 : srcset is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
+
+            resizeParams.FactorMap = FactorMapHelper.CreateFromString(factorMap);
             
             return resizeParams;
         }
@@ -100,20 +103,19 @@ namespace ToSic.Sxc.Images
             IfDebugLogPair("Safe", safe);
 
 
-            var factorFinal = DoubleOrNullWithCalculation(factor) ?? 0;
+            var factorFinal = DoubleOrNullWithCalculation(factor) ?? 0; // 0 = ignore
             double arFinal = DoubleOrNullWithCalculation(aspectRatio)
-                             ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0;
+                             ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0; // 0=ignore
             if (Debug) Log.Add($"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
-            // if either param h/w was null, then do a rescaling on the param which comes from the settings
-            // But ignore the other one!
-            var rescale = (!DNearZero(factorFinal) || !DNearZero(arFinal));
-            var resizedNew = rescale
-                ? Rescale(safe, factorFinal, arFinal, parms.H == null)
-                : safe;
+            var resizedNew = Rescale(safe, factorFinal, arFinal, parms.H == null);
             IfDebugLogPair("Rescale", resizedNew);
 
-            var resizeParams = new ResizeSettings();
+            var resizeParams = new ResizeSettings
+            {
+                // If the width was given by the parameters, then don't use FactorMap
+                UseFactorMap = parms.W != null
+            };
             (resizeParams.Width, resizeParams.Height) = KeepInRangeProportional(resizedNew);
 
             return resizeParams;
@@ -121,22 +123,18 @@ namespace ToSic.Sxc.Images
 
 
 
-        internal (int W, int H) Rescale((int W, int H) dims, double factor, double aspectRatio, bool heightNotOverriden)
+        private (int W, int H) Rescale((int W, int H) dims, double factor, double aspectRatio, bool heightNotOverriden)
         {
             var maybeLog = Debug ? Log : null;
             var wrapLog = maybeLog.SafeCall<(int, int)>();
 
             var useAspectRatio = !DNearZero(aspectRatio);
+            if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
 
             // 1. Check if we have nothing to rescale
             string msgWhyNoRescale = null;
-            if (dims.W == 0 && dims.H == 0) 
-                msgWhyNoRescale = "w/h == 0";
-            if (DNearZero(factor) || DNearZero(factor - 1)) // Factor is 0 or 1
-            {
-                factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
-                if (!useAspectRatio) msgWhyNoRescale = "Factor is 0 or 1 and no AspectRatio";
-            }
+            if (dims.W == 0 && dims.H == 0) msgWhyNoRescale = "W and H == 0";
+            if (DNearZero(factor - 1) && !useAspectRatio) msgWhyNoRescale = "Factor is 1 and no AspectRatio";
             if (msgWhyNoRescale != null)
                 return wrapLog(msgWhyNoRescale + ", no changes", dims);
 
@@ -147,8 +145,8 @@ namespace ToSic.Sxc.Images
             // Height should only get Aspect Ratio if the Height wasn't specifically provided
             var newH = heightNotOverriden && useAspectRatio
                 ? newW / aspectRatio
-                : dims.H * factor;
-            
+                : dims.H * factor;  // Note that often dims.H is 0, so this will still be 0
+
             var final = ((int)newW, (int)newH);
             return wrapLog($"W:{final.Item1}, H:{final.Item2}", final);
         }

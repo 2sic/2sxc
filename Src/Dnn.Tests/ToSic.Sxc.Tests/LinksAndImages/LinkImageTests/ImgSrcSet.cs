@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
                 "weird-extension.abc"
             };
 
-            foreach (var url in urls) TestOnLinkerAndHelper(url, url, srcset: srcset);
+            foreach (var url in urls) TestOnLinkerSrcSet(url, url, srcset: srcset);
         }
 
         [DataRow("test.jpg?w=1000 1000w", "test.jpg", "1000")]
@@ -30,7 +29,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataRow("test.jpg?w=500 500w,\ntest.jpg?w=1000 1000w,\ntest.jpg?w=2000 2000w", "test.jpg", "500w,1000w,2000w")]
         [DataTestMethod]
         public void SrcSetUrlOnlyW(string expected, string url, string srcset) 
-            => TestOnLinkerAndHelper(expected, url, srcset: srcset);
+            => TestOnLinkerSrcSet(expected, url, srcset: srcset);
 
 
 
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataRow("test.jpg 1.5x", "test.jpg", "1.5x")]
         [DataTestMethod]
         public void SrcSetUrlOnlyX(string expected, string url, string srcset) 
-            => TestOnLinkerAndHelper(expected, url, srcset: srcset);
+            => TestOnLinkerSrcSet(expected, url, srcset: srcset);
 
         [DataRow("test.jpg?w=1200 1x", "test.jpg", "1")]
         [DataRow("test.jpg?w=1800 1.5x", "test.jpg", "1.5x")]
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2000&h=1000 2x", "test.jpg", "1x,1.5x,2=2000:1000")]
         [DataTestMethod]
         public void SrcSetUrlXAndWidth(string expected, string url, string srcset)
-            => TestOnLinkerAndHelper(expected, url, width: 1200, srcset: srcset);
+            => TestOnLinkerSrcSet(expected, url, width: 1200, srcset: srcset);
 
 
 
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataRow("test.jpg?w=600 600w", "test.jpg", "1:2")] // without '*' it auto-detects a proportion
         [DataTestMethod]
         public void SrcSetUrlOnlyStar(string expected, string url, string srcset) 
-            => TestOnLinkerAndHelper(expected, url, srcset: srcset);
+            => TestOnLinkerSrcSet(expected, url, srcset: srcset);
 
         [DataRow("test.jpg?w=120 120w", "test.jpg", "1*")]
         [DataRow("test.jpg?w=180 180w", "test.jpg", "1.5*")]
@@ -72,7 +71,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataRow("test.jpg?w=120 120w,\ntest.jpg?w=200&h=180 200w", "test.jpg", "1*,2*=200:180")]
         [DataTestMethod]
         public void SrcSetUrlStarAndWidth(string expected, string url, string srcset)
-            => TestOnLinkerAndHelper(expected, url, width: 120, srcset: srcset);
+            => TestOnLinkerSrcSet(expected, url, width: 120, srcset: srcset);
 
 
         [TestMethod]
@@ -80,7 +79,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             var linker = GetLinker();
             var settings = linker.ResizeParamMerger.BuildResizeSettings(width: 1000, factor: 0.5, srcset: "0.5");
-            var src = linker.Image("test.jpg", settings);
+            var src = linker.ImageOrSrcSet("test.jpg", settings);
             Assert.AreEqual("test.jpg?w=250 250w", src, "Src should be a quarter now");
 
         }

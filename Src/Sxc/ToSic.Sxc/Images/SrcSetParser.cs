@@ -10,6 +10,11 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Hide implementation")]
     public class SrcSetParser
     {
+        private const char KeyValueSeparator = '=';
+        private const char PartSeparator = ',';
+        private const char MoreSeparator = ':';
+
+
         public static SrcSetPart[] ParseSet(string srcSet)
         {
             if (string.IsNullOrWhiteSpace(srcSet)) return Array.Empty<SrcSetPart>();
@@ -24,7 +29,7 @@ namespace ToSic.Sxc.Images
         public static SrcSetPart ParsePart(string partString)
         {
             var withMore = (partString ?? string.Empty)
-                .Split('=')
+                .Split(KeyValueSeparator)
                 .Select(more => more.Trim())
                 .ToArray();
 
@@ -70,9 +75,6 @@ namespace ToSic.Sxc.Images
 
             return part;
         }
-
-        private const char PartSeparator = ',';
-        private const char MoreSeparator = ':';
 
         public static string SrcSetSuffix(SrcSetPart ssConfig, int finalWidth)
         {

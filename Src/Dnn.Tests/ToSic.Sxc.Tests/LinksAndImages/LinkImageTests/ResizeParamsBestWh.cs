@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         }
 
 
-        private bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetNameNotFinal settings = null)
+        internal static bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetNameNotFinal settings = null)
         {
             // Get a new linker for each test run
             var linker = new ResizeParamMerger();

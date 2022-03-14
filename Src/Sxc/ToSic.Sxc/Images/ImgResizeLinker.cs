@@ -33,44 +33,47 @@ namespace ToSic.Sxc.Images
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string parameters = null,
-            object srcset = null // can be a string or a bool:true 
+            string parameters = null
             )
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcset)}:{srcset}");
+            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
 
-            if (!(settings is IResizeSettings resizeSettings))
-                resizeSettings = ResizeParamMerger.BuildResizeSettings(
-                    settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
-                    scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-                    parameters: parameters, srcset: srcset);
+            // Modern case - all settings have already been prepared, the other settings are ignored
+            if (settings is IResizeSettings resizeSettings)
+            {
+                var basic = ImageOrSrcSet(url, new ResizeSettings(resizeSettings, false));
+                return wrapLog("prepared:" + basic, basic);
+            }
 
-            var result = GenerateFinalUrlOrSrcSet(url, resizeSettings);
+            resizeSettings = ResizeParamMerger.BuildResizeSettings(
+                settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
+                parameters: parameters, srcset: false);
 
-            return wrapLog(result, result);
+            var result = ImageOrSrcSet(url, resizeSettings);
+            return wrapLog("built:" + result, result);
         }
 
-        public string Image(string url, IResizeSettings settings) => GenerateFinalUrlOrSrcSet(url, settings);
-
-        private string GenerateFinalUrlOrSrcSet(string url, IResizeSettings originalSettings)
+        public string ImageOrSrcSet(string url, IResizeSettings settings)
         {
-            var srcSetConfig = SrcSetParser.ParseSet(originalSettings.SrcSet);
+            var wrapLog = Log.Call<string>();
+            var srcSetConfig = SrcSetParser.ParseSet(settings.SrcSet);
 
             // Basic case - no srcSet config
             if ((srcSetConfig?.Length ?? 0) == 0)
-                return ConstructUrl(url, new ResizeSettings(originalSettings).ApplyFactor());
+                return wrapLog("no srcset", ConstructUrl(url, new ResizeSettings(settings).ApplyFactor()));
 
             var results = srcSetConfig.Select(ssConfig =>
             {
                 // Copy the params so we can optimize based on the expected SrcSet specs
-                var currentSet = new ResizeSettings(originalSettings, false);
+                var currentSet = new ResizeSettings(settings, false);
 
                 if (ssConfig.SizeType == SizeDefault)
                     return ConstructUrl(url, currentSet.ApplyFactor());
                 
                 // Factor is usually 1, but in srcSet scenarios it can have another value
                 // Because the settings that made it didn't get incorporated first
-                var f = originalSettings.Factor;
+                var f = settings.Factor;
                 currentSet.Width = BestSrcSetDimension(currentSet.Width, ssConfig.Width, ssConfig,
                     FallbackWidthForSrcSet);
                 currentSet.Height = BestSrcSetDimension(currentSet.Height, ssConfig.Height, ssConfig,
@@ -82,7 +85,7 @@ namespace ToSic.Sxc.Images
             });
             var result = string.Join(",\n", results);
 
-            return result;
+            return wrapLog("srcset", result);
         }
 
 

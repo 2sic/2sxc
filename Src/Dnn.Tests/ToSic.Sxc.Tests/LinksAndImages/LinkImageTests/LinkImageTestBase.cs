@@ -27,18 +27,18 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             string resizeMode = null,
             string scaleMode = null,
             string format = null,
-            object aspectRatio = null,
-            string srcset = null)
+            object aspectRatio = null)
         {
             // Test with Linker
             var linker = GetLinker();
             var linkerResult = linker.Image(url: url, settings: settings, factor: factor, width: width, height: height,
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                aspectRatio: aspectRatio, srcset: srcset);
+                aspectRatio: aspectRatio);
             Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
 
             // Skip Helper-tests if using SrcSet as that's not supported in that case
-            if (srcset != null) return;
+            // Because it would lead to not-expected result
+            //if (srcset != null) return;
 
             var linkHelper = GetLinkHelper();
             var helperResult = linkHelper.TestImage(url: url, settings: settings, factor: factor, width: width,
@@ -46,9 +46,31 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
                 aspectRatio: aspectRatio);
             Assert.AreEqual(expected, helperResult, "Failed on ILinkHelper");
+        }
 
 
-
+        protected void TestOnLinkerSrcSet(string expected,
+            string url = null,
+            object settings = null,
+            object factor = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object width = null,
+            object height = null,
+            object quality = null,
+            string resizeMode = null,
+            string scaleMode = null,
+            string format = null,
+            object aspectRatio = null,
+            string srcset = null)
+        {
+            // Test with Linker
+            var linker = GetLinker();
+            var typedSettings = linker.ResizeParamMerger.BuildResizeSettings(settings: settings, factor: factor, width: width,
+                height: height,
+                quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
+                aspectRatio: aspectRatio, srcset: srcset);
+            var linkerResult = linker.ImageOrSrcSet(url, typedSettings);
+            Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
         }
     }
 }

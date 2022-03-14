@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
         protected readonly string ImgClass;
         protected readonly string UrlOriginal;
 
-        public string Url => _url ?? (_url = ImgLinker.Image(UrlOriginal, new ResizeSettings(Settings, false)));
+        public string Url => _url ?? (_url = ImgLinker.ImageOrSrcSet(UrlOriginal, new ResizeSettings(Settings, false)));
         private string _url;
         internal IResizeSettings Settings { get; }
 

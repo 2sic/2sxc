@@ -35,7 +35,8 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object srcset = null
+            object srcset = null,
+            string factorMap = null
             )
         {
             settings = GetBestSettings(settings);
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Images
                 srcset = true;
             return ImgLinker.ResizeParamMerger.BuildResizeSettings(settings: settings, factor: factor,
                 width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, srcset: srcset);
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, srcset: srcset, factorMap: factorMap);
         }
     }
 }

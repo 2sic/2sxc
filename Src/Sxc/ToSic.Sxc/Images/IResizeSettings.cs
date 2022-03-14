@@ -61,5 +61,11 @@ namespace ToSic.Sxc.Images
         /// Rarely used, but can be used for resize parameters which are not standard. 
         /// </summary>
         NameValueCollection Parameters { get; }
+
+        [PrivateApi("WIP")]
+        FactorMap[] FactorMap { get; }
+
+        [PrivateApi("WIP")] bool UseFactorMap { get; }
+
     }
 }
