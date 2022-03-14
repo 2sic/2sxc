@@ -35,12 +35,16 @@ namespace ToSic.Sxc.Dnn.Web
         protected override string ToPage(int? pageId, string parameters = null, string language = null)
         {
             if (pageId.HasValue)
-                return DnnValueConverter.ResolvePageLink(pageId.Value, language, parameters);
-
-            return parameters == null
+            {
+                var url = DnnValueConverter.ResolvePageLink(pageId.Value, language, parameters);
+                if (!string.IsNullOrEmpty(url)) return url;
+            }
+            
+            var currentPageUrl = parameters == null
                 ? Dnn.Tab.FullUrl
-                : DotNetNuke.Common.Globals.NavigateURL(Dnn.Tab.TabID, "", parameters);
-            // NavigateURL returns absolute links
+                : DotNetNuke.Common.Globals.NavigateURL(Dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
+
+            return CurrentPageUrlWithEventualHashError(pageId, currentPageUrl);
         }
 
 

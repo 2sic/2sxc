@@ -171,5 +171,8 @@ namespace ToSic.Sxc.Web
             return string.IsNullOrEmpty(queryString) ? api :
                 api?.IndexOf("?") > 0 ? $"{api}&{queryString}" : $"{api}?{queryString}";
         }
+
+        internal static string CurrentPageUrlWithEventualHashError(int? pageId, string currentPageUrl) 
+            => !pageId.HasValue ? currentPageUrl : $"{currentPageUrl}#error-unknown-pageid-{pageId}";
     }
 }
