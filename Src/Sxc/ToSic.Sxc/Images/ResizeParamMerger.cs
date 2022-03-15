@@ -1,5 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
+using ToSic.Eav.Data;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
@@ -85,18 +87,44 @@ namespace ToSic.Sxc.Images
 
             try
             {
-                // Use given OR
-                if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
-                    advanced = getSettings?.Get(AdvancedField);
-
                 if (advanced is ResizeSettingsAdvanced advTyped)
                     resizeParams.Advanced = advTyped;
-                else if (advanced is string advString && !string.IsNullOrWhiteSpace(advString))
-                    resizeParams.Advanced = JsonConvert.DeserializeObject<ResizeSettingsAdvanced>(advString);
+                // Use given OR get it / piggyback
+                else if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
+                    resizeParams.Advanced = TryToGetAndCacheSettingsAdvanced(getSettings);
             }
             catch{ /* ignore */ }
 
             return resizeParams;
+        }
+
+        private ResizeSettingsAdvanced TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
+        {
+            if (getSettings is IPropertyLookup getProperties)
+            {
+                var advProperty = getProperties.FindPropertyInternal(AdvancedField, Array.Empty<string>(), Log);
+                if (advProperty?.Result is string jsonAdvanced && !string.IsNullOrWhiteSpace(jsonAdvanced))
+                {
+                    var entity = advProperty.Source;
+                    if (entity is IHasPiggyBack piggyBackCache)
+                        return piggyBackCache.GetPiggyBack("AdvancedSettings",
+                            () => ParseAdvancedSettings(advProperty.Result));
+                }
+            }
+            var advanced = getSettings?.Get(AdvancedField);
+
+            return ParseAdvancedSettings(advanced);
+        }
+
+        private ResizeSettingsAdvanced ParseAdvancedSettings(object value)
+        {
+            try
+            {
+                if (value is string advString && !string.IsNullOrWhiteSpace(advString))
+                    return JsonConvert.DeserializeObject<ResizeSettingsAdvanced>(advString);
+            }
+            catch { /* ignore */ }
+            return new ResizeSettingsAdvanced();
         }
 
         internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetByName settingsOrNull)
@@ -121,7 +149,7 @@ namespace ToSic.Sxc.Images
             var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format, srcSet)
             {
                 // If the width was given by the parameters, then don't use FactorMap
-                UseFactorMap = parms.W != null,
+                UseFactorMap = parms.W == null,
                 // If the height was supplied by parameters, don't use aspect ratio
                 UseAspectRatio = parms.H == null,
             };

@@ -46,9 +46,11 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             };
 
             var l = GetLinker();
-            var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000/*, advanced: adv*/);
+            var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000, advanced: adv);
 
-            settings.Advanced = adv;
+            // Normally UseFactorMap is false because we set the width explicitly
+            // But to run the test, we must set it to true
+            settings.UseFactorMap = true;
 
 
             var f1 = l.DimGen.ResizeDimensions(new ResizeSettings(settings, factor: factor));
