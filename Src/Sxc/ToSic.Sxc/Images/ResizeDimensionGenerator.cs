@@ -17,14 +17,14 @@ namespace ToSic.Sxc.Images
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
 
-            (int Width, int Height) initial = (
+            (int Width, int Height) dim = (
                 optionalPrepared?.Width ?? resizeSettings.Width,
                 optionalPrepared?.Height ?? resizeSettings.Height
             );
 
-            (int Width, int Height) dim = (
-                (resizeSettings.UseFactorMap ? srcSetSettings?.Width : null) ?? (int)(factor * initial.Width),
-                initial.Height
+            dim = (
+                (resizeSettings.UseFactorMap ? srcSetSettings?.Width : null) ?? (int)(factor * dim.Width),
+                dim.Height
             );
 
             dim.Height = HeightFromAspectRatioOrFactor(dim, factor, resizeSettings.UseAspectRatio, resizeSettings.AspectRatio);

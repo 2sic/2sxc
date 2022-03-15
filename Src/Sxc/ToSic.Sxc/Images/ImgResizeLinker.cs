@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Images
 
             var srcSetSettings = settings.Find(srcSetType);
 
-            var srcSetConfig = SrcSetParser.ParseSet(srcSetSettings?.SrcSet ?? settings.SrcSet);
+            var srcSetConfig = srcSetSettings.SrcSetParts ?? SrcSetParser.ParseSet(settings.SrcSet);
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetConfig?.Length ?? 0) == 0)
@@ -123,6 +123,7 @@ namespace ToSic.Sxc.Images
         private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, ResizeSettingsSrcSet srcSetSettings, OneResize preCalculated = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, preCalculated);
+            one.TagEnhancements = srcSetSettings;
 
             var resizerNvc = new NameValueCollection();
             ImgAddIfRelevant(resizerNvc, "w", one.Width, "0");
