@@ -81,10 +81,10 @@ namespace ToSic.Sxc.Images
 
                 // Only add these if they were really specified
                 if (ImgAlt != null) _imgTag.Alt(ImgAlt);
-                var classToAdd = $"{ImgClass} {ImgService.Settings.ImageClass}";
-                if (!string.IsNullOrWhiteSpace(classToAdd)) _imgTag.Class(classToAdd);
-
                 var settings = ImgService.Settings;
+                var classToAdd = $"{ImgClass} {settings.ImageClass}";
+                if (!string.IsNullOrWhiteSpace(classToAdd)) _imgTag.Class(classToAdd.Trim());
+
                 if (settings.ImageSetWidth && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);
                 if (settings.ImageSetHeight && ThisResize.Height != 0) _imgTag.Height(ThisResize.Height);
 
