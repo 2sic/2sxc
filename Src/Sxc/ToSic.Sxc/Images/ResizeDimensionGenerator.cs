@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Images
         public bool Debug = false;
 
 
-        public OneResize ResizeDimensions(ResizeSettings resizeSettings, OneResize optionalPrepared = null)
+        public OneResize ResizeDimensions(ResizeSettings resizeSettings, ResizeSettingsSrcSet srcSetSettings, OneResize optionalPrepared = null)
         {
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Images
             );
 
             (int Width, int Height) dim = (
-                (resizeSettings.UseFactorMap ? FactorMapHelper.Find(resizeSettings.Advanced?.Factors, factor)?.Width : null) ?? (int)(factor * initial.Width),
+                (resizeSettings.UseFactorMap ? srcSetSettings?.Width : null) ?? (int)(factor * initial.Width),
                 initial.Height
             );
 

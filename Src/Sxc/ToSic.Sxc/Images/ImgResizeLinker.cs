@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Images
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is ResizeSettings resizeSettings)
             {
-                var basic = ImageOnly(url, resizeSettings).Url;
+                var basic = ImageOnly(url, resizeSettings, SrcSetType.ImgSrc).Url;
                 return wrapLog("prepared:" + basic, basic);
             }
 
@@ -54,30 +54,34 @@ namespace ToSic.Sxc.Images
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                 parameters: parameters, srcset: false);
 
-            var result = ImageOnly(url, resizeSettings).Url;
+            var result = ImageOnly(url, resizeSettings, SrcSetType.ImgSrc).Url;
             return wrapLog("built:" + result, result);
         }
 
-        public OneResize ImageOnly(string url, ResizeSettings settings)
+        public OneResize ImageOnly(string url, ResizeSettings settings, SrcSetType srcSetType)
         {
             var wrapLog = Log.Call<OneResize>();
-            return wrapLog("no srcset", ConstructUrl(url, settings));
+            var srcSetSettings = settings.Find(srcSetType);
+            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings));
         }
 
 
-        public string SrcSet(string url, ResizeSettings settings)
+        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType)
         {
             var wrapLog = Log.Call<string>();
-            var srcSetConfig = SrcSetParser.ParseSet(settings.SrcSet);
+
+            var srcSetSettings = settings.Find(srcSetType);
+
+            var srcSetConfig = SrcSetParser.ParseSet(srcSetSettings?.SrcSet ?? settings.SrcSet);
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetConfig?.Length ?? 0) == 0)
-                return wrapLog("no srcset", ConstructUrl(url, settings).Url);
+                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings).Url);
 
             var results = srcSetConfig.Select(ssConfig =>
             {
                 if (ssConfig.SizeType == SizeDefault)
-                    return ConstructUrl(url, settings);
+                    return ConstructUrl(url, settings, srcSetSettings);
 
                 var oneResize = new OneResize
                 {
@@ -87,7 +91,7 @@ namespace ToSic.Sxc.Images
                     FallbackHeightForSrcSet)
                 };
 
-                var one = ConstructUrl(url, settings, oneResize);
+                var one = ConstructUrl(url, settings, srcSetSettings, oneResize);
                 // this must happen at the end
                 one.Suffix = SrcSetParser.SrcSetSuffix(ssConfig, one.Width);
                 return one;
@@ -116,9 +120,9 @@ namespace ToSic.Sxc.Images
             return (int)(part.Size * original);
         }
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, OneResize preCalculated = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, ResizeSettingsSrcSet srcSetSettings, OneResize preCalculated = null)
         {
-            var one = DimGen.ResizeDimensions(resizeSettings, preCalculated);
+            var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, preCalculated);
 
             var resizerNvc = new NameValueCollection();
             ImgAddIfRelevant(resizerNvc, "w", one.Width, "0");

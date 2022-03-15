@@ -69,5 +69,7 @@ namespace ToSic.Sxc.Images
         {
             Factor = factor;
         }
+
+        public ResizeSettingsSrcSet Find(SrcSetType srcSetType) => FactorMapHelper.Find(this, srcSetType);
     }
 }

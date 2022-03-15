@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Images
 
         public string Url => ThisResize.Url;
 
-        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(UrlOriginal, Settings));
+        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(UrlOriginal, Settings, SrcSetType.ImgSrc));
         private OneResize _thisResize;
 
         internal ResizeSettings Settings { get; }

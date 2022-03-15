@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Images
             try
             {
                 if (advanced is ResizeSettingsAdvanced advTyped)
-                    resizeParams.Advanced = advTyped;
+                    resizeParams.Advanced = advTyped.InitAfterLoad();
                 // Use given OR get it / piggyback
                 else if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
                     resizeParams.Advanced = TryToGetAndCacheSettingsAdvanced(getSettings);
@@ -100,31 +100,31 @@ namespace ToSic.Sxc.Images
 
         private ResizeSettingsAdvanced TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
         {
+            // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
             if (getSettings is IPropertyLookup getProperties)
             {
-                var advProperty = getProperties.FindPropertyInternal(AdvancedField, Array.Empty<string>(), Log);
-                if (advProperty?.Result is string jsonAdvanced && !string.IsNullOrWhiteSpace(jsonAdvanced))
-                {
-                    var entity = advProperty.Source;
-                    if (entity is IHasPiggyBack piggyBackCache)
-                        return piggyBackCache.GetPiggyBack("AdvancedSettings",
-                            () => ParseAdvancedSettings(advProperty.Result));
-                }
+                var result = getProperties.GetOrCreateInPiggyBack(AdvancedField, ParseAdvancedSettings, Log);
+                if (result != null) return result;
             }
-            var advanced = getSettings?.Get(AdvancedField);
 
-            return ParseAdvancedSettings(advanced);
+            return ParseAdvancedSettings(getSettings?.Get(AdvancedField));
         }
+
 
         private ResizeSettingsAdvanced ParseAdvancedSettings(object value)
         {
+            var wrapLog = Log.Call<ResizeSettingsAdvanced>();
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return JsonConvert.DeserializeObject<ResizeSettingsAdvanced>(advString);
+                    return wrapLog("create", JsonConvert.DeserializeObject<ResizeSettingsAdvanced>(advString)?.InitAfterLoad());
             }
-            catch { /* ignore */ }
-            return new ResizeSettingsAdvanced();
+            catch (Exception ex)
+            {
+                Log.Add($"error converting json to ResizeSettings. Json: {value}");
+                Log.Exception(ex);
+            }
+            return wrapLog("new", new ResizeSettingsAdvanced().InitAfterLoad());
         }
 
         internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetByName settingsOrNull)

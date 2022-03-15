@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Images
         private Img _imgTag;
 
         /// <inheritdoc />
-        public string Srcset => _srcSetCache ?? (_srcSetCache = Settings.SrcSet == null ? "" : ImgLinker.SrcSet(UrlOriginal, Settings));
+        public string Srcset => _srcSetCache ?? (_srcSetCache = Settings.SrcSet == null ? "" : ImgLinker.SrcSet(UrlOriginal, Settings, SrcSetType.ImgSrcSet));
         private string _srcSetCache;
 
         public override string ToString() => Img.ToString();

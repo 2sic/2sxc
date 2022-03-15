@@ -70,13 +70,13 @@ namespace ToSic.Sxc.Images
             string noParamOrder = Parameters.Protector,
             object factor = null, 
             string srcset = null
-        ) => new HybridHtmlString(ImgLinker.SrcSet(url, MergeSettings(settings, factor: factor, srcset: srcset)));
+        ) => new HybridHtmlString(ImgLinker.SrcSet(url, MergeSettings(settings, factor: factor, srcset: srcset), SrcSetType.ImgSrcSet));
 
         private ResizeSettings MergeSettings(
             object settings = null,
             string noParamOrder = Parameters.Protector,
             object factor = null, 
             string srcset = null
-        ) => ImgLinker.ResizeParamMerger.BuildResizeSettings((GetBestSettings(settings), factor: factor, srcset: (srcset as object) ?? true));
+        ) => ImgLinker.ResizeParamMerger.BuildResizeSettings((GetBestSettings(settings), factor: factor, srcset: srcset as object ?? true));
     }
 }

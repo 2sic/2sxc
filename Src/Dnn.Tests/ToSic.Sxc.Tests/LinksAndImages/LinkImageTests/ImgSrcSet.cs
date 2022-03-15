@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             var linker = GetLinker();
             var settings = linker.ResizeParamMerger.BuildResizeSettings(width: 1000, factor: 0.5, srcset: "0.5");
-            var src = linker.SrcSet("test.jpg", settings);
+            var src = linker.SrcSet("test.jpg", settings, SrcSetType.ImgSrcSet);
             Assert.AreEqual("test.jpg?w=250 250w", src, "Src should be a quarter now");
 
         }

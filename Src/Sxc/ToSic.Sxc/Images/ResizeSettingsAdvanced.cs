@@ -8,32 +8,43 @@ namespace ToSic.Sxc.Images
 {
     public class ResizeSettingsAdvanced
     {
-        [JsonProperty(PropertyName = "factors")]
-        public IDictionary<string, FactorRule> FactorsImport { get; set; }
+        /// <summary>
+        /// Default Resize rules for everything which isn't specified more closely in the factors
+        /// </summary>
+        [JsonProperty("resize")]
+        public ResizeSettingsBundle Resize { get; set; }
+
+        [JsonProperty("factors")]
+        public IDictionary<string, ResizeSettingsBundle> FactorsImport { get; set; }
 
 
-        [JsonIgnore]
-        public FactorRule[] Factors {
-            get
-            {
-                if (_factorRules != null) return _factorRules;
-                if (FactorsImport == null || FactorsImport.Count == 0) 
-                    return _factorRules = Array.Empty<FactorRule>();
+        [JsonIgnore] 
+        public ResizeSettingsBundle[] Factors { get; private set; }
+    
 
-                _factorRules = FactorsImport.Select(pair =>
-                    {
-                        var factor = ParseObject.DoubleOrNullWithCalculation(pair.Key);
-                        if (factor == null) return default;
-                        pair.Value.Factor = factor.Value;
-                        return pair.Value;
-                    })
-                    .Where(fr => fr != default)
-                    .ToArray();
-                return _factorRules;
-            }
+        public ResizeSettingsAdvanced InitAfterLoad()
+        {
+            if (_alreadyInit) return this;
+            _alreadyInit = true;
+            Resize?.InitAfterLoad(1, 0, null); // = (Resize ?? new ResizeSettingsBundle()).InitAfterLoad();
+            Factors = InitFactors();
+            return this;
         }
-        private FactorRule[] _factorRules;
+        private bool _alreadyInit;
 
+        private ResizeSettingsBundle[] InitFactors()
+        {
+            if (FactorsImport == null || FactorsImport.Count == 0)
+                return Array.Empty<ResizeSettingsBundle>();
 
+            var factorRules = FactorsImport.Select(pair =>
+                {
+                    var factor = ParseObject.DoubleOrNullWithCalculation(pair.Key);
+                    return pair.Value.InitAfterLoad(factor ?? 0, pair.Value.Width, Resize);
+                })
+                .Where(fr => fr != default)
+                .ToArray();
+            return factorRules;
+        }
     }
 }
