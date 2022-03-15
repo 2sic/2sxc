@@ -69,12 +69,12 @@ namespace ToSic.Sxc.Images
         /// </summary>
         NameValueCollection Parameters { get; }
 
-        [PrivateApi("WIP")]
-        FactorMap[] FactorMap { get; }
-
         [PrivateApi("WIP")] bool UseFactorMap { get; }
         [PrivateApi]
         bool UseAspectRatio { get; } 
+
+        [PrivateApi]
+        ResizeSettingsAdvanced Advanced { get; }
 
     }
 }

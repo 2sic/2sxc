@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             AssertFandW(0.5, 600, fm[0], name);
         }
 
-        private static void AssertFandW(double expectedF, int expectedW, FactorMap fm, string name)
+        private static void AssertFandW(double expectedF, int expectedW, FactorRule fm, string name)
         {
             Assert.AreEqual(expectedF, fm.Factor, name);
             Assert.AreEqual(expectedW, fm.Width, name);

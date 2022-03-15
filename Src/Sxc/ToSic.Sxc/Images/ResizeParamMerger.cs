@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
@@ -19,6 +20,7 @@ namespace ToSic.Sxc.Images
         private const string HeightField = "Height";
         private const string AspectRatioField = "AspectRatio";
         private const string SrcSetField = "SrcSet";
+        private const string AdvancedField = "Advanced";
 
         public ResizeParamMerger() : base(Constants.SxcLogName + ".ImgRPM") { }
 
@@ -38,7 +40,7 @@ namespace ToSic.Sxc.Images
             object aspectRatio = null,
             string parameters = null,
             object srcset = null,
-            string factorMap = null
+            object advanced = null
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
@@ -81,11 +83,19 @@ namespace ToSic.Sxc.Images
             resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            
-            //resizeParams.SrcSet = srcSetValue;
+            try
+            {
+                // Use given OR
+                if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
+                    advanced = getSettings?.Get(AdvancedField);
 
-            resizeParams.FactorMap = FactorMapHelper.CreateFromString(factorMap);
-            
+                if (advanced is ResizeSettingsAdvanced advTyped)
+                    resizeParams.Advanced = advTyped;
+                else if (advanced is string advString && !string.IsNullOrWhiteSpace(advString))
+                    resizeParams.Advanced = JsonConvert.DeserializeObject<ResizeSettingsAdvanced>(advString);
+            }
+            catch{ /* ignore */ }
+
             return resizeParams;
         }
 

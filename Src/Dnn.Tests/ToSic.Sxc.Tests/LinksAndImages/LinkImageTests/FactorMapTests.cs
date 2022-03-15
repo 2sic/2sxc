@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
@@ -33,8 +34,23 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 
         public void WithFactorMap(int expected, double factor, string name)
         {
+            var adv = new ResizeSettingsAdvanced
+            {
+                FactorsImport = new Dictionary<string, FactorRule>
+                {
+                    { "1", new FactorRule { Width = W100 } },
+                    { "3/4", new FactorRule { Width = W75 } },
+                    { "1:2", new FactorRule { Width = W50 } },
+                    { "0.25", new FactorRule { Width = W25 } }
+                }
+            };
+
             var l = GetLinker();
-            var settings = (ResizeSettings)l.ResizeParamMerger.BuildResizeSettings(width: 1000, factorMap: $"1={W100}\n0.75={W75}\n0.5={W50}\n0.25={W25}");
+            var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000/*, advanced: adv*/);
+
+            settings.Advanced = adv;
+
+
             var f1 = l.DimGen.ResizeDimensions(new ResizeSettings(settings, factor: factor));
             Assert.AreEqual(expected, f1.Width, name);
         }

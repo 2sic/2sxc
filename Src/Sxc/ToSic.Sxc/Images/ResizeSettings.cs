@@ -20,9 +20,10 @@ namespace ToSic.Sxc.Images
 
         // New properties
         public double AspectRatio { get; }
-        public FactorMap[] FactorMap { get; set; }
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
+
+        public ResizeSettingsAdvanced Advanced { get; set; }
 
         /// <summary>
         /// Constructor to create new
@@ -50,10 +51,10 @@ namespace ToSic.Sxc.Images
             Format = original.Format;
             Factor = original.Factor;
             Parameters = original.Parameters;
-            FactorMap = original.FactorMap;
             AspectRatio = original.AspectRatio;
             UseAspectRatio = original.UseAspectRatio;
             UseFactorMap = original.UseFactorMap;
+            Advanced = original.Advanced;
             if (keepSourceSet)
                 SrcSet = original.SrcSet;
         }

@@ -10,15 +10,22 @@ namespace ToSic.Sxc.Images
         public const char SrcSetSeparator = ';';
         public const char KeyValueSeparator = SrcSetParser.KeyValueSeparator;
 
-        public static FactorMap[] CreateFromString(string map)
+        // WIP - trying to go to a json format, so we can vary as needed
+        // {
+        //   "factorMap": [
+        //      { "factor": "1/2", "width": "600" }
+        //   ]
+        // }
+
+        public static FactorRule[] CreateFromString(string map)
         {
-            if (string.IsNullOrWhiteSpace(map)) return Array.Empty<FactorMap>();
+            if (string.IsNullOrWhiteSpace(map)) return Array.Empty<FactorRule>();
             var list = map
                 .Split(ItemSeparator)
                 .Select(s => s.Trim())
                 .Where(s => !string.IsNullOrEmpty(s))
                 .ToArray();
-            if (list.Length == 0) return Array.Empty<FactorMap>();
+            if (list.Length == 0) return Array.Empty<FactorRule>();
             var listSet = list
                 .Select(s =>
                 {
@@ -27,7 +34,7 @@ namespace ToSic.Sxc.Images
                     return new { Rule = s, pair = kvp, SrcMap = splitSrcMap.Length > 1 ? splitSrcMap[1] : "" };
                 })
                 .Where(r => r.pair.Length == 2)
-                .Select(r => new FactorMap
+                .Select(r => new FactorRule
                 {
                     Rule = r.Rule,
                     Factor = DoubleOrNullWithCalculation(r.pair[0]) ?? 0,
@@ -39,7 +46,7 @@ namespace ToSic.Sxc.Images
             return listSet;
         }
 
-        public static FactorMap Find(FactorMap[] maps, double factor)
+        public static FactorRule Find(FactorRule[] maps, double factor)
         {
             if (maps == null || !maps.Any() || DNearZero(factor)) return null;
             return maps.FirstOrDefault(m => DNearZero(m.Factor - factor));

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Images
             );
 
             (int Width, int Height) dim = (
-                (resizeSettings.UseFactorMap ? FactorMapHelper.Find(resizeSettings.FactorMap, factor)?.Width : null) ?? (int)(factor * initial.Width),
+                (resizeSettings.UseFactorMap ? FactorMapHelper.Find(resizeSettings.Advanced?.Factors, factor)?.Width : null) ?? (int)(factor * initial.Width),
                 initial.Height
             );
 

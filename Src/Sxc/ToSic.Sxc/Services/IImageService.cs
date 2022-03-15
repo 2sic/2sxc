@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Services
         ///     - it can also be an <see cref="Context.IParameters"/>
         /// </param>
         /// <param name="srcset">The Source-Set to be used if the resizing (note it's `srcset`, not `srcSet`)</param>
-        /// <param name="factorMap">WIP - not ready yet</param>
+        /// <param name="advanced">WIP - not ready yet</param>
         /// <returns>A settings object which has all the parameters as configured</returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Services
             object aspectRatio = null,
             string parameters = null,
             object srcset = null,
-            string factorMap = null
+            string advanced = null
         );
 
         /// <summary>
