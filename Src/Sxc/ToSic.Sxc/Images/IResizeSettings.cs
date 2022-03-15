@@ -69,6 +69,8 @@ namespace ToSic.Sxc.Images
         FactorMap[] FactorMap { get; }
 
         [PrivateApi("WIP")] bool UseFactorMap { get; }
+        [PrivateApi]
+        bool UseAspectRatio { get; } 
 
     }
 }

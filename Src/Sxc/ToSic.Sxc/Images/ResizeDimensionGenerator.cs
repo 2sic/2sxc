@@ -22,46 +22,41 @@ namespace ToSic.Sxc.Images
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
 
-            var dim = (resizeSettings.Width, resizeSettings.Height);
+            (int Width, int Height) dim = (
+                (resizeSettings.UseFactorMap ? FactorMapHelper.Find(resizeSettings.FactorMap, factor)?.Width : null) ?? (int)(factor * resizeSettings.Width),
+                resizeSettings.Height
+            );
 
-            if (resizeSettings.UseFactorMap )
-            {
-                dim.Width = (resizeSettings.UseFactorMap ? FactorMapHelper.Find(resizeSettings.FactorMap, factor)?.Width : null) ?? (int)(factor * dim.Width);
-                // dim.Height = (int)(factor * dim.Height);
-            }
+            dim.Height = HeightFromAspectRatioOrFactor(resizeSettings, factor, dim);
 
-            var dimTemp = Rescale(resizeSettings, factor, dim);
-
-            dimTemp = KeepInRangeProportional(dimTemp);
+            dim = KeepInRangeProportional(dim);
 
             return new OneResize
             {
-                Width = dimTemp.Width,
-                Height = dimTemp.Height
+                Width = dim.Width,
+                Height = dim.Height
             };
         }
 
 
-        private (int Width, int Height) Rescale(ResizeSettings rs, double factor, (int Width, int Height) dims)
+        private int HeightFromAspectRatioOrFactor(ResizeSettings rs, double factor, (int Width, int Height) dims)
         {
             var maybeLog = Debug ? Log : null;
-            var wrapLog = maybeLog.SafeCall<(int, int)>();
+            var wrapLog = maybeLog.SafeCall<int>();
 
             var hasAspectRatio = !DNearZero(rs.AspectRatio);
-            //var factor = rs.Factor;
-            //if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
 
-            // 2. Figure out height/width, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
+            // 2. Figure out height, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
             // Old: Width should only be calculated, if it wasn't explicitly provided (so only if coming from the settings)
-            var newW = dims.Width;// rs.Width * factor;
+            //var newW = dims.Width;
 
             // Height should only get Aspect Ratio if the Height wasn't specifically provided
             var newH = rs.UseAspectRatio && hasAspectRatio
-                ? newW / rs.AspectRatio
+                ? dims.Width / rs.AspectRatio
                 : dims.Height * factor;  // Note that often dims.H is 0, so this will still be 0
 
-            var final = ((int)newW, (int)newH);
-            return wrapLog($"W:{final.Item1}, H:{final.Item2}", final);
+            //var final = ((int)dims.Width, (int)newH);
+            return wrapLog($"H:{newH}", (int)newH);
         }
 
 

@@ -24,8 +24,14 @@ namespace ToSic.Sxc.Images
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
 
+        /// <summary>
+        /// Constructor to create new
+        /// </summary>
         public ResizeSettings() {}
 
+        /// <summary>
+        /// Constructor to copy
+        /// </summary>
         public ResizeSettings(IResizeSettings original, bool keepSourceSet = true)
         {
             Width = original.Width;
@@ -38,23 +44,11 @@ namespace ToSic.Sxc.Images
             Parameters = original.Parameters;
             FactorMap = original.FactorMap;
             AspectRatio = original.AspectRatio;
+            UseAspectRatio = original.UseAspectRatio;
+            UseFactorMap = original.UseFactorMap;
             if (keepSourceSet)
                 SrcSet = original.SrcSet;
             
         }
-
-        //internal ResizeSettings ApplyFactor(double factor)
-        //{
-        //    Factor = factor;
-        //    return ApplyFactor();
-        //}
-
-        //internal ResizeSettings ApplyFactor()
-        //{
-        //    Width = (UseFactorMap ? FactorMapHelper.Find(FactorMap, Factor)?.Width : null) ?? (int)(Factor * Width);
-        //    Height = (int)(Factor * Height);
-        //    Factor = 1;
-        //    return this;
-        //}
     }
 }
