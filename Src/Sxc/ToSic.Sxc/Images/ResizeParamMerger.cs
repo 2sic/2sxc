@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Images
             }
 
             // Check if the settings is the expected type or null/other type
-            var getSettings = settings as ICanGetNameNotFinal;
+            var getSettings = settings as ICanGetByName;
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
             var formatValue = FindKnownFormatOrNull(RealStringOrNull(format));
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Images
             return resizeParams;
         }
 
-        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetNameNotFinal settingsOrNull)
+        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetByName settingsOrNull)
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets

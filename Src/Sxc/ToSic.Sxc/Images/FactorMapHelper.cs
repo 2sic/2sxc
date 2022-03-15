@@ -6,45 +6,40 @@ namespace ToSic.Sxc.Images
 {
     public class FactorMapHelper
     {
-        public const char ItemSeparator = '\n';
-        public const char SrcSetSeparator = ';';
-        public const char KeyValueSeparator = SrcSetParser.KeyValueSeparator;
+        // 2022-03-15 2dm disabled - factor maps don't work like this, will probably stick to json format
 
-        // WIP - trying to go to a json format, so we can vary as needed
-        // {
-        //   "factorMap": [
-        //      { "factor": "1/2", "width": "600" }
-        //   ]
-        // }
+        //public const char ItemSeparator = '\n';
+        //public const char SrcSetSeparator = ';';
+        //public const char KeyValueSeparator = SrcSetParser.KeyValueSeparator;
 
-        public static FactorRule[] CreateFromString(string map)
-        {
-            if (string.IsNullOrWhiteSpace(map)) return Array.Empty<FactorRule>();
-            var list = map
-                .Split(ItemSeparator)
-                .Select(s => s.Trim())
-                .Where(s => !string.IsNullOrEmpty(s))
-                .ToArray();
-            if (list.Length == 0) return Array.Empty<FactorRule>();
-            var listSet = list
-                .Select(s =>
-                {
-                    var splitSrcMap = s.Split(SrcSetSeparator);
-                    var kvp = splitSrcMap[0].Split(KeyValueSeparator);
-                    return new { Rule = s, pair = kvp, SrcMap = splitSrcMap.Length > 1 ? splitSrcMap[1] : "" };
-                })
-                .Where(r => r.pair.Length == 2)
-                .Select(r => new FactorRule
-                {
-                    Rule = r.Rule,
-                    Factor = DoubleOrNullWithCalculation(r.pair[0]) ?? 0,
-                    Width = IntOrNull(r.pair[1]) ?? 0,
-                    SrcSet = r.SrcMap,
-                })
-                .Where(fm => fm.Width != 0 && !DNearZero(fm.Factor))
-                .ToArray();
-            return listSet;
-        }
+        //public static FactorRule[] CreateFromString(string map)
+        //{
+        //    if (string.IsNullOrWhiteSpace(map)) return Array.Empty<FactorRule>();
+        //    var list = map
+        //        .Split(ItemSeparator)
+        //        .Select(s => s.Trim())
+        //        .Where(s => !string.IsNullOrEmpty(s))
+        //        .ToArray();
+        //    if (list.Length == 0) return Array.Empty<FactorRule>();
+        //    var listSet = list
+        //        .Select(s =>
+        //        {
+        //            var splitSrcMap = s.Split(SrcSetSeparator);
+        //            var kvp = splitSrcMap[0].Split(KeyValueSeparator);
+        //            return new { Rule = s, pair = kvp, SrcMap = splitSrcMap.Length > 1 ? splitSrcMap[1] : "" };
+        //        })
+        //        .Where(r => r.pair.Length == 2)
+        //        .Select(r => new FactorRule
+        //        {
+        //            Rule = r.Rule,
+        //            Factor = DoubleOrNullWithCalculation(r.pair[0]) ?? 0,
+        //            Width = IntOrNull(r.pair[1]) ?? 0,
+        //            SrcSet = r.SrcMap,
+        //        })
+        //        .Where(fm => fm.Width != 0 && !DNearZero(fm.Factor))
+        //        .ToArray();
+        //    return listSet;
+        //}
 
         public static FactorRule Find(FactorRule[] maps, double factor)
         {

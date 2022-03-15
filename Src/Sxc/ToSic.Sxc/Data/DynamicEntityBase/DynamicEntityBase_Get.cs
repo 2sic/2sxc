@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Data
 {
-    public partial class DynamicEntityBase: ICanGetNameNotFinal
+    public partial class DynamicEntityBase: ICanGetByName
     {
         /// <inheritdoc/>
         public dynamic Get(string name) => GetInternal(name);
