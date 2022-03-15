@@ -6,20 +6,20 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Hide implementation")]
     public class ResizeSettings : IResizeSettings
     {
-        public int Width { get; set; }
-        public int Height { get; set; }
+        public int Width { get; }
+        public int Height { get; }
         public int Quality { get; set; }
         public string ResizeMode { get; set; }
         public string ScaleMode { get; set; }
-        public string Format { get; set; }
-        public double Factor { get; set; } = 1;
+        public string Format { get; }
+        public double Factor { get; } = 1;
 
 
         public string SrcSet { get; set; }
         public NameValueCollection Parameters { get; set; }
 
         // New properties
-        public double AspectRatio { get; set; }
+        public double AspectRatio { get; }
         public FactorMap[] FactorMap { get; set; }
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
@@ -27,7 +27,14 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Constructor to create new
         /// </summary>
-        public ResizeSettings() {}
+        public ResizeSettings(int width, int height, double aspectRatio, double factor, string format)
+        {
+            Width = width;
+            Height = height;
+            AspectRatio = aspectRatio;
+            Factor = factor;
+            Format = format;
+        }
 
         /// <summary>
         /// Constructor to copy
@@ -48,7 +55,15 @@ namespace ToSic.Sxc.Images
             UseFactorMap = original.UseFactorMap;
             if (keepSourceSet)
                 SrcSet = original.SrcSet;
-            
+        }
+
+        public ResizeSettings(IResizeSettings original, string format): this(original)
+        {
+            Format = format;
+        }
+        public ResizeSettings(IResizeSettings original, double factor): this(original)
+        {
+            Factor = factor;
         }
     }
 }

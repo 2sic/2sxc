@@ -48,11 +48,11 @@ namespace ToSic.Sxc.Images
                 : new List<IImageFormat> { defFormat };
 
             // Generate Meta Tags
-            var sources = formats //  defFormat.ResizeFormats
+            var sources = formats
                 .Select(resizeFormat =>
                 {
-                    var formatSettings = new ResizeSettings(resizeSettings, true);
-                    if (resizeFormat != defFormat) formatSettings.Format = resizeFormat.Format;
+                    // We must copy the settings, because we change them and this shouldn't affect anything else
+                    var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : resizeSettings.Format);
                     var srcSet = ImgLinker.SrcSet(url, formatSettings);
                     return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 });

@@ -40,20 +40,29 @@ namespace ToSic.Sxc.Images
         protected readonly string ImgClass;
         protected readonly string UrlOriginal;
 
-        public string Url => _url ?? (_url = ImgLinker.ImageOnly(UrlOriginal, new ResizeSettings(Settings, false)));
+        public string Url => _url ?? (_url = ImgLinker.ImageOnly(UrlOriginal, Settings));
         private string _url;
-        internal IResizeSettings Settings { get; }
+        internal ResizeSettings Settings { get; }
 
 
-        protected IResizeSettings PrepareResizeSettings(object settings, object factor, string srcset)
+        protected ResizeSettings PrepareResizeSettings(object settings, object factor, string srcset)
         {
             // 1. Prepare Settings
-            if (settings is IResizeSettings resizeSettings)
-                ((ResizeSettings)resizeSettings).Factor = ParseObject.DoubleOrNullWithCalculation(factor) ?? resizeSettings.Factor;
+            if (settings is ResizeSettings resizeSettings)
+            {
+                var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
+                if (newFactor != null)
+                    resizeSettings = new ResizeSettings(resizeSettings, factor: newFactor.Value);
+                //resizeSettings.Factor = ParseObject.DoubleOrNullWithCalculation(factor) ?? resizeSettings.Factor;
+            }
             else
                 resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcset: true);
 
-            if (srcset != null) ((ResizeSettings)resizeSettings).SrcSet = srcset;
+            if (srcset != null)
+            {
+                // must make a copy if we change a property, to not have side-effects
+                resizeSettings.SrcSet = srcset;
+            }
 
             return resizeSettings;
         }
