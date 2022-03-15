@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.ImportExport.Xml;
 using ToSic.Eav.Logging;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
@@ -8,11 +7,7 @@ namespace ToSic.Sxc.Images
 {
     public class ResizeDimensionGenerator: HasLog
     {
-        public ResizeDimensionGenerator(): base("Img.ResDim")
-        {
-
-
-        }
+        public ResizeDimensionGenerator(): base("Img.ResDim") { }
 
         public bool Debug = false;
 

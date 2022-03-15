@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
                 aspectRatio: aspectRatio, srcset: srcset);
             var linkerResult = linker.SrcSet(url, typedSettings);
-            Assert.AreEqual(expected, linkerResult, "Failed on ImgResizeLinker");
+            Assert.AreEqual(expected, linkerResult, $"Failed on ImgResizeLinker for srcSet '{srcset}'");
         }
     }
 }
