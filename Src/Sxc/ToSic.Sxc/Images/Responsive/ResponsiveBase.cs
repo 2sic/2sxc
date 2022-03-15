@@ -40,31 +40,29 @@ namespace ToSic.Sxc.Images
         protected readonly string ImgClass;
         protected readonly string UrlOriginal;
 
-        public string Url => _url ?? (_url = ImgLinker.ImageOnly(UrlOriginal, Settings));
-        private string _url;
+        public string Url => ThisResize.Url;
+
+        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(UrlOriginal, Settings));
+        private OneResize _thisResize;
+
         internal ResizeSettings Settings { get; }
 
 
         protected ResizeSettings PrepareResizeSettings(object settings, object factor, string srcset)
         {
             // 1. Prepare Settings
-            if (settings is ResizeSettings resizeSettings)
+            if (settings is ResizeSettings resSettings)
             {
                 var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
-                if (newFactor != null)
-                    resizeSettings = new ResizeSettings(resizeSettings, factor: newFactor.Value);
-                //resizeSettings.Factor = ParseObject.DoubleOrNullWithCalculation(factor) ?? resizeSettings.Factor;
+                if (newFactor != null) resSettings = new ResizeSettings(resSettings, factor: newFactor.Value);
             }
             else
-                resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcset: true);
+                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcset: true);
 
-            if (srcset != null)
-            {
-                // must make a copy if we change a property, to not have side-effects
-                resizeSettings.SrcSet = srcset;
-            }
+            // must make a copy if we change a property, to not have side-effects
+            if (srcset != null) resSettings = new ResizeSettings(resSettings, format: null, srcSet: srcset);
 
-            return resizeSettings;
+            return resSettings;
         }
 
         /// <summary>
@@ -82,9 +80,14 @@ namespace ToSic.Sxc.Images
                 _imgTag = Tag.Img().Src(Url);
 
                 // Only add these if they were really specified
-                if (ImgAlt != null) 
-                    _imgTag.Alt(ImgAlt);
-                if (ImgClass != null) _imgTag.Class(ImgClass);
+                if (ImgAlt != null) _imgTag.Alt(ImgAlt);
+                var classToAdd = $"{ImgClass} {ImgService.Settings.ImageClass}";
+                if (!string.IsNullOrWhiteSpace(classToAdd)) _imgTag.Class(classToAdd);
+
+                var settings = ImgService.Settings;
+                if (settings.ImageSetWidth && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);
+                if (settings.ImageSetHeight && ThisResize.Height != 0) _imgTag.Height(ThisResize.Height);
+
                 return _imgTag;
             }
         }

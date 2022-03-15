@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Images
         public double Factor { get; } = 1;
 
 
-        public string SrcSet { get; set; }
+        public string SrcSet { get; }
         public NameValueCollection Parameters { get; set; }
 
         // New properties
@@ -27,13 +27,14 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Constructor to create new
         /// </summary>
-        public ResizeSettings(int width, int height, double aspectRatio, double factor, string format)
+        public ResizeSettings(int width, int height, double aspectRatio, double factor, string format, string srcSet)
         {
             Width = width;
             Height = height;
             AspectRatio = aspectRatio;
             Factor = factor;
             Format = format;
+            SrcSet = srcSet;
         }
 
         /// <summary>
@@ -57,10 +58,12 @@ namespace ToSic.Sxc.Images
                 SrcSet = original.SrcSet;
         }
 
-        public ResizeSettings(IResizeSettings original, string format): this(original)
+        public ResizeSettings(IResizeSettings original, string format, string srcSet): this(original)
         {
-            Format = format;
+            Format = format ?? Format;
+            SrcSet = srcSet ?? SrcSet;
         }
+
         public ResizeSettings(IResizeSettings original, double factor): this(original)
         {
             Factor = factor;

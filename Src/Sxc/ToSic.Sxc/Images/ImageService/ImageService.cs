@@ -22,6 +22,8 @@ namespace ToSic.Sxc.Images
         public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _codeRootOrNull = codeRoot;
         private IDynamicCodeRoot _codeRootOrNull;
 
+        public ImageServiceSettings Settings { get; } = new ImageServiceSettings();
+
         #endregion
 
         #region Settings Handling

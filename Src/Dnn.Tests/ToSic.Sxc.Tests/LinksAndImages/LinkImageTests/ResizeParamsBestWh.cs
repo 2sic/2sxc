@@ -71,15 +71,6 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             IsTrue(TestBestWH(s, s, settings: ToDyn(new { Width = s, Height = s })), "W/H params");
         }
 
-        //public void FigureOutBestWidthAndHeight_SettingsWHF(double factor, double result, string name)
-        //{
-        //    FigureOutWHFactors(factor, result, name);
-        //    //FigureOutWHFactors(0, 1);
-        //    //FigureOutWHFactors(1, 1);
-        //    //FigureOutWHFactors(2, 2);
-        //    //FigureOutWHFactors(0.5, 0.5);
-        //}
-
 
         [TestMethod]
         public void FigureOutBestWH_SettingsWithNeutralizer()
@@ -87,8 +78,8 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             IsTrue(TestBestWH(0, 0, 0, null, null, null, ToDyn(new { Width = 700 })));
         }
 
-        //[DataRow(0, 1, "Factor 0, result 1")]
-        //[DataRow(1, 1, "Factor 1, result 1")]
+        [DataRow(0, 1, "Factor 0, result 1")]
+        [DataRow(1, 1, "Factor 1, result 1")]
         [DataRow(2, 2, "Factor 2, result 2")]
         [DataRow(0.5, 0.5, "Factor / result 0.5")]
         [DataTestMethod]
@@ -109,7 +100,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             var paramMerger = new ResizeParamMerger();
             var dimGen = new ResizeDimensionGenerator();
 
-            var resizeSettings = paramMerger.BuildCoreSettings(width, height, factor, ar, null, settings);
+            var resizeSettings = paramMerger.BuildCoreSettings(width, height, factor, ar, null, null, settings);
             var t1 = dimGen.ResizeDimensions(resizeSettings);
             var okW = expW.Equals(t1.Width);
             var okH = expH.Equals(t1.Height);

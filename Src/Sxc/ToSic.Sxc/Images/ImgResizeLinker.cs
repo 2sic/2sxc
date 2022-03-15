@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Images
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is ResizeSettings resizeSettings)
             {
-                var basic = ImageOnly(url, resizeSettings);
+                var basic = ImageOnly(url, resizeSettings).Url;
                 return wrapLog("prepared:" + basic, basic);
             }
 
@@ -54,14 +54,14 @@ namespace ToSic.Sxc.Images
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                 parameters: parameters, srcset: false);
 
-            var result = ImageOnly(url, resizeSettings);
+            var result = ImageOnly(url, resizeSettings).Url;
             return wrapLog("built:" + result, result);
         }
 
-        public string ImageOnly(string url, ResizeSettings settings)
+        public OneResize ImageOnly(string url, ResizeSettings settings)
         {
-            var wrapLog = Log.Call<string>();
-            return wrapLog("no srcset", ConstructUrl(url, settings).Url);
+            var wrapLog = Log.Call<OneResize>();
+            return wrapLog("no srcset", ConstructUrl(url, settings));
         }
 
 
@@ -76,25 +76,23 @@ namespace ToSic.Sxc.Images
 
             var results = srcSetConfig.Select(ssConfig =>
             {
-                // Copy the params so we can optimize based on the expected SrcSet specs
-                var currentSet = settings;
-
                 if (ssConfig.SizeType == SizeDefault)
-                    return ConstructUrl(url, currentSet).Url;
+                    return ConstructUrl(url, settings);
 
                 var oneResize = new OneResize
                 {
-                    Width = BestSrcSetDimension(currentSet.Width, ssConfig.Width, ssConfig,
+                    Width = BestSrcSetDimension(settings.Width, ssConfig.Width, ssConfig,
                         FallbackWidthForSrcSet),
-                    Height = BestSrcSetDimension(currentSet.Height, ssConfig.Height, ssConfig,
+                    Height = BestSrcSetDimension(settings.Height, ssConfig.Height, ssConfig,
                     FallbackHeightForSrcSet)
                 };
 
-                var one = ConstructUrl(url, currentSet, oneResize);
+                var one = ConstructUrl(url, settings, oneResize);
+                // this must happen at the end
                 one.Suffix = SrcSetParser.SrcSetSuffix(ssConfig, one.Width);
-                return one.Url + one.Suffix;
+                return one;
             });
-            var result = string.Join(",\n", results);
+            var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix));
 
             return wrapLog("srcset", result);
         }

@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Images
                 .Select(resizeFormat =>
                 {
                     // We must copy the settings, because we change them and this shouldn't affect anything else
-                    var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : resizeSettings.Format);
+                    var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null, srcSet: null);
                     var srcSet = ImgLinker.SrcSet(url, formatSettings);
                     return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 });

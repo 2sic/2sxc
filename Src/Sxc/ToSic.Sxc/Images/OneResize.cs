@@ -9,5 +9,7 @@
         public int Height;
         public string Url;
         public string Suffix;
+
+        public string UrlWithSuffix => Url + Suffix;
     }
 }

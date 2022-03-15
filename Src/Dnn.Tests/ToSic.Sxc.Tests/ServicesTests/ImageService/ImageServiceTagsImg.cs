@@ -25,10 +25,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void ImageTagMultiTest(string expected, string srcset, object factor, string testName)
         {
             var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, srcset);
+            var svc = Build<IImageService>();
             foreach (var test in testSet)
             {
                 // Factor set on the Img call
-                var svc = Build<IImageService>();
                 var settingsWithoutFactor = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height, srcset: test.Set.Srcset);
                 var imgSetNoFactor = svc.Img(ImgUrl, settings: settingsWithoutFactor, factor: factor, srcset: test.Pic.Srcset);
                 AreEqual(expected, imgSetNoFactor.ToString(), $"Failed (factor on Img): {test.Name}");

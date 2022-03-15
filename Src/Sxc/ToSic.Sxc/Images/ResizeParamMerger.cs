@@ -57,7 +57,12 @@ namespace ToSic.Sxc.Images
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
             var formatValue = FindKnownFormatOrNull(RealStringOrNull(format));
-            var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, formatValue, getSettings);
+            string srcSetValue = srcset is string srcSetString
+                ? srcSetString
+                : srcset is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
+
+
+            var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, formatValue, srcSetValue, getSettings);
 
             // Add parameters if known
             if (!string.IsNullOrWhiteSpace(parameters))
@@ -76,16 +81,15 @@ namespace ToSic.Sxc.Images
             resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            resizeParams.SrcSet = srcset is string srcSetString
-                ? srcSetString
-                : srcset is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
+            
+            //resizeParams.SrcSet = srcSetValue;
 
             resizeParams.FactorMap = FactorMapHelper.CreateFromString(factorMap);
             
             return resizeParams;
         }
 
-        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, ICanGetNameNotFinal settingsOrNull)
+        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetNameNotFinal settingsOrNull)
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets
@@ -104,14 +108,12 @@ namespace ToSic.Sxc.Images
                              ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0; // 0=ignore
             if (Debug) Log.Add($"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
-            var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format)
+            var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format, srcSet)
             {
-                //Factor = factorFinal,
                 // If the width was given by the parameters, then don't use FactorMap
                 UseFactorMap = parms.W != null,
                 // If the height was supplied by parameters, don't use aspect ratio
                 UseAspectRatio = parms.H == null,
-                //AspectRatio = arFinal,
             };
 
             return resizeSettings;
