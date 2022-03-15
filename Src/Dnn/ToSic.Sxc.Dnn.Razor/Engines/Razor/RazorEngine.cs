@@ -40,7 +40,21 @@ namespace ToSic.Sxc.Engines
 
         // 2022-03-03 2dm trying to not fix the problem yet, but see more logging
         [PrivateApi]
-        protected RazorComponentBase Webpage { get; set; }
+        protected RazorComponentBase Webpage
+        {
+            get
+            {
+                Log.Add($"Webpage get: {_webpage}");
+                return _webpage;
+            }
+            set
+            {
+                Log.Add($"Webpage set: {value}");
+                _webpage = value;
+            }
+            
+        }
+        private RazorComponentBase _webpage;
         //protected RazorComponentBase Webpage
         //{
         //    get
