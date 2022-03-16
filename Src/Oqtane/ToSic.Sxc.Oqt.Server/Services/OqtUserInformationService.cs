@@ -18,17 +18,15 @@ namespace ToSic.Sxc.Oqt.Server.Services
 
         public override string PlatformIdentityTokenPrefix() => $"{OqtConstants.UserTokenPrefix}:";
 
-        public override UserInformationDto Find(string identityToken)
+        public override UserInformationDto PlatformUserInformationDto(int userId)
         {
-            var wrapLog = Log.Call<UserInformationDto>($"t:{identityToken}");
-            var user = _userRepository.Value.GetUser(UserId(identityToken), false);
-            return (user == null)
-                ? wrapLog("Err", UserUnknown)
-                : wrapLog("Ok", new UserInformationDto()
+            var user = _userRepository.Value.GetUser(userId, false);
+            if (user == null) return null;
+            return new UserInformationDto()
                 {
                     Id = user.UserId,
                     Name = user.Username
-                });
+                };
         }
     }
 }
