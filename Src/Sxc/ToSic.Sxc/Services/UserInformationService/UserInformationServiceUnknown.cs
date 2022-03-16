@@ -12,6 +12,6 @@ namespace ToSic.Sxc.Services
 
         public override string PlatformIdentityTokenPrefix() => Unknown;
 
-        public override UserInformationDto Find(string identityToken) => UserUnknown; // return default object
+        public override UserInformationDto PlatformUserInformationDto(int userId) => null;
     }
 }

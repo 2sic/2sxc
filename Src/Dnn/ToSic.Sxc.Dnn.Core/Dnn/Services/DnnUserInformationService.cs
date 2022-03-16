@@ -13,17 +13,15 @@ namespace ToSic.Sxc.Dnn.Services
 
         public override string PlatformIdentityTokenPrefix() => DnnConstants.UserTokenPrefix;
 
-        public override UserInformationDto Find(string identityToken)
+        public override UserInformationDto PlatformUserInformationDto(int userId)
         {
-            var wrapLog = Log.Call<UserInformationDto>($"t:{identityToken}");
-            var user = UserController.Instance.GetUserById(SiteId, UserId(identityToken));
-            return (user == null) 
-                ? wrapLog("Err", UserUnknown) 
-                : wrapLog("Ok", new UserInformationDto()
-                {
-                    Id = user.UserID,
-                    Name = user.Username
-                });
+            var user = UserController.Instance.GetUserById(SiteId, userId);
+            if (user == null) return null;
+            return new UserInformationDto()
+            {
+                Id = user.UserID,
+                Name = user.Username
+            };
         }
     }
 }
