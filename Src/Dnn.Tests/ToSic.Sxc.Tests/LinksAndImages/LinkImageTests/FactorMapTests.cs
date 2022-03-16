@@ -35,14 +35,14 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 
         public void WithFactorMap(int expected, double factor, string name)
         {
-            var adv = new ResizeSettingsAdvanced
+            var adv = new MultiResizeSettings
             {
-                FactorsImport = new Dictionary<string, ResizeSettingsBundle>
+                FactorsImport = new Dictionary<string, MultiResizeRuleBundle>
                 {
-                    { "1", new ResizeSettingsBundle { Width = W100 } },
-                    { "3/4", new ResizeSettingsBundle { Width = W75, Img = new ResizeSettingsSrcSet { Width = W75Alt }} },
-                    { "1:2", new ResizeSettingsBundle { Width = W50 } },
-                    { "0.25", new ResizeSettingsBundle { Width = W25 } }
+                    { "1", new MultiResizeRuleBundle { Width = W100 } },
+                    { "3/4", new MultiResizeRuleBundle { Width = W75, Img = new MultiResizeRule { Width = W75Alt }} },
+                    { "1:2", new MultiResizeRuleBundle { Width = W50 } },
+                    { "0.25", new MultiResizeRuleBundle { Width = W25 } }
                 }
             };
 

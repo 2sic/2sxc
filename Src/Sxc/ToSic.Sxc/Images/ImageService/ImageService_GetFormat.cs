@@ -22,31 +22,6 @@ namespace ToSic.Sxc.Images
 
             // 4. Future / maybe: Otherwise check system for mime type and try to build a recommendation
         }
-
-        public IResizeSettings ResizeSettings(
-            object settings = null,
-            string noParamOrder = Parameters.Protector,
-            object factor = null,
-            object width = null,
-            object height = null,
-            object quality = null,
-            string resizeMode = null,
-            string scaleMode = null,
-            string format = null,
-            object aspectRatio = null,
-            string parameters = null,
-            object srcset = null,
-            string advanced = null
-            )
-        {
-            settings = GetBestSettings(settings);
-            
-            // If we have initial settings and srcSet isn't specified, then we should set to true so it will auto-reuse
-            if (srcset == null && settings != null) 
-                srcset = true;
-            return ImgLinker.ResizeParamMerger.BuildResizeSettings(settings: settings, factor: factor,
-                width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, srcset: srcset/*, advanced: factorMap*/);
-        }
+        
     }
 }

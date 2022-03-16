@@ -2,40 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Images
 {
-    public class ResizeSettingsAdvanced
+    public class MultiResizeSettings
     {
         /// <summary>
         /// Default Resize rules for everything which isn't specified more closely in the factors
         /// </summary>
         [JsonProperty("resize")]
-        public ResizeSettingsBundle Resize { get; set; }
+        public MultiResizeRuleBundle Resize { get; set; }
 
+        [PrivateApi("Hide, as this is only relevant for importing from JSON bu shouldn't be used otherwise")]
         [JsonProperty("factors")]
-        public IDictionary<string, ResizeSettingsBundle> FactorsImport { get; set; }
+        public IDictionary<string, MultiResizeRuleBundle> FactorsImport { get; set; }
 
 
         [JsonIgnore] 
-        public ResizeSettingsBundle[] Factors { get; private set; }
+        public MultiResizeRuleBundle[] Factors { get; private set; }
     
-
-        public ResizeSettingsAdvanced InitAfterLoad()
+        [PrivateApi]
+        public MultiResizeSettings InitAfterLoad()
         {
             if (_alreadyInit) return this;
             _alreadyInit = true;
-            Resize?.InitAfterLoad(1, 0, null); // = (Resize ?? new ResizeSettingsBundle()).InitAfterLoad();
+            Resize?.InitAfterLoad(1, 0, null);
             Factors = InitFactors();
             return this;
         }
         private bool _alreadyInit;
 
-        private ResizeSettingsBundle[] InitFactors()
+        private MultiResizeRuleBundle[] InitFactors()
         {
             if (FactorsImport == null || FactorsImport.Count == 0)
-                return Array.Empty<ResizeSettingsBundle>();
+                return Array.Empty<MultiResizeRuleBundle>();
 
             var factorRules = FactorsImport.Select(pair =>
                 {

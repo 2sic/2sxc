@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Images
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
 
-        public ResizeSettingsAdvanced Advanced { get; set; }
+        public MultiResizeSettings MultiResize { get; set; }
 
         /// <summary>
         /// Constructor to create new
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Images
             AspectRatio = original.AspectRatio;
             UseAspectRatio = original.UseAspectRatio;
             UseFactorMap = original.UseFactorMap;
-            Advanced = original.Advanced;
+            MultiResize = original.MultiResize;
             if (keepSourceSet)
                 SrcSet = original.SrcSet;
         }
@@ -70,6 +70,6 @@ namespace ToSic.Sxc.Images
             Factor = factor;
         }
 
-        public ResizeSettingsSrcSet Find(SrcSetType srcSetType) => FactorMapHelper.Find(this, srcSetType);
+        public IMultiResizeRule Find(SrcSetType srcSetType) => FactorMapHelper.Find(this, srcSetType);
     }
 }

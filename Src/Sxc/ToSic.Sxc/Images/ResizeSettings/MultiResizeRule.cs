@@ -1,21 +1,25 @@
 ﻿using Newtonsoft.Json;
-using ToSic.Eav.Documentation;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
 {
-    /// <summary>
-    /// Settings which can apply to an img, source tag or both
-    /// </summary>
-    public class ResizeSettingsSrcSet
+    public class MultiResizeRule : IMultiResizeRule
     {
+        /// <summary>
+        /// The resize factor for which this rules is meant.
+        /// Used in cases where there are many such rules and the one will be picked that matches this factor.
+        /// </summary>
         [JsonProperty("factor")]
         public double Factor { get; set; }
 
+        /// <summary>
+        /// The initial width to assume in this resize, from which other sizes would be calculated.
+        /// 
+        /// If set to 0, it will be ignored. 
+        /// </summary>
         [JsonProperty("width")]
         public int Width { get; set; }
-
 
         /// <summary>
         /// Source-Set rules (comma separated) which will determine what will be generated.
@@ -40,10 +44,11 @@ namespace ToSic.Sxc.Images
         [JsonProperty("media")]
         public string Media { get; set; }
 
+        [Eav.Documentation.PrivateApi("Important foc using these settings, but not relevant outside of this")]
         public SrcSetPart[] SrcSetParts { get; private set; }
 
-        [PrivateApi]
-        internal virtual ResizeSettingsSrcSet InitAfterLoad(double factor, int widthIfEmpty, ResizeSettingsSrcSet defaultsIfEmpty)
+        [Eav.Documentation.PrivateApi]
+        internal virtual MultiResizeRule InitAfterLoad(double factor, int widthIfEmpty, IMultiResizeRule defaultsIfEmpty)
         {
             Factor = factor;
             if (Width == 0) Width = widthIfEmpty;

@@ -52,19 +52,19 @@ namespace ToSic.Sxc.Services
         /// History: Added in 2sxc 13.03
         /// </remarks>
         IResizeSettings ResizeSettings(
-            object settings = null,
+            object settings = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object factor = null,
-            object width = null,
-            object height = null,
-            object quality = null,
-            string resizeMode = null,
-            string scaleMode = null,
-            string format = null,
-            object aspectRatio = null,
-            string parameters = null,
-            object srcset = null,
-            string advanced = null
+            object factor = default,
+            object width = default,
+            object height = default,
+            object quality = default,
+            string resizeMode = default,
+            string scaleMode = default,
+            string format = default,
+            object aspectRatio = default,
+            string parameters = default,
+            object srcset = default,
+            string advanced = default
         );
 
         /// <summary>
@@ -86,10 +86,10 @@ namespace ToSic.Sxc.Services
         /// </remarks>
         IHybridHtmlString SrcSet(
             string url,
-            object settings = null,
+            object settings = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object factor = null,
-            string srcset = null
+            object factor = default,
+            string srcset = default
         );
 
         /// <summary>
@@ -116,11 +116,11 @@ namespace ToSic.Sxc.Services
         IResponsivePicture Picture(
             string url,
             string noParamOrder = Eav.Parameters.Protector,
-            object settings = null,
-            object factor = null,
-            string srcset = null,
-            string imgAlt = null,
-            string imgClass = null
+            object settings = default,
+            object factor = default,
+            string srcset = default,
+            string imgAlt = default,
+            string imgClass = default
         );
 
         /// <summary>
@@ -147,11 +147,12 @@ namespace ToSic.Sxc.Services
         IResponsiveImage Img(
             string url,
             string noParamOrder = Eav.Parameters.Protector,
-            object settings = null,
-            object factor = null,
-            string srcset = null,
-            string imgAlt = null,
-            string imgClass = null);
-            
+            object settings = default,
+            object factor = default,
+            string srcset = default,
+            string imgAlt = default,
+            string imgClass = default
+        );
+
     }
 }

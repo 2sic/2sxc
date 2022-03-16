@@ -87,18 +87,18 @@ namespace ToSic.Sxc.Images
 
             try
             {
-                if (advanced is ResizeSettingsAdvanced advTyped)
-                    resizeParams.Advanced = advTyped.InitAfterLoad();
+                if (advanced is MultiResizeSettings advTyped)
+                    resizeParams.MultiResize = advTyped.InitAfterLoad();
                 // Use given OR get it / piggyback
                 else if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
-                    resizeParams.Advanced = TryToGetAndCacheSettingsAdvanced(getSettings);
+                    resizeParams.MultiResize = TryToGetAndCacheSettingsAdvanced(getSettings);
             }
             catch{ /* ignore */ }
 
             return resizeParams;
         }
 
-        private ResizeSettingsAdvanced TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
+        private MultiResizeSettings TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
         {
             // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
             if (getSettings is IPropertyLookup getProperties)
@@ -111,20 +111,20 @@ namespace ToSic.Sxc.Images
         }
 
 
-        private ResizeSettingsAdvanced ParseAdvancedSettings(object value)
+        private MultiResizeSettings ParseAdvancedSettings(object value)
         {
-            var wrapLog = Log.Call<ResizeSettingsAdvanced>();
+            var wrapLog = Log.Call<MultiResizeSettings>();
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog("create", JsonConvert.DeserializeObject<ResizeSettingsAdvanced>(advString)?.InitAfterLoad());
+                    return wrapLog("create", JsonConvert.DeserializeObject<MultiResizeSettings>(advString)?.InitAfterLoad());
             }
             catch (Exception ex)
             {
                 Log.Add($"error converting json to ResizeSettings. Json: {value}");
                 Log.Exception(ex);
             }
-            return wrapLog("new", new ResizeSettingsAdvanced().InitAfterLoad());
+            return wrapLog("new", new MultiResizeSettings().InitAfterLoad());
         }
 
         internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetByName settingsOrNull)

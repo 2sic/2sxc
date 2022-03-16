@@ -6,9 +6,9 @@ namespace ToSic.Sxc.Images
     public class FactorMapHelper
     {
         
-        private static ResizeSettingsBundle Find(ResizeSettings resizeSettings)
+        private static MultiResizeRuleBundle Find(ResizeSettings resizeSettings)
         {
-            var maps = resizeSettings?.Advanced?.Factors;
+            var maps = resizeSettings?.MultiResize?.Factors;
             if (maps == null || !maps.Any()) return null;
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1;
@@ -16,9 +16,9 @@ namespace ToSic.Sxc.Images
             return fm;
         }
 
-        public static ResizeSettingsSrcSet Find(ResizeSettings resizeSettings, SrcSetType srcSetType)
+        public static IMultiResizeRule Find(ResizeSettings resizeSettings, SrcSetType srcSetType)
         {
-            var advancedSettings = resizeSettings?.Advanced;
+            var advancedSettings = resizeSettings?.MultiResize;
             if (advancedSettings == null) return null;
             var fm = Find(resizeSettings);
             var def = advancedSettings.Resize;

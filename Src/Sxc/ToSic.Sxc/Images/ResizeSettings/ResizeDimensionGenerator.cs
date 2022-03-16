@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Images
         public bool Debug = false;
 
 
-        public OneResize ResizeDimensions(ResizeSettings resizeSettings, ResizeSettingsSrcSet srcSetSettings, OneResize optionalPrepared = null)
+        public OneResize ResizeDimensions(ResizeSettings resizeSettings, IMultiResizeRule srcSetSettings, OneResize optionalPrepared = null)
         {
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
@@ -46,16 +46,11 @@ namespace ToSic.Sxc.Images
 
             var hasAspectRatio = !DNearZero(aspectRatio);
 
-            // 2. Figure out height, as we're resizing, we respect the aspect ratio, unless there is none or height shouldn't be set
-            // Old: Width should only be calculated, if it wasn't explicitly provided (so only if coming from the settings)
-            //var newW = dims.Width;
-
             // Height should only get Aspect Ratio if the Height wasn't specifically provided
             var newH = useAspectRatio && hasAspectRatio
                 ? dims.Width / aspectRatio
                 : dims.Height * factor;  // Note that often dims.H is 0, so this will still be 0
 
-            //var final = ((int)dims.Width, (int)newH);
             return wrapLog($"H:{newH}", (int)newH);
         }
 
