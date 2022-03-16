@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             // Ensure that Hot Reload is not enabled or try to disable it.
             HotReloadEnabledCheck.Check();
-            return Real.Import(new HttpUploadedFile(Request), zoneId);
+            return Real.Import(new HttpUploadedFile(Request), zoneId, Request.Form["Name"]);
         }
     }
 }
