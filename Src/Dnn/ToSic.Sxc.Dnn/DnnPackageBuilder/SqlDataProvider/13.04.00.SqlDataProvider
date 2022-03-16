@@ -1,0 +1,3 @@
+/* Delete old 2sxc assembliy records, so right version is set in next steps as part of this install. */
+DELETE FROM [dbo].[Assemblies] WHERE [PackageID] IN (SELECT [PackageID] FROM [dbo].[Packages] WHERE [Name] IN ('2SexyContent', '2SexyContent-App', 'ToSic.Imageflow.Dnn'))
+GO
