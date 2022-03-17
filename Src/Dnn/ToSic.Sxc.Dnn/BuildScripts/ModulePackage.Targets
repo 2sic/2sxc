@@ -210,8 +210,8 @@
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Primitives.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.IO.RecyclableMemoryStream.dll" />-->
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
-      <!--<ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Buffers.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Memory.dll" />
+      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Buffers.dll" />
+      <!--<ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Memory.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Numerics.Vectors.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Runtime.CompilerServices.Unsafe.dll" />-->
     </ItemGroup>

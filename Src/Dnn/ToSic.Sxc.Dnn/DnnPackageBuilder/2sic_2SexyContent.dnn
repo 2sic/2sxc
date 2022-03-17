@@ -199,6 +199,42 @@
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
 
+
+            <!-- *** DNN shared (DNN assembly bindings) ***  -->
+            
+            <!-- ToSic.Eav.Core.dll PackageReference -->
+            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
+            <!-- ToSic.Sxc.WebApi PackageReference -->
+            <assembly>
+              <name>Newtonsoft.Json.dll</name>
+              <version>10.0.0.0</version>
+            </assembly>
+            <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
+            <!-- System.Memory transitive dependency -->
+            <assembly>
+              <name>System.Buffers.dll</name>
+              <version>4.0.2.0</version>
+            </assembly>
+            <!-- ASP.NET Web API Components -->
+            <!-- Libraries required for ASP.NET Web API. -->
+            <!-- ToSic.Eav.WebApi PackageReference -->
+            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
+            <assembly>
+              <name>System.Net.Http.Formatting.dll</name>
+              <version>5.2.3.0</version>
+            </assembly>
+            <assembly>
+              <name>System.Web.Http.dll</name>
+              <version>5.2.3.0</version>
+            </assembly>
+            <assembly>
+              <name>System.Web.Http.WebHost.dll</name>
+              <version>5.2.3.0</version>
+            </assembly>
+
+
+            <!-- *** 2sxc netstandard2.0 / NETFramework4.7 assemblies *** -->
+
             <!-- ToSic.Eav.DataSources PackageReference -->
             <assembly>
               <name>CsvHelper.dll</name>
@@ -285,23 +321,10 @@
               <name>Microsoft.Extensions.Primitives.dll</name>
               <version>2.1.1.0</version>
             </assembly>
-            <!-- ToSic.Eav.Core.dll PackageReference -->
-            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
-            <!-- ToSic.Sxc.WebApi PackageReference -->
-            <assembly>
-              <name>Newtonsoft.Json.dll</name>
-              <version>10.0.0.0</version>
-            </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Remotion.Linq.dll</name>
               <version>2.2.0.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
-            <!-- System.Memory transitive dependency -->
-            <assembly>
-              <name>System.Buffers.dll</name>
-              <version>4.0.2.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -345,23 +368,6 @@
             <assembly>
               <name>System.Runtime.CompilerServices.Unsafe.dll</name>
               <version>4.0.4.0</version>
-            </assembly>
-
-            <!-- ASP.NET Web API Components -->
-            <!-- Libraries required for ASP.NET Web API. -->
-            <!-- ToSic.Eav.WebApi PackageReference -->
-            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
-            <assembly>
-              <name>System.Net.Http.Formatting.dll</name>
-              <version>5.2.3.0</version>
-            </assembly>
-            <assembly>
-              <name>System.Web.Http.dll</name>
-              <version>5.2.3.0</version>
-            </assembly>
-            <assembly>
-              <name>System.Web.Http.WebHost.dll</name>
-              <version>5.2.3.0</version>
             </assembly>
 
           </assemblies>
@@ -750,10 +756,18 @@
               <name>ToSic.Imageflow.Dnn.dll</name>
             </assembly>
 
+            <!-- *** DNN shared assemblies *** -->
+
             <!-- Imageflow.Net transitive dependency -->
             <assembly>
               <name>Newtonsoft.Json.dll</name>
               <version>10.0.0.0</version>
+            </assembly>
+
+            <!-- Imageflow.Net transitive dependency -->
+            <assembly>
+              <name>System.Buffers.dll</name>
+              <version>4.0.2.0</version>
             </assembly>
           </assemblies>
         </component>
@@ -907,19 +921,6 @@
                     <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
                       <assemblyIdentity name="Microsoft.IO.RecyclableMemoryStream" publicKeyToken="31bf3856ad364e35" />
                       <codeBase version="1.2.2.0" href="bin\Imageflow\Microsoft.IO.RecyclableMemoryStream.dll" />
-                    </dependentAssembly>
-                  </node>
-
-                  <!-- Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Buffers.dll, version 4.0.2.0 -->
-                  <node path="/configuration/runtime/ab:assemblyBinding"
-                        action="update"
-                        collision="overwrite"
-                        targetpath="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Buffers'][ab:bindingRedirect]"
-                        nameSpace="urn:schemas-microsoft-com:asm.v1"
-                        nameSpacePrefix="ab">
-                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
-                      <assemblyIdentity name="System.Buffers" publicKeyToken="cc7b13ffcd2ddd51" />
-                      <codeBase version="4.0.2.0" href="bin\Imageflow\System.Buffers.dll" />
                     </dependentAssembly>
                   </node>
 
