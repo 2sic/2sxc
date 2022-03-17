@@ -227,157 +227,12 @@
               <version>5.2.3.0</version>
             </assembly>
 
-
-
-            <!-- *** 3rd party DLLs *** -->
-
-            <!-- ToSic.Eav.DataSources PackageReference -->
-            <assembly>
-              <name>CsvHelper.dll</name>
-              <version>2.0.0.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>Remotion.Linq.dll</name>
-              <version>2.2.0.0</version>
-            </assembly>
-
-
-
             <!-- *** 2sxc 13+ netstandard2.0 assemblies *** -->
-
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- ToSic.Eav.Persistence.Efc PackageReference -->
-            <assembly>
-              <name>Microsoft.EntityFrameworkCore.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- ToSic.Eav.Persistence.Efc PackageReference -->
-            <!-- Microsoft.EntityFrameworkCore.SqlServer transitive dependency -->
-            <assembly>
-              <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- ToSic.Eav.Persistence.Efc PackageReference -->
-            <assembly>
-              <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Caching.Memory transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Caching.Abstractions.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Caching.Memory.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Configuration transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.Abstractions.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.Binder.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Configuration.Binder transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Configuration.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- ToSic.Sxc.Dnn.Core PackageReference -->
-            <!-- ToSic.Sxc.Dnn.Main packages.config -->
-            <!-- Microsoft.EntityFrameworkCore.DependencyInjection transitive dependency -->
-            <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-             <!--ToSic.Eav.Core.dll PackageReference--> 
-             <!--Microsoft.EntityFrameworkCore transitive dependency--> 
-            <assembly>
-              <name>Microsoft.Extensions.DependencyInjection.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Logging.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Caching.Memory transitive dependency -->
-            <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Options.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Options transitive dependency -->
-            <assembly>
-              <name>Microsoft.Extensions.Primitives.dll</name>
-              <version>2.1.1.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
-            <!-- System.Memory transitive dependency -->
-            <assembly>
-              <name>System.Buffers.dll</name>
-              <version>4.0.2.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>System.Collections.Immutable.dll</name>
-              <version>1.2.3.0</version>
-            </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.ComponentModel.Annotations.dll</name>
               <version>4.2.1.0</version>
             </assembly>
-            <!-- ToSic.Eav.DataSources PackageReference -->
-            <assembly>
-              <name>System.Data.SqlClient.dll</name>
-              <version>4.4.0.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>System.Diagnostics.DiagnosticSource.dll</name>
-              <version>4.0.3.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>System.Interactive.Async.dll</name>
-              <version>3.0.3000.0</version>
-            </assembly>
-            <!-- Microsoft.Extensions.Primitives transitive dependency -->
-            <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
-            <assembly>
-              <name>System.Memory.dll</name>
-              <version>4.0.1.0</version>
-            </assembly>
-            <!-- System.Memory transitive dependency -->
-            <assembly>
-              <name>System.Numerics.Vectors.dll</name>
-              <version>4.1.3.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore.DependencyInjection transitive dependency -->
-            <!-- Microsoft.Extensions.Primitives transitive dependency -->
-            <!-- System.Memory transitive dependency -->
-            <assembly>
-              <name>System.Runtime.CompilerServices.Unsafe.dll</name>
-              <version>4.0.4.0</version>
-            </assembly>
-
-            
 
           </assemblies>
         </component>
@@ -413,6 +268,15 @@
             <basePath>DesktopModules/ToSIC_SexyContent</basePath>
             <resourceFile>
               <name>Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+
+        <!-- dll files -->
+        <component type="ResourceFile">
+          <resourceFiles>
+            <resourceFile>
+              <name>Dll.zip</name>
             </resourceFile>
           </resourceFiles>
         </component>
@@ -614,6 +478,94 @@
             <file>
               <path>bin</path>
               <name>ToSic.SexyContent.WebApi.dll</name>
+            </file>
+          </files>
+        </component>
+
+        <!-- 2021-12-01, clean assemblies moved to bin/Modules-->
+        <component type="Cleanup" version="13.04.00">
+          <files>
+            <basePath>bin</basePath>
+            <file>
+              <name>CsvHelper.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.EntityFrameworkCore.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.EntityFrameworkCore.Relational.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.EntityFrameworkCore.SqlServer.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Caching.Abstractions.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Caching.Memory.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Configuration.Abstractions.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Configuration.Binder.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Configuration.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.DependencyInjection.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.FileProviders.Abstractions.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Hosting.Abstractions.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Logging.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Options.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.Extensions.Primitives.dll</name>
+            </file>
+            <file>
+              <name>Microsoft.IO.RecyclableMemoryStream.dll</name>
+            </file>
+            <file>
+              <name>Remotion.Linq.dll</name>
+            </file>
+            <file>
+              <name>System.Collections.Immutable.dll</name>
+            </file>
+            <file>
+              <name>System.Data.SqlClient.dll</name>
+            </file>
+            <file>
+              <name>System.Diagnostics.DiagnosticSource.dll</name>
+            </file>
+            <file>
+              <name>System.Interactive.Async.dll</name>
+            </file>
+            <file>
+              <name>System.Memory.dll</name>
+            </file>
+            <file>
+              <name>System.Numerics.Vectors.dll</name>
+            </file>
+            <file>
+              <name>System.Runtime.CompilerServices.Unsafe.dll</name>
             </file>
           </files>
         </component>

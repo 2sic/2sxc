@@ -28,6 +28,7 @@
       <PackageName>2sic_2SexyContent</PackageName>
       <TempPackageFolder>$(MSBuildProjectDirectory)\ModulePackages\Temp</TempPackageFolder>
       <TempPackageResourcesFolder>$(MSBuildProjectDirectory)\ModulePackages\TempResources</TempPackageResourcesFolder>
+      <TempPackageDllFolder>$(MSBuildProjectDirectory)\ModulePackages\TempDll</TempPackageDllFolder>
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
       <FinalZipFolder>../../../InstallPackages/Dnn-Installer</FinalZipFolder>
       <FinalZipFileName>$(PackageName)_$(Version)_Install.zip</FinalZipFileName>
@@ -104,10 +105,6 @@
       <AssemblyInclude Include="$(OutDir)\System.Web.Http.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />
 
-      <!-- 3rd party DLLs -->
-      <AssemblyInclude Include="$(OutDir)\CsvHelper.dll" />
-      <AssemblyInclude Include="$(OutDir)\Remotion.Linq.dll" />
-
       <!-- 2021-12-01 commented, not used in 2sxc 13+, #cleanup delete ca. April 2022 -->
       <!-- for DNN 9.4.0 older entity framework core etc. 1.1.0 assemblies used by 2sxc v<13 -->
       <!--
@@ -130,30 +127,34 @@
       -->
 
       <!-- 2sxc 13+ netstandard2.0 assemblies -->
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.Abstractions.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Configuration.Abstractions.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Configuration.Binder.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Configuration.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\Microsoft.Extensions.Primitives.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Buffers.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Collections.Immutable.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.ComponentModel.Annotations.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Data.SqlClient.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Interactive.Async.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Memory.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Numerics.Vectors.dll" />
-      <AssemblyIncludeResourcesZip Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.Abstractions.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Configuration.Abstractions.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Configuration.Binder.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Configuration.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
+      <DllZip Include="$(OutDir)\Microsoft.Extensions.Primitives.dll" />
+      <DllZip Include="$(OutDir)\System.Buffers.dll" />
+      <DllZip Include="$(OutDir)\System.Collections.Immutable.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.ComponentModel.Annotations.dll" />
+      <DllZip Include="$(OutDir)\System.Data.SqlClient.dll" />
+      <DllZip Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
+      <DllZip Include="$(OutDir)\System.Interactive.Async.dll" />
+      <DllZip Include="$(OutDir)\System.Memory.dll" />
+      <DllZip Include="$(OutDir)\System.Numerics.Vectors.dll" />
+      <DllZip Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+
+      <!-- 3rd party DLLs -->
+      <DllZip Include="$(OutDir)\CsvHelper.dll" />
+      <DllZip Include="$(OutDir)\Remotion.Linq.dll" />
 
     </ItemGroup>
 
@@ -266,12 +267,16 @@
 
     <!-- create the INSTALL RESOURCES.ZIP file -->
     <Copy SourceFiles="@(InstallInclude)" DestinationFolder="$(TempPackageResourcesFolder)\%(RecursiveDir)" />
-    <Copy SourceFiles="@(AssemblyIncludeResourcesZip)" DestinationFolder="$(TempPackageResourcesFolder)\bin\Modules" />
-
     <CreateItem Include="$(TempPackageResourcesFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="ResourcesContent" />
     </CreateItem>
     <Zip Files="@(ResourcesContent)" WorkingDirectory="$(TempPackageResourcesFolder)" ZipFileName="$(TempPackageFolder)\Resources.zip" />
+
+    <Copy SourceFiles="@(DllZip)" DestinationFolder="$(TempPackageDllFolder)\bin\Modules" />
+    <CreateItem Include="$(TempPackageDllFolder)\**\*.*">
+      <Output TaskParameter="Include" ItemName="DllZipContent" />
+    </CreateItem>
+    <Zip Files="@(DllZipContent)" WorkingDirectory="$(TempPackageDllFolder)" ZipFileName="$(TempPackageFolder)\Dll.zip" />
 
     <CreateItem Include="$(TempPackagePdbFolder)\**\*.*">
       <Output TaskParameter="Include" ItemName="AssemblyHelperContent" />
