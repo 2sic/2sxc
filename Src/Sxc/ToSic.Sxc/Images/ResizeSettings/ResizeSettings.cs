@@ -17,9 +17,6 @@ namespace ToSic.Sxc.Images
         public NameValueCollection Parameters { get; set; }
 
 
-        // WIP trying to remove
-        public string SrcSet { get; }
-
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
 
@@ -61,16 +58,12 @@ namespace ToSic.Sxc.Images
             Format = format ?? Format;
         }
 
-        public ResizeSettings(IResizeSettings original, double factor): this(original)
+        public ResizeSettings(IResizeSettings original, double factor, MultiResizeSettings multi = null): this(original)
         {
             Factor = factor;
-        }
-
-        public ResizeSettings(IResizeSettings original, MultiResizeSettings multi): this(original)
-        {
             MultiResize = multi ?? MultiResize;
         }
 
-        public MultiResizeRule Find(SrcSetType srcSetType) => FactorMapHelper.Find(this, srcSetType);
+        public MultiResizeRule Find(SrcSetType srcSetType) => ResizeSettingsHelper.Find(this, srcSetType);
     }
 }

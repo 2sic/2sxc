@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
     /// </summary>
-    internal class ResizeParamMerger: HasLog // <ResizeParamMerger>
+    internal class ResizeParamMerger: HasLog
     {
         private const string ResizeModeField = "ResizeMode";
         private const string ScaleModeField = "ScaleMode";
@@ -41,7 +41,6 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            //string srcset = null,
             object advanced = null,
             bool allowMulti = false
             )
@@ -64,10 +63,10 @@ namespace ToSic.Sxc.Images
             var formatValue = FindKnownFormatOrNull(RealStringOrNull(format));
             string srcSetValue = advanced is string srcSetString
                 ? srcSetString
-                : /*srcset is bool srcSetBool && srcSetBool*/ allowMulti ? getSettings?.Get(SrcSetField) : null;
+                : allowMulti ? getSettings?.Get(SrcSetField) : null;
 
 
-            var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, formatValue, srcSetValue, getSettings);
+            var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, formatValue, getSettings);
 
             // Add parameters if known
             if (!string.IsNullOrWhiteSpace(parameters))
@@ -86,22 +85,31 @@ namespace ToSic.Sxc.Images
             resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            try
-            {
-                if (advanced is MultiResizeSettings advTyped)
-                    resizeParams.MultiResize = advTyped; // .InitAfterLoad();
-                // Use given OR get it / piggyback
-                else if (advanced == null || advanced is string strAdvanced2 && string.IsNullOrWhiteSpace(strAdvanced2))
-                    resizeParams.MultiResize = TryToGetAndCacheSettingsAdvanced(getSettings);
-                // string - json, try to parse
-                else // if (advanced is string strAdvanced && !string.IsNullOrWhiteSpace(strAdvanced))
-                    resizeParams.MultiResize = ParseSrcSetOrAdvancedSetting(advanced, srcSetValue);
-            }
-            catch{ /* ignore */ }
-
+            resizeParams.MultiResize = GetMultiResizeSettings(advanced, getSettings, srcSetValue) ?? resizeParams.MultiResize;
             resizeParams.MultiResize?.InitAfterLoad();
 
             return resizeParams;
+        }
+
+        private MultiResizeSettings GetMultiResizeSettings(object advanced, ICanGetByName getSettings, string srcSetValue)
+        {
+            try
+            {
+                if (advanced is MultiResizeSettings advTyped) return advTyped;
+                
+                // Use given OR get it / piggyback
+                if (advanced == null || advanced is string strAdvanced2 && string.IsNullOrWhiteSpace(strAdvanced2))
+                    return TryToGetAndCacheSettingsAdvanced(getSettings);
+                
+                // string - json, try to parse
+                return ParseSrcSetOrAdvancedSetting(advanced, srcSetValue);
+            }
+            catch
+            {
+                /* ignore */
+            }
+
+            return null;
         }
 
         private MultiResizeSettings TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
@@ -124,7 +132,7 @@ namespace ToSic.Sxc.Images
 
             //// If it's a rule, return that as the only resize setting
             if (value is MultiResizeRule valRule)
-                return new MultiResizeSettings { Rules = new[] { valRule } }; //.InitAfterLoad();
+                return new MultiResizeSettings { Rules = new[] { valRule } };
 
             return ParseAdvancedSettings(value);
         }
@@ -146,7 +154,7 @@ namespace ToSic.Sxc.Images
             return wrapLog("new", new MultiResizeSettings());
         }
 
-        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetByName settingsOrNull)
+        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets

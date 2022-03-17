@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             var linker = GetLinker();
             var settings = linker.ResizeParamMerger.BuildResizeSettings(width: 1000, factor: 0.5, advanced: "0.5");
-            var src = linker.SrcSet("test.jpg", settings, SrcSetType.ImgSrcSet);
+            var src = linker.SrcSet("test.jpg", settings, SrcSetType.Img);
             Assert.AreEqual("test.jpg?w=250 250w", src, "Src should be a quarter now");
 
         }

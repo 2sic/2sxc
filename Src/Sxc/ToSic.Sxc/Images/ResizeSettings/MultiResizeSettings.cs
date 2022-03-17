@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Images
         /// Default Resize rules for everything which isn't specified more closely in the factors
         /// </summary>
         [JsonIgnore]
-        internal MultiResizeRule Default => _resize ?? (_resize = FactorMapHelper.FindRuleForTarget(Rules, MultiResizeRule.RuleForDefault));
+        internal MultiResizeRule Default => _resize ?? (_resize = ResizeSettingsHelper.FindRuleForTarget(Rules, MultiResizeRule.RuleForDefault));
         private MultiResizeRule _resize;
 
         [JsonProperty("rules")]
@@ -48,35 +48,25 @@ namespace ToSic.Sxc.Images
                 r.InitAfterLoad(factor ?? 0, r.Width, Default);
             }
             return rules;
-            //rules
-            //    .Where(r => r.Type != MultiResizeRule.RuleForDefault)
-            //    .ToList()
-            //    .ForEach(r =>
-            //    {
-            //        var factor = ParseObject.DoubleOrNullWithCalculation(r.Factor);
-            //        r.InitAfterLoad(factor ?? 0, r.Width, Default);
-            //    });
-            //var factorRules = Rules
-            //    .Where(r => r.Type != MultiResizeRule.RuleForDefault)
-            //    .Select(r =>
-            //    {
-            //        var factor = ParseObject.DoubleOrNullWithCalculation(r.Factor);
-            //        return r.InitAfterLoad(factor ?? 0, r.Width, Default);
-            //    })
-            //    //.Where(fr => fr != default)
-            //    .ToArray();
-            //return factorRules;
         }
 
-        public static MultiResizeSettings Parse(object value)
+        public static MultiResizeSettings Parse(object value) => InnerParse(value)?.InitAfterLoad();
+
+        private static MultiResizeSettings InnerParse(object value)
         {
+            if (value == null) return null;
+
             // It's already what's expected
             if (value is MultiResizeSettings mrsValue) return mrsValue;
 
-            // It's just one rule which should be used
+            // Parse any string which would be a typical MRS - convert to single rule
+            if (value is string strValue && !string.IsNullOrWhiteSpace(strValue))
+                value = new MultiResizeRule { SrcSet = strValue };
+
+            // Parse any single rule It's just one rule which should be used
             if (value is MultiResizeRule mrrValue)
-                return new MultiResizeSettings() { Rules = new[] { mrrValue } };
-            
+                return new MultiResizeSettings { Rules = new[] { mrrValue } };
+
             return null;
         }
     }

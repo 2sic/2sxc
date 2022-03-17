@@ -17,7 +17,6 @@ namespace ToSic.Sxc.Images
             string format = default,
             object aspectRatio = default,
             string parameters = default,
-            //string srcset = default,
             object rules = default
             )
         {
@@ -26,10 +25,10 @@ namespace ToSic.Sxc.Images
             // If we have initial settings and srcSet isn't specified, then we should set to true so it will auto-reuse
             //if (srcset == null && settings != null) 
             //    srcset = true;
-            var allowMulti = (/*srcset*/ rules == null && settings != null);
+            var allowMulti = (rules == null && settings != null);
             return ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: settings, factor: factor,
                 width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, /*srcset: srcset,*/ allowMulti: allowMulti, advanced: rules);
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, allowMulti: allowMulti, advanced: rules);
         }
 
     }

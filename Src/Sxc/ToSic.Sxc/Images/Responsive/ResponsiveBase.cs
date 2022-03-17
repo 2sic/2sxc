@@ -16,8 +16,7 @@ namespace ToSic.Sxc.Images
             // ReSharper disable once UnusedParameter.Local
             string noParamOrder = Parameters.Protector, 
             object factor = null, 
-            //string srcSet = null,
-            object rules = null,
+            MultiResizeSettings mrs = null,
             string imgAlt = null,
             string imgClass = null,
             string logName = Constants.SxcLogName + ".IPSBas"
@@ -25,50 +24,39 @@ namespace ToSic.Sxc.Images
         {
             ImgService = imgService;
             FactorParam = factor;
-            //SrcSetParam = srcSet;
             ImgAlt = imgAlt;
             ImgClass = imgClass;
             ImgLinker = imgService.ImgLinker;
             UrlOriginal = url;
-            Settings = PrepareResizeSettings(settings, factor, /*srcSet,*/ rules);
+            Settings = PrepareResizeSettings(settings, factor, mrs);
 
         }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
         protected readonly object FactorParam;
-        //protected readonly string SrcSetParam;
         protected readonly string ImgAlt;
         protected readonly string ImgClass;
         protected readonly string UrlOriginal;
 
         public string Url => ThisResize.Url;
 
-        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(UrlOriginal, Settings, SrcSetType.ImgSrc));
+        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(UrlOriginal, Settings, SrcSetType.Img));
         private OneResize _thisResize;
 
         internal ResizeSettings Settings { get; }
 
 
-        protected ResizeSettings PrepareResizeSettings(object settings, object factor, object rules)
+        protected ResizeSettings PrepareResizeSettings(object settings, object factor, MultiResizeSettings mrs)
         {
-            // 0. Pre-check multi-rules
-            var probablyMultiRules = MultiResizeSettings.Parse(rules)?.InitAfterLoad();
-
             // 1. Prepare Settings
             if (settings is ResizeSettings resSettings)
             {
                 // If we have a modified factor, make sure we have that (this will copy the settings)
                 var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
-                if (newFactor != null) resSettings = new ResizeSettings(resSettings, factor: newFactor.Value);
+                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, mrs);
             }
             else
-                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, /*srcset: true,*/ allowMulti: true, advanced: probablyMultiRules);
-
-            //must make a copy if we change a property, to not have side-effects
-            if (probablyMultiRules != null)
-            {
-                resSettings = new ResizeSettings(resSettings, probablyMultiRules);
-            }
+                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, allowMulti: true, advanced: mrs);
 
             return resSettings;
         }

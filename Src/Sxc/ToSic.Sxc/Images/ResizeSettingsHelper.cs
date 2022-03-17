@@ -3,7 +3,7 @@ using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images
 {
-    public class FactorMapHelper
+    public class ResizeSettingsHelper
     {
         public static MultiResizeRule Find(ResizeSettings resizeSettings, SrcSetType srcSetType)
         {
@@ -11,10 +11,9 @@ namespace ToSic.Sxc.Images
             if (multiSettings == null) return null;
             var fm = FindSubRule(resizeSettings);
 
-            if (srcSetType == SrcSetType.ImgSrc || srcSetType == SrcSetType.ImgSrcSet)
-                return KeepOrUseSubRule(fm, "img") ?? KeepOrUseSubRule(multiSettings.Default, "img");
-
-            return KeepOrUseSubRule(fm, "source") ?? KeepOrUseSubRule(multiSettings.Default, "source");
+            return srcSetType == SrcSetType.Img
+                ? KeepOrUseSubRule(fm, "img") ?? KeepOrUseSubRule(multiSettings.Default, "img")
+                : KeepOrUseSubRule(fm, "source") ?? KeepOrUseSubRule(multiSettings.Default, "source");
         }
 
         private static MultiResizeRule FindSubRule(ResizeSettings resizeSettings)
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Images
             if (maps == null || !maps.Any()) return null;
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1;
-            var fm = maps.FirstOrDefault(m => DNearZero(m.FactorParsed - factor));
+            var fm = maps.FirstOrDefault(m => m.Type == MultiResizeRule.RuleForFactor && DNearZero(m.FactorParsed - factor));
             return fm;
         }
 
@@ -40,9 +39,8 @@ namespace ToSic.Sxc.Images
 
     public enum SrcSetType
     {
-        ImgSrc,
-        ImgSrcSet,
-        Sources
+        Img,
+        Source
     }
 
 }

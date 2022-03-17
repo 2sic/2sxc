@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Images
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is ResizeSettings resizeSettings)
             {
-                var basic = ImageOnly(url, resizeSettings, SrcSetType.ImgSrc).Url;
+                var basic = ImageOnly(url, resizeSettings, SrcSetType.Img).Url;
                 return wrapLog("prepared:" + basic, basic);
             }
 
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Images
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                 parameters: parameters, /*srcset: false,*/ allowMulti: false);
 
-            var result = ImageOnly(url, resizeSettings, SrcSetType.ImgSrc).Url;
+            var result = ImageOnly(url, resizeSettings, SrcSetType.Img).Url;
             return wrapLog("built:" + result, result);
         }
 
