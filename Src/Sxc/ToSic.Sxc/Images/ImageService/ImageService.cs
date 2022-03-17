@@ -47,22 +47,22 @@ namespace ToSic.Sxc.Images
         public IResponsivePicture Picture(
             string url, 
             string noParamOrder = Parameters.Protector,
-            object settings = null,
-            object factor = null, 
-            string srcset = null, 
-            string imgAlt = null, 
-            string imgClass = null
-        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, srcSet: srcset, imgAlt: imgAlt, imgClass: imgClass);
+            object settings = default,
+            object factor = default,
+            string imgAlt = default,
+            string imgClass = default,
+            object rules = default
+        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, rules: rules, imgAlt: imgAlt, imgClass: imgClass);
 
         public IResponsiveImage Img(
             string url,
             string noParamOrder = Parameters.Protector,
-            object settings = null,
-            object factor = null,
-            string srcset = null,
-            string imgAlt = null,
-            string imgClass = null
-        ) => new ResponsiveImage(this, url, GetBestSettings(settings), factor: factor, srcSet: srcset, imgAlt: imgAlt, imgClass: imgClass);
+            object settings = default,
+            object factor = default,
+            string imgAlt = default,
+            string imgClass = default,
+            object rules = default
+        ) => new ResponsiveImage(this, url, GetBestSettings(settings), factor: factor, rules: rules, imgAlt: imgAlt, imgClass: imgClass);
 
         public IHybridHtmlString SrcSet(
             string url, 

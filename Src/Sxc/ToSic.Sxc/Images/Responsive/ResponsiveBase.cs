@@ -16,7 +16,8 @@ namespace ToSic.Sxc.Images
             // ReSharper disable once UnusedParameter.Local
             string noParamOrder = Parameters.Protector, 
             object factor = null, 
-            string srcSet = null,
+            //string srcSet = null,
+            object rules = null,
             string imgAlt = null,
             string imgClass = null,
             string logName = Constants.SxcLogName + ".IPSBas"
@@ -24,18 +25,18 @@ namespace ToSic.Sxc.Images
         {
             ImgService = imgService;
             FactorParam = factor;
-            SrcSetParam = srcSet;
+            //SrcSetParam = srcSet;
             ImgAlt = imgAlt;
             ImgClass = imgClass;
             ImgLinker = imgService.ImgLinker;
             UrlOriginal = url;
-            Settings = PrepareResizeSettings(settings, factor, srcSet);
+            Settings = PrepareResizeSettings(settings, factor, /*srcSet,*/ rules);
 
         }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
         protected readonly object FactorParam;
-        protected readonly string SrcSetParam;
+        //protected readonly string SrcSetParam;
         protected readonly string ImgAlt;
         protected readonly string ImgClass;
         protected readonly string UrlOriginal;
@@ -48,19 +49,26 @@ namespace ToSic.Sxc.Images
         internal ResizeSettings Settings { get; }
 
 
-        protected ResizeSettings PrepareResizeSettings(object settings, object factor, string srcset)
+        protected ResizeSettings PrepareResizeSettings(object settings, object factor, object rules)
         {
+            // 0. Pre-check multi-rules
+            var probablyMultiRules = MultiResizeSettings.Parse(rules)?.InitAfterLoad();
+
             // 1. Prepare Settings
             if (settings is ResizeSettings resSettings)
             {
+                // If we have a modified factor, make sure we have that (this will copy the settings)
                 var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
                 if (newFactor != null) resSettings = new ResizeSettings(resSettings, factor: newFactor.Value);
             }
             else
-                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcset: true);
+                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, /*srcset: true,*/ allowMulti: true, advanced: probablyMultiRules);
 
-            // must make a copy if we change a property, to not have side-effects
-            if (srcset != null) resSettings = new ResizeSettings(resSettings, format: null, srcSet: srcset);
+            //must make a copy if we change a property, to not have side-effects
+            if (probablyMultiRules != null)
+            {
+                resSettings = new ResizeSettings(resSettings, probablyMultiRules);
+            }
 
             return resSettings;
         }

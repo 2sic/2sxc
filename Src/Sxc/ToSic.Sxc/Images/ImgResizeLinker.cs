@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Images
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
                 settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-                parameters: parameters, srcset: false);
+                parameters: parameters, /*srcset: false,*/ allowMulti: false);
 
             var result = ImageOnly(url, resizeSettings, SrcSetType.ImgSrc).Url;
             return wrapLog("built:" + result, result);
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Images
 
             var srcSetSettings = settings.Find(srcSetType);
 
-            var srcSetConfig = srcSetSettings?.SrcSetParts ?? SrcSetParser.ParseSet(settings.SrcSet);
+            var srcSetConfig = srcSetSettings?.SrcSetParsed;
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetConfig?.Length ?? 0) == 0)
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Images
             return (int)(part.Size * original);
         }
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, IMultiResizeRule srcSetSettings, OneResize preCalculated = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, MultiResizeRule srcSetSettings, OneResize preCalculated = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, preCalculated);
             one.TagEnhancements = srcSetSettings;

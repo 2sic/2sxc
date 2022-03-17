@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
@@ -9,10 +10,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var i = 1;
             return new List<TestParamSet>
             {
-                new TestParamSet($"{i++}{name}-both", true, true, true, srcset),
-                new TestParamSet($"{i++}{name}-both", true, true, false, srcset),
-                new TestParamSet($"{i++}{name}-on set", true, false, true, srcset),
-                new TestParamSet($"{i++}{name}-on set", true, false, false, srcset),
+                new TestParamSet($"Test #{i++} {name}-both", true, true, true, srcset),
+                new TestParamSet($"Test #{i++} {name}-both", true, true, false, srcset),
+                new TestParamSet($"Test #{i++} {name}-on set", true, false, true, srcset),
+                new TestParamSet($"Test #{i++} {name}-on set", true, false, false, srcset),
                 // The On-Pic variations don't exist, as the pic doesn't have params for width/height
                 //new TestParamSet($"{i++}{name}-on pic", false, true, true, srcset),
                 //new TestParamSet($"{i++}{name}-on pic", false, true, false, srcset),
@@ -30,6 +31,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
             public int? Width;
             public int? Height;
             public string Srcset;
+
+            public MultiResizeRule SrcSetRule => Srcset == null ? null : new MultiResizeRule { SrcSet = Srcset };
         }
 
         public class TestParamSet

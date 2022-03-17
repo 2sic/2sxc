@@ -13,13 +13,13 @@ namespace ToSic.Sxc.Images
         public string ScaleMode { get; set; }
         public string Format { get; }
         public double Factor { get; } = 1;
-
-
-        public string SrcSet { get; }
+        public double AspectRatio { get; }
         public NameValueCollection Parameters { get; set; }
 
-        // New properties
-        public double AspectRatio { get; }
+
+        // WIP trying to remove
+        public string SrcSet { get; }
+
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
 
@@ -28,20 +28,19 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Constructor to create new
         /// </summary>
-        public ResizeSettings(int width, int height, double aspectRatio, double factor, string format, string srcSet)
+        public ResizeSettings(int width, int height, double aspectRatio, double factor, string format)
         {
             Width = width;
             Height = height;
             AspectRatio = aspectRatio;
             Factor = factor;
             Format = format;
-            SrcSet = srcSet;
         }
 
         /// <summary>
         /// Constructor to copy
         /// </summary>
-        public ResizeSettings(IResizeSettings original, bool keepSourceSet = true)
+        private ResizeSettings(IResizeSettings original)
         {
             Width = original.Width;
             Height = original.Height;
@@ -55,14 +54,11 @@ namespace ToSic.Sxc.Images
             UseAspectRatio = original.UseAspectRatio;
             UseFactorMap = original.UseFactorMap;
             MultiResize = original.MultiResize;
-            if (keepSourceSet)
-                SrcSet = original.SrcSet;
         }
 
-        public ResizeSettings(IResizeSettings original, string format, string srcSet): this(original)
+        public ResizeSettings(IResizeSettings original, string format): this(original)
         {
             Format = format ?? Format;
-            SrcSet = srcSet ?? SrcSet;
         }
 
         public ResizeSettings(IResizeSettings original, double factor): this(original)
@@ -70,6 +66,11 @@ namespace ToSic.Sxc.Images
             Factor = factor;
         }
 
-        public IMultiResizeRule Find(SrcSetType srcSetType) => FactorMapHelper.Find(this, srcSetType);
+        public ResizeSettings(IResizeSettings original, MultiResizeSettings multi): this(original)
+        {
+            MultiResize = multi ?? MultiResize;
+        }
+
+        public MultiResizeRule Find(SrcSetType srcSetType) => FactorMapHelper.Find(this, srcSetType);
     }
 }

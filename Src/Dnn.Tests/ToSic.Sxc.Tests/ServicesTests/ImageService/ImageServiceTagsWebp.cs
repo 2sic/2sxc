@@ -22,7 +22,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, "No Src Set")]
         [DataRow(SrcWebP12 + SrcJpg12, SrcSet12, "With Src Set 1,2")]
         [DataTestMethod]
-        public void SourceTagsMultiTests(string expected, string srcset, string name) => SourceTagsMultiTest(expected, srcset, name);
+        public void SourceTagsMultiTests(string expected, string srcset, string name) 
+            => SourceTagsMultiTest(expected, srcset, name);
 
         [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, true, "No Src Set, in-pic")]
         [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, false, "No Src Set, in-setting")]

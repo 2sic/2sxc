@@ -65,10 +65,11 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             // Test with Linker
             var linker = GetLinker();
-            var typedSettings = linker.ResizeParamMerger.BuildResizeSettings(settings: settings, factor: factor, width: width,
+            var typedSettings = linker.ResizeParamMerger.BuildResizeSettings(settings: settings, factor: factor,
+                width: width,
                 height: height,
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                aspectRatio: aspectRatio, srcset: srcset);
+                aspectRatio: aspectRatio, /*srcset: srcset,*/ advanced: new MultiResizeRule() { SrcSet = srcset });
             var linkerResult = linker.SrcSet(url, typedSettings, SrcSetType.ImgSrcSet);
             Assert.AreEqual(expected, linkerResult, $"Failed on ImgResizeLinker for srcSet '{srcset}'");
         }

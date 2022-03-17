@@ -62,11 +62,11 @@ namespace ToSic.Sxc.Images
         /// </summary>
         double AspectRatio { get; }
 
-        /// <summary>
-        /// SrcSet to generate.
-        /// </summary>
-        [PrivateApi("WIP - property will probably go away")]
-        string SrcSet { get; }
+        ///// <summary>
+        ///// SrcSet to generate.
+        ///// </summary>
+        //[PrivateApi("WIP - property will probably go away")]
+        //string SrcSet { get; }
 
         /// <summary>
         /// Additional url parameters in case the final link would need this.

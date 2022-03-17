@@ -5,30 +5,37 @@ namespace ToSic.Sxc.Images
 {
     public class FactorMapHelper
     {
-        
-        private static MultiResizeRuleBundle Find(ResizeSettings resizeSettings)
+        public static MultiResizeRule Find(ResizeSettings resizeSettings, SrcSetType srcSetType)
         {
-            var maps = resizeSettings?.MultiResize?.Factors;
+            var multiSettings = resizeSettings?.MultiResize;
+            if (multiSettings == null) return null;
+            var fm = FindSubRule(resizeSettings);
+
+            if (srcSetType == SrcSetType.ImgSrc || srcSetType == SrcSetType.ImgSrcSet)
+                return KeepOrUseSubRule(fm, "img") ?? KeepOrUseSubRule(multiSettings.Default, "img");
+
+            return KeepOrUseSubRule(fm, "source") ?? KeepOrUseSubRule(multiSettings.Default, "source");
+        }
+
+        private static MultiResizeRule FindSubRule(ResizeSettings resizeSettings)
+        {
+            var maps = resizeSettings?.MultiResize?.Rules;
             if (maps == null || !maps.Any()) return null;
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1;
-            var fm = maps.FirstOrDefault(m => DNearZero(m.Factor - factor));
+            var fm = maps.FirstOrDefault(m => DNearZero(m.FactorParsed - factor));
             return fm;
         }
 
-        public static IMultiResizeRule Find(ResizeSettings resizeSettings, SrcSetType srcSetType)
+        private static MultiResizeRule KeepOrUseSubRule(MultiResizeRule rule, string target)
         {
-            var advancedSettings = resizeSettings?.MultiResize;
-            if (advancedSettings == null) return null;
-            var fm = Find(resizeSettings);
-            var def = advancedSettings.Resize;
-            
-            if (srcSetType == SrcSetType.ImgSrc || srcSetType == SrcSetType.ImgSrcSet)
-                return fm?.Img ?? fm ?? def?.Img ?? def;
-
-            return fm?.Sources.FirstOrDefault() ?? fm ?? def?.Sources.FirstOrDefault() ?? def;
+            if (rule == null) return null;
+            if (rule.Sub == null || rule.Sub.Length == 0) return rule;
+            return FindRuleForTarget(rule.Sub, target) ?? rule;
         }
 
+        internal static MultiResizeRule FindRuleForTarget(MultiResizeRule[] rules, string target) 
+            => rules?.FirstOrDefault(r => r.Type == target);
     }
 
     public enum SrcSetType

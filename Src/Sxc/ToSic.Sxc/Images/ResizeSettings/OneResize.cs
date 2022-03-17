@@ -12,6 +12,6 @@
 
         public string UrlWithSuffix => Url + Suffix;
 
-        public IMultiResizeRule TagEnhancements;
+        public MultiResizeRule TagEnhancements;
     }
 }

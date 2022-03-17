@@ -74,13 +74,14 @@ namespace ToSic.Sxc.Tests.ServicesTests
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Quality));
         }
 
-        [TestMethod]
-        public void EmptyOnlySrcSet()
-        {
-            var settings = Build<IImageService>().ResizeSettings(srcset: "100,200,300");
-            Assert.AreEqual("100,200,300", settings.SrcSet);
-            AssertAllEmptyExceptSpecified(settings, nameof(settings.SrcSet));
-        }
+        // 2022-03-17 not valid any more, this property will be removed
+        //[TestMethod]
+        //public void EmptyOnlySrcSet()
+        //{
+        //    var settings = Build<IImageService>().ResizeSettings(rules: new MultiResizeRule {SrcSet = "100,200,300" });
+        //    Assert.AreEqual("100,200,300", settings.SrcSet);
+        //    AssertAllEmptyExceptSpecified(settings, nameof(settings.SrcSet));
+        //}
 
 
 
@@ -108,21 +109,12 @@ namespace ToSic.Sxc.Tests.ServicesTests
             count += MaybeTestOneProperty(settings.Parameters, null, namesToSkip, nameof(settings.Parameters));
             count += MaybeTestOneProperty(settings.Quality, 0, namesToSkip, nameof(settings.Quality));
             count += MaybeTestOneProperty(settings.ScaleMode, null, namesToSkip, nameof(settings.ScaleMode));
-            count += MaybeTestOneProperty(settings.SrcSet, null, namesToSkip, nameof(settings.SrcSet));
+            // 2022-03-17 2dm removing this property
+            //count += MaybeTestOneProperty(settings.SrcSet, null, namesToSkip, nameof(settings.SrcSet));
 
             // Verify the total count matches expected
-            const int expectedCount = 8;
+            const int expectedCount = 7;
             Assert.AreEqual(expectedCount - namesToSkip.Length, count, "count should be total fields minus untested");
-
-            //if (namesToSkip.All(n => n != nameof(settings.Width)))
-            //    Assert.AreEqual(0, settings.Width, nameof(settings.Width));
-            //if (namesToSkip.All(n => n != nameof(settings.Format)))
-            //    Assert.AreEqual(null, settings.Format, nameof(settings.Format));
-            //Assert.AreEqual(null, settings.Mode, nameof(settings.Mode));
-            //Assert.AreEqual(null, settings.Parameters, nameof(settings.Parameters));
-            //Assert.AreEqual(0, settings.Quality, nameof(settings.Quality));
-            //Assert.AreEqual(null, settings.Scale, nameof(settings.Scale));
-            //Assert.AreEqual(null, settings.SrcSet, nameof(settings.SrcSet));
         }
 
         private static int MaybeTestOneProperty<T>(T actual, T expected, string[] namesToSkip, string notToTest)

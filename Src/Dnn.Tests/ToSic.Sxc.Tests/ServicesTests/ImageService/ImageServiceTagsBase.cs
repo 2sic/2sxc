@@ -1,4 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -64,8 +69,9 @@ namespace ToSic.Sxc.Tests.ServicesTests
         protected void PictureTagInner(string expectedParts, string srcset, bool inPicTag, string testName)
         {
             var svc = Build<IImageService>();
-            var settings = svc.ResizeSettings(width: 120, height: 24, srcset: inPicTag ? null : srcset);
-            var pic = svc.Picture(ImgUrl, settings: settings, srcset: inPicTag ? srcset : null);
+            var rule = new MultiResizeRule { SrcSet = srcset };
+            var settings = svc.ResizeSettings(width: 120, height: 24, rules: inPicTag ? null : rule);
+            var pic = svc.Picture(ImgUrl, settings: settings, rules: inPicTag ? rule : null);
 
             var expected = $"<picture>{expectedParts}<img src='{ImgUrl}?w=120&amp;h=24'></picture>";
             AreEqual(expected, pic.ToString(), $"Test failed: {testName}");
@@ -78,15 +84,40 @@ namespace ToSic.Sxc.Tests.ServicesTests
         protected void SourceTagsMultiTest(string expected, string srcset, string testName)
         {
             var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, srcset);
-            foreach (var test in testSet)
+            TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 var svc = Build<IImageService>();
-                var settings = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height, srcset: test.Set.Srcset);
-                var sources = svc.Picture(ImgUrl, settings: settings, srcset: test.Pic.Srcset).Sources;
+                var settings = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height,
+                    rules: test.Set.SrcSetRule);// new MultiResizeRule { SrcSet = test.Set.Srcset });
+                var sources = svc.Picture(ImgUrl, settings: settings, rules: test.Pic.SrcSetRule /*test.Pic.Srcset*/).Sources;
 
                 AreEqual(expected, sources.ToString(), $"Failed: {test.Name}");
-            }
+
+            });
         }
 
+
+
+        public void TestManyButThrowOnceOnly<T>(IEnumerable<(string Name, T Data)> tests, Action<T> innerCall)
+        {
+            Exception lastException = null;
+            foreach (var (name, data) in tests)
+            {
+                Trace.Write(name);
+                try
+                {
+                    innerCall(data);
+                    Trace.WriteLine(" ok");
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(" error");
+                    Console.WriteLine(ex);
+                    lastException = ex;
+                }
+
+            }
+            if (lastException != null) throw lastException;
+        }
     }
 }

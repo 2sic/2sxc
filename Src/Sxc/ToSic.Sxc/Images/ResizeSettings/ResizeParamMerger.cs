@@ -41,8 +41,9 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object srcset = null,
-            object advanced = null
+            //string srcset = null,
+            object advanced = null,
+            bool allowMulti = false
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
@@ -61,9 +62,9 @@ namespace ToSic.Sxc.Images
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
             var formatValue = FindKnownFormatOrNull(RealStringOrNull(format));
-            string srcSetValue = srcset is string srcSetString
+            string srcSetValue = advanced is string srcSetString
                 ? srcSetString
-                : srcset is bool srcSetBool && srcSetBool ? getSettings?.Get(SrcSetField) : null;
+                : /*srcset is bool srcSetBool && srcSetBool*/ allowMulti ? getSettings?.Get(SrcSetField) : null;
 
 
             var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, formatValue, srcSetValue, getSettings);
@@ -88,12 +89,17 @@ namespace ToSic.Sxc.Images
             try
             {
                 if (advanced is MultiResizeSettings advTyped)
-                    resizeParams.MultiResize = advTyped.InitAfterLoad();
+                    resizeParams.MultiResize = advTyped; // .InitAfterLoad();
                 // Use given OR get it / piggyback
-                else if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
+                else if (advanced == null || advanced is string strAdvanced2 && string.IsNullOrWhiteSpace(strAdvanced2))
                     resizeParams.MultiResize = TryToGetAndCacheSettingsAdvanced(getSettings);
+                // string - json, try to parse
+                else // if (advanced is string strAdvanced && !string.IsNullOrWhiteSpace(strAdvanced))
+                    resizeParams.MultiResize = ParseSrcSetOrAdvancedSetting(advanced, srcSetValue);
             }
             catch{ /* ignore */ }
+
+            resizeParams.MultiResize?.InitAfterLoad();
 
             return resizeParams;
         }
@@ -110,6 +116,19 @@ namespace ToSic.Sxc.Images
             return ParseAdvancedSettings(getSettings?.Get(AdvancedField));
         }
 
+        private MultiResizeSettings ParseSrcSetOrAdvancedSetting(object value, string srcSet)
+        {
+            // If it's just a src-set list, and not a json, make it a normal rule
+            if (srcSet is string strVal && !strVal.Contains("{"))
+                value = new MultiResizeRule { SrcSet = strVal };
+
+            //// If it's a rule, return that as the only resize setting
+            if (value is MultiResizeRule valRule)
+                return new MultiResizeSettings { Rules = new[] { valRule } }; //.InitAfterLoad();
+
+            return ParseAdvancedSettings(value);
+        }
+
 
         private MultiResizeSettings ParseAdvancedSettings(object value)
         {
@@ -117,14 +136,14 @@ namespace ToSic.Sxc.Images
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog("create", JsonConvert.DeserializeObject<MultiResizeSettings>(advString)?.InitAfterLoad());
+                    return wrapLog("create", JsonConvert.DeserializeObject<MultiResizeSettings>(advString));
             }
             catch (Exception ex)
             {
                 Log.Add($"error converting json to ResizeSettings. Json: {value}");
                 Log.Exception(ex);
             }
-            return wrapLog("new", new MultiResizeSettings().InitAfterLoad());
+            return wrapLog("new", new MultiResizeSettings());
         }
 
         internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, string srcSet, ICanGetByName settingsOrNull)
@@ -146,7 +165,7 @@ namespace ToSic.Sxc.Images
                              ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0; // 0=ignore
             if (Debug) Log.Add($"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
-            var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format, srcSet)
+            var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format)
             {
                 // If the width was given by the parameters, then don't use FactorMap
                 UseFactorMap = parms.W == null,

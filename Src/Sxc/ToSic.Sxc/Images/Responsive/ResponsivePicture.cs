@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Images
             string url, 
             object settings, 
             string noParamOrder = Parameters.Protector, 
-            object factor = null, 
-            string srcSet = null,
-            string imgAlt = null,
-            string imgClass = null
-            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
+            object factor = default,
+            object rules = default,
+            string imgAlt = default,
+            string imgClass = default
+            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, rules: rules, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
         {
             _featuresService = featuresService;
         }
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Images
                 .Select(resizeFormat =>
                 {
                     // We must copy the settings, because we change them and this shouldn't affect anything else
-                    var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null, srcSet: null);
+                    var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null);
                     var srcSet = ImgLinker.SrcSet(url, formatSettings, SrcSetType.Sources);
                     return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 });

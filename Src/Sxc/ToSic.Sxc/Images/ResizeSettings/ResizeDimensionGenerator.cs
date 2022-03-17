@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Plumbing;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Images
         public bool Debug = false;
 
 
-        public OneResize ResizeDimensions(ResizeSettings resizeSettings, IMultiResizeRule srcSetSettings, OneResize optionalPrepared = null)
+        public OneResize ResizeDimensions(ResizeSettings resizeSettings, MultiResizeRule srcSetSettings, OneResize optionalPrepared = null)
         {
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Images
             );
 
             dim = (
-                (resizeSettings.UseFactorMap ? srcSetSettings?.Width : null) ?? (int)(factor * dim.Width),
+                (resizeSettings.UseFactorMap ? IntOrZeroAsNull(srcSetSettings?.Width) : null) ?? (int)(factor * dim.Width),
                 dim.Height
             );
 

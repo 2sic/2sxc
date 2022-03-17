@@ -84,7 +84,7 @@
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
     <Compile Include="DynamicData\DynamicReadRealClass.cs" />
-    <Compile Include="LinksAndImages\LinkImageTests\FactorMapTests.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\MultiResizeTests.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\ImgSrcSet.cs" />
     <Compile Include="LinksAndImages\SrcSetParsePart.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\ResizeParamMergeTests.cs" />

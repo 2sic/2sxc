@@ -6,23 +6,15 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
     [TestClass]
     public class ImgSrcSet : LinkImageTestBase
     {
-        [DataRow(null)]
-        [DataRow("")]
+        [DataRow("test.jpg")]
+        [DataRow("test.png")]
+        [DataRow("/test.jpg")]
+        [DataRow("//test.jpg")]
+        [DataRow("http://www.2sxc.org/test.jpg")]
+        [DataRow("weird-extension.abc")]
         [DataTestMethod]
-        public void EmptySrcSet(string srcset)
-        {
-            var urls = new[]
-            {
-                "test.jpg",
-                "test.png",
-                "/test.jpg",
-                "//test.jpg",
-                "http://www.2sxc.org/test.jpg",
-                "weird-extension.abc"
-            };
-
-            foreach (var url in urls) TestOnLinkerSrcSet(url, url, srcset: srcset);
-        }
+        public void EmptySrcSet(string url) 
+            => TestOnLinkerSrcSet(url, url, srcset: "d");
 
         [DataRow("test.jpg?w=1000 1000w", "test.jpg", "1000")]
         [DataRow("test.jpg?w=1000 1000w", "test.jpg", "1000w")]
@@ -79,7 +71,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         public void WipDoubleResize()
         {
             var linker = GetLinker();
-            var settings = linker.ResizeParamMerger.BuildResizeSettings(width: 1000, factor: 0.5, srcset: "0.5");
+            var settings = linker.ResizeParamMerger.BuildResizeSettings(width: 1000, factor: 0.5, advanced: "0.5");
             var src = linker.SrcSet("test.jpg", settings, SrcSetType.ImgSrcSet);
             Assert.AreEqual("test.jpg?w=250 250w", src, "Src should be a quarter now");
 

@@ -1,24 +1,54 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
+using ToSic.Eav.Documentation;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
 {
-    public class MultiResizeRule : IMultiResizeRule
+    /// <summary>
+    /// # BETA
+    /// 
+    /// Rule how to generate tags etc. which can contain multiple resized images
+    /// </summary>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta / WIP")]
+    public class MultiResizeRule
     {
+        public const string JsonType = "type";
+        public const string JsonFactor = "factor";
+        public const string JsonWidth = "width";
+        public const string JsonSrcset = "srcset";
+        public const string JsonSizes = "sizes";
+        public const string JsonMedia = "media";
+        public const string JsonSub = "sub";
+        public const string RuleForDefault = "default";
+        public const string RuleForFactor = "factor";
+
+        [JsonProperty(JsonType)]
+        public string Type
+        {
+            get => _for ?? (Factor == null ? RuleForDefault : RuleForFactor);
+            set => _for = value;
+        }
+        private string _for; // Default is null = not set, auto-detect
+
+        [JsonProperty(JsonFactor)]
+        public string Factor { get; set; }
+
+
         /// <summary>
         /// The resize factor for which this rules is meant.
         /// Used in cases where there are many such rules and the one will be picked that matches this factor.
         /// </summary>
-        [JsonProperty("factor")]
-        public double Factor { get; set; }
+        [JsonIgnore]
+        public double FactorParsed { get; set; }
 
         /// <summary>
         /// The initial width to assume in this resize, from which other sizes would be calculated.
         /// 
         /// If set to 0, it will be ignored. 
         /// </summary>
-        [JsonProperty("width")]
+        [JsonProperty(JsonWidth)]
         public int Width { get; set; }
 
         /// <summary>
@@ -29,33 +59,41 @@ namespace ToSic.Sxc.Images
         /// - `200w,400w,600w,800w,1000w` - pixel sizes
         /// - `0.5*,1*,1.5*,2*` - multipliers of the originally specified pixel size
         /// </summary>
-        [JsonProperty("srcset")]
+        [JsonProperty(JsonSrcset)]
         public string SrcSet { get; set; }
 
         /// <summary>
         /// Optional `sizes` attribute which would be added to `img` tags
         /// </summary>
-        [JsonProperty("sizes")]
+        [JsonProperty(JsonSizes)]
         public string Sizes { get; set; }
 
         /// <summary>
         /// Optional `media` attribute which would be added to `source` tags
         /// </summary>
-        [JsonProperty("media")]
+        [JsonProperty(JsonMedia)]
         public string Media { get; set; }
 
-        [Eav.Documentation.PrivateApi("Important foc using these settings, but not relevant outside of this")]
-        public SrcSetPart[] SrcSetParts { get; private set; }
+        [JsonProperty(JsonSub)]
+        public MultiResizeRule[] Sub { get; set; }
 
-        [Eav.Documentation.PrivateApi]
-        internal virtual MultiResizeRule InitAfterLoad(double factor, int widthIfEmpty, IMultiResizeRule defaultsIfEmpty)
+
+        [PrivateApi("Important for using these settings, but not relevant outside of this")]
+        public SrcSetPart[] SrcSetParsed { get; private set; }
+
+        [PrivateApi]
+        internal virtual MultiResizeRule InitAfterLoad(double factor, int widthIfEmpty, MultiResizeRule defaultsIfEmpty)
         {
-            Factor = factor;
+            FactorParsed = factor;
             if (Width == 0) Width = widthIfEmpty;
             SrcSet = SrcSet ?? defaultsIfEmpty?.SrcSet;
             Sizes = Sizes ?? defaultsIfEmpty?.Sizes;
             Media = Media ?? defaultsIfEmpty?.Media;
-            SrcSetParts = SrcSetParser.ParseSet(SrcSet);
+            SrcSetParsed = SrcSetParser.ParseSet(SrcSet);
+
+            Sub = Sub ?? Array.Empty<MultiResizeRule>();
+            foreach (var s in Sub) s?.InitAfterLoad(factor, widthIfEmpty, defaultsIfEmpty);
+
             return this;
         }
     }

@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Services
         ///     - it can also be an <see cref="Context.IParameters"/>
         /// </param>
         /// <param name="srcset">The Source-Set to be used if the resizing (note it's `srcset`, not `srcSet`)</param>
-        /// <param name="advanced">WIP - not ready yet</param>
+        /// <param name="rules">WIP - not ready yet</param>
         /// <returns>A settings object which has all the parameters as configured</returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
@@ -63,8 +63,9 @@ namespace ToSic.Sxc.Services
             string format = default,
             object aspectRatio = default,
             string parameters = default,
-            object srcset = default,
-            string advanced = default
+            // WIP
+            //string srcset = default,
+            object rules = default
         );
 
         /// <summary>
@@ -118,9 +119,9 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Eav.Parameters.Protector,
             object settings = default,
             object factor = default,
-            string srcset = default,
             string imgAlt = default,
-            string imgClass = default
+            string imgClass = default,
+            object rules = default
         );
 
         /// <summary>
@@ -149,9 +150,9 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Eav.Parameters.Protector,
             object settings = default,
             object factor = default,
-            string srcset = default,
             string imgAlt = default,
-            string imgClass = default
+            string imgClass = default,
+            object rules = default
         );
 
     }

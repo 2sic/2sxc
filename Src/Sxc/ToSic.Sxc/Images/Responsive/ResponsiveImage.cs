@@ -14,11 +14,11 @@ namespace ToSic.Sxc.Images
             string url, 
             object settings, 
             string noParamOrder = Parameters.Protector, 
-            object factor = null, 
-            string srcSet = null,
-            string imgAlt = null,
-            string imgClass = null
-            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
+            object factor = default, 
+            object rules = default,
+            string imgAlt = default,
+            string imgClass = default
+            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, rules: rules, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
         {
         }
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Images
         private Img _imgTag;
 
         /// <inheritdoc />
-        public string Srcset => _srcSetCache ?? (_srcSetCache = Settings.SrcSet == null ? "" : ImgLinker.SrcSet(UrlOriginal, Settings, SrcSetType.ImgSrcSet));
+        public string Srcset => _srcSetCache ?? (_srcSetCache = string.IsNullOrWhiteSpace(ThisResize?.TagEnhancements?.SrcSet) ? "" : ImgLinker.SrcSet(UrlOriginal, Settings, SrcSetType.ImgSrcSet));
         private string _srcSetCache;
 
         public override string ToString() => Img.ToString();
