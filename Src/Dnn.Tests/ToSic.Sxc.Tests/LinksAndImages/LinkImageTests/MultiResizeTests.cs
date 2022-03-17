@@ -18,11 +18,11 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             var l = GetLinker();
             var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000);
-            var f1 = l.DimGen.ResizeDimensions(settings, settings.Find(SrcSetType.Img));
+            var f1 = l.DimGen.ResizeDimensions(settings, settings.Find(SrcSetType.Img, true));
             Assert.AreEqual(1000, f1.Width);
 
             var f2 = new ResizeSettings(settings, factor: 0.5);
-            var dims = l.DimGen.ResizeDimensions(f2, f2.Find(SrcSetType.Img));
+            var dims = l.DimGen.ResizeDimensions(f2, f2.Find(SrcSetType.Img, true));
             Assert.AreEqual(500, dims.Width);
         }
 
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             settings.UseFactorMap = true;
 
             settings = new ResizeSettings(settings, factor: factor);
-            var srcSetSettings = settings.Find(SrcSetType.Img);
+            var srcSetSettings = settings.Find(SrcSetType.Img, true);
             var f1 = l.DimGen.ResizeDimensions(settings, srcSetSettings);
             Assert.AreEqual(expected, f1.Width, name);
         }

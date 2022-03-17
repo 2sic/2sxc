@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.Web
     /// All DNN Razor Pages inherit from this class
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IDnnRazorCustomize: IDnnDynamicCode // , IRazor12
+    public interface IDnnRazorCustomize: IDnnDynamicCode
     {
         /// <summary>
         /// Override this to have your code change the (already initialized) Data object. 

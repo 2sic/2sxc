@@ -13,12 +13,12 @@ namespace ToSic.Sxc.Images
 
         public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(Constants.SxcLogName + ".ImgSvc")
         {
-            _features = features;
+            Features = features;
             ImgLinker = imgLinker.Init(Log);
         }
 
         internal ImgResizeLinker ImgLinker { get; }
-        private readonly IFeaturesService _features;
+        internal IFeaturesService Features { get; }
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _codeRootOrNull = codeRoot;
         private IDynamicCodeRoot _codeRootOrNull;
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Images
             string imgAlt = default,
             string imgClass = default,
             object rules = default
-        ) => new ResponsivePicture(this, _features, url, GetBestSettings(settings), factor: factor, mrs: ToMRS(rules), imgAlt: imgAlt, imgClass: imgClass);
+        ) => new ResponsivePicture(this, url, GetBestSettings(settings), factor: factor, mrs: ToMRS(rules), imgAlt: imgAlt, imgClass: imgClass);
 
         public IResponsiveImage Img(
             string url,

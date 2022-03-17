@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Razor.Html5;
 
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Images
             MultiResizeSettings mrs = default,
             string imgAlt = default,
             string imgClass = default
-            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, mrs: mrs, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
+            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, mrs: mrs, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.ImgImg")
         {
         }
 
@@ -31,10 +32,19 @@ namespace ToSic.Sxc.Images
             {
                 if (_img != null) return _img;
                 _img = base.Img;
-                var srcSetValue = Srcset;
-                if (!string.IsNullOrEmpty(srcSetValue)) _img = _img.Srcset(srcSetValue);
-                var sizes = ThisResize?.TagEnhancements?.Sizes;
-                if (!string.IsNullOrEmpty(sizes)) _img.Sizes(sizes);
+
+                if (ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId))
+                {
+                    var srcSetValue = Srcset;
+                    if (!string.IsNullOrEmpty(srcSetValue)) _img = _img.Srcset(srcSetValue);
+                }
+                
+                if (ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceSetSizes.NameId))
+                {
+                    var sizes = ThisResize?.TagEnhancements?.Sizes;
+                    if (!string.IsNullOrEmpty(sizes)) _img.Sizes(sizes);
+                }
+
                 return _img;
             }
         }

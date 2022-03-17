@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             var dimGen = new ResizeDimensionGenerator();
 
             var resizeSettings = paramMerger.BuildCoreSettings(width, height, factor, ar, null, settings);
-            var t1 = dimGen.ResizeDimensions(resizeSettings, resizeSettings.Find(SrcSetType.Img));
+            var t1 = dimGen.ResizeDimensions(resizeSettings, resizeSettings.Find(SrcSetType.Img, true));
             var okW = expW.Equals(t1.Width);
             var okH = expH.Equals(t1.Height);
             var ok = okW && okH;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
@@ -13,10 +14,12 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Internal stuff")]
     public class ImgResizeLinker : HasLog<ImgResizeLinker>
     {
-        public ImgResizeLinker() : base($"{Constants.SxcLogName}.ImgRes")
+        public ImgResizeLinker(Lazy<IFeaturesService> features) : base($"{Constants.SxcLogName}.ImgRes")
         {
+            _features = features;
             DimGen = new ResizeDimensionGenerator().Init(Log);
         }
+        private readonly Lazy<IFeaturesService> _features;
 
         public bool Debug = false;
 
@@ -52,7 +55,7 @@ namespace ToSic.Sxc.Images
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
                 settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-                parameters: parameters, /*srcset: false,*/ allowMulti: false);
+                parameters: parameters, allowMulti: false);
 
             var result = ImageOnly(url, resizeSettings, SrcSetType.Img).Url;
             return wrapLog("built:" + result, result);
@@ -61,7 +64,7 @@ namespace ToSic.Sxc.Images
         public OneResize ImageOnly(string url, ResizeSettings settings, SrcSetType srcSetType)
         {
             var wrapLog = Log.Call<OneResize>();
-            var srcSetSettings = settings.Find(srcSetType);
+            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
             return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings));
         }
 
@@ -70,7 +73,7 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Call<string>();
 
-            var srcSetSettings = settings.Find(srcSetType);
+            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
 
             var srcSetConfig = srcSetSettings?.SrcSetParsed;
 

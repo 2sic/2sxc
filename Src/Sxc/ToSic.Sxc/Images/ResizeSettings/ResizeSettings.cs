@@ -64,6 +64,6 @@ namespace ToSic.Sxc.Images
             MultiResize = multi ?? MultiResize;
         }
 
-        public MultiResizeRule Find(SrcSetType srcSetType) => ResizeSettingsHelper.Find(this, srcSetType);
+        public MultiResizeRule Find(SrcSetType srcSetType, bool useFactors) => ResizeSettingsHelper.Find(this, srcSetType, useFactors);
     }
 }

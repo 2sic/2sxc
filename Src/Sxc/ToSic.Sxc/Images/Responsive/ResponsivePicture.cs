@@ -15,7 +15,6 @@ namespace ToSic.Sxc.Images
     {
         internal ResponsivePicture(
             ImageService imgService,
-            IFeaturesService featuresService,
             string url, 
             object settings, 
             string noParamOrder = Parameters.Protector, 
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.Images
             string imgClass = default
             ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, mrs: mrs, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
         {
-            _featuresService = featuresService;
+            _featuresService = imgService.Features;
         }
         private readonly IFeaturesService _featuresService;
 
@@ -42,10 +41,15 @@ namespace ToSic.Sxc.Images
             var defFormat = ImgService.GetFormat(url);
             if (defFormat == null || defFormat.ResizeFormats.Count == 0) return Tag.TagList();
 
+            // Check which features are to be used
+            var useAlternateFormats = _featuresService.IsEnabled(FeaturesCatalog.ImageServiceMultiFormat.NameId);
+            var useMultiSrcSet = _featuresService.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
+
             // Determine if the feature MultiFormat is enabled, if yes, use list, otherwise use only current
-            var formats = _featuresService.IsEnabled(FeaturesCatalog.ImageServiceMultiFormat.NameId)
+            var formats = useAlternateFormats
                 ? defFormat.ResizeFormats
                 : new List<IImageFormat> { defFormat };
+
 
             // Generate Meta Tags
             var sources = formats
@@ -53,7 +57,9 @@ namespace ToSic.Sxc.Images
                 {
                     // We must copy the settings, because we change them and this shouldn't affect anything else
                     var formatSettings = new ResizeSettings(resizeSettings, format: resizeFormat != defFormat ? resizeFormat.Format : null);
-                    var srcSet = ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source);
+                    var srcSet = useMultiSrcSet
+                        ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source)
+                        : ImgLinker.Image(url, formatSettings);
                     return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                 });
             var result = Tag.TagList(sources);

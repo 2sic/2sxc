@@ -84,9 +84,6 @@ namespace ToSic.Sxc.Images
                 if (settings.ImageSetWidth && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);
                 if (settings.ImageSetHeight && ThisResize.Height != 0) _imgTag.Height(ThisResize.Height);
 
-                var imgSizes = ThisResize.TagEnhancements?.Sizes;
-                if (!string.IsNullOrWhiteSpace(imgSizes)) _imgTag.Sizes(imgSizes);
-
                 return _imgTag;
             }
         }
