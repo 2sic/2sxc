@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "ToSic.Razor/03.11.00": {
+      "ToSic.Razor/03.12.00": {
         "dependencies": {
           "Microsoft.AspNetCore.Html.Abstractions": "2.0.0",
           "Microsoft.Extensions.DependencyInjection": "3.1.16",
@@ -95,7 +95,7 @@
     }
   },
   "libraries": {
-    "ToSic.Razor/03.11.00": {
+    "ToSic.Razor/03.12.00": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -201,19 +201,19 @@
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll" />
 
       <!-- netstandard2.0/framework 4.7.2 assemblies -->
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
+      <!--<ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.DependencyInjection.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.FileProviders.Abstractions.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Hosting.Abstractions.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Logging.Abstractions.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Primitives.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.IO.RecyclableMemoryStream.dll" />
+      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.IO.RecyclableMemoryStream.dll" />-->
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Buffers.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Memory.dll" />
+      <!--<ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Memory.dll" />
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Numerics.Vectors.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Runtime.CompilerServices.Unsafe.dll" />
+      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Runtime.CompilerServices.Unsafe.dll" />-->
     </ItemGroup>
 
     <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />

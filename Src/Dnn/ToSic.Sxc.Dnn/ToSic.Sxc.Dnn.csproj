@@ -69,7 +69,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
@@ -281,6 +281,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\Uninstall.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
@@ -335,6 +336,7 @@
 
 @REM Copy Imageflow and dependecies
 robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin *.dll
+robocopy $(ProjectDir)Extensions\Imageflow\bin\Imageflow $(Dev2sxcDnnRoot)bin\Imageflow *.dll
 
 @REM Copy the data folders
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
