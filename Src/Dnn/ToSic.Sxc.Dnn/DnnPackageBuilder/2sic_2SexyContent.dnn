@@ -254,16 +254,16 @@
             <!-- ToSic.Sxc.Dnn.Main packages.config -->
             <!-- Microsoft.EntityFrameworkCore.DependencyInjection transitive dependency -->
             <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
               <version>2.1.1.0</version>
-            </assembly>
+            </assembly>-->
              <!--ToSic.Eav.Core.dll PackageReference--> 
              <!--Microsoft.EntityFrameworkCore transitive dependency--> 
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.Extensions.DependencyInjection.dll</name>
               <version>2.1.1.0</version>
-            </assembly>
+            </assembly>-->
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
@@ -1162,5 +1162,71 @@
         </component>
       </components>
     </package>
+
+    <!-- CoreMaxVersionDependency -->
+    <package name="CoreMaxVersionDependency" type="Library" version="01.00.00.01">
+      <friendlyName>CoreMaxVersionDependency type</friendlyName>
+      <description>Provides CoreMaxVersionDependency type for DotNetNuke.</description>
+      <dependencies />
+      <owner>
+        <name>2sic</name>
+        <organization>2sic internet solutions (Switzerland)</organization>
+        <url>http://2sxc.org/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license>Extensions\CoreMaxVersionDependency\License.txt</license>
+      <releaseNotes>CoreMaxVersionDependency type for DotNetNuke.</releaseNotes>
+      <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\CoreMaxVersionDependency</basePath>
+            <script type="Install">
+              <path>Extensions\CoreMaxVersionDependency\SqlDataProvider</path>
+              <name>01.00.00.SqlDataProvider</name>
+              <version>01.00.00</version>
+            </script>
+          </scripts>
+        </component>
+        <component type="Assembly">
+          <basePath></basePath>
+          <assemblies>
+            <assembly>
+              <path>bin</path>
+              <name>CoreMaxVersionDependency.dll</name>
+              <version>01.00.00</version>
+            </assembly>
+          </assemblies>
+        </component>
+      </components>
+    </package>
+
+    <!-- Microsoft.Extensions.DependencyInjection -->
+    <package name="Microsoft.Extensions.DependencyInjection" type="Library" version="02.01.01.01">
+      <friendlyName>Microsoft.Extensions.DependencyInjection Components</friendlyName>
+      <description>Provides DI support for DotNetNuke.</description>
+      <dependencies>
+        <dependency type="CoreVersion">07.04.02</dependency>
+        <dependency type="CoreMaxVersion">09.04.00</dependency>
+      </dependencies>
+      <owner>
+        <name>2sic</name>
+        <organization>2sic internet solutions (Switzerland)</organization>
+        <url>http://2sxc.org/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license>Extensions\Microsoft.Extensions.DependencyInjection\License.txt</license>
+      <releaseNotes>This package includes Microsoft.Extensions.DependencyInjection assembly version 2.1.1.</releaseNotes>
+      <components>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath></basePath>
+            <resourceFile>
+              <name>Extensions\Microsoft.Extensions.DependencyInjection\Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+      </components>
+    </package>
+
   </packages>
 </dotnetnuke>

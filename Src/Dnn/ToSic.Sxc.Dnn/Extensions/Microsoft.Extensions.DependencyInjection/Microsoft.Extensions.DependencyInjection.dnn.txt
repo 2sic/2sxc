@@ -1,0 +1,30 @@
+<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="Microsoft.Extensions.DependencyInjection" type="Library" version="02.01.01">
+      <friendlyName>Microsoft.Extensions.DependencyInjection Components</friendlyName>
+      <description>Provides DI support for DotNetNuke.</description>
+      <dependencies>
+        <dependency type="CoreVersion">07.04.02</dependency>
+        <dependency type="CoreMaxVersion" value="09.04.00">09.04.00</dependency>
+      </dependencies>
+      <owner>
+        <name>2sic</name>
+        <organization>2sic internet solutions (Switzerland)</organization>
+        <url>http://2sxc.org/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license>License.txt</license>
+      <releaseNotes>This package includes Microsoft.Extensions.DependencyInjection assembly version 2.1.1.</releaseNotes>
+      <components>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath></basePath>
+            <resourceFile>
+              <name>Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>

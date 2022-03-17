@@ -129,8 +129,8 @@
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.Binder.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Configuration.dll" />
-      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
+      <!--<AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />-->
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
@@ -261,6 +261,26 @@
     </ItemGroup>
     <Copy SourceFiles="@(RazorBladeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
+    <!-- include CoreMaxVersionDependency folder -->
+    <ItemGroup>
+      <CoreMaxVersionDependencyFiles Include="$(MSBuildProjectDirectory)\Extensions\CoreMaxVersionDependency\**\*.*" Exclude="**\bin\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CoreMaxVersionDependencyFiles)" DestinationFolder="$(TempPackageFolder)\Extensions\CoreMaxVersionDependency\%(RecursiveDir)" />
+    <ItemGroup>
+      <CoreMaxVersionDependencyDllFiles Include="$(MSBuildProjectDirectory)\Extensions\CoreMaxVersionDependency\bin\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CoreMaxVersionDependencyDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
+
+
+    <!-- include Microsoft.Extensions.DependencyInjection folder -->
+    <ItemGroup>
+      <MicrosoftExtensionsDependencyInjectionFiles Include="$(MSBuildProjectDirectory)\Extensions\Microsoft.Extensions.DependencyInjection\**\*.*" Exclude="**\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MicrosoftExtensionsDependencyInjectionFiles)" DestinationFolder="$(TempPackageFolder)\Extensions\Microsoft.Extensions.DependencyInjection\%(RecursiveDir)" />
+    <ItemGroup>
+      <MicrosoftExtensionsDependencyInjectionDllFiles Include="$(MSBuildProjectDirectory)\Extensions\Microsoft.Extensions.DependencyInjection\bin\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MicrosoftExtensionsDependencyInjectionDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />
 
     <!-- create the INSTALL RESOURCES.ZIP file -->
     <Copy SourceFiles="@(InstallInclude)" DestinationFolder="$(TempPackageResourcesFolder)\%(RecursiveDir)" />

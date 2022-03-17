@@ -1,0 +1,5 @@
+/***** Add CoreMaxVersion dependency type *****/
+IF NOT EXISTS(SELECT * FROM {databaseOwner}[{objectQualifier}Lists] WHERE ListName='Dependency' AND [Value]='CoreMaxVersion')
+INSERT INTO {databaseOwner}[{objectQualifier}Lists] ([ListName],[Value],[Text],[ParentID],[Level],[SortOrder],[DefinitionID],[Description],[PortalID],[SystemList],[CreatedByUserID],[CreatedOnDate],[LastModifiedByUserID],[LastModifiedOnDate]) 
+VALUES ('Dependency','CoreMaxVersion','DotNetNuke.Services.Installer.Dependencies.CoreMaxVersionDependency',0,0,0,-1,NULL,-1,1,NULL,NULL,NULL,NULL);
+GO

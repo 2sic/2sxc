@@ -1,0 +1,38 @@
+﻿<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="CoreMaxVersionDependency" type="Library" version="01.00.00">
+      <friendlyName>CoreMaxVersionDependency type</friendlyName>
+      <description>Provides CoreMaxVersionDependency type for DotNetNuke.</description>
+      <dependencies />
+      <owner>
+        <name>2sic</name>
+        <organization>2sic internet solutions (Switzerland)</organization>
+        <url>http://2sxc.org/</url>
+        <email>info@2sxc.org</email>
+      </owner>
+      <license>License.txt</license>
+      <releaseNotes>CoreMaxVersionDependency type for DotNetNuke.</releaseNotes>
+      <components>
+        <component type="Script">
+          <scripts>
+            <basePath>DesktopModules\CoreMaxVersionDependency</basePath>
+            <script type="Install">
+              <path>SqlDataProvider</path>
+              <name>01.00.00.SqlDataProvider</name>
+              <version>01.00.00</version>
+            </script>
+          </scripts>
+        </component>
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <path>bin</path>
+              <name>CoreMaxVersionDependency.dll</name>
+              <version>01.00.00</version>
+            </assembly>
+          </assemblies>
+        </component>
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>
