@@ -199,11 +199,53 @@
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
 
+
+
+            <!-- *** DNN transitive dependencies *** -->
+
+            <!-- ToSic.Eav.Core.dll PackageReference -->
+            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
+            <!-- ToSic.Sxc.WebApi PackageReference -->
+            <assembly>
+              <name>Newtonsoft.Json.dll</name>
+              <version>10.0.0.0</version>
+            </assembly>
+            <!-- ASP.NET Web API Components -->
+            <!-- Libraries required for ASP.NET Web API. -->
+            <!-- ToSic.Eav.WebApi PackageReference -->
+            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
+            <assembly>
+              <name>System.Net.Http.Formatting.dll</name>
+              <version>5.2.3.0</version>
+            </assembly>
+            <assembly>
+              <name>System.Web.Http.dll</name>
+              <version>5.2.3.0</version>
+            </assembly>
+            <assembly>
+              <name>System.Web.Http.WebHost.dll</name>
+              <version>5.2.3.0</version>
+            </assembly>
+
+
+
+            <!-- *** 3rd party DLLs *** -->
+
             <!-- ToSic.Eav.DataSources PackageReference -->
             <assembly>
               <name>CsvHelper.dll</name>
               <version>2.0.0.0</version>
             </assembly>
+            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
+            <assembly>
+              <name>Remotion.Linq.dll</name>
+              <version>2.2.0.0</version>
+            </assembly>
+
+
+
+            <!-- *** 2sxc 13+ netstandard2.0 assemblies *** -->
+
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>Microsoft.EntityFrameworkCore.Abstractions.dll</name>
@@ -285,18 +327,6 @@
               <name>Microsoft.Extensions.Primitives.dll</name>
               <version>2.1.1.0</version>
             </assembly>
-            <!-- ToSic.Eav.Core.dll PackageReference -->
-            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
-            <!-- ToSic.Sxc.WebApi PackageReference -->
-            <assembly>
-              <name>Newtonsoft.Json.dll</name>
-              <version>10.0.0.0</version>
-            </assembly>
-            <!-- Microsoft.EntityFrameworkCore transitive dependency -->
-            <assembly>
-              <name>Remotion.Linq.dll</name>
-              <version>2.2.0.0</version>
-            </assembly>
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
             <!-- System.Memory transitive dependency -->
             <assembly>
@@ -347,22 +377,7 @@
               <version>4.0.4.0</version>
             </assembly>
 
-            <!-- ASP.NET Web API Components -->
-            <!-- Libraries required for ASP.NET Web API. -->
-            <!-- ToSic.Eav.WebApi PackageReference -->
-            <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
-            <assembly>
-              <name>System.Net.Http.Formatting.dll</name>
-              <version>5.2.3.0</version>
-            </assembly>
-            <assembly>
-              <name>System.Web.Http.dll</name>
-              <version>5.2.3.0</version>
-            </assembly>
-            <assembly>
-              <name>System.Web.Http.WebHost.dll</name>
-              <version>5.2.3.0</version>
-            </assembly>
+            
 
           </assemblies>
         </component>
