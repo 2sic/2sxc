@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
@@ -11,20 +10,15 @@ namespace ToSic.Sxc.Blocks.Edit
     // todo: move some parts out into a BlockManagement
     public abstract partial class BlockEditorBase : HasLog
     {
-
         #region DI and Construction
-
-        protected IServiceProvider ServiceProvider { get; }
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private CmsManager _cmsManager;
-
-        internal BlockEditorBase(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base("CG.RefMan")
+        internal BlockEditorBase(BlockEditorBaseDependencies dependencies) : base("CG.RefMan")
         {
-            ServiceProvider = serviceProvider;
-            _lazyCmsRuntime = lazyCmsRuntime;
-            _cmsManagerLazy = cmsManagerLazy;
+            Dependencies = dependencies;
+            Dependencies.CmsRuntime.SetInit(r => r.Init(Block?.App, true, Log));
+            Dependencies.CmsManager.SetInit(m => m.Init(Block?.App, Log));
         }
+        public BlockEditorBaseDependencies Dependencies { get; }
+        private CmsManager CmsManager => Dependencies.CmsManager.Ready;
 
         internal BlockEditorBase Init(IBlock block)
         {
@@ -38,8 +32,6 @@ namespace ToSic.Sxc.Blocks.Edit
         protected IBlock Block;
 
         private BlockConfiguration _cGroup;
-
-
         
         #region methods which are fairly stable / the same across content-block implementations
 
@@ -55,10 +47,7 @@ namespace ToSic.Sxc.Blocks.Edit
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
 
-                //var app = Block.App;
-                var cms = _cmsManager = _cmsManagerLazy.Value.Init(Block?.App, Log);
-
-                var contentGroupGuid = cms.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
+                var contentGroupGuid = CmsManager.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
 
@@ -88,24 +77,18 @@ namespace ToSic.Sxc.Blocks.Edit
 
             var hasPresentation = presEntity != null;
 
-            var appMan = BlockAppManager();// new AppManager(Block.App, Log);
-
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-            appMan.Entities.Publish(contDraft.RepositoryId);
+            CmsManager.Entities.Publish(contDraft.RepositoryId);
 
             if (hasPresentation)
             {
                 var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
-                appMan.Entities.Publish(presDraft.RepositoryId);
+                CmsManager.Entities.Publish(presDraft.RepositoryId);
             }
 
             return true;
         }
-
-        private AppManager BlockAppManager() =>
-            _appManager ?? (_appManager = _cmsManagerLazy.Value.Init(Block.App, Log));
-        private AppManager _appManager;
 
 
         #endregion

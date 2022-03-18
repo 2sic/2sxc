@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks.Edit
             // ...but for now we'll just update the current modules title
             // note: it also correctly handles published/unpublished, but I'm not sure why :)
 
-            var cms = _lazyCmsRuntime.Value.Init(Block.App, true, Log);
+            var cms = Dependencies.CmsRuntime.Ready;
             var contentGroup = cms.Blocks.GetBlockConfig(BlockConfiguration.Guid);
 
             var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
