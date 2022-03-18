@@ -8,7 +8,15 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsRuntime: AppRuntime
     {
-        public CmsRuntime(AppRuntimeDependencies dependencies) : base(dependencies, "Sxc.CmsRt") { }
+        private readonly LazyInit<BlocksRuntime> _blocksRuntime;
+        private readonly LazyInit<ViewsRuntime> _viewsRuntime;
+
+        public CmsRuntime(AppRuntimeDependencies dependencies, LazyInit<ViewsRuntime> viewsRuntime, LazyInit<BlocksRuntime> blocksRuntime) : base(dependencies,
+            "Sxc.CmsRt")
+        {
+            _blocksRuntime = blocksRuntime.SetInit(r => r.Init(this, Log));
+            _viewsRuntime = viewsRuntime.SetInit(r => r.Init(this, Log));
+        }
 
         public new CmsRuntime Init(IAppIdentity app, bool showDrafts, ILog parentLog) 
             => base.Init(app, showDrafts, parentLog) as CmsRuntime;
@@ -16,10 +24,8 @@ namespace ToSic.Sxc.Apps
         public new CmsRuntime InitWithState(AppState appState, bool showDrafts, ILog parentLog) 
             => base.InitWithState(appState, showDrafts, parentLog) as CmsRuntime;
 
-        public ViewsRuntime Views => _views ?? (_views = ServiceProvider.Build<ViewsRuntime>().Init(this, Log));
-        private ViewsRuntime _views;
+        public ViewsRuntime Views => _viewsRuntime.Ready;
 
-        public BlocksRuntime Blocks => _blocks ?? (_blocks = ServiceProvider.Build<BlocksRuntime>().Init(this, Log));
-        private BlocksRuntime _blocks;
+        public BlocksRuntime Blocks => _blocksRuntime.Ready;
     }
 }

@@ -25,13 +25,14 @@ namespace ToSic.Sxc.WebApi.ImportExport
     {
         #region Constructor / DI
 
-        public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport, CmsRuntime cmsRuntime, ISite site, IUser user) : base("Bck.Export")
+        public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport, CmsRuntime cmsRuntime, ISite site, IUser user, GeneratorLog<ImpExpHelpers> impExpHelpers) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _zipExport = zipExport;
             _cmsRuntime = cmsRuntime;
             _site = site;
             _user = user;
+            _impExpHelpers = impExpHelpers.SetLog(Log);
         }
 
         private readonly IZoneMapper _zoneMapper;
@@ -39,6 +40,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly CmsRuntime _cmsRuntime;
         private readonly ISite _site;
         private readonly IUser _user;
+        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
 
         public ExportApp Init(ILog parentLog)
         {
@@ -53,7 +55,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         {
             Log.Add($"get app info for app:{appId} and zone:{zoneId}");
             var contextZoneId = _site.ZoneId;
-            var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
@@ -83,7 +85,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
@@ -102,7 +104,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _cmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";

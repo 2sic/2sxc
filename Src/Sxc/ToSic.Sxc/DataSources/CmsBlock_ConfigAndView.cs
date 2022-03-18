@@ -1,7 +1,5 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Apps.Blocks;
+﻿using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 
 
 namespace ToSic.Sxc.DataSources
@@ -26,13 +24,12 @@ namespace ToSic.Sxc.DataSources
                 return wrapLog("Error, no module-id", null);
             }
 
-            var sp = DataSourceFactory.ServiceProvider;
             var userMayEdit = HasInstanceContext && Block.Context.UserMayEdit;
 
             var cms = _lazyCmsRuntime.IsValueCreated
                 ? _lazyCmsRuntime.Value
                 : _lazyCmsRuntime.Value.Init(this, userMayEdit, Log);
-            var container = sp.Build<IModule>().Init(ModuleId.Value, Log);
+            var container = _moduleLazy.Value.Init(ModuleId.Value, Log);
             var blockId = container.BlockIdentifier;
             return wrapLog("ok", cms.Blocks.GetOrGeneratePreviewConfig(blockId));
         }

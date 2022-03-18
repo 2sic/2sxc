@@ -5,6 +5,7 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.DataSources
@@ -30,6 +31,7 @@ namespace ToSic.Sxc.DataSources
     public sealed partial class CmsBlock : DataSourceBase
     {
         private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly Lazy<IModule> _moduleLazy;
 
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";
@@ -59,9 +61,10 @@ namespace ToSic.Sxc.DataSources
         }
 
 
-        public CmsBlock(Lazy<CmsRuntime> lazyCmsRuntime)
+        public CmsBlock(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<IModule> moduleLazy)
         {
             _lazyCmsRuntime = lazyCmsRuntime;
+            _moduleLazy = moduleLazy;
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);
