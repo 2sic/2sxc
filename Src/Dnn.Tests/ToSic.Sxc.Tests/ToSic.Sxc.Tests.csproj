@@ -80,6 +80,7 @@
     <Compile Include="Adam\AdamSecurity.cs" />
     <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
+    <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
@@ -94,10 +95,10 @@
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats_Best.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTagsImg.cs" />
-    <Compile Include="ServicesTests\ImageService\ImageServiceTagsNoWebp.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsNoPatron.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTagsBase.cs" />
     <Compile Include="ServicesTests\ImageService\ImageTagsTestPermutations.cs" />
-    <Compile Include="ServicesTests\ImageService\ImageServiceTagsWebp.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsPatronPerfectionist.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceResizeSettings.cs" />
     <Compile Include="ServicesTests\ImageService\FactorMapTests.cs" />
     <Compile Include="ServicesTests\MailServiceBaseTests.cs" />
@@ -106,10 +107,10 @@
     <Compile Include="ServicesTests\MailAddressTests.cs" />
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
-    <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
+    <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
     <Compile Include="TestBaseSxc.cs" />
-    <Compile Include="ServicesTests\ConvertServiceTests\ConvertServiceTest.cs" />
+    <Compile Include="ServicesTests\ConvertService\ConvertServiceTest.cs" />
     <Compile Include="LinksAndImages\LinkHelperTestBase.cs" />
     <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToVerifyTests.cs" />
     <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToTestBase.cs" />

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Images
             object settings, 
             string noParamOrder = Parameters.Protector, 
             object factor = default, 
-            MultiResizeSettings mrs = default,
+            RecipeSet mrs = default,
             string imgAlt = default,
             string imgClass = default
             ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, mrs: mrs, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.ImgImg")

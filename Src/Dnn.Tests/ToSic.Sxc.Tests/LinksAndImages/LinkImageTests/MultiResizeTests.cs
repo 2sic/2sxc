@@ -1,18 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services;
+using static ToSic.Sxc.Tests.DataForImageTests.ResizeRecipesData;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
     [TestClass]
     public class MultiResizeTests: LinkImageTestBase
     {
-        private const int W100 = 990;
-        private const int W75 = 700;
-        private const int W75Alt = 777;
-        private const int W50 = 450;
-        private const int W25 = 200;
-
         [TestMethod]
         public void NoFactorMap()
         {
@@ -26,35 +21,17 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             Assert.AreEqual(500, dims.Width);
         }
 
+        [DataRow(W75Alt, 0.75, "0.75 should be changed")]
         [DataRow(W100, 1, "1 should be changed too")]
         [DataRow(W50, 0.5, "0.5 should be changed")]
-        [DataRow(W75Alt, 0.75, "0.75 should be changed")]
         [DataRow(700, 0.70, "0.70 should not be changed")]
         [DataRow((int)(1000 * .9), 0.9, "0.9 should just calculate, because it's not in the factor-list")]
         [DataTestMethod]
 
-        public void WithFactorMap(int expected, double factor, string name)
-        {
-            // existing
-            var adv = new MultiResizeSettings
-            {
-                Rules = new[]
-                {
-                    new MultiResizeRule { Factor = "1", Width = W100 },
-                    new MultiResizeRule
-                    {
-                        Factor = "3/4",
-                        Width = W75,
-                        Sub = new[] { new MultiResizeRule { Type = "img", Width = W75Alt } }
-                    },
-                    new MultiResizeRule { Factor = "1:2", Width = W50 },
+        public void WithFactorMap(int expected, double factor, string name) 
+            => WithFactorMapInternal(expected, factor, name, TestRecipeSet());
 
-                    new MultiResizeRule { Factor = "0.25", Width = W25 }
-                }
-            };
 
-            WithFactorMapInternal(expected, factor, name, adv);
-        }
 
         [DataRow(W100, 1, "1 should be changed too")]
         [DataRow(W50, 0.5, "0.5 should be changed")]
@@ -66,24 +43,15 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         public void WithFactorMapJson(int expected, double factor, string name)
         {
             // Test with json structure
-            var adv = new
-            {
-                rules = new object[]
-                {
-                    new { factor = "1", width = W100 },
-                    new { factor = "3/4", width = W75, sub = new object[] { new { type = "img", width = W75Alt } } },
-                    new { factor = "1:2", width = W50 },
-                    new { factor = "0.25", width = W25 }
-                }
-            };
-            var factorsJson = JsonConvert.SerializeObject(adv, Formatting.Indented);
+            var factorsJson = JsonRecipe();
             WithFactorMapInternal(expected, factor, name + "-json", factorsJson);
         }
 
-        private void WithFactorMapInternal(int expected, double factor, string name, object adv)
+
+        private void WithFactorMapInternal(int expected, double factor, string name, object recipes)
         {
             var l = GetLinker();
-            var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000, advanced: adv);
+            var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000, advanced: recipes);
 
             // Normally UseFactorMap is false because we set the width explicitly
             // But to run the test, we must set it to true

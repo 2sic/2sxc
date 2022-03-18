@@ -6,12 +6,12 @@ using ToSic.Testing.Shared.Platforms;
 namespace ToSic.Sxc.Tests.ServicesTests
 {
     [TestClass]
-    public class ImageServiceTagsNoWebp : ImageServiceTagsBase
+    public class ImageServiceTagsNoPatron : ImageServiceTagsBase
     {
         // Start the test with a platform-info that has WebP support
         protected override IServiceCollection SetupServices(IServiceCollection services = null)
         {
-            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformNoLicense>();
+            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformNotPatron>();
         }
 
         protected override bool TestModeImg => false;

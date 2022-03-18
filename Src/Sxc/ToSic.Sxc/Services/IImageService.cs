@@ -45,8 +45,7 @@ namespace ToSic.Sxc.Services
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
         ///     - it can also be an <see cref="Context.IParameters"/>
         /// </param>
-        /// <param name="srcset">The Source-Set to be used if the resizing (note it's `srcset`, not `srcSet`)</param>
-        /// <param name="rules">WIP - not ready yet</param>
+        /// <param name="recipe">WIP - not ready yet</param>
         /// <returns>A settings object which has all the parameters as configured</returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
@@ -63,9 +62,7 @@ namespace ToSic.Sxc.Services
             string format = default,
             object aspectRatio = default,
             string parameters = default,
-            // WIP
-            //string srcset = default,
-            object rules = default
+            object recipe = default
         );
 
         /// <summary>
@@ -73,14 +70,14 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="url">The image url</param>
         /// <param name="settings">
-        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
-        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
-        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
+        ///     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
+        ///     Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
-        /// <param name="srcset">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
+        /// <param name="recipe">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
         /// <returns></returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
@@ -90,7 +87,7 @@ namespace ToSic.Sxc.Services
             object settings = default,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = default,
-            string srcset = default
+            object recipe = default
         );
 
         /// <summary>
@@ -121,7 +118,7 @@ namespace ToSic.Sxc.Services
             object factor = default,
             string imgAlt = default,
             string imgClass = default,
-            object rules = default
+            object recipe = default
         );
 
         /// <summary>
@@ -152,7 +149,7 @@ namespace ToSic.Sxc.Services
             object factor = default,
             string imgAlt = default,
             string imgClass = default,
-            object rules = default
+            object recipe = default
         );
 
     }

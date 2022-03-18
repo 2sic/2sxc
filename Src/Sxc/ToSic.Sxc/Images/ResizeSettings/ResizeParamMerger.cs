@@ -91,11 +91,11 @@ namespace ToSic.Sxc.Images
             return resizeParams;
         }
 
-        private MultiResizeSettings GetMultiResizeSettings(object advanced, ICanGetByName getSettings, string srcSetValue)
+        private RecipeSet GetMultiResizeSettings(object advanced, ICanGetByName getSettings, string srcSetValue)
         {
             try
             {
-                if (advanced is MultiResizeSettings advTyped) return advTyped;
+                if (advanced is RecipeSet advTyped) return advTyped;
                 
                 // Use given OR get it / piggyback
                 if (advanced == null || advanced is string strAdvanced2 && string.IsNullOrWhiteSpace(strAdvanced2))
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Images
             return null;
         }
 
-        private MultiResizeSettings TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
+        private RecipeSet TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
         {
             // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
             if (getSettings is IPropertyLookup getProperties)
@@ -124,34 +124,34 @@ namespace ToSic.Sxc.Images
             return ParseAdvancedSettings(getSettings?.Get(AdvancedField));
         }
 
-        private MultiResizeSettings ParseSrcSetOrAdvancedSetting(object value, string srcSet)
+        private RecipeSet ParseSrcSetOrAdvancedSetting(object value, string srcSet)
         {
             // If it's just a src-set list, and not a json, make it a normal rule
             if (srcSet is string strVal && !strVal.Contains("{"))
-                value = new MultiResizeRule { SrcSet = strVal };
+                value = new Recipe(srcset: strVal); // { SrcSet = strVal };
 
             //// If it's a rule, return that as the only resize setting
-            if (value is MultiResizeRule valRule)
-                return new MultiResizeSettings { Rules = new[] { valRule } };
+            if (value is Recipe valRule)
+                return new RecipeSet { Recipes = Array.AsReadOnly(new[] { valRule }) };
 
             return ParseAdvancedSettings(value);
         }
 
 
-        private MultiResizeSettings ParseAdvancedSettings(object value)
+        private RecipeSet ParseAdvancedSettings(object value)
         {
-            var wrapLog = Log.Call<MultiResizeSettings>();
+            var wrapLog = Log.Call<RecipeSet>();
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog("create", JsonConvert.DeserializeObject<MultiResizeSettings>(advString));
+                    return wrapLog("create", JsonConvert.DeserializeObject<RecipeSet>(advString));
             }
             catch (Exception ex)
             {
                 Log.Add($"error converting json to ResizeSettings. Json: {value}");
                 Log.Exception(ex);
             }
-            return wrapLog("new", new MultiResizeSettings());
+            return wrapLog("new", new RecipeSet());
         }
 
         internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)

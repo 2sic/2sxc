@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Eav.Security.Encryption;
 using ToSic.Sxc.Services;
 using static ToSic.Sxc.Services.SecureDataService;
 
-namespace ToSic.Sxc.Tests.ServicesTests.SecureDataTests
+namespace ToSic.Sxc.Tests.ServicesTests
 {
     [TestClass]
     public class SecureDataTest: TestBaseSxc

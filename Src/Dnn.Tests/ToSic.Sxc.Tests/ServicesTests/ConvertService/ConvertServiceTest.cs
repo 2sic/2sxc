@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Services;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.ServicesTests.ConvertServiceTests
+namespace ToSic.Sxc.Tests.ServicesTests
 {
     /// <summary>
     /// Note: there are not many tests here, because the true engine is in the EAV conversion system which is tested very thoroughly already

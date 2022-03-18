@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Images
         public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _codeRootOrNull = codeRoot;
         private IDynamicCodeRoot _codeRootOrNull;
 
-        public ImageServiceSettings Settings { get; } = new ImageServiceSettings();
+        //public ImageServiceSettings Settings { get; } = new ImageServiceSettings();
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Images
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private MultiResizeSettings ToMRS(object value) => MultiResizeSettings.Parse(value)?.InitAfterLoad();
+        private RecipeSet ToMRS(object value) => RecipeSet.Parse(value)?.InitAfterLoad();
 
         #endregion
 
@@ -63,8 +63,8 @@ namespace ToSic.Sxc.Images
             object factor = default,
             string imgAlt = default,
             string imgClass = default,
-            object rules = default
-        ) => new ResponsivePicture(this, url, GetBestSettings(settings), factor: factor, mrs: ToMRS(rules), imgAlt: imgAlt, imgClass: imgClass);
+            object recipe = default
+        ) => new ResponsivePicture(this, url, GetBestSettings(settings), factor: factor, mrs: ToMRS(recipe), imgAlt: imgAlt, imgClass: imgClass);
 
         public IResponsiveImage Img(
             string url,
@@ -73,24 +73,21 @@ namespace ToSic.Sxc.Images
             object factor = default,
             string imgAlt = default,
             string imgClass = default,
-            object rules = default
-        ) => new ResponsiveImage(this, url, GetBestSettings(settings), factor: factor, mrs: ToMRS(rules), imgAlt: imgAlt, imgClass: imgClass);
+            object recipe = default
+        ) => new ResponsiveImage(this, url, GetBestSettings(settings), factor: factor, mrs: ToMRS(recipe), imgAlt: imgAlt, imgClass: imgClass);
 
-        public IHybridHtmlString SrcSet(
-            string url, 
+        public IHybridHtmlString SrcSet(string url,
             object settings = null,
-            string noParamOrder = Parameters.Protector,
-            object factor = null, 
-            string srcset = null
-            // TODO: RULES
-        ) => new HybridHtmlString(ImgLinker.SrcSet(url, MergeSettings(settings, factor: factor, srcset: srcset), SrcSetType.Img));
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            object factor = null,
+            object recipe = null
+        ) => new HybridHtmlString(ImgLinker.SrcSet(url, MergeSettings(settings, factor: factor, recipe: recipe), SrcSetType.Img));
 
         private ResizeSettings MergeSettings(
             object settings = null,
             string noParamOrder = Parameters.Protector,
             object factor = null, 
-            string srcset = null
-            // TODO: RULES
-        ) => ImgLinker.ResizeParamMerger.BuildResizeSettings((GetBestSettings(settings), factor: factor, srcset: srcset as object ?? true));
+            object recipe = null
+        ) => ImgLinker.ResizeParamMerger.BuildResizeSettings(GetBestSettings(settings), factor: factor, advanced: ToMRS(recipe));
     }
 }

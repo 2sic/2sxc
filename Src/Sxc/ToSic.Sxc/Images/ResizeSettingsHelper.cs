@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images
 {
     public class ResizeSettingsHelper
     {
-        public static MultiResizeRule Find(ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors)
+        public static Recipe Find(ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors)
         {
             var multiSettings = resizeSettings?.MultiResize;
             if (multiSettings == null) return null;
@@ -16,25 +17,25 @@ namespace ToSic.Sxc.Images
                 : KeepOrUseSubRule(fm, "source") ?? KeepOrUseSubRule(multiSettings.Default, "source");
         }
 
-        private static MultiResizeRule FindSubRule(ResizeSettings resizeSettings)
+        private static Recipe FindSubRule(ResizeSettings resizeSettings)
         {
-            var rules = resizeSettings?.MultiResize?.Rules;
+            var rules = resizeSettings?.MultiResize?.Recipes;
             if (rules == null || !rules.Any()) return null;
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1;
-            var fm = rules.FirstOrDefault(m => m.Type == MultiResizeRule.RuleForFactor && DNearZero(m.FactorParsed - factor));
+            var fm = rules.FirstOrDefault(m => m.Type == Recipe.RuleForFactor && DNearZero(m.FactorParsed - factor));
             return fm;
         }
 
-        private static MultiResizeRule KeepOrUseSubRule(MultiResizeRule rule, string target)
+        private static Recipe KeepOrUseSubRule(Recipe rule, string target)
         {
             if (rule == null) return null;
-            if (rule.Sub == null || rule.Sub.Length == 0) return rule;
+            if (rule.Sub == null || rule.Sub.Count == 0) return rule;
             return FindRuleForTarget(rule.Sub, target) ?? rule;
         }
 
-        internal static MultiResizeRule FindRuleForTarget(MultiResizeRule[] rules, string target) 
-            => rules?.FirstOrDefault(r => r.Type == target);
+        internal static Recipe FindRuleForTarget(IEnumerable<Recipe> recipes, string target) 
+            => recipes?.FirstOrDefault(r => r.Type == target);
     }
 
     public enum SrcSetType

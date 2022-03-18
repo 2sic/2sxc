@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Images
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
 
-        public MultiResizeSettings MultiResize { get; set; }
+        public RecipeSet MultiResize { get; set; }
 
         /// <summary>
         /// Constructor to create new
@@ -58,12 +58,12 @@ namespace ToSic.Sxc.Images
             Format = format ?? Format;
         }
 
-        public ResizeSettings(IResizeSettings original, double factor, MultiResizeSettings multi = null): this(original)
+        public ResizeSettings(IResizeSettings original, double factor, RecipeSet multi = null): this(original)
         {
             Factor = factor;
             MultiResize = multi ?? MultiResize;
         }
 
-        public MultiResizeRule Find(SrcSetType srcSetType, bool useFactors) => ResizeSettingsHelper.Find(this, srcSetType, useFactors);
+        public Recipe Find(SrcSetType srcSetType, bool useFactors) => ResizeSettingsHelper.Find(this, srcSetType, useFactors);
     }
 }

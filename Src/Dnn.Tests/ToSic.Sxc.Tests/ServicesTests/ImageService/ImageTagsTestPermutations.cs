@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             public int? Height;
             public string Srcset;
 
-            public MultiResizeRule SrcSetRule => Srcset == null ? null : new MultiResizeRule { SrcSet = Srcset };
+            public Recipe SrcSetRule => Srcset == null ? null : new Recipe(srcset: Srcset); // { SrcSet = Srcset };
         }
 
         public class TestParamSet

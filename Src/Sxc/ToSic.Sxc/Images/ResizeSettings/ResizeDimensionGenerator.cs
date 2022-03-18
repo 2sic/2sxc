@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Images
         public bool Debug = false;
 
 
-        public OneResize ResizeDimensions(ResizeSettings resizeSettings, MultiResizeRule srcSetSettings, OneResize optionalPrepared = null)
+        public OneResize ResizeDimensions(ResizeSettings resizeSettings, Recipe srcSetSettings, OneResize optionalPrepared = null)
         {
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1

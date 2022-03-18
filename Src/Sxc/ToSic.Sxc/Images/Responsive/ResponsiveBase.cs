@@ -1,4 +1,5 @@
-﻿using ToSic.Eav;
+﻿using System.Linq;
+using ToSic.Eav;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Plumbing;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Images
             // ReSharper disable once UnusedParameter.Local
             string noParamOrder = Parameters.Protector, 
             object factor = null, 
-            MultiResizeSettings mrs = null,
+            RecipeSet mrs = null,
             string imgAlt = null,
             string imgClass = null,
             string logName = Constants.SxcLogName + ".IPSBas"
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Images
         internal ResizeSettings Settings { get; }
 
 
-        protected ResizeSettings PrepareResizeSettings(object settings, object factor, MultiResizeSettings mrs)
+        protected ResizeSettings PrepareResizeSettings(object settings, object factor, RecipeSet mrs)
         {
             // 1. Prepare Settings
             if (settings is ResizeSettings resSettings)
@@ -75,14 +76,24 @@ namespace ToSic.Sxc.Images
 
                 _imgTag = Tag.Img().Src(Url);
 
+                // Add all kind of attributes if specified
+                var tag = ThisResize.TagEnhancements;
+                var dic = tag?.Attributes?
+                    .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key))
+                    .ToDictionary(p => p.Key, p => p.Value); ;
+                if (dic != null)
+                    foreach (var a in dic)
+                        _imgTag.Attr(a.Key, a.Value);
+
                 // Only add these if they were really specified
                 if (ImgAlt != null) _imgTag.Alt(ImgAlt);
-                var settings = ImgService.Settings;
-                var classToAdd = $"{ImgClass} {settings.ImageClass}";
-                if (!string.IsNullOrWhiteSpace(classToAdd)) _imgTag.Class(classToAdd.Trim());
+                
+                // Note that adding a class will keep previous class added
+                if (ImgClass != null) _imgTag.Class(ImgClass);
 
-                if (settings.ImageSetWidth && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);
-                if (settings.ImageSetHeight && ThisResize.Height != 0) _imgTag.Height(ThisResize.Height);
+                // Optionally set width and height if known
+                if (tag?.SetWidth == true && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);
+                if (tag?.SetHeight == true && ThisResize.Height != 0) _imgTag.Height(ThisResize.Height);
 
                 return _imgTag;
             }

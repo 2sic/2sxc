@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Images
             return (int)(part.Size * original);
         }
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, MultiResizeRule srcSetSettings, OneResize preCalculated = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, OneResize preCalculated = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, preCalculated);
             one.TagEnhancements = srcSetSettings;

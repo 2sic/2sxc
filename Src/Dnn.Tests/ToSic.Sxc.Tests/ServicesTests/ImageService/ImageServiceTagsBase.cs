@@ -44,8 +44,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void ImgAlt()
         {
+            const string imgAlt = "test-alt";
             var svc = Build<IImageService>();
-            var imgAlt = "test-alt";
             var result = TestModeImg 
                 ? svc.Img(ImgUrl, imgAlt: imgAlt).ToString()
                 : svc.Picture(ImgUrl, imgAlt: imgAlt).Img.ToString();
@@ -69,11 +69,11 @@ namespace ToSic.Sxc.Tests.ServicesTests
         protected void PictureTagInner(string expectedParts, string srcset, bool inPicTag, string testName)
         {
             var svc = Build<IImageService>();
-            var rule = new MultiResizeRule { SrcSet = srcset };
-            var settings = svc.ResizeSettings(width: 120, height: 24, rules: inPicTag ? null : rule);
-            var pic = svc.Picture(ImgUrl, settings: settings, rules: inPicTag ? rule : null);
+            var rule = new Recipe(srcset: srcset);
+            var settings = svc.ResizeSettings(width: 120, height: 24, recipe: inPicTag ? null : rule);
+            var pic = svc.Picture(ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
 
-            var expected = $"<picture>{expectedParts}<img src='{ImgUrl}?w=120&amp;h=24'></picture>";
+            var expected = $"<picture>{expectedParts}<img src='{Img120x24}'></picture>";
             AreEqual(expected, pic.ToString(), $"Test failed: {testName}");
         }
 
@@ -88,8 +88,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
             {
                 var svc = Build<IImageService>();
                 var settings = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height,
-                    rules: test.Set.SrcSetRule);// new MultiResizeRule { SrcSet = test.Set.Srcset });
-                var sources = svc.Picture(ImgUrl, settings: settings, rules: test.Pic.SrcSetRule /*test.Pic.Srcset*/).Sources;
+                    recipe: test.Set.SrcSetRule);
+                var sources = svc.Picture(ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
 
                 AreEqual(expected, sources.ToString(), $"Failed: {test.Name}");
 
