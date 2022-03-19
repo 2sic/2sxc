@@ -13,10 +13,10 @@ namespace ToSic.Sxc.Tests.DataForImageTests
         public const int W25 = 200;
 
         public static RecipeSet TestRecipeSet() =>
-            new RecipeSet(null, new[]
+            new RecipeSet(new Recipe(recipes:  new[]
             {
                 new Recipe(factor: "1", width: W100),
-                new Recipe(factor: "3/4", width: W75, sub: new[]
+                new Recipe(factor: "3/4", width: W75, recipes: new[]
                 {
                     new Recipe(type: "img", width: W75Alt, attributes: new Dictionary<string, object>
                     {
@@ -26,20 +26,28 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                 }),
                 new Recipe(factor: "1:2", width: W50),
                 new Recipe(factor: "0.25", width: W25)
-            });
+            }));
 
         public static string JsonRecipe()
         {
             var adv = new
             {
-                recipes = new object[]
+                recipe = new
                 {
-                    new { factor = "1", width = W100 },
-                    new { factor = "3/4", width = W75, sub = new object[] { new { type = "img", width = W75Alt } } },
-                    new { factor = "1:2", width = W50 },
-                    new { factor = "0.25", width = W25 }
+                    recipes = new object[]
+                    {
+                        new { factor = "1", width = W100 },
+                        new
+                        {
+                            factor = "3/4", width = W75, recipes = new object[] { new { type = "img", width = W75Alt } }
+                        },
+                        new { factor = "1:2", width = W50 },
+                        new { factor = "0.25", width = W25 }
+                    }
+
                 }
             };
+
             var factorsJson = JsonConvert.SerializeObject(adv, Formatting.Indented);
             return factorsJson;
         }

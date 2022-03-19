@@ -13,13 +13,13 @@ namespace ToSic.Sxc.Images
             var fm = useFactors ? FindSubRule(resizeSettings) : null;
 
             return srcSetType == SrcSetType.Img
-                ? KeepOrUseSubRule(fm, "img") ?? KeepOrUseSubRule(multiSettings.Default, "img")
-                : KeepOrUseSubRule(fm, "source") ?? KeepOrUseSubRule(multiSettings.Default, "source");
+                ? KeepOrUseSubRule(fm, "img") ?? KeepOrUseSubRule(multiSettings.Recipe, "img")
+                : KeepOrUseSubRule(fm, "source") ?? KeepOrUseSubRule(multiSettings.Recipe, "source");
         }
 
         private static Recipe FindSubRule(ResizeSettings resizeSettings)
         {
-            var rules = resizeSettings?.MultiResize?.Recipes;
+            var rules = resizeSettings?.MultiResize?.Recipe?.Recipes;
             if (rules == null || !rules.Any()) return null;
             var factor = resizeSettings.Factor;
             if (DNearZero(factor)) factor = 1;
@@ -30,8 +30,8 @@ namespace ToSic.Sxc.Images
         private static Recipe KeepOrUseSubRule(Recipe rule, string target)
         {
             if (rule == null) return null;
-            if (rule.Sub == null || rule.Sub.Count == 0) return rule;
-            return FindRuleForTarget(rule.Sub, target) ?? rule;
+            if (rule.Recipes == null || rule.Recipes.Count == 0) return rule;
+            return FindRuleForTarget(rule.Recipes, target) ?? rule;
         }
 
         internal static Recipe FindRuleForTarget(IEnumerable<Recipe> recipes, string target) 

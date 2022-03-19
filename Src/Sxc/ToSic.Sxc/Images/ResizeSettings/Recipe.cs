@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Plumbing;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.Images
         /// <param name="width"></param>
         /// <param name="srcset"></param>
         /// <param name="attributes"></param>
-        /// <param name="sub"></param>
+        /// <param name="recipes"></param>
         /// <param name="setWidth"></param>
         /// <param name="setHeight"></param>
         [JsonConstructor]   // This is important for deserialization from json
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Images
             int width = default,
             string srcset = default,
             Dictionary<string, object> attributes = default,
-            IEnumerable<Recipe> sub = default,
+            IEnumerable<Recipe> recipes = default,
             bool? setWidth = default,
             bool? setHeight = default
         )
@@ -56,7 +57,7 @@ namespace ToSic.Sxc.Images
             Factor = factor ?? original?.Factor;
             Width = width != 0 ? width : original?.Width ?? 0;
             SrcSet = srcset ?? original?.SrcSet;
-            Sub = sub != null ? Array.AsReadOnly(sub.ToArray()) : original?.Sub ?? Array.AsReadOnly(Array.Empty<Recipe>());
+            Recipes = recipes != null ? Array.AsReadOnly(recipes.ToArray()) : original?.Recipes ?? Array.AsReadOnly(Array.Empty<Recipe>());
             Attributes = attributes != null ? new ReadOnlyDictionary<string, object>(attributes) : original?.Attributes;
             SetWidth = setWidth ?? original?.SetWidth;
             SetHeight = setHeight ?? original?.SetHeight;
@@ -103,17 +104,8 @@ namespace ToSic.Sxc.Images
         /// </summary>
         public string SrcSet { get; private set; }
 
-        /// <summary>
-        /// Optional `sizes` attribute which would be added to `img` tags
-        /// </summary>
-        //public string Sizes { get; private set; }
 
         public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes as string : null;
-
-        ///// <summary>
-        ///// Optional `media` attribute which would be added to `source` tags
-        ///// </summary>
-        //public string Media { get; private set; }
 
 
         /// <summary>
@@ -125,27 +117,37 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// wip TODO: DOC
         /// </summary>
-        public ReadOnlyCollection<Recipe> Sub { get; }
+        
+        public ReadOnlyCollection<Recipe> Recipes { get; }
 
 
         [PrivateApi("Important for using these settings, but not relevant outside of this")]
         public SrcSetPart[] SrcSetParsed { get; private set; }
 
-        [PrivateApi]
-        internal virtual Recipe InitAfterLoad(double factor, int widthIfEmpty, Recipe defaultsIfEmpty)
+
+        internal Recipe InitAfterLoad()
         {
-            FactorParsed = factor;
-            if (Width == 0) Width = widthIfEmpty;
+            if (_alreadyInit) return this;
+            _alreadyInit = true;
+            InitAfterLoad(null);
+            return this;
+        }
+        private bool _alreadyInit;
+
+
+
+        [PrivateApi]
+        internal virtual Recipe InitAfterLoad(Recipe defaultsIfEmpty)
+        {
+            FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? defaultsIfEmpty?.FactorParsed ?? 1;
+            if (Width == 0) Width = defaultsIfEmpty?.Width ?? 0;
             SrcSet = SrcSet ?? defaultsIfEmpty?.SrcSet;
-            //Sizes = Sizes ?? defaultsIfEmpty?.Sizes;
-            //Media = Media ?? defaultsIfEmpty?.Media;
             SetWidth = SetWidth ?? defaultsIfEmpty?.SetWidth;
             SetHeight = SetHeight ?? defaultsIfEmpty?.SetHeight;
             Attributes = Attributes ?? defaultsIfEmpty?.Attributes;
             SrcSetParsed = SrcSetParser.ParseSet(SrcSet);
 
-            foreach (var s in Sub) 
-                s?.InitAfterLoad(factor, widthIfEmpty, this);
+            foreach (var s in Recipes) s?.InitAfterLoad(this);
 
             return this;
         }
