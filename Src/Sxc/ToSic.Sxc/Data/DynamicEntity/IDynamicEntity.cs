@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Metadata;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Data
@@ -53,6 +52,9 @@ namespace ToSic.Sxc.Data
         /// It can also be null if there is no underlying entity. 
         /// </returns>
         new object EntityTitle { get; }
+
+        [PrivateApi("WIP")]
+        IDynamicField Field(string name);
 
 
         /// <summary>

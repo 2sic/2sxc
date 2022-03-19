@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Eav;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Plumbing;
@@ -10,38 +9,22 @@ namespace ToSic.Sxc.Images
 {
     public abstract class ResponsiveBase: HybridHtmlString
     {
-        protected ResponsiveBase(
-            ImageService imgService, 
-            string url, 
-            object settings, 
-            // ReSharper disable once UnusedParameter.Local
-            string noParamOrder = Parameters.Protector, 
-            object factor = null, 
-            RecipeSet mrs = null,
-            string imgAlt = null,
-            string imgClass = null,
-            string logName = Constants.SxcLogName + ".IPSBas"
-            )
+
+        protected ResponsiveBase(ImageService imgService, ResponsiveParams responsiveParams)
         {
+            Call = responsiveParams;
             ImgService = imgService;
-            FactorParam = factor;
-            ImgAlt = imgAlt;
-            ImgClass = imgClass;
             ImgLinker = imgService.ImgLinker;
-            UrlOriginal = url;
-            Settings = PrepareResizeSettings(settings, factor, mrs);
+            Settings = PrepareResizeSettings(Call.Settings, Call.Factor, Call.Recipe);
 
         }
+        protected ResponsiveParams Call { get; }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
-        protected readonly object FactorParam;
-        protected readonly string ImgAlt;
-        protected readonly string ImgClass;
-        protected readonly string UrlOriginal;
 
         public string Url => ThisResize.Url;
 
-        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(UrlOriginal, Settings, SrcSetType.Img));
+        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(Call.Url, Settings, SrcSetType.Img));
         private OneResize _thisResize;
 
         internal ResizeSettings Settings { get; }
@@ -86,10 +69,10 @@ namespace ToSic.Sxc.Images
                         _imgTag.Attr(a.Key, a.Value);
 
                 // Only add these if they were really specified
-                if (ImgAlt != null) _imgTag.Alt(ImgAlt);
+                if (Call.ImgAlt != null) _imgTag.Alt(Call.ImgAlt);
                 
                 // Note that adding a class will keep previous class added
-                if (ImgClass != null) _imgTag.Class(ImgClass);
+                if (Call.ImgClass != null) _imgTag.Class(Call.ImgClass);
 
                 // Optionally set width and height if known
                 if (tag?.SetWidth == true && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);

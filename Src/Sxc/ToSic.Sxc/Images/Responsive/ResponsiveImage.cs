@@ -1,5 +1,4 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Razor.Html5;
 
@@ -10,16 +9,7 @@ namespace ToSic.Sxc.Images
     public class ResponsiveImage: ResponsiveBase, IResponsiveImage
     {
         [PrivateApi("don't show")]
-        internal ResponsiveImage(
-            ImageService imgService, 
-            string url, 
-            object settings, 
-            string noParamOrder = Parameters.Protector, 
-            object factor = default, 
-            RecipeSet mrs = default,
-            string imgAlt = default,
-            string imgClass = default
-            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, mrs: mrs, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.ImgImg")
+        internal ResponsiveImage(ImageService imgService, ResponsiveParams responsiveParams) : base(imgService, responsiveParams)
         {
         }
 
@@ -55,7 +45,7 @@ namespace ToSic.Sxc.Images
         public string Srcset => _srcSetCache
                                 ?? (_srcSetCache = string.IsNullOrWhiteSpace(ThisResize?.TagEnhancements?.SrcSet)
                                     ? ""
-                                    : ImgLinker.SrcSet(UrlOriginal, Settings, SrcSetType.Img)
+                                    : ImgLinker.SrcSet(Call.Url, Settings, SrcSetType.Img)
                                 );
         private string _srcSetCache;
 

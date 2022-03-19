@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
-using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -13,26 +11,15 @@ namespace ToSic.Sxc.Images
 {
     public class ResponsivePicture: ResponsiveBase, IResponsivePicture
     {
-        internal ResponsivePicture(
-            ImageService imgService,
-            string url, 
-            object settings, 
-            string noParamOrder = Parameters.Protector, 
-            object factor = default,
-            RecipeSet mrs = default,
-            string imgAlt = default,
-            string imgClass = default
-            ) : base(imgService, url, settings, noParamOrder: noParamOrder, factor: factor, mrs: mrs, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
+        internal ResponsivePicture(ImageService imgService, ResponsiveParams responsiveParams) : base(imgService, responsiveParams)
         {
-            _featuresService = imgService.Features;
         }
-        private readonly IFeaturesService _featuresService;
 
 
-        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(UrlOriginal, Settings), Img));
+        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Call.Url, Settings), Img));
         private Picture _pictureTag;
 
-        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(UrlOriginal, Settings));
+        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(Call.Url, Settings));
         private TagList _sourceTags;
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
@@ -42,8 +29,8 @@ namespace ToSic.Sxc.Images
             if (defFormat == null || defFormat.ResizeFormats.Count == 0) return Tag.TagList();
 
             // Check which features are to be used
-            var useAlternateFormats = _featuresService.IsEnabled(FeaturesCatalog.ImageServiceMultiFormat.NameId);
-            var useMultiSrcSet = _featuresService.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
+            var useAlternateFormats = ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultiFormat.NameId);
+            var useMultiSrcSet = ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
 
             // Determine if the feature MultiFormat is enabled, if yes, use list, otherwise use only current
             var formats = useAlternateFormats
