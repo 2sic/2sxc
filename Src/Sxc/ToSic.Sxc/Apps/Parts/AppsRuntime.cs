@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsRuntime(IServiceProvider serviceProvider, IAppStates appStates, Generator<App> appGenerator) : base("Cms.AppsRt")
+        public AppsRuntime(IAppStates appStates, Generator<App> appGenerator) : base("Cms.AppsRt")
         {
             _appStates = appStates;
             _appGenerator = appGenerator;

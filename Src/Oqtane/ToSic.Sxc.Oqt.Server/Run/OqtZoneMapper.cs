@@ -19,21 +19,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
     {
         /// <inheritdoc />
         public OqtZoneMapper(ISiteRepository siteRepository, 
-            ISettingRepository settingRepository, 
-            IServiceProvider serviceProvider,
+            ISettingRepository settingRepository,
+            Generator<ISite> site,
             Lazy<ZoneCreator> zoneCreatorLazy,
             OqtCulture oqtCulture, 
             IAppStates appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
             _siteRepository = siteRepository;
             _settingRepository = settingRepository;
-            _serviceProvider = serviceProvider;
+            _site = site;
             _zoneCreatorLazy = zoneCreatorLazy;
             _oqtCulture = oqtCulture;
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly Generator<ISite> _site;
         private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
         private readonly OqtCulture _oqtCulture;
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var sites = _siteRepository.GetSites().ToList();
             var found = sites.FirstOrDefault(p => HasZoneId(p.SiteId, out var zoneOfSite) && zoneOfSite == zoneId);
-            return found != null ? ((OqtSite)_serviceProvider.Build<ISite>()).Init(found) : null;
+            return found != null ? ((OqtSite)_site.New).Init(found) : null;
         }
 
         public override List<ISiteLanguageState> CulturesWithState(ISite site)

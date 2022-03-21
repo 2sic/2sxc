@@ -18,25 +18,22 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         public AppFilesControllerReal(
             ISite site,
             IUser user, 
-            Lazy<AssetEditor> assetEditorLazy,
-            IServiceProvider serviceProvider,
+            Generator<AssetEditor> assetEditorGenerator,
             IAppStates appStates,
             AppPaths appPaths
             ) : base("Bck.Assets")
         {
             _site = site;
-            _assetEditorLazy = assetEditorLazy;
+            _assetEditorGenerator = assetEditorGenerator;
             _assetTemplates = new AssetTemplates().Init(Log);
-            _serviceProvider = serviceProvider;
             _appStates = appStates;
             _appPaths = appPaths;
             _user = user;
         }
 
         private readonly ISite _site;
-        private readonly Lazy<AssetEditor> _assetEditorLazy;
+        private readonly Generator<AssetEditor> _assetEditorGenerator;
         private readonly AssetTemplates _assetTemplates;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IAppStates _appStates;
         private readonly AppPaths _appPaths;
         private readonly IUser _user;
@@ -140,7 +137,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         {
             var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
             var app = _appStates.Get(appId);
-            var assetEditor = _serviceProvider.Build<AssetEditor>();
+            var assetEditor = _assetEditorGenerator.New;
 
             // TODO: simplify once we release v13 #cleanUp EOY 2021
             if (path == null)
@@ -155,7 +152,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         {
             var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
             var app = _appStates.Get(assetFromTemplateDto.AppId);
-            var assetEditor = _assetEditorLazy.Value.Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
+            var assetEditor = _assetEditorGenerator.New.Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
             return wrapLog(null, assetEditor);
         }
