@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Images
 
         public string Url => ThisResize.Url;
 
-        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(Call.Url, Settings, SrcSetType.Img));
+        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(Call.Url, Settings, Call.Field));
         private OneResize _thisResize;
 
         internal ResizeSettings Settings { get; }
@@ -69,7 +69,8 @@ namespace ToSic.Sxc.Images
                         _imgTag.Attr(a.Key, a.Value);
 
                 // Only add these if they were really specified
-                if (Call.ImgAlt != null) _imgTag.Alt(Call.ImgAlt);
+                var imgAlt = Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull()?.Description;
+                if (imgAlt != null) _imgTag.Alt(imgAlt);
                 
                 // Note that adding a class will keep previous class added
                 if (Call.ImgClass != null) _imgTag.Class(Call.ImgClass);

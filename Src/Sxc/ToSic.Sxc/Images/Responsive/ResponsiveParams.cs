@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Images
             RecipeSet recipe = null)
         {
             Field = field;
-            Url = url ?? field?.Parent.Get(Field.Name) as string;
+            Url = url ?? field?.Parent.Get(field.Name) as string;
             Settings = settings;
             Factor = factor;
             ImgAlt = imgAlt;

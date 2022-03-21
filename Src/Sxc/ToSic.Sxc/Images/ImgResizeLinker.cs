@@ -5,6 +5,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.SrcSetPart;
@@ -29,18 +30,19 @@ namespace ToSic.Sxc.Images
         /// Make sure this is in sync with the Link.Image
         /// </summary>
         public string Image(
-            string url = null,
-            object settings = null,
-            object factor = null,
+            string url = default,
+            object settings = default,
+            object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object width = null,
-            object height = null,
-            object quality = null,
-            string resizeMode = null,
-            string scaleMode = null,
-            string format = null,
-            object aspectRatio = null,
-            string parameters = null
+            IDynamicField field = default,  // todo
+            object width = default,
+            object height = default,
+            object quality = default,
+            string resizeMode = default,
+            string scaleMode = default,
+            string format = default,
+            object aspectRatio = default,
+            string parameters = default
             )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
@@ -48,7 +50,7 @@ namespace ToSic.Sxc.Images
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is ResizeSettings resizeSettings)
             {
-                var basic = ImageOnly(url, resizeSettings, SrcSetType.Img).Url;
+                var basic = ImageOnly(url, resizeSettings, field).Url;
                 return wrapLog("prepared:" + basic, basic);
             }
 
@@ -57,19 +59,19 @@ namespace ToSic.Sxc.Images
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                 parameters: parameters, allowMulti: false);
 
-            var result = ImageOnly(url, resizeSettings, SrcSetType.Img).Url;
+            var result = ImageOnly(url, resizeSettings, field).Url;
             return wrapLog("built:" + result, result);
         }
 
-        public OneResize ImageOnly(string url, ResizeSettings settings, SrcSetType srcSetType)
+        public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
         {
             var wrapLog = Log.Call<OneResize>();
-            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
-            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings));
+            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
+            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field: field));
         }
 
 
-        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType)
+        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IDynamicField field = null)
         {
             var wrapLog = Log.Call<string>();
 
@@ -79,12 +81,12 @@ namespace ToSic.Sxc.Images
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetConfig?.Length ?? 0) == 0)
-                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings).Url);
+                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field: field).Url);
 
             var results = srcSetConfig.Select(ssConfig =>
             {
                 if (ssConfig.SizeType == SizeDefault)
-                    return ConstructUrl(url, settings, srcSetSettings);
+                    return ConstructUrl(url, settings, srcSetSettings, null);
 
                 var oneResize = new OneResize
                 {
@@ -94,7 +96,7 @@ namespace ToSic.Sxc.Images
                     FallbackHeightForSrcSet)
                 };
 
-                var one = ConstructUrl(url, settings, srcSetSettings, oneResize);
+                var one = ConstructUrl(url, settings, srcSetSettings, field: field, preCalculated: oneResize);
                 // this must happen at the end
                 one.Suffix = SrcSetParser.SrcSetSuffix(ssConfig, one.Width);
                 return one;
@@ -123,7 +125,7 @@ namespace ToSic.Sxc.Images
             return (int)(part.Size * original);
         }
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, OneResize preCalculated = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, OneResize preCalculated = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, preCalculated);
             one.TagEnhancements = srcSetSettings;
@@ -135,6 +137,11 @@ namespace ToSic.Sxc.Images
             ImgAddIfRelevant(resizerNvc, "mode", resizeSettings.ResizeMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "scale", resizeSettings.ScaleMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "format", resizeSettings.Format, DontSetParam);
+
+            // Get resize instructions of the data if it has any
+            var modifier = field?.ImageDecoratorOrNull()?.GetAnchorOrNull();
+            if (modifier?.Item1 != null)
+                ImgAddIfRelevant(resizerNvc, modifier.Value.Item1, modifier.Value.Item2);
 
             url = UrlHelpers.AddQueryString(url, resizerNvc);
 

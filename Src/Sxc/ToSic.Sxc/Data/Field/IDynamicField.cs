@@ -1,4 +1,7 @@
-﻿namespace ToSic.Sxc.Data
+﻿using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Documentation;
+
+namespace ToSic.Sxc.Data
 {
     /// <summary>
     /// # BETA
@@ -18,5 +21,8 @@
         /// The parent object holding this field
         /// </summary>
         IDynamicEntity Parent { get; }
+
+        [PrivateApi]
+        ImageDecorator ImageDecoratorOrNull();
     }
 }

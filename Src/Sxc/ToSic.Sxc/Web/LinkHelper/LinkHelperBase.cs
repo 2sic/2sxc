@@ -5,6 +5,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
 
@@ -118,19 +119,21 @@ namespace ToSic.Sxc.Web
         }
 
         /// <inheritdoc />
-        public string Image(string url = null,
-            object settings = null,
-            object factor = null,
+        public string Image(
+            string url = default,
+            object settings = default,
+            object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object width = null,
-            object height = null,
-            object quality = null,
-            string resizeMode = null,
-            string scaleMode = null,
-            string format = null,
-            object aspectRatio = null,
-            string type = null,
-            object parameters = null
+            IDynamicField field = default,
+            object width = default,
+            object height = default,
+            object quality = default,
+            string resizeMode = default,
+            string scaleMode = default,
+            string format = default,
+            object aspectRatio = default,
+            string type = default,
+            object parameters = default
             )
         {
             // prevent incorrect use without named parameters
@@ -141,12 +144,13 @@ namespace ToSic.Sxc.Web
             var strParams = ParametersToString(parameters);
 
             // If the url should be expanded to have a full root or something, do this first
+            url = url ?? field?.Parent.Get(field.Name) as string;
             var expandedUrl = ExpandUrlIfNecessary(type, url);
 
             // Get the image-url(s) as needed
             // Note that srcset is false, so it won't generate a bunch of sources, just one - which is how the API works
             // Anybody that wants a srcset must use the new IImageService for that
-            var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+            var imageUrl = ImgLinker.Image(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams);
 
             return imageUrl;
