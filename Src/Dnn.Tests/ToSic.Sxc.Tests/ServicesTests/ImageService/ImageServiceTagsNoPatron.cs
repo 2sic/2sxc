@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
     public class ImageServiceTagsNoPatron : ImageServiceTagsBase
     {
         // Start the test with a platform-info that has WebP support
-        protected override IServiceCollection SetupServices(IServiceCollection services = null)
+        protected override IServiceCollection SetupServices(IServiceCollection services)
         {
             return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformNotPatron>();
         }
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
 
         [DataRow(SrcJpgNone, SrcSetNone, "No Src Set")]
-        [DataRow(SrcJpg12, SrcSet12, "With Src Set 1,2")]
+        [DataRow(SrcJpgNone, SrcSet12, "With Src Set 1,2, no patron")]
         [DataTestMethod]
         public void SourceTagsMultiTests(string expected, string variants, string name) 
             => SourceTagsMultiTest(expected, variants, name);
@@ -26,8 +26,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
         [DataRow(SrcJpgNone, SrcSetNone, true, "No Src Set, in-pic")]
         [DataRow(SrcJpgNone, SrcSetNone, false, "No Src Set, in-settings")]
-        [DataRow(SrcJpg12, SrcSet12, true, "With Src Set 1,2, in-pic")]
-        [DataRow(SrcJpg12, SrcSet12, false, "With Src Set 1,2, in-settings")]
+        [DataRow(SrcJpgNone, SrcSet12, true, "With Src Set 1,2, in-pic")]
+        [DataRow(SrcJpgNone, SrcSet12, false, "With Src Set 1,2, in-settings")]
         [DataTestMethod]
         public void PictureTags(string expected, string variants, bool inPicTag, string name) 
             => PictureTagInner(expected, variants, inPicTag, name);

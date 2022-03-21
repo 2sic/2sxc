@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Call<OneResize>();
             var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
-            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field: field));
+            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
         }
 
 
@@ -77,28 +77,20 @@ namespace ToSic.Sxc.Images
 
             var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
 
-            var srcSetConfig = srcSetSettings?.SrcSetParsed;
+            var srcSetParts = srcSetSettings?.SrcSetParsed;
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
-            if ((srcSetConfig?.Length ?? 0) == 0)
-                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field: field).Url);
+            if ((srcSetParts?.Length ?? 0) == 0)
+                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field).Url);
 
-            var results = srcSetConfig.Select(ssConfig =>
+            var results = srcSetParts.Select(ssPart =>
             {
-                if (ssConfig.SizeType == SizeDefault)
-                    return ConstructUrl(url, settings, srcSetSettings, null);
+                if (ssPart.SizeType == SizeDefault)
+                    return ConstructUrl(url, settings, srcSetSettings, null, ssPart);
 
-                var oneResize = new OneResize
-                {
-                    Width = BestSrcSetDimension(settings.Width, ssConfig.Width, ssConfig,
-                        FallbackWidthForSrcSet),
-                    Height = BestSrcSetDimension(settings.Height, ssConfig.Height, ssConfig,
-                    FallbackHeightForSrcSet)
-                };
-
-                var one = ConstructUrl(url, settings, srcSetSettings, field: field, preCalculated: oneResize);
+                var one = ConstructUrl(url, settings, srcSetSettings, field: field, partDef: ssPart);
                 // this must happen at the end
-                one.Suffix = SrcSetParser.SrcSetSuffix(ssConfig, one.Width);
+                one.Suffix = ssPart.SrcSetSuffix(one.Width); // SrcSetParser.SrcSetSuffix(ssPart, one.Width);
                 return one;
             });
             var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix));
@@ -107,27 +99,10 @@ namespace ToSic.Sxc.Images
         }
 
 
-        /// <summary>
-        /// Get the best matching dimension (width/height) based on what's specified
-        /// </summary>
-        private int BestSrcSetDimension(int original, int onSrcSet, SrcSetPart part, int fallbackIfNoOriginal)
+
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, SrcSetPart partDef = null)
         {
-            // SrcSet defined a value, use that
-            if (onSrcSet != 0) return onSrcSet;
-
-            // No need to recalculate anything, return original
-            if (part.SizeType != SizePixelDensity && part.SizeType != SizeFactorOf) return original;
-
-            // If we're doing a factor-of, we always need an original value. If it's missing, use the fallback
-            if (part.SizeType == SizeFactorOf && original == 0) original = fallbackIfNoOriginal;
-
-            // Calculate the expected value based on Size=Scale-Factor * original
-            return (int)(part.Size * original);
-        }
-
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, OneResize preCalculated = null)
-        {
-            var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, preCalculated);
+            var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
             one.TagEnhancements = srcSetSettings;
 
             var resizerNvc = new NameValueCollection();

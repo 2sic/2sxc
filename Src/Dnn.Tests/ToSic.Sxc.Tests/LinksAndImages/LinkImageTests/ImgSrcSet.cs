@@ -33,11 +33,11 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         public void SrcSetUrlOnlyX(string expected, string url, string variants) 
             => TestOnLinkerSrcSet(expected, url, variants: variants);
 
-        [DataRow("test.jpg?w=1200 1x", "test.jpg", "1")]
         [DataRow("test.jpg?w=1800 1.5x", "test.jpg", "1.5x")]
+        [DataRow("test.jpg?w=1200 1x", "test.jpg", "1")]
         [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2400 2x", "test.jpg", "1x,1.5x,2")]
-        [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2000 2x", "test.jpg", "1x,1.5x,2=2000")]
-        [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2000&h=1000 2x", "test.jpg", "1x,1.5x,2=2000:1000")]
+        [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2000 2x", "test.jpg", "1x,1.5x,2x=2000")]
+        [DataRow("test.jpg?w=1200 1x,\ntest.jpg?w=1800 1.5x,\ntest.jpg?w=2000&h=1000 2x", "test.jpg", "1x,1.5x,2x=2000:1000")]
         [DataTestMethod]
         public void SrcSetUrlXAndWidth(string expected, string url, string variants)
             => TestOnLinkerSrcSet(expected, url, width: 1200, variants: variants);

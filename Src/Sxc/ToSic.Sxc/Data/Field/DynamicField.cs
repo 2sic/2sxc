@@ -20,16 +20,14 @@ namespace ToSic.Sxc.Data
         public IMetadataOf MetadataOfItem()
         {
             if(_metadataOfItem != null) return _metadataOfItem;
-            var ctx = Parent._Dependencies?.BlockOrNull?.Context;
-            if (ctx == null) return null;
+            var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
+            if (app == null) return null;
 
-            var value = Parent.Get(Name, convertLinks: false); //.Entity.GetBestValue<string>(Name,);
+            var value = Parent.Get(Name, convertLinks: false);
             if (value == null) return null;
 
             if(!(value is string valString) || string.IsNullOrWhiteSpace(valString)) return null;
 
-            var app = ctx.AppState;
-            if (app == null) return null;
             _metadataOfItem = app.GetMetadataOf(TargetTypes.CmsItem, valString, "");
             return _metadataOfItem;
         }

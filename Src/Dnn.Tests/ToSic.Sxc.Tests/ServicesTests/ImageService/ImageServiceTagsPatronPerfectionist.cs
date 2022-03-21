@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         /// <summary>
         /// Start the test with a platform-info that has WebP support
         /// </summary>
-        protected override IServiceCollection SetupServices(IServiceCollection services = null)
+        protected override IServiceCollection SetupServices(IServiceCollection services)
         {
             return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
         }

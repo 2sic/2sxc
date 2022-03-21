@@ -94,7 +94,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats_Best.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats.cs" />
-    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImg.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImgPatronPerfectionist.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImgNoPatron.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImgBase.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTagsNoPatron.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTagsBase.cs" />
     <Compile Include="ServicesTests\ImageService\ImageTagsTestPermutations.cs" />

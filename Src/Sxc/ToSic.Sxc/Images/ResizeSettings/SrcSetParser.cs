@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using static ToSic.Sxc.Plumbing.ParseObject;
-using static ToSic.Sxc.Images.SrcSetPart;
 
 namespace ToSic.Sxc.Images
 {
@@ -51,13 +49,17 @@ namespace ToSic.Sxc.Images
                     if (sizeAsNumber != null && part.SizeType == SrcSetPart.SizeDefault)
                         part.SizeType = SrcSetPart.SizeFactorOf;
                 }
-                part.Size = (float)Math.Round(sizeAsNumber ?? 0, 2);
+                part.Size = Math.Round(sizeAsNumber ?? 0, 2);
 
                 // If it's a real size and we didn't already set the Type, set it based on the value range
                 if (part.SizeType == SrcSetPart.SizeDefault && !DNearZero(part.Size))
                     part.SizeType = part.Size < 1 
                         ? SrcSetPart.SizeFactorOf // Less than 1 - can't be pixel density, must be factor
                         : part.Size < 10 ? SrcSetPart.SizePixelDensity : SrcSetPart.SizeWidth;
+
+                // Set the factor for later calculations
+                if (part.SizeType == SrcSetPart.SizeFactorOf || part.SizeType == SrcSetPart.SizePixelDensity)
+                    part.AdditionalFactor = part.Size;
             }
 
             // If size type is width, then we must round to int and the width must have the same value
@@ -76,19 +78,19 @@ namespace ToSic.Sxc.Images
             return part;
         }
 
-        public static string SrcSetSuffix(SrcSetPart ssConfig, int finalWidth)
-        {
-            var srcSetSize = ssConfig.Size;
-            var srcSetSizeTypeCode = ssConfig.SizeType;
-            if (srcSetSizeTypeCode == SizeFactorOf)
-            {
-                srcSetSize = finalWidth;
-                srcSetSizeTypeCode = SizeWidth;
-            }
+        //public static string SrcSetSuffix(SrcSetPart ssConfig, int finalWidth)
+        //{
+        //    var srcSetSize = ssConfig.Size;
+        //    var srcSetSizeTypeCode = ssConfig.SizeType;
+        //    if (srcSetSizeTypeCode == SizeFactorOf)
+        //    {
+        //        srcSetSize = finalWidth;
+        //        srcSetSizeTypeCode = SizeWidth;
+        //    }
 
-            var suffix = $" {srcSetSize.ToString(CultureInfo.InvariantCulture)}{srcSetSizeTypeCode}";
-            return suffix;
-        }
+        //    var suffix = $" {srcSetSize.ToString(CultureInfo.InvariantCulture)}{srcSetSizeTypeCode}";
+        //    return suffix;
+        //}
 
     }
 }

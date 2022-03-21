@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Eav.Configuration;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Tests.DynamicData;
@@ -9,6 +10,10 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
     public class LinkImageTestBase: TestBaseSxc
     {
+        public LinkImageTestBase()
+        {
+            Build<SystemLoader>().StartUpFeatures();
+        }
 
         public ImgResizeLinker GetLinker() => Build<ImgResizeLinker>();
         public ILinkHelper GetLinkHelper() => Build<ILinkHelper>();

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Tests
     public class TestBaseSxc: TestBaseDiEmpty
     {
 
-        protected override IServiceCollection SetupServices(IServiceCollection services = null)
+        protected override IServiceCollection SetupServices(IServiceCollection services)
         {
             return base.SetupServices(services)
                 .AddSxcCore()

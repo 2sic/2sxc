@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
 {
@@ -140,7 +141,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages
         private static void CompareSrcSetPart(string variants, SrcSetPart result, SrcSetPart expected)
         {
             Assert.IsNotNull(result);
-            Assert.AreEqual(expected.Size, result.Size, $"Sizes should match on '{variants}'");
+            Assert.IsTrue(ParseObject.DNearZero(expected.Size - result.Size), $"Sizes should match on '{variants}'");
             Assert.AreEqual(expected.SizeType, result.SizeType, $"Size Types should match on '{variants}'");
             Assert.AreEqual(expected.Width, result.Width, $"Widths should match on '{variants}'");
             Assert.AreEqual(expected.Height, result.Height, $"Heights should match on '{variants}'");

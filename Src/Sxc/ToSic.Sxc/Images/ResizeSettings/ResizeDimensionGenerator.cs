@@ -1,6 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Plumbing;
 using static ToSic.Sxc.Images.ImageConstants;
+using static ToSic.Sxc.Images.SrcSetPart;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images
@@ -12,22 +14,67 @@ namespace ToSic.Sxc.Images
         public bool Debug = false;
 
 
-        public OneResize ResizeDimensions(ResizeSettings resizeSettings, Recipe srcSetSettings, OneResize optionalPrepared = null)
+        //public static OneResize BestWidthAndHeightBasedOnSrcSet(ResizeSettings settings, SrcSetPart partDef)
+        //{
+        //    return new OneResize
+        //    {
+        //        Width = BestWidthOrHeightBasedOnSrcSet(settings.Width, partDef.Width, partDef,
+        //            FallbackWidthForSrcSet),
+        //        Height = BestWidthOrHeightBasedOnSrcSet(settings.Height, partDef.Height, partDef,
+        //            FallbackHeightForSrcSet)
+        //    };
+        //}
+
+        //public static (int Width, int Height) BestWidthAndHeightBasedOnSrcSetTemp(ResizeSettings settings, SrcSetPart partDef)
+        //{
+        //    if (partDef == null) return (settings.Width, settings.Height);
+        //    var initialDims = (
+        //        BestWidthOrHeightBasedOnSrcSet(settings.Width, partDef.Width, partDef,
+        //            FallbackWidthForSrcSet),
+        //        BestWidthOrHeightBasedOnSrcSet(settings.Height, partDef.Height, partDef,
+        //            FallbackHeightForSrcSet)
+        //    );
+        //    return initialDims;
+        //}
+
+
+
+        /// <summary>
+        /// Get the best matching dimension (width/height) based on what's specified
+        /// </summary>
+        private static int BestWidthOrHeightBasedOnSrcSet(int initial, int srcSetOverride, SrcSetPart partDef, int fallbackIfNoOriginal)
         {
-            var factor = resizeSettings.Factor;
+            // SrcSet defined a value, use that
+            if (srcSetOverride != 0) return srcSetOverride;
+
+            // No need to recalculate anything, return original
+            if (partDef.SizeType != SizePixelDensity && partDef.SizeType != SizeFactorOf) return initial;
+
+            // If we're doing a factor-of, we always need an original value. If it's missing, use the fallback
+            if (partDef.SizeType == SizeFactorOf && initial == 0) initial = fallbackIfNoOriginal;
+
+            // Calculate the expected value based on Size=Scale-Factor * original
+            return (int)(partDef.Size * initial);
+        }
+
+
+        public OneResize ResizeDimensions(ResizeSettings settings, Recipe recipe, SrcSetPart partDef = null)
+        {
+            var factor = settings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
 
-            (int Width, int Height) dim = (
-                optionalPrepared?.Width ?? resizeSettings.Width,
-                optionalPrepared?.Height ?? resizeSettings.Height
-            );
+            var maybeWidth = FigureOutBestWidth(settings, recipe, partDef, factor);
 
-            dim = (
-                (resizeSettings.UseFactorMap ? IntOrZeroAsNull(srcSetSettings?.Width) : null) ?? (int)(factor * dim.Width),
-                dim.Height
-            );
 
-            dim.Height = HeightFromAspectRatioOrFactor(dim, factor, resizeSettings.UseAspectRatio, resizeSettings.AspectRatio);
+            // Now height
+            var probablyH = partDef == null
+                ? settings.Height
+                : BestWidthOrHeightBasedOnSrcSet(settings.Height, partDef.Height, partDef,
+                    FallbackHeightForSrcSet);
+
+            (int Width, int Height) dim = (maybeWidth, probablyH);
+
+            dim.Height = HeightFromAspectRatioOrFactor(dim, factor, settings.UseAspectRatio, settings.AspectRatio);
 
             dim = KeepInRangeProportional(dim);
 
@@ -36,6 +83,28 @@ namespace ToSic.Sxc.Images
                 Width = dim.Width,
                 Height = dim.Height
             };
+        }
+
+        private static int FigureOutBestWidth(ResizeSettings settings, Recipe recipe, SrcSetPart partDef, double factor)
+        {
+            // Priority 1: The value on the part definition. If it's non-zero, don't change the width by any other factor
+            var width = partDef?.Width ?? 0;
+            if (width != 0) return width;
+
+            // Priority #2: The value from the factor map/recipe, which was selected based on this factor. 
+            // It must be adjusted by part definition, as we may be looping through various sizes
+            width = settings.UseFactorMap ? ParseObject.IntOrZeroAsNull(recipe?.Width) ?? 0 : 0;
+            if (width != 0)
+                return (int)(width * (partDef?.AdditionalFactor ?? 1));
+
+            // Priority #3: If we have a Part-Definition, calculate the values now
+            width = (int)(settings.Width * factor);
+
+            if (partDef != null)
+                width = BestWidthOrHeightBasedOnSrcSet(width, partDef.Width, partDef,
+                    FallbackWidthForSrcSet);
+
+            return width;
         }
 
 
