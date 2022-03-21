@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var svc = Build<IImageService>();
             var rule = new Recipe(variants: variants);
-            var settings = svc.ResizeSettings(width: 120, height: 24, recipe: inPicTag ? null : rule);
+            var settings = svc.Settings(width: 120, height: 24, recipe: inPicTag ? null : rule);
             var pic = svc.Picture(url: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
 
             var expected = $"<picture>{expectedParts}<img src='{Img120x24}'></picture>";
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 var svc = Build<IImageService>();
-                var settings = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height,
+                var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height,
                     recipe: test.Set.SrcSetRule);
                 var sources = svc.Picture(url: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
 

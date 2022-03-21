@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// History: Added in 2sxc 13.03
         /// </remarks>
-        IResizeSettings ResizeSettings(
+        IResizeSettings Settings(
             object settings = default,
             string noParamOrder = Eav.Parameters.Protector,
             object factor = default,
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Services
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
         /// 
-        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
+        /// Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
@@ -142,7 +142,7 @@ namespace ToSic.Sxc.Services
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
         /// 
-        /// Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
+        /// Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>

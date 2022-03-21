@@ -16,14 +16,14 @@ namespace ToSic.Sxc.Tests.ServicesTests
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 // Factor set on the Img call
-                var settingsWithoutFactor = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height,
+                var settingsWithoutFactor = svc.Settings(width: test.Set.Width, height: test.Set.Height,
                     recipe: new Recipe(variants: test.Set.Variants));
                 var imgSetNoFactor = svc.Img(url: ImgUrl, settings: settingsWithoutFactor, factor: factor,
                     recipe: test.Pic.Variants);
                  Is(expected, imgSetNoFactor.ToString(), $"Failed (factor on Img): {test.Name}");
 
                 // Factor specified on settings
-                var settingsWithFactor = svc.ResizeSettings(factor: factor, width: test.Set.Width,
+                var settingsWithFactor = svc.Settings(factor: factor, width: test.Set.Width,
                     height: test.Set.Height,
                     recipe: new Recipe(variants: test.Set.Variants));
                 var imgSetFactor = svc.Img(url: ImgUrl, settings: settingsWithFactor, recipe: test.Pic.Variants);
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 var svc = Build<IImageService>();
-                var settings = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height, recipe: test.Set.SrcSetRule);
+                var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height, recipe: test.Set.SrcSetRule);
                 var img = svc.Img(url: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule);
                 AreEqual(expected.Replace("&amp;", "&"), img.Srcset, $"Failed: {test.Name}");
             });
