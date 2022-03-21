@@ -21,12 +21,12 @@ namespace ToSic.Sxc.Images
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta / WIP")]
     public class Recipe
     {
-        public const string RuleForDefault = "default";
+        [PrivateApi] public const string RuleForDefault = "default";
 
         // Special properties which are only added to the tag if activated in settings
-        public const string SpecialPropertySizes = "sizes";
-        public const string SpecialPropertyMedia = "media";
-        public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia };
+        [PrivateApi] public const string SpecialPropertySizes = "sizes";
+        [PrivateApi] public const string SpecialPropertyMedia = "media";
+        [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia };
 
         /// <summary>
         /// ## Important: If you call this from your code, always use named parameters, as the parameter order can change in future
@@ -39,6 +39,7 @@ namespace ToSic.Sxc.Images
         /// <param name="variants"></param>
         /// <param name="attributes"></param>
         /// <param name="recipes"></param>
+        /// <param name="cssFramework"></param>
         /// <param name="setWidth"></param>
         /// <param name="setHeight"></param>
         [JsonConstructor]   // This is important for deserialization from json
@@ -47,11 +48,12 @@ namespace ToSic.Sxc.Images
             // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
             string name = default,
             string tag = default, 
-            string factor = default, 
+            string factor = default,
             int width = default,
             string variants = default,
             Dictionary<string, object> attributes = default,
             IEnumerable<Recipe> recipes = default,
+            string cssFramework = default,
             bool? setWidth = default,
             bool? setHeight = default
         )
@@ -65,32 +67,38 @@ namespace ToSic.Sxc.Images
             Attributes = attributes != null ? new ReadOnlyDictionary<string, object>(attributes) : original?.Attributes;
             SetWidth = setWidth ?? original?.SetWidth;
             SetHeight = setHeight ?? original?.SetHeight;
+            CssFramework = cssFramework;
         }
 
 
         /// <summary>
         /// Just an identifier - no technical use
         /// </summary>
-        public string Name { get; }
+        public string Name { get; private set; }
 
         /// <summary>
         /// TODO: DOC
         /// - `img`, `source`
         /// </summary>
-        public string Tag { get ; }
+        public string Tag { get; private set; }
 
         /// <summary>
         /// Determines which factors this recipe should be applied to.
         /// Null means any factor.
         /// </summary>
-        public string Factor { get; }
+        public string Factor { get; private set; }
+
+
+        /// <summary>
+        /// WIP, not implemented yet
+        /// </summary>
+        public string CssFramework { get; set; }
 
 
         /// <summary>
         /// The resize factor for which this rules is meant.
         /// Used in cases where there are many such rules and the one will be picked that matches this factor.
         /// </summary>
-        //[JsonIgnore]
         [PrivateApi]
         public double FactorParsed { get; private set; }
 
@@ -101,8 +109,14 @@ namespace ToSic.Sxc.Images
         /// </summary>
         public int Width { get; private set; }
 
+        /// <summary>
+        /// Determines if the img tag will receive a width-attribute
+        /// </summary>
         public bool? SetWidth { get; private set; }
 
+        /// <summary>
+        /// Determines if the img tag will receive a height-attribute
+        /// </summary>
         public bool? SetHeight { get; private set; }
 
         /// <summary>
@@ -117,7 +131,7 @@ namespace ToSic.Sxc.Images
         /// </summary>
         public string Variants { get; private set; }
 
-
+        [PrivateApi]
         public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes as string : null;
 
 
@@ -132,7 +146,7 @@ namespace ToSic.Sxc.Images
         /// </summary>
         public ReadOnlyCollection<Recipe> Recipes { get; }
         
-        // TODO: CONTINUE HERE
+        [PrivateApi]
         public ReadOnlyCollection<Recipe> AllSubRecipes
         {
             get
@@ -155,7 +169,7 @@ namespace ToSic.Sxc.Images
         [PrivateApi("Important for using these settings, but not relevant outside of this")]
         public SrcSetPart[] SrcSetParsed { get; private set; }
 
-
+        [PrivateApi]
         internal Recipe InitAfterLoad()
         {
             if (_alreadyInit) return this;
@@ -170,12 +184,16 @@ namespace ToSic.Sxc.Images
         [PrivateApi]
         internal virtual Recipe InitAfterLoad(Recipe defaultsIfEmpty)
         {
+            Factor = Factor ?? defaultsIfEmpty?.Factor;
             FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? defaultsIfEmpty?.FactorParsed ?? 0;
             if (Width == 0) Width = defaultsIfEmpty?.Width ?? 0;
+            Tag = Tag ?? defaultsIfEmpty?.Tag;
             Variants = Variants ?? defaultsIfEmpty?.Variants;
             SetWidth = SetWidth ?? defaultsIfEmpty?.SetWidth;
             SetHeight = SetHeight ?? defaultsIfEmpty?.SetHeight;
             Attributes = Attributes ?? defaultsIfEmpty?.Attributes;
+            Name = Name ?? defaultsIfEmpty?.Name;
+            CssFramework = CssFramework ?? defaultsIfEmpty?.CssFramework;
             SrcSetParsed = SrcSetParser.ParseSet(Variants);
 
             foreach (var s in Recipes) s?.InitAfterLoad(this);

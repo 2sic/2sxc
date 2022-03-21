@@ -62,12 +62,6 @@ namespace ToSic.Sxc.Images
         /// </summary>
         double AspectRatio { get; }
 
-        ///// <summary>
-        ///// SrcSet to generate.
-        ///// </summary>
-        //[PrivateApi("WIP - property will probably go away")]
-        //string SrcSet { get; }
-
         /// <summary>
         /// Additional url parameters in case the final link would need this.
         /// Rarely used, but can be used for resize parameters which are not standard. 
@@ -84,7 +78,7 @@ namespace ToSic.Sxc.Images
         /// Settings which are used when img/picture tags are generated with multiple resizes
         /// </summary>
         [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
-        AdvancedSettings MultiResize { get; }
+        AdvancedSettings Advanced { get; }
 
     }
 }

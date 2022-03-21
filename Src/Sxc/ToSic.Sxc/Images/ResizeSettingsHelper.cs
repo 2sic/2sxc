@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Images
     {
         public static Recipe Find(ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors)
         {
-            var multiSettings = resizeSettings?.MultiResize;
+            var multiSettings = resizeSettings?.Advanced;
             var mainRecipe = multiSettings?.Recipe;
             if (mainRecipe == null) return null;
             var subRecipes = mainRecipe.AllSubRecipes;

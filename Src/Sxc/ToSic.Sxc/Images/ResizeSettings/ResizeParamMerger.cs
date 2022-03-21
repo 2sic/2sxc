@@ -45,6 +45,10 @@ namespace ToSic.Sxc.Images
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
+            if (settings is IResizeSettings)
+                throw new Exception(
+                    $"Received an {nameof(IResizeSettings)} as {nameof(settings)}. This should never happen. {nameof(BuildResizeSettings)} should only be used when it's not such an object.");
+
             // check common mistakes
             if (aspectRatio != null && height != null)
             {
@@ -79,8 +83,7 @@ namespace ToSic.Sxc.Images
             resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            resizeParams.MultiResize = GetMultiResizeSettings(advanced, getSettings) ?? resizeParams.MultiResize;
-            resizeParams.MultiResize?.InitAfterLoad();
+            resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings) ?? resizeParams.Advanced;
 
             return resizeParams;
         }

@@ -13,6 +13,9 @@ namespace ToSic.Sxc.Images
         public AdvancedSettings(Recipe recipe = default)
         {
             Recipe = recipe;
+
+            // Initialize the recipe and all sub-recipes
+            Recipe?.InitAfterLoad();
         }
 
         /// <summary>
@@ -21,22 +24,8 @@ namespace ToSic.Sxc.Images
         [JsonIgnore]
         internal Recipe Recipe { get; }
 
-    
-        // Important: Never merge into the constructor
         [PrivateApi]
-        public AdvancedSettings InitAfterLoad()
-        {
-            if (_alreadyInit) return this;
-            _alreadyInit = true;
-
-            // Init Default first
-            Recipe?.InitAfterLoad();
-            return this;
-        }
-        private bool _alreadyInit;
-
-
-        public static AdvancedSettings Parse(object value) => InnerParse(value)?.InitAfterLoad();
+        public static AdvancedSettings Parse(object value) => InnerParse(value);
 
         private static AdvancedSettings InnerParse(object value)
         {
@@ -56,6 +45,7 @@ namespace ToSic.Sxc.Images
             return null;
         }
 
+        [PrivateApi]
         public static AdvancedSettings FromJson(object value, ILog log = null)
         {
             var wrapLog = log.SafeCall<AdvancedSettings>();
