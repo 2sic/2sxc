@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -53,5 +55,22 @@ namespace ToSic.Sxc.Images
 
             return null;
         }
+
+        public static AdvancedSettings FromJson(object value, ILog log = null)
+        {
+            var wrapLog = log.SafeCall<AdvancedSettings>();
+            try
+            {
+                if (value is string advString && !string.IsNullOrWhiteSpace(advString))
+                    return wrapLog("create", JsonConvert.DeserializeObject<AdvancedSettings>(advString));
+            }
+            catch (Exception ex)
+            {
+                log?.Add($"error converting json to AdvancedSettings. Json: {value}");
+                log?.Exception(ex);
+            }
+            return wrapLog("new", new AdvancedSettings());
+        }
+
     }
 }

@@ -43,11 +43,11 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         {
             // Test with json structure
             var factorsJson = JsonRecipe();
-            WithFactorMapInternal(expected, factor, name + "-json", factorsJson);
+            WithFactorMapInternal(expected, factor, name + "-json", AdvancedSettings.FromJson(factorsJson));
         }
 
 
-        private void WithFactorMapInternal(int expected, double factor, string name, object recipes)
+        private void WithFactorMapInternal(int expected, double factor, string name, AdvancedSettings recipes)
         {
             var l = GetLinker();
             var settings = l.ResizeParamMerger.BuildResizeSettings(width: 1000, advanced: recipes);

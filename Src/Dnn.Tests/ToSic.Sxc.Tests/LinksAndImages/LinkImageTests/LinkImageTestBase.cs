@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
                 width: width,
                 height: height,
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                aspectRatio: aspectRatio, advanced: new Recipe(variants: variants));
+                aspectRatio: aspectRatio, advanced: AdvancedSettings.Parse(new Recipe(variants: variants)));
             var linkerResult = linker.SrcSet(url, typedSettings, SrcSetType.Img);
             Assert.AreEqual(expected, linkerResult, $"Failed on ImgResizeLinker for srcSet '{variants}'");
         }

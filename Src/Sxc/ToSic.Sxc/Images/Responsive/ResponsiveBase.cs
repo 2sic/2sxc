@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
                 resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, mrs);
             }
             else
-                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, allowMulti: true, advanced: mrs);
+                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, /*allowMulti: true,*/ advanced: mrs);
 
             return resSettings;
         }

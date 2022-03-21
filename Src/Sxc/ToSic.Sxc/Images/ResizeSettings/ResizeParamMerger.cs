@@ -1,5 +1,4 @@
 ﻿using System;
-using Newtonsoft.Json;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Logging;
@@ -21,7 +20,6 @@ namespace ToSic.Sxc.Images
         private const string WidthField = "Width";
         private const string HeightField = "Height";
         private const string AspectRatioField = "AspectRatio";
-        private const string SrcSetField = "SrcSet";
         private const string AdvancedField = "Advanced";
 
         public ResizeParamMerger() : base(Constants.SxcLogName + ".ImgRPM") { }
@@ -41,9 +39,8 @@ namespace ToSic.Sxc.Images
             string format = null,
             object aspectRatio = null,
             string parameters = null,
-            object advanced = null,
-            bool allowMulti = false
-            )
+            AdvancedSettings advanced = default
+        )
         {
             var wrapLog = (Debug ? Log : null).SafeCall<string>();
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
@@ -61,9 +58,6 @@ namespace ToSic.Sxc.Images
             if (Debug) Log.Add($"Has Settings:{getSettings != null}");
 
             var formatValue = FindKnownFormatOrNull(RealStringOrNull(format));
-            string srcSetValue = advanced is string srcSetString
-                ? srcSetString
-                : allowMulti ? getSettings?.Get(SrcSetField) : null;
 
 
             var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, formatValue, getSettings);
@@ -85,24 +79,25 @@ namespace ToSic.Sxc.Images
             resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
             resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            resizeParams.MultiResize = GetMultiResizeSettings(advanced, getSettings, srcSetValue) ?? resizeParams.MultiResize;
+            resizeParams.MultiResize = GetMultiResizeSettings(advanced, getSettings) ?? resizeParams.MultiResize;
             resizeParams.MultiResize?.InitAfterLoad();
 
             return resizeParams;
         }
 
-        private AdvancedSettings GetMultiResizeSettings(object advanced, ICanGetByName getSettings, string srcSetValue)
+        private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
         {
+            if (advanced != null) return advanced;
             try
             {
-                if (advanced is AdvancedSettings advTyped) return advTyped;
-                
-                // Use given OR get it / piggyback
-                if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
-                    return TryToGetAndCacheSettingsAdvanced(getSettings);
-                
-                // string - json, try to parse
-                return ParseSrcSetOrAdvancedSetting(advanced, srcSetValue);
+                // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
+                if (getSettings is IPropertyLookup getProperties)
+                {
+                    var result = getProperties.GetOrCreateInPiggyBack(AdvancedField, ParseAdvancedSettingsJson, Log);
+                    if (result != null) return result;
+                }
+
+                return ParseAdvancedSettingsJson(getSettings?.Get(AdvancedField));
             }
             catch
             {
@@ -111,48 +106,9 @@ namespace ToSic.Sxc.Images
 
             return null;
         }
+        
 
-        private AdvancedSettings TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
-        {
-            // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
-            if (getSettings is IPropertyLookup getProperties)
-            {
-                var result = getProperties.GetOrCreateInPiggyBack(AdvancedField, ParseAdvancedSettings, Log);
-                if (result != null) return result;
-            }
-
-            return ParseAdvancedSettings(getSettings?.Get(AdvancedField));
-        }
-
-        private AdvancedSettings ParseSrcSetOrAdvancedSetting(object value, string srcSet)
-        {
-            // If it's just a src-set list, and not a json, make it a normal rule
-            if (srcSet is string strVal && !strVal.Contains("{"))
-                value = new Recipe(variants: strVal);
-
-            //// If it's a rule, return that as the only resize setting
-            if (value is Recipe valRule)
-                return new AdvancedSettings(valRule);
-
-            return ParseAdvancedSettings(value);
-        }
-
-
-        private AdvancedSettings ParseAdvancedSettings(object value)
-        {
-            var wrapLog = Log.Call<AdvancedSettings>();
-            try
-            {
-                if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog("create", JsonConvert.DeserializeObject<AdvancedSettings>(advString));
-            }
-            catch (Exception ex)
-            {
-                Log.Add($"error converting json to ResizeSettings. Json: {value}");
-                Log.Exception(ex);
-            }
-            return wrapLog("new", new AdvancedSettings());
-        }
+        public AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
 
         internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)
         {
