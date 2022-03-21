@@ -1,5 +1,4 @@
 ﻿using DotNetNuke.Web.Api;
-using System;
 using System.Linq;
 using System.Net.Http;
 using ToSic.Eav.Logging;
@@ -11,11 +10,14 @@ namespace ToSic.Sxc.Dnn.WebApi
 {
     internal class DnnGetBlock
     {
-        private readonly IServiceProvider _serviceProvider;
+ 
+        private readonly Generator<BlockFromEntity> _blockFromEntity;
+        private readonly Generator<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
-        public DnnGetBlock(IServiceProvider serviceProvider)
+        public DnnGetBlock(Generator<BlockFromEntity> blockFromEntity, Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
         {
-            _serviceProvider = serviceProvider;
+            _blockFromEntity = blockFromEntity;
+            _moduleAndBlockBuilder = moduleAndBlockBuilder;
         }
 
         internal IBlock GetCmsBlock(HttpRequestMessage request, ILog log)
@@ -27,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 return wrapLog("request ModuleInfo not found", null);
 
-            var block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(log).GetBlock(moduleInfo);
+            var block = _moduleAndBlockBuilder.New.Init(log).GetBlock(moduleInfo);
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
@@ -41,7 +43,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                         var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');
                         block = FindInnerContentParentBlock(block, blockId, blockIds, log);
                     }
-                    block = _serviceProvider.Build<BlockFromEntity>().Init(block, blockId, log);
+                    block = _blockFromEntity.New.Init(block, blockId, log);
                 }
             }
 
@@ -60,7 +62,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                     var id = int.Parse(parentIds[0]);
                     if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
                     if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
-                    parent = _serviceProvider.Build<BlockFromEntity>().Init(parent, cbid, log);
+                    parent = _blockFromEntity.New.Init(parent, cbid, log);
                 }
             }
 
