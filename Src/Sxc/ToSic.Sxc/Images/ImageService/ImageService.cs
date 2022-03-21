@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Images
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private RecipeSet ToMRS(object value) => RecipeSet.Parse(value)?.InitAfterLoad();
+        private AdvancedSettings ToMRS(object value) => AdvancedSettings.Parse(value);
 
         #endregion
 

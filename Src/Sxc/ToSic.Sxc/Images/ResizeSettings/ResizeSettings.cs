@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Images
         public bool UseFactorMap { get; set; } = true;
         public bool UseAspectRatio { get; set; } = true;
 
-        public RecipeSet MultiResize { get; set; }
+        public AdvancedSettings MultiResize { get; set; }
 
         /// <summary>
         /// Constructor to create new
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Images
             Format = format ?? Format;
         }
 
-        public ResizeSettings(IResizeSettings original, double factor, RecipeSet multi = null): this(original)
+        public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings multi = null): this(original)
         {
             Factor = factor;
             MultiResize = multi ?? MultiResize;

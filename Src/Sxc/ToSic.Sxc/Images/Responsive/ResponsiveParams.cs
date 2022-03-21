@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Images
         public object Factor { get; }
         public string ImgAlt { get; }
         public string ImgClass { get; }
-        public RecipeSet Recipe { get; }
+        public AdvancedSettings Recipe { get; }
 
         internal ResponsiveParams(
             string method,
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Images
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
-            RecipeSet recipe = null)
+            AdvancedSettings recipe = null)
         {
             Field = field;
             Url = url ?? field?.Parent.Get(field.Name) as string;

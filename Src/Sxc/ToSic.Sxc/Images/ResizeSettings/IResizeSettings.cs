@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Images
         /// Settings which are used when img/picture tags are generated with multiple resizes
         /// </summary>
         [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
-        RecipeSet MultiResize { get; }
+        AdvancedSettings MultiResize { get; }
 
     }
 }

@@ -5,12 +5,12 @@ using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Images
 {
-    public class RecipeSet
+    public class AdvancedSettings
     {
         [JsonConstructor]
-        public RecipeSet(Recipe recipe = default)
+        public AdvancedSettings(Recipe recipe = default)
         {
-            Recipe = recipe != null ? new Recipe(recipe, tag: Recipe.RuleForDefault) : null;
+            Recipe = recipe;
         }
 
         /// <summary>
@@ -21,10 +21,8 @@ namespace ToSic.Sxc.Images
 
     
         // Important: Never merge into the constructor
-        // TODO: Make sure all recipes also contain default ?
-        // TODO: add recipeSets, remove "sub" properties
         [PrivateApi]
-        public RecipeSet InitAfterLoad()
+        public AdvancedSettings InitAfterLoad()
         {
             if (_alreadyInit) return this;
             _alreadyInit = true;
@@ -36,14 +34,14 @@ namespace ToSic.Sxc.Images
         private bool _alreadyInit;
 
 
-        public static RecipeSet Parse(object value) => InnerParse(value)?.InitAfterLoad();
+        public static AdvancedSettings Parse(object value) => InnerParse(value)?.InitAfterLoad();
 
-        private static RecipeSet InnerParse(object value)
+        private static AdvancedSettings InnerParse(object value)
         {
             if (value == null) return null;
 
             // It's already what's expected
-            if (value is RecipeSet mrsValue) return mrsValue;
+            if (value is AdvancedSettings mrsValue) return mrsValue;
 
             // Parse any string which would be a typical MRS - convert to single rule
             if (value is string strValue && !string.IsNullOrWhiteSpace(strValue))
@@ -51,7 +49,7 @@ namespace ToSic.Sxc.Images
 
             // Parse any single rule It's just one rule which should be used
             if (value is Recipe mrrValue)
-                return new RecipeSet(mrrValue);
+                return new AdvancedSettings(mrrValue);
 
             return null;
         }

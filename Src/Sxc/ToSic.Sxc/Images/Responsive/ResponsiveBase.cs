@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Images
         internal ResizeSettings Settings { get; }
 
 
-        protected ResizeSettings PrepareResizeSettings(object settings, object factor, RecipeSet mrs)
+        protected ResizeSettings PrepareResizeSettings(object settings, object factor, AdvancedSettings mrs)
         {
             // 1. Prepare Settings
             if (settings is ResizeSettings resSettings)

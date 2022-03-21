@@ -91,14 +91,14 @@ namespace ToSic.Sxc.Images
             return resizeParams;
         }
 
-        private RecipeSet GetMultiResizeSettings(object advanced, ICanGetByName getSettings, string srcSetValue)
+        private AdvancedSettings GetMultiResizeSettings(object advanced, ICanGetByName getSettings, string srcSetValue)
         {
             try
             {
-                if (advanced is RecipeSet advTyped) return advTyped;
+                if (advanced is AdvancedSettings advTyped) return advTyped;
                 
                 // Use given OR get it / piggyback
-                if (advanced == null || advanced is string strAdvanced2 && string.IsNullOrWhiteSpace(strAdvanced2))
+                if (advanced == null || advanced is string strAdvanced && string.IsNullOrWhiteSpace(strAdvanced))
                     return TryToGetAndCacheSettingsAdvanced(getSettings);
                 
                 // string - json, try to parse
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Images
             return null;
         }
 
-        private RecipeSet TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
+        private AdvancedSettings TryToGetAndCacheSettingsAdvanced(ICanGetByName getSettings)
         {
             // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
             if (getSettings is IPropertyLookup getProperties)
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Images
             return ParseAdvancedSettings(getSettings?.Get(AdvancedField));
         }
 
-        private RecipeSet ParseSrcSetOrAdvancedSetting(object value, string srcSet)
+        private AdvancedSettings ParseSrcSetOrAdvancedSetting(object value, string srcSet)
         {
             // If it's just a src-set list, and not a json, make it a normal rule
             if (srcSet is string strVal && !strVal.Contains("{"))
@@ -132,26 +132,26 @@ namespace ToSic.Sxc.Images
 
             //// If it's a rule, return that as the only resize setting
             if (value is Recipe valRule)
-                return new RecipeSet(valRule);
+                return new AdvancedSettings(valRule);
 
             return ParseAdvancedSettings(value);
         }
 
 
-        private RecipeSet ParseAdvancedSettings(object value)
+        private AdvancedSettings ParseAdvancedSettings(object value)
         {
-            var wrapLog = Log.Call<RecipeSet>();
+            var wrapLog = Log.Call<AdvancedSettings>();
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog("create", JsonConvert.DeserializeObject<RecipeSet>(advString));
+                    return wrapLog("create", JsonConvert.DeserializeObject<AdvancedSettings>(advString));
             }
             catch (Exception ex)
             {
                 Log.Add($"error converting json to ResizeSettings. Json: {value}");
                 Log.Exception(ex);
             }
-            return wrapLog("new", new RecipeSet());
+            return wrapLog("new", new AdvancedSettings());
         }
 
         internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)

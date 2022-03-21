@@ -32,6 +32,7 @@ namespace ToSic.Sxc.Images
         /// ## Important: If you call this from your code, always use named parameters, as the parameter order can change in future
         /// </summary>
         /// <param name="original"></param>
+        /// <param name="name"></param>
         /// <param name="tag"></param>
         /// <param name="factor"></param>
         /// <param name="width"></param>
@@ -44,6 +45,7 @@ namespace ToSic.Sxc.Images
         public Recipe(
             Recipe original = null,
             // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
+            string name = default,
             string tag = default, 
             string factor = default, 
             int width = default,
@@ -54,7 +56,8 @@ namespace ToSic.Sxc.Images
             bool? setHeight = default
         )
         {
-            Tag = tag ?? original?.Factor ?? RuleForDefault; // (factor == null ? RuleForDefault : RuleForFactor);
+            Name = name;
+            Tag = tag ?? original?.Factor ?? RuleForDefault;
             Factor = factor ?? original?.Factor;
             Width = width != 0 ? width : original?.Width ?? 0;
             Variants = variants ?? original?.Variants;
@@ -64,14 +67,21 @@ namespace ToSic.Sxc.Images
             SetHeight = setHeight ?? original?.SetHeight;
         }
 
+
+        /// <summary>
+        /// Just an identifier - no technical use
+        /// </summary>
+        public string Name { get; }
+
         /// <summary>
         /// TODO: DOC
-        /// - `default`, `factor`, `img`, `source`
+        /// - `img`, `source`
         /// </summary>
         public string Tag { get ; }
 
         /// <summary>
-        /// TODO: DOC
+        /// Determines which factors this recipe should be applied to.
+        /// Null means any factor.
         /// </summary>
         public string Factor { get; }
 
@@ -102,6 +112,8 @@ namespace ToSic.Sxc.Images
         /// - `1x,1.5x,2x` - screen resolutions
         /// - `200w,400w,600w,800w,1000w` - pixel sizes
         /// - `0.5*,1*,1.5*,2*` - multipliers of the originally specified pixel size
+        ///
+        /// _Important: According to the HTML standard you can mix pixel-sizes and multipliers, but not resolutions with any of the other types._
         /// </summary>
         public string Variants { get; private set; }
 

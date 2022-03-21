@@ -12,8 +12,8 @@ namespace ToSic.Sxc.Tests.DataForImageTests
         public const int W50 = 450;
         public const int W25 = 200;
 
-        public static RecipeSet TestRecipeSet() =>
-            new RecipeSet(new Recipe(recipes:  new[]
+        public static AdvancedSettings TestRecipeSet() =>
+            new AdvancedSettings(new Recipe(recipes:  new[]
             {
                 new Recipe(factor: "1", width: W100),
                 new Recipe(factor: "3/4", width: W75, recipes: new[]
