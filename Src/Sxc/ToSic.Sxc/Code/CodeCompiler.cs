@@ -11,14 +11,10 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public abstract class CodeCompiler: HasLog<CodeCompiler>
     {
-        protected readonly IServiceProvider ServiceProvider;
-
         #region Constructor / DI
 
-        internal CodeCompiler(IServiceProvider serviceProvider) : base("Sys.CsCmpl")
-        {
-            ServiceProvider = serviceProvider;
-        }
+        internal CodeCompiler() : base("Sys.CsCmpl")
+        { }
 
         #endregion
 

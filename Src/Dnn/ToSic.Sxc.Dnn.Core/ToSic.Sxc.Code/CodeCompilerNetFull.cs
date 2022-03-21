@@ -9,10 +9,6 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public class CodeCompilerNetFull: CodeCompiler
     {
-        public CodeCompilerNetFull(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
-
         protected override Assembly GetAssembly(string virtualPath, string className)
         {
             var assembly = BuildManager.GetCompiledAssembly(virtualPath);
