@@ -12,32 +12,7 @@ namespace ToSic.Sxc.Images
         public ResizeDimensionGenerator(): base("Img.ResDim") { }
 
         public bool Debug = false;
-
-
-        //public static OneResize BestWidthAndHeightBasedOnSrcSet(ResizeSettings settings, SrcSetPart partDef)
-        //{
-        //    return new OneResize
-        //    {
-        //        Width = BestWidthOrHeightBasedOnSrcSet(settings.Width, partDef.Width, partDef,
-        //            FallbackWidthForSrcSet),
-        //        Height = BestWidthOrHeightBasedOnSrcSet(settings.Height, partDef.Height, partDef,
-        //            FallbackHeightForSrcSet)
-        //    };
-        //}
-
-        //public static (int Width, int Height) BestWidthAndHeightBasedOnSrcSetTemp(ResizeSettings settings, SrcSetPart partDef)
-        //{
-        //    if (partDef == null) return (settings.Width, settings.Height);
-        //    var initialDims = (
-        //        BestWidthOrHeightBasedOnSrcSet(settings.Width, partDef.Width, partDef,
-        //            FallbackWidthForSrcSet),
-        //        BestWidthOrHeightBasedOnSrcSet(settings.Height, partDef.Height, partDef,
-        //            FallbackHeightForSrcSet)
-        //    );
-        //    return initialDims;
-        //}
-
-
+        
 
         /// <summary>
         /// Get the best matching dimension (width/height) based on what's specified
@@ -63,10 +38,11 @@ namespace ToSic.Sxc.Images
             var factor = settings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
 
+            // First width - quite complicated
             var maybeWidth = FigureOutBestWidth(settings, recipe, partDef, factor);
 
 
-            // Now height
+            // Now height - might be incomplete, but ATM this isn't actually used much
             var probablyH = partDef == null
                 ? settings.Height
                 : BestWidthOrHeightBasedOnSrcSet(settings.Height, partDef.Height, partDef,

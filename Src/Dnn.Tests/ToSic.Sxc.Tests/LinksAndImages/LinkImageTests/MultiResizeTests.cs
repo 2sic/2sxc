@@ -20,10 +20,10 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             Assert.AreEqual(500, dims.Width);
         }
 
-        [DataRow(W75Alt, 0.75, "0.75 should be changed")]
-        [DataRow(W100, 1, "1 should be changed too")]
         [DataRow(W50, 0.5, "0.5 should be changed")]
         [DataRow(700, 0.70, "0.70 should not be changed")]
+        [DataRow(W75ImgOnly777, 0.75, "0.75 should be changed")]
+        [DataRow(W100, 1, "1 should be changed too")]
         [DataRow((int)(1000 * .9), 0.9, "0.9 should just calculate, because it's not in the factor-list")]
         [DataTestMethod]
 
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 
         [DataRow(W100, 1, "1 should be changed too")]
         [DataRow(W50, 0.5, "0.5 should be changed")]
-        [DataRow(W75Alt, 0.75, "0.75 should be changed")]
+        [DataRow(W75ImgOnly777, 0.75, "0.75 should be changed")]
         [DataRow(700, 0.70, "0.70 should not be changed")]
         [DataRow((int)(1000 * .9), 0.9, "0.9 should just calculate, because it's not in the factor-list")]
         [DataTestMethod]

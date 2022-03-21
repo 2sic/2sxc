@@ -22,7 +22,8 @@ namespace ToSic.Sxc.Images
     public class Recipe
     {
         public const string RuleForDefault = "default";
-        public const string RuleForFactor = "factor";
+
+        // Special properties which are only added to the tag if activated in settings
         public const string SpecialPropertySizes = "sizes";
         public const string SpecialPropertyMedia = "media";
         public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia };
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Images
         /// ## Important: If you call this from your code, always use named parameters, as the parameter order can change in future
         /// </summary>
         /// <param name="original"></param>
-        /// <param name="type"></param>
+        /// <param name="tag"></param>
         /// <param name="factor"></param>
         /// <param name="width"></param>
         /// <param name="variants"></param>
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.Images
         public Recipe(
             Recipe original = null,
             // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
-            string type = default, 
+            string tag = default, 
             string factor = default, 
             int width = default,
             string variants = default,
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Images
             bool? setHeight = default
         )
         {
-            Type = type ?? original?.Factor ?? (factor == null ? RuleForDefault : RuleForFactor);
+            Tag = tag ?? original?.Factor ?? RuleForDefault; // (factor == null ? RuleForDefault : RuleForFactor);
             Factor = factor ?? original?.Factor;
             Width = width != 0 ? width : original?.Width ?? 0;
             Variants = variants ?? original?.Variants;
@@ -67,7 +68,7 @@ namespace ToSic.Sxc.Images
         /// TODO: DOC
         /// - `default`, `factor`, `img`, `source`
         /// </summary>
-        public string Type { get ; }
+        public string Tag { get ; }
 
         /// <summary>
         /// TODO: DOC
@@ -120,7 +121,7 @@ namespace ToSic.Sxc.Images
         public ReadOnlyCollection<Recipe> Recipes { get; }
         
         // TODO: CONTINUE HERE
-        public ReadOnlyCollection<Recipe> RecipesFlat
+        public ReadOnlyCollection<Recipe> AllSubRecipes
         {
             get
             {
@@ -129,8 +130,8 @@ namespace ToSic.Sxc.Images
                 foreach (var r in Recipes)
                 {
                     list.Add(r);
-                    if(r.Recipes != null && r.Recipes.Any())
-                        list.AddRange(r.Recipes);
+                    if (r.Recipes != null)
+                        list.AddRange(r.AllSubRecipes);
                 }
 
                 return _recipesFlat = list.AsReadOnly();
@@ -157,7 +158,7 @@ namespace ToSic.Sxc.Images
         [PrivateApi]
         internal virtual Recipe InitAfterLoad(Recipe defaultsIfEmpty)
         {
-            FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? defaultsIfEmpty?.FactorParsed ?? 1;
+            FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? defaultsIfEmpty?.FactorParsed ?? 0;
             if (Width == 0) Width = defaultsIfEmpty?.Width ?? 0;
             Variants = Variants ?? defaultsIfEmpty?.Variants;
             SetWidth = SetWidth ?? defaultsIfEmpty?.SetWidth;

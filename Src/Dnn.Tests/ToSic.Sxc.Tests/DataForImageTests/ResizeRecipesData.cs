@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.DataForImageTests
     {
         public const int W100 = 990;
         public const int W75 = 700;
-        public const int W75Alt = 777;
+        public const int W75ImgOnly777 = 777;
         public const int W50 = 450;
         public const int W25 = 200;
 
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                 new Recipe(factor: "1", width: W100),
                 new Recipe(factor: "3/4", width: W75, recipes: new[]
                 {
-                    new Recipe(type: "img", width: W75Alt, attributes: new Dictionary<string, object>
+                    new Recipe(tag: "img", width: W75ImgOnly777, attributes: new Dictionary<string, object>
                     {
                         { "class", "img-fluid" },
                         { "test", "value" }
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                         new { factor = "1", width = W100 },
                         new
                         {
-                            factor = "3/4", width = W75, recipes = new object[] { new { type = "img", width = W75Alt } }
+                            factor = "3/4", width = W75, recipes = new object[] { new { tag = "img", width = W75ImgOnly777 } }
                         },
                         new { factor = "1:2", width = W50 },
                         new { factor = "0.25", width = W25 }

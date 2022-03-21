@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Images
         [JsonConstructor]
         public RecipeSet(Recipe recipe = default)
         {
-            Recipe = recipe != null ? new Recipe(recipe, type: Recipe.RuleForDefault) : null;
+            Recipe = recipe != null ? new Recipe(recipe, tag: Recipe.RuleForDefault) : null;
         }
 
         /// <summary>
