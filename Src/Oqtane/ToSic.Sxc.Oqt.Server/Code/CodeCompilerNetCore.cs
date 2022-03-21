@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 
@@ -12,16 +11,18 @@ namespace ToSic.Sxc.Oqt.Server.Code
     [PrivateApi]
     public class CodeCompilerNetCore: CodeCompiler
     {
-        public CodeCompilerNetCore(IServiceProvider serviceProvider) : base(serviceProvider)
+        private readonly Lazy<IServerPaths> _serverPaths;
+
+        public CodeCompilerNetCore(Lazy<IServerPaths> serverPaths)
         {
-            
+            _serverPaths = serverPaths;
         }
 
         protected override Type GetCsHtmlType(string virtualPath) 
             => throw new Exception("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
         protected override Assembly GetAssembly(string virtualPath, string className)
         {
-            var fullPath = ServiceProvider.Build<IServerPaths>().FullContentPath(virtualPath.Backslash());
+            var fullPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
             fullPath = NormalizeFullFilePath(fullPath);
             try
             {

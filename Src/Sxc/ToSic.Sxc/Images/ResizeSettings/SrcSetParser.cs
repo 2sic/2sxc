@@ -8,6 +8,11 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Hide implementation")]
     public class SrcSetParser
     {
+        public const char KeyValueSeparator = '=';
+        public const char PartSeparator = ',';
+        public const char WidthSeparator = ':';
+
+
         public static SrcSetPart[] ParseSet(string srcSet)
         {
             if (string.IsNullOrWhiteSpace(srcSet)) return Array.Empty<SrcSetPart>();
@@ -22,7 +27,7 @@ namespace ToSic.Sxc.Images
         public static SrcSetPart ParsePart(string partString)
         {
             var withMore = (partString ?? string.Empty)
-                .Split('=')
+                .Split(KeyValueSeparator)
                 .Select(more => more.Trim())
                 .ToArray();
 
@@ -44,13 +49,17 @@ namespace ToSic.Sxc.Images
                     if (sizeAsNumber != null && part.SizeType == SrcSetPart.SizeDefault)
                         part.SizeType = SrcSetPart.SizeFactorOf;
                 }
-                part.Size = (float)Math.Round(sizeAsNumber ?? 0, 2);
+                part.Size = Math.Round(sizeAsNumber ?? 0, 2);
 
                 // If it's a real size and we didn't already set the Type, set it based on the value range
                 if (part.SizeType == SrcSetPart.SizeDefault && !DNearZero(part.Size))
                     part.SizeType = part.Size < 1 
                         ? SrcSetPart.SizeFactorOf // Less than 1 - can't be pixel density, must be factor
                         : part.Size < 10 ? SrcSetPart.SizePixelDensity : SrcSetPart.SizeWidth;
+
+                // Set the factor for later calculations
+                if (part.SizeType == SrcSetPart.SizeFactorOf || part.SizeType == SrcSetPart.SizePixelDensity)
+                    part.AdditionalFactor = part.Size;
             }
 
             // If size type is width, then we must round to int and the width must have the same value
@@ -59,7 +68,7 @@ namespace ToSic.Sxc.Images
 
             if (withMore.Length > 1)
             {
-                var moreParts = withMore[1].Split(MoreSeparator).Select(s => s.Trim()).ToArray();
+                var moreParts = withMore[1].Split(WidthSeparator).Select(s => s.Trim()).ToArray();
                 if (!string.IsNullOrEmpty(moreParts[0]))
                     part.Width = IntOrNull(moreParts[0]) ?? 0;
                 if (moreParts.Length > 1 && !string.IsNullOrEmpty(moreParts[1]))
@@ -69,8 +78,19 @@ namespace ToSic.Sxc.Images
             return part;
         }
 
-        private const char PartSeparator = ',';
-        private const char MoreSeparator = ':';
+        //public static string SrcSetSuffix(SrcSetPart ssConfig, int finalWidth)
+        //{
+        //    var srcSetSize = ssConfig.Size;
+        //    var srcSetSizeTypeCode = ssConfig.SizeType;
+        //    if (srcSetSizeTypeCode == SizeFactorOf)
+        //    {
+        //        srcSetSize = finalWidth;
+        //        srcSetSizeTypeCode = SizeWidth;
+        //    }
+
+        //    var suffix = $" {srcSetSize.ToString(CultureInfo.InvariantCulture)}{srcSetSizeTypeCode}";
+        //    return suffix;
+        //}
 
     }
 }

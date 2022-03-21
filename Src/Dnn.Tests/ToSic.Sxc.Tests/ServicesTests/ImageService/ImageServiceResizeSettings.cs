@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyWidth()
         {
-            var settings = Build<IImageService>().ResizeSettings(width: 100);
+            var settings = Build<IImageService>().Settings(width: 100);
             Assert.AreEqual(100, settings.Width);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Width));
         }
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyHeight()
         {
-            var settings = Build<IImageService>().ResizeSettings(height: 100);
+            var settings = Build<IImageService>().Settings(height: 100);
             Assert.AreEqual(100, settings.Height);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Height));
         }
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyFormat()
         {
-            var settings = Build<IImageService>().ResizeSettings(format: "jpg");
+            var settings = Build<IImageService>().Settings(format: "jpg");
             Assert.AreEqual("jpg", settings.Format);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Format));
         }
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyResizeMode()
         {
-            var settings = Build<IImageService>().ResizeSettings(resizeMode: "crop");
+            var settings = Build<IImageService>().Settings(resizeMode: "crop");
             Assert.AreEqual("crop", settings.ResizeMode);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.ResizeMode));
         }
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void EmptyOnlyScaleMode()
         {
             // todo: use constants for the final result
-            var settings = Build<IImageService>().ResizeSettings(scaleMode: "up");
+            var settings = Build<IImageService>().Settings(scaleMode: "up");
             Assert.AreEqual("upscaleonly", settings.ScaleMode);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.ScaleMode));
         }
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyParameters()
         {
-            var settings = Build<IImageService>().ResizeSettings(parameters: "count=17");
+            var settings = Build<IImageService>().Settings(parameters: "count=17");
             Assert.AreEqual("count=17", settings.Parameters.NvcToString());
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Parameters));
         }
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyQuality75()
         {
-            var settings = Build<IImageService>().ResizeSettings(quality: 75);
+            var settings = Build<IImageService>().Settings(quality: 75);
             Assert.AreEqual(75, settings.Quality);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Quality));
         }
@@ -69,25 +69,26 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyQualityDot75()
         {
-            var settings = Build<IImageService>().ResizeSettings(quality: .75f);
+            var settings = Build<IImageService>().Settings(quality: .75f);
             Assert.AreEqual(75, settings.Quality);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.Quality));
         }
 
-        [TestMethod]
-        public void EmptyOnlySrcSet()
-        {
-            var settings = Build<IImageService>().ResizeSettings(srcset: "100,200,300");
-            Assert.AreEqual("100,200,300", settings.SrcSet);
-            AssertAllEmptyExceptSpecified(settings, nameof(settings.SrcSet));
-        }
+        // 2022-03-17 not valid any more, this property will be removed
+        //[TestMethod]
+        //public void EmptyOnlySrcSet()
+        //{
+        //    var settings = Build<IImageService>().ResizeSettings(rules: new MultiResizeRule {SrcSet = "100,200,300" });
+        //    Assert.AreEqual("100,200,300", settings.SrcSet);
+        //    AssertAllEmptyExceptSpecified(settings, nameof(settings.SrcSet));
+        //}
 
 
 
         [TestMethod]
         public void EmptyWidthAndHeight()
         {
-            var settings = Build<IImageService>().ResizeSettings(width: 100, height: 49);
+            var settings = Build<IImageService>().Settings(width: 100, height: 49);
             Assert.AreEqual(100, settings.Width);
             Assert.AreEqual(49, settings.Height);
             AssertAllEmptyExceptSpecified(settings, new[] { nameof(settings.Width), nameof(settings.Height) });
@@ -108,21 +109,12 @@ namespace ToSic.Sxc.Tests.ServicesTests
             count += MaybeTestOneProperty(settings.Parameters, null, namesToSkip, nameof(settings.Parameters));
             count += MaybeTestOneProperty(settings.Quality, 0, namesToSkip, nameof(settings.Quality));
             count += MaybeTestOneProperty(settings.ScaleMode, null, namesToSkip, nameof(settings.ScaleMode));
-            count += MaybeTestOneProperty(settings.SrcSet, null, namesToSkip, nameof(settings.SrcSet));
+            // 2022-03-17 2dm removing this property
+            //count += MaybeTestOneProperty(settings.SrcSet, null, namesToSkip, nameof(settings.SrcSet));
 
             // Verify the total count matches expected
-            const int expectedCount = 8;
+            const int expectedCount = 7;
             Assert.AreEqual(expectedCount - namesToSkip.Length, count, "count should be total fields minus untested");
-
-            //if (namesToSkip.All(n => n != nameof(settings.Width)))
-            //    Assert.AreEqual(0, settings.Width, nameof(settings.Width));
-            //if (namesToSkip.All(n => n != nameof(settings.Format)))
-            //    Assert.AreEqual(null, settings.Format, nameof(settings.Format));
-            //Assert.AreEqual(null, settings.Mode, nameof(settings.Mode));
-            //Assert.AreEqual(null, settings.Parameters, nameof(settings.Parameters));
-            //Assert.AreEqual(0, settings.Quality, nameof(settings.Quality));
-            //Assert.AreEqual(null, settings.Scale, nameof(settings.Scale));
-            //Assert.AreEqual(null, settings.SrcSet, nameof(settings.SrcSet));
         }
 
         private static int MaybeTestOneProperty<T>(T actual, T expected, string[] namesToSkip, string notToTest)

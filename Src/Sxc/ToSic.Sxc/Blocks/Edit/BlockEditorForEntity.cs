@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     internal class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> outerBlockManagerLazy, Lazy<CmsManager> parentBlockManagerLazy, IAppStates appStates) 
-            : base(serviceProvider, lazyCmsRuntime, outerBlockManagerLazy)
+        public BlockEditorForEntity(BlockEditorBaseDependencies dependencies, Lazy<CmsManager> parentBlockManagerLazy, IAppStates appStates) 
+            : base(dependencies)
         {
             _parentBlockManagerLazy = parentBlockManagerLazy;
             _appStates = appStates;

@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public ImportResultDto Import(int zoneId)
         {
             PreventServerTimeout300();
-            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId);
+            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
         }
     }
 }

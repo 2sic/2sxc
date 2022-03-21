@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Code
 {
     public static class ErrorHelp
     {
-        private const string ErrHelpPre = "Error in your code. Probably https://r.2sxc.org/";
-        private const string ErrHelpSuf = " can help. \n What follows is the internal error: ";
+        private const string ErrHelpPre = "Error in your code. ***** Probably https://r.2sxc.org/";
+        private const string ErrHelpSuf = " can help! ***** \n What follows is the internal error: ";
 
         private const string IEntityErrDetection = "error CS0234: The type or namespace name 'IEntity' does not exist in the namespace 'ToSic.Eav";
         private const string IEntityErrorMessage = ErrHelpPre + "ErrIEntity" + ErrHelpSuf;

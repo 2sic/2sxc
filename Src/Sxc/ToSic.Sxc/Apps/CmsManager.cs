@@ -8,7 +8,13 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager, IAppIdentityWithPublishingState
     {
-        public CmsManager(AppRuntimeDependencies dependencies) : base(dependencies, "Sxc.CmsMan") { }
+        private readonly LazyInit<CmsRuntime> _cmsRuntime;
+
+        public CmsManager(AppRuntimeDependencies dependencies, LazyInit<CmsRuntime> cmsRuntime) : base(dependencies,
+            "Sxc.CmsMan")
+        {
+            _cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts, Log));
+        }
 
         public CmsManager Init(IAppIdentityWithPublishingState app, ILog parentLog)
         {
@@ -33,10 +39,7 @@ namespace ToSic.Sxc.Apps
             return this;
         }
 
-        public new CmsRuntime Read 
-            => _runtime ?? (_runtime = ServiceProvider.Build<CmsRuntime>().InitWithState(AppState, ShowDrafts, Log));
-        private CmsRuntime _runtime;
-
+        public new CmsRuntime Read => _cmsRuntime.Ready;
 
         public ViewsManager Views => _views ?? (_views = new ViewsManager().Init(this, Log));
         private ViewsManager _views;

@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Globalization;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Images
 {
@@ -14,7 +15,10 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// The size - usually 1000 or something in case of 'w', and 1.5 or something in case of 'x'
         /// </summary>
-        public float Size;
+        public double Size;
+
+
+        public double AdditionalFactor = 1;
 
         /// <summary>
         /// Type of size - width or pixel density
@@ -30,5 +34,20 @@ namespace ToSic.Sxc.Images
         /// Image height if specified in pixels
         /// </summary>
         public int Height;
+
+        public string SrcSetSuffix(int finalWidth)
+        {
+            var srcSetSize = Size;
+            var srcSetSizeTypeCode = SizeType;
+            if (srcSetSizeTypeCode == SizeFactorOf)
+            {
+                srcSetSize = finalWidth;
+                srcSetSizeTypeCode = SizeWidth;
+            }
+
+            var suffix = $" {srcSetSize.ToString(CultureInfo.InvariantCulture)}{srcSetSizeTypeCode}";
+            return suffix;
+        }
+
     }
 }

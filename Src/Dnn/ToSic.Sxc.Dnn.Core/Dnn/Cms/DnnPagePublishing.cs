@@ -25,13 +25,15 @@ namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class DnnPagePublishing : HasLog<IPagePublishing>, IPagePublishing
     {
-        private readonly IServiceProvider _serviceProvider;
-
         #region DI Constructors and More
-        
-        public DnnPagePublishing(IServiceProvider serviceProvider) : base("Dnn.Publsh")
+
+        private readonly Lazy<AppManager> _appManager;
+        private readonly LazyInit<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
+
+        public DnnPagePublishing(Lazy<AppManager> appManager, LazyInitLog<IModuleAndBlockBuilder> moduleAndBlockBuilder) : base("Dnn.Publsh")
         {
-            _serviceProvider = serviceProvider;
+            _appManager = appManager;
+            _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
         }
         
         #endregion
@@ -87,16 +89,16 @@ namespace ToSic.Sxc.Dnn.Cms
             Log.Add($"Publish(m:{instanceId}, v:{version})");
             try
             {
-                // publish all entites of this content block
+                // publish all entities of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                var cb = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(dnnModule);
+                var cb = _moduleAndBlockBuilder.Ready.GetBlock(dnnModule);
 
                 Log.Add($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
                 {
                     Log.Add("cb exists");
-                    var appManager = _serviceProvider.Build<AppManager>().Init(cb, Log);
+                    var appManager = _appManager.Value.Init(cb, Log);
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();

@@ -1,18 +1,22 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    internal class BlockEditorForModule: BlockEditorBase
+    internal class BlockEditorForModule : BlockEditorBase
     {
-        public BlockEditorForModule(IServiceProvider serviceProvider, Lazy<CmsRuntime> lazyCmsRuntime, Lazy<CmsManager> cmsManagerLazy) : base(serviceProvider, lazyCmsRuntime, cmsManagerLazy) { }
-        private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater 
-                                                                ?? (_platformModuleUpdater = ServiceProvider.Build<IPlatformModuleUpdater>().Init(Log));
-        private IPlatformModuleUpdater _platformModuleUpdater;
+        public BlockEditorForModule(BlockEditorBaseDependencies dependencies,
+            LazyInitLog<IPlatformModuleUpdater> platformModuleUpdater) : base(dependencies)
+        {
+            _platformModuleUpdater = platformModuleUpdater.SetLog(Log);
+        }
+
+        private readonly LazyInitLog<IPlatformModuleUpdater> _platformModuleUpdater;
+
+        private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater.Ready;
+
 
         protected override void SavePreviewTemplateId(Guid templateGuid)
             => PlatformModuleUpdater.SetPreview(Block.Context.Module.Id, templateGuid);

@@ -17,11 +17,12 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: HasLog
     {
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates, Lazy<IConvertToEavLight> convertToEavLight) : base("Bck.Views")
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates, Lazy<IConvertToEavLight> convertToEavLight, GeneratorLog<ImpExpHelpers> impExpHelpers) : base("Bck.Views")
         {
             _cmsManagerLazy = cmsManagerLazy;
             _appStates = appStates;
             _convertToEavLight = convertToEavLight;
+            _impExpHelpers = impExpHelpers.SetLog(Log);
 
             _site = context.Site;
             _user = context.User;
@@ -30,6 +31,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly IAppStates _appStates;
         private readonly Lazy<IConvertToEavLight> _convertToEavLight;
+        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
         private readonly ISite _site;
         private readonly IUser _user;
 
@@ -93,7 +95,7 @@ namespace ToSic.Sxc.WebApi.Views
         {
             // todo: extra security to only allow zone change if host user
             Log.Add($"delete a{appId}, t:{id}");
-            var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+            var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var cms = _cmsManagerLazy.Value.Init(app, Log);
             cms.Views.DeleteView(id);
             return true;

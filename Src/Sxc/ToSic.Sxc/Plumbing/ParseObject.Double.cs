@@ -43,6 +43,10 @@ namespace ToSic.Sxc.Plumbing
             return DoubleOrNull(value);
         }
 
-        internal static bool DNearZero(double f) => Math.Abs(f) <= 0.01;
+        /// <summary>
+        /// Special helper to verify a double is near zero by at least 1%.
+        /// To test if it's near another number, subtract that first and then check if near zero. 
+        /// </summary>
+        internal static bool DNearZero(double d) => Math.Abs(d) <= 0.01;
     }
 }

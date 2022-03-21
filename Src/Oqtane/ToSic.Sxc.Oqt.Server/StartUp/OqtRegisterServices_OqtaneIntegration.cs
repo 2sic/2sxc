@@ -8,14 +8,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
     internal static partial class OqtRegisterServices
     {
         /// <summary>
-        /// Mail and Logging
+        /// Mail, Logging and other services.
         /// </summary>
         private static IServiceCollection AddSxcOqtIntegratedServices(this IServiceCollection services)
         {
             services.TryAddTransient<ILogService, OqtLogService>();
             services.TryAddTransient<IMailService, OqtMailService>();
+            services.TryAddTransient<IUserInformationService, OqtUserInformationService>();
             return services;
         }
-        
     }
 }

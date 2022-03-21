@@ -17,12 +17,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
     {
         #region Constructor / DI
 
-        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user, ResponseMaker<THttpResponseType> responseMaker) : base("Bck.Export")
+        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user, GeneratorLog<ImpExpHelpers> impExpHelpers, ResponseMaker<THttpResponseType> responseMaker) : base("Bck.Export")
         {
             _xmlExporter = xmlExporter;
             _cmsRuntime = cmsRuntime;
             _site = site;
             _user = user;
+            _impExpHelpers = impExpHelpers.SetLog(Log);
             _responseMaker = responseMaker;
         }
 
@@ -31,6 +32,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly ISite _site;
         private CmsRuntime CmsRuntime => _cmsRuntime.Value;
         private readonly IUser _user;
+        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
 
         #endregion
@@ -39,7 +41,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         {
             Log.Add($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSuperUser}");
             var contextZoneId = _site.ZoneId;
-            var currentApp = CmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var cms = CmsRuntime.Init(currentApp, true, Log);
             var contentTypes = cms.ContentTypes.All.OfScope(scope);
@@ -85,7 +87,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = CmsRuntime.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
             var appRuntime = CmsRuntime.Init(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";

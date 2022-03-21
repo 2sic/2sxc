@@ -5,6 +5,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
 
@@ -42,6 +43,8 @@ namespace ToSic.Sxc.Web
             string language = null
             )
         {
+            var wrapLog = Log.Call<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
+
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
 
@@ -50,19 +53,24 @@ namespace ToSic.Sxc.Web
                 throw new ArgumentException($"Only one of the parameters '{nameof(api)}' or '{nameof(pageId)}' can have a value.");
 
             var strParams = ParametersToString(parameters);
-
+            Log.Add($"parameters:{strParams}");
+ 
             // TODO: unclear what would happen if a new parameter would replace an existing - would it just append? that wouldn't be good
             var url = api == null
                 ? ToPage(pageId, strParams, language)
                 : ToApi(api, strParams);
+            Log.Add($"url:{url}");
 
             var processed = ExpandUrlIfNecessary(type, url);
+            Log.Add($"expandUrl:{processed}, t:{type}");
 
-            return Tags.SafeUrl(processed).ToString();
+            return wrapLog("Ok", Tags.SafeUrl(processed).ToString());
         }
 
         private string ExpandUrlIfNecessary(string type, string url)
         {
+            if (url == null) return null;
+
             // Short-Circuit to really not do anything if the type isn't specified
             if (string.IsNullOrEmpty(type)) return url;
 
@@ -83,7 +91,7 @@ namespace ToSic.Sxc.Web
                     return url;
             }
         }
-        
+     
 
         protected abstract string ToApi(string api, string parameters = null);
 
@@ -111,19 +119,21 @@ namespace ToSic.Sxc.Web
         }
 
         /// <inheritdoc />
-        public string Image(string url = null,
-            object settings = null,
-            object factor = null,
+        public string Image(
+            string url = default,
+            object settings = default,
+            object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object width = null,
-            object height = null,
-            object quality = null,
-            string resizeMode = null,
-            string scaleMode = null,
-            string format = null,
-            object aspectRatio = null,
-            string type = null,
-            object parameters = null
+            IDynamicField field = default,
+            object width = default,
+            object height = default,
+            object quality = default,
+            string resizeMode = default,
+            string scaleMode = default,
+            string format = default,
+            object aspectRatio = default,
+            string type = default,
+            object parameters = default
             )
         {
             // prevent incorrect use without named parameters
@@ -134,13 +144,14 @@ namespace ToSic.Sxc.Web
             var strParams = ParametersToString(parameters);
 
             // If the url should be expanded to have a full root or something, do this first
+            url = url ?? field?.Parent.Get(field.Name) as string;
             var expandedUrl = ExpandUrlIfNecessary(type, url);
 
             // Get the image-url(s) as needed
             // Note that srcset is false, so it won't generate a bunch of sources, just one - which is how the API works
             // Anybody that wants a srcset must use the new IImageService for that
-            var imageUrl = ImgLinker.Image(expandedUrl, settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams, srcset: false);
+            var imageUrl = ImgLinker.Image(url: expandedUrl, settings: settings, field: field, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: strParams);
 
             return imageUrl;
         }
@@ -164,5 +175,8 @@ namespace ToSic.Sxc.Web
             return string.IsNullOrEmpty(queryString) ? api :
                 api?.IndexOf("?") > 0 ? $"{api}&{queryString}" : $"{api}?{queryString}";
         }
+
+        internal static string CurrentPageUrlWithEventualHashError(int? pageId, string currentPageUrl) 
+            => !pageId.HasValue ? currentPageUrl : $"{currentPageUrl}#error-unknown-pageid-{pageId}";
     }
 }

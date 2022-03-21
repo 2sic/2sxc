@@ -18,20 +18,22 @@ namespace ToSic.Sxc.WebApi.Cms
     public class ContentGroupControllerReal: HasLog<ContentGroupControllerReal>, IContentGroupController
     {
         public const string LogSuffix = "CntGrp";
-        public ContentGroupControllerReal(IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base("Api.CntGrpRl")
+        public ContentGroupControllerReal(LazyInitLog<IPagePublishing> publishing, GeneratorLog<IPagePublishing> versioning, LazyInit<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base("Api.CntGrpRl")
         {
             CtxResolver = ctxResolver;
-            _cmsManagerLazy = cmsManagerLazy;
-            _publishing = publishing.Init(Log);
+            _cmsManagerLazy = cmsManagerLazy.SetInit(m => m.Init(Context, Log));
+            _publishing = publishing.SetLog(Log);
+            _versioning = versioning.SetLog(Log);
         }
 
         public IContextResolver CtxResolver { get; }
 
         #region Constructor / di
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private readonly IPagePublishing _publishing;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Context, Log));
-        private CmsManager _cmsManager;
+        private readonly LazyInit<CmsManager> _cmsManagerLazy;
+        private readonly LazyInitLog<IPagePublishing> _publishing;
+        private readonly GeneratorLog<IPagePublishing> _versioning;
+        private CmsManager CmsManager => _cmsManagerLazy.Ready;
+
 
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());
         private IContextOfBlock _context;
@@ -63,7 +65,6 @@ namespace ToSic.Sxc.WebApi.Cms
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
         {
             var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
-            var versioning = CmsManager.ServiceProvider.Build<IPagePublishing>().Init(Log);
 
             void InternalSave(VersioningActionInfo args)
             {
@@ -86,7 +87,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - this is always part of page
-            versioning.DoInsidePublishing(Context, InternalSave);
+            _versioning.New.DoInsidePublishing(Context, InternalSave);
             wrapLog(null);
         }
 
@@ -146,7 +147,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.Add($"list for:{guid}, items:{list?.Count}");
             if (list == null) throw new ArgumentNullException(nameof(list));
 
-            _publishing.DoInsidePublishing(Context, args =>
+            _publishing.Ready.DoInsidePublishing(Context, args =>
             {
                 //var cms = new CmsManager().Init(_app, Log);
                 var entity = CmsManager.Read.AppState.List.One(guid);

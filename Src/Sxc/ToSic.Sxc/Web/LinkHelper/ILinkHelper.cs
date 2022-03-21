@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Web
 {
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Web
         /// <param name="api">optional api url "api/name/method?id=something"</param>
         /// <param name="parameters">
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
-        ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
+        ///     - in 2sxc 12.05+ it can also be an <see cref="Context.IParameters"/>
         /// </param>
         /// <param name="type">
         ///     Optional type changes how the link is generated. Possible values are:
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Web
         /// <remarks>
         /// History
         /// * v12 added the api parameter for liking APIs of the current app
-        /// * In v12.05 the type of parameters was changed from string to object, to allow <see cref="ToSic.Sxc.Context.IParameters"/> as well
+        /// * In v12.05 the type of parameters was changed from string to object, to allow <see cref="Context.IParameters"/> as well
         /// * In v13.02 introduced language with "current"
         /// </remarks>
         string To(
@@ -73,6 +74,7 @@ namespace ToSic.Sxc.Web
         /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="field">WIP v13.04 - not final yet</param>
         /// <param name="width">Optional width parameter. Usually takes the default from the `settings`.</param>
         /// <param name="height">Optional height parameter. Usually takes the default from the `settings`.</param>
         /// <param name="quality">Optional quality parameter. Usually takes the default from the `settings`.</param>
@@ -89,17 +91,18 @@ namespace ToSic.Sxc.Web
         /// </param>
         /// <param name="parameters">
         ///     - the parameters either as `id=47&amp;name=daniel` (Dnn also supports `/id/47/name/daniel`)
-        ///     - in 2sxc 12.05+ it can also be an <see cref="ToSic.Sxc.Context.IParameters"/>
+        ///     - in 2sxc 12.05+ it can also be an <see cref="Context.IParameters"/>
         /// </param>
         /// <remarks>
         /// Usually a factor is applied to create a link which is possibly 50% of the content-width or similar.
         /// In these cases the height is not applied but the aspectRatio is used, which usually comes from `settings` if any were provided.
-        ///
+        /// 
         /// History
         /// - New in 2sxc 12.03
         /// - type added ca. v12.08
         /// - Option to use <see cref="Images.IResizeSettings"/> added in v13.03
-        /// - Factor originally didn't influence width/height if provided here, updated it v13.03 to influence that as well
+        /// - `factor` originally didn't influence width/height if provided here, updated it v13.03 to influence that as well
+        /// - `field` being added in 13.04, not ready yet
         /// </remarks>
         /// <returns></returns>
         // Test comments, probably remove soon as this was never implemented like this
@@ -123,19 +126,20 @@ namespace ToSic.Sxc.Web
         ///// - `suffix` would return the entire suffix starting from the `?` _including_ the `?` or `#` - if nothing is there, empty string
         ///// </param>        [PrivateApi]
         string Image(
-            string url = null,
-            object settings = null,
-            object factor = null,
+            string url = default,
+            object settings = default,
+            object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object width = null,
-            object height = null,
-            object quality = null,
-            string resizeMode = null,
-            string scaleMode = null,
-            string format = null,
-            object aspectRatio = null,
-            string type = null,
-            object parameters = null
+            IDynamicField field = default,
+            object width = default,
+            object height = default,
+            object quality = default,
+            string resizeMode = default,
+            string scaleMode = default,
+            string format = default,
+            object aspectRatio = default,
+            string type = default,
+            object parameters = default
             );
 
         /// <summary>

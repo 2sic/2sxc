@@ -4,10 +4,14 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Images
 {
     /// <summary>
+    /// # BETA
     /// Settings how to resize an image for the `src` or `srcset` attributes.
     ///
     /// It's read only, to create it, use the <see cref="ToSic.Sxc.Services.IImageService"/>
     /// </summary>
+    /// <remarks>
+    /// History: **BETA** To be released ca. 2sxc 13.10
+    /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
     public interface IResizeSettings
     {
@@ -48,18 +52,33 @@ namespace ToSic.Sxc.Images
         /// </summary>
         string Format { get; }
 
-        [PrivateApi("WIP")]
+        /// <summary>
+        /// The resize factor by which the original value (width/height) is scaled
+        /// </summary>
         double Factor { get; }
 
         /// <summary>
-        /// SrcSet to generate.
+        /// The aspect ratio to determine the height, in case no height was specified. 
         /// </summary>
-        string SrcSet { get; }
+        double AspectRatio { get; }
 
         /// <summary>
         /// Additional url parameters in case the final link would need this.
         /// Rarely used, but can be used for resize parameters which are not standard. 
         /// </summary>
         NameValueCollection Parameters { get; }
+
+        [PrivateApi("WIP")] 
+        bool UseFactorMap { get; }
+
+        [PrivateApi]
+        bool UseAspectRatio { get; }
+
+        /// <summary>
+        /// Settings which are used when img/picture tags are generated with multiple resizes
+        /// </summary>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
+        AdvancedSettings Advanced { get; }
+
     }
 }

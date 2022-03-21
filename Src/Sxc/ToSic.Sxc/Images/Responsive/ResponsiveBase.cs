@@ -1,64 +1,89 @@
-﻿using ToSic.Eav;
+﻿using System.Linq;
+using ToSic.Razor.Blade;
+using ToSic.Razor.Html5;
 using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Web;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
 {
     public abstract class ResponsiveBase: HybridHtmlString
     {
-        protected ResponsiveBase(
-            ImageService imgService, 
-            string url, 
-            object settings, 
-            // ReSharper disable once UnusedParameter.Local
-            string noParamOrder = Parameters.Protector, 
-            object factor = null, 
-            string srcSet = null,
-            string imgAlt = null,
-            string imgClass = null,
-            string logName = Constants.SxcLogName + ".IPSBas"
-            ) : base()
+
+        protected ResponsiveBase(ImageService imgService, ResponsiveParams responsiveParams)
         {
+            Call = responsiveParams;
             ImgService = imgService;
-            FactorParam = factor;
-            SrcSetParam = srcSet;
-            ImgAlt = imgAlt;
-            ImgClass = imgClass;
             ImgLinker = imgService.ImgLinker;
-            Url = url;
-            Settings = PrepareResizeSettings(settings, factor, srcSet);
+            Settings = PrepareResizeSettings(Call.Settings, Call.Factor, Call.Recipe);
 
         }
+        protected ResponsiveParams Call { get; }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
-        protected readonly object FactorParam;
-        protected readonly string SrcSetParam;
-        protected readonly string ImgAlt;
-        protected readonly string ImgClass;
 
-        public string Url { get; }
-        internal IResizeSettings Settings { get; }
+        public string Url => ThisResize.Url;
+
+        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(Call.Url, Settings, Call.Field));
+        private OneResize _thisResize;
+
+        internal ResizeSettings Settings { get; }
 
 
-        protected IResizeSettings PrepareResizeSettings(object settings, object factor, string srcset)
+        protected ResizeSettings PrepareResizeSettings(object settings, object factor, AdvancedSettings mrs)
         {
             // 1. Prepare Settings
-            if (!(settings is IResizeSettings resizeSettings))
+            if (settings is ResizeSettings resSettings)
             {
-                resizeSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, srcset: true);
+                // If we have a modified factor, make sure we have that (this will copy the settings)
+                var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
+                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, mrs);
             }
             else
-            {
-                ((ResizeSettings)resizeSettings).Factor = ParseObject.DoubleOrNullWithCalculation(factor) ?? resizeSettings.Factor;
-                // TODO: STILL USE THE FACTOR!
-                // resizeSettings.Factor
-            }
+                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, /*allowMulti: true,*/ advanced: mrs);
 
-            if (srcset != null) ((ResizeSettings)resizeSettings).SrcSet = srcset;
-
-            return resizeSettings;
+            return resSettings;
         }
 
+        /// <summary>
+        /// ToString must be specified by each implementation
+        /// </summary>
+        /// <returns></returns>
         public abstract override string ToString();
+
+        public virtual Img Img
+        {
+            get
+            {
+                if (_imgTag != null) return _imgTag;
+
+                _imgTag = Tag.Img().Src(Url);
+
+                // Add all kind of attributes if specified
+                var tag = ThisResize.TagEnhancements;
+                var dic = tag?.Attributes?
+                    .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key))
+                    .ToDictionary(p => p.Key, p => p.Value); ;
+                if (dic != null)
+                    foreach (var a in dic)
+                        _imgTag.Attr(a.Key, a.Value);
+
+                // Only add these if they were really specified
+                var imgAlt = Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull()?.Description;
+                if (imgAlt != null) _imgTag.Alt(imgAlt);
+                
+                // Note that adding a class will keep previous class added
+                if (Call.ImgClass != null) _imgTag.Class(Call.ImgClass);
+
+                // Optionally set width and height if known
+                if (tag?.SetWidth == true && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);
+                if (tag?.SetHeight == true && ThisResize.Height != 0) _imgTag.Height(ThisResize.Height);
+
+                return _imgTag;
+            }
+        }
+
+        private Img _imgTag;
+
     }
 }

@@ -69,7 +69,8 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
                 var aliases = AliasRepositoryLazy.Value.GetAliases().ToList(); // cached by Oqtane
 
                 if (siteId.HasValue) // acceptable solution
-                    siteState.Alias = aliases.OrderByDescending(a => a.Name.Length)
+                    siteState.Alias = aliases.OrderByDescending(a => /*a.IsDefault*/  a.Name.Length) // TODO: a.IsDefault DESC after upgrade to Oqt v3.0.3+
+                        //.ThenByDescending(a => a.Name.Length)
                         .ThenBy(a => a.Name)
                         .FirstOrDefault(a => a.SiteId == siteId.Value && a.Name.StartsWith(url, StringComparison.InvariantCultureIgnoreCase));
                 else // fallback solution, wrong site is possible

@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Data
 {
@@ -11,6 +12,9 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public Guid EntityGuid => Entity?.EntityGuid ?? Guid.Empty;
 
+
+        [PrivateApi("WIP v13")]
+        public IDynamicField Field(string name) => new DynamicField(this, name);
 
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;

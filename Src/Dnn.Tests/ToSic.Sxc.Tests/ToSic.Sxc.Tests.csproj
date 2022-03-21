@@ -80,10 +80,12 @@
     <Compile Include="Adam\AdamSecurity.cs" />
     <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
+    <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
     <Compile Include="DynamicData\DynamicReadRealClass.cs" />
+    <Compile Include="LinksAndImages\LinkImageTests\MultiResizeTests.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\ImgSrcSet.cs" />
     <Compile Include="LinksAndImages\SrcSetParsePart.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\ResizeParamMergeTests.cs" />
@@ -92,22 +94,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats_Best.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceFormats.cs" />
-    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImg.cs" />
-    <Compile Include="ServicesTests\ImageService\ImageServiceTagsNoWebp.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImgPatronPerfectionist.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImgNoPatron.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsImgBase.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsNoPatron.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceTagsBase.cs" />
     <Compile Include="ServicesTests\ImageService\ImageTagsTestPermutations.cs" />
-    <Compile Include="ServicesTests\ImageService\ImageServiceTagsWebp.cs" />
+    <Compile Include="ServicesTests\ImageService\ImageServiceTagsPatronPerfectionist.cs" />
     <Compile Include="ServicesTests\ImageService\ImageServiceResizeSettings.cs" />
+    <Compile Include="ServicesTests\ImageService\FactorMapTests.cs" />
     <Compile Include="ServicesTests\MailServiceBaseTests.cs" />
     <Compile Include="ServicesTests\MailAddressCollectionTests.cs" />
     <Compile Include="ServicesTests\AddMailAddressesInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailAddressTests.cs" />
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
-    <Compile Include="ServicesTests\SecureDataTests\SecureDataTest.cs" />
+    <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
     <Compile Include="TestBaseSxc.cs" />
-    <Compile Include="ServicesTests\ConvertServiceTests\ConvertServiceTest.cs" />
+    <Compile Include="ServicesTests\ConvertService\ConvertServiceTest.cs" />
     <Compile Include="LinksAndImages\LinkHelperTestBase.cs" />
     <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToVerifyTests.cs" />
     <Compile Include="LinksAndImages\LinkHelperTests\LinkHelperToTestBase.cs" />
@@ -153,10 +158,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>2.2.0</Version>
+      <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <Version>2.2.0</Version>
+      <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>1.3.2</Version>

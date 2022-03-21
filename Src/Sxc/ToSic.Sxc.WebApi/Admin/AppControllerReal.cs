@@ -94,16 +94,23 @@ namespace ToSic.Sxc.WebApi.Admin
 
         public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage) => _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage);
 
-        public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId)
+        /// <summary>
+        /// Import App from import zip.
+        /// </summary>
+        /// <param name="uploadInfo">file upload</param>
+        /// <param name="zoneId">int</param>
+        /// <param name="renameApp">optional new name for app, provide to rename the app</param>
+        /// <returns></returns>
+        public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, string renameApp)
         {
             var wrapLog = Log.Call<ImportResultDto>();
 
             if (!uploadInfo.HasFiles())
                 return new ImportResultDto(false, "no files uploaded");
 
-            var (fileName, stream) = uploadInfo.GetStream(0);
+            var (_, stream) = uploadInfo.GetStream(0);
 
-            var result = _importAppLazy.Ready.Import(zoneId, fileName, stream);
+            var result = _importAppLazy.Ready.Import(stream, zoneId, renameApp);
 
             return wrapLog("ok", result);
         }

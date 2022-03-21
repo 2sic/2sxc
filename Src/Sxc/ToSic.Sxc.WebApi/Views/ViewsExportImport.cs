@@ -35,6 +35,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
+        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
         private readonly ISite _site;
         private readonly IUser _user;
@@ -46,6 +47,7 @@ namespace ToSic.Sxc.WebApi.Views
             IContextOfSite context,
             IAppStates appStates,
             AppIconHelpers appIconHelpers,
+            GeneratorLog<ImpExpHelpers> impExpHelpers,
             ResponseMaker<THttpResponseType> responseMaker
             ) : base("Bck.Views")
         {
@@ -55,6 +57,7 @@ namespace ToSic.Sxc.WebApi.Views
             _jsonBundleLazy = jsonBundleLazy;
             _appStates = appStates;
             _appIconHelpers = appIconHelpers;
+            _impExpHelpers = impExpHelpers.SetLog(Log);
             _responseMaker = responseMaker;
 
             _site = context.Site;
@@ -65,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Views
         {
             var logCall = Log.Call($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user);
-            var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+            var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var cms = _cmsManagerLazy.Value.Init(app, Log);
             var bundle = new BundleEntityWithAssets
             {
@@ -112,7 +115,7 @@ namespace ToSic.Sxc.WebApi.Views
             try
             {
                 // 0.1 Check permissions, get the app, 
-                var app = _cmsManagerLazy.Value.ServiceProvider.Build<ImpExpHelpers>().Init(Log).GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+                var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
                 //_appHelpers.Init(app, Log);
 
                 // 0.2 Verify it's json etc.

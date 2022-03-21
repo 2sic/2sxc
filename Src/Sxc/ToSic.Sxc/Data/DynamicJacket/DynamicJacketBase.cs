@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>, IPropertyLookup, ISxcDynamicObject, ICanGetNameNotFinal
+    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
     {
         /// <summary>
         /// The underlying data, in case it's needed for various internal operations.

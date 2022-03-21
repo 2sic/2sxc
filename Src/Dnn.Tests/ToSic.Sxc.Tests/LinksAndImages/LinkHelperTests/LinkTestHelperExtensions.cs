@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
             object aspectRatio = null,
             string type = null
             )
-            => link.Image(url, settings, factor, noParamOrder, width, height, quality, resizeMode, scaleMode, format,
-                aspectRatio, type: type);
+            => link.Image(url, settings, factor, noParamOrder, width: width, height: height, quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
+                aspectRatio: aspectRatio, type: type);
     }
 }

@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -26,14 +27,16 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
 
-        public App(AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy, Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy) : base(dependencies, "App.SxcApp")
         {
             _globalPaths = globalPaths;
             _appPathsLazy = appPathsLazy;
+            _dynamicEntityDependenciesLazy = dynamicEntityDependenciesLazy;
         }
 
         private readonly Lazy<GlobalPaths> _globalPaths;
         private readonly Lazy<AppPaths> _appPathsLazy;
+        private readonly Lazy<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
         private AppPaths _appPaths;
         private AppPaths AppPaths => _appPaths ?? (_appPaths = _appPathsLazy.Value.Init(Site, AppState, Log));
 
@@ -85,8 +88,8 @@ namespace ToSic.Sxc.Apps
         // TO GET THE DynamicEntityDependencies from the DynamicCodeRoot which creates the App...? 
         // ATM it's a bit limited, for example it probably cannot resolve links
         private DynamicEntityDependencies DynamicEntityDependencies
-            => _dynamicEntityDependencies ?? (_dynamicEntityDependencies = DataSourceFactory.ServiceProvider
-                .Build<DynamicEntityDependencies>().Init(null, Site.SafeLanguagePriorityCodes(), Log));
+            => _dynamicEntityDependencies ?? (_dynamicEntityDependencies =
+                _dynamicEntityDependenciesLazy.Value.Init(null, Site.SafeLanguagePriorityCodes(), Log));
         private DynamicEntityDependencies _dynamicEntityDependencies;
 
         /// <inheritdoc />

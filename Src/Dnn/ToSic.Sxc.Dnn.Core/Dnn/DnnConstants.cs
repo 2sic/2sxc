@@ -32,5 +32,10 @@
         /// AntiForgery token header name
         /// </summary>
         public const string AntiForgeryTokenHeaderName = "RequestVerificationToken";
+
+        /// <summary>
+        /// Prefix for user identity token
+        /// </summary>
+        public const string UserTokenPrefix = "dnn:userid=";
     }
 }

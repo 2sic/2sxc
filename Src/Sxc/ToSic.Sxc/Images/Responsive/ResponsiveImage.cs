@@ -1,6 +1,5 @@
-﻿using ToSic.Eav;
+﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
-using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -10,43 +9,44 @@ namespace ToSic.Sxc.Images
     public class ResponsiveImage: ResponsiveBase, IResponsiveImage
     {
         [PrivateApi("don't show")]
-        internal ResponsiveImage(
-            ImageService imgService, 
-            string url, 
-            object settings, 
-            string noParamOrder = Parameters.Protector, 
-            object factor = null, 
-            string srcSet = null,
-            string imgAlt = null,
-            string imgClass = null
-            ) : base(imgService, url, settings, factor: factor, srcSet: srcSet, imgAlt: imgAlt, imgClass: imgClass, logName: $"{Constants.SxcLogName}.PicSet")
+        internal ResponsiveImage(ImageService imgService, ResponsiveParams responsiveParams) : base(imgService, responsiveParams)
         {
         }
 
-        /// <inheritdoc />
-        public Img Img
+        /// <summary>
+        /// Same as base / initial implementation, but add srcset if available
+        /// </summary>
+        public override Img Img
         {
             get
             {
-                if (_imgTag != null) return _imgTag;
+                if (_img != null) return _img;
+                _img = base.Img;
 
-                _imgTag = Tag.Img()
-                    .Src(ImgLinker.Image(Url, new ResizeSettings(Settings, false)));
-                var srcSetValue = Srcset;
-                if (!string.IsNullOrEmpty(srcSetValue))
-                    _imgTag = _imgTag.Srcset(srcSetValue);
-                    
-                // Only add these if they were really specified
-                if (ImgAlt != null) _imgTag.Alt(ImgAlt);
-                if (ImgClass != null) _imgTag.Class(ImgClass);
-                return _imgTag;
+                if (ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId))
+                {
+                    var srcSetValue = Srcset;
+                    if (!string.IsNullOrEmpty(srcSetValue)) _img = _img.Srcset(srcSetValue);
+                }
+                
+                if (ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceSetSizes.NameId))
+                {
+                    var sizes = ThisResize?.TagEnhancements?.Sizes;
+                    if (!string.IsNullOrEmpty(sizes)) _img.Sizes(sizes);
+                }
+
+                return _img;
             }
         }
 
-        private Img _imgTag;
+        private Img _img;
 
         /// <inheritdoc />
-        public string Srcset => _srcSetCache ?? (_srcSetCache = Settings.SrcSet == null ? "" : ImgLinker.Image(Url, Settings));
+        public string Srcset => _srcSetCache
+                                ?? (_srcSetCache = string.IsNullOrWhiteSpace(ThisResize?.TagEnhancements?.Variants)
+                                    ? ""
+                                    : ImgLinker.SrcSet(Call.Url, Settings, SrcSetType.Img, Call.Field)
+                                );
         private string _srcSetCache;
 
         public override string ToString() => Img.ToString();

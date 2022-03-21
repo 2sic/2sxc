@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.SrcSetPart;
@@ -14,111 +15,108 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Internal stuff")]
     public class ImgResizeLinker : HasLog<ImgResizeLinker>
     {
-        public ImgResizeLinker() : base($"{Constants.SxcLogName}.ImgRes") { }
+        public ImgResizeLinker(Lazy<IFeaturesService> features) : base($"{Constants.SxcLogName}.ImgRes")
+        {
+            _features = features;
+            DimGen = new ResizeDimensionGenerator().Init(Log);
+        }
+        private readonly Lazy<IFeaturesService> _features;
 
         public bool Debug = false;
+
+        public readonly ResizeDimensionGenerator DimGen;
 
         /// <summary>
         /// Make sure this is in sync with the Link.Image
         /// </summary>
         public string Image(
-            string url = null,
-            object settings = null,
-            object factor = null,
+            string url = default,
+            object settings = default,
+            object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object width = null,
-            object height = null,
-            object quality = null,
-            string resizeMode = null,
-            string scaleMode = null,
-            string format = null,
-            object aspectRatio = null,
-            string parameters = null,
-            object srcset = null // can be a string or a bool:true 
+            IDynamicField field = default,  // todo
+            object width = default,
+            object height = default,
+            object quality = default,
+            string resizeMode = default,
+            string scaleMode = default,
+            string format = default,
+            object aspectRatio = default,
+            string parameters = default
             )
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}, {nameof(srcset)}:{srcset}");
+            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
 
-            if (!(settings is IResizeSettings resizeSettings))
-                resizeSettings = ResizeParamMerger.BuildResizeSettings(
-                    settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
-                    scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-                    parameters: parameters, srcset: srcset);
-
-            var result = GenerateFinalUrlOrSrcSet(url, resizeSettings);
-
-            return wrapLog(result, result);
-        }
-
-        public string Image(string url, IResizeSettings settings) => GenerateFinalUrlOrSrcSet(url, settings);
-
-        private string GenerateFinalUrlOrSrcSet(string url, IResizeSettings originalSettings)
-        {
-            var srcSetConfig = SrcSetParser.ParseSet(originalSettings.SrcSet);
-
-            // Basic case - no srcSet config
-            if ((srcSetConfig?.Length ?? 0) == 0)
-                return ConstructUrl(url, originalSettings);
-
-            var results = srcSetConfig.Select(ssConfig =>
+            // Modern case - all settings have already been prepared, the other settings are ignored
+            if (settings is ResizeSettings resizeSettings)
             {
-                if (ssConfig.SizeType == SizeDefault)
-                    return ConstructUrl(url, originalSettings);
+                var basic = ImageOnly(url, resizeSettings, field).Url;
+                return wrapLog("prepared:" + basic, basic);
+            }
 
-                // Copy the params so we can optimize based on the expected SrcSet specs
-                var srcResize = new ResizeSettings(originalSettings, false);
+            resizeSettings = ResizeParamMerger.BuildResizeSettings(
+                settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
+                parameters: parameters/*, allowMulti: false*/);
 
-                // Factor is usually 1, but in srcSet scenarios it can have another value
-                // Because the settings that made it didn't get incorporated first
-                var f = originalSettings.Factor;
-                srcResize.Width = BestSrcSetDimension(srcResize.Width, ssConfig.Width, ssConfig, FallbackWidthForSrcSet);
-                srcResize.Height = BestSrcSetDimension(srcResize.Height, ssConfig.Height, ssConfig, FallbackHeightForSrcSet);
+            var result = ImageOnly(url, resizeSettings, field).Url;
+            return wrapLog("built:" + result, result);
+        }
 
-                srcResize.Width = (int)(f * srcResize.Width);
-                srcResize.Height = (int)(f * srcResize.Height);
+        public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
+        {
+            var wrapLog = Log.Call<OneResize>();
+            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
+            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
+        }
 
-                var size = ssConfig.Size;
-                var sizeTypeCode = ssConfig.SizeType;
-                if (sizeTypeCode == SizeFactorOf)
-                {
-                    size = srcResize.Width;
-                    sizeTypeCode = SizeWidth;
-                }
 
-                return $"{ConstructUrl(url, srcResize)} {size.ToString(CultureInfo.InvariantCulture)}{sizeTypeCode}";
+        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IDynamicField field = null)
+        {
+            var wrapLog = Log.Call<string>();
+
+            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
+
+            var srcSetParts = srcSetSettings?.SrcSetParsed;
+
+            // Basic case -no srcSet config. In this case the src-set can just contain the url.
+            if ((srcSetParts?.Length ?? 0) == 0)
+                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field).Url);
+
+            var results = srcSetParts.Select(ssPart =>
+            {
+                if (ssPart.SizeType == SizeDefault)
+                    return ConstructUrl(url, settings, srcSetSettings, null, ssPart);
+
+                var one = ConstructUrl(url, settings, srcSetSettings, field: field, partDef: ssPart);
+                // this must happen at the end
+                one.Suffix = ssPart.SrcSetSuffix(one.Width); // SrcSetParser.SrcSetSuffix(ssPart, one.Width);
+                return one;
             });
-            var result = string.Join(",\n", results);
+            var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix));
 
-            return result;
+            return wrapLog("srcset", result);
         }
 
-        /// <summary>
-        /// Get the best matching dimension (width/height) based on what's specified
-        /// </summary>
-        private int BestSrcSetDimension(int original, int onSrcSet, SrcSetPart part, int fallbackIfNoOriginal)
+
+
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, SrcSetPart partDef = null)
         {
-            // SrcSet defined a value, use that
-            if (onSrcSet != 0) return onSrcSet;
+            var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
+            one.TagEnhancements = srcSetSettings;
 
-            // No need to recalculate anything, return original
-            if (part.SizeType != SizePixelDensity && part.SizeType != SizeFactorOf) return original;
-
-            // If we're doing a factor-of, we always need an original value. If it's missing, use the fallback
-            if (part.SizeType == SizeFactorOf && original == 0) original = fallbackIfNoOriginal;
-
-            // Calculate the expected value based on Size=Scale-Factor * original
-            return (int)(part.Size * original);
-        }
-
-        private string ConstructUrl(string url, IResizeSettings resizeSettings)
-        {
             var resizerNvc = new NameValueCollection();
-            ImgAddIfRelevant(resizerNvc, "w", resizeSettings.Width, "0");
-            ImgAddIfRelevant(resizerNvc, "h", resizeSettings.Height, "0");
+            ImgAddIfRelevant(resizerNvc, "w", one.Width, "0");
+            ImgAddIfRelevant(resizerNvc, "h", one.Height, "0");
             ImgAddIfRelevant(resizerNvc, "quality", resizeSettings.Quality, "0");
             ImgAddIfRelevant(resizerNvc, "mode", resizeSettings.ResizeMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "scale", resizeSettings.ScaleMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "format", resizeSettings.Format, DontSetParam);
+
+            // Get resize instructions of the data if it has any
+            var modifier = field?.ImageDecoratorOrNull()?.GetAnchorOrNull();
+            if (modifier?.Item1 != null)
+                ImgAddIfRelevant(resizerNvc, modifier.Value.Item1, modifier.Value.Item2);
 
             url = UrlHelpers.AddQueryString(url, resizerNvc);
 
@@ -126,7 +124,8 @@ namespace ToSic.Sxc.Images
                 url = UrlHelpers.AddQueryString(url, resizeSettings.Parameters);
 
             var result = Tags.SafeUrl(url).ToString();
-            return result;
+            one.Url = result;
+            return one;
         }
 
 

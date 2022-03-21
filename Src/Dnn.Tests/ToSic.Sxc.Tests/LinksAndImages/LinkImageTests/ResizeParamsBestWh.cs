@@ -71,15 +71,6 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             IsTrue(TestBestWH(s, s, settings: ToDyn(new { Width = s, Height = s })), "W/H params");
         }
 
-        [TestMethod]
-        public void FigureOutBestWidthAndHeight_SettingsWHF()
-        {
-            FigureOutWHFactors(0, 1);
-            FigureOutWHFactors(1, 1);
-            FigureOutWHFactors(2, 2);
-            FigureOutWHFactors(0.5, 0.5);
-        }
-
 
         [TestMethod]
         public void FigureOutBestWH_SettingsWithNeutralizer()
@@ -87,23 +78,30 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             IsTrue(TestBestWH(0, 0, 0, null, null, null, ToDyn(new { Width = 700 })));
         }
 
-        private void FigureOutWHFactors(double factor, double fResult)
+        [DataRow(0, 1, "Factor 0, result 1")]
+        [DataRow(1, 1, "Factor 1, result 1")]
+        [DataRow(2, 2, "Factor 2, result 2")]
+        [DataRow(0.5, 0.5, "Factor / result 0.5")]
+        [DataTestMethod]
+        public void FigureOutBestWidthAndHeight_SettingsWHF(double factor, double fResult, string name)
         {
-            Console.WriteLine("Run with Factor: " + factor);
+            Console.WriteLine("Run with Factor: " + factor + $"; start-value is {s}");
             // Factor 1
-            IsTrue(TestBestWH((int)(fResult * s), 0, factor: factor, settings: ToDyn(new { Width = s })), $"W with f:{factor}");
-            IsTrue(TestBestWH(0, (int)(fResult * s), factor: factor, settings: ToDyn(new { Height = s })), $"H with f:{factor}");
-            IsTrue(TestBestWH(0, 0, factor: factor, settings: ToDyn(new { })), $"No params f:{factor}");
-            IsTrue(TestBestWH((int)(fResult * s), (int)(fResult * s), factor: factor, settings: ToDyn(new { Width = s, Height = s })), $"W/H f:{factor}");
+            IsTrue(TestBestWH((int)(fResult * s), 0, factor: factor, settings: ToDyn(new { Width = s })), $"Calc W with f:{factor}");
+            IsTrue(TestBestWH(0, (int)(fResult * s), factor: factor, settings: ToDyn(new { Height = s })), $"Calc H with f:{factor}");
+            IsTrue(TestBestWH(0, 0, factor: factor, settings: ToDyn(new { })), $"No params - f shouldn't have an effect f:{factor}");
+            IsTrue(TestBestWH((int)(fResult * s), (int)(fResult * s), factor: factor, settings: ToDyn(new { Width = s, Height = s })), $"Calc W and H in settings with f:{factor}");
         }
 
 
-        private bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetNameNotFinal settings = null)
+        internal static bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetByName settings = null)
         {
             // Get a new linker for each test run
-            var linker = new ResizeParamMerger();
+            var paramMerger = new ResizeParamMerger();
+            var dimGen = new ResizeDimensionGenerator();
 
-            var t1 = linker.FigureOutBestWidthAndHeight(width, height, factor, ar, settings);
+            var resizeSettings = paramMerger.BuildCoreSettings(width, height, factor, ar, null, settings);
+            var t1 = dimGen.ResizeDimensions(resizeSettings, resizeSettings.Find(SrcSetType.Img, true));
             var okW = expW.Equals(t1.Width);
             var okH = expH.Equals(t1.Height);
             var ok = okW && okH;

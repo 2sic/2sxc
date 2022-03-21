@@ -42,13 +42,30 @@ namespace ToSic.Sxc.Search
     /// </remarks>
     public class SearchController : HasLog<SearchController>
     {
-        public SearchController(IServiceProvider serviceProvider, IAppsCache appsCache) : base("DNN.Search")
+        public SearchController(IServiceProvider serviceProvider, 
+            IAppsCache appsCache,
+            Generator<CodeCompiler> codeCompiler,
+            Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
+            Generator<ISite> site, 
+            LazyInitLog<IModuleAndBlockBuilder> moduleAndBlockBuilder,
+            LazyInitLog<DnnLookUpEngineResolver> dnnLookUpEngineResolver
+            ) : base("DNN.Search")
         {
             _serviceProvider = serviceProvider;
             _appsCache = appsCache;
+            _codeCompiler = codeCompiler;
+            _dnnDynamicCodeRoot = dnnDynamicCodeRoot;
+            _site = site;
+            _dnnLookUpEngineResolver = dnnLookUpEngineResolver.SetLog(Log);
+            _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
         }
         private readonly IServiceProvider _serviceProvider;
         private readonly IAppsCache _appsCache;
+        private readonly Generator<CodeCompiler> _codeCompiler;
+        private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
+        private readonly Generator<ISite> _site;
+        private readonly LazyInitLog<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
+        private readonly LazyInitLog<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
 
         /// <summary>
@@ -64,7 +81,7 @@ namespace ToSic.Sxc.Search
             if (DnnModule == null) return wrapLog("cancel", "no module");
             
             // This changes site in whole scope
-            DnnSite = ((DnnSite)_serviceProvider.Build<ISite>()).TrySwap(DnnModule, Log);
+            DnnSite = ((DnnSite)_site.New).TrySwap(DnnModule, Log);
 
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
@@ -74,7 +91,7 @@ namespace ToSic.Sxc.Search
             // In case it's not loaded yet
             _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            Block = _serviceProvider.Build<IModuleAndBlockBuilder>().Init(Log).GetBlock(DnnModule);
+            Block = _moduleAndBlockBuilder.Ready.GetBlock(DnnModule);
 
             if (Block.View == null) return wrapLog("cancel", "no view");
             if (Block.View.SearchIndexingDisabled) return wrapLog("cancel", "search disabled"); // new in 12.02
@@ -252,7 +269,7 @@ namespace ToSic.Sxc.Search
                 Log.Add("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
-                    var getLookups = (DnnLookUpEngineResolver) _serviceProvider.Build<DnnLookUpEngineResolver>().Init(Log);
+                    var getLookups = _dnnLookUpEngineResolver.Ready;
                     var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
                     ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
                 }
@@ -294,12 +311,11 @@ namespace ToSic.Sxc.Search
         {
             var wrapLog = Log.Call<ICustomizeSearch>();
             // 1. Get and compile the view.ViewController
-            var codeCompiler = _serviceProvider.Build<CodeCompiler>();
             var path = Path
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
                 .ForwardSlash();
             Log.Add($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-            var instance = codeCompiler.InstantiateClass(block.View.ViewController, null, path, true);
+            var instance = _codeCompiler.New.InstantiateClass(block.View.ViewController, null, path, true);
             Log.Add("got instance of compiled ViewController class");
 
             // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
@@ -309,7 +325,7 @@ namespace ToSic.Sxc.Search
             if (instance is DynamicCode instanceWithContext)
             {
                 Log.Add($"attach DynamicCode context to class instance");
-                var parentDynamicCodeRoot = _serviceProvider.Build<DnnDynamicCodeRoot>().Init(block, Log, Constants.CompatibilityLevel10);
+                var parentDynamicCodeRoot = _dnnDynamicCodeRoot.New.Init(block, Log, Constants.CompatibilityLevel10);
                 instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
             }
 

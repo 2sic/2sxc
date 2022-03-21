@@ -49,7 +49,8 @@ namespace ToSic.Sxc
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();
             services.TryAddTransient<BlockEditorForModule>();
-            
+            services.TryAddTransient<BlockEditorBaseDependencies>();
+
             // Block functionality
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
