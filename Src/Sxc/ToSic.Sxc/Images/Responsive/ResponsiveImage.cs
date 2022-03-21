@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public string Srcset => _srcSetCache
-                                ?? (_srcSetCache = string.IsNullOrWhiteSpace(ThisResize?.TagEnhancements?.SrcSet)
+                                ?? (_srcSetCache = string.IsNullOrWhiteSpace(ThisResize?.TagEnhancements?.Variants)
                                     ? ""
                                     : ImgLinker.SrcSet(Call.Url, Settings, SrcSetType.Img)
                                 );

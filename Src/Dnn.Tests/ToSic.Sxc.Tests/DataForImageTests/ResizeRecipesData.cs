@@ -48,8 +48,7 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                 }
             };
 
-            var factorsJson = JsonConvert.SerializeObject(adv, Formatting.Indented);
-            return factorsJson;
+            return JsonConvert.SerializeObject(adv, Formatting.Indented);
         }
 
     }

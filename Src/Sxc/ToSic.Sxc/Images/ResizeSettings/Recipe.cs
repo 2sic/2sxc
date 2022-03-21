@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Images
         /// <param name="type"></param>
         /// <param name="factor"></param>
         /// <param name="width"></param>
-        /// <param name="srcset"></param>
+        /// <param name="variants"></param>
         /// <param name="attributes"></param>
         /// <param name="recipes"></param>
         /// <param name="setWidth"></param>
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Images
             string type = default, 
             string factor = default, 
             int width = default,
-            string srcset = default,
+            string variants = default,
             Dictionary<string, object> attributes = default,
             IEnumerable<Recipe> recipes = default,
             bool? setWidth = default,
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Images
             Type = type ?? original?.Factor ?? (factor == null ? RuleForDefault : RuleForFactor);
             Factor = factor ?? original?.Factor;
             Width = width != 0 ? width : original?.Width ?? 0;
-            SrcSet = srcset ?? original?.SrcSet;
+            Variants = variants ?? original?.Variants;
             Recipes = recipes != null ? Array.AsReadOnly(recipes.ToArray()) : original?.Recipes ?? Array.AsReadOnly(Array.Empty<Recipe>());
             Attributes = attributes != null ? new ReadOnlyDictionary<string, object>(attributes) : original?.Attributes;
             SetWidth = setWidth ?? original?.SetWidth;
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Images
         /// - `200w,400w,600w,800w,1000w` - pixel sizes
         /// - `0.5*,1*,1.5*,2*` - multipliers of the originally specified pixel size
         /// </summary>
-        public string SrcSet { get; private set; }
+        public string Variants { get; private set; }
 
 
         public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes as string : null;
@@ -117,8 +117,26 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// wip TODO: DOC
         /// </summary>
-        
         public ReadOnlyCollection<Recipe> Recipes { get; }
+        
+        // TODO: CONTINUE HERE
+        public ReadOnlyCollection<Recipe> RecipesFlat
+        {
+            get
+            {
+                if (_recipesFlat != null) return _recipesFlat;
+                var list = new List<Recipe>();
+                foreach (var r in Recipes)
+                {
+                    list.Add(r);
+                    if(r.Recipes != null && r.Recipes.Any())
+                        list.AddRange(r.Recipes);
+                }
+
+                return _recipesFlat = list.AsReadOnly();
+            }
+        }
+        private ReadOnlyCollection<Recipe> _recipesFlat;
 
 
         [PrivateApi("Important for using these settings, but not relevant outside of this")]
@@ -141,11 +159,11 @@ namespace ToSic.Sxc.Images
         {
             FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? defaultsIfEmpty?.FactorParsed ?? 1;
             if (Width == 0) Width = defaultsIfEmpty?.Width ?? 0;
-            SrcSet = SrcSet ?? defaultsIfEmpty?.SrcSet;
+            Variants = Variants ?? defaultsIfEmpty?.Variants;
             SetWidth = SetWidth ?? defaultsIfEmpty?.SetWidth;
             SetHeight = SetHeight ?? defaultsIfEmpty?.SetHeight;
             Attributes = Attributes ?? defaultsIfEmpty?.Attributes;
-            SrcSetParsed = SrcSetParser.ParseSet(SrcSet);
+            SrcSetParsed = SrcSetParser.ParseSet(Variants);
 
             foreach (var s in Recipes) s?.InitAfterLoad(this);
 

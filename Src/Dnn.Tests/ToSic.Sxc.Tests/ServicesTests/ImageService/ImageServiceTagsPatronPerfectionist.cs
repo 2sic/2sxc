@@ -27,16 +27,16 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, "No Src Set")]
         [DataRow(SrcWebP12 + SrcJpg12, SrcSet12, "With Src Set 1,2")]
         [DataTestMethod]
-        public void SourceTagsMultiTests(string expected, string srcset, string name) 
-            => SourceTagsMultiTest(expected, srcset, name);
+        public void SourceTagsMultiTests(string expected, string variants, string name) 
+            => SourceTagsMultiTest(expected, variants, name);
 
         [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, true, "No Src Set, in-pic")]
         [DataRow(SrcWebPNone + SrcJpgNone, SrcSetNone, false, "No Src Set, in-setting")]
         [DataRow(SrcWebP12 + SrcJpg12, SrcSet12, true, "With Src Set 1,2, in-pic")]
         [DataRow(SrcWebP12 + SrcJpg12, SrcSet12, false, "With Src Set 1,2, in-settings")]
         [DataTestMethod]
-        public void PictureTags(string expected, string srcset, bool inPicTag, string name)
-            => PictureTagInner(expected, srcset, inPicTag, name);
+        public void PictureTags(string expected, string variants, bool inPicTag, string name)
+            => PictureTagInner(expected, variants, inPicTag, name);
 
 
         [DataRow("<img src='test.jpg?w=777' class='img-fluid' test='value'>", 0.75, "0.75 with attributes")]
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void ImgWhichShouldSetWidth()
         {
-            var recipe = new Recipe(width: 1000, srcset: "1", setWidth: true,
+            var recipe = new Recipe(width: 1000, variants: "1", setWidth: true,
                 attributes: new Dictionary<string, object>
                 {
                     { "class", "img-fluid" }, 

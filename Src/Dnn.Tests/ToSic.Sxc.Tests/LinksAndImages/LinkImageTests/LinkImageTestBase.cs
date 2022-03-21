@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 
             // Skip Helper-tests if using SrcSet as that's not supported in that case
             // Because it would lead to not-expected result
-            //if (srcset != null) return;
+            //if (variants != null) return;
 
             var linkHelper = GetLinkHelper();
             var helperResult = linkHelper.TestImage(url: url, settings: settings, factor: factor, width: width,
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
             string scaleMode = null,
             string format = null,
             object aspectRatio = null,
-            string srcset = null)
+            string variants = null)
         {
             // Test with Linker
             var linker = GetLinker();
@@ -69,9 +69,9 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
                 width: width,
                 height: height,
                 quality: quality, resizeMode: resizeMode, scaleMode: scaleMode, format: format,
-                aspectRatio: aspectRatio, advanced: new Recipe(srcset: srcset));
+                aspectRatio: aspectRatio, advanced: new Recipe(variants: variants));
             var linkerResult = linker.SrcSet(url, typedSettings, SrcSetType.Img);
-            Assert.AreEqual(expected, linkerResult, $"Failed on ImgResizeLinker for srcSet '{srcset}'");
+            Assert.AreEqual(expected, linkerResult, $"Failed on ImgResizeLinker for srcSet '{variants}'");
         }
     }
 }

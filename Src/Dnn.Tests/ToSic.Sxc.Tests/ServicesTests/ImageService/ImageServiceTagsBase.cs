@@ -66,10 +66,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
         #endregion
 
 
-        protected void PictureTagInner(string expectedParts, string srcset, bool inPicTag, string testName)
+        protected void PictureTagInner(string expectedParts, string variants, bool inPicTag, string testName)
         {
             var svc = Build<IImageService>();
-            var rule = new Recipe(srcset: srcset);
+            var rule = new Recipe(variants: variants);
             var settings = svc.ResizeSettings(width: 120, height: 24, recipe: inPicTag ? null : rule);
             var pic = svc.Picture(url: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
 
@@ -81,9 +81,9 @@ namespace ToSic.Sxc.Tests.ServicesTests
         /// <summary>
         /// Run a batch of tests on the source tags, with permutations of where the settings are given
         /// </summary>
-        protected void SourceTagsMultiTest(string expected, string srcset, string testName)
+        protected void SourceTagsMultiTest(string expected, string variants, string testName)
         {
-            var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, srcset);
+            var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 var svc = Build<IImageService>();

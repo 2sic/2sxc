@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Images
 
             // Parse any string which would be a typical MRS - convert to single rule
             if (value is string strValue && !string.IsNullOrWhiteSpace(strValue))
-                value = new Recipe(srcset: strValue);
+                value = new Recipe(variants: strValue);
 
             // Parse any single rule It's just one rule which should be used
             if (value is Recipe mrrValue)

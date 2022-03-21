@@ -128,7 +128,7 @@ namespace ToSic.Sxc.Images
         {
             // If it's just a src-set list, and not a json, make it a normal rule
             if (srcSet is string strVal && !strVal.Contains("{"))
-                value = new Recipe(srcset: strVal);
+                value = new Recipe(variants: strVal);
 
             //// If it's a rule, return that as the only resize setting
             if (value is Recipe valRule)

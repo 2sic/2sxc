@@ -26,30 +26,30 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataRow(ImgTagJpg12, SrcSet12, null, "With Src Set 1,2")]
         [DataRow(ImgTagJpgNoneF05, SrcSetNone, 0.5, "No Src Set, factor 0.5")]
         [DataTestMethod]
-        public void ImageTagMultiTest(string expected, string srcset, object factor, string testName)
+        public void ImageTagMultiTest(string expected, string variants, object factor, string testName)
         {
-            var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, srcset);
+            var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
             var svc = Build<IImageService>();
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 // Factor set on the Img call
                 var settingsWithoutFactor = svc.ResizeSettings(width: test.Set.Width, height: test.Set.Height,
-                    recipe: new Recipe(srcset: test.Set.Srcset));
+                    recipe: new Recipe(variants: test.Set.Variants));
                 var imgSetNoFactor = svc.Img(url: ImgUrl, settings: settingsWithoutFactor, factor: factor,
-                    recipe: test.Pic.Srcset);
+                    recipe: test.Pic.Variants);
                 Is(expected, imgSetNoFactor.ToString(), $"Failed (factor on Img): {test.Name}");
 
                 // Factor specified on settings
                 var settingsWithFactor = svc.ResizeSettings(factor: factor, width: test.Set.Width,
                     height: test.Set.Height,
-                    recipe: new Recipe(srcset: test.Set.Srcset));
-                var imgSetFactor = svc.Img(url: ImgUrl, settings: settingsWithFactor, recipe: test.Pic.Srcset);
+                    recipe: new Recipe(variants: test.Set.Variants));
+                var imgSetFactor = svc.Img(url: ImgUrl, settings: settingsWithFactor, recipe: test.Pic.Variants);
                 Is(expected, imgSetFactor.ToString(), $"Failed (factor on settings): {test.Name}");
 
                 // Factor on both - should not equal, because the factor is only applied 1x
                 if (factor == null) return; // Skip if the factor has no effect
                 var imgBothFactors = svc.Img(url: ImgUrl, settings: settingsWithFactor, factor: factor,
-                    recipe: test.Pic.Srcset);
+                    recipe: test.Pic.Variants);
                 Is(expected, imgBothFactors.ToString(), $"Failed (factor on both): {test.Name}");
             });
         }
@@ -57,9 +57,9 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataRow(Img120x24x + ",\n" + Img240x48x, SrcSet12, "With Src Set 1,2")]
         [DataRow("", SrcSetNone, "No Src Set")]
         [DataTestMethod]
-        public void ImageSrcSetMultiTest(string expected, string srcset, string testName)
+        public void ImageSrcSetMultiTest(string expected, string variants, string testName)
         {
-            var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, srcset);
+            var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 var svc = Build<IImageService>();
