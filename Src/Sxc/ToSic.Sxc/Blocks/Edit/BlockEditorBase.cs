@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
@@ -15,10 +16,10 @@ namespace ToSic.Sxc.Blocks.Edit
         {
             Dependencies = dependencies;
             Dependencies.CmsRuntime.SetInit(r => r.Init(Block?.App, true, Log));
-            Dependencies.CmsManager.SetInit(m => m.Init(Block?.App, Log));
+            Dependencies.CmsManager.SetInit(r => r.Init(Block?.App, Log));
+            Dependencies.AppManager.SetInit(r => r.Init(Block?.App, Log));
         }
         public BlockEditorBaseDependencies Dependencies { get; }
-        private CmsManager CmsManager => Dependencies.CmsManager.Ready;
 
         internal BlockEditorBase Init(IBlock block)
         {
@@ -28,6 +29,9 @@ namespace ToSic.Sxc.Blocks.Edit
         }
 
         #endregion
+
+        private CmsManager CmsManager => Dependencies.CmsManager.Ready;
+        private AppManager AppManager => Dependencies.AppManager.Ready;
 
         protected IBlock Block;
 
@@ -46,7 +50,6 @@ namespace ToSic.Sxc.Blocks.Edit
             if (BlockConfiguration.Exists || forceCreateContentGroup)
             {
                 var existedBeforeSettingTemplate = BlockConfiguration.Exists;
-
                 var contentGroupGuid = CmsManager.Blocks.UpdateOrCreateContentGroup(BlockConfiguration, templateId);
 
                 if (!existedBeforeSettingTemplate) EnsureLinkToContentGroup(contentGroupGuid);
@@ -79,17 +82,18 @@ namespace ToSic.Sxc.Blocks.Edit
 
             // make sure we really have the draft item an not the live one
             var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
-            CmsManager.Entities.Publish(contDraft.RepositoryId);
+            AppManager.Entities.Publish(contDraft.RepositoryId);
 
             if (hasPresentation)
             {
                 var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
-                CmsManager.Entities.Publish(presDraft.RepositoryId);
+                AppManager.Entities.Publish(presDraft.RepositoryId);
             }
 
             return true;
         }
 
+        private AppManager BlockAppManager => Dependencies.AppManager.Ready;
 
         #endregion
 
