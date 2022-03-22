@@ -1,8 +1,10 @@
-﻿using ToSic.Eav.Apps;
+﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Repository.Efc;
 
 namespace ToSic.Sxc.Apps
 {
@@ -10,8 +12,13 @@ namespace ToSic.Sxc.Apps
     {
         private readonly LazyInit<CmsRuntime> _cmsRuntime;
 
-        public CmsManager(AppRuntimeDependencies dependencies, LazyInit<CmsRuntime> cmsRuntime) : base(dependencies,
-            "Sxc.CmsMan")
+        public CmsManager(AppRuntimeDependencies dependencies, 
+            LazyInit<AppRuntime> appRuntime,
+            LazyInit<DbDataController> dbDataController,
+            LazyInit<EntitiesManager> entitiesManager,
+            LazyInit<QueryManager> queryManager,
+            LazyInit<CmsRuntime> cmsRuntime
+            ) : base(dependencies, appRuntime, dbDataController, entitiesManager, queryManager, "Sxc.CmsMan")
         {
             _cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts, Log));
         }
