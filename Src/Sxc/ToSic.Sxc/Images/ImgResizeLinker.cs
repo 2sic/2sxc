@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Images
         public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
         {
             var wrapLog = Log.Call<OneResize>();
-            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
+            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors));
             return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
         }
 
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Call<string>();
 
-            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
+            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors));
 
             var srcSetParts = srcSetSettings?.SrcSetParsed;
 
