@@ -27,6 +27,7 @@ namespace ToSic.Sxc.WebApi.Adam
         public (string, Stream) GetStream(int i = 0)
         {
             var originalFile = Request.Files[i];
+            // TODO: sanitize fileName
             return (originalFile?.FileName, originalFile?.InputStream);
         }
     }

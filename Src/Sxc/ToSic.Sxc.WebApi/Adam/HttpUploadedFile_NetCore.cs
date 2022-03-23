@@ -21,6 +21,7 @@ namespace ToSic.Sxc.WebApi.Adam
         public (string, Stream) GetStream(int i = 0)
         {
             var originalFile = Request.Form.Files[i];
+            // TODO: sanitize fileName
             return (originalFile.FileName, originalFile.OpenReadStream());
         }
 
