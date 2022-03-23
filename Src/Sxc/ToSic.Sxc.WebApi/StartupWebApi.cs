@@ -26,6 +26,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Sys;
+using ToSic.Sxc.WebApi.Sys.Licenses;
 using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
 
@@ -109,6 +110,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ListControllerReal>();
             services.TryAddTransient(typeof(InstallControllerReal<>));
             services.TryAddTransient<BlockControllerReal>();
+            services.TryAddTransient<LicenseControllerReal>();
 
             return services;
         }
