@@ -5,6 +5,7 @@ using System.Linq;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Configuration.Licenses;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Validation;
@@ -17,15 +18,19 @@ namespace ToSic.Sxc.WebApi.Sys.Licenses
         public LicenseControllerReal(IServiceProvider serviceProvider, 
             Lazy<ILicenseService> licenseServiceLazy, 
             Lazy<IFeaturesInternal> featuresLazy,
-            Lazy<IGlobalConfiguration> globalConfiguration) : base(serviceProvider, "Bck.Lics")
+            Lazy<IGlobalConfiguration> globalConfiguration,
+            LazyInitLog<SystemLoader> systemLoaderLazy
+            ) : base(serviceProvider, "Bck.Lics")
         {
             _licenseServiceLazy = licenseServiceLazy;
             _featuresLazy = featuresLazy;
             _globalConfiguration = globalConfiguration;
+            _systemLoaderLazy = systemLoaderLazy.SetLog(Log);
         }
         private readonly Lazy<ILicenseService> _licenseServiceLazy;
         private readonly Lazy<IFeaturesInternal> _featuresLazy;
         private readonly Lazy<IGlobalConfiguration> _globalConfiguration;
+        private readonly LazyInitLog<SystemLoader> _systemLoaderLazy;
 
         /// <inheritdoc />
         public IEnumerable<LicenseDto> Summary()
@@ -104,7 +109,8 @@ namespace ToSic.Sxc.WebApi.Sys.Licenses
                 File.WriteAllText(filePath, file.Contents);
             }
 
-            // TODO: do we need to reload lic files now?
+            // reload license and features
+            _systemLoaderLazy.Ready.StartUpFeatures();
 
             return wrapLog("ok", true);
         }
