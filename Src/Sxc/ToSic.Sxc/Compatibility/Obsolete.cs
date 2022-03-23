@@ -9,6 +9,9 @@ namespace ToSic.Sxc.Compatibility
     {
         public static ILog Warning13To14(string obsoleteId, string specificId, string link, Action<ILog> addMore = null) 
             => new LogObsolete(obsoleteId, specificId, "v13", "v14 ca. middle of 2022", link, addMore).Log;
+        public static ILog Warning13To15(string obsoleteId, string specificId, string link, Action<ILog> addMore = null) 
+            => new LogObsolete(obsoleteId, specificId, "v13", "v15 ca. end of 2022", link, addMore).Log;
+
         public static ILog Killed13(string obsoleteId, string specificId, string link, Action<ILog> addMore = null) 
             => new LogObsolete(obsoleteId, specificId, "v13 EOY 2021", null, link, addMore).Log;
 
