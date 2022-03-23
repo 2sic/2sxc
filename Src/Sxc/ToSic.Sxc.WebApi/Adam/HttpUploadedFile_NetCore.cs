@@ -1,8 +1,10 @@
 ﻿#if NETSTANDARD
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using ToSic.Eav.Security.Files;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -20,9 +22,14 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public (string, Stream) GetStream(int i = 0)
         {
-            var originalFile = Request.Form.Files[i];
-            // TODO: sanitize fileName
-            return (originalFile.FileName, originalFile.OpenReadStream());
+            var file = Request.Form.Files[i];
+
+            var fileName = FileNames.SanitizeFileName(file?.FileName);
+
+            if (FileNames.IsKnownRiskyExtension(fileName))
+                throw new Exception($"File {fileName} has risky file type.");
+
+            return (fileName, file.OpenReadStream());
         }
 
     }
