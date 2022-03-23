@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public bool HasFiles() => Request.Files.Any();
 
-        public int Count => Request.Form.Count;
+        public int Count => Request.Files.Count;
 
         public (string, Stream) GetStream(int i = 0)
         {
