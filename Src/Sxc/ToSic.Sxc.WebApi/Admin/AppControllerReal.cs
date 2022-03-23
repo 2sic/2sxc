@@ -106,7 +106,7 @@ namespace ToSic.Sxc.WebApi.Admin
             var wrapLog = Log.Call<ImportResultDto>();
 
             if (!uploadInfo.HasFiles())
-                return new ImportResultDto(false, "no files uploaded");
+                return wrapLog("no file uploaded", new ImportResultDto(false, "no file uploaded"));
 
             var (_, stream) = uploadInfo.GetStream(0);
 

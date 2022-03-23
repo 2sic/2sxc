@@ -109,7 +109,7 @@ namespace ToSic.Sxc.WebApi.Admin
             var wrapLog = Log.Call<ImportResultDto>();
 
             if (!uploadInfo.HasFiles())
-                return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
+                return wrapLog("no file uploaded", new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error));
 
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < uploadInfo.Count; i++)
