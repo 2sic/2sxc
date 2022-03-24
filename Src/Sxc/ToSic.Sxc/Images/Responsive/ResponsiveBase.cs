@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Images
 
         public string Url => ThisResize.Url;
 
-        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(Call.Url, Settings, Call.Field));
+        protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(Call.Link.Url, Settings, Call.Field));
         private OneResize _thisResize;
 
         internal ResizeSettings Settings { get; }

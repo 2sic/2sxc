@@ -10,8 +10,7 @@ namespace ToSic.Sxc.Images
     [PrivateApi]
     public class ResponsiveParams
     {
-
-        public string Url { get; }
+        public IHasLink Link { get; }
 
         public IDynamicField Field { get; }
         public object Settings { get; }
@@ -22,6 +21,7 @@ namespace ToSic.Sxc.Images
 
         internal ResponsiveParams(
             string method,
+            object link,
             string noParamOrder = Parameters.Protector,
             string url = default,
             IDynamicField field = default,
@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             AdvancedSettings recipe = null)
         {
-            Field = field;
-            Url = url ?? field?.Parent.Get(field.Name) as string;
+            Field = field ?? link as IDynamicField;
+            Link = field as IHasLink ?? new HasLink(url ?? link as string);
             Settings = settings;
             Factor = factor;
             ImgAlt = imgAlt;

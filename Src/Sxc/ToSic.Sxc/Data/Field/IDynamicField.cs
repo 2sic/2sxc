@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Data
     ///
     /// This is an interface which should describe a field. It's important for APIs which can need to know more about the field holding an item. 
     /// </summary>
-    public interface IDynamicField
+    public interface IDynamicField: IHasLink
     {
         /// <summary>
         /// The field name

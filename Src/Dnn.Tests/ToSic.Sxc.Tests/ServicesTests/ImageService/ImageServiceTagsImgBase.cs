@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 // Factor set on the Img call
                 var settingsWithoutFactor = svc.Settings(width: test.Set.Width, height: test.Set.Height,
                     recipe: new Recipe(variants: test.Set.Variants));
-                var imgSetNoFactor = svc.Img(url: ImgUrl, settings: settingsWithoutFactor, factor: factor,
+                var imgSetNoFactor = svc.Img(link: ImgUrl, settings: settingsWithoutFactor, factor: factor,
                     recipe: test.Pic.Variants);
                  Is(expected, imgSetNoFactor.ToString(), $"Failed (factor on Img): {test.Name}");
 
@@ -26,12 +26,12 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 var settingsWithFactor = svc.Settings(factor: factor, width: test.Set.Width,
                     height: test.Set.Height,
                     recipe: new Recipe(variants: test.Set.Variants));
-                var imgSetFactor = svc.Img(url: ImgUrl, settings: settingsWithFactor, recipe: test.Pic.Variants);
+                var imgSetFactor = svc.Img( link: ImgUrl, settings: settingsWithFactor, recipe: test.Pic.Variants);
                 Is(expected, imgSetFactor.ToString(), $"Failed (factor on settings): {test.Name}");
 
                 // Factor on both - should not equal, because the factor is only applied 1x
                 if (factor == null) return; // Skip if the factor has no effect
-                var imgBothFactors = svc.Img(url: ImgUrl, settings: settingsWithFactor, factor: factor,
+                var imgBothFactors = svc.Img(link: ImgUrl, settings: settingsWithFactor, factor: factor,
                     recipe: test.Pic.Variants);
                 Is(expected, imgBothFactors.ToString(), $"Failed (factor on both): {test.Name}");
             });
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             {
                 var svc = Build<IImageService>();
                 var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height, recipe: test.Set.SrcSetRule);
-                var img = svc.Img(url: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule);
+                var img = svc.Img(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule);
                 AreEqual(expected.Replace("&amp;", "&"), img.Srcset, $"Failed: {test.Name}");
             });
         }

@@ -17,14 +17,39 @@ namespace ToSic.Sxc.Data
 
         public IDynamicEntity Parent { get; }
 
+        public object Raw
+        {
+            get
+            {
+                if (_rawRetrieved) return _raw;
+                _rawRetrieved = true;
+                return _raw = Parent.Get(Name, convertLinks: false);
+            }
+        }
+        private object _raw;
+        private bool _rawRetrieved;
+
+        public string Url
+        {
+            get
+            {
+                if(_urlRetrieved) return _url;
+                _urlRetrieved = true;
+                return _url = Parent.Get(Name, convertLinks: true) as string;
+            }
+        }
+
+        private string _url;
+        private bool _urlRetrieved;
+
+
         public IMetadataOf MetadataOfItem()
         {
             if(_metadataOfItem != null) return _metadataOfItem;
             var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
             if (app == null) return null;
 
-            var value = Parent.Get(Name, convertLinks: false);
-            if (value == null) return null;
+            var value = Raw;
 
             if(!(value is string valString) || string.IsNullOrWhiteSpace(valString)) return null;
 
@@ -46,5 +71,6 @@ namespace ToSic.Sxc.Data
         }
         private ImageDecorator _imgDec;
         private bool _imgDecTried;
+
     }
 }

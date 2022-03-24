@@ -16,10 +16,10 @@ namespace ToSic.Sxc.Images
         }
 
 
-        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Call.Url, Settings), Img));
+        public Picture Picture => _pictureTag ?? (_pictureTag = Tag.Picture(SourceTagsInternal(Call.Link.Url, Settings), Img));
         private Picture _pictureTag;
 
-        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(Call.Url, Settings));
+        public TagList Sources => _sourceTags ?? (_sourceTags = SourceTagsInternal(Call.Link.Url, Settings));
         private TagList _sourceTags;
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)

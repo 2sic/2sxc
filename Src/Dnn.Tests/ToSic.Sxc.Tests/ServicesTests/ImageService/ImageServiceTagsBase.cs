@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void UrlResized()
         {
             var svc = Build<IImageService>();
-            var url = TestModeImg ? svc.Img(url: ImgUrl).Url : svc.Picture(url: ImgUrl).Url;
+            var url = TestModeImg ? svc.Img(link: ImgUrl).Url : svc.Picture(link: ImgUrl).Url;
             AreEqual(ImgUrl, url);
         }
 
@@ -47,8 +47,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
             const string imgAlt = "test-alt";
             var svc = Build<IImageService>();
             var result = TestModeImg 
-                ? svc.Img(url: ImgUrl, imgAlt: imgAlt).ToString()
-                : svc.Picture(url: ImgUrl, imgAlt: imgAlt).Img.ToString();
+                ? svc.Img(link: ImgUrl, imgAlt: imgAlt).ToString()
+                : svc.Picture(link: ImgUrl, imgAlt: imgAlt).Img.ToString();
             AreEqual($"<img src='{ImgUrl}' alt='{imgAlt}'>", result);
         }
 
@@ -58,8 +58,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var svc = Build<IImageService>();
             var cls = "class-dummy";
             var result = TestModeImg
-                ? svc.Img(url: ImgUrl, imgClass: cls).ToString()
-                : svc.Picture(url: ImgUrl, imgClass: cls).Img.ToString();
+                ? svc.Img( link: ImgUrl, imgClass: cls).ToString()
+                : svc.Picture( link: ImgUrl, imgClass: cls).Img.ToString();
             AreEqual($"<img src='{ImgUrl}' class='{cls}'>", result);
         }
 
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var svc = Build<IImageService>();
             var rule = new Recipe(variants: variants);
             var settings = svc.Settings(width: 120, height: 24, recipe: inPicTag ? null : rule);
-            var pic = svc.Picture(url: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
+            var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
 
             var expected = $"<picture>{expectedParts}<img src='{Img120x24}'></picture>";
             AreEqual(expected, pic.ToString(), $"Test failed: {testName}");
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 var svc = Build<IImageService>();
                 var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height,
                     recipe: test.Set.SrcSetRule);
-                var sources = svc.Picture(url: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
+                var sources = svc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;
 
                 AreEqual(expected, sources.ToString(), $"Failed: {test.Name}");
 

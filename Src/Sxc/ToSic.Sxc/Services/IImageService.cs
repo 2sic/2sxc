@@ -97,30 +97,40 @@ namespace ToSic.Sxc.Services
         /// 
         /// The resulting object can just be added to the html, like `@pic` or you can work with sub-properties as specified in the <see cref="IResponsivePicture"/>
         /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="url">The image url</param>
-        /// <param name="field"></param>
-        /// <param name="settings">
-        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
-        /// - The name of a settings configuration, like "Content" or "Screen"
-        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
+        /// <param name="link">
+        ///     What should be in this, can be:
         /// 
-        /// Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
+        ///     - a string url, in which case it would be used if `url` is not specified
+        ///     - a <see cref="IDynamicField"/> in which case it would be used if `field` is not specified
+        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="settings">
+        ///     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        ///     - The name of a settings configuration, like "Content" or "Screen"
+        ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
+        /// 
+        ///     Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
-        /// <param name="recipe"></param>
-        /// <param name="srcset">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
+        /// <param name="recipe">
+        ///     Optional recipe = instructions how to create the various variants of this link.
+        ///     Can be any one of these:
+        /// 
+        ///     - string containing variants
+        ///     - Rule object
+        /// 
+        ///     TODO: DOCS not quite ready
+        /// </param>
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
         /// </remarks>
         IResponsivePicture Picture(
+            object link = null,
             string noParamOrder = Eav.Parameters.Protector,
-            string url = default,
-            IDynamicField field = default,
             object settings = default,
             object factor = default,
             string imgAlt = default,
@@ -133,30 +143,40 @@ namespace ToSic.Sxc.Services
         /// 
         /// The resulting object can just be added to the html, like `@img` or you can work with sub-properties as specified in the <see cref="IResponsiveImage"/>
         /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="url">The image url.</param>
-        /// <param name="field"></param>
-        /// <param name="settings">
-        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
-        /// - The name of a settings configuration, like "Content" or "Screen"
-        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
+        /// <param name="link">
+        ///     What should be in this, can be:
         /// 
-        /// Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
+        ///     - a string url, in which case it would be used if `url` is not specified
+        ///     - a <see cref="IDynamicField"/> in which case it would be used if `field` is not specified
+        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="settings">
+        ///     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        ///     - The name of a settings configuration, like "Content" or "Screen"
+        ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
+        /// 
+        ///     Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
-        /// <param name="recipe"></param>
-        /// <param name="srcset">Optional string to configure what `srcset`s to generate - see [](xref:NetCode.Images.SrcSet) (note it's `srcset`, not `srcSet`)</param>
+        /// <param name="recipe">
+        ///     Optional recipe = instructions how to create the various variants of this link.
+        ///     Can be any one of these:
+        /// 
+        ///     - string containing variants
+        ///     - Rule object
+        /// 
+        ///     TODO: DOCS not quite ready
+        /// </param>
         /// <returns>A ResponsiveImage object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
         /// History: Added in 2sxc 13.03
         /// </remarks>
         IResponsiveImage Img(
+            object link = null,
             string noParamOrder = Eav.Parameters.Protector,
-            string url = default,
-            IDynamicField field = default,
             object settings = default,
             object factor = default,
             string imgAlt = default,

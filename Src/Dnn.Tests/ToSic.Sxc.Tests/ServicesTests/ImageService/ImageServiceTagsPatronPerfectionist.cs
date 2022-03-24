@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var set = ResizeRecipesData.TestRecipeSet();
             var svc = Build<IImageService>();
-            var img = svc.Img(url: "test.jpg", factor: factor, recipe: set);
+            var img = svc.Img(link: "test.jpg", factor: factor, recipe: set);
             Is(expected, img.ToString(), name);
         }
 
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                     { "sizes", "100vw" }
                 });
             var svc = Build<IImageService>();
-            var img = svc.Img(url: "test.jpg", factor: 0.5, recipe: recipe, imgClass: "added");
+            var img = svc.Img(link: "test.jpg", factor: 0.5, imgClass: "added", recipe: recipe);
             Is("<img src='test.jpg?w=1000' class='img-fluid added' width='1000' srcset='test.jpg?w=1000 1x' sizes='100vw'>", img.ToString(), "test");
 
         }

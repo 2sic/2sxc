@@ -66,30 +66,26 @@ namespace ToSic.Sxc.Images
 
 
 
-        public IResponsivePicture Picture(
-            string noParamOrder = Parameters.Protector,
-            string url = default,
-            IDynamicField field = default,
+        public IResponsivePicture Picture(object link = null,
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
             object settings = null,
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
             object recipe = null)
             => new ResponsivePicture(this,
-                new ResponsiveParams(nameof(Picture), noParamOrder, url, field, GetBestSettings(settings), factor, imgAlt, imgClass,
+                new ResponsiveParams(nameof(Picture), link, noParamOrder, null, null, GetBestSettings(settings), factor, imgAlt, imgClass,
                     ToMRS(recipe)));
 
-        public IResponsiveImage Img(
-            string noParamOrder = Parameters.Protector,
-            string url = default,
-            IDynamicField field = default,
+        public IResponsiveImage Img(object link = null,
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
             object settings = null,
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
             object recipe = null)
             => new ResponsiveImage(this,
-                new ResponsiveParams(nameof(Img), noParamOrder, url, field, GetBestSettings(settings), factor, imgAlt, imgClass,
+                new ResponsiveParams(nameof(Img), link, noParamOrder, null, null, GetBestSettings(settings), factor, imgAlt, imgClass,
                     ToMRS(recipe)));
 
 
