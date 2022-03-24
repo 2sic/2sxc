@@ -3,8 +3,8 @@ using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Http;
-using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.Sys.Licenses;
+using ToSic.Eav.WebApi.Adam;
+using ToSic.Eav.WebApi.Sys.Licenses;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {

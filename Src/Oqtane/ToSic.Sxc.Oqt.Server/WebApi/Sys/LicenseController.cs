@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Routing;
+using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.Sys.Licenses;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
