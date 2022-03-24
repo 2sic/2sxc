@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             var currentFolderDto = dtoMaker.Create(currentFolder);
             currentFolderDto.Name = ".";
-            currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
+            //currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
             allDtos.Insert(0, currentFolderDto);
 
             var adamFolders = subfolders
@@ -59,8 +59,8 @@ namespace ToSic.Sxc.WebApi.Adam
                 .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))
                 .Select(f =>
                 {
-                    var dto = dtoMaker.Create(f/*, State*/);
-                    dto.MetadataId = (int)f.Metadata.EntityId;
+                    var dto = dtoMaker.Create(f);
+                    //dto.MetadataId = (int)f.Metadata.EntityId;
                     return dto;
                 })
                 .ToList();
@@ -71,8 +71,8 @@ namespace ToSic.Sxc.WebApi.Adam
                 .Select(f =>
                 {
                     var dto = dtoMaker.Create(f);
-                    dto.MetadataId = (int)f.Metadata.EntityId;
-                    dto.Type = Classification.TypeName(f.Extension);
+                    //dto.MetadataId = (int)f.Metadata.EntityId;
+                    //dto.Type = Classification.TypeName(f.Extension);
                     return dto;
                 })
                 .ToList();
