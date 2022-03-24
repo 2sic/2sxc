@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.WebApi;
