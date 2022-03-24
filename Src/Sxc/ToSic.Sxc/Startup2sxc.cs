@@ -75,6 +75,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
             services.TryAddTransient<ContextOfApp.ContextOfAppDependencies>();
+            services.TryAddTransient<ContextOfSite.ContextOfSiteDependencies>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();

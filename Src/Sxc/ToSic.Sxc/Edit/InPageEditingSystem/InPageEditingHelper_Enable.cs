@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (forms == true)
             {
                 var feats = new[] { FeaturesCatalog.PublicEditForm.Guid };
-                var features = Block.Context.ServiceProvider.Build<IFeaturesInternal>();
+                var features = Block.Context.Dependencies.FeaturesInternalGenerator.New;
                 if (!features.Enabled(feats, "public forms not available", out var exp))
                     throw exp;
             }
