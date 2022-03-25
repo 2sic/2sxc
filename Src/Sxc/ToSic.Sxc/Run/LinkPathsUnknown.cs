@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Run
             throw new NotImplementedException();
         }
 
-        // Mock CurrentPage
+        // Stub CurrentPage
         public string GetCurrentRequestUrl() => LinkHelperUnknown.NiceCurrentUrl;
 
-        // Mock DomainName
+        // Stub DomainName
         public string GetCurrentLinkRoot() => LinkHelperUnknown.DefRoot;
     }
 }
