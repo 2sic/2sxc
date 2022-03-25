@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Apps
     public partial class App : EavApp, IApp
     {
         #region DI Constructors
-
+        [PrivateApi]
         public App(IServiceProvider serviceProvider, AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy, Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy) : base(dependencies, "App.SxcApp")
         {
             _serviceProvider = serviceProvider;
@@ -39,6 +39,7 @@ namespace ToSic.Sxc.Apps
         private AppPaths _appPaths;
         private AppPaths AppPaths => _appPaths ?? (_appPaths = _appPathsLazy.Value.Init(Site, AppState, Log));
 
+        [PrivateApi]
         public App PreInit(ISite site)
         {
             Site = site;

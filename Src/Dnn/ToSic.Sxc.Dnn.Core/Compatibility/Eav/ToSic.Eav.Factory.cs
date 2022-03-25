@@ -23,7 +23,7 @@ namespace ToSic.Eav
 
         [PrivateApi("Removed v13.02 - should not be in use, completely remove ca. July 2022")]
 	    public static void ActivateNetCoreDi(ServiceConfigurator configure) =>
-            Killed13(nameof(ActivateNetCoreDi), "", "https://r.2sxc.org/brc-13-eav-startup");
+            Killed13(nameof(ActivateNetCoreDi), "", "https://r.2sxc.org/brc-13-eav-factory-startup");
 
         /// <summary>
         /// Dependency Injection resolver with a known type as a parameter.
