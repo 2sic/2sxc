@@ -13,6 +13,7 @@ using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Cms;
 using ToSic.Sxc.Oqt.Server.Data;
 using ToSic.Sxc.Oqt.Server.Integration;
+using ToSic.Sxc.Oqt.Server.Polymorphism;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Run;
@@ -70,11 +71,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // Views / Templates / Razor: Polymorphism Resolvers
             services.TryAddTransient<Sxc.Polymorphism.Koi>();
             services.TryAddTransient<Polymorphism.Permissions>();
-            try
-            {
-                services.ActivateKoi2Di();
-            }
-            catch { /* ignore */ }
+            //services.ActivateKoi2Di();
+            services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();
 
             return services;
         }

@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Connect.Koi;
+using Connect.Koi.Detectors;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
@@ -63,6 +66,9 @@ namespace ToSic.Sxc
 
             // v13.04
             services.TryAddTransient<IUserInformationService, UserInformationServiceUnknown>();
+
+            // Koi, mainly so tests don't fail
+            services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
             return services;
         }

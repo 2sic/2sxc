@@ -176,11 +176,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // new in v12 - .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
 
-            // new in v12 - different way to integrate KOI - experimental!
-            try
-            {
-                services.ActivateKoi2Di();
-            } catch { /* ignore */ }
+            // Integrate KOI Dnn-Parts
+            services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
+            //services.ActivateKoi2Di();
             
             // new in v12.02 - RazorBlade DI
             services.TryAddScoped<DnnPageChanges>();
