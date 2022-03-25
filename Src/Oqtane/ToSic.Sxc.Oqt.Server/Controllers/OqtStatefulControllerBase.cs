@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Blocks;
@@ -33,6 +32,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected IBlock BlockOptional { get; private set; }
 
         protected IApp GetApp(int appId)
-            => GetService<Sxc.Apps.App>().Init(ServiceProvider, appId, Log, BlockOptional);
+            => GetService<Apps.App>().Init(appId, Log, BlockOptional);
     }
 }

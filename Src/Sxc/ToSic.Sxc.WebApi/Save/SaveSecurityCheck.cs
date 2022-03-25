@@ -9,7 +9,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.WebApi.Save
 {
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.WebApi.Save
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
             var sp = Context.ServiceProvider;
-            var app = sp.Build<Apps.App>().Init(sp, appId, Log, null, Context.UserMayEdit);
+            var app = sp.Build<Apps.App>().Init(appId, Log, null, Context.UserMayEdit);
             var permCheck = sp.Build<MultiPermissionsTypes>().Init(Context, app, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);

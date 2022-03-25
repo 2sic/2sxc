@@ -216,7 +216,7 @@ namespace ToSic.Sxc.WebApi.App
         /// used for API calls to get the current app
         /// </summary>
         /// <returns></returns>
-        internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(ServiceProvider, appId, Log, null, showDrafts);
+        internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(appId, Log, null, showDrafts);
 
         // TODO: THIS SHOULD probably replace The GetApp above, as it's just an indirect way of getting the data-controller?
         private SimpleDataController DataController(IAppIdentity app) => _dataController ?? (_dataController = _dataControllerLazy.Ready.Init(app.ZoneId, app.AppId));
