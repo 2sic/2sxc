@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             => base.ImageTagMultiTest(expected, variants, factor, testName);
 
         [DataRow(Img120x24x + ",\n" + Img240x48x, SrcSet12, "With Src Set 1,2")]
-        [DataRow("", SrcSetNone, "No Src Set")]
+        [DataRow(null, SrcSetNone, "No Src Set")]
         [DataTestMethod]
         public new void ImageSrcSetMultiTest(string expected, string variants, string testName) 
             => base.ImageSrcSetMultiTest(expected, variants, testName);

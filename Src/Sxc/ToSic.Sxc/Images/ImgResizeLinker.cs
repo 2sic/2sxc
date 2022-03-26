@@ -116,6 +116,7 @@ namespace ToSic.Sxc.Images
             {
                 resizeMode = ImageConstants.ModeMax;
                 one.ShowAll = true;
+                one.Height = 0; // if we show all, the height may not match crop-height
             }
 
             var resizerNvc = new NameValueCollection();

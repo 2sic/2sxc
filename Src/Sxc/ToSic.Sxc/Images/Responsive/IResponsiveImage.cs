@@ -24,13 +24,27 @@ namespace ToSic.Sxc.Images
         Img Img { get; }
 
         /// <summary>
+        /// Determines if the image should be shown entirely.
+        /// This usually means that the image is a logo or something, so cropping was not an option.
+        /// This also usually means that the aspect ratio / height may be different than expected
+        /// </summary>
+        bool ShowAll { get; }
+
+        /// <summary>
+        /// The image height, if it should be set at all. Will be null otherwise. 
+        /// </summary>
+        string Height { get; }
+
+        /// <summary>
+        /// The image width, if it should be set at all. Will be null otherwise. 
+        /// </summary>
+        string Width { get; }
+
+        /// <summary>
         /// The SrcSet in case you need to use it in your own custom img-tag.
         /// Note that it will be an empty string, if the image has no reason to have a srcset
         /// </summary>
-        /// <remarks>
-        /// Note that it's `Srcset` and _not_ `SrcSet` to be consistent with RazorBlade
-        /// </remarks>
-        string Srcset { get; }
+        string SrcSet { get; }
 
         /// <summary>
         /// The main url, used for main `src` property

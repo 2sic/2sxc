@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Images
 
             return ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: settings, factor: factor,
                 width: width, height: height, quality: quality, resizeMode: resizeMode,
-                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: ToMRS(recipe));
+                scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: ToAdv(recipe));
         }
 
     }

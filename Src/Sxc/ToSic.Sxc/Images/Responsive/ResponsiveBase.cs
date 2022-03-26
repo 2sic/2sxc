@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Plumbing;
@@ -7,7 +9,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
 {
-    public abstract class ResponsiveBase: HybridHtmlString
+    public abstract class ResponsiveBase: HybridHtmlString, IResponsiveImage
     {
 
         protected ResponsiveBase(ImageService imgService, ResponsiveParams responsiveParams)
@@ -15,14 +17,11 @@ namespace ToSic.Sxc.Images
             Call = responsiveParams;
             ImgService = imgService;
             ImgLinker = imgService.ImgLinker;
-            Settings = PrepareResizeSettings(Call.Settings, Call.Factor, Call.Recipe);
-
+            Settings = PrepareResizeSettings(Call.Settings, Call.Factor, Call.Advanced);
         }
         protected ResponsiveParams Call { get; }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
-
-        public string Url => ThisResize.Url;
 
         protected OneResize ThisResize => _thisResize ?? (_thisResize = ImgLinker.ImageOnly(Call.Link.Url, Settings, Call.Field));
         private OneResize _thisResize;
@@ -30,17 +29,17 @@ namespace ToSic.Sxc.Images
         internal ResizeSettings Settings { get; }
 
 
-        protected ResizeSettings PrepareResizeSettings(object settings, object factor, AdvancedSettings mrs)
+        protected ResizeSettings PrepareResizeSettings(object settings, object factor, AdvancedSettings advanced)
         {
             // 1. Prepare Settings
             if (settings is ResizeSettings resSettings)
             {
                 // If we have a modified factor, make sure we have that (this will copy the settings)
                 var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
-                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, mrs);
+                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, advanced);
             }
             else
-                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, /*allowMulti: true,*/ advanced: mrs);
+                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: advanced);
 
             return resSettings;
         }
@@ -51,6 +50,7 @@ namespace ToSic.Sxc.Images
         /// <returns></returns>
         public abstract override string ToString();
 
+        /// <inheritdoc />
         public virtual Img Img
         {
             get
@@ -76,14 +76,45 @@ namespace ToSic.Sxc.Images
                 if (Call.ImgClass != null) _imgTag.Class(Call.ImgClass);
 
                 // Optionally set width and height if known
-                if (tag?.SetWidth == true && ThisResize.Width != 0) _imgTag.Width(ThisResize.Width);
-                if (tag?.SetHeight == true && ThisResize.Height != 0) _imgTag.Height(ThisResize.Height);
+                if (Width != null) _imgTag.Width(Width);
+                if (Height != null) _imgTag.Height(Height);
 
                 return _imgTag;
             }
         }
-
         private Img _imgTag;
+
+
+        /// <inheritdoc />
+        public bool ShowAll => ThisResize.ShowAll;
+
+        /// <inheritdoc />
+        public string SrcSet => _srcSet.Get(() =>
+            ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId)
+                ? string.IsNullOrWhiteSpace(ThisResize?.TagEnhancements?.Variants)
+                    ? null
+                    : ImgLinker.SrcSet(Call.Link.Url, Settings, SrcSetType.Img, Call.Field)
+                : null);
+        private readonly PropertyToRetrieveOnce<string> _srcSet = new PropertyToRetrieveOnce<string>();
+
+
+        /// <inheritdoc />
+        public string Width => _width.Get(() =>
+            ThisResize.TagEnhancements?.SetWidth == true && ThisResize.Width != 0
+                ? ThisResize.Width.ToString()
+                : null);
+        private readonly PropertyToRetrieveOnce<string> _width = new PropertyToRetrieveOnce<string>();
+
+
+        /// <inheritdoc />
+        public string Height => _height.Get(() =>
+            ThisResize.TagEnhancements?.SetHeight == true && ThisResize.Height != 0
+                ? ThisResize.Height.ToString()
+                : null);
+        private readonly PropertyToRetrieveOnce<string> _height = new PropertyToRetrieveOnce<string>();
+
+        /// <inheritdoc />
+        public string Url => ThisResize.Url;
 
     }
 }

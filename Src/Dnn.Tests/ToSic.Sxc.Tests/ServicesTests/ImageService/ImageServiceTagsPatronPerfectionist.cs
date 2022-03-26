@@ -45,22 +45,27 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var set = ResizeRecipesData.TestRecipeSet();
             var svc = Build<IImageService>();
-            var img = svc.Img(link: "test.jpg", factor: factor, recipe: set);
+            var img = svc.Img("test.jpg", factor: factor, recipe: set);
             Is(expected, img.ToString(), name);
         }
 
-        [TestMethod]
-        public void ImgWhichShouldSetWidth()
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", false, false, "neither")]
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' width='1000' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", true, false, "Width only")]
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' height='500' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", false, true, "Height only")]
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' width='1000' height='500' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", true, true, "both")]
+        [DataTestMethod]
+        public void ImgWhichShouldSetWidth(string expected, bool setWidth, bool setHeight, string name)
         {
-            var recipe = new Recipe(width: 1000, variants: "1", setWidth: true,
+            var recipe = new Recipe(width: 1000, variants: "1", setWidth: setWidth, setHeight: setHeight,
                 attributes: new Dictionary<string, object>
                 {
-                    { "class", "img-fluid" }, 
+                    { "class", "img-fluid" },
                     { "sizes", "100vw" }
                 });
             var svc = Build<IImageService>();
-            var img = svc.Img(link: "test.jpg", factor: 0.5, imgClass: "added", recipe: recipe);
-            Is("<img src='test.jpg?w=1000' class='img-fluid added' width='1000' srcset='test.jpg?w=1000 1x' sizes='100vw'>", img.ToString(), "test");
+            var settings = svc.Settings(aspectRatio: 2 / 1);
+            var img = svc.Img("test.jpg", settings: settings, factor: 0.5, imgClass: "added", recipe: recipe);
+            Is(expected, img.ToString(), name);
 
         }
 

@@ -1,5 +1,4 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -60,7 +59,7 @@ namespace ToSic.Sxc.Images
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private AdvancedSettings ToMRS(object value) => AdvancedSettings.Parse(value);
+        private AdvancedSettings ToAdv(object value) => AdvancedSettings.Parse(value);
 
         #endregion
 
@@ -75,7 +74,7 @@ namespace ToSic.Sxc.Images
             object recipe = null)
             => new ResponsivePicture(this,
                 new ResponsiveParams(nameof(Picture), link, noParamOrder, null, null, GetBestSettings(settings), factor, imgAlt, imgClass,
-                    ToMRS(recipe)));
+                    ToAdv(recipe)));
 
         public IResponsiveImage Img(object link = null,
             string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
@@ -86,7 +85,7 @@ namespace ToSic.Sxc.Images
             object recipe = null)
             => new ResponsiveImage(this,
                 new ResponsiveParams(nameof(Img), link, noParamOrder, null, null, GetBestSettings(settings), factor, imgAlt, imgClass,
-                    ToMRS(recipe)));
+                    ToAdv(recipe)));
 
 
         // 2022-03-19 2dm - not ready yet
@@ -97,11 +96,11 @@ namespace ToSic.Sxc.Images
         //    object recipe = null
         //) => new HybridHtmlString(ImgLinker.SrcSet(url, MergeSettings(settings, factor: factor, recipe: recipe), SrcSetType.Img));
 
-        private ResizeSettings MergeSettings(
-            object settings = null,
-            string noParamOrder = Parameters.Protector,
-            object factor = null, 
-            object recipe = null
-        ) => ImgLinker.ResizeParamMerger.BuildResizeSettings(GetBestSettings(settings), factor: factor, advanced: ToMRS(recipe));
+        //private ResizeSettings MergeSettings(
+        //    object settings = null,
+        //    string noParamOrder = Parameters.Protector,
+        //    object factor = null, 
+        //    object recipe = null
+        //) => ImgLinker.ResizeParamMerger.BuildResizeSettings(GetBestSettings(settings), factor: factor, advanced: ToAdv(recipe));
     }
 }

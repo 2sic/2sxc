@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Images
         public object Factor { get; }
         public string ImgAlt { get; }
         public string ImgClass { get; }
-        public AdvancedSettings Recipe { get; }
+        public AdvancedSettings Advanced { get; }
 
         internal ResponsiveParams(
             string method,
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Images
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
-            AdvancedSettings recipe = null)
+            AdvancedSettings advanced = null)
         {
             Field = field ?? link as IDynamicField;
             Link = (IHasLink)Field ?? new HasLink(url ?? link as string);
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Images
             Factor = factor;
             ImgAlt = imgAlt;
             ImgClass = imgClass;
-            Recipe = recipe;
+            Advanced = advanced;
             WarningParamsPicImg(method, noParamOrder);
         }
 

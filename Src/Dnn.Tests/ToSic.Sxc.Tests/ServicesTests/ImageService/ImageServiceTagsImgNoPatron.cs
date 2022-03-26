@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
     [TestClass]
     public class ImageServiceTagsImgNoPatron : ImageServiceTagsImgBase
     {
-        // Start the test with a platform-info that has WebP support
+        // Start the test with a platform-info that has no patron
         protected override IServiceCollection SetupServices(IServiceCollection services)
         {
             return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformNotPatron>();
@@ -23,8 +23,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public new void ImageTagMultiTest(string expected, string variants, object factor, string testName) 
             => base.ImageTagMultiTest(expected, variants, factor, testName);
 
-        [DataRow(Img120x24x + ",\n" + Img240x48x, SrcSet12, "With Src Set 1,2")]
-        [DataRow("", SrcSetNone, "No Src Set")]
+        [DataRow(null, SrcSet12, "With Src Set 1,2, no patron")]
+        [DataRow(null, SrcSetNone, "No Src Set, no patron")]
         [DataTestMethod]
         public new void ImageSrcSetMultiTest(string expected, string variants, string testName) 
             => base.ImageSrcSetMultiTest(expected, variants, testName);

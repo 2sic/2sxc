@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 var svc = Build<IImageService>();
                 var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height, recipe: test.Set.SrcSetRule);
                 var img = svc.Img(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule);
-                AreEqual(expected.Replace("&amp;", "&"), img.Srcset, $"Failed: {test.Name}");
+                AreEqual(expected?.Replace("&amp;", "&"), img.SrcSet, $"Failed: {test.Name}");
             });
         }
 

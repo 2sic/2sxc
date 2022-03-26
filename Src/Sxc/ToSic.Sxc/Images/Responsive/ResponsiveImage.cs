@@ -2,8 +2,6 @@
 using ToSic.Eav.Documentation;
 using ToSic.Razor.Html5;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Images
 {
     public class ResponsiveImage: ResponsiveBase, IResponsiveImage
@@ -23,12 +21,9 @@ namespace ToSic.Sxc.Images
                 if (_img != null) return _img;
                 _img = base.Img;
 
-                if (ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId))
-                {
-                    var srcSetValue = Srcset;
-                    if (!string.IsNullOrEmpty(srcSetValue)) _img = _img.Srcset(srcSetValue);
-                }
-                
+                if (!string.IsNullOrEmpty(SrcSet)) _img = _img.Srcset(SrcSet);
+
+                // TODO: MAYBE move sizes to a public property?
                 if (ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceSetSizes.NameId))
                 {
                     var sizes = ThisResize?.TagEnhancements?.Sizes;
@@ -41,13 +36,6 @@ namespace ToSic.Sxc.Images
 
         private Img _img;
 
-        /// <inheritdoc />
-        public string Srcset => _srcSetCache
-                                ?? (_srcSetCache = string.IsNullOrWhiteSpace(ThisResize?.TagEnhancements?.Variants)
-                                    ? ""
-                                    : ImgLinker.SrcSet(Call.Link.Url, Settings, SrcSetType.Img, Call.Field)
-                                );
-        private string _srcSetCache;
 
         public override string ToString() => Img.ToString();
     }
