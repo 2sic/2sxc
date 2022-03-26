@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Images
                 : new[] { (double?)null };
 
             // Get PiggyBack cache to rarely rerun LINQ
-            var pgb = resizeSettings.PiggyBack;
+            var pgb = multiSettings.PiggyBack;
 
             // Loop all combinations
             foreach (var cssFw in frameworks)

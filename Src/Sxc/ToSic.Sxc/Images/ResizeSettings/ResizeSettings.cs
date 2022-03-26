@@ -66,8 +66,5 @@ namespace ToSic.Sxc.Images
             Advanced = multi ?? Advanced;
         }
 
-        public PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
-        private PiggyBack _piggyBack;
-
     }
 }
