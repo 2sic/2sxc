@@ -68,14 +68,9 @@ namespace ToSic.Sxc.Images
                     foreach (var a in dic)
                         _imgTag.Attr(a.Key, a.Value);
 
-                // Only add these if they were really specified
-                var imgAlt = Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull()?.Description;
-                if (imgAlt != null) _imgTag.Alt(imgAlt);
-                
-                // Note that adding a class will keep previous class added
-                if (Call.ImgClass != null) _imgTag.Class(Call.ImgClass);
-
-                // Optionally set width and height if known
+                // Only add these if they were really specified / known
+                if (Alt != null) _imgTag.Alt(Alt);
+                if (Class != null) _imgTag.Class(Class);
                 if (Width != null) _imgTag.Width(Width);
                 if (Height != null) _imgTag.Height(Height);
 
@@ -83,6 +78,23 @@ namespace ToSic.Sxc.Images
             }
         }
         private Img _imgTag;
+
+
+        /// <inheritdoc />
+        public string Alt => _alt.Get(() => Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull()?.Description);
+        private readonly PropertyToRetrieveOnce<string> _alt = new PropertyToRetrieveOnce<string>();
+
+
+        /// <inheritdoc />
+        public string Class => _imgClass.Get(() =>
+        {
+            var part1 = Call.ImgClass;
+            object part2 = null;
+            var hasOnDic = ThisResize.TagEnhancements?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out part2) ?? false;
+            var hasBoth = !string.IsNullOrEmpty(Call.ImgClass) && hasOnDic;
+            return part1 + (hasBoth ? " " : "") + (part2 as string);
+        });
+        private readonly PropertyToRetrieveOnce<string> _imgClass = new PropertyToRetrieveOnce<string>();
 
 
         /// <inheritdoc />

@@ -26,7 +26,8 @@ namespace ToSic.Sxc.Images
         // Special properties which are only added to the tag if activated in settings
         [PrivateApi] public const string SpecialPropertySizes = "sizes";
         [PrivateApi] public const string SpecialPropertyMedia = "media";
-        [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia };
+        [PrivateApi] public const string SpecialPropertyClass = "class";
+        [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia, SpecialPropertyClass };
 
         /// <summary>
         /// ## Important: If you call this from your code, always use named parameters, as the parameter order can change in future

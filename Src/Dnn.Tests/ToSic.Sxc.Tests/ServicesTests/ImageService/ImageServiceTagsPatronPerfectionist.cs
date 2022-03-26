@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             => PictureTagInner(expected, variants, inPicTag, name);
 
 
-        [DataRow("<img src='test.jpg?w=678' class='img-fluid' test='value'>", 0.75, "0.75 with attributes")]
+        [DataRow("<img src='test.jpg?w=678' test='value' class='img-fluid'>", 0.75, "0.75 with attributes")]
         [DataTestMethod]
         public void ImgWhichShouldAutoGetAttributes(string expected, double factor, string name)
         {
@@ -49,10 +49,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
             Is(expected, img.ToString(), name);
         }
 
-        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", false, false, "neither")]
-        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' width='1000' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", true, false, "Width only")]
-        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' height='500' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", false, true, "Height only")]
-        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='img-fluid added' width='1000' height='500' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", true, true, "both")]
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='manual img-fluid' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", false, false, "neither")]
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='manual img-fluid' width='1000' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", true, false, "Width only")]
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='manual img-fluid' height='500' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", false, true, "Height only")]
+        [DataRow("<img src='test.jpg?w=1000&amp;h=500' class='manual img-fluid' width='1000' height='500' srcset='test.jpg?w=1000&amp;h=500 1x' sizes='100vw'>", true, true, "both")]
         [DataTestMethod]
         public void ImgWhichShouldSetWidth(string expected, bool setWidth, bool setHeight, string name)
         {
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                 });
             var svc = Build<IImageService>();
             var settings = svc.Settings(aspectRatio: 2 / 1);
-            var img = svc.Img("test.jpg", settings: settings, factor: 0.5, imgClass: "added", recipe: recipe);
+            var img = svc.Img("test.jpg", settings: settings, factor: 0.5, imgClass: "manual", recipe: recipe);
             Is(expected, img.ToString(), name);
 
         }
