@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             => PictureTagInner(expected, variants, inPicTag, name);
 
 
-        [DataRow("<img src='test.jpg?w=777' class='img-fluid' test='value'>", 0.75, "0.75 with attributes")]
+        [DataRow("<img src='test.jpg?w=678' class='img-fluid' test='value'>", 0.75, "0.75 with attributes")]
         [DataTestMethod]
         public void ImgWhichShouldAutoGetAttributes(string expected, double factor, string name)
         {

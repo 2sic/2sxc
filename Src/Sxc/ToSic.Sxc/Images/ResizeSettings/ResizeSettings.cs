@@ -64,6 +64,7 @@ namespace ToSic.Sxc.Images
             Advanced = multi ?? Advanced;
         }
 
-        public Recipe Find(SrcSetType srcSetType, bool useFactors) => ResizeSettingsHelper.Find(this, srcSetType, useFactors);
+        //public Recipe Find(SrcSetType srcSetType, bool useFactors, string cssFramework)
+        //    => ResizeSettingsHelper.Find(this, srcSetType, useFactors, cssFramework);
     }
 }

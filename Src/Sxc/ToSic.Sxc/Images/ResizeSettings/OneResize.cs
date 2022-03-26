@@ -13,5 +13,7 @@
         public string UrlWithSuffix => Url + Suffix;
 
         public Recipe TagEnhancements;
+
+        public bool ShowAll = false;
     }
 }

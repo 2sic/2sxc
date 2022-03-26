@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Images
             AdvancedSettings recipe = null)
         {
             Field = field ?? link as IDynamicField;
-            Link = field as IHasLink ?? new HasLink(url ?? link as string);
+            Link = (IHasLink)Field ?? new HasLink(url ?? link as string);
             Settings = settings;
             Factor = factor;
             ImgAlt = imgAlt;
