@@ -8,16 +8,16 @@ namespace ToSic.Sxc.Images
     {
         public static Recipe Find(this ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors, string cssFramework)
         {
-            var multiSettings = resizeSettings?.Advanced;
-            var mainRecipe = multiSettings?.Recipe;
+            var advanced = resizeSettings?.Advanced;
+            var mainRecipe = advanced?.Recipe;
             if (mainRecipe == null) return null;
-            var subRecipes = mainRecipe.AllSubRecipes;
+            var subRecipes = advanced.AllSubRecipes;
 
             // No sub-recipes - return main
             if (subRecipes?.Any() != true) return mainRecipe;
 
             // Prepare list of frameworks, targets and factors to use in the loops
-            var frameworks = new[] { cssFramework, null };
+            var frameworks = cssFramework == null ? new[] { (string)null } : new[] { cssFramework, null };
 
             var primaryTarget = srcSetType == SrcSetType.Img ? "img" : "source";
             var targetsToTest = new[] { primaryTarget, Recipe.RuleForDefault };
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Images
                 : new[] { (double?)null };
 
             // Get PiggyBack cache to rarely rerun LINQ
-            var pgb = multiSettings.PiggyBack;
+            var pgb = advanced.PiggyBack;
 
             // Loop all combinations
             foreach (var cssFw in frameworks)

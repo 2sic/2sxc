@@ -1,12 +1,11 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Hide implementation")]
-    public class ResizeSettings : IResizeSettings, IHasPiggyBack
+    public class ResizeSettings : IResizeSettings
     {
         public int Width { get; }
         public int Height { get; }

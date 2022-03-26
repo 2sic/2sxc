@@ -146,24 +146,7 @@ namespace ToSic.Sxc.Images
         /// </summary>
         public ReadOnlyCollection<Recipe> Recipes { get; }
         
-        [PrivateApi]
-        public ReadOnlyCollection<Recipe> AllSubRecipes
-        {
-            get
-            {
-                if (_recipesFlat != null) return _recipesFlat;
-                var list = new List<Recipe>();
-                foreach (var r in Recipes)
-                {
-                    list.Add(r);
-                    if (r.Recipes != null)
-                        list.AddRange(r.AllSubRecipes);
-                }
 
-                return _recipesFlat = list.AsReadOnly();
-            }
-        }
-        private ReadOnlyCollection<Recipe> _recipesFlat;
 
 
         [PrivateApi("Important for using these settings, but not relevant outside of this")]
