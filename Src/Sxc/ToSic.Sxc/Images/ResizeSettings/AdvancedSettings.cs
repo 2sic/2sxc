@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -7,7 +8,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Images
 {
-    public class AdvancedSettings
+    public class AdvancedSettings: IHasPiggyBack
     {
         [JsonConstructor]
         public AdvancedSettings(Recipe recipe = default)
@@ -61,6 +62,14 @@ namespace ToSic.Sxc.Images
             }
             return wrapLog("new", new AdvancedSettings());
         }
+
+        /// <summary>
+        /// Piggyback cache to remember previous LINQ queries which already filtered certain combinations
+        /// </summary>
+        [PrivateApi("internal use only")]
+        [JsonIgnore]
+        public PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
+        private PiggyBack _piggyBack;
 
     }
 }

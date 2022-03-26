@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ToSic.Eav.Plumbing;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images
@@ -26,14 +27,21 @@ namespace ToSic.Sxc.Images
                 ? new[] { (double?)factor, null }
                 : new[] { (double?)null };
 
+            // Get PiggyBack cache to rarely rerun LINQ
+            var pgb = resizeSettings.PiggyBack;
+
             // Loop all combinations
             foreach (var cssFw in frameworks)
             {
-                var cssRecipes = subRecipes.Where(r => r.CssFramework == cssFw).ToList();
+                var cssKey = cssFw.AsKey();
+                var cssRecipes = pgb.GetOrGenerate(cssKey, 
+                    () => subRecipes.Where(r => r.CssFramework == cssFw).ToList());
                 if (!cssRecipes.Any()) continue;
                 foreach (var f in factorsToTest)
                 {
-                    var recList = cssRecipes.Where(m => f == null ? m.FactorParsed == 0 : DNearZero(m.FactorParsed - f.Value)).ToList();
+                    var factorKey = cssKey + "-" + (f == null ? ((string)null).AsKey() : f.ToString().AsKey());
+                    var recList = pgb.GetOrGenerate(factorKey, 
+                        () => cssRecipes.Where(m => f == null ? m.FactorParsed == 0 : DNearZero(m.FactorParsed - f.Value)).ToList());
                     foreach (var target in targetsToTest)
                     {
                         var match = recList.FirstOrDefault(m => m.Tag == target);
