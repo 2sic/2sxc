@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Blocks
@@ -15,7 +13,7 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         private IRenderingHelper RenderingHelper =>
-            _rendHelp ?? (_rendHelp = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log));
+            _rendHelp ?? (_rendHelp = _renderHelpGen.New.Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
         public string Render() => Run(true).Html;
@@ -175,7 +173,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (InstallationOk) return null;
 
-            var installer = Block.Context.ServiceProvider.Build<IEnvironmentInstaller>();
+            var installer = _envInstGen.New;
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {

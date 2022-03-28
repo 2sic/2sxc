@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Run;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -23,17 +26,23 @@ namespace ToSic.Sxc.Blocks
                 Lazy<BlockDataSourceFactory> bdsFactoryLazy,
                 Lazy<App> appLazy,
                 Lazy<AppConfigDelegate> appConfigDelegateLazy,
-                Lazy<CmsRuntime> cmsLazy)
+                Lazy<CmsRuntime> cmsLazy,
+                Generator<IEnvironmentInstaller> envInstGen,
+                Generator<IRenderingHelper> renderHelpGen)
             {
                 BdsFactoryLazy = bdsFactoryLazy;
                 AppLazy = appLazy;
                 AppConfigDelegateLazy = appConfigDelegateLazy;
                 CmsLazy = cmsLazy;
+                EnvInstGen = envInstGen;
+                RenderHelpGen = renderHelpGen;
             }
             internal Lazy<BlockDataSourceFactory> BdsFactoryLazy { get; }
             internal Lazy<App> AppLazy { get; }
             internal Lazy<AppConfigDelegate> AppConfigDelegateLazy { get; }
             internal Lazy<CmsRuntime> CmsLazy { get; }
+            internal Generator<IEnvironmentInstaller> EnvInstGen { get; }
+            internal Generator<IRenderingHelper> RenderHelpGen { get; }
         }
 
         protected BlockBase(Dependencies dependencies, string logName) : base(logName)
@@ -62,7 +71,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, Log);
+            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, _deps.EnvInstGen, _deps.RenderHelpGen, Log);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
