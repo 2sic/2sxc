@@ -5,7 +5,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    internal class BlockEditorForModule : BlockEditorBase
+    public class BlockEditorForModule : BlockEditorBase
     {
         public BlockEditorForModule(BlockEditorBaseDependencies dependencies,
             LazyInitLog<IPlatformModuleUpdater> platformModuleUpdater) : base(dependencies)

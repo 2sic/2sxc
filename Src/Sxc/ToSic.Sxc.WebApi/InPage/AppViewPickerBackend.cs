@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Edit;
@@ -11,12 +12,21 @@ namespace ToSic.Sxc.WebApi.InPage
 {
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
-
-        public AppViewPickerBackend(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base(sp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
+        public AppViewPickerBackend(IServiceProvider sp, 
+            Lazy<CmsManager> cmsManagerLazy, 
+            IContextResolver ctxResolver, 
+            Generator<BlockEditorForModule> blkEdtForMod,
+            Generator<BlockEditorForEntity> blkEdtForEnt
+            ) : base(sp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
         {
+            _blkEdtForMod = blkEdtForMod;
+            _blkEdtForEnt = blkEdtForEnt;
         }
 
-        public void SetAppId(int? appId) => BlockEditorBase.GetEditor(Block).SetAppId(appId);
+        private readonly Generator<BlockEditorForModule> _blkEdtForMod;
+        private readonly Generator<BlockEditorForEntity> _blkEdtForEnt;
+
+        public void SetAppId(int? appId) => BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SetAppId(appId);
 
         public IEnumerable<TemplateUiInfo> Templates() =>
             Block?.App == null 
@@ -44,7 +54,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             var callLog = Log.Call<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return callLog("ok", BlockEditorBase.GetEditor(Block).SaveTemplateId(templateId, forceCreateContentGroup));
+            return callLog("ok", BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SaveTemplateId(templateId, forceCreateContentGroup));
         }
 
         public bool Publish(int id)
