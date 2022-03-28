@@ -29,18 +29,18 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public static IHtmlString One(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null, 
+            IDynamicEntity item = null,
             string field = null,
-            Guid? newGuid = null) 
+            Guid? newGuid = null)
             => RenderService(parent).One(parent, noParamOrder, item, field, newGuid);
 
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static Services.IRenderService RenderService(DynamicEntity parent)
         {
-            //First do version checks -should not be allowed if compatibility is too low
+            // First do version checks -should not be allowed if compatibility is too low
             if (parent._Dependencies.CompatibilityLevel > Constants.MaxLevelForStaticRender)
-                    throw new Exception(
-                        "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
+                throw new Exception(
+                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
 
             var block = parent._Dependencies?.BlockOrNull;
@@ -66,10 +66,10 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public static IHtmlString All(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
-            string field = null, 
+            string field = null,
             string apps = null,
             int max = 100,
-            string merge = null) 
+            string merge = null)
             => RenderService(parent).All(parent, noParamOrder, field, apps, max, merge);
     }
 }
