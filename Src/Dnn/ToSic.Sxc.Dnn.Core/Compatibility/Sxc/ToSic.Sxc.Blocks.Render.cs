@@ -1,8 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Dnn;
 using static ToSic.Sxc.Compatibility.Obsolete;
 using IHtmlString = System.Web.IHtmlString;
 
@@ -39,10 +37,10 @@ namespace ToSic.Sxc.Blocks
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static Services.IRenderService RenderService(DynamicEntity parent)
         {
-            // First do version checks - should not be allowed if compatibility is too low
+            //First do version checks -should not be allowed if compatibility is too low
             if (parent._Dependencies.CompatibilityLevel > Constants.MaxLevelForStaticRender)
-                throw new Exception(
-                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
+                    throw new Exception(
+                        "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
 
             var block = parent._Dependencies?.BlockOrNull;
@@ -52,14 +50,8 @@ namespace ToSic.Sxc.Blocks
                 "https://r.2sxc.org/brc-13-static-render",
                 (log) => LogBlockDetails(block, log));
 
-            // 2022-02-03 2dm remove a case of getting Page ServiceDependency which probably never needs it
-            // return DnnStaticDi.GetPageScopedServiceProvider().Build<Services.IRenderService>();
-            // The dynamic entity has a current service provider attached
-            if (block == null)
-                throw new Exception(
-                    "Error 2022-02-03 2dm - this is an unexpected error after a change which should never happen. If you run into this, please open an issue on Github.");
 
-            return block.Context.ServiceProvider.Build<Services.IRenderService>();
+            return parent._Dependencies.RenderService;
         }
 
         /// <summary>
