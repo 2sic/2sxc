@@ -198,7 +198,7 @@ namespace ToSic.Sxc.Blocks
             if (_engine != null) return wrapLog("cached", _engine);
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return wrapLog("no view", null);
-            _engine = EngineFactory.CreateEngine(Block.Context.ServiceProvider, Block.View);
+            _engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
             _engine.Init(Block, Purpose.WebView, Log);
             return wrapLog("created", _engine);
         }

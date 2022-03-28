@@ -9,6 +9,7 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Run;
 using App = ToSic.Sxc.Apps.App;
@@ -28,7 +29,9 @@ namespace ToSic.Sxc.Blocks
                 Lazy<AppConfigDelegate> appConfigDelegateLazy,
                 Lazy<CmsRuntime> cmsLazy,
                 Generator<IEnvironmentInstaller> envInstGen,
-                Generator<IRenderingHelper> renderHelpGen)
+                Generator<IRenderingHelper> renderHelpGen,
+                Generator<IRazorEngine> razorEngineGen, 
+                Generator<TokenEngine> tokenEngineGen)
             {
                 BdsFactoryLazy = bdsFactoryLazy;
                 AppLazy = appLazy;
@@ -36,6 +39,8 @@ namespace ToSic.Sxc.Blocks
                 CmsLazy = cmsLazy;
                 EnvInstGen = envInstGen;
                 RenderHelpGen = renderHelpGen;
+                RazorEngineGen = razorEngineGen;
+                TokenEngineGen = tokenEngineGen;
             }
             internal Lazy<BlockDataSourceFactory> BdsFactoryLazy { get; }
             internal Lazy<App> AppLazy { get; }
@@ -43,6 +48,8 @@ namespace ToSic.Sxc.Blocks
             internal Lazy<CmsRuntime> CmsLazy { get; }
             internal Generator<IEnvironmentInstaller> EnvInstGen { get; }
             internal Generator<IRenderingHelper> RenderHelpGen { get; }
+            internal Generator<IRazorEngine> RazorEngineGen { get; }
+            internal Generator<TokenEngine> TokenEngineGen { get; }
         }
 
         protected BlockBase(Dependencies dependencies, string logName) : base(logName)
@@ -71,7 +78,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, _deps.EnvInstGen, _deps.RenderHelpGen, Log);
+            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, _deps.EnvInstGen, _deps.RenderHelpGen, _deps.RazorEngineGen, _deps.TokenEngineGen, Log);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder

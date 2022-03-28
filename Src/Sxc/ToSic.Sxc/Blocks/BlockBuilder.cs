@@ -2,6 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Blocks
@@ -29,12 +30,16 @@ namespace ToSic.Sxc.Blocks
         internal BlockBuilder(IBlockBuilder rootBlockBuilder, 
             IBlock cb, 
             Generator<IEnvironmentInstaller> envInstGen, 
-            Generator<IRenderingHelper> renderHelpGen, 
+            Generator<IRenderingHelper> renderHelpGen,
+            Generator<IRazorEngine> razorEngineGen, 
+            Generator<TokenEngine> tokenEngineGen,
             ILog parentLog)
             : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
             _envInstGen = envInstGen;
             _renderHelpGen = renderHelpGen;
+            _razorEngineGen = razorEngineGen;
+            _tokenEngineGen = tokenEngineGen;
             // the root block is the main container. If there is none yet, use this, as it will be the root
             RootBuilder = rootBlockBuilder ?? this;
             Block = cb;
@@ -42,6 +47,8 @@ namespace ToSic.Sxc.Blocks
 
         private readonly Generator<IEnvironmentInstaller> _envInstGen;
         private readonly Generator<IRenderingHelper> _renderHelpGen;
+        private readonly Generator<IRazorEngine> _razorEngineGen;
+        private readonly Generator<TokenEngine> _tokenEngineGen;
 
         #endregion
 

@@ -46,7 +46,9 @@ namespace ToSic.Sxc.Search
             IAppsCache appsCache,
             Generator<CodeCompiler> codeCompiler,
             Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
-            Generator<ISite> site, 
+            Generator<ISite> site,
+            Generator<IRazorEngine> razorEngineGen, 
+            Generator<TokenEngine> tokenEngineGen,
             LazyInitLog<IModuleAndBlockBuilder> moduleAndBlockBuilder,
             LazyInitLog<DnnLookUpEngineResolver> dnnLookUpEngineResolver
             ) : base("DNN.Search")
@@ -56,6 +58,8 @@ namespace ToSic.Sxc.Search
             _codeCompiler = codeCompiler;
             _dnnDynamicCodeRoot = dnnDynamicCodeRoot;
             _site = site;
+            _razorEngineGen = razorEngineGen;
+            _tokenEngineGen = tokenEngineGen;
             _dnnLookUpEngineResolver = dnnLookUpEngineResolver.SetLog(Log);
             _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
         }
@@ -64,6 +68,8 @@ namespace ToSic.Sxc.Search
         private readonly Generator<CodeCompiler> _codeCompiler;
         private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
         private readonly Generator<ISite> _site;
+        private readonly Generator<IRazorEngine> _razorEngineGen;
+        private readonly Generator<TokenEngine> _tokenEngineGen;
         private readonly LazyInitLog<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
@@ -158,7 +164,7 @@ namespace ToSic.Sxc.Search
                 {
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
-                    var engine = EngineFactory.CreateEngine(_serviceProvider,  Block.View);
+                    var engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
                     engine.Init(Block, Purpose.IndexingForSearch, Log);
                     
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing
