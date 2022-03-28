@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
@@ -8,7 +10,11 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
     public partial class InPageEditingHelper : HasLog<IInPageEditingSystem>, IInPageEditingSystem
     {
-        public InPageEditingHelper() : base("Sxc.Edit") { }
+        private readonly LazyInit<IRenderingHelper> _renderHelper;
+        public InPageEditingHelper(LazyInit<IRenderingHelper> renderHelper) : base("Sxc.Edit")
+        {
+            _renderHelper = renderHelper.SetInit(h => h.Init(Block, Log));
+        }
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
