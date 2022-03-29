@@ -14,6 +14,11 @@ namespace ToSic.Sxc.Services
     /// <summary>
     /// Contains status and commands to configure the in-page editing system.
     /// </summary>
+    /// <remarks>
+    /// History
+    /// - First version created ca. v2 - originally as `ToSic.Sxc.Web.IInPageEditEditingHelper`
+    /// - Moved to `ToSic.Sxc.Services.IEditService` in v13.05
+    /// </remarks>
     [PublicApi_Stable_ForUseInYourCode]
     public interface IEditService: IHasLog, INeedsDynamicCodeRoot
 #if NETFRAMEWORK
@@ -29,7 +34,8 @@ namespace ToSic.Sxc.Services
         bool Enabled
         {
             get;
-            [PrivateApi("hide the set - it's only used for demo code")]
+            // 2022-03-29 2dm disabled this private-api, as it was shown in the docs anyhow
+            // [PrivateApi("hide the set - it's only used for demo code")]
             set;
         }
 
@@ -151,13 +157,13 @@ namespace ToSic.Sxc.Services
         /// <param name="field">the field of this content-item, which contains the inner-content-items</param>
         /// <param name="contentType">type name used for 'new' items in a toolbar - usually for inner-content and list-contexts</param>
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
-        /// <param name="apps">Beta / WIP</param>
-        /// <param name="max">Beta / WIP</param>
+        /// <param name="apps">Restrict the apps which can be added to this placeholder</param>
+        /// <param name="max">Limit the amount of content-blocks that can be added to this placeholder</param>
         /// <returns>An <see cref="IHybridHtmlString"/> object containing an html-attribute to add to the wrapper of the inner content</returns>
         /// <remarks>
         /// **History** <br/>
         /// 1. Introduced in 2sxc 8.4
-        /// 1. Enhanced with apps in 10.27
+        /// 1. Enhanced with apps and max in 10.27
         /// </remarks>
         IHybridHtmlString ContextAttributes(
             IDynamicEntity target, 

@@ -11,11 +11,11 @@ namespace ToSic.Sxc.Edit.EditService
 {
     public partial class EditService : HasLog, IEditService
     {
-        private readonly LazyInit<IRenderingHelper> _renderHelper;
         public EditService(LazyInit<IRenderingHelper> renderHelper) : base("Sxc.Edit")
         {
             _renderHelper = renderHelper.SetInit(h => h.Init(Block, Log));
         }
+        private readonly LazyInit<IRenderingHelper> _renderHelper;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
