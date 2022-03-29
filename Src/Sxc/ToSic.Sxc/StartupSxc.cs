@@ -5,6 +5,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
@@ -154,6 +155,9 @@ namespace ToSic.Sxc
             services.TryAddTransient<IEditService, EditService>();
             services.TryAddTransient<DynamicCodeService.Dependencies>();
             services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
+
+            // v13 Experimental LightSpeed
+            services.TryAddTransient<IOutputCache, LightSpeed>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

@@ -35,11 +35,18 @@ namespace ToSic.Sxc.Blocks
         public string HttpStatusMessage { get; set; }
 
         /// <inheritdoc />
-        public IList<int> DependentApps { get; } = new List<int>();
+        public IList<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
 
 
         public int ModuleId { get; set; }
 
         public override string ToString() => Html;
+    }
+
+    public class DependentApp : IDependentApp
+    {
+        public int AppId { get; set; }
+
+        public long CacheTimestamp { get; set; }
     }
 }

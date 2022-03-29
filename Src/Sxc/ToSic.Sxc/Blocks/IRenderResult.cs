@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
@@ -56,9 +57,14 @@ namespace ToSic.Sxc.Blocks
         string HttpStatusMessage { get; }
 
         [PrivateApi]
-        IList<int> DependentApps { get; }
+        IList<IDependentApp> DependentApps { get; }
 
         [PrivateApi("not in use yet")]
         int ModuleId { get; }
+    }
+
+    public interface IDependentApp: ITimestamped
+    {
+        int AppId { get; }
     }
 }

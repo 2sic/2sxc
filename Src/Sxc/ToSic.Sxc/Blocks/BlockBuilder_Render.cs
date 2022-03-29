@@ -4,6 +4,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Blocks
 {
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Blocks
                     ModuleId = Block.ParentId
                 };
 
-                result.DependentApps.Add(Block.AppId);
+                result.DependentApps.Add(new DependentApp { AppId = Block.AppId, CacheTimestamp = Block.App.AppState.CacheTimestamp });
 
                 // TODO: this may fail on a sub-tmplate, must research
                 result.Assets = Assets;
