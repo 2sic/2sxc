@@ -5,7 +5,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Tests.ServicesTests
 {
     [TestClass]
-    public partial class ImageServiceFormats: TestBaseSxc
+    public partial class ImageServiceFormats: TestBaseSxcDb
     {
         [DataRow("test.png")]
         [DataRow(".png")]

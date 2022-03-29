@@ -89,10 +89,15 @@ namespace ToSic.Sxc.Images
         public string Class => _imgClass.Get(() =>
         {
             var part1 = Call.ImgClass;
-            object part2 = null;
-            var hasOnDic = ThisResize.TagEnhancements?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out part2) ?? false;
-            var hasBoth = !string.IsNullOrEmpty(Call.ImgClass) && hasOnDic;
-            return part1 + (hasBoth ? " " : "") + (part2 as string);
+            object attrClassObj = null;
+            ThisResize.TagEnhancements?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClassObj);
+            var attrClass = attrClassObj as string;
+            var hasOnAttrs = !string.IsNullOrWhiteSpace(attrClass);
+            var hasOnImgClass = !string.IsNullOrWhiteSpace(Call.ImgClass);
+            
+            // Must use null if neither are useful
+            if (!hasOnAttrs && !hasOnImgClass) return null;
+            return part1 + (hasOnImgClass && hasOnAttrs ? " " : "") + attrClass;
         });
         private readonly PropertyToRetrieveOnce<string> _imgClass = new PropertyToRetrieveOnce<string>();
 

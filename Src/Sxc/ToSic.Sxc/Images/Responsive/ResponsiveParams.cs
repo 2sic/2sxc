@@ -10,8 +10,14 @@ namespace ToSic.Sxc.Images
     [PrivateApi]
     public class ResponsiveParams
     {
+        /// <summary>
+        /// The only reliable object which knows about the url - can never be null
+        /// </summary>
         public IHasLink Link { get; }
 
+        /// <summary>
+        /// The field used for this responsive output - can be null!
+        /// </summary>
         public IDynamicField Field { get; }
         public object Settings { get; }
         public object Factor { get; }
