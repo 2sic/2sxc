@@ -56,7 +56,7 @@ namespace ToSic.SexyContent.Razor
         /// Helper commands to enable in-page editing functionality
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
-        public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
+        public IEditService Edit => _DynCodeRoot.Edit;
 
         public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
 

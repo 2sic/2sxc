@@ -6,7 +6,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    public partial class InPageEditingHelper
+    public partial class EditService
     {
         private readonly string innerContentAttribute = "data-list-context";
 

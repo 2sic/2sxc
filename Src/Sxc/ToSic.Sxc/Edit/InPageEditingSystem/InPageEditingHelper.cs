@@ -4,14 +4,15 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    public partial class InPageEditingHelper : HasLog<IInPageEditingSystem>, IInPageEditingSystem
+    public partial class EditService : HasLog, IEditService
     {
         private readonly LazyInit<IRenderingHelper> _renderHelper;
-        public InPageEditingHelper(LazyInit<IRenderingHelper> renderHelper) : base("Sxc.Edit")
+        public EditService(LazyInit<IRenderingHelper> renderHelper) : base("Sxc.Edit")
         {
             _renderHelper = renderHelper.SetInit(h => h.Init(Block, Log));
         }
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             SetBlock(codeRoot.Block);
         }
 
-        public IInPageEditingSystem SetBlock(IBlock block)
+        public IEditService SetBlock(IBlock block)
         {
             Block = block;
             Enabled = Block?.Context.UserMayEdit ?? false;

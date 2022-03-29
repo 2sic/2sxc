@@ -33,7 +33,7 @@ namespace Custom.Hybrid
         public ILinkService Link => _DynCodeRoot.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
+        public IEditService Edit => _DynCodeRoot.Edit;
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 

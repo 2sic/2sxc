@@ -10,7 +10,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    public partial class InPageEditingHelper
+    public partial class EditService
     {
         #region Context Attributes
 

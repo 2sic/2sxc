@@ -6,8 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
-
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Renderers
 {
@@ -45,7 +44,7 @@ namespace ToSic.Sxc.Blocks.Renderers
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
 
-        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid, IInPageEditingSystem edit, Generator<BlockFromEntity> blkFrmEntGen)
+        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid, IEditService edit, Generator<BlockFromEntity> blkFrmEntGen)
         {
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
             var inner = subItem == null ? "": Render(parent._Dependencies.BlockOrNull, subItem.Entity, blkFrmEntGen);
@@ -53,7 +52,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IInPageEditingSystem edit, Generator<BlockFromEntity> blkFrmEntGen)
+        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IEditService edit, Generator<BlockFromEntity> blkFrmEntGen)
         {
             var innerBuilder = new StringBuilder();
             var found = parent.TryGetMember(fieldName, out var objFound);

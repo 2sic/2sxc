@@ -12,7 +12,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -143,7 +142,7 @@ namespace Custom.Hybrid
         public ILinkService Link => _DynCodeRoot?.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
+        public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
 

@@ -108,9 +108,9 @@ namespace ToSic.Sxc.Code
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
         /// <returns>
-        /// An <see cref="IInPageEditingSystem"/> object.
+        /// An <see cref="IEditService"/> object.
         /// </returns>
-        IInPageEditingSystem Edit { get; }
+        IEditService Edit { get; }
         #endregion
 
         #region AsDynamic for Strings

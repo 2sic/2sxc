@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public ILinkService Link => _DynCodeRoot?.Link;
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
+        public IEditService Edit => _DynCodeRoot?.Edit;
         #endregion
 
         #region SharedCode - must also map previous path to use here

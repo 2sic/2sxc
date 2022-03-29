@@ -190,7 +190,7 @@ namespace ToSic.SexyContent.WebApi
 
         #region Link & Edit - added in 2sxc 10.01
         public ILinkService Link => _DynCodeRoot?.Link;
-        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
+        public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
 

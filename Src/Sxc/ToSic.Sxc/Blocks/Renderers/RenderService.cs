@@ -5,6 +5,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Blocks
     {
 
 
-        public RenderService(GeneratorLog<IInPageEditingSystem> editGenerator, 
+        public RenderService(GeneratorLog<IEditService> editGenerator, 
             LazyInitLog<IModuleAndBlockBuilder> builder,
             Generator<BlockFromEntity> blkFrmEntGen
             ) : base("Sxc.RndSvc", initialMessage:"()")
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.Blocks
             _editGenerator = editGenerator.SetLog(Log);
         }
         private readonly Generator<BlockFromEntity> _blkFrmEntGen;
-        private readonly GeneratorLog<IInPageEditingSystem> _editGenerator;
+        private readonly GeneratorLog<IEditService> _editGenerator;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log.LinkTo(codeRoot.Log);
@@ -99,6 +100,6 @@ namespace ToSic.Sxc.Blocks
         /// create edit-object which is necessary for context attributes
         /// We need a new one for each parent
         /// </summary>
-        private IInPageEditingSystem GetEdit(DynamicEntity parent) => _editGenerator.New.SetBlock(parent._Dependencies.BlockOrNull);
+        private IEditService GetEdit(DynamicEntity parent) => _editGenerator.New.SetBlock(parent._Dependencies.BlockOrNull);
     }
 }

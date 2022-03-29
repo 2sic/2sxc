@@ -109,8 +109,8 @@ namespace ToSic.Sxc.Code
         #region Edit
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _edit ?? (_edit = GetService<IInPageEditingSystem>());// { get; private set; }
-        private IInPageEditingSystem _edit;
+        public IEditService Edit => _edit ?? (_edit = GetService<IEditService>());
+        private IEditService _edit;
 
         #endregion
 

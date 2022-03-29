@@ -1,18 +1,26 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Web;
+// ReSharper disable RedundantExtendsListEntry
+#pragma warning disable CS0108, CS0114
 
 // ReSharper disable UnusedMember.Global
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     /// <summary>
     /// Contains status and commands to configure the in-page editing system.
     /// </summary>
-    [PrivateApi("Moved to Services.IEditService is v13.05 - must remain here to not break old code, but probably never referenced by exact type, so low risk.")]
-    [Obsolete("Please use Services.IEditService. This will be removed probably in v14")]
-    public interface IInPageEditingSystem: IHasLog, INeedsDynamicCodeRoot
+    [PublicApi_Stable_ForUseInYourCode]
+    public interface IEditService: IHasLog, INeedsDynamicCodeRoot
+#if NETFRAMEWORK
+#pragma warning disable CS0618
+        , IInPageEditingSystem
+#pragma warning restore CS0618
+#endif
     {
         /// <summary>
         /// If editing is enabled or not
@@ -237,5 +245,7 @@ namespace ToSic.Sxc.Web
         /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
         IHybridHtmlString Attribute(string name, object value);
 
+        [PrivateApi("internal use only")]
+        IEditService SetBlock(IBlock block);
     }
 }

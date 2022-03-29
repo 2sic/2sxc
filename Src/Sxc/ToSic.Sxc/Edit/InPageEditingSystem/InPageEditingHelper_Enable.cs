@@ -6,7 +6,7 @@ using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Edit.InPageEditingSystem
 {
-    public partial class InPageEditingHelper
+    public partial class EditService
     {
         /// <inheritdoc />
         public bool Enabled { 

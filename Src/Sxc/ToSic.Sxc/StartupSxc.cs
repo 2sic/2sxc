@@ -151,7 +151,7 @@ namespace ToSic.Sxc
             services.TryAddScoped(typeof(PageScopedService<>));
 
             // v13 DynamicCodeService
-            services.TryAddTransient<IInPageEditingSystem, InPageEditingHelper>();
+            services.TryAddTransient<IEditService, EditService>();
             services.TryAddTransient<DynamicCodeService.Dependencies>();
             services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
