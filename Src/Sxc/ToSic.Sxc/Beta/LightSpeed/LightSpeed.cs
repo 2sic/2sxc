@@ -12,10 +12,8 @@ namespace ToSic.Sxc.Beta.LightSpeed
 {
     public class LightSpeed: HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights")
-        {
-            _features = features;
-        }
+        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights") 
+            => _features = features;
         private readonly IFeaturesService _features;
 
         public IOutputCache Init(int moduleId, IBlock block)
@@ -27,6 +25,8 @@ namespace ToSic.Sxc.Beta.LightSpeed
         }
         private int _moduleId;
         private IBlock _block;
+        private AppState AppState => _block?.Context?.AppState;
+
 
         public bool Save(IRenderResult data)
         {
@@ -35,11 +35,42 @@ namespace ToSic.Sxc.Beta.LightSpeed
             if (data == null) return wrapLog("null", false);
             if (data == Existing?.Data) return wrapLog("not new", false);
             Fresh.Data = data;
-            Ocm.Add(_moduleId, Fresh, AppConfig.Duration);
-            return wrapLog($"added for {AppConfig.Duration} seconds", true);
+            var duration = GetDuration();
+            // only add if we really have a duration; -1 is disabled, 0 is not set...
+            if (duration <= 0)
+                return wrapLog($"not added as duration is {duration}", false);
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration);
+            Log.Add($"Cache Key: {cacheKey}");
+            return wrapLog($"added for {duration}s", true);
         }
 
-        public bool IsInCache => Existing != null;
+        private int GetDuration()
+        {
+            var user = _block.Context.User;
+            if (user.IsSuperUser) return AppConfig.DurationSystemAdmin;
+            if (user.IsAdmin) return AppConfig.DurationEditor;
+            if (!user.IsAnonymous) return AppConfig.DurationUser;
+            return AppConfig.Duration;
+        }
+
+
+
+        private string Suffix => _suffix.Get(GetSuffix);
+        private readonly PropertyToRetrieveOnce<string> _suffix = new PropertyToRetrieveOnce<string>();
+        private string GetSuffix() => !AppConfig.ByUrlParam ? null : _block.Context.Page.Parameters.ToString();
+
+
+        private string CacheKey =>
+            _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, UserIdOrAnon, Suffix)));
+        private readonly PropertyToRetrieveOnce<string> _key = new PropertyToRetrieveOnce<string>();
+
+
+        private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
+        private readonly PropertyToRetrieveOnce<int?> _userId = new PropertyToRetrieveOnce<int?>();
+
+
+        //public bool IsInCache => Existing != null;
+
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);
         private readonly PropertyToRetrieveOnce<OutputCacheItem> _existing = new PropertyToRetrieveOnce<OutputCacheItem>();
@@ -48,7 +79,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             var wrapLog = Log.Call<OutputCacheItem>();
             if (AppState == null) return wrapLog("no app", null);
 
-            var result = IsEnabled ? Ocm.Get(_moduleId) : null;
+            var result = IsEnabled ? Ocm.Get(CacheKey) : null;
             if (result == null) return wrapLog("not in cache", null);
 
             // compare cache time-stamps
@@ -63,26 +94,20 @@ namespace ToSic.Sxc.Beta.LightSpeed
         public OutputCacheItem Fresh => _fresh ?? (_fresh = new OutputCacheItem());
         private OutputCacheItem _fresh;
 
+
         public bool IsEnabled => _enabled.Get(IsEnabledGenerator);
         private readonly PropertyToRetrieveOnce<bool> _enabled = new PropertyToRetrieveOnce<bool>();
         private bool IsEnabledGenerator()
         {
             var wrapLog = Log.Call<bool>();
-            
-            // 1. check feature (fastest)
             var feat = _features.IsEnabled(FeaturesCatalog.LightSpeedOutputCache.NameId);
             if (!feat) return wrapLog("feature disabled", false);
-
-            // 2. Check App activated
-            //var decoEntity = AppState?.Metadata?.FirstOrDefaultOfType(LightSpeedDecorator.TypeName);
-            //if (decoEntity == null) return wrapLog("no app config", false);
-
-            //var deco = new LightSpeedDecorator(decoEntity);
-            var ok = AppConfig.IsEnabled;// deco.IsEnabled;
-
+            var ok = AppConfig.IsEnabled;
             return wrapLog($"app config: {ok}", ok);
         }
-        private AppState AppState => _block?.Context?.AppState;
+
+
+
 
         public LightSpeedDecorator AppConfig => _lsd.Get(LightSpeedDecoratorGenerator);
         private readonly PropertyToRetrieveOnce<LightSpeedDecorator> _lsd = new PropertyToRetrieveOnce<LightSpeedDecorator>();
@@ -90,12 +115,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
         {
             var wrapLog = Log.Call<LightSpeedDecorator>();
             var decoEntityOrNull = AppState?.Metadata?.FirstOrDefaultOfType(LightSpeedDecorator.TypeName);
-            //if (decoEntity == null) return wrapLog("no app config", null);
-
             var deco = new LightSpeedDecorator(decoEntityOrNull);
             return wrapLog($"{decoEntityOrNull != null}", deco);
         }
-
 
 
         private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());

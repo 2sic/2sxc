@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
 
         OutputCacheItem Fresh { get; }
 
-        bool IsInCache { get; }
+        //bool IsInCache { get; }
 
         bool Save(IRenderResult data);
     }
