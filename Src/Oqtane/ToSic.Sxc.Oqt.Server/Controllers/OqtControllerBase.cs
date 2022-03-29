@@ -22,7 +22,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     {
         protected OqtControllerBase(string logSuffix)
         {
-            // ReSharper disable once VirtualMemberCallInConstructor
             Log = new Log($"Api.{logSuffix}", null, GetType().Name);
             _helper = new NetCoreControllersHelper(this);
         }
