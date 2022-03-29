@@ -1,16 +1,30 @@
-﻿using System;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     /// <summary>
-    /// Helpers to create links with parameters or base-tag links (important for SPAs)
+    /// Helpers to create links to
+    ///
+    /// - Pages
+    /// - APIs
+    /// - Images
+    ///
+    /// As well as create base-tag links (important for SPAs)
+    ///
+    /// Note that you get this automatically in Razor or APIs - on an object called `Link` - so you usually will not need to create this yourself. 
     /// </summary>
-    [PrivateApi("Hide from 2022-03-29 v13.05 as it shouldn't be used any more. Keep for a while for compatibility, but we don't believe anybody is using this interface directly.")]
-    [Obsolete("This shouldn't be used any more and will be removed ca. v14. Use the ILinkService instead.")]
-    public interface ILinkHelper: INeedsDynamicCodeRoot
+    /// <remarks>
+    /// History
+    /// 
+    /// - Created ca. v2 as `ToSic.Sxc.Web.ILinkHelper`
+    /// - Moved to this new `Services.ILinkService` in v13.05. The previous name will continue to work, but newer features will be missing on that interface. 
+    /// </remarks>
+    [PublicApi_Stable_ForUseInYourCode]
+    public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug, ILinkHelper
     {
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it
@@ -143,6 +157,7 @@ namespace ToSic.Sxc.Web
             string type = default,
             object parameters = default
             );
+
     }
 
 }

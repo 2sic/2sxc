@@ -1,4 +1,5 @@
 ﻿using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
@@ -13,9 +14,9 @@ namespace ToSic.Sxc.Tests.LinksAndImages
             // @STV - don't use statics in tests - can cause unexpected results across tests
             // Every test should run by itself
 
-            Link = Build<ILinkHelper>();
+            Link = Build<ILinkService>();
         }
 
-        internal ILinkHelper Link;
+        internal ILinkService Link;
     }
 }

@@ -122,6 +122,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.TryAddTransient<IDnnContext, DnnContext>();
             services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
+            services.TryAddTransient<ILinkService, DnnLinkHelper>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();

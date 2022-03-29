@@ -4,6 +4,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Code
@@ -73,7 +74,7 @@ namespace ToSic.Sxc.Code
 
         #region Link and Edit
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot?.Link;
+        public ILinkService Link => _DynCodeRoot?.Link;
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
         #endregion

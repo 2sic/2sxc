@@ -46,7 +46,8 @@ namespace ToSic.Sxc
             services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
             // v12.05 - linkhelperunknown - for testing etc.
-            services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
+            //services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
+            services.TryAddTransient<ILinkService, LinkHelperUnknown>();
 
             // v12.05
             services.TryAddTransient<IRazorService, RazorServiceUnknown>();

@@ -4,12 +4,13 @@ using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     /// <summary>
-    /// The DNN implementation of the <see cref="ILinkHelper"/>.
+    /// The DNN implementation of the <see cref="ILinkService"/>.
     /// </summary>
     [PrivateApi("This implementation shouldn't be visible")]
     public class DnnLinkHelper : LinkHelperBase

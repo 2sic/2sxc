@@ -10,12 +10,13 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
     /// <summary>
-    /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
+    /// The Oqtane implementation of the <see cref="ILinkService"/>.
     /// </summary>
     [PrivateApi]
     public class OqtLinkHelper : LinkHelperBase

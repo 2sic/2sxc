@@ -14,6 +14,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 
@@ -125,7 +126,7 @@ namespace ToSic.Sxc.Dnn
         #region Link & Edit - added to API in 2sxc 10.01
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot?.Link;
+        public ILinkService Link => _DynCodeRoot?.Link;
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;

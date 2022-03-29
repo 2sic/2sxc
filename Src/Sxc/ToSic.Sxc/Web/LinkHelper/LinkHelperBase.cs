@@ -8,11 +8,12 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
-    public abstract class LinkHelperBase : HasLog, ILinkHelper
+    public abstract class LinkHelperBase : HasLog, ILinkService
     {
         protected LinkHelperBase(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy) : base($"{Constants.SxcLogName}.LnkHlp")
         {
@@ -156,14 +157,7 @@ namespace ToSic.Sxc.Web
             return imageUrl;
         }
 
-        private bool _debug;
-        public void DebugSet(bool debug)
-        {
-            _debug = debug;
-            // Set logging on ImageResizeHelper
-            ImgLinker.Debug = debug; //.DebugSet(debug);
-        }
-
+        /// <inheritdoc />
         public bool Debug
         {
             get => _debug;
@@ -173,6 +167,7 @@ namespace ToSic.Sxc.Web
                 ImgLinker.Debug = value;
             }
         }
+        private bool _debug;
 
         /**
          * Combine api with query string.

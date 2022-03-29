@@ -113,9 +113,9 @@ namespace ToSic.Sxc.Code
         /// Link helper object to create the correct links
         /// </summary>
         /// <returns>
-        /// A <see cref="ILinkHelper"/> object.
+        /// A <see cref="ILinkService"/> object.
         /// </returns>
-        ILinkHelper Link { get; }
+        ILinkService Link { get; }
 
         #endregion
 

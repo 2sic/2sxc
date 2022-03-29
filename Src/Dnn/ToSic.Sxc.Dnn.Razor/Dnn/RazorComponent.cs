@@ -16,6 +16,7 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Dnn
         #region Link, Edit, Dnn, App, Data
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot.Link;
+        public ILinkService Link => _DynCodeRoot.Link;
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot.Edit;

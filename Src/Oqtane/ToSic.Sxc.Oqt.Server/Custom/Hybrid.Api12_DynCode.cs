@@ -140,7 +140,7 @@ namespace Custom.Hybrid
         #region Link & Edit - added to API in 2sxc 10.01
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot?.Link;
+        public ILinkService Link => _DynCodeRoot?.Link;
 
         /// <inheritdoc />
         public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;

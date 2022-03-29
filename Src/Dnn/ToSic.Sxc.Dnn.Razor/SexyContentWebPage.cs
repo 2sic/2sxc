@@ -24,6 +24,7 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -47,7 +48,7 @@ namespace ToSic.SexyContent.Razor
     {
         #region Helpers linked through AppAndData Helpers
 
-        public ILinkHelper Link => _DynCodeRoot.Link;
+        public ILinkService Link => _DynCodeRoot.Link;
 
         [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
 
