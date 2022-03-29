@@ -148,7 +148,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="debug"></param>
         [InternalApi_DoNotUse_MayChangeWithoutNotice("just for debugging, can change at any time but for debugging it's useful")]
-        void SetDebug(bool debug);
+        void DebugSet(bool debug);
     }
 
 }

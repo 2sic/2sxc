@@ -157,11 +157,21 @@ namespace ToSic.Sxc.Web
         }
 
         private bool _debug;
-        public void SetDebug(bool debug)
+        public void DebugSet(bool debug)
         {
             _debug = debug;
             // Set logging on ImageResizeHelper
-            ImgLinker.Debug = debug;
+            ImgLinker.Debug = debug; //.DebugSet(debug);
+        }
+
+        public bool Debug
+        {
+            get => _debug;
+            set
+            {
+                _debug = value;
+                ImgLinker.Debug = value;
+            }
         }
 
         /**

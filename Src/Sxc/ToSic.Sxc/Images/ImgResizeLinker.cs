@@ -6,8 +6,10 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.SrcSetPart;
@@ -15,7 +17,7 @@ using static ToSic.Sxc.Images.SrcSetPart;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Internal stuff")]
-    public class ImgResizeLinker : HasLog<ImgResizeLinker>
+    public class ImgResizeLinker : HasLog /* <ImgResizeLinker>*/, ICanDebug
     {
         public ImgResizeLinker(Lazy<IFeaturesService> features, Lazy<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
         {
@@ -26,7 +28,9 @@ namespace ToSic.Sxc.Images
         private readonly Lazy<IFeaturesService> _features;
         private readonly Lazy<ICss> _koi;
 
-        public bool Debug = false;
+        //public void DebugSet(bool debug) => Debug = debug;
+
+        public bool Debug { get; set; }
 
         public readonly ResizeDimensionGenerator DimGen;
 
@@ -81,7 +85,7 @@ namespace ToSic.Sxc.Images
 
             var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors), _koi.Value.Framework);
 
-            var srcSetParts = srcSetSettings?.SrcSetParsed;
+            var srcSetParts = srcSetSettings?.VariantsParsed;
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetParts?.Length ?? 0) == 0)
@@ -107,7 +111,7 @@ namespace ToSic.Sxc.Images
         private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, SrcSetPart partDef = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
-            one.TagEnhancements = srcSetSettings;
+            one.Recipe = srcSetSettings;
 
             var imgDecorator = field?.ImageDecoratorOrNull;
 

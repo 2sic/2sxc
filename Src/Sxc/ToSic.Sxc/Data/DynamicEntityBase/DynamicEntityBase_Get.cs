@@ -16,10 +16,10 @@
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Get",
                 $"{nameof(language)}, {nameof(convertLinks)}");
 
-            var debugBefore = _debug;
-            if (debug != null) _debug = debug.Value;
+            var debugBefore = Debug;
+            if (debug != null) Debug = debug.Value;
             var result = GetInternal(name, language, convertLinks);
-            if (debug != null) _debug = debugBefore;
+            if (debug != null) Debug = debugBefore;
 
             return result;
         }

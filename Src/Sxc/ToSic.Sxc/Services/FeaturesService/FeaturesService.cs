@@ -1,16 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Services
 {
-    public class FeaturesService: Wrapper<ToSic.Eav.Configuration.IFeaturesService>, IFeaturesService
+    public class FeaturesService: HasLog, IFeaturesService, ICanDebug
     {
-        public FeaturesService(ToSic.Eav.Configuration.IFeaturesService contents) : base(contents) { }
+        public FeaturesService(Eav.Configuration.IFeaturesService root) : base($"{Constants.SxcLogName}.FeatSv")
+            => _root = root;
 
-        public bool IsEnabled(params string[] nameIds) => _contents.IsEnabled(nameIds);
+        private readonly Eav.Configuration.IFeaturesService _root;
 
-        public bool Valid => _contents.Valid;
+        public bool IsEnabled(params string[] nameIds)
+        {
+            var result = _root.IsEnabled(nameIds);
+            if (!Debug) return result;
+            var wrapLog = Log.Call<bool>(string.Join(",", nameIds ?? Array.Empty<string>()));
+            return wrapLog($"{result}", result);
+        }
 
+        public bool Valid => _root.Valid;
+
+        public bool Debug { get; set; }
     }
 }

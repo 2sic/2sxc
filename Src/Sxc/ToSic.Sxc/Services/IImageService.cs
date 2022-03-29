@@ -1,4 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
@@ -12,7 +14,7 @@ namespace ToSic.Sxc.Services
     /// History: **BETA** Released ca. 2sxc 13.10
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
-    public interface IImageService
+    public interface IImageService: ICanDebug
     {
         /// <summary>
         /// Get the format information for a specific extension.

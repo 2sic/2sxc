@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Data
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Data
 #if NETFRAMEWORK
         SexyContent.Interfaces.IDynamicEntity,
 #endif
-        IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject
+        IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject, ICanDebug
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity
@@ -191,11 +192,11 @@ namespace ToSic.Sxc.Data
         DynamicEntityDependencies _Dependencies { get; }
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
-        /// <summary>
-        /// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
-        /// </summary>
-        /// <param name="debug"></param>
-        void SetDebug(bool debug);
+        ///// <summary>
+        ///// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
+        ///// </summary>
+        ///// <param name="debug"></param>
+        //void SetDebug(bool debug);
 
     }
 }

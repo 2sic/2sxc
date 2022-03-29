@@ -8,7 +8,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject
+    public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug
     {
         protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
 
@@ -20,9 +20,9 @@ namespace ToSic.Sxc.Data
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <inheritdoc />
-        public void SetDebug(bool debug) => _debug = debug;
-        protected bool _debug;
-        
+        //public void SetDebug(bool debug) => _debug = debug;
+        //protected bool _debug;
+        public bool Debug { get; set; }
 
 
         [PrivateApi("Internal")]
@@ -37,13 +37,13 @@ namespace ToSic.Sxc.Data
         /// <param name="contents"></param>
         /// <returns></returns>
         [PrivateApi]
-        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Dependencies, _debug);
+        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Dependencies, Debug);
 
         internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntityDependencies dependencies, bool? debug)
         {
             if (contents == null) return null;
             var result = new DynamicEntity(contents, dependencies);
-            if(debug == true) result.SetDebug(true);
+            if (debug == true) result.Debug = true; // result.SetDebug(true);
             return result;
         }
 
@@ -53,5 +53,6 @@ namespace ToSic.Sxc.Data
         public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);
 
         #endregion
+
     }
 }

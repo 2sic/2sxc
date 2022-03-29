@@ -25,14 +25,14 @@ namespace ToSic.Sxc.Data
             SetEntity(entity);
 
             // WIP new in 12.03
-            _ListHelper = new DynamicEntityListHelper(this, () => _debug, dependencies);
+            _ListHelper = new DynamicEntityListHelper(this, () => Debug, dependencies);
         }
 
         internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, DynamicEntityDependencies dependencies): base(dependencies)
         {
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             SetEntity(list.FirstOrDefault() ?? PlaceHolder(appIdOrNull, parent, field));
-            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => _debug, dependencies);
+            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, dependencies);
         }
 
         private IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)

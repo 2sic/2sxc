@@ -62,6 +62,12 @@ namespace ToSic.Sxc.Images
         string SrcSet { get; }
 
         /// <summary>
+        /// The sizes in case you need it in your custom img-tag.
+        /// It will only be used for normal `img` tags, but not for `img` tags inside `picture` tags.
+        /// </summary>
+        string Sizes { get; }
+
+        /// <summary>
         /// The main url, used for main `src` property
         /// </summary>
         string Url { get; }

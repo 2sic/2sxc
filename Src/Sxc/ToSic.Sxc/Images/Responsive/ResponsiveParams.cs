@@ -29,27 +29,29 @@ namespace ToSic.Sxc.Images
             string method,
             object link,
             string noParamOrder = Parameters.Protector,
-            string url = default,
-            IDynamicField field = default,
+            //string url = default,
+            //IDynamicField field = default,
             object settings = null,
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
             AdvancedSettings advanced = null)
         {
-            Field = field ?? link as IDynamicField;
-            Link = (IHasLink)Field ?? new HasLink(url ?? link as string);
+            Field = /*field ??*/ link as IDynamicField;
+            Link = (IHasLink)Field ?? new HasLink(/*url ??*/ link as string);
             Settings = settings;
             Factor = factor;
             ImgAlt = imgAlt;
             ImgClass = imgClass;
             Advanced = advanced;
-            WarningParamsPicImg(method, noParamOrder);
+            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
+                $"{nameof(link)}, {nameof(settings)}, {nameof(factor)}, {nameof(imgAlt)}, {nameof(imgClass)}, recipe");
+            //WarningParamsPicImg(method, noParamOrder);
         }
 
 
-        private static void WarningParamsPicImg(string mName, string noParamOrder)
-            => Parameters.ProtectAgainstMissingParameterNames(noParamOrder, mName, "url, field, factor, imgAlt, imgClass, recipe");
+        //private static void WarningParamsPicImg(string mName, string noParamOrder)
+        //    => Parameters.ProtectAgainstMissingParameterNames(noParamOrder, mName, "url, field, factor, imgAlt, imgClass, recipe");
 
     }
 }

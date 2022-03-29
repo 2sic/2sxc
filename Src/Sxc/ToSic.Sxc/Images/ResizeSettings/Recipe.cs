@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Plumbing;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Images
     /// All the properties are read-only. If you need to override anything, copy it and set the modified values, then use the copy. 
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta / WIP")]
-    public class Recipe
+    public class Recipe: ICanDump
     {
         [PrivateApi] public const string RuleForDefault = "default";
 
@@ -151,7 +152,7 @@ namespace ToSic.Sxc.Images
 
 
         [PrivateApi("Important for using these settings, but not relevant outside of this")]
-        public SrcSetPart[] SrcSetParsed { get; private set; }
+        public SrcSetPart[] VariantsParsed { get; private set; }
 
         [PrivateApi]
         internal Recipe InitAfterLoad()
@@ -172,17 +173,25 @@ namespace ToSic.Sxc.Images
             FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? defaultsIfEmpty?.FactorParsed ?? 0;
             if (Width == 0) Width = defaultsIfEmpty?.Width ?? 0;
             Tag = Tag ?? defaultsIfEmpty?.Tag;
+            var hasVariants = Variants != null;
             Variants = Variants ?? defaultsIfEmpty?.Variants;
             SetWidth = SetWidth ?? defaultsIfEmpty?.SetWidth;
             SetHeight = SetHeight ?? defaultsIfEmpty?.SetHeight;
             Attributes = Attributes ?? defaultsIfEmpty?.Attributes;
             Name = Name ?? defaultsIfEmpty?.Name;
             CssFramework = CssFramework ?? defaultsIfEmpty?.CssFramework;
-            SrcSetParsed = SrcSetParser.ParseSet(Variants);
+            VariantsParsed = hasVariants ? SrcSetParser.ParseSet(Variants) : defaultsIfEmpty?.VariantsParsed;
 
             foreach (var s in Recipes) s?.InitAfterLoad(this);
 
             return this;
         }
+
+        public string Dump() =>
+            $"{nameof(Name)}: '{Name}', {nameof(CssFramework)}: {CssFramework}, " +
+            $"{nameof(Factor)}: {Factor}, {nameof(FactorParsed)}: {FactorParsed}, " +
+            $"{nameof(Variants)}: '{Variants}', {nameof(VariantsParsed)}: {VariantsParsed}, " +
+            $"{nameof(SetWidth)}: {SetWidth}, {nameof(SetHeight)}: {SetHeight}, " +
+            $"{nameof(Attributes)}: {Attributes?.Count}";
     }
 }

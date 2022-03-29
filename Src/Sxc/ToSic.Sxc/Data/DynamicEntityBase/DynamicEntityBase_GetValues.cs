@@ -12,12 +12,12 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
-            var logOrNull = _debug ? _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas") : null;
-            var safeWrap = _debug
-                ? logOrNull.SafeCall<object>(
+            var logOrNull = /*Debug ?*/ _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);// : null;
+            var safeWrap = // Debug
+                /*?*/ logOrNull.SafeCall<object>(Debug,
                     $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
                     "Debug: true")
-                : logOrNull.SafeCall<object>();
+                /*: logOrNull.SafeCall<object>()*/;
             
             // This determines if we should access & store in cache
             var useCache = language == null && lookup;
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Data
             {
                 logOrNull?.SafeAdd($"Convert entity list as {nameof(DynamicEntity)}");
                 var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Dependencies);
-                if (_debug) dynEnt.SetDebug(_debug);
+                if (Debug) dynEnt.Debug = true;// dynEnt.SetDebug(_debug);
                 return safeWrap("ent-list, now dyn", dynEnt);
             }
 
