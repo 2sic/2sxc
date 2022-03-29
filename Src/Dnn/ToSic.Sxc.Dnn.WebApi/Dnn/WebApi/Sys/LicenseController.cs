@@ -26,10 +26,18 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public bool Upload()
+        public LicenseFileResultDto Upload()
         {
             PreventServerTimeout300();
             return Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request));
+        }
+
+        /// <inheritdoc />
+        [HttpGet]
+        public LicenseFileResultDto Retrieve()
+        {
+            PreventServerTimeout300();
+            return Real.Retrieve();
         }
     }
 }
