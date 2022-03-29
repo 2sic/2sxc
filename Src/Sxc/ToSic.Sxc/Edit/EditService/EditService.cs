@@ -7,7 +7,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Edit.EditService
 {
     public partial class EditService : HasLog, IEditService
     {
