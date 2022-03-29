@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCode : HasLog, IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
+    public abstract partial class DynamicCode : HasLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
     {
 
         #region Constructor - NOT for DI
