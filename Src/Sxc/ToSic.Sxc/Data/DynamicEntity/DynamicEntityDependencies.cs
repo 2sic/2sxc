@@ -2,7 +2,9 @@
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using IRenderService = ToSic.Sxc.Services.IRenderService;
 
 namespace ToSic.Sxc.Data
 {
@@ -13,10 +15,11 @@ namespace ToSic.Sxc.Data
     [PrivateApi("this should all stay internal and never be public")]
     public class DynamicEntityDependencies
     {
-        public DynamicEntityDependencies(Lazy<IDataBuilder> dataBuilderLazy, Lazy<IValueConverter> valueConverterLazy)
+        public DynamicEntityDependencies(Lazy<IDataBuilder> dataBuilderLazy, Lazy<IValueConverter> valueConverterLazy, Generator<Services.IRenderService> renderServiceGenerator)
         {
             _dataBuilderLazy = dataBuilderLazy;
             _valueConverterLazy = valueConverterLazy;
+            _renderServiceGenerator = renderServiceGenerator;
         }
 
         internal DynamicEntityDependencies Init(IBlock blockOrNull, string[] dimensions, ILog log, int compatibility = Constants.CompatibilityLevel10)
@@ -46,7 +49,10 @@ namespace ToSic.Sxc.Data
 
 
         internal IDataBuilder DataBuilder => _dataBuilderLazy.Value;
-
         private readonly Lazy<IDataBuilder> _dataBuilderLazy;
+
+
+        internal IRenderService RenderService => _renderServiceGenerator.New;
+        private readonly Generator<IRenderService> _renderServiceGenerator;
     }
 }

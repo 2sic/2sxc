@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Modules;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 
@@ -13,15 +12,16 @@ namespace ToSic.Sxc.Dnn.Install
     /// Helper class to ensure that the an app is ready.
     /// It will have to do various file accesses - so once it knows a module is ready, it will cache the result.
     /// </summary>
-    public class DnnReadyCheckTurbo: HasLog
+    public class DnnReadyCheckTurbo : HasLog
     {
         /// <summary>
         /// Fast static check to see if the check had previously completed. 
         /// </summary>
         /// <param name="module"></param>
         /// <param name="block"></param>
+        /// <param name="appFolderInitializerLazy"></param>
         /// <param name="log"></param>
-        public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, ILog log)
+        public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy, ILog log)
         {
             var wrapLog = log.Call(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
             if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Install
                 return;
             }
 
-            new DnnReadyCheckTurbo(module, log).EnsureSiteAndAppFoldersAreReadyInternal(block);
+            new DnnReadyCheckTurbo(module, log).EnsureSiteAndAppFoldersAreReadyInternal(block, appFolderInitializerLazy);
             wrapLog("deep-check: ready");
         }
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Verify that the portal is ready, otherwise show a good error
         /// </summary>
-        private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block)
+        private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
         {
             var timerWrap = Log.Call<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", useTimer: true);
 
@@ -61,12 +61,12 @@ namespace ToSic.Sxc.Dnn.Install
             if (block.App != null)
             {
                 Log.Add("Will check if site is ready and template folder exists");
-                EnsureSiteIsConfiguredAndTemplateFolderExists(block);
+                EnsureSiteIsConfiguredAndTemplateFolderExists(block, appFolderInitializerLazy);
 
                 // If no exception was raised inside, everything is fine - must cache
                 CachedModuleResults.AddOrUpdate(_module.ModuleId, true, (id, value) => true);
             }
-            else 
+            else
                 Log.Add("skip, content-block not ready");
 
             return timerWrap("ok", true);
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block)
+        private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
         {
             var wrapLog = Log.SafeCall<bool>($"AppId: {block.AppId}");
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Dnn.Install
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = block.Context.ServiceProvider.Build<AppFolderInitializer>().Init(Log);
+                var tm = appFolderInitializerLazy.Value.Init(Log);
                 tm.EnsureTemplateFolderExists(block.Context.AppState, false);
             }
 

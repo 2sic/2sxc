@@ -15,14 +15,16 @@ namespace ToSic.Sxc.Blocks.Output
     {
         #region Constructors and DI
 
-        public RenderingHelper(ILinkPaths linkPaths, IEnvironmentLogger errorLogger) : base("Sxc.RndHlp")
+        public RenderingHelper(ILinkPaths linkPaths, IEnvironmentLogger errorLogger, Generator<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
         {
             _linkPaths = linkPaths;
             _errorLogger = errorLogger;
+            _jsContextAllGen = jsContextAllGen;
         }
 
         private readonly ILinkPaths _linkPaths;
         private readonly IEnvironmentLogger _errorLogger;
+        private readonly Generator<JsContextAll> _jsContextAllGen;
 
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
@@ -98,7 +100,7 @@ namespace ToSic.Sxc.Blocks.Output
             return msg;
         }
 
-        public string UiContextInfos() => JsonConvert.SerializeObject(Context.ServiceProvider.Build<JsContextAll>().Init(AppRootPath, Block, Log));
+        public string UiContextInfos() => JsonConvert.SerializeObject(_jsContextAllGen.New.Init(AppRootPath, Block, Log));
 
     }
 }

@@ -16,21 +16,28 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
     public class OqtGetBlock: HasLog<OqtGetBlock>
     {
         public OqtGetBlock(
-            IServiceProvider serviceProvider,
             Lazy<IModuleRepository> modRepoLazy,
             RequestHelper requestHelper,
-            IContextResolver contextResolverToInit
+            IContextResolver contextResolverToInit,
+            Generator<IContextOfBlock> cntOfBlkGen,
+            Generator<BlockFromModule> blkFromModGen,
+            Generator<BlockFromEntity> blkFromEntGen
         ) : base($"{OqtConstants.OqtLogPrefix}.GetBlk")
         {
-            _serviceProvider = serviceProvider;
             _modRepoLazy = modRepoLazy;
             this.requestHelper = requestHelper;
             _contextResolverToInit = contextResolverToInit;
+            _cntOfBlkGen = cntOfBlkGen;
+            _blkFromModGen = blkFromModGen;
+            _blkFromEntGen = blkFromEntGen;
         }
-        private readonly IServiceProvider _serviceProvider;
+
         private readonly Lazy<IModuleRepository> _modRepoLazy;
         private readonly RequestHelper requestHelper;
         private readonly IContextResolver _contextResolverToInit;
+        private readonly Generator<IContextOfBlock> _cntOfBlkGen;
+        private readonly Generator<BlockFromModule> _blkFromModGen;
+        private readonly Generator<BlockFromEntity> _blkFromEntGen;
 
         public IContextResolver TryToLoadBlockAndAttachToResolver()
         {
@@ -70,15 +77,15 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 return wrapLog("missing block because PageId not found in request", null);
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
-            var ctx = _serviceProvider.Build<IContextOfBlock>().Init(pageId, module, Log);
-            var block = _serviceProvider.Build<BlockFromModule>().Init(ctx, Log);
+            var ctx = _cntOfBlkGen.New.Init(pageId, module, Log);
+            var block = _blkFromModGen.New.Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
             var contentBlockId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             if (contentBlockId >= 0) return wrapLog("found block", block);
 
             Log.Add($"Inner Content: {contentBlockId}");
-            var entityBlock = _serviceProvider.Build<BlockFromEntity>().Init(block, contentBlockId, Log);
+            var entityBlock = _blkFromEntGen.New.Init(block, contentBlockId, Log);
             return wrapLog("found inner block", entityBlock);
         }
 

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
@@ -21,15 +23,26 @@ namespace ToSic.Sxc.WebApi.Cms
 
         #region DI Constructor and Init
 
-        public EditSaveBackend(SxcPagePublishing pagePublishing, Lazy<AppManager> appManagerLazy, IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Cms.SaveBk")
+        public EditSaveBackend(
+            SxcPagePublishing pagePublishing, 
+            Lazy<AppManager> appManagerLazy, 
+            IServiceProvider serviceProvider, 
+            IContextResolver ctxResolver,
+            Generator<Apps.App> appGen,
+            Generator<MultiPermissionsTypes> multiPermissionsTypesGen
+            ) : base(serviceProvider, "Cms.SaveBk")
         {
             _pagePublishing = pagePublishing;
             _appManagerLazy = appManagerLazy;
             _ctxResolver = ctxResolver;
+            _appGen = appGen;
+            _multiPermissionsTypesGen = multiPermissionsTypesGen;
         }
         private readonly SxcPagePublishing _pagePublishing;
         private readonly Lazy<AppManager> _appManagerLazy;
         private readonly IContextResolver _ctxResolver;
+        private readonly Generator<Apps.App> _appGen;
+        private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
 
         public EditSaveBackend Init(int appId, ILog log)
         {
@@ -73,7 +86,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Save.SaveSecurity(_context, Log)
+            var permCheck = new Save.SaveSecurity(_context, _appGen, _multiPermissionsTypesGen, Log)
                 .DoPreSaveSecurityCheck(_appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)

@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(WrapInContext), $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
-            var renderingHelper = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log);
+            var renderingHelper = _renderHelper.Ready;
 
             return new HybridHtmlString(
                renderingHelper.WrapInContext(content.ToString(),

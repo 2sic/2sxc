@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;
@@ -72,7 +73,8 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, Log);
+                var appFolderInitializerLazy = GetService<Lazy<AppFolderInitializer>>();
+                if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, appFolderInitializerLazy, Log);
                 DnnClientResources = GetService<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();

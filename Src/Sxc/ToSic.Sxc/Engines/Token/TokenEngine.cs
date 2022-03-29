@@ -76,10 +76,12 @@ namespace ToSic.Sxc.Engines
         #region Constructor / DI
 
         private readonly Lazy<DynamicCodeRoot> _dynCodeRootLazy;
+        private readonly GeneratorLog<AppConfigDelegate> _appConfigDelegateGenerator;
 
-        public TokenEngine(EngineBaseDependencies helpers, Lazy<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
+        public TokenEngine(EngineBaseDependencies helpers, Lazy<DynamicCodeRoot> dynCodeRootLazy, GeneratorLog<AppConfigDelegate> appConfigDelegateGenerator) : base(helpers)
         {
             _dynCodeRootLazy = dynCodeRootLazy;
+            _appConfigDelegateGenerator = appConfigDelegateGenerator.SetLog(Log);
         }
 
         #endregion
@@ -100,7 +102,7 @@ namespace ToSic.Sxc.Engines
 
         private void InitTokenReplace()
         {
-            var confProv = Block.Context.ServiceProvider.Build<AppConfigDelegate>().Init(Log).GetLookupEngineForContext(Block.Context, Block.App, Block);
+            var confProv = _appConfigDelegateGenerator.New.GetLookupEngineForContext(Block.Context, Block.App, Block);
             _tokenReplace = new TokenReplace(confProv);
             
             // Add the Content and ListContent property sources used always

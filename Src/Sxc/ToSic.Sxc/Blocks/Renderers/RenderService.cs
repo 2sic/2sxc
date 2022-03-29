@@ -21,11 +21,17 @@ namespace ToSic.Sxc.Blocks
 #pragma warning restore CS0618
     {
 
-        public RenderService(GeneratorLog<IInPageEditingSystem> editGenerator, LazyInitLog<IModuleAndBlockBuilder> builder): base("Sxc.RndSvc", initialMessage:"()")
+
+        public RenderService(GeneratorLog<IInPageEditingSystem> editGenerator, 
+            LazyInitLog<IModuleAndBlockBuilder> builder,
+            Generator<BlockFromEntity> blkFrmEntGen
+            ) : base("Sxc.RndSvc", initialMessage:"()")
         {
+            _blkFrmEntGen = blkFrmEntGen;
             _builder = builder.SetLog(Log);
             _editGenerator = editGenerator.SetLog(Log);
         }
+        private readonly Generator<BlockFromEntity> _blkFrmEntGen;
         private readonly GeneratorLog<IInPageEditingSystem> _editGenerator;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
 
@@ -52,8 +58,8 @@ namespace ToSic.Sxc.Blocks
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             item = item ?? parent;
             return new HybridHtmlString(field == null
-                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity) // with edit-context
-                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent)) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
+                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity, _blkFrmEntGen) // with edit-context
+                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), _blkFrmEntGen) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 
         /// <summary>
@@ -77,8 +83,8 @@ namespace ToSic.Sxc.Blocks
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
             return new HybridHtmlString(merge == null
-                    ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent))
-                    : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent)));
+                    ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent), _blkFrmEntGen)
+                    : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent), _blkFrmEntGen));
         }
 
         public IRenderResult Module(int pageId, int moduleId)
