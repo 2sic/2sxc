@@ -2,25 +2,26 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Dnn.Web
+namespace ToSic.Sxc.Dnn.Services
 {
     /// <summary>
     /// The DNN implementation of the <see cref="ILinkService"/>.
     /// </summary>
     [PrivateApi("This implementation shouldn't be visible")]
-    public class DnnLinkHelper : LinkHelperBase
+    public class DnnLinkService : LinkServiceBase
     {
         private readonly Lazy<DnnValueConverter> _dnnValueConverterLazy;
 
 
 
         [PrivateApi]
-        public DnnLinkHelper(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy, Lazy<ILinkPaths> linkPathsLazy) : base(imgLinker, linkPathsLazy)
+        public DnnLinkService(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy, Lazy<ILinkPaths> linkPathsLazy) : base(imgLinker, linkPathsLazy)
         {
             _dnnValueConverterLazy = dnnValueConverterLazy;
         }

@@ -18,7 +18,6 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         {
             // 2022-03-29 2dm replaced this. As Oqtane is still very new, we don't need to support the old interface as nobody will have code ATM linking to exactly that interface
             //services.TryAddTransient<ILinkHelper, OqtLinkHelper>();
-            services.TryAddTransient<ILinkService, OqtLinkHelper>();
+            services.TryAddTransient<ILinkService, OqtLinkService>();
 
             services.TryAddTransient<OqtPageOutput>();
             services.TryAddTransient<OqtSxcViewBuilder>();

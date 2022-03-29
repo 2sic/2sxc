@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
     /// The Oqtane implementation of the <see cref="ILinkService"/>.
     /// </summary>
     [PrivateApi]
-    public class OqtLinkHelper : LinkHelperBase
+    public class OqtLinkService : LinkServiceBase
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
         private readonly Lazy<IAliasRepository> _aliasRepositoryLazy;
         private Sxc.Context.IContextOfBlock _context;
 
-        public OqtLinkHelper(
+        public OqtLinkService(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
             ImgResizeLinker imgLinker,

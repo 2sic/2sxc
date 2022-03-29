@@ -4,11 +4,12 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     [PrivateApi("for testing / un-implemented use")]
-    public class LinkHelperUnknown: LinkHelperBase, IIsUnknown
+    public class LinkServiceUnknown: LinkServiceBase, IIsUnknown
     {
         public const string DefDomain = "unknown.2sxc.org";
         public const string DefProtocol = "https";
@@ -17,15 +18,12 @@ namespace ToSic.Sxc.Web
         public const string NiceCurrentPage = "current-page";
         public const string NiceCurrentRelative = NiceCurrentPath + NiceCurrentPage;
 
-        // 2dm - disable this, as there cannot be a current query on a page, unless it's page-url like tabid=25
-        public const string CurrentQuery = "";// "testparam=2742";
         public const string NiceCurrentUrlRoot = DefRoot + NiceCurrentRelative;
-        public const string NiceCurrentUrl = NiceCurrentUrlRoot;// + "?" + CurrentQuery;
+        public const string NiceCurrentUrl = NiceCurrentUrlRoot;
 
         public const string UglyAnyQuery = "tabId={0}";
         public const string UglyCurrentQuery = "tabId=27";
         public const string UglyCurrentPage = "default.aspx?" + UglyCurrentQuery;
-        //public const string UglyCurrentRelative = NiceCurrentPath + NiceCurrentPage;
         public const string UglyAnyPage = "default.aspx?" + UglyAnyQuery;
         public const string UglyCurrentUrl = DefRoot + "/" + UglyCurrentPage;
         public const string UglyAnyPageUrl = DefRoot + "/" + UglyAnyPage;
@@ -36,7 +34,7 @@ namespace ToSic.Sxc.Web
         internal static string CurrentPageUrl = NiceCurrentUrl;
         internal static string AnyPageUrl = NiceAnyPageUrl;
 
-        public LinkHelperUnknown(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkHelperUnknown> warn) : base(imgLinker, linkPathsLazy)
+        public LinkServiceUnknown(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> warn) : base(imgLinker, linkPathsLazy)
         {
         }
 
@@ -57,16 +55,5 @@ namespace ToSic.Sxc.Web
             AnyPageUrl = uglyOn ? UglyAnyPageUrl : NiceAnyPageUrl;
         }
 
-        //protected override string ToImplementation(int? pageId = null, string parameters = null, string api = null)
-        //{
-        //    if (!string.IsNullOrEmpty(parameters)) parameters = $"?{parameters}";
-
-        //    // Page or Api?
-        //    return api == null 
-        //        ? pageId != null
-        //            ? $"{GetDomainName()}/page{pageId}{parameters}" 
-        //            : $"{CurrentPage}{parameters}"
-        //        : $"{api}{parameters}";
-        //}
     }
 }

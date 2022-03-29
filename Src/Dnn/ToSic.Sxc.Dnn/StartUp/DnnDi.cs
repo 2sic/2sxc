@@ -121,8 +121,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
             services.TryAddTransient<IDnnContext, DnnContext>();
-            services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
-            services.TryAddTransient<ILinkService, DnnLinkHelper>();
+            //services.TryAddTransient<ILinkHelper, DnnLinkService>(); // 2022-03-29 v13.05 2dm disabled this, as I cannot imagine anybody having used this in DI
+            services.TryAddTransient<ILinkService, DnnLinkService>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();

@@ -8,14 +8,14 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Web
+namespace ToSic.Sxc.Services
 {
     [PrivateApi]
-    public abstract class LinkHelperBase : HasLog, ILinkService
+    public abstract class LinkServiceBase : HasLog, ILinkService
     {
-        protected LinkHelperBase(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy) : base($"{Constants.SxcLogName}.LnkHlp")
+        protected LinkServiceBase(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy) : base($"{Constants.SxcLogName}.LnkHlp")
         {
             _linkPathsLazy = linkPathsLazy;
             ImgLinker = imgLinker;

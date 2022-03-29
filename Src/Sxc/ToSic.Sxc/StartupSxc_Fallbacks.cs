@@ -1,5 +1,4 @@
-﻿using Connect.Koi;
-using Connect.Koi.Detectors;
+﻿using Connect.Koi.Detectors;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam;
@@ -47,7 +46,7 @@ namespace ToSic.Sxc
 
             // v12.05 - linkhelperunknown - for testing etc.
             //services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
-            services.TryAddTransient<ILinkService, LinkHelperUnknown>();
+            services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
             // v12.05
             services.TryAddTransient<IRazorService, RazorServiceUnknown>();

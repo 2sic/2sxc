@@ -24,9 +24,12 @@ namespace ToSic.Sxc.Services
     /// - Moved to this new `Services.ILinkService` in v13.05. The previous name will continue to work, but newer features will be missing on that interface. 
     /// </remarks>
     [PublicApi_Stable_ForUseInYourCode]
+    public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug
+#if NETFRAMEWORK
 #pragma warning disable CS0618
-    public interface ILinkService: INeedsDynamicCodeRoot, ICanDebug, ILinkHelper
+        , ILinkHelper
 #pragma warning restore CS0618
+#endif
     {
         /// <summary>
         /// returns a link to the current page with parameters resolved in a way that DNN wants it

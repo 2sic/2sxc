@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -146,3 +147,4 @@ namespace ToSic.Sxc.Web
     }
 
 }
+#endif
