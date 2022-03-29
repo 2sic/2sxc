@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Services
     ///
     /// As well as create base-tag links (important for SPAs)
     ///
-    /// Note that you get this automatically in Razor or APIs - on an object called `Link` - so you usually will not need to create this yourself. 
+    /// You will never create this yourself, as get this automatically in Razor or APIs on an object called `Link`.
     /// </summary>
     /// <remarks>
     /// History

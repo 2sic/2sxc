@@ -13,6 +13,8 @@ namespace ToSic.Sxc.Services
 {
     /// <summary>
     /// Contains status and commands to configure the in-page editing system.
+    ///
+    /// You will never create this yourself, as get this automatically in Razor or WebAPIs on an object called `Edit`.
     /// </summary>
     /// <remarks>
     /// History
