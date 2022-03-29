@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Images
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
                 settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-                parameters: parameters/*, allowMulti: false*/);
+                parameters: parameters);
 
             var result = ImageOnly(url, resizeSettings, field).Url;
             return wrapLog("built:" + result, result);
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Images
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
             one.TagEnhancements = srcSetSettings;
 
-            var imgDecorator = field?.ImageDecoratorOrNull();
+            var imgDecorator = field?.ImageDecoratorOrNull;
 
             var resizeMode = resizeSettings.ResizeMode;
             if (imgDecorator?.CropBehavior == ImageDecorator.NoCrop)

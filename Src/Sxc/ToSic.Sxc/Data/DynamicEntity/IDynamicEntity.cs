@@ -53,7 +53,14 @@ namespace ToSic.Sxc.Data
         /// </returns>
         new object EntityTitle { get; }
 
-        [PrivateApi("WIP")]
+        /// <summary>
+        /// **BETA**
+        ///
+        /// Get a Field-object of a property of this entity, to use with services like the <see cref="Services.IImageService"/> which also need more information like the metadata.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [WorkInProgressApi("WIP, to be released ca. 13.10")]
         IDynamicField Field(string name);
 
 

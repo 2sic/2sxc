@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Images
 {
-    [WorkInProgressApi("BETA")]
+    [PrivateApi("BETA, not sure if we need this")]
     public class ResizeSettingsFactory
     {
 

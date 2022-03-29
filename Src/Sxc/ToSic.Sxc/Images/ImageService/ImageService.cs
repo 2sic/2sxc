@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Logging;
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -63,21 +64,9 @@ namespace ToSic.Sxc.Images
 
         #endregion
 
-
-
-        public IResponsivePicture Picture(object link = null,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
-            object settings = null,
-            object factor = null,
-            string imgAlt = null,
-            string imgClass = null,
-            object recipe = null)
-            => new ResponsivePicture(this,
-                new ResponsiveParams(nameof(Picture), link, noParamOrder, null, null, GetBestSettings(settings), factor, imgAlt, imgClass,
-                    ToAdv(recipe)));
-
+        /// <inheritdoc />
         public IResponsiveImage Img(object link = null,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = Eav.Parameters.Protector,
             object settings = null,
             object factor = null,
             string imgAlt = null,
@@ -88,10 +77,42 @@ namespace ToSic.Sxc.Images
                     ToAdv(recipe)));
 
 
+        /// <inheritdoc />
+        public IResponsiveImage ImgOrPic(object link = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object settings = null,
+            object factor = null,
+            string imgAlt = null,
+            string imgClass = null,
+            object recipe = null)
+        {
+            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder, null, null,
+                GetBestSettings(settings), factor, imgAlt, imgClass, ToAdv(recipe));
+            var path = respParams.Link.Url;
+            var format = GetFormat(path);
+            return format.ResizeFormats.Any()
+                ? (IResponsiveImage)new ResponsivePicture(this, respParams)
+                : new ResponsiveImage(this, respParams);
+        }
+
+
+        /// <inheritdoc />
+        public IResponsivePicture Picture(object link = null,
+            string noParamOrder = Eav.Parameters.Protector, 
+            object settings = null,
+            object factor = null,
+            string imgAlt = null,
+            string imgClass = null,
+            object recipe = null)
+            => new ResponsivePicture(this,
+                new ResponsiveParams(nameof(Picture), link, noParamOrder, null, null, GetBestSettings(settings), factor, imgAlt, imgClass,
+                    ToAdv(recipe)));
+
+
         // 2022-03-19 2dm - not ready yet
         //public IHybridHtmlString SrcSet(string url,
         //    object settings = null,
-        //    string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+        //    string noParamOrder = Eav.Parameters.Protector,
         //    object factor = null,
         //    object recipe = null
         //) => new HybridHtmlString(ImgLinker.SrcSet(url, MergeSettings(settings, factor: factor, recipe: recipe), SrcSetType.Img));

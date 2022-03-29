@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Images
 
 
         /// <inheritdoc />
-        public string Alt => _alt.Get(() => Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull()?.Description);
+        public string Alt => _alt.Get(() => Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull?.Description);
         private readonly PropertyToRetrieveOnce<string> _alt = new PropertyToRetrieveOnce<string>();
 
 

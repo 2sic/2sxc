@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Data
 {
@@ -13,64 +14,40 @@ namespace ToSic.Sxc.Data
             Name = name;
         }
 
+        /// <inheritdoc />
         public string Name { get; }
 
         public IDynamicEntity Parent { get; }
 
-        public object Raw
-        {
-            get
+        /// <inheritdoc />
+        public dynamic Raw => _raw.Get(() => Parent.Get(Name, convertLinks: false));
+        private readonly PropertyToRetrieveOnce<dynamic> _raw = new PropertyToRetrieveOnce<dynamic>();
+
+
+        /// <inheritdoc />
+        public dynamic Value => _value.Get(() => Parent.Get(Name, convertLinks: true));
+        private readonly PropertyToRetrieveOnce<dynamic> _value = new PropertyToRetrieveOnce<dynamic>();
+
+        /// <inheritdoc />
+        public string Url => Value as string;
+
+
+        public IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
-                if (_rawRetrieved) return _raw;
-                _rawRetrieved = true;
-                return _raw = Parent.Get(Name, convertLinks: false);
-            }
-        }
-        private object _raw;
-        private bool _rawRetrieved;
+                if (!(Raw is string valString) || string.IsNullOrWhiteSpace(valString)) return null;
+                var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
+                return app?.GetMetadataOf(TargetTypes.CmsItem, valString, "");
+            });
+        private readonly PropertyToRetrieveOnce<IMetadataOf> _itemMd = new PropertyToRetrieveOnce<IMetadataOf>();
 
-        public string Url
+
+
+        public ImageDecorator ImageDecoratorOrNull => _imgDec2.Get(() =>
         {
-            get
-            {
-                if(_urlRetrieved) return _url;
-                _urlRetrieved = true;
-                return _url = Parent.Get(Name, convertLinks: true) as string;
-            }
-        }
-
-        private string _url;
-        private bool _urlRetrieved;
-
-
-        public IMetadataOf MetadataOfItem()
-        {
-            if(_metadataOfItem != null) return _metadataOfItem;
-            var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
-            if (app == null) return null;
-
-            var value = Raw;
-
-            if(!(value is string valString) || string.IsNullOrWhiteSpace(valString)) return null;
-
-            _metadataOfItem = app.GetMetadataOf(TargetTypes.CmsItem, valString, "");
-            return _metadataOfItem;
-        }
-        private IMetadataOf _metadataOfItem;
-
-        public ImageDecorator ImageDecoratorOrNull()
-        {
-            if(_imgDecTried) return _imgDec;
-            _imgDecTried = true;
-            var md = MetadataOfItem();
-            if(md == null) return null;
-            var decItem = md.FirstOrDefaultOfType(ImageDecorator.TypeName);
-            if (decItem != null)
-                _imgDec = new ImageDecorator(decItem);
-            return _imgDec;
-        }
-        private ImageDecorator _imgDec;
-        private bool _imgDecTried;
+            var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeName);
+            return decItem != null ? new ImageDecorator(decItem) : null;
+        });
+        private readonly PropertyToRetrieveOnce<ImageDecorator> _imgDec2 = new PropertyToRetrieveOnce<ImageDecorator>();
 
     }
 }

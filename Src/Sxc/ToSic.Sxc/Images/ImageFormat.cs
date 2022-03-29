@@ -27,5 +27,13 @@ namespace ToSic.Sxc.Images
                 ? better?.Union(new []{this}).ToList() ?? new List<IImageFormat> { this }
                 : new List<IImageFormat>();
         }
+
+        public ImageFormat(IImageFormat original, bool preserveSizes)
+        {
+            Format = original.Format;
+            MimeType = original.MimeType;
+            CanResize = original.CanResize;
+            ResizeFormats = preserveSizes ? original.ResizeFormats : new List<IImageFormat>();
+        }
     }
 }

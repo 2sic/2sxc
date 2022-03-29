@@ -12,7 +12,10 @@ namespace ToSic.Sxc.Search
     /// To use it, create a custom code (.cs) file which implements this interface.
     /// You can also inherit from a DynamicCode base class (like Code12) if you need more functionality. 
     /// </summary>
-    [WorkInProgressApi("Still WIP in 12.02")]
+    /// <remarks>
+    /// History: Released v12.02
+    /// </remarks>
+    [PublicApi]
     public interface ICustomizeSearch
     {
         /// <summary>
