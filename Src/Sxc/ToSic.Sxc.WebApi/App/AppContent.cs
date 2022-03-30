@@ -133,26 +133,25 @@ namespace ToSic.Sxc.WebApi.App
             var cleanedNewItem = new AppContentEntityBuilder(Log)
                 .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, AppState);
 
-            var userName = Context.User.IdentityToken;
+            // add owner
+            if (cleanedNewItem.Any(v => v.Key.ToLowerInvariant() == Attributes.EntityFieldOwner));
+                cleanedNewItem.Add(Attributes.EntityFieldOwner, Context.User.IdentityToken);
 
-            var realApp = GetApp(AppState.AppId, Context.UserMayEdit);
             var dataController = DataController(AppState);
             if (id == null)
             {
                 Log.Add($"create new entity because id is null");
                 var metadata = GetMetadata(newContentItemCaseInsensitive);
                 Log.Add($"metadata: {metadata}");
-                // todo: try to use DataController
-                var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
-                Log.Add($"new entity created: {entity}");
-                id = entity.EntityId;
+
+                var ids = dataController.Create(contentType, new List<Dictionary<string, object>> { cleanedNewItem }, metadata);
+                id = ids.FirstOrDefault();
 
                 Log.Add($"new entity id: {id}");
-                var added = AddParentRelationship(newContentItemCaseInsensitive, entity.EntityId);
+                var added = AddParentRelationship(newContentItemCaseInsensitive, id.Value);
             }
             else
-                // todo: try to use DataController
-                realApp.Data.Update(id.Value, cleanedNewItem, userName);
+                dataController.Update(id.Value, cleanedNewItem);
 
             return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit)
                 .Convert(AppState.List.One(id.Value));
