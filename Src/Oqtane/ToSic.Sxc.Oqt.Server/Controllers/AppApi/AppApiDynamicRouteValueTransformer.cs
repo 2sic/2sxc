@@ -55,79 +55,90 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
         public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
         {
-            var wrapLog = Log.Call<RouteValueDictionary>();
-
-            #region Ensure required alias
-            Alias alias;
-            if (values.ContainsKey("alias"))
+            return await Task.Run(() =>
             {
-                alias = _tenantResolver.GetAlias();
-            }
-            else
-            {
-                var serviceProvider = httpContext.RequestServices;
-                var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
-                alias = siteStateInitializer.InitializedState.Alias
-                        ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'alias' route value.", "Not Found");
-            }
-            var aliasPart = OqtServerPaths.GetAppRootWithSiteId(alias.SiteId);
-            #endregion
+                var wrapLog = Log.Call<RouteValueDictionary>();
 
-            // Ensure required route values: alias, appFolder, controller, action.
-            if (!values.ContainsKey("appFolder"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'appFolder' route value.", "Not Found");
-            var appFolder = (string)values["appFolder"];
-            if (appFolder == WebApiConstants.Auto)
-            {
-                // Before trying to get the AppFolder, we must init the ICmsContext as this will
-                var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
-                blockInitializer.TryToLoadBlockAndAttachToResolver();
-                appFolder = _appFolder.Ready.GetAppFolder();
-            }
+                #region Ensure required alias
 
+                Alias alias;
+                if (values.ContainsKey("alias"))
+                {
+                    alias = _tenantResolver.GetAlias();
+                }
+                else
+                {
+                    var serviceProvider = httpContext.RequestServices;
+                    var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
+                    alias = siteStateInitializer.InitializedState.Alias
+                            ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
+                                $"Error: missing required 'alias' route value.", "Not Found");
+                }
 
-            if (!values.ContainsKey("controller"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'controller' route value.", "Not Found");
-            var controller = (string)values["controller"];
+                var aliasPart = OqtServerPaths.GetAppRootWithSiteId(alias.SiteId);
 
-            if (!values.ContainsKey("action"))
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Error: missing required 'action' route value.", "Not Found");
-            var action = (string)values["action"];
+                #endregion
 
-            Log.Add($"TransformAsync route required values are present, alias:{alias.AliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
-
-            var controllerTypeName = $"{controller}Controller";
-            Log.Add($"Controller TypeName: {controllerTypeName}");
-            values.Add("controllerTypeName", controllerTypeName);
-
-            var edition = GetEdition(values);
-            Log.Add($"Edition: {edition}");
+                // Ensure required route values: alias, appFolder, controller, action.
+                if (!values.ContainsKey("appFolder"))
+                    throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
+                        $"Error: missing required 'appFolder' route value.", "Not Found");
+                var appFolder = (string) values["appFolder"];
+                if (appFolder == WebApiConstants.Auto)
+                {
+                    // Before trying to get the AppFolder, we must init the ICmsContext as this will
+                    var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
+                    blockInitializer.TryToLoadBlockAndAttachToResolver();
+                    appFolder = _appFolder.Ready.GetAppFolder();
+                }
 
 
-            var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
-            Log.Add($"Controller Folder: {controllerFolder}");
+                if (!values.ContainsKey("controller"))
+                    throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
+                        $"Error: missing required 'controller' route value.", "Not Found");
+                var controller = (string) values["controller"];
 
-            var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
-            Log.Add($"Area: {area}");
-            values.Add("area", area);
+                if (!values.ContainsKey("action"))
+                    throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
+                        $"Error: missing required 'action' route value.", "Not Found");
+                var action = (string) values["action"];
 
-            var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
-            Log.Add($"Controller Path: {controllerPath}");
+                Log.Add(
+                    $"TransformAsync route required values are present, alias:{alias.AliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
 
-            var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
-            Log.Add($"Absolute Path: {apiFile}");
-            values.Add("apiFile", apiFile);
+                var controllerTypeName = $"{controller}Controller";
+                Log.Add($"Controller TypeName: {controllerTypeName}");
+                values.Add("controllerTypeName", controllerTypeName);
 
-            var dllName = GetDllName(controllerFolder, apiFile);
-            Log.Add($"Dll Name: {dllName}");
-            values.Add("dllName", dllName);
+                var edition = GetEdition(values);
+                Log.Add($"Edition: {edition}");
 
-            // help with path resolution for compilers running inside the created controller
-            httpContext.Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
-            httpContext.Request?.HttpContext.Items.Add(HttpContextKeyForAppFolder, appFolder);
-            
-            return wrapLog($"ok, TransformAsync route required values are prepared", values);
+                var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
+                Log.Add($"Controller Folder: {controllerFolder}");
+
+                var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
+                Log.Add($"Area: {area}");
+                values.Add("area", area);
+
+                var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
+                Log.Add($"Controller Path: {controllerPath}");
+
+                var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
+                Log.Add($"Absolute Path: {apiFile}");
+                values.Add("apiFile", apiFile);
+
+                var dllName = GetDllName(controllerFolder, apiFile);
+                Log.Add($"Dll Name: {dllName}");
+                values.Add("dllName", dllName);
+
+                // help with path resolution for compilers running inside the created controller
+                httpContext.Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+
+                httpContext.Request?.HttpContext.Items.Add(HttpContextKeyForAppFolder, appFolder);
+
+                return wrapLog($"ok, TransformAsync route required values are prepared", values);
+            });
         }
 
         public static string GetDllName(string controllerFolder, string apiFile)
