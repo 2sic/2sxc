@@ -134,7 +134,7 @@ namespace ToSic.Sxc.WebApi.App
                 .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, AppState);
 
             // add owner
-            if (cleanedNewItem.Any(v => v.Key.ToLowerInvariant() == Attributes.EntityFieldOwner));
+            if (cleanedNewItem.Any(v => v.Key.ToLowerInvariant() == Attributes.EntityFieldOwner))
                 cleanedNewItem.Add(Attributes.EntityFieldOwner, Context.User.IdentityToken);
 
             var dataController = DataController(AppState);
