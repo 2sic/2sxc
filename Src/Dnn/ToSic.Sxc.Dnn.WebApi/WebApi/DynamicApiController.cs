@@ -71,7 +71,9 @@ namespace ToSic.Sxc.WebApi
 
         // ReSharper disable once InconsistentNaming
         [PrivateApi]
+#pragma warning disable IDE1006 // Naming Styles
         public AdamCode _AdamCode { get; private set; }
+#pragma warning restore IDE1006 // Naming Styles
 
         public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
 
