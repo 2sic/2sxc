@@ -14,6 +14,12 @@ namespace ToSic.Sxc.Blocks
         public string Html { get; set; }
 
         /// <inheritdoc />
+        public bool CanCache { get; set; }
+
+        /// <inheritdoc />
+        public bool IsError { get; set; }
+
+        /// <inheritdoc />
         public IList<IPageFeature> Features { get; set; }
 
         /// <inheritdoc />

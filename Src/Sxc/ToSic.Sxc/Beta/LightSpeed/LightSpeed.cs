@@ -33,6 +33,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
             var wrapLog = Log.Call<bool>();
             if (!IsEnabled) return wrapLog("disabled", false);
             if (data == null) return wrapLog("null", false);
+            if (data.IsError) return wrapLog("error", false);
+            if (!data.CanCache) return wrapLog("can't cache", false);
+            if (data.DependentApps?.Any() != true) return wrapLog("app not initialized", false);
             if (data == Existing?.Data) return wrapLog("not new", false);
             Fresh.Data = data;
             var duration = Duration;

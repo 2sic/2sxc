@@ -20,6 +20,17 @@ namespace ToSic.Sxc.Blocks
         string Html { get; }
 
         /// <summary>
+        /// Determines if this render-result can be cached.
+        /// Should be false in case of errors or not-yet initialized content
+        /// </summary>
+        bool CanCache { get; }
+
+        /// <summary>
+        /// Information that the result contains an error message and should be treated differently, like no caching
+        /// </summary>
+        bool IsError { get; }
+
+        /// <summary>
         /// Built-in page features (like jQuery, 2sxc.JsCode, ...) which were requested by the code and should be enabled
         /// </summary>
         IList<IPageFeature> Features { get; }
