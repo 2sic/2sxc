@@ -21,12 +21,12 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public dynamic Raw => _raw.Get(() => Parent.Get(Name, convertLinks: false));
-        private readonly PropertyToRetrieveOnce<dynamic> _raw = new PropertyToRetrieveOnce<dynamic>();
+        private readonly ValueGetOnce<dynamic> _raw = new ValueGetOnce<dynamic>();
 
 
         /// <inheritdoc />
         public dynamic Value => _value.Get(() => Parent.Get(Name, convertLinks: true));
-        private readonly PropertyToRetrieveOnce<dynamic> _value = new PropertyToRetrieveOnce<dynamic>();
+        private readonly ValueGetOnce<dynamic> _value = new ValueGetOnce<dynamic>();
 
         /// <inheritdoc />
         public string Url => Value as string;
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
                 var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
                 return app?.GetMetadataOf(TargetTypes.CmsItem, valString, "");
             });
-        private readonly PropertyToRetrieveOnce<IMetadataOf> _itemMd = new PropertyToRetrieveOnce<IMetadataOf>();
+        private readonly ValueGetOnce<IMetadataOf> _itemMd = new ValueGetOnce<IMetadataOf>();
 
 
 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Data
             var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeName);
             return decItem != null ? new ImageDecorator(decItem) : null;
         });
-        private readonly PropertyToRetrieveOnce<ImageDecorator> _imgDec2 = new PropertyToRetrieveOnce<ImageDecorator>();
+        private readonly ValueGetOnce<ImageDecorator> _imgDec2 = new ValueGetOnce<ImageDecorator>();
 
     }
 }

@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Images
             Log.SafeAdd(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
             return t;
         });
-        private readonly PropertyToRetrieveOnce<OneResize> _thisResize = new PropertyToRetrieveOnce<OneResize>();
+        private readonly ValueGetOnce<OneResize> _thisResize = new ValueGetOnce<OneResize>();
 
 
         internal ResizeSettings Settings { get; }
@@ -98,12 +98,12 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public string Alt => _alt.Get(() => Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull?.Description);
-        private readonly PropertyToRetrieveOnce<string> _alt = new PropertyToRetrieveOnce<string>();
+        private readonly ValueGetOnce<string> _alt = new ValueGetOnce<string>();
 
 
         /// <inheritdoc />
         public string Class => _imgClass.Get(ClassGenerator);
-        private readonly PropertyToRetrieveOnce<string> _imgClass = new PropertyToRetrieveOnce<string>();
+        private readonly ValueGetOnce<string> _imgClass = new ValueGetOnce<string>();
         private string ClassGenerator()
         {
             var wrapLog = Log.SafeCall<string>(ImgService.Debug);
@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public string SrcSet => _srcSet.Get(SrcSetGenerator);
-        private readonly PropertyToRetrieveOnce<string> _srcSet = new PropertyToRetrieveOnce<string>();
+        private readonly ValueGetOnce<string> _srcSet = new ValueGetOnce<string>();
         private string SrcSetGenerator()
         {
             var isEnabled = ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public string Width => _width.Get(WidthGenerator);
-        private readonly PropertyToRetrieveOnce<string> _width = new PropertyToRetrieveOnce<string>();
+        private readonly ValueGetOnce<string> _width = new ValueGetOnce<string>();
         private string WidthGenerator()
         {
             var setWidth = ThisResize.Recipe?.SetWidth;
@@ -158,7 +158,7 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public string Height => _height.Get(HeightGenerator);
-        private readonly PropertyToRetrieveOnce<string> _height = new PropertyToRetrieveOnce<string>();
+        private readonly ValueGetOnce<string> _height = new ValueGetOnce<string>();
         private string HeightGenerator()
         {
             var setHeight = ThisResize.Recipe?.SetHeight;
@@ -171,7 +171,7 @@ namespace ToSic.Sxc.Images
 
 
         public string Sizes => _sizes.Get(SizesGenerator);
-        private readonly PropertyToRetrieveOnce<string> _sizes = new PropertyToRetrieveOnce<string>();
+        private readonly ValueGetOnce<string> _sizes = new ValueGetOnce<string>();
         private string SizesGenerator()
         {
             var wrapLog = Log.SafeCall<string>(ImgService.Debug);

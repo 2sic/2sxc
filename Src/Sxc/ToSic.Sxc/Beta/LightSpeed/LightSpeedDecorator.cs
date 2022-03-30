@@ -11,6 +11,8 @@ namespace ToSic.Sxc.Beta.LightSpeed
         public const string FieldDurationEditor = "DurationEditors";
         public const string FieldDurationSysAdmin = "DurationSystemAdmin";
         public const string FieldByUrlParameters = "ByUrlParameters";
+        public const string FieldUrlCaseSensitive = "UrlParametersCaseSensitive";
+        public const string FieldAdvanced = "Advanced";
 
         public LightSpeedDecorator(IEntity entity) : base(entity)
         {
@@ -27,5 +29,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
         public int DurationSystemAdmin => Get(FieldDurationSysAdmin, 0);
 
         public bool ByUrlParam => Get(FieldByUrlParameters, false);
+
+        public bool UrlParamCaseSensitive => Get(FieldUrlCaseSensitive, false);
+
+        public string Advanced => Get(FieldAdvanced, "");
     }
 }

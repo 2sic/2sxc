@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             if (data == null) return wrapLog("null", false);
             if (data == Existing?.Data) return wrapLog("not new", false);
             Fresh.Data = data;
-            var duration = GetDuration();
+            var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
                 return wrapLog($"not added as duration is {duration}", false);
@@ -44,36 +44,41 @@ namespace ToSic.Sxc.Beta.LightSpeed
             return wrapLog($"added for {duration}s", true);
         }
 
-        private int GetDuration()
+        private int Duration => _duration.Get(() =>
         {
             var user = _block.Context.User;
             if (user.IsSuperUser) return AppConfig.DurationSystemAdmin;
             if (user.IsAdmin) return AppConfig.DurationEditor;
             if (!user.IsAnonymous) return AppConfig.DurationUser;
             return AppConfig.Duration;
-        }
+        });
+        private readonly ValueGetOnce<int> _duration = new ValueGetOnce<int>();
 
 
 
         private string Suffix => _suffix.Get(GetSuffix);
-        private readonly PropertyToRetrieveOnce<string> _suffix = new PropertyToRetrieveOnce<string>();
-        private string GetSuffix() => !AppConfig.ByUrlParam ? null : _block.Context.Page.Parameters.ToString();
+        private readonly ValueGetOnce<string> _suffix = new ValueGetOnce<string>();
+        private string GetSuffix()
+        {
+            if (!AppConfig.ByUrlParam) return null;
+            var urlParams = _block.Context.Page.Parameters.ToString();
+            if (string.IsNullOrWhiteSpace(urlParams)) return null;
+            if (!AppConfig.UrlParamCaseSensitive) urlParams = urlParams.ToLowerInvariant();
+            return urlParams;
+        }
 
 
         private string CacheKey =>
             _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, UserIdOrAnon, Suffix)));
-        private readonly PropertyToRetrieveOnce<string> _key = new PropertyToRetrieveOnce<string>();
+        private readonly ValueGetOnce<string> _key = new ValueGetOnce<string>();
 
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
-        private readonly PropertyToRetrieveOnce<int?> _userId = new PropertyToRetrieveOnce<int?>();
-
-
-        //public bool IsInCache => Existing != null;
+        private readonly ValueGetOnce<int?> _userId = new ValueGetOnce<int?>();
 
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);
-        private readonly PropertyToRetrieveOnce<OutputCacheItem> _existing = new PropertyToRetrieveOnce<OutputCacheItem>();
+        private readonly ValueGetOnce<OutputCacheItem> _existing = new ValueGetOnce<OutputCacheItem>();
         private OutputCacheItem ExistingGenerator()
         {
             var wrapLog = Log.Call<OutputCacheItem>();
@@ -96,7 +101,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
 
 
         public bool IsEnabled => _enabled.Get(IsEnabledGenerator);
-        private readonly PropertyToRetrieveOnce<bool> _enabled = new PropertyToRetrieveOnce<bool>();
+        private readonly ValueGetOnce<bool> _enabled = new ValueGetOnce<bool>();
         private bool IsEnabledGenerator()
         {
             var wrapLog = Log.Call<bool>();
@@ -110,7 +115,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
 
 
         public LightSpeedDecorator AppConfig => _lsd.Get(LightSpeedDecoratorGenerator);
-        private readonly PropertyToRetrieveOnce<LightSpeedDecorator> _lsd = new PropertyToRetrieveOnce<LightSpeedDecorator>();
+        private readonly ValueGetOnce<LightSpeedDecorator> _lsd = new ValueGetOnce<LightSpeedDecorator>();
         private LightSpeedDecorator LightSpeedDecoratorGenerator()
         {
             var wrapLog = Log.Call<LightSpeedDecorator>();

@@ -19,10 +19,10 @@ namespace ToSic.Sxc.Images
 
 
         public Picture Picture => _picTag.Get(() => Tag.Picture(Sources, Img));
-        private readonly PropertyToRetrieveOnce<Picture> _picTag = new PropertyToRetrieveOnce<Picture>();
+        private readonly ValueGetOnce<Picture> _picTag = new ValueGetOnce<Picture>();
 
         public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Call.Link.Url, Settings));
-        private readonly PropertyToRetrieveOnce<TagList> _sourceTags = new PropertyToRetrieveOnce<TagList>();
+        private readonly ValueGetOnce<TagList> _sourceTags = new ValueGetOnce<TagList>();
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {
