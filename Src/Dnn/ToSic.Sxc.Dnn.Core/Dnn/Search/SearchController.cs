@@ -165,8 +165,9 @@ namespace ToSic.Sxc.Search
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
                     var engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
-                    engine.Init(Block, Purpose.IndexingForSearch, Log);
-                    
+                    engine.Init(Log).Init(Block, Purpose.IndexingForSearch);
+
+#pragma warning disable CS0618
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing
                     // The new model v12.02 won't need this
                     Log.Add("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
@@ -175,6 +176,7 @@ namespace ToSic.Sxc.Search
                     // check if the cshtml has search customizations
                     Log.Add("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
                     engine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
+#pragma warning restore CS0618
                 }
             }
             catch (Exception e)

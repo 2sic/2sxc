@@ -3,6 +3,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
+#pragma warning disable CS0108, CS0114
 
 namespace ToSic.Sxc.Services
 {

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
             // Check special cases #1 Toolbar - only in DNN, not available in Oqtane
 #if NETFRAMEWORK
             // ReSharper disable once ConvertIfStatementToSwitchStatement
-            #pragma warning disable 618 - ignore Obsolete
+            #pragma warning disable 618 // ignore Obsolete
             if (field == "Toolbar") return Toolbar.ToString();
             #pragma warning restore 618
 #endif

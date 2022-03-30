@@ -49,6 +49,8 @@ namespace ToSic.Sxc.Context
         /// <remarks>
         /// Added in v12.10
         /// </remarks>
+#pragma warning disable CS0108, CS0114
         IMetadataOf Metadata { get; }
+#pragma warning restore CS0108, CS0114
     }
 }

@@ -1,7 +1,9 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
-
+#if !NETFRAMEWORK
+#pragma warning disable CS0109
+#endif
 // ReSharper disable UnusedMemberInSuper.Global
 
 namespace ToSic.Sxc.Apps

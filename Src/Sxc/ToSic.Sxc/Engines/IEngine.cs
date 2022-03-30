@@ -16,8 +16,10 @@ namespace ToSic.Sxc.Engines
     /// and using all that to produce an html-string for the browser. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public interface IEngine
+    public interface IEngine: IHasLog
     {
+#if NETFRAMEWORK
+#pragma warning disable CS0612
         /// <summary>
         /// Initialize the Engine (pass everything needed for Render to it).<br/>
         /// This is not in the constructor, because IEngines usually get constructed with DI,
@@ -25,8 +27,11 @@ namespace ToSic.Sxc.Engines
         /// </summary>
         /// <param name="block">block within the cms</param>
         /// <param name="purpose">Purpose of the engine (show in web, search-index, etc.). The custom code may adapt its behavior depending on the purpose</param>
-        /// <param name="parentLog">Log to chain with</param>
-        void Init(IBlock block, Purpose purpose, ILog parentLog);
+        void Init(IBlock block, Purpose purpose);
+#pragma warning restore CS0612
+#endif
+
+        void Init(IBlock block);
 
         /// <summary>
         /// Renders a template, returning a string with the rendered template.
@@ -36,11 +41,13 @@ namespace ToSic.Sxc.Engines
 
         [PrivateApi] bool ActivateJsApi { get; }
 
+#if NETFRAMEWORK
         /// <summary>
         /// Mechanism which allows the view to change data it will show in a stream-based way.
         /// This helps to ensure that other parts like JSON-Streams or Search have the same information
         /// as the view itself. 
         /// </summary>
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         void CustomizeData();
 
         /// <summary>
@@ -50,16 +57,12 @@ namespace ToSic.Sxc.Engines
         /// <param name="moduleInfo"></param>
         /// <param name="beginDate"></param>
         [PrivateApi]
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo, DateTime beginDate);
 
-        /// <summary>
-        /// todo
-        /// </summary>
         [PrivateApi]
-        RenderStatusType PreRenderStatus { get; }
-
-        [PrivateApi]
-        bool CompatibilityAutoLoadJQueryAndRVT { get; }
+        bool CompatibilityAutoLoadJQueryAndRvt { get; }
+#endif
 
         List<IClientAsset> Assets { get; }
     }

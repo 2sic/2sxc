@@ -2,18 +2,14 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Installation
 {
     internal static class HotReloadEnabledCheck
     {
-      
         private static bool? _hotReloadEnabledCheckedAndError;
 
         private static string errorMessage = "Warning: You must run Oqtane without Hot-Reload to install Apps. See https://r.2sxc.org/oqt-hr";
-
-        internal static OqtViewResultsDto InstallationErrorResult;
 
         internal static void Check()
         {

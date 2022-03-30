@@ -12,7 +12,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
@@ -49,6 +48,7 @@ namespace ToSic.Sxc.Dnn
 
         [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
 #pragma warning disable 618 // disable warning about IContainer being obsolete
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
 #pragma warning restore 618
             DateTime beginDate)

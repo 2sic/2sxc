@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
@@ -202,7 +203,7 @@ namespace ToSic.Sxc.Blocks
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return wrapLog("no view", null);
             _engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
-            _engine.Init(Block, Purpose.WebView, Log);
+            _engine.Init(Log).Init(Block);
             return wrapLog("created", _engine);
         }
         private IEngine _engine;

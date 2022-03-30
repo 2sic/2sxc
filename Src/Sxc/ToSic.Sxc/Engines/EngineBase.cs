@@ -30,13 +30,17 @@ namespace ToSic.Sxc.Engines
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
         [PrivateApi] protected IDataSource DataSource;
-        [PrivateApi] protected Purpose Purpose;
+#if NETFRAMEWORK
+#pragma warning disable CS0612
+        [PrivateApi] protected Purpose Purpose = Purpose.WebView;
+#pragma warning restore CS0612
+#endif
         [PrivateApi] protected IBlock Block;
 
         [PrivateApi]
-        public RenderStatusType PreRenderStatus { get; internal set; }
+        private RenderStatusType PreRenderStatus { get; set; }
 
-        [PrivateApi] public bool CompatibilityAutoLoadJQueryAndRVT { get; protected set; } = true;
+        [PrivateApi] public bool CompatibilityAutoLoadJQueryAndRvt { get; protected set; } = true;
 
         #region Constructor and DI
 
@@ -48,14 +52,22 @@ namespace ToSic.Sxc.Engines
             Helpers = helpers;
             helpers.BlockResourceExtractor.Init(Log);
         }
-        
+
         #endregion
 
-        
+#if NETFRAMEWORK
+#pragma warning disable CS0612
         /// <inheritdoc />
-        public void Init(IBlock block, Purpose purpose, ILog parentLog)
+        public void Init(IBlock block, Purpose purpose)
         {
-            Log.LinkTo(parentLog);
+            Purpose = purpose;
+            Init(block);
+        }
+#pragma warning restore CS0612
+#endif
+
+        public void Init(IBlock block)
+        {
             var wrapLog = Log.Call();
             Block = block;
             var view = Block.View;
@@ -74,7 +86,7 @@ namespace ToSic.Sxc.Engines
             TemplatePath = templatePath;
             App = Block.App;
             DataSource = Block.Data;
-            Purpose = purpose;
+            //Purpose = purpose;
 
             // check common errors
             CheckExpectedTemplateErrors();
@@ -126,22 +138,29 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         protected virtual void Init() {}
 
+#if NETFRAMEWORK
         /// <inheritdoc />
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public virtual void CustomizeData() {}
 
         /// <inheritdoc />
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {
         }
+#endif 
 
         /// <inheritdoc />
         public string Render()
         {
             var wrapLog = Log.Call<string>();
             // call engine internal feature to optionally change what data is actually used or prepared for search...
+#if NETFRAMEWORK
+#pragma warning disable CS0618
             CustomizeData();
-
+#pragma warning restore CS0618
+#endif
             // check if rendering is possible, or throw exceptions...
             CheckExpectedNoRenderConditions();
 

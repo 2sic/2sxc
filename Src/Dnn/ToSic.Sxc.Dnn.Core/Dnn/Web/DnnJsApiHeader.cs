@@ -43,7 +43,9 @@ namespace ToSic.Sxc.Dnn.Web
                 rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
                 rvt: AntiForgeryToken());
 
+#pragma warning disable CS0618
             HtmlPage.AddMeta(InpageCms.MetaName, json);
+#pragma warning restore CS0618
             return wrapLog("added", true);
         }
 

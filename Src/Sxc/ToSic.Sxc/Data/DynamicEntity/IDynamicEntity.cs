@@ -4,6 +4,9 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using IEntity = ToSic.Eav.Data.IEntity;
+#if !NETFRAMEWORK
+#pragma warning disable CS0109
+#endif
 
 namespace ToSic.Sxc.Data
 {

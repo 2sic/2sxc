@@ -1,7 +1,4 @@
-﻿using System;
-using ToSic.Eav.Plumbing;
-
-namespace ToSic.Sxc.Dnn.Install
+﻿namespace ToSic.Sxc.Dnn.Install
 {
     public partial class DnnEnvironmentInstaller
     {
@@ -25,8 +22,10 @@ namespace ToSic.Sxc.Dnn.Install
         public static void VerifyUpgradeComplete()
         {
             // When this is created, update the status
+#pragma warning disable CS0618
             UpgradeComplete = DnnStaticDi.StaticBuild<DnnEnvironmentInstaller>()
                 .IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
+#pragma warning restore CS0618
         }
 
         internal static bool UpgradeComplete;

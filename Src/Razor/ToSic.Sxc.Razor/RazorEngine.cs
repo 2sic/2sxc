@@ -27,14 +27,6 @@ namespace ToSic.Sxc.Razor
             RazorRenderer = razorRenderer;
         }
         
-        /// <inheritdoc />
-        [PrivateApi]
-        protected override void Init()
-        {
-            // in MVC & Oqtane we're always using V10 compatibility
-            CompatibilityAutoLoadJQueryAndRVT = false;
-        }
-
         #endregion
         
         /// <inheritdoc/>

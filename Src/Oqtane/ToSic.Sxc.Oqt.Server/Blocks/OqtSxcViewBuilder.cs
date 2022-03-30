@@ -2,7 +2,6 @@
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -80,17 +79,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             #endregion
 
             // #Lightspeed
-            var renderResult = PreviousCache?.Data ?? Block.BlockBuilder.Run(true);
+            var renderResult = Block.BlockBuilder.Run(true);
 
             PageOutput.Init(this, renderResult);
-
-            //// #Lightspeed
-            //if (NewCache != null)
-            //{
-            //    Log.Add("Adding to lightspeed");
-            //    NewCache.Data = renderResult;
-            //    Lightspeed.Add(Module.ModuleId, NewCache);
-            //}
 
             var ret = new OqtViewResultsDto
             {
@@ -133,11 +124,5 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private bool _blockLoaded;
 
         #endregion
-
-        private OutputCacheManager Lightspeed => _lightspeed ??= new OutputCacheManager();
-        private OutputCacheManager _lightspeed;
-        private OutputCacheItem PreviousCache;
-        private OutputCacheItem NewCache;
-
     }
 }

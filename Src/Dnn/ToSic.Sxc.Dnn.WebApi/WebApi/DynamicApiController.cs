@@ -14,7 +14,6 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi
 {
-    /// <inheritdoc cref="SxcApiControllerBase" />
     /// <summary>
     /// This is the foundation for both the old SxcApiController and the new Dnn.ApiController.
     /// incl. the current App, DNN, Data, etc.
