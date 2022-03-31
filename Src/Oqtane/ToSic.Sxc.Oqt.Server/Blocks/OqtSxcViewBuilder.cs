@@ -48,9 +48,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         #endregion
 
-        protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Block));
-        private readonly ValueGetOnce<IOutputCache> _oc = new ValueGetOnce<IOutputCache>();
-
         #region Prepare
 
         /// <summary>
@@ -92,7 +89,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         }
 
 
-
         internal Alias Alias;
         internal Site Site;
         internal Page Page;
@@ -110,6 +106,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
                 // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
                 _contextResolverForLookUps.AttachRealBlock(() => _block);
+                
                 _blockLoaded = true;
                 return _block;
             }
@@ -117,6 +114,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         private IBlock _block;
         private bool _blockLoaded;
+
+        protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Block));
+        private readonly ValueGetOnce<IOutputCache> _oc = new();
 
         #endregion
     }
