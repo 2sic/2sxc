@@ -50,7 +50,9 @@ namespace ToSic.Sxc.Images
                     var srcSet = useMultiSrcSet
                         ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Call.Field)
                         : ImgLinker.ImageOnly(url, formatSettings, Call.Field).Url;
-                    return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
+                    var source = Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
+                    if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
+                    return source;
                 });
             var result = Tag.TagList(sources);
             return wrapLog($"{result.Count()}", result);

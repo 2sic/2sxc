@@ -177,7 +177,7 @@ namespace ToSic.Sxc.Images
             var wrapLog = Log.SafeCall<string>(ImgService.Debug);
             if (!ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceSetSizes.NameId))
                 return wrapLog("disabled", null);
-            var sizes = ThisResize?.Recipe?.Sizes;
+            var sizes = ThisResize.Recipe?.Sizes;
             return wrapLog(sizes, sizes);
         }
 
