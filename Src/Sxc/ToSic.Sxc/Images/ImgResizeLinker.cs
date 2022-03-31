@@ -6,10 +6,8 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.SrcSetPart;
@@ -17,7 +15,7 @@ using static ToSic.Sxc.Images.SrcSetPart;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Internal stuff")]
-    public class ImgResizeLinker : HasLog /* <ImgResizeLinker>*/, ICanDebug
+    public class ImgResizeLinker : HasLog, ICanDebug
     {
         public ImgResizeLinker(Lazy<IFeaturesService> features, Lazy<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
         {
@@ -27,8 +25,6 @@ namespace ToSic.Sxc.Images
         }
         private readonly Lazy<IFeaturesService> _features;
         private readonly Lazy<ICss> _koi;
-
-        //public void DebugSet(bool debug) => Debug = debug;
 
         public bool Debug { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="13.05.00">
+    <package name="2SexyContent" type="Module" version="13.06.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -54,12 +54,12 @@
             <script type="Install">
               <path>SqlDataProvider</path>
               <name>13.04.00.SqlDataProvider</name>
-              <version>13.05.00</version>
+              <version>13.06.00</version>
             </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>13.05.00</version>
+              <version>13.06.00</version>
             </script>
           </scripts>
         </component>
@@ -67,7 +67,7 @@
           Always flush the dist folder before installing new stuff - must always run before the module is installed!
           That means the node has to be in the xml-file before the Module nodes
         -->
-        <component type="Cleanup" version="13.05.00" fileName="cleanup\flush.txt">
+        <component type="Cleanup" version="13.06.00" fileName="cleanup\flush.txt">
         </component>
         <component type="Module">
           <desktopModule>
@@ -96,19 +96,6 @@
                     <supportsPopUps>False</supportsPopUps>
                     <viewOrder>0</viewOrder>
                   </moduleControl>
-
-                  <!-- 2021-11-30, commented because it is not in use, probably can be deleted 2022 -->
-                  <!--<moduleControl>
-                    <controlKey>webformsbridge</controlKey>
-                    <controlSrc>DesktopModules/ToSIC_SexyContent/DnnWebForms/WebFormsBridge.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Formly FieldTemplate WebForms Bridge</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>-->
-
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
@@ -123,29 +110,10 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,13.05.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,13.06.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
-
-        <!--
-          2020-06 2dm: Previously 2sxc also included the copy-image-resizer
-          which causes issues on update, because DNN thinks that image resizer was included with the
-          version which 2sxc has, like V9 or V10. That's why we must say we don't use it any more
-        -->
-        <!--<component type="Assembly">
-          <assemblies>
-            --><!-- 2020-07-27 2dm try to pretend we need it, so it can then Unregister it again :( https://github.com/2sic/2sxc/issues/2126
-                 If this works, it's because we need the UnRegister for upgrades, but can't have it on new installs without breaking the install --><!--
-            <assembly>
-              <name>ImageResizer.dll</name>
-            </assembly>
-            <assembly action="UnRegister">
-              <name>ImageResizer.dll</name>
-            </assembly>
-          </assemblies>
-        </component>-->
-
         <component type="Assembly">
           <assemblies>
             <basePath>bin</basePath>
@@ -161,10 +129,6 @@
             <assembly>
               <name>ToSic.Sxc.Dnn.Core.dll</name>
             </assembly>
-            <!-- trying to include pdb - not possible because the installer will skip anything other than dlls -->
-            <!--<assembly>
-              <name>ToSic.Sxc.Dnn.pdb</name>
-            </assembly>-->
             <assembly>
               <name>ToSic.Sxc.Dnn.Razor.dll</name>
             </assembly>
@@ -612,7 +576,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="13.05.00">
+    <package name="2SexyContent-App" type="Module" version="13.06.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
