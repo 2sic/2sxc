@@ -152,7 +152,7 @@ namespace ToSic.Sxc.Images
 
 
         [PrivateApi("Important for using these settings, but not relevant outside of this")]
-        public SrcSetPart[] VariantsParsed { get; private set; }
+        public RecipeVariant[] VariantsParsed { get; private set; }
 
         [PrivateApi]
         internal Recipe InitAfterLoad()
@@ -180,7 +180,7 @@ namespace ToSic.Sxc.Images
             Attributes = RecipeHelpers.MergeDics(parent?.Attributes, Attributes);
             Name = Name ?? parent?.Name;
             CssFramework = CssFramework ?? parent?.CssFramework;
-            VariantsParsed = hasVariants ? SrcSetParser.ParseSet(Variants) : parent?.VariantsParsed;
+            VariantsParsed = hasVariants ? RecipeVariantsParser.ParseSet(Variants) : parent?.VariantsParsed;
 
             foreach (var s in Recipes) s?.InitAfterLoad(this);
 

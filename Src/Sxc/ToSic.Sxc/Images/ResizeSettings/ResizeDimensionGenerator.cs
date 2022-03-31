@@ -2,7 +2,7 @@
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Plumbing;
 using static ToSic.Sxc.Images.ImageConstants;
-using static ToSic.Sxc.Images.SrcSetPart;
+using static ToSic.Sxc.Images.RecipeVariant;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Get the best matching dimension (width/height) based on what's specified
         /// </summary>
-        private static int BestWidthOrHeightBasedOnSrcSet(int initial, int srcSetOverride, SrcSetPart partDef, int fallbackIfNoOriginal)
+        private static int BestWidthOrHeightBasedOnSrcSet(int initial, int srcSetOverride, RecipeVariant partDef, int fallbackIfNoOriginal)
         {
             // SrcSet defined a value, use that
             if (srcSetOverride != 0) return srcSetOverride;
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Images
         }
 
 
-        public OneResize ResizeDimensions(ResizeSettings settings, Recipe recipe, SrcSetPart partDef = null)
+        public OneResize ResizeDimensions(ResizeSettings settings, Recipe recipe, RecipeVariant partDef = null)
         {
             var factor = settings.Factor;
             if (DNearZero(factor)) factor = 1; // in this case we must still calculate, and should assume factor is exactly 1
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Images
             };
         }
 
-        private static int FigureOutBestWidth(ResizeSettings settings, Recipe recipe, SrcSetPart partDef, double factor)
+        private static int FigureOutBestWidth(ResizeSettings settings, Recipe recipe, RecipeVariant partDef, double factor)
         {
             // Priority 1: The value on the part definition. If it's non-zero, don't change the width by any other factor
             var width = partDef?.Width ?? 0;

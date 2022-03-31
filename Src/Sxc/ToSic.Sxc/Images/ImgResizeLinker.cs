@@ -10,7 +10,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
-using static ToSic.Sxc.Images.SrcSetPart;
+using static ToSic.Sxc.Images.RecipeVariant;
 
 namespace ToSic.Sxc.Images
 {
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Images
 
 
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, SrcSetPart partDef = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, RecipeVariant partDef = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
             one.Recipe = srcSetSettings;

@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages
             var variants = "100,100w,,100=100,100w=100:,d";
             var expected100 = BuildExpected(100, 'w', 100, 0);
             var expDefault = BuildExpected(0, 'd', 0, 0);
-            var result = SrcSetParser.ParseSet(variants);
+            var result = RecipeVariantsParser.ParseSet(variants);
             Assert.AreEqual(6, result.Length);
             CompareSrcSetPart(variants, result.First(), expected100);
             CompareSrcSetPart(variants, result.Skip(1).First(), expected100);
@@ -116,21 +116,21 @@ namespace ToSic.Sxc.Tests.LinksAndImages
         private static void TestPartOnly(string variants, float size, char sizeType, int? width, int height)
         {
             var expected = BuildExpected(size, sizeType, width, height);
-            var result = SrcSetParser.ParsePart(variants);
+            var result = RecipeVariantsParser.ParsePart(variants);
             CompareSrcSetPart(variants, result, expected);
         }
 
         private static void TestSetOnly(string variants, float size, char sizeType, int? width, int height)
         {
             var expected = BuildExpected(size, sizeType, width, height);
-            var asSet = SrcSetParser.ParseSet(variants);
+            var asSet = RecipeVariantsParser.ParseSet(variants);
             Assert.AreEqual(1, asSet.Length, "Expect 1 exact hit");
             var first = asSet.First();
             CompareSrcSetPart(variants, first, expected);
         }
 
-        private static SrcSetPart BuildExpected(float size, char sizeType, int? width, int height) =>
-            new SrcSetPart
+        private static RecipeVariant BuildExpected(float size, char sizeType, int? width, int height) =>
+            new RecipeVariant
             {
                 Size = size,
                 SizeType = sizeType,
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages
                 Height = height
             };
 
-        private static void CompareSrcSetPart(string variants, SrcSetPart result, SrcSetPart expected)
+        private static void CompareSrcSetPart(string variants, RecipeVariant result, RecipeVariant expected)
         {
             Assert.IsNotNull(result);
             Assert.IsTrue(ParseObject.DNearZero(expected.Size - result.Size), $"Sizes should match on '{variants}'");
