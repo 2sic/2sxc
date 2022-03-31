@@ -163,6 +163,7 @@ namespace ToSic.Sxc
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services
                 .AddKoi()
+                .AddImageflowCustomization()
                 .AddSxcCoreFallbackServices();
 
             return services;
@@ -175,7 +176,13 @@ namespace ToSic.Sxc
 
             return services;
         }
+        public static IServiceCollection AddImageflowCustomization(this IServiceCollection services)
+        {
+            services.AddTransient<IImageflowRewriteService, ImageflowRewriteService> ();
 
+            return services;
+        }
+        
         public static IServiceCollection AddNetVariations(this IServiceCollection services)
         {
 #if NETSTANDARD
