@@ -39,11 +39,12 @@ namespace ToSic.Sxc.Tests.ServicesTests
             => PictureTagInner(expected, variants, inPicTag, name);
 
 
-        [DataRow("<img src='test.jpg?w=678' test='value' class='img-fluid'>", 0.75, "0.75 with attributes")]
+        [DataRow("<img src='test.jpg?w=678' loading='lazy' test='value' class='img-fluid'>", 0.75, false, "0.75 with attributes, settings-object")]
+        [DataRow("<img src='test.jpg?w=678' loading='lazy' test='value' class='img-fluid'>", 0.75, true, "0.75 with attributes, json-object")]
         [DataTestMethod]
-        public void ImgWhichShouldAutoGetAttributes(string expected, double factor, string name)
+        public void ImgWhichShouldAutoGetAttributes(string expected, double factor, bool json, string name)
         {
-            var set = ResizeRecipesData.TestRecipeSet();
+            var set = json ? ResizeRecipesData.TestRecipeSetFromJson : ResizeRecipesData.TestRecipeSet();
             var svc = Build<IImageService>();
             var img = svc.Img("test.jpg", factor: factor, recipe: set);
             Is(expected, img.ToString(), name);

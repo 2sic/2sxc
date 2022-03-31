@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Images
             Width = width != 0 ? width : original?.Width ?? 0;
             Variants = variants ?? original?.Variants;
             Recipes = recipes != null ? Array.AsReadOnly(recipes.ToArray()) : original?.Recipes ?? Array.AsReadOnly(Array.Empty<Recipe>());
-            Attributes = attributes != null ? new ReadOnlyDictionary<string, object>(attributes) : original?.Attributes;
+            Attributes = RecipeHelpers.MergeDics(original?.Attributes, RecipeHelpers.ToStringDicOrNull(attributes));
             SetWidth = setWidth ?? original?.SetWidth;
             SetHeight = setHeight ?? original?.SetHeight;
             CssFramework = cssFramework;
@@ -134,13 +134,13 @@ namespace ToSic.Sxc.Images
         public string Variants { get; private set; }
 
         [PrivateApi]
-        public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes as string : null;
+        public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes : null;
 
 
         /// <summary>
         /// Attributes to add to the img tag 
         /// </summary>
-        public ReadOnlyDictionary<string, object> Attributes { get; private set; }
+        public ReadOnlyDictionary<string, string> Attributes { get; private set; }
 
 
         /// <summary>
@@ -167,20 +167,20 @@ namespace ToSic.Sxc.Images
 
 
         [PrivateApi]
-        internal virtual Recipe InitAfterLoad(Recipe defaultsIfEmpty)
+        internal virtual Recipe InitAfterLoad(Recipe parent)
         {
-            Factor = Factor ?? defaultsIfEmpty?.Factor;
-            FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? defaultsIfEmpty?.FactorParsed ?? 0;
-            if (Width == 0) Width = defaultsIfEmpty?.Width ?? 0;
-            Tag = Tag ?? defaultsIfEmpty?.Tag;
+            Factor = Factor ?? parent?.Factor;
+            FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? parent?.FactorParsed ?? 0;
+            if (Width == 0) Width = parent?.Width ?? 0;
+            Tag = Tag ?? parent?.Tag;
             var hasVariants = Variants != null;
-            Variants = Variants ?? defaultsIfEmpty?.Variants;
-            SetWidth = SetWidth ?? defaultsIfEmpty?.SetWidth;
-            SetHeight = SetHeight ?? defaultsIfEmpty?.SetHeight;
-            Attributes = Attributes ?? defaultsIfEmpty?.Attributes;
-            Name = Name ?? defaultsIfEmpty?.Name;
-            CssFramework = CssFramework ?? defaultsIfEmpty?.CssFramework;
-            VariantsParsed = hasVariants ? SrcSetParser.ParseSet(Variants) : defaultsIfEmpty?.VariantsParsed;
+            Variants = Variants ?? parent?.Variants;
+            SetWidth = SetWidth ?? parent?.SetWidth;
+            SetHeight = SetHeight ?? parent?.SetHeight;
+            Attributes = RecipeHelpers.MergeDics(parent?.Attributes, Attributes);
+            Name = Name ?? parent?.Name;
+            CssFramework = CssFramework ?? parent?.CssFramework;
+            VariantsParsed = hasVariants ? SrcSetParser.ParseSet(Variants) : parent?.VariantsParsed;
 
             foreach (var s in Recipes) s?.InitAfterLoad(this);
 

@@ -15,17 +15,23 @@ namespace ToSic.Sxc.Tests.DataForImageTests
 
         public const string CssNone = null;
         public const string CssUnknown = "unk";
+        private static Dictionary<string, object> Attributes75MixIn = new Dictionary<string, object>
+        {
+            { "loading", "lazy" },
+            { "toReset", "parent" }
+        };
         private static Dictionary<string, object> Attributes75 = new Dictionary<string, object>
         {
             { "class", "img-fluid" },
-            { "test", "value" }
+            { "test", "value" },
+            { "toReset", null } // null will reset the originally set attribute by the parent
         };
 
         public static AdvancedSettings TestRecipeSet() =>
             new AdvancedSettings(new Recipe(recipes: new[]
             {
                 new Recipe(factor: "1", width: W100),
-                new Recipe(factor: "3/4", width: W75, recipes: new[]
+                new Recipe(factor: "3/4", width: W75, attributes: Attributes75MixIn, recipes: new[]
                 {
                     new Recipe(tag: "img", width: W75CssUnknown, cssFramework: CssUnknown, attributes: Attributes75),
                     new Recipe(tag: "img", width: W75ImgOnly777, attributes: Attributes75)
@@ -34,7 +40,12 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                 new Recipe(factor: "0.25", width: W25)
             }));
 
-        public static string JsonRecipe()
+        public static AdvancedSettings TestRecipeSetFromJson => AdvancedSettings.FromJson(JsonRecipe());
+
+        private static object JsonAttributes75MixIn = new { loading = "lazy", toReset = "parent" };
+        private static object JsonAttributes75 = new { @class = "img-fluid", test = "value", toReset = (string)null };
+
+        private static string JsonRecipe()
         {
             var adv = new
             {
@@ -45,10 +56,10 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                         new { factor = "1", width = W100 },
                         new
                         {
-                            factor = "3/4", width = W75, recipes = new object[]
+                            factor = "3/4", width = W75, attributes = JsonAttributes75MixIn, recipes = new object[]
                             {
-                                new { tag = "img", width = W75CssUnknown, cssFramework = CssUnknown },
-                                new { tag = "img", width = W75ImgOnly777 }
+                                new { tag = "img", width = W75CssUnknown, cssFramework = CssUnknown, attributes = JsonAttributes75 },
+                                new { tag = "img", width = W75ImgOnly777, attributes = JsonAttributes75 }
                             }
                         },
                         new { factor = "1:2", width = W50 },
