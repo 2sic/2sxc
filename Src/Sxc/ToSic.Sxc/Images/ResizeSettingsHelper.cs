@@ -1,68 +1,58 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using ToSic.Eav.Plumbing;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
 namespace ToSic.Sxc.Images
 {
-    public class ResizeSettingsHelper
+    public static class ResizeSettingsExtensions
     {
-        public static Recipe Find(ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors)
+        public static Recipe Find(this ResizeSettings resizeSettings, SrcSetType srcSetType, bool useFactors, string cssFramework)
         {
-            var multiSettings = resizeSettings?.Advanced;
-            var mainRecipe = multiSettings?.Recipe;
+            var advanced = resizeSettings?.Advanced;
+            var mainRecipe = advanced?.Recipe;
             if (mainRecipe == null) return null;
-            var subRecipes = mainRecipe.AllSubRecipes;
+            var subRecipes = advanced.AllSubRecipes;
 
-            Recipe result = null;
-            if (subRecipes?.Any()  == true)
+            // No sub-recipes - return main
+            if (subRecipes?.Any() != true) return mainRecipe;
+
+            // Prepare list of frameworks, targets and factors to use in the loops
+            var frameworks = cssFramework == null ? new[] { (string)null } : new[] { cssFramework, null };
+
+            var primaryTarget = srcSetType == SrcSetType.Img ? "img" : "source";
+            var targetsToTest = new[] { primaryTarget, Recipe.RuleForDefault };
+
+            var factor = DNearZero(resizeSettings.Factor) ? 1 : resizeSettings.Factor;
+            var factorsToTest = useFactors
+                ? new[] { (double?)factor, null }
+                : new[] { (double?)null };
+
+            // Get PiggyBack cache to rarely rerun LINQ
+            var pgb = advanced.PiggyBack;
+
+            // Loop all combinations
+            foreach (var cssFw in frameworks)
             {
-                var factor = resizeSettings.Factor;
-                if (DNearZero(factor)) factor = 1;
-
-                var key = srcSetType == SrcSetType.Img ? "img" : "src";
-
-                var factorToUse = useFactors ? (double?)factor : null;
-                result = FindRule(subRecipes, factorToUse, key)
-                             ?? FindRule(subRecipes, factorToUse, Recipe.RuleForDefault);
-                
-                // Nothing yet, and previously we tried with factor, then try without
-                if (result == null && useFactors)
-                    result = FindRule(subRecipes, null, key)
-                             ?? FindRule(subRecipes, null, Recipe.RuleForDefault);
+                var cssKey = cssFw.AsKey();
+                var cssRecipes = pgb.GetOrGenerate(cssKey, 
+                    () => subRecipes.Where(r => r.CssFramework == cssFw).ToList());
+                if (!cssRecipes.Any()) continue;
+                foreach (var f in factorsToTest)
+                {
+                    var factorKey = cssKey + "-" + (f == null ? ((string)null).AsKey() : f.ToString().AsKey());
+                    var recList = pgb.GetOrGenerate(factorKey, 
+                        () => cssRecipes.Where(m => f == null ? m.FactorParsed == 0 : DNearZero(m.FactorParsed - f.Value)).ToList());
+                    foreach (var target in targetsToTest)
+                    {
+                        var match = recList.FirstOrDefault(m => m.Tag == target);
+                        if (match != null) return match;
+                    }
+                }
             }
 
-            return result ?? mainRecipe;
+
+            return mainRecipe;
         }
-
-        private static Recipe FindRule(IReadOnlyCollection<Recipe> subRecipes, double? factor, string target)
-        {
-            if (subRecipes == null || !subRecipes.Any()) return null;
-            IEnumerable<Recipe> query = subRecipes;
-            query = query.Where(m => factor == null ? m.FactorParsed == 0 : DNearZero(m.FactorParsed - factor.Value));
-            query = query.Where(m => m.Tag == target);
-            var fm = query.FirstOrDefault();
-            return fm;
-        }
-
-        //private static Recipe FindSubRule(ResizeSettings resizeSettings, IReadOnlyCollection<Recipe> subRecipes)
-        //{
-        //    //var subRecipes = resizeSettings?.MultiResize?.Recipe?.AllSubRecipes;
-        //    if (subRecipes == null || !subRecipes.Any()) return null;
-        //    var factor = resizeSettings.Factor;
-        //    if (DNearZero(factor)) factor = 1;
-        //    var fm = subRecipes.FirstOrDefault(m => m.Type == Recipe.RuleForFactor && DNearZero(m.FactorParsed - factor));
-        //    return fm;
-        //}
-
-        //private static Recipe KeepOrUseSubRule(Recipe rule, string target)
-        //{
-        //    if (rule == null) return null;
-        //    if (rule.AllSubRecipes == null || rule.AllSubRecipes.Count == 0) return rule;
-        //    return FindRuleForTarget(rule.AllSubRecipes, target) ?? rule;
-        //}
-
-        //internal static Recipe FindRuleForTarget(IEnumerable<Recipe> recipes, string target) 
-        //    => recipes?.FirstOrDefault(r => r.Type == target);
     }
 
     public enum SrcSetType

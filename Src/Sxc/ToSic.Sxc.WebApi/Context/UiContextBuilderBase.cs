@@ -4,6 +4,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Languages;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Context;
@@ -25,14 +26,23 @@ namespace ToSic.Sxc.WebApi.Context
             public IAppStates AppStates { get; }
             public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
             public Lazy<LanguagesBackend> LanguagesBackend { get; }
+            public Lazy<IFeaturesService> Features { get; }
 
-            public Dependencies(IContextOfSite siteCtx, Apps.App appToLaterInitialize, IAppStates appStates, Lazy<AppUserLanguageCheck> appUserLanguageCheck, Lazy<LanguagesBackend> languagesBackend)
+            public Dependencies(
+                IContextOfSite siteCtx, 
+                Apps.App appToLaterInitialize, 
+                IAppStates appStates, 
+                Lazy<AppUserLanguageCheck> appUserLanguageCheck, 
+                Lazy<LanguagesBackend> languagesBackend,
+                Lazy<IFeaturesService> features
+            )
             {
                 SiteCtx = siteCtx;
                 AppToLaterInitialize = appToLaterInitialize;
                 AppStates = appStates;
                 AppUserLanguageCheck = appUserLanguageCheck;
                 LanguagesBackend = languagesBackend;
+                Features = features;
             }
         }
 
@@ -137,7 +147,11 @@ namespace ToSic.Sxc.WebApi.Context
         {
             var isRealApp = App != null && App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
-            var dto = new ContextEnableDto();
+            var dto = new ContextEnableDto
+            {
+                DebugMode = tmp.CanDevelop ||
+                            Deps.Features.Value.IsEnabled(FeaturesCatalog.EditUiAllowDebugModeForEditors)
+            };
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
             if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = tmp.CanDevelop;
             if(ctx.HasFlag(CtxEnable.Query)) dto.Query = isRealApp && tmp.CanDevelop;

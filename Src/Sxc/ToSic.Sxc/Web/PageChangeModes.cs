@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Web
 {
-    [WorkInProgressApi("not final yet")]
+    [PrivateApi("not final yet, probably will not be implemented like this")]
     public enum PageChangeModes
     {
         /// <summary>

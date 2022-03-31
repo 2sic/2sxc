@@ -16,7 +16,7 @@ namespace Custom.Hybrid
         /// </summary>
         /// <returns>The created .net-core like `OkResult` for the response.</returns>
         [NonAction]
-        public dynamic Ok()
+        public new dynamic Ok()
         {
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -66,7 +66,7 @@ namespace Custom.Hybrid
         /// <param name="url">The URL to redirect to.</param>
         /// <returns>The created .net-core like `RedirectResult` for the response.</returns>
         [NonAction]
-        public dynamic Redirect(string url)
+        public new dynamic Redirect(string url)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
             var response = Request.CreateResponse(HttpStatusCode.Redirect);
@@ -140,7 +140,7 @@ namespace Custom.Hybrid
         /// </summary>
         /// <returns>The created .net-core like `NotFoundResult` for the response.</returns>
         [NonAction]
-        public dynamic NotFound()
+        public new dynamic NotFound()
             => Request.CreateResponse(HttpStatusCode.NotFound);
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Custom.Hybrid
         /// </summary>
         /// <returns>The created .net-core like `BadRequestResult` for the response.</returns>
         [NonAction]
-        public dynamic BadRequest()
+        public new dynamic BadRequest()
             => Request.CreateResponse(HttpStatusCode.BadRequest);
 
         ///// <summary>
@@ -183,7 +183,7 @@ namespace Custom.Hybrid
         /// </summary>
         /// <returns>The created .net-core like `ConflictResult` for the response.</returns>
         [NonAction]
-        public dynamic Conflict()
+        public new dynamic Conflict()
             => Request.CreateResponse(HttpStatusCode.Conflict);
 
         /// <summary>

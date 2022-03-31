@@ -30,10 +30,10 @@ namespace Custom.Hybrid
         #region Link, Edit, App, Data
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot.Link;
+        public ILinkService Link => _DynCodeRoot.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
+        public IEditService Edit => _DynCodeRoot.Edit;
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 

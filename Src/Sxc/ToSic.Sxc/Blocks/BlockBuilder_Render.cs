@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.PageFeatures;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Blocks
 {
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         private IRenderingHelper RenderingHelper =>
-            _rendHelp ?? (_rendHelp = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log));
+            _rendHelp ?? (_rendHelp = _renderHelpGen.New.Init(Block, Log));
         private IRenderingHelper _rendHelp;
 
         public string Render() => Run(true).Html;
@@ -26,16 +26,20 @@ namespace ToSic.Sxc.Blocks
             var wrapLog = Log.Call<IRenderResult>();
             try
             {
+                var (html, err) = RenderInternal();
                 var result = new RenderResult
                 {
-                    Html = RenderInternal(),
-                    ModuleId = Block.ParentId
+                    Html = html,
+                    IsError = err,
+                    ModuleId = Block.ParentId,
+
+                    Assets = Assets, // TODO: this may fail on a sub-template, must research
+                    CanCache = !err && Block.ContentGroupExists && Block.Configuration?.Exists == true,
                 };
 
-                result.DependentApps.Add(Block.AppId);
-
-                // TODO: this may fail on a sub-tmplate, must research
-                result.Assets = Assets;
+                // case when we do not have an app
+                if (Block.AppId != 0 && Block.App?.AppState != null)
+                    result.DependentApps.Add(new DependentApp { AppId = Block.AppId, CacheTimestamp = Block.App.AppState.CacheTimestamp });
 
                 // The remaining stuff should only happen at top-level
                 // Because once these properties are picked up, they are flushed
@@ -74,14 +78,14 @@ namespace ToSic.Sxc.Blocks
 
         private IRenderResult _result;
 
-        private string RenderInternal()
+        private (string Html, bool Error) RenderInternal()
         {
-          var wrapLog = Log.Call<string>();
+          var wrapLog = Log.Call<(string, bool)>();
 
             try
             {
                 // do pre-check to see if system is stable & ready
-                var body = GenerateErrorMsgIfInstallationNotOk();
+                var (body, err) = GenerateErrorMsgIfInstallationNotOk();
 
                 #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
@@ -90,14 +94,14 @@ namespace ToSic.Sxc.Blocks
                     if (Block.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        body = Block.Context.UserMayEdit
-                            ? "" // stop further processing
+                        (body, err) = Block.Context.UserMayEdit
+                            ? ("", false) // stop further processing
                             // end users should see server error as no js-side processing will happen
-                            : RenderingHelper.DesignErrorMessage(
+                            : (RenderingHelper.DesignErrorMessage(
                                 new Exception("Data is missing - usually when a site is copied " +
                                               "but the content / apps have not been imported yet" +
                                               " - check 2sxc.org/help?tag=export-import"),
-                                true, "Error - needs admin to fix", false, true);
+                                true, "Error - needs admin to fix", false, true), true);
                     }
                 }
                 #endregion
@@ -116,8 +120,6 @@ namespace ToSic.Sxc.Blocks
                             if (engine.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
-                                // 2021-09-01 before: if (RootBuilder is BlockBuilder parentBlock) parentBlock.UiAddJsApi = engine.ActivateJsApi;
-                                // todo: should change this, so the param isn't in ActivateJsApi but clearer
                                 Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.JsCore.Key);
                             }
 
@@ -129,6 +131,7 @@ namespace ToSic.Sxc.Blocks
                     catch (Exception ex)
                     {
                         body = RenderingHelper.DesignErrorMessage(ex, true, "Error rendering template", false, true);
+                        err = true;
                     }
                 #endregion
 
@@ -144,10 +147,6 @@ namespace ToSic.Sxc.Blocks
                     addEditCtx = features.Contains(BuiltInFeatures.ModuleContext);
                 }
 
-                // 2022-03-03 2dm - moving special properties to page-activate features #pageActivate
-                // WIP, if all is good, remove these comments end of March
-                //addEditCtx = UiAddEditContext;
-
                 // Wrap
                 var result = WrapInDiv
                     ? RenderingHelper.WrapInContext(body,
@@ -157,12 +156,12 @@ namespace ToSic.Sxc.Blocks
                     : body;
                 #endregion
 
-                return wrapLog(null, result);
+                return wrapLog(null, (result, err));
             }
             catch (Exception ex)
             {
-                return wrapLog("error", RenderingHelper.DesignErrorMessage(ex, true,
-                    null, true, true));
+                return wrapLog("error", (RenderingHelper.DesignErrorMessage(ex, true,
+                    null, true, true), true));
             }
         }
 
@@ -171,22 +170,23 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         internal static bool InstallationOk;
 
-        private string GenerateErrorMsgIfInstallationNotOk()
+        private (string Html, bool Error) GenerateErrorMsgIfInstallationNotOk()
         {
-            if (InstallationOk) return null;
+            if (InstallationOk) return (null, false);
 
-            var installer = Block.Context.ServiceProvider.Build<IEnvironmentInstaller>();
+            var installer = _envInstGen.New;
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {
                 Log.Add("system isn't ready,show upgrade message");
-                return RenderingHelper.DesignErrorMessage(new Exception(notReady), true,
+                var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true,
                     "Error - needs admin to fix this", false, false);
+                return (result, true);
             }
 
             InstallationOk = true;
             Log.Add("system is ready, no upgrade-message to show");
-            return null;
+            return (null, false);
         }
 
         /// <summary>
@@ -200,8 +200,8 @@ namespace ToSic.Sxc.Blocks
             if (_engine != null) return wrapLog("cached", _engine);
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return wrapLog("no view", null);
-            _engine = EngineFactory.CreateEngine(Block.Context.ServiceProvider, Block.View);
-            _engine.Init(Block, Purpose.WebView, Log);
+            _engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
+            _engine.Init(Log).Init(Block);
             return wrapLog("created", _engine);
         }
         private IEngine _engine;

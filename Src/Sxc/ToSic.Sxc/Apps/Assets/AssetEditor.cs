@@ -23,7 +23,6 @@ namespace ToSic.Sxc.Apps.Assets
         private readonly ISite _site;
         private readonly AppPaths _appPaths;
         private CmsRuntime _cmsRuntime;
-        private IApp _app;
         private AppState _appState;
 
         public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy, IUser user, Lazy<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")

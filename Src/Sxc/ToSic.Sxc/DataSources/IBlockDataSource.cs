@@ -15,5 +15,11 @@ namespace ToSic.Sxc.DataSources
     {
         [PrivateApi("older use case, will probably become obsolete some day")]
         DataPublishing Publish { get; }
+
+#if NETFRAMEWORK
+        [Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
+        [PrivateApi]
+        CacheWithGetContentType Cache { get; }
+#endif
     }
 }

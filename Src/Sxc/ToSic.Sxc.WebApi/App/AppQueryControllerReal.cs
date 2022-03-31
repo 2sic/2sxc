@@ -5,7 +5,6 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.App;
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.WebApi.App
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = GetService<Apps.App>().Init(ServiceProvider, appCtx.AppState.AppId, Log, maybeBlock, appCtx.UserMayEdit);
+            var app = GetService<Apps.App>().Init(appCtx.AppState.AppId, Log, maybeBlock, appCtx.UserMayEdit);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
             wrapLog(null);

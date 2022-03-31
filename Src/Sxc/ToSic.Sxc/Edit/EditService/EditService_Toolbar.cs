@@ -4,9 +4,9 @@ using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 using IEntity = ToSic.Eav.Data.IEntity;
 
-namespace ToSic.Sxc.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Edit.EditService
 {
-    public partial class InPageEditingHelper
+    public partial class EditService
     {
         private readonly string innerContentAttribute = "data-list-context";
 

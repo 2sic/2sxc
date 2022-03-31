@@ -3,14 +3,12 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Edit.EditService
 {
-    public partial class InPageEditingHelper
+    public partial class EditService
     {
         #region Context Attributes
 
@@ -56,7 +54,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
         {
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(WrapInContext), $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
-            var renderingHelper = Block.Context.ServiceProvider.Build<IRenderingHelper>().Init(Block, Log);
+            var renderingHelper = _renderHelper.Ready;
 
             return new HybridHtmlString(
                renderingHelper.WrapInContext(content.ToString(),

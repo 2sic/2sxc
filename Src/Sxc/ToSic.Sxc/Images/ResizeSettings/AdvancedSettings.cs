@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Newtonsoft.Json;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -7,7 +11,7 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Images
 {
-    public class AdvancedSettings
+    public class AdvancedSettings: IHasPiggyBack
     {
         [JsonConstructor]
         public AdvancedSettings(Recipe recipe = default)
@@ -61,6 +65,34 @@ namespace ToSic.Sxc.Images
             }
             return wrapLog("new", new AdvancedSettings());
         }
+
+        [PrivateApi]
+        public ReadOnlyCollection<Recipe> AllSubRecipes
+            => _recipesFlat ?? (_recipesFlat = GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly());
+        private ReadOnlyCollection<Recipe> _recipesFlat;
+
+        private static List<Recipe> GetAllRecipesRecursive(ReadOnlyCollection<Recipe> recipes)
+        {
+            var list = new List<Recipe>();
+            if (recipes?.Any() != true) return list;
+
+            foreach (var r in recipes)
+            {
+                list.Add(r);
+                list.AddRange(GetAllRecipesRecursive(r.Recipes));
+            }
+
+            return list;
+        }
+
+
+        /// <summary>
+        /// Piggyback cache to remember previous LINQ queries which already filtered certain combinations
+        /// </summary>
+        [PrivateApi("internal use only")]
+        [JsonIgnore]
+        public PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
+        private PiggyBack _piggyBack;
 
     }
 }

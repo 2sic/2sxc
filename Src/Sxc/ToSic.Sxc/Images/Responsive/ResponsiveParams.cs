@@ -10,40 +10,48 @@ namespace ToSic.Sxc.Images
     [PrivateApi]
     public class ResponsiveParams
     {
+        /// <summary>
+        /// The only reliable object which knows about the url - can never be null
+        /// </summary>
+        public IHasLink Link { get; }
 
-        public string Url { get; }
-
+        /// <summary>
+        /// The field used for this responsive output - can be null!
+        /// </summary>
         public IDynamicField Field { get; }
         public object Settings { get; }
         public object Factor { get; }
         public string ImgAlt { get; }
         public string ImgClass { get; }
-        public AdvancedSettings Recipe { get; }
+        public AdvancedSettings Advanced { get; }
 
         internal ResponsiveParams(
             string method,
+            object link,
             string noParamOrder = Parameters.Protector,
-            string url = default,
-            IDynamicField field = default,
+            //string url = default,
+            //IDynamicField field = default,
             object settings = null,
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
-            AdvancedSettings recipe = null)
+            AdvancedSettings advanced = null)
         {
-            Field = field;
-            Url = url ?? field?.Parent.Get(field.Name) as string;
+            Field = /*field ??*/ link as IDynamicField;
+            Link = (IHasLink)Field ?? new HasLink(/*url ??*/ link as string);
             Settings = settings;
             Factor = factor;
             ImgAlt = imgAlt;
             ImgClass = imgClass;
-            Recipe = recipe;
-            WarningParamsPicImg(method, noParamOrder);
+            Advanced = advanced;
+            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
+                $"{nameof(link)}, {nameof(settings)}, {nameof(factor)}, {nameof(imgAlt)}, {nameof(imgClass)}, recipe");
+            //WarningParamsPicImg(method, noParamOrder);
         }
 
 
-        private static void WarningParamsPicImg(string mName, string noParamOrder)
-            => Parameters.ProtectAgainstMissingParameterNames(noParamOrder, mName, "url, field, factor, imgAlt, imgClass, recipe");
+        //private static void WarningParamsPicImg(string mName, string noParamOrder)
+        //    => Parameters.ProtectAgainstMissingParameterNames(noParamOrder, mName, "url, field, factor, imgAlt, imgClass, recipe");
 
     }
 }

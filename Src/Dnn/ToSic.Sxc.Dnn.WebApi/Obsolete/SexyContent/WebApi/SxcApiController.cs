@@ -16,6 +16,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -188,8 +189,8 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Link & Edit - added in 2sxc 10.01
-        public ILinkHelper Link => _DynCodeRoot?.Link;
-        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
+        public ILinkService Link => _DynCodeRoot?.Link;
+        public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
 

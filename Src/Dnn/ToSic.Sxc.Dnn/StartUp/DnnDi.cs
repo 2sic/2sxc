@@ -121,7 +121,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
             services.TryAddTransient<IDnnContext, DnnContext>();
-            services.TryAddTransient<ILinkHelper, DnnLinkHelper>();
+            //services.TryAddTransient<ILinkHelper, DnnLinkService>(); // 2022-03-29 v13.05 2dm disabled this, as I cannot imagine anybody having used this in DI
+            services.TryAddTransient<ILinkService, DnnLinkService>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
@@ -176,11 +177,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // new in v12 - .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
 
-            // new in v12 - different way to integrate KOI - experimental!
-            try
-            {
-                services.ActivateKoi2Di();
-            } catch { /* ignore */ }
+            // Integrate KOI Dnn-Parts
+            services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
+            //services.ActivateKoi2Di();
             
             // new in v12.02 - RazorBlade DI
             services.TryAddScoped<DnnPageChanges>();

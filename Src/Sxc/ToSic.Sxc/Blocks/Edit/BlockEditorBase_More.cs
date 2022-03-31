@@ -6,10 +6,12 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     public partial class BlockEditorBase
     {
-        internal static BlockEditorBase GetEditor(IBlock block)
+        internal static BlockEditorBase GetEditor(IBlock block, 
+            Generator<BlockEditorForModule> blkEdtForMod,
+            Generator<BlockEditorForEntity> blkEdtForEnt)
         {
-            if (block is BlockFromModule) return block.Context.ServiceProvider.Build<BlockEditorForModule>().Init(block);
-            if (block is BlockFromEntity) return block.Context.ServiceProvider.Build<BlockEditorForEntity>().Init(block);
+            if (block is BlockFromModule) return blkEdtForMod.New.Init(block);
+            if (block is BlockFromEntity) return blkEdtForEnt.New.Init(block);
             throw new Exception("Can't find BlockEditor - the base block type in unknown");
         }
 

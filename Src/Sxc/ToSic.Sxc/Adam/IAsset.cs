@@ -25,7 +25,9 @@ namespace ToSic.Sxc.Adam
         /// to help in razor template etc.
         /// </summary>
         /// <returns>An IDynamicEntity which contains the metadata, or an empty IDynamicEntity which still works if no metadata exists.</returns>
+#pragma warning disable CS0108, CS0114
         IDynamicMetadata Metadata { get; }
+#pragma warning restore CS0108, CS0114
 
         ///// <summary>
         ///// Experimental

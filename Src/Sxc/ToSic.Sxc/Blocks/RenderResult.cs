@@ -14,6 +14,12 @@ namespace ToSic.Sxc.Blocks
         public string Html { get; set; }
 
         /// <inheritdoc />
+        public bool CanCache { get; set; }
+
+        /// <inheritdoc />
+        public bool IsError { get; set; }
+
+        /// <inheritdoc />
         public IList<IPageFeature> Features { get; set; }
 
         /// <inheritdoc />
@@ -35,11 +41,18 @@ namespace ToSic.Sxc.Blocks
         public string HttpStatusMessage { get; set; }
 
         /// <inheritdoc />
-        public IList<int> DependentApps { get; } = new List<int>();
+        public IList<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
 
 
         public int ModuleId { get; set; }
 
         public override string ToString() => Html;
+    }
+
+    public class DependentApp : IDependentApp
+    {
+        public int AppId { get; set; }
+
+        public long CacheTimestamp { get; set; }
     }
 }

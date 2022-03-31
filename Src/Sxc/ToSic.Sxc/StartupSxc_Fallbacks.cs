@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Connect.Koi.Detectors;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
@@ -43,7 +45,8 @@ namespace ToSic.Sxc
             services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
             // v12.05 - linkhelperunknown - for testing etc.
-            services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
+            //services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
+            services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
             // v12.05
             services.TryAddTransient<IRazorService, RazorServiceUnknown>();
@@ -63,6 +66,9 @@ namespace ToSic.Sxc
 
             // v13.04
             services.TryAddTransient<IUserInformationService, UserInformationServiceUnknown>();
+
+            // Koi, mainly so tests don't fail
+            services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
             return services;
         }

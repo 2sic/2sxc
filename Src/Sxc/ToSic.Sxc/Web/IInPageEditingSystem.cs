@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 
@@ -11,8 +10,9 @@ namespace ToSic.Sxc.Web
     /// <summary>
     /// Contains status and commands to configure the in-page editing system.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
-    public interface IInPageEditingSystem: IHasLog<IInPageEditingSystem>, INeedsDynamicCodeRoot
+    [PrivateApi("Moved to Services.IEditService is v13.05 - must remain here to not break old code, but probably never referenced by exact type, so low risk.")]
+    [Obsolete("Please use Services.IEditService. This will be removed probably in v14")]
+    public interface IInPageEditingSystem: IHasLog, INeedsDynamicCodeRoot
     {
         /// <summary>
         /// If editing is enabled or not
@@ -237,7 +237,5 @@ namespace ToSic.Sxc.Web
         /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
         IHybridHtmlString Attribute(string name, object value);
 
-        [PrivateApi("internal use only")]
-        IInPageEditingSystem SetBlock(IBlock block);
     }
 }

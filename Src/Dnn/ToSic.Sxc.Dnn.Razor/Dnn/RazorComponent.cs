@@ -12,10 +12,10 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
@@ -48,6 +48,7 @@ namespace ToSic.Sxc.Dnn
 
         [PrivateApi("shouldn't be used any more, but was still in v12 when released. v13+ must completely remove this")]
 #pragma warning disable 618 // disable warning about IContainer being obsolete
+        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IContainer moduleInfo,
 #pragma warning restore 618
             DateTime beginDate)
@@ -77,10 +78,10 @@ namespace ToSic.Sxc.Dnn
         #region Link, Edit, Dnn, App, Data
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot.Link;
+        public ILinkService Link => _DynCodeRoot.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
+        public IEditService Edit => _DynCodeRoot.Edit;
 
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();

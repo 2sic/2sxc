@@ -2,6 +2,7 @@
 using ToSic.Eav.Configuration;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Tests.DynamicData;
 using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
 using ToSic.Sxc.Web;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         }
 
         public ImgResizeLinker GetLinker() => Build<ImgResizeLinker>();
-        public ILinkHelper GetLinkHelper() => Build<ILinkHelper>();
+        public ILinkService GetLinkHelper() => Build<ILinkService>();
 
         public static DynamicReadObject ToDyn(object contents) => TestAccessors.DynReadObjT(contents, false, false);
 

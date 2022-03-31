@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Documentation;
+﻿#if NETFRAMEWORK
+using System;
+using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 
@@ -7,7 +9,8 @@ namespace ToSic.Sxc.Web
     /// <summary>
     /// Helpers to create links with parameters or base-tag links (important for SPAs)
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi("Hide from 2022-03-29 v13.05 as it shouldn't be used any more. Keep for a while for compatibility, but we don't believe anybody is using this interface directly.")]
+    [Obsolete("This shouldn't be used any more and will be removed ca. v14. Use the ILinkService instead.")]
     public interface ILinkHelper: INeedsDynamicCodeRoot
     {
         /// <summary>
@@ -141,14 +144,7 @@ namespace ToSic.Sxc.Web
             string type = default,
             object parameters = default
             );
-
-        /// <summary>
-        /// WIP v12.04 - not final
-        /// Should activate debugging for Link helpers
-        /// </summary>
-        /// <param name="debug"></param>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("just for debugging, can change at any time but for debugging it's useful")]
-        void SetDebug(bool debug);
     }
 
 }
+#endif

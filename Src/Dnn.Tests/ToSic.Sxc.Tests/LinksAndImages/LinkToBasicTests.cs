@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
-using ToSic.Sxc.Web;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Tests.LinksAndImages
         [TestMethod]
         public void NormalPage()
         {
-            Assert.AreEqual($"{LinkHelperUnknown.DefRoot}/page0", Link.TestTo(pageId: 0));
-            Assert.AreEqual($"{LinkHelperUnknown.DefRoot}/page27", Link.TestTo(pageId: 27));
+            Assert.AreEqual($"{LinkServiceUnknown.DefRoot}/page0", Link.TestTo(pageId: 0));
+            Assert.AreEqual($"{LinkServiceUnknown.DefRoot}/page27", Link.TestTo(pageId: 27));
         }
     }
 }

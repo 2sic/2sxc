@@ -1,6 +1,9 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+#if !NETFRAMEWORK
+#pragma warning disable CS0109
+#endif
 
 namespace ToSic.Sxc.Search
 {

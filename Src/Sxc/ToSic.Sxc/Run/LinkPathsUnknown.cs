@@ -1,13 +1,13 @@
 ﻿using System;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Run
 {
     internal class LinkPathsUnknown : ILinkPaths, IIsUnknown
     {
-        public LinkPathsUnknown(WarnUseOfUnknown<LinkHelperUnknown> warn)
+        public LinkPathsUnknown(WarnUseOfUnknown<LinkServiceUnknown> warn)
         {
             
         }
@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Run
             throw new NotImplementedException();
         }
 
-        // Mock CurrentPage
-        public string GetCurrentRequestUrl() => LinkHelperUnknown.NiceCurrentUrl;
+        // Stub CurrentPage
+        public string GetCurrentRequestUrl() => LinkServiceUnknown.NiceCurrentUrl;
 
-        // Mock DomainName
-        public string GetCurrentLinkRoot() => LinkHelperUnknown.DefRoot;
+        // Stub DomainName
+        public string GetCurrentLinkRoot() => LinkServiceUnknown.DefRoot;
     }
 }

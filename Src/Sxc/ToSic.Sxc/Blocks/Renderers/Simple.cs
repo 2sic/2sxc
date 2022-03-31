@@ -6,8 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
-
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Blocks.Renderers
 {
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Blocks.Renderers
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static string Render(IBlock parentBlock, IEntity entity)
+        internal static string Render(IBlock parentBlock, IEntity entity, Generator<BlockFromEntity> blkFrmEntGen)
         {
             var log = new Log("Htm.Render", parentBlock.Log, "simple");
 
@@ -28,7 +27,7 @@ namespace ToSic.Sxc.Blocks.Renderers
 
             // render it
             log.Add("found, will render");
-            var cb = parentBlock.Context.ServiceProvider.Build<BlockFromEntity>().Init(parentBlock, entity, log);
+            var cb = blkFrmEntGen.New.Init(parentBlock, entity, log);
             var result = cb.BlockBuilder.Run(false);
 
             // Special: during Run() various things are picked up like header changes, activations etc.
@@ -45,21 +44,21 @@ namespace ToSic.Sxc.Blocks.Renderers
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
 
-        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid, IInPageEditingSystem edit)
+        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid, IEditService edit, Generator<BlockFromEntity> blkFrmEntGen)
         {
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent._Dependencies.BlockOrNull, subItem.Entity);
+            var inner = subItem == null ? "": Render(parent._Dependencies.BlockOrNull, subItem.Entity, blkFrmEntGen);
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IInPageEditingSystem edit)
+        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IEditService edit, Generator<BlockFromEntity> blkFrmEntGen)
         {
             var innerBuilder = new StringBuilder();
             var found = parent.TryGetMember(fieldName, out var objFound);
             if (found && objFound is IList<DynamicEntity> items)
                 foreach (var cb in items)
-                    innerBuilder.Append(Render(cb._Dependencies.BlockOrNull, cb.Entity));
+                    innerBuilder.Append(Render(cb._Dependencies.BlockOrNull, cb.Entity, blkFrmEntGen));
 
             return string.Format(WrapperTemplate, new object[]
             {

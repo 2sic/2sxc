@@ -175,11 +175,9 @@ namespace ToSic.Sxc.Engines
                 compatibility = Constants.CompatibilityLevel12;
 
             if(pageToInit is SexyContentWebPage oldPage)
-#pragma warning disable 618
-#pragma warning disable CS0612
+#pragma warning disable 618, CS0612
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
-#pragma warning restore CS0612
-#pragma warning restore 618
+#pragma warning restore 618, CS0612
             InitHelpers(pageToInit, compatibility);
             return wrapLog("ok", true);
         }
@@ -190,7 +188,7 @@ namespace ToSic.Sxc.Engines
             webPage.ConnectToRoot(_dnnDynCodeLazy.Value.Init(Block, Log, compatibility));
 
             // New in 10.25 - ensure jquery is not included by default
-            if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRVT = false;
+            if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;
             wrapLog(null);
         }
 

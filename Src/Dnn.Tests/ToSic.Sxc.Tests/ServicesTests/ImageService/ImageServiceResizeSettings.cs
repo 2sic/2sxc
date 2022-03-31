@@ -36,8 +36,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void EmptyOnlyResizeMode()
         {
-            var settings = Build<IImageService>().Settings(resizeMode: "crop");
-            Assert.AreEqual("crop", settings.ResizeMode);
+            var settings = Build<IImageService>().Settings(resizeMode: ImageConstants.ModeCrop);
+            Assert.AreEqual(ImageConstants.ModeCrop, settings.ResizeMode);
             AssertAllEmptyExceptSpecified(settings, nameof(settings.ResizeMode));
         }
 

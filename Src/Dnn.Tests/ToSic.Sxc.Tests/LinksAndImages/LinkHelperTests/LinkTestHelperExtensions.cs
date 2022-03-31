@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Services;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
         /// <summary>
         /// Special helper to avoid accessing the real To so many times
         /// </summary>
-        public static string TestTo(this ILinkHelper link,
+        public static string TestTo(this ILinkService link,
             string noParamOrder = Eav.Parameters.Protector,
             int? pageId = null,
             object parameters = null,
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
         }
 
 
-        public static string TestImage(this ILinkHelper link,
+        public static string TestImage(this ILinkService link,
             string url = null,
             object settings = null,
             object factor = null,

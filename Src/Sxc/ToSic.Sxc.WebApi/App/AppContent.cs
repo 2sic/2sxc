@@ -133,26 +133,25 @@ namespace ToSic.Sxc.WebApi.App
             var cleanedNewItem = new AppContentEntityBuilder(Log)
                 .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, AppState);
 
-            var userName = Context.User.IdentityToken;
+            // add owner
+            if (cleanedNewItem.Any(v => v.Key.ToLowerInvariant() == Attributes.EntityFieldOwner))
+                cleanedNewItem.Add(Attributes.EntityFieldOwner, Context.User.IdentityToken);
 
-            var realApp = GetApp(AppState.AppId, Context.UserMayEdit);
             var dataController = DataController(AppState);
             if (id == null)
             {
                 Log.Add($"create new entity because id is null");
                 var metadata = GetMetadata(newContentItemCaseInsensitive);
                 Log.Add($"metadata: {metadata}");
-                // todo: try to use DataController
-                var entity = realApp.Data.Create(contentType, cleanedNewItem, userName, metadata);
-                Log.Add($"new entity created: {entity}");
-                id = entity.EntityId;
+
+                var ids = dataController.Create(contentType, new List<Dictionary<string, object>> { cleanedNewItem }, metadata);
+                id = ids.FirstOrDefault();
 
                 Log.Add($"new entity id: {id}");
-                var added = AddParentRelationship(newContentItemCaseInsensitive, entity.EntityId);
+                var added = AddParentRelationship(newContentItemCaseInsensitive, id.Value);
             }
             else
-                // todo: try to use DataController
-                realApp.Data.Update(id.Value, cleanedNewItem, userName);
+                dataController.Update(id.Value, cleanedNewItem);
 
             return InitEavAndSerializer(AppState.AppId, Context.UserMayEdit)
                 .Convert(AppState.List.One(id.Value));
@@ -216,7 +215,7 @@ namespace ToSic.Sxc.WebApi.App
         /// used for API calls to get the current app
         /// </summary>
         /// <returns></returns>
-        internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(ServiceProvider, appId, Log, null, showDrafts);
+        internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(appId, Log, null, showDrafts);
 
         // TODO: THIS SHOULD probably replace The GetApp above, as it's just an indirect way of getting the data-controller?
         private SimpleDataController DataController(IAppIdentity app) => _dataController ?? (_dataController = _dataControllerLazy.Ready.Init(app.ZoneId, app.AppId));

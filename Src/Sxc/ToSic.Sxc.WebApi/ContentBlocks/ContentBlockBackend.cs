@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -24,14 +25,20 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             IPagePublishing publishing, 
             Lazy<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            Lazy<IBlockResourceExtractor> optimizerLazy)
+            Lazy<IBlockResourceExtractor> optimizerLazy,
+            Generator<BlockEditorForModule> blkEdtForMod,
+            Generator<BlockEditorForEntity> blkEdtForEnt)
             : base(sp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
             _optimizer = optimizerLazy;
+            _blkEdtForMod = blkEdtForMod;
+            _blkEdtForEnt = blkEdtForEnt;
             _publishing = publishing.Init(Log);
         }
 
         private readonly Lazy<IBlockResourceExtractor> _optimizer;
+        private readonly Generator<BlockEditorForModule> _blkEdtForMod;
+        private readonly Generator<BlockEditorForEntity> _blkEdtForEnt;
         private readonly IPagePublishing _publishing;
 
         #endregion
@@ -63,7 +70,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.Add($"try to publish #{index} on '{part}'");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            return BlockEditorBase.GetEditor(Block).Publish(part, index);
+            return BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).Publish(part, index);
         }
 
         public AjaxRenderDto RenderV2(int templateId, string lang, string root)

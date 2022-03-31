@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using ToSic.Eav.Documentation;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
 {
@@ -58,12 +59,11 @@ namespace ToSic.Sxc.Images
             Format = format ?? Format;
         }
 
-        public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings multi = null): this(original)
+        public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings advanced = null): this(original)
         {
             Factor = factor;
-            Advanced = multi ?? Advanced;
+            Advanced = advanced ?? Advanced;
         }
 
-        public Recipe Find(SrcSetType srcSetType, bool useFactors) => ResizeSettingsHelper.Find(this, srcSetType, useFactors);
     }
 }

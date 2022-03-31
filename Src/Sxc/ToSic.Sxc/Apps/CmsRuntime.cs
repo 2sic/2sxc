@@ -11,8 +11,14 @@ namespace ToSic.Sxc.Apps
         private readonly LazyInit<BlocksRuntime> _blocksRuntime;
         private readonly LazyInit<ViewsRuntime> _viewsRuntime;
 
-        public CmsRuntime(AppRuntimeDependencies dependencies, LazyInit<ViewsRuntime> viewsRuntime, LazyInit<BlocksRuntime> blocksRuntime) : base(dependencies,
-            "Sxc.CmsRt")
+        public CmsRuntime(AppRuntimeDependencies dependencies, 
+            LazyInit<EntityRuntime> entityRuntime,
+            LazyInit<MetadataRuntime> metadataRuntime,
+            LazyInit<ContentTypeRuntime> contentTypeRuntime,
+            LazyInit<QueryRuntime> queryRuntime, 
+            LazyInit<ViewsRuntime> viewsRuntime, 
+            LazyInit<BlocksRuntime> blocksRuntime) 
+            : base(dependencies, entityRuntime, metadataRuntime, contentTypeRuntime, queryRuntime, "Sxc.CmsRt")
         {
             _blocksRuntime = blocksRuntime.SetInit(r => r.Init(this, Log));
             _viewsRuntime = viewsRuntime.SetInit(r => r.Init(this, Log));

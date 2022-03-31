@@ -8,6 +8,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -94,9 +95,9 @@ namespace ToSic.Sxc.Code
         /// Link helper object to create the correct links
         /// </summary>
         /// <returns>
-        /// A <see cref="ILinkHelper"/> object.
+        /// A <see cref="ILinkService"/> object.
         /// </returns>
-        ILinkHelper Link { get; }
+        ILinkService Link { get; }
 
         #endregion
 
@@ -107,9 +108,9 @@ namespace ToSic.Sxc.Code
         /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
         /// </summary>
         /// <returns>
-        /// An <see cref="IInPageEditingSystem"/> object.
+        /// An <see cref="IEditService"/> object.
         /// </returns>
-        IInPageEditingSystem Edit { get; }
+        IEditService Edit { get; }
         #endregion
 
         #region AsDynamic for Strings

@@ -16,7 +16,7 @@
         }
         catch (Exception ex)
         {
-            ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
+          await Task.Run(() => ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error));
         }
     }
 
@@ -28,7 +28,7 @@
         }
         catch (Exception ex)
         {
-            ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
+          await Task.Run(() => ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error));
         }
     }
 }

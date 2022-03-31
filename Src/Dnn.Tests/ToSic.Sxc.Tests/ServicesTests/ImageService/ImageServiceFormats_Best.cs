@@ -5,8 +5,10 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Tests.ServicesTests
 {
-    public partial class ImageServiceFormats
+    public abstract partial class ImageServiceFormats
     {
+        protected abstract int ExpectedPngFormats { get; }
+
         [DataRow("test.png")]
         [DataRow(".png")]
         [DataRow("png")]
@@ -21,8 +23,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
         {
             var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
-            Assert.AreEqual(2, formats.Count);
-            AssertOneFileInfo(ImageConstants.Png, formats.Skip(1).First());
+            Assert.AreEqual(ExpectedPngFormats, formats.Count);
+            // If we have many, we expect that the original will be listed as the second alternative
+            if (formats.Count > 0)
+                AssertOneFileInfo(ImageConstants.Png, formats.Skip(1).First());
         }
 
         [DataRow(null)]

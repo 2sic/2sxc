@@ -14,7 +14,6 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi
 {
-    /// <inheritdoc cref="SxcApiControllerBase" />
     /// <summary>
     /// This is the foundation for both the old SxcApiController and the new Dnn.ApiController.
     /// incl. the current App, DNN, Data, etc.
@@ -72,7 +71,9 @@ namespace ToSic.Sxc.WebApi
 
         // ReSharper disable once InconsistentNaming
         [PrivateApi]
+#pragma warning disable IDE1006 // Naming Styles
         public AdamCode _AdamCode { get; private set; }
+#pragma warning restore IDE1006 // Naming Styles
 
         public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
 

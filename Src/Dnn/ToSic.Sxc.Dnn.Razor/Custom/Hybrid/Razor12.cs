@@ -36,10 +36,10 @@ namespace Custom.Hybrid
         #region Link, Edit, Dnn, App, Data
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot.Link;
+        public ILinkService Link => _DynCodeRoot.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot.Edit;
+        public IEditService Edit => _DynCodeRoot.Edit;
 
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();

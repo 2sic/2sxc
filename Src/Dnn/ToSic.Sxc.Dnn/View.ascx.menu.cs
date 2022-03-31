@@ -58,9 +58,6 @@ namespace ToSic.Sxc.Dnn
 
             var user = new DnnUser();
 
-            //if (DnnSecurity.PortalHasGroup(PortalId, Sxc.Settings.DnnGroupSxcDesigners) &&
-            //    !new DnnUser().IsDesigner) return;
-
             // Edit Template Button
             if (user.IsDesigner && appIsKnown && block.View != null)
                 actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,

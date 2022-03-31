@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Data
 {
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <remarks>New in 12.02</remarks>
     [PublicApi]
-    public partial interface IDynamicStack: ISxcDynamicObject
+    public partial interface IDynamicStack: ISxcDynamicObject, ICanDebug
     {
         /// <summary>
         /// Get a source object which is used in the stack. Returned as a dynamic object. 
@@ -52,11 +53,11 @@ namespace ToSic.Sxc.Data
 
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
-        /// <summary>
-        /// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
-        /// </summary>
-        /// <param name="debug"></param>
-        void SetDebug(bool debug);
+        ///// <summary>
+        ///// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
+        ///// </summary>
+        ///// <param name="debug"></param>
+        //void SetDebug(bool debug);
 
     }
 }

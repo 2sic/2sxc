@@ -145,7 +145,7 @@
     <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Dnn\Adam\DnnAdamFileSystem.cs" />
-    <Compile Include="Dnn\Web\DnnLinkHelper.cs" />
+    <Compile Include="Dnn\Services\DnnLinkService.cs" />
     <Compile Include="Dnn\Run\DnnModuleUpdater.cs" />
     <Compile Include="Dnn\DnnBusinessController.cs" />
     <Compile Include="Dnn\Context\DnnModule.cs" />

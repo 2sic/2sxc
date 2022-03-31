@@ -10,15 +10,16 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
     /// <summary>
-    /// The Oqtane implementation of the <see cref="ILinkHelper"/>.
+    /// The Oqtane implementation of the <see cref="ILinkService"/>.
     /// </summary>
     [PrivateApi]
-    public class OqtLinkHelper : LinkHelperBase
+    public class OqtLinkService : LinkServiceBase
     {
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
         private readonly Lazy<IAliasRepository> _aliasRepositoryLazy;
         private Sxc.Context.IContextOfBlock _context;
 
-        public OqtLinkHelper(
+        public OqtLinkService(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
             ImgResizeLinker imgLinker,

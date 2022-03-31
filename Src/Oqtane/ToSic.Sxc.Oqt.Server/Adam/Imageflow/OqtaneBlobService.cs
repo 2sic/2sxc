@@ -42,34 +42,37 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
 
         public async Task<IBlobData> Fetch(string virtualPath)
         {
-            if (!SupportsPath(virtualPath)) return null;
+            return await Task.Run(() =>
+            {
+                if (!SupportsPath(virtualPath)) return null;
 
-            // Get appName and filePath.
-            string appName;
-            string filePath;
-            var rez = ContainsBetaPath(virtualPath)
-                ? GetBetaAppNameAndFilePath(virtualPath, out appName, out filePath)
-                : GetAppNameAndFilePath(virtualPath, out appName, out filePath);
-            if (rez) return null;
+                // Get appName and filePath.
+                string appName;
+                string filePath;
+                var rez = ContainsBetaPath(virtualPath)
+                    ? GetBetaAppNameAndFilePath(virtualPath, out appName, out filePath)
+                    : GetAppNameAndFilePath(virtualPath, out appName, out filePath);
+                if (rez) return null;
 
-            // Get route.
-            var route = GetRoute(virtualPath);
+                // Get route.
+                var route = GetRoute(virtualPath);
 
-            using var scope = _serviceProvider.CreateScope();
+                using var scope = _serviceProvider.CreateScope();
 
-            var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-            if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);
+                var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+                if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);
 
-            // Get alias.
-            //siteStateInitializer.InitIfEmpty();
-            var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
-            var alias = siteStateInitializer.InitializedState.Alias; // siteStateInitializer.SiteState.Alias;
-            
-            // Build physicalPath.
-            var physicalPath = ContentFileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
-            if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
+                // Get alias.
+                //siteStateInitializer.InitIfEmpty();
+                var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
+                var alias = siteStateInitializer.InitializedState.Alias; // siteStateInitializer.SiteState.Alias;
 
-            return BlobData(physicalPath);
+                // Build physicalPath.
+                var physicalPath = ContentFileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
+                if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
+
+                return BlobData(physicalPath);
+            });
         }
 
         private static IBlobData BlobData(string physicalPath)

@@ -12,7 +12,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -33,7 +32,7 @@ namespace Custom.Hybrid
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        public new TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
         /// <inheritdoc />
         public IApp App => _DynCodeRoot?.App;
@@ -140,10 +139,10 @@ namespace Custom.Hybrid
         #region Link & Edit - added to API in 2sxc 10.01
 
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot?.Link;
+        public ILinkService Link => _DynCodeRoot?.Link;
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
+        public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
 

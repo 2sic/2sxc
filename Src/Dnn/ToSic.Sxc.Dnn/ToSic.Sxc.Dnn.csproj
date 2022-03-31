@@ -111,7 +111,6 @@
   <ItemGroup>
     <Compile Include="DnnBusinessController.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="StartUp\ActivateKoi2DependencyInjection.cs" />
     <Compile Include="StartUp\CompilerDependencies.cs" />
     <Compile Include="StartUp\DnnDi.cs" />
     <Compile Include="StartUp\StartupDnn9.cs" />

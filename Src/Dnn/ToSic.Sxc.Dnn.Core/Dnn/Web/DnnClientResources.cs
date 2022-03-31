@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Dnn.Web
         {
             var alwaysNeedsAntiForgeryAndHeader = BlockBuilder
                                           ?.GetEngine()
-                                          ?.CompatibilityAutoLoadJQueryAndRVT
+                                          ?.CompatibilityAutoLoadJQueryAndRvt
                                       ?? true;
             return alwaysNeedsAntiForgeryAndHeader;
         }

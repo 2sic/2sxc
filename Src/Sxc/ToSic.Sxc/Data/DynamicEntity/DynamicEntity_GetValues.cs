@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Data
             // Check special cases #1 Toolbar - only in DNN, not available in Oqtane
 #if NETFRAMEWORK
             // ReSharper disable once ConvertIfStatementToSwitchStatement
-            #pragma warning disable 618 - ignore Obsolete
+            #pragma warning disable 618 // ignore Obsolete
             if (field == "Toolbar") return Toolbar.ToString();
             #pragma warning restore 618
 #endif
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi("Internal")]
         public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
         {
-            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt");
+            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt", Debug);
             var safeWrap = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return safeWrap("no entity", null);

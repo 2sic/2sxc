@@ -5,6 +5,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
+using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
@@ -13,7 +14,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
-using ToSic.Sxc.Edit.InPageEditingSystem;
+using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
@@ -75,6 +76,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
             services.TryAddTransient<ContextOfApp.ContextOfAppDependencies>();
+            services.TryAddTransient<ContextOfSite.ContextOfSiteDependencies>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();
@@ -150,13 +152,26 @@ namespace ToSic.Sxc
             services.TryAddScoped(typeof(PageScopedService<>));
 
             // v13 DynamicCodeService
-            services.TryAddTransient<IInPageEditingSystem, InPageEditingHelper>();
+            services.TryAddTransient<IEditService, EditService>();
             services.TryAddTransient<DynamicCodeService.Dependencies>();
             services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
+            // v13 Experimental LightSpeed
+            services.TryAddTransient<IOutputCache, LightSpeed>();
+
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
-            services.AddSxcCoreFallbackServices();
+            services
+                .AddKoi()
+                .AddSxcCoreFallbackServices();
+
+            return services;
+        }
+
+        public static IServiceCollection AddKoi(this IServiceCollection services)
+        {
+            services.TryAddTransient<Connect.Koi.KoiCss.Dependencies>();
+            services.TryAddTransient<Connect.Koi.ICss, Connect.Koi.KoiCss>();
 
             return services;
         }

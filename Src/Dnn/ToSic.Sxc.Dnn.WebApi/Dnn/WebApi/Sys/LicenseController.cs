@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Web.Http;
-using DotNetNuke.Security;
+﻿using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.Http;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Sys.Licenses;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
@@ -17,8 +19,25 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// </summary>
         protected override string HistoryLogGroup => "web-api.license";
 
+        /// <inheritdoc />
         [HttpGet]
         public IEnumerable<LicenseDto> Summary() => Real.Summary();
 
+        /// <inheritdoc />
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public LicenseFileResultDto Upload()
+        {
+            PreventServerTimeout300();
+            return Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request));
+        }
+
+        /// <inheritdoc />
+        [HttpGet]
+        public LicenseFileResultDto Retrieve()
+        {
+            PreventServerTimeout300();
+            return Real.Retrieve();
+        }
     }
 }

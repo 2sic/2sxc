@@ -25,23 +25,24 @@ namespace ToSic.Sxc.WebApi.Adam
             Log.Add("first permission checks passed");
 
             // This will contain the list of items
-            var allDtos = new List<AdamItemDto>();
+            var list = new List<AdamItemDto>();
             
             // get root and at the same time auto-create the core folder in case it's missing (important)
             var root = AdamContext.AdamRoot.Folder(autoCreate);
 
             // if no root exists then quit now
             if (!autoCreate && root == null) 
-                return wrapLog("no folder", allDtos);
+                return wrapLog("no folder", list);
 
             // try to see if we can get into the subfolder - will throw error if missing
             var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
             
             // ensure that it's super user, or the folder is really part of this item
-            if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var exp))
+            if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var ex))
             {
                 Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
-                throw exp;
+                Log.Exception(ex);
+                throw ex;
             }
 
             var subfolders = currentFolder.Folders.ToList();
@@ -51,34 +52,22 @@ namespace ToSic.Sxc.WebApi.Adam
 
             var currentFolderDto = dtoMaker.Create(currentFolder);
             currentFolderDto.Name = ".";
-            currentFolderDto.MetadataId = currentFolder.Metadata.EntityId;
-            allDtos.Insert(0, currentFolderDto);
+            list.Insert(0, currentFolderDto);
 
             var adamFolders = subfolders
                 .Cast<Folder<TFolderId, TFileId>>()
                 .Where(s => !EqualityComparer<TFolderId>.Default.Equals(s.SysId, currentFolder.SysId))
-                .Select(f =>
-                {
-                    var dto = dtoMaker.Create(f/*, State*/);
-                    dto.MetadataId = (int)f.Metadata.EntityId;
-                    return dto;
-                })
+                .Select(f => dtoMaker.Create(f))
                 .ToList();
-            allDtos.AddRange(adamFolders);
+            list.AddRange(adamFolders);
 
             var adamFiles = files
                 .Cast<File<TFolderId, TFileId>>()
-                .Select(f =>
-                {
-                    var dto = dtoMaker.Create(f);
-                    dto.MetadataId = (int)f.Metadata.EntityId;
-                    dto.Type = Classification.TypeName(f.Extension);
-                    return dto;
-                })
+                .Select(f => dtoMaker.Create(f))
                 .ToList();
-            allDtos.AddRange(adamFiles);
+            list.AddRange(adamFiles);
 
-            return wrapLog($"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{allDtos.Count}", allDtos.ToList());
+            return wrapLog($"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{list.Count}", list.ToList());
         }
 
     }

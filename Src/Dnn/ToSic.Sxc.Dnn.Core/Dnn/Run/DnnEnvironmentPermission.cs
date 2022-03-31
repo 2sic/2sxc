@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// In some cases the container is a ContainerNull object without ModuleInfo, so we must really do null-checks
         /// </remarks>
         protected ModuleInfo Module =>
-            _module ?? (_module = ((Context as IContextOfBlock)?.Module as Module<ModuleInfo>)?.UnwrappedContents);
+            _module ?? (_module = ((Context as IContextOfBlock)?.Module as Module<ModuleInfo>)?.GetContents());
         private ModuleInfo _module;
 
         public override bool EnvironmentAllows(List<Grants> grants)
@@ -41,21 +41,27 @@ namespace ToSic.Sxc.Dnn.Run
 
         public override bool VerifyConditionOfEnvironment(string condition)
         {
-            if (!condition.ToLowerInvariant().StartsWith(_salPrefix)) return false;
+            var wrapLog = Log.Call<bool>(condition);
+            if (!condition.ToLowerInvariant().StartsWith(_salPrefix)) 
+                return wrapLog("unknown condition: false", false);
 
             var salWord = condition.Substring(_salPrefix.Length);
             var sal = (SecurityAccessLevel)Enum.Parse(typeof(SecurityAccessLevel), salWord);
             // check anonymous - this is always valid, even if not in a module context
             if (sal == SecurityAccessLevel.Anonymous)
-                return true;
+                return wrapLog("anonymous, always true", true);
 
             // check within module context
             if (Module != null)
-                return ModulePermissionController
-                    .HasModuleAccess(sal, CustomPermissionKey, Module);
+            {
+                // TODO: STV WHERE DOES THE MODULE COME FROM?
+                // IT APPEARS THAT IT'S MISSING IN NORMAL REST CALLS
+                var result = ModulePermissionController.HasModuleAccess(sal, CustomPermissionKey, Module);
+                return wrapLog($"module: {result}", result);
+            }
 
             Log.Add("trying to check permission " + _salPrefix + ", but don't have module in context");
-            return false;
+            return wrapLog("can't verify: false", false);
         }
 
         private bool UserIsModuleAdmin()

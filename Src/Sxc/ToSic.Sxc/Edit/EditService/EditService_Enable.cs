@@ -1,12 +1,10 @@
 ﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web.PageFeatures;
 
-namespace ToSic.Sxc.Edit.InPageEditingSystem
+namespace ToSic.Sxc.Edit.EditService
 {
-    public partial class InPageEditingHelper
+    public partial class EditService
     {
         /// <inheritdoc />
         public bool Enabled { 
@@ -29,7 +27,7 @@ namespace ToSic.Sxc.Edit.InPageEditingSystem
             if (forms == true)
             {
                 var feats = new[] { FeaturesCatalog.PublicEditForm.Guid };
-                var features = Block.Context.ServiceProvider.Build<IFeaturesInternal>();
+                var features = Block.Context.Dependencies.FeaturesInternalGenerator.New;
                 if (!features.Enabled(feats, "public forms not available", out var exp))
                     throw exp;
             }

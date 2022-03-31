@@ -8,11 +8,8 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
-using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Engines;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -23,23 +20,26 @@ namespace ToSic.Sxc.Apps
     /// name, folder, data, metadata etc.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public class App : EavApp, IApp
+    public partial class App : EavApp, IApp
     {
         #region DI Constructors
-
-        public App(AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy, Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy) : base(dependencies, "App.SxcApp")
+        [PrivateApi]
+        public App(IServiceProvider serviceProvider, AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy, Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy) : base(dependencies, "App.SxcApp")
         {
+            _serviceProvider = serviceProvider;
             _globalPaths = globalPaths;
             _appPathsLazy = appPathsLazy;
             _dynamicEntityDependenciesLazy = dynamicEntityDependenciesLazy;
         }
 
+        private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<GlobalPaths> _globalPaths;
         private readonly Lazy<AppPaths> _appPathsLazy;
         private readonly Lazy<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
         private AppPaths _appPaths;
         private AppPaths AppPaths => _appPaths ?? (_appPaths = _appPathsLazy.Value.Init(Site, AppState, Log));
 
+        [PrivateApi]
         public App PreInit(ISite site)
         {
             Site = site;

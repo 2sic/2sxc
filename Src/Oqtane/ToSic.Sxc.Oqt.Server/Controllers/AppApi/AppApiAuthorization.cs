@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 return;
             }
 
-            object? resource;
+            object resource;
             if (AppContext.TryGetSwitch(SuppressUseHttpContextAsAuthorizationResource, out var useEndpointAsResource) &&
                 useEndpointAsResource)
             {

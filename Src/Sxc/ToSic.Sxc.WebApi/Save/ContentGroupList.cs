@@ -4,10 +4,12 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Edit;
 using static System.StringComparison;
 using BlockEditorBase = ToSic.Sxc.Blocks.Edit.BlockEditorBase;
 
@@ -18,13 +20,20 @@ namespace ToSic.Sxc.WebApi.Save
         #region Constructor / DI
 
         private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly Generator<BlockEditorForModule> _blkEdtForMod;
+        private readonly Generator<BlockEditorForEntity> _blkEdtForEnt;
         private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(_appIdentity, _withDrafts, Log));
         private CmsManager _cmsManager;
         private bool _withDrafts = false;
 
-        public ContentGroupList(Lazy<CmsManager> cmsManagerLazy) : base("Api.GrpPrc")
+        public ContentGroupList(Lazy<CmsManager> cmsManagerLazy, 
+            Generator<BlockEditorForModule> blkEdtForMod,
+            Generator<BlockEditorForEntity> blkEdtForEnt
+            ) : base("Api.GrpPrc")
         {
             _cmsManagerLazy = cmsManagerLazy;
+            _blkEdtForMod = blkEdtForMod;
+            _blkEdtForEnt = blkEdtForEnt;
         }
 
         public ContentGroupList Init(IAppIdentity appIdentity, ILog parentLog, bool withDraftsTemp)
@@ -93,7 +102,7 @@ namespace ToSic.Sxc.WebApi.Save
             }
 
             // update-module-title
-            BlockEditorBase.GetEditor(block).UpdateTitle();
+            BlockEditorBase.GetEditor(block, _blkEdtForMod, _blkEdtForEnt).UpdateTitle();
             return wrapLog("ok", true);
         }
 

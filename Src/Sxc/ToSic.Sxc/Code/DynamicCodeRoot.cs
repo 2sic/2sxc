@@ -8,6 +8,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
@@ -101,15 +102,15 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided
-        public ILinkHelper Link => _link ?? (_link = GetService<ILinkHelper>());
-        private ILinkHelper _link;
+        public ILinkService Link => _link ?? (_link = GetService<ILinkService>());
+        private ILinkService _link;
 
 
         #region Edit
 
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _edit ?? (_edit = GetService<IInPageEditingSystem>());// { get; private set; }
-        private IInPageEditingSystem _edit;
+        public IEditService Edit => _edit ?? (_edit = GetService<IEditService>());
+        private IEditService _edit;
 
         #endregion
 

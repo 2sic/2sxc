@@ -4,6 +4,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Code
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCode : HasLog, IDynamicCode, IWrapper<IDynamicCode>, ICoupledDynamicCode
+    public abstract partial class DynamicCode : HasLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
     {
 
         #region Constructor - NOT for DI
@@ -73,9 +74,9 @@ namespace ToSic.Sxc.Code
 
         #region Link and Edit
         /// <inheritdoc />
-        public ILinkHelper Link => _DynCodeRoot?.Link;
+        public ILinkService Link => _DynCodeRoot?.Link;
         /// <inheritdoc />
-        public IInPageEditingSystem Edit => _DynCodeRoot?.Edit;
+        public IEditService Edit => _DynCodeRoot?.Edit;
         #endregion
 
         #region SharedCode - must also map previous path to use here

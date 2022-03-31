@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Images
             AdvancedSettings advanced = default
         )
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>();
+            var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             if (settings is IResizeSettings)
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Images
 
             // Check if the settings is the expected type or null/other type
             var getSettings = settings as ICanGetByName;
-            if (Debug) Log.Add($"Has Settings:{getSettings != null}");
+            Log.SafeAdd(Debug, $"Has Settings:{getSettings != null}");
 
             var formatValue = FindKnownFormatOrNull(RealStringOrNull(format));
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Images
 
             resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings) ?? resizeParams.Advanced;
 
-            return resizeParams;
+            return wrapLog("ok", resizeParams);
         }
 
         private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Images
             var factorFinal = DoubleOrNullWithCalculation(factor) ?? 0; // 0 = ignore
             double arFinal = DoubleOrNullWithCalculation(aspectRatio)
                              ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0; // 0=ignore
-            if (Debug) Log.Add($"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
+            Log.SafeAdd(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
             var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format)
             {

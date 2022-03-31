@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;
@@ -51,17 +52,18 @@ namespace ToSic.Sxc.Dnn
             bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
 
             #region Lightspeed - very experimental - deactivate before distribution
-            if (Lightspeed.HasCache(ModuleId))
+            try
             {
-                Log.Add("Lightspeed enabled, has cache");
-                PreviousCache = Lightspeed.Get(ModuleId);
-                if (PreviousCache != null)
+                if (OutputCache.Existing != null)
                 {
                     checkPortalIsReady = false;
-                    requiresPre1025Behavior = PreviousCache.EnforcePre1025;
+                    requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
                 }
             }
-            if(PreviousCache == null) NewCache = new OutputCacheItem();
+            catch
+            {
+                /* ignore */
+            }
             #endregion
 
             // Always do this, part of the guarantee that everything will work
@@ -72,13 +74,17 @@ namespace ToSic.Sxc.Dnn
             // ensure everything is ready and that we know if we should activate the client-dependency
             TryCatchAndLogToDnn(() =>
             {
-                if (checkPortalIsReady) DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, Log);
+                if (checkPortalIsReady) DnnReadyCheckTurbo
+                    .EnsureSiteAndAppFoldersAreReady(this, Block, GetService<Lazy<AppFolderInitializer>>(), Log);
                 DnnClientResources = GetService<DnnClientResources>()
                     .Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                 var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                 if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
                 // #lightspeed
-                if(NewCache != null) NewCache.EnforcePre1025 = needsPre1025Behavior;
+                try
+                {
+                    OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
+                } catch { /* ignore */ }
             }, callLog);
             _stopwatch.Stop();
         }
@@ -97,7 +103,7 @@ namespace ToSic.Sxc.Dnn
             var callLog = Log.Call(useTimer: true);
 
             // #lightspeed
-            if (PreviousCache != null) Log.Add("Lightspeed hit - will use cached");
+            if (OutputCache?.Existing != null) Log.Add("Lightspeed hit - will use cached");
 
             IRenderResult data = null;
             var headersAndScriptsAdded = false;
@@ -106,7 +112,7 @@ namespace ToSic.Sxc.Dnn
                 TryCatchAndLogToDnn(() =>
                 {
                     // Try to build the html and everything
-                    data = PreviousCache?.Data ?? RenderViewAndGatherJsCssSpecs();
+                    data = OutputCache?.Existing?.Data ?? RenderViewAndGatherJsCssSpecs();
                     // in this case assets & page settings were not applied
                     try
                     {
@@ -124,17 +130,10 @@ namespace ToSic.Sxc.Dnn
                     if (RenderNaked)
                         SendStandalone(data.Html);
                     else
-                    {
                         phOutput.Controls.Add(new LiteralControl(data.Html));
 
-                        // #Lightspeed
-                        if (NewCache != null)
-                        {
-                            Log.Add("Adding to lightspeed");
-                            NewCache.Data = data;
-                            Lightspeed.Add(ModuleId, NewCache);
-                        }
-                    }
+                    // #Lightspeed
+                    OutputCache?.Save(data);
                 });
 
             // if we had an error before, or have one now, re-check assets
@@ -161,9 +160,8 @@ namespace ToSic.Sxc.Dnn
         }
 
 
-        private OutputCacheManager Lightspeed => _lightspeed ?? (_lightspeed = new OutputCacheManager());
-        private OutputCacheManager _lightspeed;
-        private OutputCacheItem PreviousCache;
-        private OutputCacheItem NewCache;
+
+        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(Log).Init(ModuleId, Block));
+        private readonly ValueGetOnce<IOutputCache> _oc = new ValueGetOnce<IOutputCache>();
     }
 }

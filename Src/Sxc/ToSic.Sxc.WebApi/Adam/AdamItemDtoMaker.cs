@@ -1,7 +1,12 @@
-﻿using ToSic.Eav.Metadata;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Eav.WebApi.Dto.Metadata;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -37,18 +42,22 @@ namespace ToSic.Sxc.WebApi.Adam
         private const string ThumbnailPattern = "{0}?w=120&h=120&mode=crop&urlSource=backend";
         private const string PreviewPattern = "{0}?w=800&h=800&mode=max&urlSource=backend";
 
-        public virtual AdamItemDto Create(File<TFolderId, TFileId> original)
+        public virtual AdamItemDto Create(File<TFolderId, TFileId> file)
         {
-            var url = original.Url;
-            var item = new AdamItemDto<TFolderId, TFileId>(false, original.SysId, original.ParentSysId, original.FullName, original.Size,
-                original.Created, original.Modified)
+            var url = file.Url;
+            var item = new AdamItemDto<TFolderId, TFileId>(false, file.SysId, file.ParentSysId,
+                file.FullName, file.Size,
+                file.Created, file.Modified)
             {
-                Path = original.Path,
+                Path = file.Path,
                 ThumbnailUrl = string.Format(ThumbnailPattern, url),
                 PreviewUrl = string.Format(PreviewPattern, url),
                 Url = url,
-                ReferenceId = (original as IHasMetadata).Metadata.Target.KeyString,
-                AllowEdit = CanEditFolder(original)
+                ReferenceId = (file as IHasMetadata).Metadata.Target.KeyString,
+                AllowEdit = CanEditFolder(file),
+                MetadataId = (int)file.Metadata.EntityId,
+                Metadata = GetMetadataOf(file.Metadata),
+                Type = Classification.TypeName(file.Extension),
             };
             // (original.StorageLocation == 0) ? original.Path : FileLinkClickController.Instance.GetFileLinkClick(original);
             return item;
@@ -57,14 +66,32 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public virtual AdamItemDto Create(Folder<TFolderId, TFileId> folder)
         {
-            var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0, folder.Created,
+            var item = new AdamItemDto<TFolderId, TFolderId>(true, folder.SysId, folder.ParentSysId, folder.Name, 0,
+                folder.Created,
                 folder.Modified)
             {
                 Path = folder.Path,
                 AllowEdit = CanEditFolder(folder),
                 ReferenceId = (folder as IHasMetadata).Metadata.Target.KeyString,
+                MetadataId = (int)folder.Metadata.EntityId,
+                Metadata = GetMetadataOf(folder.Metadata),
             };
             return item;
+        }
+
+        private IEnumerable<MetadataOfDto> GetMetadataOf(IDynamicMetadata md)
+        {
+            if (md == null) return null;
+
+            var result = ((IHasMetadata)md).Metadata
+                .Select(m => new MetadataOfDto
+                {
+                    Id = m.EntityId,
+                    Guid = m.EntityGuid,
+                    Type = new JsonType(m)
+                })
+                .ToArray();
+            return result.Any() ? result : null;
         }
 
         private bool CanEditFolder(Eav.Apps.Assets.IAsset original)

@@ -13,12 +13,12 @@ namespace ToSic.Sxc.Web.PageService
         {
             Features = features;
         }
-        
+
 
         /// <summary>
         /// How the changes given to this object should be processed.
         /// </summary>
-        [WorkInProgressApi("not final yet")]
+        [PrivateApi("not final yet, will probably change")]
         public PageChangeModes ChangeMode { get; set; } = PageChangeModes.Auto;
 
         [PrivateApi("not final yet")]

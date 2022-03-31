@@ -38,15 +38,14 @@ namespace ToSic.Sxc.Code
         public DynamicCodeService(Dependencies dependencies): base($"{Constants.SxcLogName}.DCS")
         {
             _dependencies = dependencies;
-            ServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
+            var newScopedServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
             // Important: These generators must be built inside the scope, so they must be made here
             // and not come from the constructor injection
-            CodeRootGenerator = ServiceProvider.Build<Generator<DynamicCodeRoot>>();
-            AppGenerator = ServiceProvider.Build<Generator<App>>();
-            AppConfigDelegateGenerator = ServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
-            ModuleAndBlockBuilder = ServiceProvider.Build<LazyInitLog<IModuleAndBlockBuilder>>().SetLog(Log);
+            CodeRootGenerator = newScopedServiceProvider.Build<Generator<DynamicCodeRoot>>();
+            AppGenerator = newScopedServiceProvider.Build<Generator<App>>();
+            AppConfigDelegateGenerator = newScopedServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
+            ModuleAndBlockBuilder = newScopedServiceProvider.Build<LazyInitLog<IModuleAndBlockBuilder>>().SetLog(Log);
         }
-        protected IServiceProvider ServiceProvider { get; }
         protected readonly Generator<DynamicCodeRoot> CodeRootGenerator;
         protected readonly Generator<App> AppGenerator;
         protected readonly GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator;

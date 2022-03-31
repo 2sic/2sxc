@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
@@ -17,6 +18,17 @@ namespace ToSic.Sxc.Blocks
         /// The resulting HTML to add to the page
         /// </summary>
         string Html { get; }
+
+        /// <summary>
+        /// Determines if this render-result can be cached.
+        /// Should be false in case of errors or not-yet initialized content
+        /// </summary>
+        bool CanCache { get; }
+
+        /// <summary>
+        /// Information that the result contains an error message and should be treated differently, like no caching
+        /// </summary>
+        bool IsError { get; }
 
         /// <summary>
         /// Built-in page features (like jQuery, 2sxc.JsCode, ...) which were requested by the code and should be enabled
@@ -56,9 +68,14 @@ namespace ToSic.Sxc.Blocks
         string HttpStatusMessage { get; }
 
         [PrivateApi]
-        IList<int> DependentApps { get; }
+        IList<IDependentApp> DependentApps { get; }
 
         [PrivateApi("not in use yet")]
         int ModuleId { get; }
+    }
+
+    public interface IDependentApp: ITimestamped
+    {
+        int AppId { get; }
     }
 }

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, ICoupledDynamicCode, IRazor, IDnnRazor
+    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IRazor, IDnnRazor
     {
         public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this));
         private IHtmlHelper _html;

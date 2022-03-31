@@ -6,7 +6,7 @@ using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    internal class BlockEditorForEntity : BlockEditorBase
+    public class BlockEditorForEntity : BlockEditorBase
     {
         public BlockEditorForEntity(BlockEditorBaseDependencies dependencies, Lazy<CmsManager> parentBlockManagerLazy, IAppStates appStates) 
             : base(dependencies)

@@ -11,6 +11,13 @@ namespace ToSic.Sxc.Images
         internal const int MaxQuality = 100;
         internal const string DontSetParam = "(none)";
 
+        // https://imageresizing.net/docs/v4/reference
+        public const string ModeCrop = "crop";
+        public const string ModeMax = "max";
+        public const string ModePad = "pad";
+        public const string ModeCarve = "carve";
+        public const string ModeStretch = "stretch";
+
         /// <summary>
         /// In case a srcset is being generated with a '*' factor and we don't have a number, assume 1200.
         /// This is an ideal number, as it's quite big but not huge, and will usually be easily divisible by 2,3,4,6 etc.

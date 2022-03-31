@@ -3,10 +3,10 @@ using DotNetNuke.Web.Api;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
-using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin

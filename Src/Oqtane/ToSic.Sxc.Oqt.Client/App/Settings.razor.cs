@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.App
             }
             catch (Exception ex)
             {
-                ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
+                await Task.Run(() => ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error));
             }
         }
 
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.App
             }
             catch (Exception ex)
             {
-                ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error);
+                await Task.Run(() => ModuleInstance.AddModuleMessage(ex.Message, MessageType.Error));
             }
         }
     }

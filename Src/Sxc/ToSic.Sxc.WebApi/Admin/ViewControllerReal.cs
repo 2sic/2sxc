@@ -4,12 +4,12 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
 
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Admin
             var wrapLog = Log.Call<ImportResultDto>();
 
             if (!uploadInfo.HasFiles())
-                return new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error);
+                return wrapLog("no file uploaded", new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error));
 
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < uploadInfo.Count; i++)

@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi("Internal")]
         public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
         {
-            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk");
+            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk", Debug);
 
             var wrapLog = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
             var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull);

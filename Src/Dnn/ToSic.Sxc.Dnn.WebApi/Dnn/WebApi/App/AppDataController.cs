@@ -27,8 +27,13 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// <inheritdoc />
         [HttpGet]
 	    [AllowAnonymous] // will check security internally, so assume no requirements
-	    public IDictionary<string, object> GetOne(string contentType, string id, string appPath = null)
-	        => Real.GetOne(contentType, id, appPath);
+	    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = null) // this will handle Guid
+            => Real.GetOne(contentType, guid, appPath);
+
+        [HttpGet]
+        [AllowAnonymous] // will check security internally, so assume no requirements
+        public IDictionary<string, object> GetOne(string contentType, int id, string appPath = null) // this will handle int id
+            => Real.GetOne(contentType, id.ToString(), appPath);
 
         #endregion
 
@@ -51,8 +56,14 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         /// <inheritdoc />
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
-        public void Delete(string contentType, string id, [FromUri] string appPath = null) 
-            => Real.Delete(contentType, id, appPath);
+        public void Delete(string contentType, string guid, [FromUri] string appPath = null) // this will handle Guid
+            => Real.Delete(contentType, guid, appPath);
+
+ 
+        [HttpDelete]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
+        public void Delete(string contentType, int id, [FromUri] string appPath = null) // this will handle int id
+            => Real.Delete(contentType, id.ToString(), appPath);
 
         #endregion
 

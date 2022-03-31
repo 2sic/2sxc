@@ -5,11 +5,11 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.WebApi.Admin
             var wrapLog = Log.Call<ImportResultDto>();
 
             if (!uploadInfo.HasFiles())
-                return new ImportResultDto(false, "no files uploaded");
+                return wrapLog("no file uploaded", new ImportResultDto(false, "no file uploaded"));
 
             var (_, stream) = uploadInfo.GetStream(0);
 

@@ -5,6 +5,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
@@ -21,12 +22,18 @@ namespace ToSic.Sxc.Blocks
 #pragma warning restore CS0618
     {
 
-        public RenderService(GeneratorLog<IInPageEditingSystem> editGenerator, LazyInitLog<IModuleAndBlockBuilder> builder): base("Sxc.RndSvc", initialMessage:"()")
+
+        public RenderService(GeneratorLog<IEditService> editGenerator, 
+            LazyInitLog<IModuleAndBlockBuilder> builder,
+            Generator<BlockFromEntity> blkFrmEntGen
+            ) : base("Sxc.RndSvc", initialMessage:"()")
         {
+            _blkFrmEntGen = blkFrmEntGen;
             _builder = builder.SetLog(Log);
             _editGenerator = editGenerator.SetLog(Log);
         }
-        private readonly GeneratorLog<IInPageEditingSystem> _editGenerator;
+        private readonly Generator<BlockFromEntity> _blkFrmEntGen;
+        private readonly GeneratorLog<IEditService> _editGenerator;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log.LinkTo(codeRoot.Log);
@@ -52,8 +59,8 @@ namespace ToSic.Sxc.Blocks
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             item = item ?? parent;
             return new HybridHtmlString(field == null
-                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity) // with edit-context
-                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent)) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
+                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity, _blkFrmEntGen) // with edit-context
+                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), _blkFrmEntGen) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
         }
 
         /// <summary>
@@ -77,8 +84,8 @@ namespace ToSic.Sxc.Blocks
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
             return new HybridHtmlString(merge == null
-                    ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent))
-                    : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent)));
+                    ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent), _blkFrmEntGen)
+                    : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent), _blkFrmEntGen));
         }
 
         public IRenderResult Module(int pageId, int moduleId)
@@ -93,6 +100,6 @@ namespace ToSic.Sxc.Blocks
         /// create edit-object which is necessary for context attributes
         /// We need a new one for each parent
         /// </summary>
-        private IInPageEditingSystem GetEdit(DynamicEntity parent) => _editGenerator.New.SetBlock(parent._Dependencies.BlockOrNull);
+        private IEditService GetEdit(DynamicEntity parent) => _editGenerator.New.SetBlock(parent._Dependencies.BlockOrNull);
     }
 }

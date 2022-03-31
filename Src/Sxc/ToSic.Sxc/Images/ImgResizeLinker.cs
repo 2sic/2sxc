@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
+using Connect.Koi;
+using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Run;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.SrcSetPart;
@@ -13,16 +17,20 @@ using static ToSic.Sxc.Images.SrcSetPart;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Internal stuff")]
-    public class ImgResizeLinker : HasLog<ImgResizeLinker>
+    public class ImgResizeLinker : HasLog /* <ImgResizeLinker>*/, ICanDebug
     {
-        public ImgResizeLinker(Lazy<IFeaturesService> features) : base($"{Constants.SxcLogName}.ImgRes")
+        public ImgResizeLinker(Lazy<IFeaturesService> features, Lazy<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
         {
             _features = features;
+            _koi = koi;
             DimGen = new ResizeDimensionGenerator().Init(Log);
         }
         private readonly Lazy<IFeaturesService> _features;
+        private readonly Lazy<ICss> _koi;
 
-        public bool Debug = false;
+        //public void DebugSet(bool debug) => Debug = debug;
+
+        public bool Debug { get; set; }
 
         public readonly ResizeDimensionGenerator DimGen;
 
@@ -57,7 +65,7 @@ namespace ToSic.Sxc.Images
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
                 settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
-                parameters: parameters/*, allowMulti: false*/);
+                parameters: parameters);
 
             var result = ImageOnly(url, resizeSettings, field).Url;
             return wrapLog("built:" + result, result);
@@ -66,7 +74,7 @@ namespace ToSic.Sxc.Images
         public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
         {
             var wrapLog = Log.Call<OneResize>();
-            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
+            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors), _koi.Value.Framework);
             return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
         }
 
@@ -75,9 +83,9 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Call<string>();
 
-            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors.NameId));
+            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors), _koi.Value.Framework);
 
-            var srcSetParts = srcSetSettings?.SrcSetParsed;
+            var srcSetParts = srcSetSettings?.VariantsParsed;
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetParts?.Length ?? 0) == 0)
@@ -103,20 +111,30 @@ namespace ToSic.Sxc.Images
         private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, SrcSetPart partDef = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
-            one.TagEnhancements = srcSetSettings;
+            one.Recipe = srcSetSettings;
+
+            var imgDecorator = field?.ImageDecoratorOrNull;
+
+            var resizeMode = resizeSettings.ResizeMode;
+            if (imgDecorator?.CropBehavior == ImageDecorator.NoCrop)
+            {
+                resizeMode = ImageConstants.ModeMax;
+                one.ShowAll = true;
+                one.Height = 0; // if we show all, the height may not match crop-height
+            }
 
             var resizerNvc = new NameValueCollection();
             ImgAddIfRelevant(resizerNvc, "w", one.Width, "0");
             ImgAddIfRelevant(resizerNvc, "h", one.Height, "0");
             ImgAddIfRelevant(resizerNvc, "quality", resizeSettings.Quality, "0");
-            ImgAddIfRelevant(resizerNvc, "mode", resizeSettings.ResizeMode, DontSetParam);
+            ImgAddIfRelevant(resizerNvc, "mode", resizeMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "scale", resizeSettings.ScaleMode, DontSetParam);
             ImgAddIfRelevant(resizerNvc, "format", resizeSettings.Format, DontSetParam);
 
             // Get resize instructions of the data if it has any
-            var modifier = field?.ImageDecoratorOrNull()?.GetAnchorOrNull();
-            if (modifier?.Item1 != null)
-                ImgAddIfRelevant(resizerNvc, modifier.Value.Item1, modifier.Value.Item2);
+            var modifier = imgDecorator?.GetAnchorOrNull();
+            if (modifier?.Param != null)
+                ImgAddIfRelevant(resizerNvc, modifier.Value.Param, modifier.Value.Value);
 
             url = UrlHelpers.AddQueryString(url, resizerNvc);
 
