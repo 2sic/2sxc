@@ -2,6 +2,8 @@
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -24,13 +26,15 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             BlockFromModule blockModuleEmpty,
             IContextResolver contextResolverForLookUps,
             LogHistory logHistory,
-            GlobalTypesCheck globalTypesCheck
+            GlobalTypesCheck globalTypesCheck, 
+            IOutputCache outputCache
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
             _contextOfBlockEmpty = contextOfBlockEmpty;
             _blockModuleEmpty = blockModuleEmpty;
             _contextResolverForLookUps = contextResolverForLookUps;
             _globalTypesCheck = globalTypesCheck;
+            _outputCache = outputCache;
             PageOutput = pageOutput;
             logHistory.Add("oqt-view", Log);
         }
@@ -40,8 +44,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly BlockFromModule _blockModuleEmpty;
         private readonly IContextResolver _contextResolverForLookUps;
         private readonly GlobalTypesCheck _globalTypesCheck;
+        private readonly IOutputCache _outputCache;
 
         #endregion
+
+        protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Block));
+        private readonly ValueGetOnce<IOutputCache> _oc = new ValueGetOnce<IOutputCache>();
 
         #region Prepare
 
@@ -61,25 +69,11 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             // Check if there is less than 50 global types and warn user to restart application
             if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
 
-            #region Lightspeed - very experimental - deactivate before distribution
-            //if (Lightspeed.HasCache(module.ModuleId))
-            //{
-            //    Log.Add("Lightspeed enabled, has cache");
-            //    PreviousCache = Lightspeed.Get(module.ModuleId);
-            //}
-
-            //if (PreviousCache == null)
-            //{
-            //    NewCache = new OutputCacheItem();
-            //}
-            //else
-            //{
-            //    Log.Add("Lightspeed hit - will use cached");
-            //}
+            #region Lightspeed output caching
+            if (OutputCache?.Existing != null) Log.Add("Lightspeed hit - will use cached");
+            var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
+            OutputCache?.Save(renderResult);
             #endregion
-
-            // #Lightspeed
-            var renderResult = Block.BlockBuilder.Run(true);
 
             PageOutput.Init(this, renderResult);
 
@@ -108,7 +102,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             get
             {
                 if (_blockLoaded) return _block;
-                _blockLoaded = true;
+
                 var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module, Log);
                 _block = _blockModuleEmpty.Init(ctx, Log);
                 
@@ -116,6 +110,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
                 // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
                 _contextResolverForLookUps.AttachRealBlock(() => _block);
+                _blockLoaded = true;
                 return _block;
             }
         }
