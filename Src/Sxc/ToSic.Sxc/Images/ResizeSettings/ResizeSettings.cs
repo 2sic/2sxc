@@ -59,10 +59,10 @@ namespace ToSic.Sxc.Images
             Format = format ?? Format;
         }
 
-        public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings multi = null): this(original)
+        public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings advanced = null): this(original)
         {
             Factor = factor;
-            Advanced = multi ?? Advanced;
+            Advanced = advanced ?? Advanced;
         }
 
     }

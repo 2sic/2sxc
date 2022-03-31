@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
@@ -26,14 +25,22 @@ namespace ToSic.Sxc.Services
         [PrivateApi("Not sure if this is needed outside...")]
         IImageFormat GetFormat(string path);
 
+
+        // TODO - SETTINGS CAN'T BE AN IResizeSettings, because that will throw an error in the merge call
+        // We should reconsider this and make it possible to also rebuild a resize-settings
+        // - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
+
+
         /// <summary>
         /// Construct custom Resize-Settings as needed, either based on existing settings or starting from scratch
         /// </summary>
         /// <param name="settings">
-        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
-        /// - The name of a settings configuration, like "Content" or "Screen"
+        /// - A standardized Image-Settings object like `Settings.Images.Content` used as a template - see http://r.2sxc.org/settings
+        /// - The `string` name of a template settings , like "Content" or "Screen"
+        /// - a `bool` true/false - if true, the normal "Content" configuration is used as a template, if false, no initial configuration is used
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings. If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
+        /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
+        /// If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
