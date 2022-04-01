@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Services.Tests
         }
 
         [TestMethod()]
-        public void QueryStringRewriteWhenNotMissingInQueryStringOneElement()
+        public void QueryStringRewriteWhenNotMissingInQueryString()
         {
             var actual = QueryStringRewrite(new NameValueCollection { { Quality, "value" } });
             var expected = new NameValueCollection { { Quality, "value" } };
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Services.Tests
         }
 
         [TestMethod()]
-        public void QueryStringRewriteWhenMissingInQueryStringOneElement()
+        public void QueryStringRewriteWhenMissingInQueryStringWithOneItem()
         {
             var actual = QueryStringRewrite(new NameValueCollection { { "1", "1" } });
             var expected = new NameValueCollection
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Services.Tests
         }
 
         [TestMethod()]
-        public void QueryStringRewriteWhenNotMissingInQueryStringManyElement()
+        public void QueryStringRewriteWhenNotMissingInQueryStringWithManyItems()
         {
             var actual = QueryStringRewrite(
                 new NameValueCollection
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Services.Tests
         }
 
         [TestMethod()]
-        public void QueryStringRewriteWhenMissingInQueryStringManyElement()
+        public void QueryStringRewriteWhenMissingInQueryStringWithManyItems()
         {
             var actual = QueryStringRewrite(
                 new NameValueCollection
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Services.Tests
         }
 
         [TestMethod()]
-        public void QueryStringRewriteWhenMissingInQueryStringManyItems()
+        public void QueryStringRewriteWhenMissingInQueryStringWithManyQualityItems()
         {
             var actual = QueryStringRewrite(new NameValueCollection
             {
@@ -132,7 +132,7 @@ namespace ToSic.Sxc.Services.Tests
         }
 
         [TestMethod()]
-        public void QueryStringRewriteWhenNotMissingInQueryStringManyItems()
+        public void QueryStringRewriteWhenNotMissingInQueryStringWithManyQualityItems()
         {
             var actual = QueryStringRewrite(new NameValueCollection
             {
