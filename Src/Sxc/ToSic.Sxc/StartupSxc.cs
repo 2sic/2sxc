@@ -178,7 +178,7 @@ namespace ToSic.Sxc
         }
         public static IServiceCollection AddImageflowCustomization(this IServiceCollection services)
         {
-            services.AddTransient<IImageflowRewriteService, ImageflowRewriteService> ();
+            //services.AddTransient<IImageflowRewrite, ImageflowRewrite> ();
 
             return services;
         }

@@ -112,7 +112,7 @@
     <Compile Include="ServicesTests\MailAddressInputTypeTests.cs" />
     <Compile Include="ServicesTests\MailServiceTestsBase.cs" />
     <Compile Include="ServicesTests\SecureData\SecureDataTest.cs" />
-    <Compile Include="Services\ImageflowRewriteService\ImageflowRewriteServiceTests.cs" />
+    <Compile Include="Images\ImageflowRewriteTests.cs" />
     <Compile Include="TestBaseSxcDb.cs" />
     <Compile Include="TestBaseSxc.cs" />
     <Compile Include="ServicesTests\ConvertService\ConvertServiceTest.cs" />
