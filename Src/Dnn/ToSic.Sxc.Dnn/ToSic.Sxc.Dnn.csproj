@@ -99,6 +99,11 @@
     <Reference Include="System" />
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
+    <Reference Include="ToSic.Imageflow.Dnn, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Dependencies\Imageflow\Dnn\ToSic.Imageflow.Dnn.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="ToSic.Razor, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.dll</HintPath>

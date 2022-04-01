@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.SexyContent.Dnn920;
+using ToSic.Sxc.Images.ImageflowRewrite;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace ToSic.Sxc.Dnn.StartUp
@@ -81,6 +82,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // 2022-02-01 2dm - should not be necessary any more, .net Framework doesn't need this
             // But we'll leave it in, because possibly this function is more reliable than the built in
             Razor.StartUp.StartUp.RegisterToJson(JsonConvert.SerializeObject);
+
+            // Optional registration of query string rewrite functionality implementation for dnn imageflow module
+            Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
 
             _alreadyConfigured = true;
         }

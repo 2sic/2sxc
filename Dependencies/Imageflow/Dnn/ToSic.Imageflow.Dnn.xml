@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ToSic.Imageflow.Dnn</name>
+    </assembly>
+    <members>
+        <member name="T:ToSic.Imageflow.Dnn.BusinessController">
+            <summary>
+            BusinessController to support UpgradeModule
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.BusinessController.UpgradeModule(System.String)">
+            <summary>
+            Executed on module upgrade.
+            This Library package have dnn manifest with simplified "module" component,
+            to specify this BusinessController that supports upgrade.
+            </summary>
+            <param name="version"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.DependencyInjection.Resolve``1">
+            <summary>
+            Dependency Injection resolver with a known type as a parameter.
+            </summary>
+            <typeparam name="T">The type / interface we need.</typeparam>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.DependencyInjection.Configure">
+            <summary>
+            Configure IoC. If it's already configured, do nothing.
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.DependencyInjection.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            ConfigureServices for DI
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="T:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions">
+            <summary>
+            Hybrid cache options
+            </summary>
+        </member>
+        <member name="P:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions.DiskCacheDirectory">
+            <summary>
+            Where to store the cached files and the database
+            </summary>
+        </member>
+        <member name="P:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions.QueueSizeLimitInBytes">
+            <summary>
+            How many RAM bytes to use when writing asynchronously to disk before we switch to writing synchronously.
+            Defaults to 100MiB. 
+            </summary>
+        </member>
+        <member name="P:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions.CacheSizeLimitInBytes">
+            <summary>
+            Defaults to 1 GiB. Don't set below 9MB or no files will be cached, since 9MB is reserved just for empty directory entries.
+            </summary>
+        </member>
+        <member name="P:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions.MinCleanupBytes">
+            <summary>
+            The minimum number of bytes to free when running a cleanup task. Defaults to 1MiB;
+            </summary>
+        </member>
+        <member name="P:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions.MinAgeToDelete">
+            <summary>
+            The minimum age of files to delete. Defaults to 10 seconds.
+            </summary>
+        </member>
+        <member name="P:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions.DatabaseShards">
+            <summary>
+            The number of shards to split the metabase into. More shards means more open log files, slower shutdown.
+            But more shards also mean less lock contention and faster start time for individual cached requests.
+            Defaults to 8. You have to delete the database directory each time you change this number.
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Cache.HybridCacheOptions.#ctor(System.String)">
+            <summary>
+            HybridCacheOptions with cache folder
+            </summary>
+            <param name="cacheDir"></param>
+        </member>
+        <member name="T:ToSic.Imageflow.Dnn.ImageflowModule">
+            <summary>
+            ImageflowModule
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.ImageflowModule.Init(System.Web.HttpApplication)">
+            <summary>
+            Init Imageflow HttpModule
+            </summary>
+            <param name="application"></param>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.ImageflowModule.Dispose">
+            <summary>
+            Dispose Imageflow HttpModule
+            </summary>
+        </member>
+        <member name="T:ToSic.Imageflow.Dnn.Options.ImageflowModuleOptions">
+            <summary>
+            ImageflowModuleOptions
+            </summary>
+        </member>
+        <member name="P:ToSic.Imageflow.Dnn.Options.ImageflowModuleOptions.DefaultCacheControlString">
+            <summary>
+            Use "public, max-age=2592000" to cache for 30 days and cache on CDNs and proxies.
+            </summary>
+        </member>
+        <member name="T:ToSic.Imageflow.Dnn.Helpers.MagicBytes">
+            <summary>
+            Identifying Common File Formats
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.Helpers.MagicBytes.ProxyToStream(System.IO.Stream,System.Web.HttpResponse)">
+            <summary>
+            Proxies the given stream to the HTTP response, while also setting the content length
+            and the content type based off the magic bytes of the image
+            </summary>
+            <param name="sourceStream"></param>
+            <param name="response"></param>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:ToSic.Imageflow.Dnn.StartUp">
+            <summary>
+            StartUp is helper class to enable registration of QueryStringRewrite functionality from
+            main 2sxc dnn module
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(System.Func{System.Collections.Specialized.NameValueCollection,System.Collections.Specialized.NameValueCollection})">
+            <summary>
+            Register QueryStringRewrite function for use in ImageJobInfo.
+            This registration should be called from the main 2sxc dnn module
+            before we use dnn imageflow.
+            </summary>
+            <param name="queryStringRewrite"></param>
+        </member>
+        <member name="T:ToSic.Imageflow.Dnn.StartupDnn">
+            <summary>
+            This configures .net Dependency Injection
+            The StartUp is defined as an IServiceRouteMapper.
+            This way DNN will auto-run this code before anything else
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.StartupDnn.RegisterRoutes(DotNetNuke.Web.Api.IMapRoute)">
+            <summary>
+            This will be called by DNN when loading the assemblies.
+            We just want to trigger the DependencyInjection-Configure
+            </summary>
+            <param name="mapRouteManager"></param>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.UpgradeUtil.UpgradeNativeAssemblies">
+            <summary>
+            Ensure that native assemblies are in place, before we start to use them.
+            </summary>
+        </member>
+        <member name="M:ToSic.Imageflow.Dnn.UpgradeUtil.ReplaceNativeAssemblies">
+            <summary>
+            Replacing of native assemblies is only possible when this assemblies are not already locked,
+            because are in use and loaded.
+            This part is tricky and it is possible that it will be executed more times, until all work is done.
+            </summary>
+        </member>
+    </members>
+</doc>
