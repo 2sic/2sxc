@@ -96,8 +96,6 @@
     </Reference>
     <Reference Include="ToSic.Imageflow.Oqt.Server.Oqtane">
       <HintPath>..\..\..\Dependencies\Imageflow\Oqt\ToSic.Imageflow.Oqt.Server.Oqtane.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
