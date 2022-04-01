@@ -59,8 +59,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
                 .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 
-            // 2sxc Oqtane blob services for Imageflow.
-            services.AddImageflowOqtaneBlobService();
+            // 2sxc Oqtane blob services for Imageflow and other customizations.
+            services.AddImageflowExtensions();
 
             // Help RazorBlade to have a proper best-practices ToJson
             // New v12.05

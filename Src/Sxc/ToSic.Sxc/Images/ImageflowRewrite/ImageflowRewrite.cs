@@ -2,6 +2,8 @@
 
 namespace ToSic.Sxc.Images.ImageflowRewrite
 {
+    // Is executed in dnn imageflow module and oqtane imageflow module to
+    // rewrite query string params before imageflow middleware take a care of them.
     public class ImageflowRewrite
     {
         public static readonly string Quality = "quality";
@@ -9,7 +11,7 @@ namespace ToSic.Sxc.Images.ImageflowRewrite
         public static readonly string PngQuality = "png.quality";
         public static readonly string WebpQuality = "webp.quality";
 
-        public NameValueCollection QueryStringRewrite(NameValueCollection queryString)
+        public static NameValueCollection QueryStringRewrite(NameValueCollection queryString)
         {
             // rewrite query string
             if (queryString != null && !string.IsNullOrEmpty(queryString[Quality]))
