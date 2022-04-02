@@ -30,14 +30,14 @@ namespace ToSic.Sxc.Tests.DataForImageTests
         public static AdvancedSettings TestRecipeSet() =>
             new AdvancedSettings(new Recipe(recipes: new[]
             {
-                new Recipe(factor: "1", width: W100),
-                new Recipe(factor: "3/4", width: W75, attributes: Attributes75MixIn, recipes: new[]
+                new Recipe(forFactor: "1", width: W100),
+                new Recipe(forFactor: "3/4", width: W75, attributes: Attributes75MixIn, recipes: new[]
                 {
-                    new Recipe(tag: "img", width: W75CssUnknown, cssFramework: CssUnknown, attributes: Attributes75),
-                    new Recipe(tag: "img", width: W75ImgOnly777, attributes: Attributes75)
+                    new Recipe(forTag: "img", width: W75CssUnknown, forCss: CssUnknown, attributes: Attributes75),
+                    new Recipe(forTag: "img", width: W75ImgOnly777, attributes: Attributes75)
                 }),
-                new Recipe(factor: "1:2", width: W50),
-                new Recipe(factor: "0.25", width: W25)
+                new Recipe(forFactor: "1:2", width: W50),
+                new Recipe(forFactor: "0.25", width: W25)
             }));
 
         public static AdvancedSettings TestRecipeSetFromJson => AdvancedSettings.FromJson(JsonRecipe());
@@ -53,17 +53,17 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                 {
                     recipes = new object[]
                     {
-                        new { factor = "1", width = W100 },
+                        new { forFactor = "1", width = W100 },
                         new
                         {
-                            factor = "3/4", width = W75, attributes = JsonAttributes75MixIn, recipes = new object[]
+                            forFactor = "3/4", width = W75, attributes = JsonAttributes75MixIn, recipes = new object[]
                             {
-                                new { tag = "img", width = W75CssUnknown, cssFramework = CssUnknown, attributes = JsonAttributes75 },
-                                new { tag = "img", width = W75ImgOnly777, attributes = JsonAttributes75 }
+                                new { forTag = "img", width = W75CssUnknown, forCss = CssUnknown, attributes = JsonAttributes75 },
+                                new { forTag = "img", width = W75ImgOnly777, attributes = JsonAttributes75 }
                             }
                         },
-                        new { factor = "1:2", width = W50 },
-                        new { factor = "0.25", width = W25 }
+                        new { forFactor = "1:2", width = W50 },
+                        new { forFactor = "0.25", width = W25 }
                     }
 
                 }

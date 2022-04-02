@@ -31,45 +31,47 @@ namespace ToSic.Sxc.Images
         [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia, SpecialPropertyClass };
 
         /// <summary>
-        /// ## Important: If you call this from your code, always use named parameters, as the parameter order can change in future
+        /// **Important**
+        ///
+        /// If you call this from your code, always use named parameters, as the parameter order can change in future.
         /// </summary>
-        /// <param name="original"></param>
-        /// <param name="name"></param>
-        /// <param name="tag"></param>
-        /// <param name="factor"></param>
-        /// <param name="width"></param>
-        /// <param name="variants"></param>
-        /// <param name="attributes"></param>
-        /// <param name="recipes"></param>
-        /// <param name="cssFramework"></param>
-        /// <param name="setWidth"></param>
-        /// <param name="setHeight"></param>
+        /// <param name="original">An original recipe to copy if we want to get a modified recipe based on one which already existed.</param>
+        /// <param name="name">An optional name </param>
+        /// <param name="width">Initial width to use when resizing</param>
+        /// <param name="variants">Special string containing variants to generate</param>
+        /// <param name="attributes">List of attributes to set on the `img` tag</param>
+        /// <param name="recipes">List of additional recipes which will all inherit values from this master after creation</param>
+        /// <param name="setWidth">Set the `width` attribute if the img width is known</param>
+        /// <param name="setHeight">Set the `height` attribute if the img-height is known</param>
+        /// <param name="forTag">Restricts the rule to only apply to specific tags - ATM `img` and `source`</param>
+        /// <param name="forFactor">Restricts the rule to only apply to resizes for a specified factor</param>
+        /// <param name="forCss">Restricts the rule to only apply to pages which have the specified CSS Framework</param>
         [JsonConstructor]   // This is important for deserialization from json
         public Recipe(
             Recipe original = null,
             // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
             string name = default,
-            string tag = default, 
-            string factor = default,
             int width = default,
             string variants = default,
             Dictionary<string, object> attributes = default,
             IEnumerable<Recipe> recipes = default,
-            string cssFramework = default,
             bool? setWidth = default,
-            bool? setHeight = default
+            bool? setHeight = default,
+            string forTag = default, 
+            string forFactor = default,
+            string forCss = default
         )
         {
             Name = name;
-            Tag = tag ?? original?.Factor ?? RuleForDefault;
-            Factor = factor ?? original?.Factor;
+            ForTag = forTag ?? original?.ForFactor ?? RuleForDefault;
+            ForFactor = forFactor ?? original?.ForFactor;
             Width = width != 0 ? width : original?.Width ?? 0;
             Variants = variants ?? original?.Variants;
             Recipes = recipes != null ? Array.AsReadOnly(recipes.ToArray()) : original?.Recipes ?? Array.AsReadOnly(Array.Empty<Recipe>());
             Attributes = RecipeHelpers.MergeDics(original?.Attributes, RecipeHelpers.ToStringDicOrNull(attributes));
             SetWidth = setWidth ?? original?.SetWidth;
             SetHeight = setHeight ?? original?.SetHeight;
-            CssFramework = cssFramework;
+            ForCss = forCss;
         }
 
 
@@ -82,19 +84,19 @@ namespace ToSic.Sxc.Images
         /// TODO: DOC
         /// - `img`, `source`
         /// </summary>
-        public string Tag { get; private set; }
+        public string ForTag { get; private set; }
 
         /// <summary>
         /// Determines which factors this recipe should be applied to.
         /// Null means any factor.
         /// </summary>
-        public string Factor { get; private set; }
+        public string ForFactor { get; private set; }
 
 
         /// <summary>
         /// WIP, not implemented yet
         /// </summary>
-        public string CssFramework { get; set; }
+        public string ForCss { get; set; }
 
 
         /// <summary>
@@ -169,17 +171,17 @@ namespace ToSic.Sxc.Images
         [PrivateApi]
         internal virtual Recipe InitAfterLoad(Recipe parent)
         {
-            Factor = Factor ?? parent?.Factor;
-            FactorParsed = ParseObject.DoubleOrNullWithCalculation(Factor) ?? parent?.FactorParsed ?? 0;
+            ForFactor = ForFactor ?? parent?.ForFactor;
+            FactorParsed = ParseObject.DoubleOrNullWithCalculation(ForFactor) ?? parent?.FactorParsed ?? 0;
             if (Width == 0) Width = parent?.Width ?? 0;
-            Tag = Tag ?? parent?.Tag;
+            ForTag = ForTag ?? parent?.ForTag;
             var hasVariants = Variants != null;
             Variants = Variants ?? parent?.Variants;
             SetWidth = SetWidth ?? parent?.SetWidth;
             SetHeight = SetHeight ?? parent?.SetHeight;
             Attributes = RecipeHelpers.MergeDics(parent?.Attributes, Attributes);
             Name = Name ?? parent?.Name;
-            CssFramework = CssFramework ?? parent?.CssFramework;
+            ForCss = ForCss ?? parent?.ForCss;
             VariantsParsed = hasVariants ? RecipeVariantsParser.ParseSet(Variants) : parent?.VariantsParsed;
 
             foreach (var s in Recipes) s?.InitAfterLoad(this);
@@ -188,8 +190,8 @@ namespace ToSic.Sxc.Images
         }
 
         public string Dump() =>
-            $"{nameof(Name)}: '{Name}', {nameof(CssFramework)}: {CssFramework}, " +
-            $"{nameof(Factor)}: {Factor}, {nameof(FactorParsed)}: {FactorParsed}, " +
+            $"{nameof(Name)}: '{Name}', {nameof(ForCss)}: {ForCss}, " +
+            $"{nameof(ForFactor)}: {ForFactor}, {nameof(FactorParsed)}: {FactorParsed}, " +
             $"{nameof(Variants)}: '{Variants}', {nameof(VariantsParsed)}: {VariantsParsed}, " +
             $"{nameof(SetWidth)}: {SetWidth}, {nameof(SetHeight)}: {SetHeight}, " +
             $"{nameof(Attributes)}: {Attributes?.Count}";
