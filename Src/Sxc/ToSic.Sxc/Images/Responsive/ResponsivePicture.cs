@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Images
 {
     public class ResponsivePicture: ResponsiveBase, IResponsivePicture
     {
-        internal ResponsivePicture(ImageService imgService, ResponsiveParams responsiveParams) : base(imgService, responsiveParams, "Picture")
+        internal ResponsivePicture(ImageService imgService, ResponsiveParams callParams) : base(imgService, callParams, "Picture")
         {
         }
 

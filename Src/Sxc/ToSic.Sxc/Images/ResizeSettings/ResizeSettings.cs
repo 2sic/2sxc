@@ -38,32 +38,44 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Constructor to copy
         /// </summary>
-        private ResizeSettings(IResizeSettings original)
+        public ResizeSettings(IResizeSettings original,
+            string noParamOrder = Eav.Parameters.Protector,
+            int? width = null,
+            int? height = null,
+            double? aspectRatio = null,
+            double? factor = null,
+            int? quality = null,
+            string format = null,
+            string resizeMode = null,
+            string scaleMode = null,
+            NameValueCollection parameters = null,
+            AdvancedSettings advanced = null
+        )
         {
-            Width = original.Width;
-            Height = original.Height;
-            Quality = original.Quality;
-            ResizeMode = original.ResizeMode;
-            ScaleMode = original.ScaleMode;
-            Format = original.Format;
-            Factor = original.Factor;
-            Parameters = original.Parameters;
-            AspectRatio = original.AspectRatio;
+            Width = width ?? original.Width;
+            Height = height ?? original.Height;
+            Quality = quality ?? original.Quality;
+            ResizeMode = resizeMode ?? original.ResizeMode;
+            ScaleMode = scaleMode ?? original.ScaleMode;
+            Format = format ?? original.Format;
+            Factor = factor ?? original.Factor;
+            Parameters = parameters ?? original.Parameters;
+            AspectRatio = aspectRatio ?? original.AspectRatio;
             UseAspectRatio = original.UseAspectRatio;
             UseFactorMap = original.UseFactorMap;
-            Advanced = original.Advanced;
+            Advanced = advanced ?? original.Advanced;
         }
 
-        public ResizeSettings(IResizeSettings original, string format): this(original)
-        {
-            Format = format ?? Format;
-        }
+        //public ResizeSettings(IResizeSettings original, string format): this(original)
+        //{
+        //    Format = format ?? Format;
+        //}
 
-        public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings advanced = null): this(original)
-        {
-            Factor = factor;
-            Advanced = advanced ?? Advanced;
-        }
+        //public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings advanced = null): this(original)
+        //{
+        //    Factor = factor;
+        //    Advanced = advanced ?? Advanced;
+        //}
 
     }
 }

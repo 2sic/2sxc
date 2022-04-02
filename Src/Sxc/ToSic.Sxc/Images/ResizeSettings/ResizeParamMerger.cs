@@ -3,7 +3,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
 
@@ -29,8 +28,8 @@ namespace ToSic.Sxc.Images
 
         internal ResizeSettings BuildResizeSettings(
             object settings = null,
-            object factor = null,
             string noParamOrder = Eav.Parameters.Protector,
+            object factor = null,
             object width = null,
             object height = null,
             object quality = null,
@@ -61,27 +60,20 @@ namespace ToSic.Sxc.Images
             var getSettings = settings as ICanGetByName;
             Log.SafeAdd(Debug, $"Has Settings:{getSettings != null}");
 
-            var formatValue = FindKnownFormatOrNull(RealStringOrNull(format));
+            var resP = new ResizeParams();
 
+            var formatValue = resP.FormatOrNull(format);
 
-            var resizeParams = BuildCoreSettings(width, height, factor, aspectRatio, formatValue, getSettings);
+            var resizeParams = BuildCoreSettings(resP, width, height, factor, aspectRatio, formatValue, getSettings);
 
             // Add parameters if known
-            if (!string.IsNullOrWhiteSpace(parameters))
-                resizeParams.Parameters = UrlHelpers.ParseQueryString(parameters);
+            resizeParams.Parameters = resP.ParametersOrNull(parameters);
 
             // Aspects which aren't affected by scale
-            var qParamDouble = DoubleOrNull(quality);
-            if (qParamDouble.HasValue)
-                qParamDouble = DNearZero(qParamDouble.Value)  // ignore if basically 0
-                    ? null
-                    : qParamDouble.Value > 1
-                        ? qParamDouble
-                        : qParamDouble * 100;
-            var qParamInt = (int?)qParamDouble;
-            resizeParams.Quality = qParamInt ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? 0;
+            var qParamInt2 = resP.QualityOrNull(quality);
+            resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? IntIgnore;
             resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
-            resizeParams.ScaleMode = FindKnownScaleOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
+            resizeParams.ScaleMode = resP.ScaleModeOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
             resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings) ?? resizeParams.Advanced;
 
@@ -113,23 +105,23 @@ namespace ToSic.Sxc.Images
 
         public AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
 
-        internal ResizeSettings BuildCoreSettings(object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)
+        internal ResizeSettings BuildCoreSettings(ResizeParams resP, object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)
         {
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets
-            (int? W, int? H) parms = (IntOrNull(width), IntOrNull(height));
+            (int? W, int? H) parms = (resP.WidthOrNull(width), resP.HeightOrNull(height));
             IfDebugLogPair("Params", parms);
 
             // Pre-Clean the values - all as strings
             (dynamic W, dynamic H) set = (settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
             if (settingsOrNull != null) IfDebugLogPair("Settings", set);
 
-            (int W, int H) safe = (parms.W ?? IntOrZeroAsNull(set.W) ?? 0, parms.H ?? IntOrZeroAsNull(set.H) ?? 0);
+            (int W, int H) safe = (parms.W ?? IntOrZeroAsNull(set.W) ?? IntIgnore, parms.H ?? IntOrZeroAsNull(set.H) ?? IntIgnore);
             IfDebugLogPair("Safe", safe);
 
-            var factorFinal = DoubleOrNullWithCalculation(factor) ?? 0; // 0 = ignore
-            double arFinal = DoubleOrNullWithCalculation(aspectRatio)
-                             ?? DoubleOrNullWithCalculation(settingsOrNull?.Get(AspectRatioField)) ?? 0; // 0=ignore
+            var factorFinal = resP.FactorOrNull(factor) ?? IntIgnore;
+            double arFinal = resP.AspectRationOrNull(aspectRatio)
+                             ?? resP.AspectRationOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
             Log.SafeAdd(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
             var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format)

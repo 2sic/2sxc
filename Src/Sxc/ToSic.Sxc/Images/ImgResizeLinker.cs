@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Images
             }
 
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
-                settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                settings, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                 parameters: parameters);
 

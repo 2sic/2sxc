@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Images
     public class ResponsiveImage: ResponsiveBase
     {
         [PrivateApi("don't show")]
-        internal ResponsiveImage(ImageService imgService, ResponsiveParams responsiveParams) : base(imgService, responsiveParams, "Img")
+        internal ResponsiveImage(ImageService imgService, ResponsiveParams callParams) : base(imgService, callParams, "Img")
         {
         }
 

@@ -71,8 +71,7 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsiveImage(this,
-                new ResponsiveParams(nameof(Img), link, noParamOrder, /*null, null,*/ GetBestSettings(settings), factor, imgAlt, imgClass,
-                    ToAdv(recipe)))
+                new ResponsiveParams(nameof(Img), link, noParamOrder, EnsureSettings(GetBestSettings(settings), factor, recipe), imgAlt, imgClass))
                 .Init(Log);
 
 
@@ -85,8 +84,7 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
         {
-            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder, /*null, null,*/
-                GetBestSettings(settings), factor, imgAlt, imgClass, ToAdv(recipe));
+            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder, EnsureSettings(GetBestSettings(settings), factor, recipe), imgAlt, imgClass);
             var path = respParams.Link.Url;
             var format = GetFormat(path);
             return format.ResizeFormats.Any()
@@ -104,8 +102,7 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsivePicture(this,
-                new ResponsiveParams(nameof(Picture), link, noParamOrder, /*null, null,*/ GetBestSettings(settings), factor, imgAlt, imgClass,
-                    ToAdv(recipe)))
+                new ResponsiveParams(nameof(Picture), link, noParamOrder, EnsureSettings(GetBestSettings(settings), factor, recipe), imgAlt, imgClass))
                 .Init(Log);
 
         /// <inheritdoc />

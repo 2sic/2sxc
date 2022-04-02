@@ -1,4 +1,6 @@
 ﻿using ToSic.Eav;
+using ToSic.Eav.Logging;
+using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Images
 {
@@ -25,6 +27,28 @@ namespace ToSic.Sxc.Images
             return ImgLinker.ResizeParamMerger.BuildResizeSettings(noParamOrder: noParamOrder, settings: settings, factor: factor,
                 width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: ToAdv(recipe));
+        }
+
+
+        private ResizeSettings EnsureSettings(object settings, object factor, object recipe)
+        {
+            var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
+            var advanced = ToAdv(recipe);
+            // 1. Prepare Settings
+            if (settings is ResizeSettings resSettings)
+            {
+                // If we have a modified factor, make sure we have that (this will copy the settings)
+                var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
+                Log.SafeAdd(Debug, $"Is {nameof(ResizeSettings)}, now with new factor: {newFactor}, will clone/init");
+                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, advanced: advanced);
+            }
+            else
+            {
+                Log.SafeAdd(Debug, $"Not {nameof(ResizeSettings)}, will create");
+                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: advanced);
+            }
+
+            return wrapLog("ok", resSettings);
         }
 
     }

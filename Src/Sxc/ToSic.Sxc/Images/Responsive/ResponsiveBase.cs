@@ -4,7 +4,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
-using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Web;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -13,13 +12,13 @@ namespace ToSic.Sxc.Images
     public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     {
 
-        protected ResponsiveBase(ImageService imgService, ResponsiveParams responsiveParams, string logName)
+        protected ResponsiveBase(ImageService imgService, ResponsiveParams callParams, string logName)
             : base($"Img.{logName}")
         {
-            Call = responsiveParams;
+            Call = callParams;
             ImgService = imgService;
             ImgLinker = imgService.ImgLinker;
-            Settings = PrepareResizeSettings(Call.Settings, Call.Factor, Call.Advanced);
+            //Settings = callParams.Settings; // PrepareResizeSettings(Call, Call.Settings, Call.Factor, Call.Advanced);
         }
         protected ResponsiveParams Call { get; }
         protected readonly ImgResizeLinker ImgLinker;
@@ -33,28 +32,28 @@ namespace ToSic.Sxc.Images
         private readonly ValueGetOnce<OneResize> _thisResize = new ValueGetOnce<OneResize>();
 
 
-        internal ResizeSettings Settings { get; }
+        internal ResizeSettings Settings => Call.Settings;// { get; }
 
 
-        protected ResizeSettings PrepareResizeSettings(object settings, object factor, AdvancedSettings advanced)
-        {
-            var wrapLog = Log.SafeCall<ResizeSettings>(ImgService.Debug);
-            // 1. Prepare Settings
-            if (settings is ResizeSettings resSettings)
-            {
-                // If we have a modified factor, make sure we have that (this will copy the settings)
-                var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
-                Log.SafeAdd(ImgService.Debug, $"Is {nameof(ResizeSettings)}, now with new factor: {newFactor}, will clone/init");
-                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, advanced);
-            }
-            else
-            {
-                Log.SafeAdd(ImgService.Debug, $"Not {nameof(ResizeSettings)}, will create");
-                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: advanced);
-            }
+        //private ResizeSettings PrepareResizeSettings(ResponsiveParams call, object settings, object factor, AdvancedSettings advanced)
+        //{
+        //    var wrapLog = Log.SafeCall<ResizeSettings>(ImgService.Debug);
+        //    // 1. Prepare Settings
+        //    if (settings is ResizeSettings resSettings)
+        //    {
+        //        // If we have a modified factor, make sure we have that (this will copy the settings)
+        //        var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
+        //        Log.SafeAdd(ImgService.Debug, $"Is {nameof(ResizeSettings)}, now with new factor: {newFactor}, will clone/init");
+        //        resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, advanced: advanced);
+        //    }
+        //    else
+        //    {
+        //        Log.SafeAdd(ImgService.Debug, $"Not {nameof(ResizeSettings)}, will create");
+        //        resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: advanced);
+        //    }
 
-            return wrapLog("ok", resSettings);
-        }
+        //    return wrapLog("ok", resSettings);
+        //}
 
         /// <summary>
         /// ToString must be specified by each implementation
