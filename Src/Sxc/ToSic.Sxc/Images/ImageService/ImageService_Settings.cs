@@ -29,13 +29,5 @@ namespace ToSic.Sxc.Images
         }
 
 
-        //private ResizeSettings EnsureSettings(object settings, object factor, object recipe)
-        //{
-        //    var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
-        //    settings = GetBestSettings(settings);
-        //    var resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: ToAdv(recipe));
-        //    return wrapLog("ok", resSettings);
-        //}
-
     }
 }
