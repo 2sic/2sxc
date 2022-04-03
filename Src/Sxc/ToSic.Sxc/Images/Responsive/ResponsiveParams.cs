@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Images
         /// The field used for this responsive output - can be null!
         /// </summary>
         public IDynamicField Field { get; }
-        public ResizeSettings Settings { get; }
+        public IResizeSettings Settings { get; }
         public string ImgAlt { get; }
         public string ImgClass { get; }
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Images
             string method,
             object link,
             string noParamOrder = Parameters.Protector,
-            ResizeSettings settings = null,
+            IResizeSettings settings = null,
             string imgAlt = null,
             string imgClass = null
             )

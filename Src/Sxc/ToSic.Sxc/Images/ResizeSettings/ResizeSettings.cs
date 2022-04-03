@@ -1,5 +1,8 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using ToSic.Eav.Documentation;
+using static ToSic.Sxc.Images.ImageConstants;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
@@ -7,9 +10,9 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Hide implementation")]
     public class ResizeSettings : IResizeSettings
     {
-        public int Width { get; }
-        public int Height { get; }
-        public int Quality { get; set; }
+        public int Width { get; } = IntIgnore;
+        public int Height { get; } = IntIgnore;
+        public int Quality { get; set; } = IntIgnore;
         public string ResizeMode { get; set; }
         public string ScaleMode { get; set; }
         public string Format { get; }
@@ -26,10 +29,15 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Constructor to create new
         /// </summary>
-        public ResizeSettings(int width, int height, double aspectRatio, double factor, string format)
+        public ResizeSettings(int? width, int? height, int fallbackWidth, int fallbackHeight, double aspectRatio, double factor, string format)
         {
-            Width = width;
-            Height = height;
+            Width = width ?? fallbackWidth;
+            Height = height ?? fallbackHeight;
+            // If the width was given by the parameters, then don't use FactorMap
+            UseFactorMap = width == null;
+            // If the height was supplied by parameters, don't use aspect ratio
+            UseAspectRatio = height == null;
+
             AspectRatio = aspectRatio;
             Factor = factor;
             Format = format;
@@ -38,7 +46,8 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Constructor to copy
         /// </summary>
-        public ResizeSettings(IResizeSettings original,
+        public ResizeSettings(
+            IResizeSettings original,
             string noParamOrder = Eav.Parameters.Protector,
             int? width = null,
             int? height = null,
@@ -52,6 +61,7 @@ namespace ToSic.Sxc.Images
             AdvancedSettings advanced = null
         )
         {
+            if (original == null) throw new ArgumentNullException(nameof(original));
             Width = width ?? original.Width;
             Height = height ?? original.Height;
             Quality = quality ?? original.Quality;
@@ -65,17 +75,6 @@ namespace ToSic.Sxc.Images
             UseFactorMap = original.UseFactorMap;
             Advanced = advanced ?? original.Advanced;
         }
-
-        //public ResizeSettings(IResizeSettings original, string format): this(original)
-        //{
-        //    Format = format ?? Format;
-        //}
-
-        //public ResizeSettings(IResizeSettings original, double factor, AdvancedSettings advanced = null): this(original)
-        //{
-        //    Factor = factor;
-        //    Advanced = advanced ?? Advanced;
-        //}
 
     }
 }

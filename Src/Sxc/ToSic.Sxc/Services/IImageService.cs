@@ -40,7 +40,6 @@ namespace ToSic.Sxc.Services
         /// - a `bool` true/false - if true, the normal "Content" configuration is used as a template, if false, no initial configuration is used
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="ToSic.Sxc.Images.IResizeSettings"/> object containing all settings.
-        /// If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
@@ -107,31 +106,31 @@ namespace ToSic.Sxc.Services
         /// The resulting object can just be added to the html, like `@pic` or you can work with sub-properties as specified in the <see cref="IResponsivePicture"/>
         /// </summary>
         /// <param name="link">
-        ///     What should be in this, can be:
+        /// What should be in this, can be:
         /// 
-        ///     - a string url, in which case it would be used if `url` is not specified
-        ///     - a <see cref="IDynamicField"/> in which case it would be used if `field` is not specified
+        /// - a string url, in which case it would be used if `url` is not specified
+        /// - a <see cref="IDynamicField"/> in which case it would be used if `field` is not specified
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
-        ///     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
-        ///     - The name of a settings configuration, like "Content" or "Screen"
-        ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
+        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        /// - The name of a settings configuration, like "Content" or "Screen"
+        /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
+        /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
         /// 
-        ///     Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
+        /// Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
         /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
         /// <param name="recipe">
-        ///     Optional recipe = instructions how to create the various variants of this link.
-        ///     Can be any one of these:
+        /// Optional recipe = instructions how to create the various variants of this link.
+        /// Can be any one of these:
         /// 
-        ///     - string containing variants
-        ///     - Rule object
+        /// - string containing variants
+        /// - Rule object
         /// 
-        ///     TODO: DOCS not quite ready
+        /// TODO: DOCS not quite ready
         /// </param>
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
@@ -139,8 +138,8 @@ namespace ToSic.Sxc.Services
         /// </remarks>
         IResponsivePicture Picture(
             object link = null,
-            string noParamOrder = Eav.Parameters.Protector,
             object settings = default,
+            string noParamOrder = Eav.Parameters.Protector,
             object factor = default,
             string imgAlt = default,
             string imgClass = default,
@@ -185,8 +184,8 @@ namespace ToSic.Sxc.Services
         /// </remarks>
         IResponsiveImage Img(
             object link = null,
-            string noParamOrder = Eav.Parameters.Protector,
             object settings = default,
+            string noParamOrder = Eav.Parameters.Protector,
             object factor = default,
             string imgAlt = default,
             string imgClass = default,
@@ -229,9 +228,10 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// History: Added in 2sxc 13.03
         /// </remarks>
-        IResponsiveImage ImgOrPic(object link = null,
-            string noParamOrder = Eav.Parameters.Protector,
+        IResponsiveImage ImgOrPic(
+            object link = null,
             object settings = null,
+            string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
             string imgAlt = null,
             string imgClass = null,

@@ -63,28 +63,30 @@ namespace ToSic.Sxc.Images
         #endregion
 
         /// <inheritdoc />
-        public IResponsiveImage Img(object link = null,
-            string noParamOrder = Eav.Parameters.Protector,
+        public IResponsiveImage Img(
+            object link = null,
             object settings = null,
+            string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
             object recipe = null)
             => new ResponsiveImage(this,
-                new ResponsiveParams(nameof(Img), link, noParamOrder, EnsureSettings(GetBestSettings(settings), factor, recipe), imgAlt, imgClass))
+                new ResponsiveParams(nameof(Img), link, noParamOrder, Settings(settings, factor: factor, recipe: recipe), imgAlt, imgClass))
                 .Init(Log);
 
 
         /// <inheritdoc />
-        public IResponsiveImage ImgOrPic(object link = null,
-            string noParamOrder = Eav.Parameters.Protector,
+        public IResponsiveImage ImgOrPic(
+            object link = null,
             object settings = null,
+            string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
             object recipe = null)
         {
-            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder, EnsureSettings(GetBestSettings(settings), factor, recipe), imgAlt, imgClass);
+            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder, Settings(settings, factor: factor, recipe: recipe), imgAlt, imgClass);
             var path = respParams.Link.Url;
             var format = GetFormat(path);
             return format.ResizeFormats.Any()
@@ -94,15 +96,16 @@ namespace ToSic.Sxc.Images
 
 
         /// <inheritdoc />
-        public IResponsivePicture Picture(object link = null,
-            string noParamOrder = Eav.Parameters.Protector, 
+        public IResponsivePicture Picture(
+            object link = null,
             object settings = null,
+            string noParamOrder = Eav.Parameters.Protector, 
             object factor = null,
             string imgAlt = null,
             string imgClass = null,
             object recipe = null)
             => new ResponsivePicture(this,
-                new ResponsiveParams(nameof(Picture), link, noParamOrder, EnsureSettings(GetBestSettings(settings), factor, recipe), imgAlt, imgClass))
+                new ResponsiveParams(nameof(Picture), link, noParamOrder, Settings(settings, factor: factor, recipe: recipe), imgAlt, imgClass))
                 .Init(Log);
 
         /// <inheritdoc />

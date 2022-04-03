@@ -25,7 +25,6 @@ namespace ToSic.Sxc.Images
 
         public bool Debug = false;
 
-
         internal ResizeSettings BuildResizeSettings(
             object settings = null,
             string noParamOrder = Eav.Parameters.Protector,
@@ -44,10 +43,6 @@ namespace ToSic.Sxc.Images
             var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
-            if (settings is IResizeSettings)
-                throw new Exception(
-                    $"Received an {nameof(IResizeSettings)} as {nameof(settings)}. This should never happen. {nameof(BuildResizeSettings)} should only be used when it's not such an object.");
-
             // check common mistakes
             if (aspectRatio != null && height != null)
             {
@@ -56,11 +51,31 @@ namespace ToSic.Sxc.Images
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
             }
 
+            // Helper for resize parameters
+            var resP = new ResizeParams().Init(Log);
+
+            if (settings is IResizeSettings typeSettings)
+            {
+                Log.SafeAdd(Debug, $"Is {nameof(ResizeSettings)}, will clone/init");
+                return new ResizeSettings(
+                    typeSettings,
+                    format: resP.FormatOrNull(format),
+                    width: resP.WidthOrNull(width),
+                    height: resP.HeightOrNull(height),
+                    aspectRatio: resP.AspectRatioOrNull(aspectRatio),
+                    factor: resP.FactorOrNull(factor),
+                    quality: resP.QualityOrNull(quality),
+                    resizeMode: resP.ResizeModeOrNull(resizeMode),
+                    scaleMode: resP.ScaleModeOrNull(scaleMode),
+                    parameters: resP.ParametersOrNull(parameters),
+                    advanced: advanced
+                );
+            }
+
             // Check if the settings is the expected type or null/other type
             var getSettings = settings as ICanGetByName;
             Log.SafeAdd(Debug, $"Has Settings:{getSettings != null}");
 
-            var resP = new ResizeParams();
 
             var formatValue = resP.FormatOrNull(format);
 
@@ -72,10 +87,10 @@ namespace ToSic.Sxc.Images
             // Aspects which aren't affected by scale
             var qParamInt2 = resP.QualityOrNull(quality);
             resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? IntIgnore;
-            resizeParams.ResizeMode = KeepBestString(resizeMode, getSettings?.Get(ResizeModeField));
+            resizeParams.ResizeMode = resP.ResizeModeOrNull(KeepBestString(resizeMode, getSettings?.Get(ResizeModeField)));
             resizeParams.ScaleMode = resP.ScaleModeOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
-            resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings) ?? resizeParams.Advanced;
+            resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
 
             return wrapLog("ok", resizeParams);
         }
@@ -83,6 +98,7 @@ namespace ToSic.Sxc.Images
         private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
         {
             if (advanced != null) return advanced;
+            AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
             try
             {
                 // Check if we have a property-lookup (usually an entity) and if yes, use the piggy-back
@@ -101,45 +117,37 @@ namespace ToSic.Sxc.Images
 
             return null;
         }
-        
-
-        public AdvancedSettings ParseAdvancedSettingsJson(object value) => AdvancedSettings.FromJson(value, Log);
 
         internal ResizeSettings BuildCoreSettings(ResizeParams resP, object width, object height, object factor, object aspectRatio, string format, ICanGetByName settingsOrNull)
         {
+            void IfDebugLogPair<T>(string prefix, (T W, T H) values)
+            {
+                if (Debug) Log.Add($"{prefix}: W:{values.W}, H:{values.H}");
+            }
+
             // Try to pre-process parameters and prefer them
             // The manually provided values must remember Zeros because they deactivate presets
-            (int? W, int? H) parms = (resP.WidthOrNull(width), resP.HeightOrNull(height));
-            IfDebugLogPair("Params", parms);
+            (int? W, int? H) parameters = (resP.WidthOrNull(width), resP.HeightOrNull(height));
+            IfDebugLogPair("Params", parameters);
 
             // Pre-Clean the values - all as strings
             (dynamic W, dynamic H) set = (settingsOrNull?.Get(WidthField), settingsOrNull?.Get(HeightField));
             if (settingsOrNull != null) IfDebugLogPair("Settings", set);
 
-            (int W, int H) safe = (parms.W ?? IntOrZeroAsNull(set.W) ?? IntIgnore, parms.H ?? IntOrZeroAsNull(set.H) ?? IntIgnore);
+            (int W, int H) safe = (IntOrZeroAsNull(set.W) ?? IntIgnore, IntOrZeroAsNull(set.H) ?? IntIgnore);
             IfDebugLogPair("Safe", safe);
 
             var factorFinal = resP.FactorOrNull(factor) ?? IntIgnore;
-            double arFinal = resP.AspectRationOrNull(aspectRatio)
-                             ?? resP.AspectRationOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
+            double arFinal = resP.AspectRatioOrNull(aspectRatio)
+                             ?? resP.AspectRatioOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
             Log.SafeAdd(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
-            var resizeSettings = new ResizeSettings(safe.W, safe.H, arFinal, factorFinal, format)
-            {
-                // If the width was given by the parameters, then don't use FactorMap
-                UseFactorMap = parms.W == null,
-                // If the height was supplied by parameters, don't use aspect ratio
-                UseAspectRatio = parms.H == null,
-            };
+            var resizeSettings = new ResizeSettings(parameters.W, parameters.H,
+                safe.W, safe.H,
+                arFinal, factorFinal, format);
 
             return resizeSettings;
         }
         
-
-        protected void IfDebugLogPair<T>(string prefix, (T W, T H) values)
-        {
-            if (Debug) Log.Add($"{prefix}: W:{values.W}, H:{values.H}");
-        }
-
     }
 }

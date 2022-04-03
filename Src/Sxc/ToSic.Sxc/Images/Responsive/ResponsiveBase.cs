@@ -18,42 +18,21 @@ namespace ToSic.Sxc.Images
             Call = callParams;
             ImgService = imgService;
             ImgLinker = imgService.ImgLinker;
-            //Settings = callParams.Settings; // PrepareResizeSettings(Call, Call.Settings, Call.Factor, Call.Advanced);
         }
         protected ResponsiveParams Call { get; }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
 
         protected OneResize ThisResize => _thisResize.Get(() => { 
-            var t = ImgLinker.ImageOnly(Call.Link.Url, Settings, Call.Field);
+            var t = ImgLinker.ImageOnly(Call.Link.Url, Settings as ResizeSettings, Call.Field);
             Log.SafeAdd(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
             return t;
         });
         private readonly ValueGetOnce<OneResize> _thisResize = new ValueGetOnce<OneResize>();
 
 
-        internal ResizeSettings Settings => Call.Settings;// { get; }
+        internal IResizeSettings Settings => Call.Settings;
 
-
-        //private ResizeSettings PrepareResizeSettings(ResponsiveParams call, object settings, object factor, AdvancedSettings advanced)
-        //{
-        //    var wrapLog = Log.SafeCall<ResizeSettings>(ImgService.Debug);
-        //    // 1. Prepare Settings
-        //    if (settings is ResizeSettings resSettings)
-        //    {
-        //        // If we have a modified factor, make sure we have that (this will copy the settings)
-        //        var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
-        //        Log.SafeAdd(ImgService.Debug, $"Is {nameof(ResizeSettings)}, now with new factor: {newFactor}, will clone/init");
-        //        resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, advanced: advanced);
-        //    }
-        //    else
-        //    {
-        //        Log.SafeAdd(ImgService.Debug, $"Not {nameof(ResizeSettings)}, will create");
-        //        resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: advanced);
-        //    }
-
-        //    return wrapLog("ok", resSettings);
-        //}
 
         /// <summary>
         /// ToString must be specified by each implementation
@@ -75,7 +54,7 @@ namespace ToSic.Sxc.Images
                 var tag = ThisResize.Recipe;
                 var dic = tag?.Attributes?
                     .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key))
-                    .ToDictionary(p => p.Key, p => p.Value); ;
+                    .ToDictionary(p => p.Key, p => p.Value);
                 if (dic != null)
                 {
                     Log.SafeAdd(ImgService.Debug, "will add properties from attributes");
@@ -133,7 +112,7 @@ namespace ToSic.Sxc.Images
             var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
             var wrapLog = Log.SafeCall<string>(ImgService.Debug, $"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
             var result = isEnabled && hasVariants
-                ? ImgLinker.SrcSet(Call.Link.Url, Settings, SrcSetType.Img, Call.Field)
+                ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.Field)
                 : null;
             return wrapLog(result, result);
         }

@@ -1,6 +1,5 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Images
 {
@@ -30,26 +29,13 @@ namespace ToSic.Sxc.Images
         }
 
 
-        private ResizeSettings EnsureSettings(object settings, object factor, object recipe)
-        {
-            var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
-            var advanced = ToAdv(recipe);
-            // 1. Prepare Settings
-            if (settings is ResizeSettings resSettings)
-            {
-                // If we have a modified factor, make sure we have that (this will copy the settings)
-                var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
-                Log.SafeAdd(Debug, $"Is {nameof(ResizeSettings)}, now with new factor: {newFactor}, will clone/init");
-                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, advanced: advanced);
-            }
-            else
-            {
-                Log.SafeAdd(Debug, $"Not {nameof(ResizeSettings)}, will create");
-                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: advanced);
-            }
-
-            return wrapLog("ok", resSettings);
-        }
+        //private ResizeSettings EnsureSettings(object settings, object factor, object recipe)
+        //{
+        //    var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
+        //    settings = GetBestSettings(settings);
+        //    var resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: ToAdv(recipe));
+        //    return wrapLog("ok", resSettings);
+        //}
 
     }
 }
