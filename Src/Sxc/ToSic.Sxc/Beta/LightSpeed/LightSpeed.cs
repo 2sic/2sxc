@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
@@ -18,6 +19,8 @@ namespace ToSic.Sxc.Beta.LightSpeed
             _appResetMonitors = appResetMonitors;
         }
 
+        ~LightSpeed() => UnsubscribeAppStateChanged();
+
         private readonly IFeaturesService _features;
         private readonly AppResetMonitors _appResetMonitors;
 
@@ -26,6 +29,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             var wrapLog = Log.Call<IOutputCache>($"mod: {moduleId}");
             _moduleId = moduleId;
             _block = block;
+            SubscribeAppStateChanged();
             return wrapLog($"{IsEnabled}", this);
         }
         private int _moduleId;
@@ -98,15 +102,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // compare cache time-stamps
             var dependentApp = result.Data?.DependentApps?.FirstOrDefault();
             if (dependentApp == null) return wrapLog("no dep app", null);
-
-            // AppState is unchanged?
-            if (AppState.CacheTimestamp == dependentApp.CacheTimestamp) return wrapLog("found", result);
-
-            // flush a cache and dispose ChangeMonitor
-            if (_appResetMonitors.Monitors.TryRemove(dependentApp.AppId, out var appResetMonitorToDispose))
-                appResetMonitorToDispose.Flush();
-
-            return wrapLog("app changed", null);
+            return AppState.CacheTimestamp > dependentApp.CacheTimestamp
+                ? wrapLog("app changed", null)
+                : wrapLog("found", result);
         }
 
 
@@ -142,5 +140,16 @@ namespace ToSic.Sxc.Beta.LightSpeed
         private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager(_appResetMonitors));
         private OutputCacheManager _ocm;
 
+
+        public void HandleAppStateChanged(object sender, AppStateChangedEventArgs e)
+        {
+            // flush a cache and dispose ChangeMonitor
+            if (sender is AppState appState && _appResetMonitors.Monitors.TryRemove(appState.AppId /*e.AppId*/, out var appResetMonitorToDispose))
+                appResetMonitorToDispose.Flush();
+        }
+
+        private void SubscribeAppStateChanged() => AppState.AppStateChanged += HandleAppStateChanged;
+
+        private void UnsubscribeAppStateChanged() => AppState.AppStateChanged -= HandleAppStateChanged;
     }
 }
