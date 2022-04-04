@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             _appResetMonitors = appResetMonitors;
         }
 
-        ~LightSpeed() => UnsubscribeAppStateChanged();
+        ~LightSpeed() => AppState.AppStateChanged -= HandleAppStateChanged;
 
         private readonly IFeaturesService _features;
         private readonly AppResetMonitors _appResetMonitors;
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             var wrapLog = Log.Call<IOutputCache>($"mod: {moduleId}");
             _moduleId = moduleId;
             _block = block;
-            SubscribeAppStateChanged();
+            AppState.AppStateChanged += HandleAppStateChanged;
             return wrapLog($"{IsEnabled}", this);
         }
         private int _moduleId;
@@ -141,15 +141,11 @@ namespace ToSic.Sxc.Beta.LightSpeed
         private OutputCacheManager _ocm;
 
 
-        public void HandleAppStateChanged(object sender, AppStateChangedEventArgs e)
+        public void HandleAppStateChanged(object sender, EventArgs e)
         {
             // flush a cache and dispose ChangeMonitor
             if (sender is AppState appState && _appResetMonitors.Monitors.TryRemove(appState.AppId /*e.AppId*/, out var appResetMonitorToDispose))
                 appResetMonitorToDispose.Flush();
         }
-
-        private void SubscribeAppStateChanged() => AppState.AppStateChanged += HandleAppStateChanged;
-
-        private void UnsubscribeAppStateChanged() => AppState.AppStateChanged -= HandleAppStateChanged;
     }
 }
