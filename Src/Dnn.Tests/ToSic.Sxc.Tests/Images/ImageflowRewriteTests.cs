@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.Images
             ImageflowRewrite.AddKeyWhenMissing(queryString, key, value);
 
         private NameValueCollection QueryStringRewrite(NameValueCollection queryString) => 
-            new ImageflowRewrite().QueryStringRewrite(queryString);
+            ImageflowRewrite.QueryStringRewrite(queryString);
 
         private static void AreEquivalentAlsoByValues(NameValueCollection expected, NameValueCollection actual) =>
             CollectionAssert.AreEquivalent(
