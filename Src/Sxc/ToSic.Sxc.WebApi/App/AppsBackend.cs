@@ -4,10 +4,12 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -32,8 +34,16 @@ namespace ToSic.Sxc.WebApi.App
             return list.Select(CreateAppDto).ToList();
         }
 
-        private static AppDto CreateAppDto(IApp a) =>
-            new AppDto
+        private static AppDto CreateAppDto(IApp a)
+        {
+            AppMetadataDto lightspeed = null;
+            var lsEntity = a.AppState.Metadata.FirstOrDefaultOfType(LightSpeedDecorator.TypeName);
+            if (lsEntity != null)
+            {
+                var lsd = new LightSpeedDecorator(lsEntity);
+                lightspeed = new AppMetadataDto { Id = lsd.Id, Title = lsd.Title, IsEnabled = lsd.IsEnabled };
+            }
+            return new AppDto
             {
                 Id = a.AppId,
                 IsApp = a.NameId != Eav.Constants.DefaultAppGuid &&
@@ -49,7 +59,9 @@ namespace ToSic.Sxc.WebApi.App
                 Version = a.VersionSafe(),
                 IsGlobal = a.AppState.IsGlobal(),
                 IsInherited = a.AppState.IsInherited(),
+                Lightspeed = lightspeed,
             };
+        }
 
         public List<AppDto> GetInheritableApps()
         {
