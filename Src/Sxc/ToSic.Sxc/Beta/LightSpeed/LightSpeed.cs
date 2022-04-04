@@ -12,9 +12,14 @@ namespace ToSic.Sxc.Beta.LightSpeed
 {
     public class LightSpeed: HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights") 
-            => _features = features;
+        public LightSpeed(IFeaturesService features, AppResetMonitors appResetMonitors) : base(Constants.SxcLogName + ".Lights")
+        {
+            _features = features;
+            _appResetMonitors = appResetMonitors;
+        }
+
         private readonly IFeaturesService _features;
+        private readonly AppResetMonitors _appResetMonitors;
 
         public IOutputCache Init(int moduleId, IBlock block)
         {
@@ -93,9 +98,15 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // compare cache time-stamps
             var dependentApp = result.Data?.DependentApps?.FirstOrDefault();
             if (dependentApp == null) return wrapLog("no dep app", null);
-            return AppState.CacheTimestamp > dependentApp.CacheTimestamp
-                ? wrapLog("app changed", null) 
-                : wrapLog("found", result);
+
+            // AppState is unchanged?
+            if (AppState.CacheTimestamp == dependentApp.CacheTimestamp) return wrapLog("found", result);
+
+            // flush a cache and dispose ChangeMonitor
+            if (_appResetMonitors.Monitors.TryRemove(dependentApp.AppId, out var appResetMonitorToDispose))
+                appResetMonitorToDispose.Flush();
+
+            return wrapLog("app changed", null);
         }
 
 
@@ -128,7 +139,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
         }
 
 
-        private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());
+        private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager(_appResetMonitors));
         private OutputCacheManager _ocm;
 
     }

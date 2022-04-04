@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Documentation;
 
@@ -8,6 +9,12 @@ namespace ToSic.Sxc.Beta.LightSpeed
     public class OutputCacheManager
     {
         internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
+
+        public OutputCacheManager(AppResetMonitors appResetMonitors)
+        {
+            _appResetMonitors = appResetMonitors;
+        }
+        private readonly AppResetMonitors _appResetMonitors;
 
         internal string Id(int moduleId, int? userId, string suffix)
         {
@@ -25,6 +32,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
                 if (duration == 0) duration = 1;
                 var expiration = new TimeSpan(0, 0, duration);
                 var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+                // get new or shared instance of ChangeMonitor and insert it to the cache item
+                var da = data.Data.DependentApps.FirstOrDefault();
+                if (da != null) policy.ChangeMonitors.Add(_appResetMonitors.GetOrCreate(da.AppId));
                 Cache.Set(new CacheItem(cacheKey, data), policy);
                 return cacheKey;
             }

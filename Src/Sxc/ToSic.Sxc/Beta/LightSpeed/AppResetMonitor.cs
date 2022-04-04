@@ -7,10 +7,10 @@ namespace ToSic.Sxc.Beta.LightSpeed
     /// Experimental way to signal that all the items in an app cache should be flushed
     /// Idea from here: https://stackoverflow.com/questions/25269338/is-this-a-good-solution-to-clear-a-c-sharp-memorycache
     /// </summary>
-    internal class AppResetMonitor: ChangeMonitor
+    public class AppResetMonitor: ChangeMonitor
     {
         public int AppId { get; }
-
+        
         public AppResetMonitor(int appId)
         {
             AppId = appId;
@@ -19,7 +19,10 @@ namespace ToSic.Sxc.Beta.LightSpeed
         }
 
 
-        protected override void Dispose(bool disposing)  { }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) Dispose();
+        }
 
         public override string UniqueId { get; } = Guid.NewGuid().ToString();
 
