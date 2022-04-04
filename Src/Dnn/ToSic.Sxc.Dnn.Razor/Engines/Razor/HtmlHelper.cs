@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web;
+using System.Web.WebPages;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
+using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Engines.Razor
 {
@@ -12,13 +17,16 @@ namespace ToSic.Sxc.Engines.Razor
     [PrivateApi]
     public class HtmlHelper: IHtmlHelper
     {
-        private readonly RazorComponentBase _page;
-
-        public HtmlHelper(RazorComponentBase page)
+        public HtmlHelper(RazorComponentBase page, bool isSystemAdmin, IFeaturesService features)
         {
             _page = page;
+            _isSystemAdmin = isSystemAdmin;
+            _features = features;
         }
-        
+        private readonly RazorComponentBase _page;
+        private readonly bool _isSystemAdmin;
+        private readonly IFeaturesService _features;
+
         /// <inheritdoc/>
         public IHtmlString Raw(object stringHtml)
         {
@@ -38,7 +46,63 @@ namespace ToSic.Sxc.Engines.Razor
         /// <param name="path"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public IHtmlString Partial(string path, params object[] data) 
-            => _page.BaseRenderPage(path, data);
+        public IHtmlString Partial(string path, params object[] data)
+        {
+            try
+            {
+                // This will get a HelperResult object, which is often not executed yet
+                var result = _page.BaseRenderPage(path, data);
+
+                // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
+                if (!ThrowPartialError)
+                    return result;
+
+                var wrappedResult = new HelperResult(writer =>
+                {
+                    try
+                    {
+                        result.WriteTo(writer);
+                    }
+                    catch (Exception renderException)
+                    {
+                        // Important to know: Once this fires, the page will stop rendering more templates
+                        _IsError = true;
+                        _page.Log?.Exception(renderException);
+                        // Show a nice / ugly error depending on user permissions
+                        // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
+                        var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(renderException, true);
+                        writer.WriteLine(nice);
+                    }
+                });
+                return wrappedResult;
+            }
+            catch (Exception compileException)
+            {
+                // Ensure our error paths exist, to only report this in the system-logs once
+                _errorPaths = _errorPaths ?? new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+                var isFirstOccurrence = !_errorPaths.Contains(path);
+                _errorPaths.Add(path);
+
+                // Report if first time
+                if (isFirstOccurrence)
+                    _page.Log?.Exception(compileException);
+                _IsError = true;
+                _page.Log?.Add("Special exception handling - only show message");
+
+                // Show a nice / ugly error depending on user permissions
+                // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
+                var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(compileException, isFirstOccurrence);
+                var htmlError = new HybridHtmlString(nice);
+                return htmlError;
+            }
+        }
+
+        [PrivateApi]
+        public bool _IsError = false;
+        private HashSet<string> _errorPaths;
+
+        private bool ThrowPartialError => _throwPartialError.Get(() =>
+            _features.IsEnabled(FeaturesCatalog.RazorThrowPartial.NameId) || _isSystemAdmin && _features.IsEnabled(FeaturesCatalog.RenderThrowPartialSystemAdmin.NameId));
+        private readonly ValueGetOnce<bool> _throwPartialError = new ValueGetOnce<bool>();
     }
 }

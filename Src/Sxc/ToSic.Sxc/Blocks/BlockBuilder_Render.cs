@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
@@ -14,9 +15,11 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         public bool WrapInDiv { get; set; } = true;
 
-        private IRenderingHelper RenderingHelper =>
-            _rendHelp ?? (_rendHelp = _renderHelpGen.New.Init(Block, Log));
-        private IRenderingHelper _rendHelp;
+        [PrivateApi]
+        public IRenderingHelper RenderingHelper => _rendHelp2.Get(() => _renderHelpGen.New.Init(Block, Log));
+            //_rendHelp ?? (_rendHelp = _renderHelpGen.New.Init(Block, Log));
+        //private IRenderingHelper _rendHelp;
+        private readonly ValueGetOnce<IRenderingHelper> _rendHelp2 = new ValueGetOnce<IRenderingHelper>();
 
         public string Render() => Run(true).Html;
 
@@ -101,7 +104,7 @@ namespace ToSic.Sxc.Blocks
                                 new Exception("Data is missing - usually when a site is copied " +
                                               "but the content / apps have not been imported yet" +
                                               " - check 2sxc.org/help?tag=export-import"),
-                                true, "Error - needs admin to fix", false, true), true);
+                                true, "Error - needs admin to fix"), true);
                     }
                 }
                 #endregion
@@ -130,7 +133,7 @@ namespace ToSic.Sxc.Blocks
                     }
                     catch (Exception ex)
                     {
-                        body = RenderingHelper.DesignErrorMessage(ex, true, "Error rendering template", false, true);
+                        body = RenderingHelper.DesignErrorMessage(ex, true);
                         err = true;
                     }
                 #endregion
@@ -160,8 +163,7 @@ namespace ToSic.Sxc.Blocks
             }
             catch (Exception ex)
             {
-                return wrapLog("error", (RenderingHelper.DesignErrorMessage(ex, true,
-                    null, true, true), true));
+                return wrapLog("error", (RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true));
             }
         }
 
@@ -180,7 +182,7 @@ namespace ToSic.Sxc.Blocks
             {
                 Log.Add("system isn't ready,show upgrade message");
                 var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true,
-                    "Error - needs admin to fix this", false, false);
+                    "Error - needs admin to fix this", encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 
