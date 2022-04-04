@@ -8,7 +8,7 @@
         {
             Body = @"@inherits Custom.Hybrid.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
-@using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
+@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
 <div @Edit.TagToolbar(Content)>
     Put your content here
@@ -25,7 +25,7 @@
 // - This inherits from Custom.Hybrid.Code12
 //   which will automatically provide the common objects like App, CmsContext, Data etc.
 //   from the current context to use in your code
-@using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
+@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
 public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12 {
   public string SayHello() {
@@ -48,7 +48,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Web.Http;
 using DotNetNuke.Web.Api;
 #endif
-@using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
+@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
 [AllowAnonymous]      // define that all commands can be accessed without a login
 // Inherit from Custom.Hybrid.Api12 to get features like App, CmsContext, Data etc.

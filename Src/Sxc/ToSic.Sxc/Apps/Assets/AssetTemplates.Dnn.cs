@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Apps.Assets
         {
             Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
-@using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
+@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
 <div @Edit.TagToolbar(Content)>
     Put your content here
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Apps.Assets
                 Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data as well as Dnn etc. - you can delete this comment *@
 @using ToSic.Razor.Blade;
-@using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
+@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
 @functions {
   public string Hello() {
@@ -56,7 +56,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
-@using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
+@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
 /*
 Custom code which views use to customize how dnn search treats data of that view.
