@@ -158,7 +158,7 @@ namespace ToSic.Sxc
 
             // v13 Experimental LightSpeed
             services.TryAddTransient<IOutputCache, LightSpeed>();
-            services.TryAddSingleton<AppResetMonitors>();
+            //services.TryAddSingleton<AppResetMonitors>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

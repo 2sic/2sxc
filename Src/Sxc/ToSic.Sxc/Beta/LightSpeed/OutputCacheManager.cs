@@ -11,12 +11,6 @@ namespace ToSic.Sxc.Beta.LightSpeed
     {
         internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
-        public OutputCacheManager(AppResetMonitors appResetMonitors)
-        {
-            _appResetMonitors = appResetMonitors;
-        }
-        private readonly AppResetMonitors _appResetMonitors;
-
         internal string Id(int moduleId, int? userId, string suffix)
         {
             var id = GlobalCacheRoot + moduleId;
@@ -33,13 +27,13 @@ namespace ToSic.Sxc.Beta.LightSpeed
                 if (duration == 0) duration = 1;
                 var expiration = new TimeSpan(0, 0, duration);
                 var policy = new CacheItemPolicy { SlidingExpiration = expiration };
-                // get new or shared instance of ChangeMonitor and insert it to the cache item
-                policy.ChangeMonitors.Add(_appResetMonitors.GetOrCreate(appState));
+                // get new instance of ChangeMonitor and insert it to the cache item
+                policy.ChangeMonitors.Add(new AppResetMonitor(appState));
                 Cache.Set(new CacheItem(cacheKey, data), policy);
                 return cacheKey;
             }
             catch
-            {
+            { 
                 /* ignore for now */
             }
 

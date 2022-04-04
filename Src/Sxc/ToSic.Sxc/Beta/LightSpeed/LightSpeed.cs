@@ -13,14 +13,12 @@ namespace ToSic.Sxc.Beta.LightSpeed
 {
     public class LightSpeed: HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features, AppResetMonitors appResetMonitors) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights")
         {
             _features = features;
-            _appResetMonitors = appResetMonitors;
         }
 
         private readonly IFeaturesService _features;
-        private readonly AppResetMonitors _appResetMonitors;
 
         public IOutputCache Init(int moduleId, IBlock block)
         {
@@ -133,7 +131,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
         }
 
 
-        private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager(_appResetMonitors));
+        private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());
         private OutputCacheManager _ocm;
 
 
