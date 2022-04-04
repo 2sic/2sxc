@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Caching;
+using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.Beta.LightSpeed
 {
@@ -9,14 +10,19 @@ namespace ToSic.Sxc.Beta.LightSpeed
     /// </summary>
     public class AppResetMonitor: ChangeMonitor
     {
-        public int AppId { get; }
+
+        public int AppId => _appState.AppId;
         
-        public AppResetMonitor(int appId)
+        public AppResetMonitor(AppState appState)
         {
-            AppId = appId;
+            _appState = appState;
+            _appState.AppStateChanged += HandleAppStateChanged;
             // https://docs.microsoft.com/en-us/dotnet/api/system.runtime.caching.changemonitor?view=dotnet-plat-ext-6.0
             InitializationComplete(); // necessary for ChangeMonitors
         }
+        private readonly AppState _appState;
+
+        ~AppResetMonitor() => _appState.AppStateChanged -= HandleAppStateChanged;
 
 
         protected override void Dispose(bool disposing)
@@ -26,8 +32,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
 
         public override string UniqueId { get; } = Guid.NewGuid().ToString();
 
-        public void Flush()
+        public void HandleAppStateChanged(object sender, EventArgs e)
         {
+            // flush a cache and dispose ChangeMonitor
             this.OnChanged(null);
         }
     }

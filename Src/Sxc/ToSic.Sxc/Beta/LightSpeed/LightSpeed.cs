@@ -19,8 +19,6 @@ namespace ToSic.Sxc.Beta.LightSpeed
             _appResetMonitors = appResetMonitors;
         }
 
-        ~LightSpeed() => AppState.AppStateChanged -= HandleAppStateChanged;
-
         private readonly IFeaturesService _features;
         private readonly AppResetMonitors _appResetMonitors;
 
@@ -29,7 +27,6 @@ namespace ToSic.Sxc.Beta.LightSpeed
             var wrapLog = Log.Call<IOutputCache>($"mod: {moduleId}");
             _moduleId = moduleId;
             _block = block;
-            AppState.AppStateChanged += HandleAppStateChanged;
             return wrapLog($"{IsEnabled}", this);
         }
         private int _moduleId;
@@ -51,7 +48,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
                 return wrapLog($"not added as duration is {duration}", false);
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration);
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState);
             Log.Add($"Cache Key: {cacheKey}");
             return wrapLog($"added for {duration}s", true);
         }
@@ -102,9 +99,8 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // compare cache time-stamps
             var dependentApp = result.Data?.DependentApps?.FirstOrDefault();
             if (dependentApp == null) return wrapLog("no dep app", null);
-            return AppState.CacheTimestamp > dependentApp.CacheTimestamp
-                ? wrapLog("app changed", null)
-                : wrapLog("found", result);
+
+            return wrapLog("found", result);
         }
 
 
@@ -141,11 +137,6 @@ namespace ToSic.Sxc.Beta.LightSpeed
         private OutputCacheManager _ocm;
 
 
-        public void HandleAppStateChanged(object sender, EventArgs e)
-        {
-            // flush a cache and dispose ChangeMonitor
-            if (sender is AppState appState && _appResetMonitors.Monitors.TryRemove(appState.AppId /*e.AppId*/, out var appResetMonitorToDispose))
-                appResetMonitorToDispose.Flush();
-        }
+
     }
 }
