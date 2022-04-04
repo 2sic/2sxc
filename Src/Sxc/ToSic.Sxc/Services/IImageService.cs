@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System.Collections.Generic;
+using ToSic.Eav;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Services
         /// </remarks>
         IResizeSettings Settings(
             object settings = default,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object factor = default,
             object width = default,
             object height = default,
@@ -72,6 +74,23 @@ namespace ToSic.Sxc.Services
             object aspectRatio = default,
             string parameters = default,
             object recipe = default
+        );
+
+        Recipe Recipe(string variants);
+
+        Recipe Recipe(
+            Recipe recipe,
+            string noParamOrder = Parameters.Protector,
+            string name = default,
+            int width = default,
+            string variants = default,
+            Dictionary<string, object> attributes = default,
+            IEnumerable<Recipe> recipes = default,
+            bool? setWidth = default,
+            bool? setHeight = default,
+            string forTag = default,
+            string forFactor = default,
+            string forCss = default
         );
 
         // 2022-03-19 2dm - not ready yet
@@ -103,7 +122,10 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// Get a Responsive Picture object which you can then either just show, or use to construct a more customized output as you need it.
         /// 
-        /// The resulting object can just be added to the html, like `@pic` or you can work with sub-properties as specified in the <see cref="IResponsivePicture"/>
+        /// The resulting object can just be added to the html, like `@pic` or you can work with sub-properties as specified in the <see cref="IResponsivePicture"/>.
+        ///
+        /// **Important:** This call only allows you to set the most common parameters `factor` and `width`.
+        /// For other parameters like `height`, `aspectRatio`, `quality` etc. create Settings <see cref="Settings"/> and pass them in.
         /// </summary>
         /// <param name="link">
         /// What should be in this, can be:
@@ -139,8 +161,9 @@ namespace ToSic.Sxc.Services
         IResponsivePicture Picture(
             object link = null,
             object settings = default,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object factor = default,
+            object width = default,
             string imgAlt = default,
             string imgClass = default,
             object recipe = default
@@ -185,8 +208,9 @@ namespace ToSic.Sxc.Services
         IResponsiveImage Img(
             object link = null,
             object settings = default,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object factor = default,
+            object width = default,
             string imgAlt = default,
             string imgClass = default,
             object recipe = default
@@ -231,8 +255,9 @@ namespace ToSic.Sxc.Services
         IResponsiveImage ImgOrPic(
             object link = null,
             object settings = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object factor = null,
+            object width = default,
             string imgAlt = null,
             string imgClass = null,
             object recipe = null);

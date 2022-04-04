@@ -1,4 +1,5 @@
-﻿using ToSic.Eav;
+﻿using System.Collections.Generic;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Images
@@ -28,6 +29,23 @@ namespace ToSic.Sxc.Images
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio, parameters: parameters, advanced: ToAdv(recipe));
         }
 
+        public Recipe Recipe(string variants) => new Recipe(variants: variants);
 
+        public Recipe Recipe(
+            Recipe recipe,
+            string noParamOrder = Parameters.Protector,
+            string name = default,
+            int width = default,
+            string variants = default,
+            Dictionary<string, object> attributes = default,
+            IEnumerable<Recipe> recipes = default,
+            bool? setWidth = default,
+            bool? setHeight = default,
+            string forTag = default,
+            string forFactor = default,
+            string forCss = default
+        )
+            => new Recipe(recipe, name: name, width: width, variants: variants, attributes: attributes, recipes: recipes, 
+                setWidth: setWidth, setHeight: setHeight, forTag: forTag, forFactor: forFactor, forCss: forCss);
     }
 }
