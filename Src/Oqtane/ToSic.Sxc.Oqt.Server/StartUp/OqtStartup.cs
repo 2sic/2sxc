@@ -82,6 +82,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
+            // Register Sxc features before loading
+            Sxc.Configuration.Features.BuiltIn.Register(serviceProvider.Build<FeaturesCatalog>());
 
             // Load features from configuration
             // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types

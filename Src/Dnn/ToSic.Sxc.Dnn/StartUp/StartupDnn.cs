@@ -64,6 +64,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
             globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
 
+            // Register Sxc features before loading
+            Sxc.Configuration.Features.BuiltIn.Register(transientSp.Build<FeaturesCatalog>());
+
             // Load features from configuration
             var sysLoader = transientSp.Build<SystemLoader>();
             sysLoader.StartUp();

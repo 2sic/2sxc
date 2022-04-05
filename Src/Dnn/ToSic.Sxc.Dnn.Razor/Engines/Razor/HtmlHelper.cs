@@ -7,6 +7,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
+using static ToSic.Sxc.Configuration.Features.BuiltIn;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Engines.Razor
@@ -102,7 +103,7 @@ namespace ToSic.Sxc.Engines.Razor
         private HashSet<string> _errorPaths;
 
         private bool ThrowPartialError => _throwPartialError.Get(() =>
-            _features.IsEnabled(Eav.Configuration.FeaturesBuiltIn.RazorThrowPartial.NameId) || _isSystemAdmin && _features.IsEnabled(Eav.Configuration.FeaturesBuiltIn.RenderThrowPartialSystemAdmin.NameId));
+            _features.IsEnabled(RazorThrowPartial.NameId) || _isSystemAdmin && _features.IsEnabled(RenderThrowPartialSystemAdmin.NameId));
         private readonly ValueGetOnce<bool> _throwPartialError = new ValueGetOnce<bool>();
     }
 }
