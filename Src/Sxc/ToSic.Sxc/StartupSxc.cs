@@ -119,7 +119,8 @@ namespace ToSic.Sxc
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 
             services.TryAddTransient<IPageFeatures, PageFeatures>();
-            services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
+            services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
+            services.TryAddSingleton<PageFeaturesCatalog>();
 
             // new in v12.02/12.04 Image Link Resize Helper
             services.TryAddTransient<ImgResizeLinker>();

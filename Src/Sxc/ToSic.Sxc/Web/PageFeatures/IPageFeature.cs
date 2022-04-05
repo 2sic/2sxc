@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web.PageFeatures
@@ -26,8 +27,11 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <summary>
         /// List of other features required to run this feature.
         /// </summary>
-        IEnumerable<string> Requires { get; }
+        IEnumerable<string> Needs { get; }
 
-        bool AlreadyProcessed { get; set; }
+        /// <summary>
+        /// Optional requirements which are necessary for this feature to be used
+        /// </summary>
+        List<Condition> RequirementsOrNull { get; }
     }
 }

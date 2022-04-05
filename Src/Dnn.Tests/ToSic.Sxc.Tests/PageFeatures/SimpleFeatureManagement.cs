@@ -1,19 +1,29 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Tests.PageFeatures
 {
     [TestClass]
-    public class SimpleFeatureManagement
+    public class SimpleFeatureManagement: TestBaseSxcDb
     {
         [TestMethod]
-        public void AddFeatures()
+        public void PageFeaturesCaseInsensitive()
         {
-            var fm = new Sxc.Web.PageFeatures.PageFeaturesManager();
-
-            //fm.Register(new PageFeature("turnOn", "turnOn JS"));
-
+            var fm = Build<IPageFeaturesManager>();
             Assert.IsTrue(fm.Features["turnOn"] != null);
             Assert.IsTrue(fm.Features["Turnon"] != null);
+        }
+        [TestMethod]
+        public void AdditionalFeatures()
+        {
+            var fm = Build<IPageFeaturesManager>();
+            Assert.IsTrue(!fm.Features.TryGetValue("dummy", out _));
+
+            var cat = Build<PageFeaturesCatalog>();
+            cat.Register(new PageFeature("dummy", "dummy-feature"));
+
+            Assert.IsTrue(fm.Features["dummy"] != null);
+
         }
     }
 }

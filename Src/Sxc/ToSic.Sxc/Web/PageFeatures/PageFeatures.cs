@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Web.PageFeatures
             return realKeys;
         }
 
-        private List<IPageFeature> FeaturesFromSettings { get; } = new List<IPageFeature>();
+        private List<PageFeatureFromSettings> FeaturesFromSettings { get; } = new List<PageFeatureFromSettings>();
 
-        public void FeaturesFromSettingsAdd(IPageFeature newFeature) => FeaturesFromSettings.Add(newFeature);
+        public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature) => FeaturesFromSettings.Add(newFeature);
 
         public List<IPageFeature> FeaturesFromSettingsGetNew(ILog log)
         {
@@ -38,7 +38,8 @@ namespace ToSic.Sxc.Web.PageFeatures
 
             // Mark the new ones as processed now, so they won't be processed in future
             newFeatures.ForEach(f => f.AlreadyProcessed = true);
-            return wrapLog($"{newFeatures.Count}", newFeatures);
+            var asIPageFeature = newFeatures.Cast<IPageFeature>().ToList();
+            return wrapLog($"{asIPageFeature.Count}", asIPageFeature);
         }
 
 
