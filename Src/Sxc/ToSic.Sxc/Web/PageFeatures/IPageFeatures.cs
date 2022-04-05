@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="log"></param>
         /// <returns></returns>
-        List<IPageFeature> FeaturesFromSettingsGetNew(ILog log);
+        List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log);
 
     }
 }

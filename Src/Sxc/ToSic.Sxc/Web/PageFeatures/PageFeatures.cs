@@ -23,9 +23,9 @@ namespace ToSic.Sxc.Web.PageFeatures
 
         public void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature) => FeaturesFromSettings.Add(newFeature);
 
-        public List<IPageFeature> FeaturesFromSettingsGetNew(ILog log)
+        public List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log)
         {
-            var wrapLog = log.Call<List<IPageFeature>>();
+            var wrapLog = log.Call<List<PageFeatureFromSettings>>();
             // Filter out the ones which were already added in a previous round
             var newFeatures = FeaturesFromSettings
                 // Put duplicates together
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Web.PageFeatures
 
             // Mark the new ones as processed now, so they won't be processed in future
             newFeatures.ForEach(f => f.AlreadyProcessed = true);
-            var asIPageFeature = newFeatures.Cast<IPageFeature>().ToList();
+            var asIPageFeature = newFeatures;//.Cast<IPageFeature>().ToList();
             return wrapLog($"{asIPageFeature.Count}", asIPageFeature);
         }
 

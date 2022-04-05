@@ -43,8 +43,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
             foreach (var manualFeature in manualFeatures)
             {
                 // process manual features to get assets
-                _oqtBlockResourceExtractor.Process(manualFeature.Html);
-                assets.AddRange(_oqtBlockResourceExtractor.Assets);
+                var result = _oqtBlockResourceExtractor.Process(manualFeature.Html);
+                assets.AddRange(result.Assets);
             }
             return assets;
         }

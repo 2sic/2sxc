@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         public string Name { get; }
 
-        public string Html { get; }
+        public string Html { get; set; }
 
         /// <summary>
         /// Nice description of the feature.

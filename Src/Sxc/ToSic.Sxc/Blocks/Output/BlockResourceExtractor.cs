@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks.Output
 {
-    public abstract class BlockResourceExtractor: HasLog<IBlockResourceExtractor>, IBlockResourceExtractor
+    public abstract class BlockResourceExtractor: HasLog, IBlockResourceExtractor
     {
         #region Construction / DI
         protected BlockResourceExtractor() : base("Sxc.AstOpt") { }
@@ -36,22 +37,29 @@ namespace ToSic.Sxc.Blocks.Output
         /// that we need to skip from adding in general HtmlAttributes dictionary
         /// because this special attributes are handled in custom way.
         /// </summary>
-        private static List<string> SkipHtmlAttributes = new List<string>() { "src", "id", "data-enableoptimizations" };
+        private static readonly List<string> SkipHtmlAttributes = new List<string> { "src", "id", "data-enableoptimizations" };
 
         #endregion
 
         /// <summary>
         /// List of extracted assets - this must be processed later by the caller
         /// </summary>
-        public List<IClientAsset> Assets { get; }= new List<IClientAsset>();
+        protected List<IClientAsset> Assets { get; private set; }
 
         /// <summary>
         /// Run the sequence to extract assets
         /// </summary>
         /// <param name="renderedTemplate"></param>
         /// <returns></returns>
-        public abstract (string Template, bool Include2sxcJs) Process(string renderedTemplate);
+        public RenderEngineResult Process(string renderedTemplate)
+        {
+            // Pre-Flush Assets, so each call gets its own list
+            Assets = new List<IClientAsset>();
+            var (template, include2SxcJs) = ExtractFromHtml(renderedTemplate);
+            return new RenderEngineResult(template, include2SxcJs, Assets);
+        }
 
+        public abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate);
 
 
         protected string ExtractStyles(string renderedTemplate)
