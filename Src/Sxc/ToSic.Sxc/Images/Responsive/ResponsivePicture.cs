@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Images
                 ? defFormat.ResizeFormats
                 : new List<IImageFormat> { defFormat };
             
-            var useMultiSrcSet = ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
+            var useMultiSrcSet = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
 
             Log.SafeAdd($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
 

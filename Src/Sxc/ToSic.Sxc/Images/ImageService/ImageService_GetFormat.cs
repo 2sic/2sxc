@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ToSic.Eav.Configuration;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 namespace ToSic.Sxc.Images
 {
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Images
 
             // 2. See if we know of this - if yes, return - but strip sub-formats if the feature is disabled
             if (ImageConstants.FileTypes.TryGetValue(extension, out var result))
-                return Features.IsEnabled(FeaturesCatalog.ImageServiceMultiFormat.NameId)
+                return Features.IsEnabled(ImageServiceMultiFormat.NameId)
                     ? result
                     : new ImageFormat(result, false);
 

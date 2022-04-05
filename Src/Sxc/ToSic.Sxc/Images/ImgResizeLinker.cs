@@ -9,6 +9,7 @@ using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;
 
@@ -70,7 +71,7 @@ namespace ToSic.Sxc.Images
         public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
         {
             var wrapLog = Log.Call<OneResize>();
-            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors), _koi.Value.Framework);
+            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
             return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
         }
 
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Call<string>();
 
-            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors), _koi.Value.Framework);
+            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
 
             var srcSetParts = srcSetSettings?.VariantsParsed;
 

@@ -1,10 +1,11 @@
 ﻿using System.Linq;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Web;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
@@ -108,7 +109,7 @@ namespace ToSic.Sxc.Images
         private readonly ValueGetOnce<string> _srcSet = new ValueGetOnce<string>();
         private string SrcSetGenerator()
         {
-            var isEnabled = ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
+            var isEnabled = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
             var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
             var wrapLog = Log.SafeCall<string>(ImgService.Debug, $"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
             var result = isEnabled && hasVariants
@@ -153,7 +154,7 @@ namespace ToSic.Sxc.Images
         private string SizesGenerator()
         {
             var wrapLog = Log.SafeCall<string>(ImgService.Debug);
-            if (!ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceSetSizes.NameId))
+            if (!ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId))
                 return wrapLog("disabled", null);
             var sizes = ThisResize.Recipe?.Sizes;
             return wrapLog(sizes, sizes);

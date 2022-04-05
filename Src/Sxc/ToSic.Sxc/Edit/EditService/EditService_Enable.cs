@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web.PageFeatures;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 namespace ToSic.Sxc.Edit.EditService
 {
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Edit.EditService
             // extend this list if new parameters are added
             if (forms == true)
             {
-                var feats = new[] { FeaturesCatalog.PublicEditForm.Guid };
+                var feats = new[] { PublicEditForm.Guid };
                 var features = Block.Context.Dependencies.FeaturesInternalGenerator.New;
                 if (!features.Enabled(feats, "public forms not available", out var exp))
                     throw exp;

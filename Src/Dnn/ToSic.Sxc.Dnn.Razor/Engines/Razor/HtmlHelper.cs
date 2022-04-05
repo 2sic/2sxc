@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Engines.Razor
         private HashSet<string> _errorPaths;
 
         private bool ThrowPartialError => _throwPartialError.Get(() =>
-            _features.IsEnabled(FeaturesCatalog.RazorThrowPartial.NameId) || _isSystemAdmin && _features.IsEnabled(FeaturesCatalog.RenderThrowPartialSystemAdmin.NameId));
+            _features.IsEnabled(Eav.Configuration.FeaturesBuiltIn.RazorThrowPartial.NameId) || _isSystemAdmin && _features.IsEnabled(Eav.Configuration.FeaturesBuiltIn.RenderThrowPartialSystemAdmin.NameId));
         private readonly ValueGetOnce<bool> _throwPartialError = new ValueGetOnce<bool>();
     }
 }

@@ -9,6 +9,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 namespace ToSic.Sxc.Oqt.Server.Data
 {
@@ -146,7 +147,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
                 var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(FeaturesCatalog.BlockFileResolveOutsideOfEntityAdam.Guid)) return result;
+                if (!_featuresLazy.Value.Enabled(BlockFileResolveOutsideOfEntityAdam.Guid)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !ToSic.Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)

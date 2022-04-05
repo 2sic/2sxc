@@ -11,6 +11,7 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Web.JsContext;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 namespace ToSic.Sxc.WebApi.Context
 {
@@ -150,7 +151,7 @@ namespace ToSic.Sxc.WebApi.Context
             var dto = new ContextEnableDto
             {
                 DebugMode = tmp.CanDevelop ||
-                            Deps.Features.Value.IsEnabled(FeaturesCatalog.EditUiAllowDebugModeForEditors)
+                            Deps.Features.Value.IsEnabled(EditUiAllowDebugModeForEditors)
             };
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
             if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = tmp.CanDevelop;

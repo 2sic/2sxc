@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Configuration;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.Web.PageFeatures
                 JsCore.Key,
                 ModuleContext.Key,
             },
-            reqConditions: new List<Condition> { FeaturesCatalog.PublicEditForm.Condition });
+            reqConditions: new List<Condition> { PublicEditForm.Condition });
 
         /// <summary>
         /// The 2sxc JS libraries for cms / edit actions

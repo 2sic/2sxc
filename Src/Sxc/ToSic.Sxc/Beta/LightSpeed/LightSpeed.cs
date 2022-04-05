@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -111,7 +112,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
         private bool IsEnabledGenerator()
         {
             var wrapLog = Log.Call<bool>();
-            var feat = _features.IsEnabled(FeaturesCatalog.LightSpeedOutputCache.NameId);
+            var feat = _features.IsEnabled(LightSpeedOutputCache.NameId);
             if (!feat) return wrapLog("feature disabled", false);
             var ok = AppConfig.IsEnabled;
             return wrapLog($"app config: {ok}", ok);
