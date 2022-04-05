@@ -23,10 +23,6 @@ namespace ToSic.Sxc.Web.PageService
             if (keys.Any())
             {
                 var added = PageServiceShared.Activate(keys);
-
-                // 2022-03-03 2dm - moving special properties to page-activate features #pageActivate
-                // WIP, if all is good, remove these comments end of March
-
                 // also add to this specific module, as we need a few module-level features to activate in case...
                 CodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
             }
