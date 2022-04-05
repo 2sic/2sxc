@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
     public class OqtBlockResourceExtractor: BlockResourceExtractor
     {
-        public override (string Template, bool Include2sxcJs) Implementation(string renderedTemplate)
+        public override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
         {
             var include2SxcJs = false;
 
