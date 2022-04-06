@@ -59,5 +59,31 @@ namespace ToSic.Sxc.Oqt.Client
                 // ignore exception
             }
         }
+
+        /// <summary>
+        /// Added to fix vertical compatibility with Oqtane 3.1
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="src"></param>
+        /// <param name="integrity"></param>
+        /// <param name="crossorigin"></param>
+        /// <param name="content"></param>
+        /// <param name="location"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public new Task IncludeScript(string id, string src, string integrity, string crossorigin, string content, string location, string key)
+        {
+            try
+            {
+                _jsRuntime.InvokeVoidAsync(
+                    "Oqtane.Interop.includeScript",
+                    id, src, integrity, crossorigin, content, location);
+                return Task.CompletedTask;
+            }
+            catch
+            {
+                return Task.CompletedTask;
+            }
+        }
     }
 }
