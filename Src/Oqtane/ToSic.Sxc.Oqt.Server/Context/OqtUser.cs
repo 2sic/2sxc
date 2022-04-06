@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
             if (!user.IsAuthenticated) return user;
 
             user.Username = _httpContextAccessor.HttpContext.User.Identity.Name;
-            user.UserId = int.Parse(_httpContextAccessor.HttpContext.User.Claims.First(item => item.Type == ClaimTypes.PrimarySid).Value);
+            user.UserId = int.Parse(_httpContextAccessor.HttpContext.User.Claims.First(item => item.Type == ClaimTypes.NameIdentifier || item.Type == ClaimTypes.PrimarySid).Value);
             var roles = _httpContextAccessor.HttpContext.User.Claims.Where(item => item.Type == ClaimTypes.Role).Aggregate("", (current, claim) => current + (claim.Value + ";"));
             if (roles != "") roles = ";" + roles;
             user.Roles = roles;
