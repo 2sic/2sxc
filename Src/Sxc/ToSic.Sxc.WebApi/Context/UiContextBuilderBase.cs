@@ -102,8 +102,8 @@ namespace ToSic.Sxc.WebApi.Context
             return new ContextLanguageDto
             {
                 Current = site.CurrentCultureCode,
-                Primary = site.DefaultCultureCode,
-                List = converted,
+                Primary = converted.Any() ? site.DefaultCultureCode : site.CurrentCultureCode, // in special case when no languages are available, use the current culture to fix translation issue in UI
+                List = converted, 
             };
         }
 
