@@ -39,10 +39,12 @@ namespace ToSic.Sxc.Dnn.Services
 
             var manualChanges = ManualFeatures(dnnPage, renderResult.FeaturesFromSettings);
 
+            var httpHeaderChanges = ApplayToHttpHeaders(page, renderResult.HttpHeaders);
+
             Log.Add("Will apply Header Status-Code changes if needed");
             ApplyHttpStatus(page, renderResult);
 
-            count += headChanges + manualChanges;
+            count += headChanges + manualChanges + httpHeaderChanges;
             Log.Add($"Applied {count} changes");
             return count;
         }
@@ -98,6 +100,37 @@ namespace ToSic.Sxc.Dnn.Services
                 dnnPage.AddToHead(h.Tag);
             return headChanges.Count;
         }
+        
+        private int ApplayToHttpHeaders(Page page, IList<string> httpHeaders)
+        {
+            var wrapLog = Log.Call<int>();
+
+            if (page?.Response == null) return wrapLog("error, HttpResponse is null", 0);
+            if (page.Response.HeadersWritten) return wrapLog("error, to late for adding http headers", 0);
+            if (httpHeaders == null || httpHeaders.Count == 0) return wrapLog("ok, no headers to add", 0);
+
+            foreach (var httpHeader in httpHeaders)
+            {
+                if (string.IsNullOrWhiteSpace(httpHeader)) continue;
+                string key;
+                string value;
+                var s = httpHeader.IndexOf(":");
+                if (s < 1)
+                {
+                    key = httpHeader;
+                    value = string.Empty;
+                }
+                else
+                {
+                    key = httpHeader.Substring(0, s);
+                    value = httpHeader.Substring(s + 1);
+                }
+                Log.Add($"add http header: {key}:{value}");
+                page.Response.Headers[key] = value;
+            }
+            return wrapLog("ok", httpHeaders.Count);
+        }
+
 
         private void ApplyHttpStatus(Page page, IRenderResult result)
         {
