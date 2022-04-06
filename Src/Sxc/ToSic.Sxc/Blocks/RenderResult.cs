@@ -47,6 +47,8 @@ namespace ToSic.Sxc.Blocks
         public int ModuleId { get; set; }
 
         public override string ToString() => Html;
+
+        public List<string> HttpHeaders;
     }
 
     public class DependentApp : IDependentApp

@@ -71,6 +71,7 @@ namespace ToSic.Sxc.Blocks
 
                     result.HttpStatusCode = pss.HttpStatusCode;
                     result.HttpStatusMessage = pss.HttpStatusMessage;
+                    result.HttpHeaders = pss.HttpHeaders;
                 }
 
                 _result = result;
