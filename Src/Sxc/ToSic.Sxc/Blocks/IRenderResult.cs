@@ -56,6 +56,11 @@ namespace ToSic.Sxc.Blocks
         IList<IPageFeature> FeaturesFromSettings { get; }
 
         /// <summary>
+        /// List of HttpHeaders to add to the response in format "key:value"
+        /// </summary>
+        IList<string> HttpHeaders { get; }
+
+        /// <summary>
         /// Optional HTTP-Status Code which the code returned.
         /// Typically used on details-pages, which could return a 404 or similar.
         /// If it's applied to the Response, it should probably also include the <see cref="HttpStatusMessage"/>

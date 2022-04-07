@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
 
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Blocks
     /// This is kind of the master-container for a content-management block. It's the wrapper which is in the CMS (DNN), and the module will talk with this
     /// Sxc Block to get everything rendered. 
     /// </summary>
-    [PrivateApi("not sure yet what to call this, CmsBlock isn't right, because it's more of a BlockHost or something")]
+    [PrivateApi("not sure yet what to call this, or if it should be public")]
     public interface IBlockBuilder: IHasLog
     {
         /// <summary>
@@ -29,6 +30,9 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         [PrivateApi]
         IRenderResult Run(bool topLevel);
+
+        [PrivateApi]
+        IRenderingHelper RenderingHelper { get; }
 
         /// <summary>
         /// The real block / unit of content which will be rendered. 

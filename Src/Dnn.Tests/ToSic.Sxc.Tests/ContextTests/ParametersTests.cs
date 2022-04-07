@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Tests.ContextTests
         {
             var p = GetTestParameters().Add("id", string.Empty);
             AreEqual(2, p.Count);
-            AreEqual("id=27&id&sort=descending", p.ToString());
+            AreEqual("id=27&sort=descending", p.ToString());
         }
         [TestMethod]
         public void ParameterAddExistingNull()

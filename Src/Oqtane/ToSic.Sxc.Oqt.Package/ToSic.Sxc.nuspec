@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ToSic.Sxc</id>
-    <version>13.05.00</version>
+    <version>13.06.00</version>
     <authors>2sic</authors>
     <owners>2sic</owners>
     <title>2sxc</title>
@@ -20,7 +20,7 @@
     <summary>2sxc 13 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
       <dependency id="Oqtane.Framework" version="2.2.0" />
-      <dependency id="ToSic.Imageflow.Oqtane" version="1.0.3" />
+      <dependency id="ToSic.Imageflow.Oqtane" version="1.0.4" />
     </dependencies>
   </metadata>
   <files>
@@ -56,12 +56,12 @@
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation default compilation context -->
     <!--<file src="..\..\..\..\oqtane-razor-refs\net6.0\refs\*.dll" target="refs\net6.0" />-->
 
-    <!-- ToSic.Imageflow.Oqtane 1.0.3 -->
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Imageflow.*" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Imazen.*" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\lib\net5.0\Microsoft.IO.*" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.3\runtimes\win*\**\*imageflow.*" target="runtimes" />
+    <!-- ToSic.Imageflow.Oqtane 1.0.4 -->
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imageflow.*" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imazen.*" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Microsoft.IO.*" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\runtimes\win*\**\*imageflow.*" target="runtimes" />
   </files>
 </package>

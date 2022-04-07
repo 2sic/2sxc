@@ -32,6 +32,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("13.05.00")]
+[assembly: AssemblyVersion("13.06.00")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Razor")]

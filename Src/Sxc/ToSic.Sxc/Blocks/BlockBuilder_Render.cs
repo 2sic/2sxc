@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.PageFeatures;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -14,9 +17,9 @@ namespace ToSic.Sxc.Blocks
         [PrivateApi]
         public bool WrapInDiv { get; set; } = true;
 
-        private IRenderingHelper RenderingHelper =>
-            _rendHelp ?? (_rendHelp = _renderHelpGen.New.Init(Block, Log));
-        private IRenderingHelper _rendHelp;
+        [PrivateApi]
+        public IRenderingHelper RenderingHelper => _rendHelp2.Get(() => _renderHelpGen.New.Init(Block, Log));
+        private readonly ValueGetOnce<IRenderingHelper> _rendHelp2 = new ValueGetOnce<IRenderingHelper>();
 
         public string Render() => Run(true).Html;
 
@@ -33,7 +36,7 @@ namespace ToSic.Sxc.Blocks
                     IsError = err,
                     ModuleId = Block.ParentId,
 
-                    Assets = Assets, // TODO: this may fail on a sub-template, must research
+                    Assets = Assets, // TODO: this may fail on a sub-sub-template, must research
                     CanCache = !err && Block.ContentGroupExists && Block.Configuration?.Exists == true,
                 };
 
@@ -59,10 +62,16 @@ namespace ToSic.Sxc.Blocks
                     // Head & Page Changes
                     result.HeadChanges = pss.GetHeadChangesAndFlush(Log);
                     result.PageChanges = pss.GetPropertyChangesAndFlush(Log);
-                    result.FeaturesFromSettings = pss.Features.FeaturesFromSettingsGetNew(Log);
+                    var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.Features.FeaturesFromSettingsGetNew(Log));
+
+                    Assets.AddRange(newAssets);
+                    result.Assets = Assets;
+
+                    result.FeaturesFromSettings = rest;
 
                     result.HttpStatusCode = pss.HttpStatusCode;
                     result.HttpStatusMessage = pss.HttpStatusMessage;
+                    result.HttpHeaders = pss.HttpHeaders;
                 }
 
                 _result = result;
@@ -74,6 +83,27 @@ namespace ToSic.Sxc.Blocks
             }
 
             return wrapLog(null, _result);
+        }
+
+        private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)
+        {
+            var wrapLog = Log.Call<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
+            var newAssets = new List<IClientAsset>();
+            foreach (var settingFeature in featuresFromSettings)
+            {
+                var extracted = _resourceExtractor.Ready.Process(settingFeature.Html);
+                if (!extracted.Assets.Any()) continue;
+                Log.Add($"Moved Feature Html {settingFeature.Key} to assets");
+                newAssets.AddRange(extracted.Assets);
+                settingFeature.Html = extracted.Html;
+            }
+
+            var featsLeft = featuresFromSettings
+                .Where(f => !string.IsNullOrWhiteSpace(f.Html))
+                .Cast<IPageFeature>()
+                .ToList();
+
+            return wrapLog($"New: {newAssets.Count}; Rest: {featsLeft.Count}", (newAssets, featsLeft));
         }
 
         private IRenderResult _result;
@@ -101,7 +131,7 @@ namespace ToSic.Sxc.Blocks
                                 new Exception("Data is missing - usually when a site is copied " +
                                               "but the content / apps have not been imported yet" +
                                               " - check 2sxc.org/help?tag=export-import"),
-                                true, "Error - needs admin to fix", false, true), true);
+                                true, "Error - needs admin to fix"), true);
                     }
                 }
                 #endregion
@@ -114,23 +144,24 @@ namespace ToSic.Sxc.Blocks
                         {
                             Log.Add("standard case, found template, will render");
                             var engine = GetEngine();
-                            body = engine.Render();
+                            var renderEngineResult = engine.Render();
+                            body = renderEngineResult.Html;
                             // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
-                            if (engine.ActivateJsApi)
+                            if (renderEngineResult.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
                                 Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.JsCore.Key);
                             }
 
                             // TODO: this should use the same pattern as features, waiting to be picked up
-                            TransferEngineAssetsToParent(engine);
+                            TransferEngineAssetsToParent(renderEngineResult);
                         }
                         else body = "";
                     }
                     catch (Exception ex)
                     {
-                        body = RenderingHelper.DesignErrorMessage(ex, true, "Error rendering template", false, true);
+                        body = RenderingHelper.DesignErrorMessage(ex, true);
                         err = true;
                     }
                 #endregion
@@ -160,8 +191,7 @@ namespace ToSic.Sxc.Blocks
             }
             catch (Exception ex)
             {
-                return wrapLog("error", (RenderingHelper.DesignErrorMessage(ex, true,
-                    null, true, true), true));
+                return wrapLog("error", (RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true));
             }
         }
 
@@ -180,7 +210,7 @@ namespace ToSic.Sxc.Blocks
             {
                 Log.Add("system isn't ready,show upgrade message");
                 var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true,
-                    "Error - needs admin to fix this", false, false);
+                    "Error - needs admin to fix this", encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 

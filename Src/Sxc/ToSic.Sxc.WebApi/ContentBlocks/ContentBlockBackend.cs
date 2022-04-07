@@ -104,12 +104,13 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 withInternal.ExtractOnlyEnableOptimization = false;
 
             Log.Add("4.1. Process optimizers");
-            var rest = optimizer.Process(mergedFeatures).Template;
+            var renderResult = optimizer.Process(mergedFeatures);
+            var rest = renderResult.Html;
             if (!string.IsNullOrWhiteSpace(rest)) 
                 Log.Add("Warning: Rest after extraction should be empty - not handled ATM");
 
             Log.Add("4.2. Add more resources based on processed");
-            resources.AddRange(optimizer.Assets.Select(asset => new AjaxResourceDtoWIP
+            resources.AddRange(renderResult.Assets.Select(asset => new AjaxResourceDtoWIP
             {
                 Url = asset.Url,
                 Type = asset.IsJs ? "js" : "css",

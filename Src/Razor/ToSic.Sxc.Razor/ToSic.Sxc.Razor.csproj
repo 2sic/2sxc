@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-    <Version>13.05.00</Version>
+    <Version>13.06.00</Version>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <Deterministic>true</Deterministic>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>

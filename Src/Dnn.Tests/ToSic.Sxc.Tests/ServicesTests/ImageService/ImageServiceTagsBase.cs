@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void UrlResized()
         {
             var svc = Build<IImageService>();
-            var url = TestModeImg ? svc.Img(link: ImgUrl).Url : svc.Picture(link: ImgUrl).Url;
+            var url = TestModeImg ? svc.Img(ImgUrl).Url : svc.Picture(ImgUrl).Url;
             AreEqual(ImgUrl, url);
         }
 
@@ -47,8 +47,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
             const string imgAlt = "test-alt";
             var svc = Build<IImageService>();
             var result = TestModeImg 
-                ? svc.Img(link: ImgUrl, imgAlt: imgAlt).ToString()
-                : svc.Picture(link: ImgUrl, imgAlt: imgAlt).Img.ToString();
+                ? svc.Img(ImgUrl, imgAlt: imgAlt).ToString()
+                : svc.Picture(ImgUrl, imgAlt: imgAlt).Img.ToString();
             AreEqual($"<img src='{ImgUrl}' alt='{imgAlt}'>", result);
         }
 
@@ -58,8 +58,8 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var svc = Build<IImageService>();
             var cls = "class-dummy";
             var result = TestModeImg
-                ? svc.Img( link: ImgUrl, imgClass: cls).ToString()
-                : svc.Picture( link: ImgUrl, imgClass: cls).Img.ToString();
+                ? svc.Img(ImgUrl, imgClass: cls).ToString()
+                : svc.Picture(ImgUrl, imgClass: cls).Img.ToString();
             AreEqual($"<img src='{ImgUrl}' class='{cls}'>", result);
         }
 

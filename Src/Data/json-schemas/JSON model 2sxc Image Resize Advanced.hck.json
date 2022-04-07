@@ -1,0 +1,325 @@
+{
+    "modelName": "2sxc Image Resize Advanced",
+    "collections": [
+        {
+            "collectionName": "Recipe",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "Name",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "properties": [],
+                    "GUID": "3b3ce810-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "name"
+                },
+                {
+                    "name": "SetWidth",
+                    "hackoladeMeta": {
+                        "namingConvention": ""
+                    },
+                    "isActivated": true,
+                    "type": "boolean",
+                    "GUID": "41780f70-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "setWidth"
+                },
+                {
+                    "name": "Variants",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "properties": [],
+                    "GUID": "62f4c0d0-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "variants"
+                },
+                {
+                    "name": "Attributes",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [],
+                    "additionalProperties": true,
+                    "GUID": "8bded800-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "code": "attributes",
+                    "error": {},
+                    "propertyNames": {
+                        "GUID": "93d73fc0-b40b-11ec-b2ec-ddf76f2d96ad"
+                    }
+                },
+                {
+                    "name": "SetHeight",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "boolean",
+                    "GUID": "a6d52830-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "setHeight"
+                },
+                {
+                    "name": "Width",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "numeric",
+                    "properties": [],
+                    "GUID": "bf48c520-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "width"
+                },
+                {
+                    "name": "For Css",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "properties": [],
+                    "GUID": "d44a93e0-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "forCss"
+                },
+                {
+                    "name": "For Factor",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "any",
+                    "properties": [],
+                    "code": "forFactor",
+                    "GUID": "daf03ce0-b40b-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    }
+                },
+                {
+                    "name": "For Tag",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "properties": [],
+                    "GUID": "0175fe40-b40c-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "forTag"
+                },
+                {
+                    "name": "Recipes",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "document",
+                            "properties": [],
+                            "additionalProperties": false,
+                            "GUID": "259239b0-b40c-11ec-b2ec-ddf76f2d96ad",
+                            "arrayItem": true,
+                            "arrayParentType": "array",
+                            "error": {}
+                        }
+                    ],
+                    "additionalItems": true,
+                    "GUID": "258df3f0-b40c-11ec-b2ec-ddf76f2d96ad",
+                    "code": "recipes",
+                    "foreignCollection": "f98c31f0-b40a-11ec-b2ec-ddf76f2d96ad",
+                    "error": {}
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "f98e2dc0-b40a-11ec-b2ec-ddf76f2d96ad"
+            },
+            "isActivated": true,
+            "additionalProperties": false,
+            "GUID": "f98c31f0-b40a-11ec-b2ec-ddf76f2d96ad",
+            "id": "/recipe",
+            "bucketId": "4b3a28c0-b40d-11ec-b2ec-ddf76f2d96ad"
+        },
+        {
+            "collectionName": "SettingsAdvanced",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "Recipe",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [],
+                    "additionalProperties": false,
+                    "GUID": "a7ed0b60-b40c-11ec-b2ec-ddf76f2d96ad",
+                    "error": {
+                        "name": false,
+                        "code": false
+                    },
+                    "code": "recipe"
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "18c9c8c0-b40b-11ec-b2ec-ddf76f2d96ad"
+            },
+            "isActivated": true,
+            "additionalProperties": false,
+            "GUID": "18c7ccf0-b40b-11ec-b2ec-ddf76f2d96ad",
+            "bucketId": "4b3a28c0-b40d-11ec-b2ec-ddf76f2d96ad"
+        }
+    ],
+    "buckets": [
+        {
+            "name": "Root",
+            "type": "bucket",
+            "collectionIds": [
+                "f98c31f0-b40a-11ec-b2ec-ddf76f2d96ad",
+                "18c7ccf0-b40b-11ec-b2ec-ddf76f2d96ad"
+            ],
+            "backgroundColor": {
+                "r": 216,
+                "g": 0,
+                "b": 115,
+                "a": 1
+            },
+            "show": true,
+            "isActivated": true,
+            "GUID": "4b3a28c0-b40d-11ec-b2ec-ddf76f2d96ad"
+        }
+    ],
+    "views": [],
+    "relationships": [],
+    "users": [],
+    "diagramViews": [],
+    "idToNameHashTable": {
+        "f98c31f0-b40a-11ec-b2ec-ddf76f2d96ad": "Recipe",
+        "18c7ccf0-b40b-11ec-b2ec-ddf76f2d96ad": "SettingsAdvanced",
+        "3b3ce810-b40b-11ec-b2ec-ddf76f2d96ad": "Name",
+        "41780f70-b40b-11ec-b2ec-ddf76f2d96ad": "SetWidth",
+        "62f4c0d0-b40b-11ec-b2ec-ddf76f2d96ad": "Variants",
+        "8bded800-b40b-11ec-b2ec-ddf76f2d96ad": "Attributes",
+        "a6d52830-b40b-11ec-b2ec-ddf76f2d96ad": "SetHeight",
+        "bf48c520-b40b-11ec-b2ec-ddf76f2d96ad": "Width",
+        "d44a93e0-b40b-11ec-b2ec-ddf76f2d96ad": "For Css",
+        "daf03ce0-b40b-11ec-b2ec-ddf76f2d96ad": "For Factor",
+        "0175fe40-b40c-11ec-b2ec-ddf76f2d96ad": "For Tag",
+        "258df3f0-b40c-11ec-b2ec-ddf76f2d96ad": "Recipes",
+        "a7ed0b60-b40c-11ec-b2ec-ddf76f2d96ad": "Recipe",
+        "4b3a28c0-b40d-11ec-b2ec-ddf76f2d96ad": "Root"
+    },
+    "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "e5248051-b40a-11ec-b2ec-ddf76f2d96ad"
+    },
+    "polyglotDefinitions": {
+        "type": "polyglotDefinitions",
+        "properties": [],
+        "GUID": "e5248053-b40a-11ec-b2ec-ddf76f2d96ad"
+    },
+    "externalDefinitions": {
+        "type": "externalDefinitions",
+        "properties": [],
+        "GUID": "e5248052-b40a-11ec-b2ec-ddf76f2d96ad"
+    },
+    "sources": [],
+    "decorativeSymbols": [],
+    "dbVendor": "JSON",
+    "dbVersion": "draft-07",
+    "appTarget": "JSON",
+    "creationTS": "2022-04-04T11:32:22.868Z",
+    "GUID": "e5248050-b40a-11ec-b2ec-ddf76f2d96ad",
+    "isLineageEnabled": false,
+    "hackoladeMeta": {
+        "validationErrors": {
+            "modelName": false
+        }
+    },
+    "author": "2sic",
+    "lastModifTS": "2022-04-04T12:02:25.290Z",
+    "persistenceSchemaVersion": "5",
+    "isCreatedByPlugin": true,
+    "pluginInformation": {
+        "pluginEngineVersion": "1.0.0"
+    },
+    "applicationInformation": {
+        "version": "5.4.11"
+    },
+    "settings": {
+        "centralPane": {
+            "dbLevel": {
+                "erd": [
+                    {
+                        "GUID": "f98c31f0-b40a-11ec-b2ec-ddf76f2d96ad",
+                        "x": 443,
+                        "y": 85,
+                        "width": 184,
+                        "height": 231,
+                        "color": {}
+                    },
+                    {
+                        "GUID": "18c7ccf0-b40b-11ec-b2ec-ddf76f2d96ad",
+                        "x": 80,
+                        "y": 80,
+                        "width": 222,
+                        "height": 51,
+                        "color": {}
+                    }
+                ],
+                "buckets": [
+                    {
+                        "x": 40,
+                        "y": 40,
+                        "GUID": "4b3a28c0-b40d-11ec-b2ec-ddf76f2d96ad"
+                    }
+                ],
+                "collapsedNodes": [],
+                "activeRelationship": "",
+                "activeRelationshipFields": {
+                    "childField": [],
+                    "parentField": []
+                },
+                "selectedCollections": [],
+                "displayColorPicker": false,
+                "graphView": {
+                    "erd": [],
+                    "buckets": [],
+                    "decorativeSymbols": [],
+                    "forceLayout": true,
+                    "defaultLinkLength": 300
+                },
+                "diagramViews": [],
+                "decorativeSymbols": [],
+                "nestedCollectionsLayout": "horizontal",
+                "options": []
+            },
+            "collectionLevel": {},
+            "changed": false
+        },
+        "dtDiagram": {
+            "collapsedNodes": [],
+            "shouldDistributeCollections": false
+        }
+    }
+}

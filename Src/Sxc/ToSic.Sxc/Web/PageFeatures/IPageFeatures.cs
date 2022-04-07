@@ -35,14 +35,14 @@ namespace ToSic.Sxc.Web
         /// Add a manual feature (having custom HTML)
         /// </summary>
         /// <param name="newFeature"></param>
-        void FeaturesFromSettingsAdd(IPageFeature newFeature);
+        void FeaturesFromSettingsAdd(PageFeatureFromSettings newFeature);
 
         /// <summary>
         /// Get the manual features which were added - skip those which were previously already added
         /// </summary>
         /// <param name="log"></param>
         /// <returns></returns>
-        List<IPageFeature> FeaturesFromSettingsGetNew(ILog log);
+        List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log);
 
     }
 }

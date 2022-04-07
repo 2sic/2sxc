@@ -7,6 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Adam
             if (stream == null || fileName == null || contentType == null || guid == null || field == null)
                 throw new Exception();
 
-            var feats = new[] { Eav.Configuration.FeaturesCatalog.SaveInAdamApi.Guid, Eav.Configuration.FeaturesCatalog.PublicUploadFiles.Guid };
+            var feats = new[] { SaveInAdamApi.Guid, PublicUploadFiles.Guid };
 
             if (!_featuresLazy.Value.Enabled(feats, "can't save in ADAM", out var exp))
                 throw exp;

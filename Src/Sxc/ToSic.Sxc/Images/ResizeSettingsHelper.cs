@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Images
             {
                 var cssKey = cssFw.AsKey();
                 var cssRecipes = pgb.GetOrGenerate(cssKey, 
-                    () => subRecipes.Where(r => r.CssFramework == cssFw).ToList());
+                    () => subRecipes.Where(r => r.ForCss == cssFw).ToList());
                 if (!cssRecipes.Any()) continue;
                 foreach (var f in factorsToTest)
                 {
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Images
                         () => cssRecipes.Where(m => f == null ? m.FactorParsed == 0 : DNearZero(m.FactorParsed - f.Value)).ToList());
                     foreach (var target in targetsToTest)
                     {
-                        var match = recList.FirstOrDefault(m => m.Tag == target);
+                        var match = recList.FirstOrDefault(m => m.ForTag == target);
                         if (match != null) return match;
                     }
                 }

@@ -8,6 +8,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 namespace ToSic.Sxc.Adam
 {
@@ -105,15 +106,15 @@ namespace ToSic.Sxc.Adam
 
         public readonly Guid[] FeaturesForRestrictedUsers =
         {
-            FeaturesCatalog.PublicUploadFiles.Guid,
-            FeaturesCatalog.PublicEditForm.Guid,
+            PublicUploadFiles.Guid,
+            PublicEditForm.Guid,
         };
 
 
         /// <summary>
         /// try to find attribute definition - for later extra security checks
         /// </summary>
-        private IContentTypeAttribute AttributeDefinition(AppState appState/*, int appId*/, string contentType, string fieldName)
+        private IContentTypeAttribute AttributeDefinition(AppState appState, string contentType, string fieldName)
         {
             var type = appState /*State.Get(appId)*/.GetContentType(contentType);
             return type[fieldName];

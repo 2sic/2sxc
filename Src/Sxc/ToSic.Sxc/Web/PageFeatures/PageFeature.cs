@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web.PageFeatures
@@ -11,19 +12,28 @@ namespace ToSic.Sxc.Web.PageFeatures
     [PrivateApi("Internal / not final - neither name, namespace or anything")]
     public class PageFeature : IPageFeature
     {
+        public const string ConditionIsPageFeature = "pagefeature";
+
+        #region Constructor
+
         public PageFeature(
             string key, 
             string name, 
             string description = null,
-            string[] requires = null,
-            string html = null)
+            string[] needs = null,
+            string html = null,
+            List<Condition> reqConditions = null)
         {
             Key = key ?? throw new Exception("key is required");
             Name = name ?? throw new Exception("name is required");
             Html = html;
             Description = description ?? "";
-            Requires = requires ?? Array.Empty<string>();
+            Needs = needs ?? Array.Empty<string>();
+            Condition = new Condition(ConditionIsPageFeature, key);
+            RequirementsOrNull = reqConditions ?? new List<Condition>();
         }
+
+        #endregion
         
         /// <summary>
         /// Primary identifier to activate the feature
@@ -35,7 +45,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         public string Name { get; }
 
-        public string Html { get; }
+        public string Html { get; set; }
 
         /// <summary>
         /// Nice description of the feature.
@@ -45,8 +55,10 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <summary>
         /// List of other features required to run this feature.
         /// </summary>
-        public IEnumerable<string> Requires { get; }
+        public IEnumerable<string> Needs { get; }
 
-        public bool AlreadyProcessed { get; set; }
+        public Condition Condition { get; }
+
+        public List<Condition> RequirementsOrNull { get; }
     }
 }

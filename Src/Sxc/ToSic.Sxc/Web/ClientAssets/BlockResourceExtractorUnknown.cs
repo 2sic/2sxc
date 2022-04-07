@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Run.Unknown;
+﻿using ToSic.Eav.Run.Unknown;
 using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Web
@@ -9,6 +8,6 @@ namespace ToSic.Sxc.Web
     {
         public BlockResourceExtractorUnknown(WarnUseOfUnknown<BlockResourceExtractorUnknown> warn) { }
 
-        public override (string Template, bool Include2sxcJs) Process(string renderedTemplate) => (renderedTemplate, false);
+        public override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate) => (renderedTemplate, false);
     }
 }

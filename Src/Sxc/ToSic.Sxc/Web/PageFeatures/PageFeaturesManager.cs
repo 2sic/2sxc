@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace ToSic.Sxc.Web.PageFeatures
@@ -11,38 +9,11 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <summary>
         /// Constructor - ATM we'll just add our known services here. 
         /// </summary>
-        /// <remarks>
-        /// Important: if you want to add more services in a DI Startup, it must happen at Configure.
-        /// If you do it earlier, the singleton retrieved then will not be the one at runtime.
-        /// </remarks>
-        public PageFeaturesManager()
-        {
-            Register(
-                BuiltInFeatures.JQuery,
-                BuiltInFeatures.PageContext,
-                BuiltInFeatures.ModuleContext,
-                BuiltInFeatures.JsCore,
-                BuiltInFeatures.JsCms,
-                BuiltInFeatures.Toolbars,
-                BuiltInFeatures.TurnOn
-            );
-        }
-        
-        private readonly ConcurrentDictionary<string, IPageFeature> _features = new ConcurrentDictionary<string, IPageFeature>(StringComparer.InvariantCultureIgnoreCase);
+        public PageFeaturesManager(PageFeaturesCatalog catalog) => _catalog = catalog;
+        private readonly PageFeaturesCatalog _catalog;
 
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, IPageFeature> Features { get; private set; }
-
-        public void Register(params IPageFeature[] features)
-        {
-            // add all features if it doesn't yet exist, otherwise update
-            foreach (var f in features)
-                if (f != null)
-                    _features.AddOrUpdate(f.Key, f, (key, existing) => f);
-            
-            // Reset the read-only dictionary
-            Features = new ReadOnlyDictionary<string, IPageFeature>(_features);
-        }
+        public IReadOnlyDictionary<string, IPageFeature> Features => _catalog.Dictionary;
 
         public List<IPageFeature> GetWithDependents(List<string> keys)
         {
@@ -61,10 +32,10 @@ namespace ToSic.Sxc.Web.PageFeatures
             return collected.Distinct().ToList();
         }
 
-        private List<IPageFeature> GetMissingDependencies(List<IPageFeature> target, List<IPageFeature> toCheck)
+        private List<IPageFeature> GetMissingDependencies(IReadOnlyCollection<IPageFeature> target, IEnumerable<IPageFeature> toCheck)
         {
             // See what we still need
-            var requiredKeys = toCheck.SelectMany(f => f.Requires).ToArray();
+            var requiredKeys = toCheck.SelectMany(f => f.Needs).ToArray();
             
             // Skip those already in the target
             var missing = requiredKeys.Where(si =>

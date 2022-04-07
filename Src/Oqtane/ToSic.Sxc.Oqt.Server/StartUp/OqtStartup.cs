@@ -59,8 +59,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
                 .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 
-            // 2sxc Oqtane blob services for Imageflow.
-            services.AddImageflowOqtaneBlobService();
+            // 2sxc Oqtane blob services for Imageflow and other customizations.
+            services.AddImageflowExtensions();
 
             // Help RazorBlade to have a proper best-practices ToJson
             // New v12.05
@@ -82,6 +82,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
+            // Register Sxc features before loading
+            Sxc.Configuration.Features.BuiltIn.Register(serviceProvider.Build<FeaturesCatalog>());
 
             // Load features from configuration
             // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types

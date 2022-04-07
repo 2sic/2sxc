@@ -1,0 +1,557 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+      {
+          "recipe": {
+              "name": "default",
+              "variants": "2*, 1*, 3/4*, 1/2*",
+              "setWidth": false,
+              "attributes": {
+                  "loading": "lazy"
+              },
+              "recipes": [
+                  {
+                      "name": "Experimental Bootstrap3",
+                      "forCss": "bs3",
+                      "attributes": {
+                          "class": "img-responsive"
+                      },
+                      "setWidth": false
+                  },
+                  {
+                      "name": "Experimental Bootstrap5",
+                      "forCss": "bs5",
+                      "attributes": {
+                          "class": "img-fluid"
+                      },
+                      "setWidth": true,
+                      "recipes": [
+                          {
+                              "forFactor": "12/12",
+                              "width": 1230,
+                              "attributes": {
+                                  "sizes": "(max-width: 1400px) 100vw, 1230px"
+                              }
+                          },
+                          {
+                              "forFactor": "11/12",
+                              "width": 1100
+                          },
+                          {
+                              "forFactor": "1/12",
+                              "width": 75
+                          }
+                      ]
+                  }
+              ]
+          }
+      }
+  ],
+  "required": [
+      "recipe"
+  ],
+  "properties": {
+      "recipe": {
+          "$id": "#/properties/recipe",
+          "type": "object",
+          "title": "The recipe schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": {},
+          "examples": [
+              {
+                  "name": "default",
+                  "variants": "2*, 1*, 3/4*, 1/2*",
+                  "setWidth": false,
+                  "attributes": {
+                      "loading": "lazy"
+                  },
+                  "recipes": [
+                      {
+                          "name": "Experimental Bootstrap3",
+                          "forCss": "bs3",
+                          "attributes": {
+                              "class": "img-responsive"
+                          },
+                          "setWidth": false
+                      },
+                      {
+                          "name": "Experimental Bootstrap5",
+                          "forCss": "bs5",
+                          "attributes": {
+                              "class": "img-fluid"
+                          },
+                          "setWidth": true,
+                          "recipes": [
+                              {
+                                  "forFactor": "12/12",
+                                  "width": 1230,
+                                  "attributes": {
+                                      "sizes": "(max-width: 1400px) 100vw, 1230px"
+                                  }
+                              },
+                              {
+                                  "forFactor": "11/12",
+                                  "width": 1100
+                              },
+                              {
+                                  "forFactor": "1/12",
+                                  "width": 75
+                              }
+                          ]
+                      }
+                  ]
+              }
+          ],
+          "required": [
+              "name",
+              "variants",
+              "setWidth",
+              "attributes",
+              "recipes"
+          ],
+          "properties": {
+              "name": {
+                  "$id": "#/properties/recipe/properties/name",
+                  "type": "string",
+                  "title": "The name schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": "",
+                  "examples": [
+                      "default"
+                  ]
+              },
+              "variants": {
+                  "$id": "#/properties/recipe/properties/variants",
+                  "type": "string",
+                  "title": "The variants schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": "",
+                  "examples": [
+                      "2*, 1*, 3/4*, 1/2*"
+                  ]
+              },
+              "setWidth": {
+                  "$id": "#/properties/recipe/properties/setWidth",
+                  "type": "boolean",
+                  "title": "The setWidth schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": false,
+                  "examples": [
+                      false
+                  ]
+              },
+              "attributes": {
+                  "$id": "#/properties/recipe/properties/attributes",
+                  "type": "object",
+                  "title": "The attributes schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": {},
+                  "examples": [
+                      {
+                          "loading": "lazy"
+                      }
+                  ],
+                  "required": [
+                      "loading"
+                  ],
+                  "properties": {
+                      "loading": {
+                          "$id": "#/properties/recipe/properties/attributes/properties/loading",
+                          "type": "string",
+                          "title": "The loading schema",
+                          "description": "An explanation about the purpose of this instance.",
+                          "default": "",
+                          "examples": [
+                              "lazy"
+                          ]
+                      }
+                  },
+                  "additionalProperties": true
+              },
+              "recipes": {
+                  "$id": "#/properties/recipe/properties/recipes",
+                  "type": "array",
+                  "title": "The recipes schema",
+                  "description": "An explanation about the purpose of this instance.",
+                  "default": [],
+                  "examples": [
+                      [
+                          {
+                              "name": "Experimental Bootstrap3",
+                              "forCss": "bs3",
+                              "attributes": {
+                                  "class": "img-responsive"
+                              },
+                              "setWidth": false
+                          },
+                          {
+                              "name": "Experimental Bootstrap5",
+                              "forCss": "bs5",
+                              "attributes": {
+                                  "class": "img-fluid"
+                              },
+                              "setWidth": true,
+                              "recipes": [
+                                  {
+                                      "forFactor": "12/12",
+                                      "width": 1230,
+                                      "attributes": {
+                                          "sizes": "(max-width: 1400px) 100vw, 1230px"
+                                      }
+                                  },
+                                  {
+                                      "forFactor": "11/12",
+                                      "width": 1100
+                                  },
+                                  {
+                                      "forFactor": "1/12",
+                                      "width": 75
+                                  }
+                              ]
+                          }
+                      ]
+                  ],
+                  "additionalItems": true,
+                  "items": {
+                      "$id": "#/properties/recipe/properties/recipes/items",
+                      "anyOf": [
+                          {
+                              "$id": "#/properties/recipe/properties/recipes/items/anyOf/0",
+                              "type": "object",
+                              "title": "The first anyOf schema",
+                              "description": "An explanation about the purpose of this instance.",
+                              "default": {},
+                              "examples": [
+                                  {
+                                      "name": "Experimental Bootstrap3",
+                                      "forCss": "bs3",
+                                      "attributes": {
+                                          "class": "img-responsive"
+                                      },
+                                      "setWidth": false
+                                  }
+                              ],
+                              "required": [
+                                  "name",
+                                  "forCss",
+                                  "attributes",
+                                  "setWidth"
+                              ],
+                              "properties": {
+                                  "name": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/0/properties/name",
+                                      "type": "string",
+                                      "title": "The name schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": "",
+                                      "examples": [
+                                          "Experimental Bootstrap3"
+                                      ]
+                                  },
+                                  "forCss": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/0/properties/forCss",
+                                      "type": "string",
+                                      "title": "The forCss schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": "",
+                                      "examples": [
+                                          "bs3"
+                                      ]
+                                  },
+                                  "attributes": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/0/properties/attributes",
+                                      "type": "object",
+                                      "title": "The attributes schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": {},
+                                      "examples": [
+                                          {
+                                              "class": "img-responsive"
+                                          }
+                                      ],
+                                      "required": [
+                                          "class"
+                                      ],
+                                      "properties": {
+                                          "class": {
+                                              "$id": "#/properties/recipe/properties/recipes/items/anyOf/0/properties/attributes/properties/class",
+                                              "type": "string",
+                                              "title": "The class schema",
+                                              "description": "An explanation about the purpose of this instance.",
+                                              "default": "",
+                                              "examples": [
+                                                  "img-responsive"
+                                              ]
+                                          }
+                                      },
+                                      "additionalProperties": true
+                                  },
+                                  "setWidth": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/0/properties/setWidth",
+                                      "type": "boolean",
+                                      "title": "The setWidth schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": false,
+                                      "examples": [
+                                          false
+                                      ]
+                                  }
+                              },
+                              "additionalProperties": true
+                          },
+                          {
+                              "$id": "#/properties/recipe/properties/recipes/items/anyOf/1",
+                              "type": "object",
+                              "title": "The second anyOf schema",
+                              "description": "An explanation about the purpose of this instance.",
+                              "default": {},
+                              "examples": [
+                                  {
+                                      "name": "Experimental Bootstrap5",
+                                      "forCss": "bs5",
+                                      "attributes": {
+                                          "class": "img-fluid"
+                                      },
+                                      "setWidth": true,
+                                      "recipes": [
+                                          {
+                                              "forFactor": "12/12",
+                                              "width": 1230,
+                                              "attributes": {
+                                                  "sizes": "(max-width: 1400px) 100vw, 1230px"
+                                              }
+                                          },
+                                          {
+                                              "forFactor": "11/12",
+                                              "width": 1100
+                                          },
+                                          {
+                                              "forFactor": "1/12",
+                                              "width": 75
+                                          }
+                                      ]
+                                  }
+                              ],
+                              "required": [
+                                  "name",
+                                  "forCss",
+                                  "attributes",
+                                  "setWidth",
+                                  "recipes"
+                              ],
+                              "properties": {
+                                  "name": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/name",
+                                      "type": "string",
+                                      "title": "The name schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": "",
+                                      "examples": [
+                                          "Experimental Bootstrap5"
+                                      ]
+                                  },
+                                  "forCss": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/forCss",
+                                      "type": "string",
+                                      "title": "The forCss schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": "",
+                                      "examples": [
+                                          "bs5"
+                                      ]
+                                  },
+                                  "attributes": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/attributes",
+                                      "type": "object",
+                                      "title": "The attributes schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": {},
+                                      "examples": [
+                                          {
+                                              "class": "img-fluid"
+                                          }
+                                      ],
+                                      "required": [
+                                          "class"
+                                      ],
+                                      "properties": {
+                                          "class": {
+                                              "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/attributes/properties/class",
+                                              "type": "string",
+                                              "title": "The class schema",
+                                              "description": "An explanation about the purpose of this instance.",
+                                              "default": "",
+                                              "examples": [
+                                                  "img-fluid"
+                                              ]
+                                          }
+                                      },
+                                      "additionalProperties": true
+                                  },
+                                  "setWidth": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/setWidth",
+                                      "type": "boolean",
+                                      "title": "The setWidth schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": false,
+                                      "examples": [
+                                          true
+                                      ]
+                                  },
+                                  "recipes": {
+                                      "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes",
+                                      "type": "array",
+                                      "title": "The recipes schema",
+                                      "description": "An explanation about the purpose of this instance.",
+                                      "default": [],
+                                      "examples": [
+                                          [
+                                              {
+                                                  "forFactor": "12/12",
+                                                  "width": 1230,
+                                                  "attributes": {
+                                                      "sizes": "(max-width: 1400px) 100vw, 1230px"
+                                                  }
+                                              },
+                                              {
+                                                  "forFactor": "11/12",
+                                                  "width": 1100
+                                              }
+                                          ]
+                                      ],
+                                      "additionalItems": true,
+                                      "items": {
+                                          "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items",
+                                          "anyOf": [
+                                              {
+                                                  "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/0",
+                                                  "type": "object",
+                                                  "title": "The first anyOf schema",
+                                                  "description": "An explanation about the purpose of this instance.",
+                                                  "default": {},
+                                                  "examples": [
+                                                      {
+                                                          "forFactor": "12/12",
+                                                          "width": 1230,
+                                                          "attributes": {
+                                                              "sizes": "(max-width: 1400px) 100vw, 1230px"
+                                                          }
+                                                      }
+                                                  ],
+                                                  "required": [
+                                                      "forFactor",
+                                                      "width",
+                                                      "attributes"
+                                                  ],
+                                                  "properties": {
+                                                      "forFactor": {
+                                                          "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/0/properties/forFactor",
+                                                          "type": "string",
+                                                          "title": "The forFactor schema",
+                                                          "description": "An explanation about the purpose of this instance.",
+                                                          "default": "",
+                                                          "examples": [
+                                                              "12/12"
+                                                          ]
+                                                      },
+                                                      "width": {
+                                                          "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/0/properties/width",
+                                                          "type": "integer",
+                                                          "title": "The width schema",
+                                                          "description": "An explanation about the purpose of this instance.",
+                                                          "default": 0,
+                                                          "examples": [
+                                                              1230
+                                                          ]
+                                                      },
+                                                      "attributes": {
+                                                          "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/0/properties/attributes",
+                                                          "type": "object",
+                                                          "title": "The attributes schema",
+                                                          "description": "An explanation about the purpose of this instance.",
+                                                          "default": {},
+                                                          "examples": [
+                                                              {
+                                                                  "sizes": "(max-width: 1400px) 100vw, 1230px"
+                                                              }
+                                                          ],
+                                                          "required": [
+                                                              "sizes"
+                                                          ],
+                                                          "properties": {
+                                                              "sizes": {
+                                                                  "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/0/properties/attributes/properties/sizes",
+                                                                  "type": "string",
+                                                                  "title": "The sizes schema",
+                                                                  "description": "An explanation about the purpose of this instance.",
+                                                                  "default": "",
+                                                                  "examples": [
+                                                                      "(max-width: 1400px) 100vw, 1230px"
+                                                                  ]
+                                                              }
+                                                          },
+                                                          "additionalProperties": true
+                                                      }
+                                                  },
+                                                  "additionalProperties": true
+                                              },
+                                              {
+                                                  "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/1",
+                                                  "type": "object",
+                                                  "title": "The second anyOf schema",
+                                                  "description": "An explanation about the purpose of this instance.",
+                                                  "default": {},
+                                                  "examples": [
+                                                      {
+                                                          "forFactor": "11/12",
+                                                          "width": 1100
+                                                      }
+                                                  ],
+                                                  "required": [
+                                                      "forFactor",
+                                                      "width"
+                                                  ],
+                                                  "properties": {
+                                                      "forFactor": {
+                                                          "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/1/properties/forFactor",
+                                                          "type": "string",
+                                                          "title": "The forFactor schema",
+                                                          "description": "An explanation about the purpose of this instance.",
+                                                          "default": "",
+                                                          "examples": [
+                                                              "11/12"
+                                                          ]
+                                                      },
+                                                      "width": {
+                                                          "$id": "#/properties/recipe/properties/recipes/items/anyOf/1/properties/recipes/items/anyOf/1/properties/width",
+                                                          "type": "integer",
+                                                          "title": "The width schema",
+                                                          "description": "An explanation about the purpose of this instance.",
+                                                          "default": 0,
+                                                          "examples": [
+                                                              1100
+                                                          ]
+                                                      }
+                                                  },
+                                                  "additionalProperties": true
+                                              }
+                                          ]
+                                      }
+                                  }
+                              },
+                              "additionalProperties": true
+                          }
+                      ]
+                  }
+              }
+          },
+          "additionalProperties": true
+      }
+  },
+  "additionalProperties": true
+}

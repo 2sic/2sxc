@@ -10,6 +10,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;
+using ToSic.Sxc.Services;
 using File = System.IO.File;
 
 namespace ToSic.Sxc.Web
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Web
     [PrivateApi("internal class only!")]
     public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IRazor, IDnnRazor
     {
-        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this));
+        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this, _DynCodeRoot?.Block?.Context.User.IsSuperUser ?? false, _DynCodeRoot?.GetService<IFeaturesService>()));
         private IHtmlHelper _html;
 
         [PrivateApi]

@@ -39,6 +39,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         #endregion
 
+        public const string DefaultVisitorError = "Error Showing Content - please login as system admin to see Details.";
 
         protected IContextOfBlock Context;
         protected IBlockBuilder BlockBuilder;
@@ -78,14 +79,14 @@ namespace ToSic.Sxc.Blocks.Output
             return contextAttribs;
         }
 
-        public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError, bool addMinimalWrapper, bool encodeMessage)
+        public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null, bool addContextWrapper = false, bool encodeMessage = true)
         {
-            var intro = "Error";
-            var msg = intro + ": " + ex;
+            const string prefix = "Error: ";
+            var msg = prefix + ex;
             if (addToEventLog) _errorLogger?.LogException(ex);
 
             if (!Context.User.IsSuperUser)
-                msg = visitorAlternateError ?? "error showing content";
+                msg = visitorAlternateError ?? DefaultVisitorError;
 
             if (encodeMessage)
                 msg = HttpUtility.HtmlEncode(msg);
@@ -94,7 +95,7 @@ namespace ToSic.Sxc.Blocks.Output
             msg = "<div class='dnnFormMessage dnnFormWarning'>" + msg + "</div>";
 
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
-            if (addMinimalWrapper)
+            if (addContextWrapper)
                 msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id);
 
             return msg;

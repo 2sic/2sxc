@@ -1,4 +1,8 @@
-﻿namespace ToSic.Sxc.Web.PageFeatures
+﻿using System.Collections.Generic;
+using ToSic.Eav.Configuration;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+
+namespace ToSic.Sxc.Web.PageFeatures
 {
     public class BuiltInFeatures
     {
@@ -26,7 +30,7 @@
         /// <remarks>
         /// Published the key '2sxc.JsCore' in v13.00, do not change
         /// </remarks>
-        public static PageFeature JsCore = new PageFeature("2sxc.JsCore", "2sxc core js APIs", requires: new[]
+        public static PageFeature JsCore = new PageFeature("2sxc.JsCore", "2sxc core js APIs", needs: new[]
         {
             PageContext.Key
         });
@@ -34,7 +38,7 @@
         /// <summary>
         /// WIP - this will probably be moved to local only in future, ATM it's global though
         /// </summary>
-        public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto", "Ensure that the toolbars automatically appear", requires: new[]
+        public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto", "Ensure that the toolbars automatically appear", needs: new[]
         {
             PageContext.Key
         });
@@ -45,11 +49,12 @@
         /// <remarks>
         /// Published the key '2sxc.JsCms' in v13.00, do not change
         /// </remarks>
-        public static PageFeature JsCms = new PageFeature("2sxc.JsCms", "2sxc inpage editing APIs", requires: new[]
-        {
-            JsCore.Key,
-            ModuleContext.Key,
-        });
+        public static PageFeature JsCms = new PageFeature("2sxc.JsCms", "2sxc inpage editing APIs", needs: new[]
+            {
+                JsCore.Key,
+                ModuleContext.Key,
+            },
+            reqConditions: new List<Condition> { PublicEditForm.Condition });
 
         /// <summary>
         /// The 2sxc JS libraries for cms / edit actions
@@ -58,7 +63,7 @@
         /// Published the key '2sxc.Toolbars' in v13.00, do not change
         /// </remarks>
         public static PageFeature Toolbars =
-            new PageFeature("2sxc.Toolbars", "2sxc InPage editing UIs / Toolbar", requires: new[]
+            new PageFeature("2sxc.Toolbars", "2sxc InPage editing UIs / Toolbar", needs: new[]
             {
                 JsCore.Key,
                 ToolbarsAuto.Key,

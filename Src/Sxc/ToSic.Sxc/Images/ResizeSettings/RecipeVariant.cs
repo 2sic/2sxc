@@ -4,7 +4,7 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Hide implementation")]
-    public class SrcSetPart
+    public class RecipeVariant
     {
         public const char SizeDefault = 'd';
         public const char SizeWidth = 'w';

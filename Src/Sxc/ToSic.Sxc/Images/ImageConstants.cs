@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Images
         public const string ModePad = "pad";
         public const string ModeCarve = "carve";
         public const string ModeStretch = "stretch";
+        public const int IntIgnore = 0;
 
         /// <summary>
         /// In case a srcset is being generated with a '*' factor and we don't have a number, assume 1200.

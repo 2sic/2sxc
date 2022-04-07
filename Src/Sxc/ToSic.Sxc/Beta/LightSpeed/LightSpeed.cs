@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -12,8 +14,11 @@ namespace ToSic.Sxc.Beta.LightSpeed
 {
     public class LightSpeed: HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights") 
-            => _features = features;
+        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights")
+        {
+            _features = features;
+        }
+
         private readonly IFeaturesService _features;
 
         public IOutputCache Init(int moduleId, IBlock block)
@@ -42,7 +47,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
                 return wrapLog($"not added as duration is {duration}", false);
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration);
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState);
             Log.Add($"Cache Key: {cacheKey}");
             return wrapLog($"added for {duration}s", true);
         }
@@ -93,9 +98,8 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // compare cache time-stamps
             var dependentApp = result.Data?.DependentApps?.FirstOrDefault();
             if (dependentApp == null) return wrapLog("no dep app", null);
-            return AppState.CacheTimestamp > dependentApp.CacheTimestamp
-                ? wrapLog("app changed", null) 
-                : wrapLog("found", result);
+
+            return wrapLog("found", result);
         }
 
 
@@ -108,7 +112,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
         private bool IsEnabledGenerator()
         {
             var wrapLog = Log.Call<bool>();
-            var feat = _features.IsEnabled(FeaturesCatalog.LightSpeedOutputCache.NameId);
+            var feat = _features.IsEnabled(LightSpeedOutputCache.NameId);
             if (!feat) return wrapLog("feature disabled", false);
             var ok = AppConfig.IsEnabled;
             return wrapLog($"app config: {ok}", ok);
@@ -130,6 +134,8 @@ namespace ToSic.Sxc.Beta.LightSpeed
 
         private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());
         private OutputCacheManager _ocm;
+
+
 
     }
 }

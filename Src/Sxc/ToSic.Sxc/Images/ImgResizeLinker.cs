@@ -6,18 +6,17 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Run;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Web.Url;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 using static ToSic.Sxc.Images.ImageConstants;
-using static ToSic.Sxc.Images.SrcSetPart;
+using static ToSic.Sxc.Images.RecipeVariant;
 
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Internal stuff")]
-    public class ImgResizeLinker : HasLog /* <ImgResizeLinker>*/, ICanDebug
+    public class ImgResizeLinker : HasLog, ICanDebug
     {
         public ImgResizeLinker(Lazy<IFeaturesService> features, Lazy<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
         {
@@ -27,8 +26,6 @@ namespace ToSic.Sxc.Images
         }
         private readonly Lazy<IFeaturesService> _features;
         private readonly Lazy<ICss> _koi;
-
-        //public void DebugSet(bool debug) => Debug = debug;
 
         public bool Debug { get; set; }
 
@@ -63,7 +60,7 @@ namespace ToSic.Sxc.Images
             }
 
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
-                settings, factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
+                settings, factor: factor, width: width, height: height, quality: quality, resizeMode: resizeMode,
                 scaleMode: scaleMode, format: format, aspectRatio: aspectRatio,
                 parameters: parameters);
 
@@ -74,7 +71,7 @@ namespace ToSic.Sxc.Images
         public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
         {
             var wrapLog = Log.Call<OneResize>();
-            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors), _koi.Value.Framework);
+            var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
             return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
         }
 
@@ -83,7 +80,7 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Call<string>();
 
-            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(FeaturesCatalog.ImageServiceUseFactors), _koi.Value.Framework);
+            var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
 
             var srcSetParts = srcSetSettings?.VariantsParsed;
 
@@ -108,7 +105,7 @@ namespace ToSic.Sxc.Images
 
 
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, SrcSetPart partDef = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, RecipeVariant partDef = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
             one.Recipe = srcSetSettings;

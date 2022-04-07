@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         [DataTestMethod]
 
         public void WithFactorMapJson(int expected, double factor, string cssFramework, string name) 
-            => WithFactorMapInternal(expected, factor, cssFramework, AdvancedSettings.FromJson(JsonRecipe()), name + "-json");
+            => WithFactorMapInternal(expected, factor, cssFramework, TestRecipeSetFromJson, name + "-json");
 
 
         private void WithFactorMapInternal(int expected, double factor, string cssFramework, AdvancedSettings recipes, string name)

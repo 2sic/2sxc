@@ -6,6 +6,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Images
 {
     public class ResponsivePicture: ResponsiveBase, IResponsivePicture
     {
-        internal ResponsivePicture(ImageService imgService, ResponsiveParams responsiveParams) : base(imgService, responsiveParams, "Picture")
+        internal ResponsivePicture(ImageService imgService, ResponsiveParams callParams) : base(imgService, callParams, "Picture")
         {
         }
 
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Images
                 ? defFormat.ResizeFormats
                 : new List<IImageFormat> { defFormat };
             
-            var useMultiSrcSet = ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
+            var useMultiSrcSet = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
 
             Log.SafeAdd($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
 
@@ -50,7 +51,9 @@ namespace ToSic.Sxc.Images
                     var srcSet = useMultiSrcSet
                         ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Call.Field)
                         : ImgLinker.ImageOnly(url, formatSettings, Call.Field).Url;
-                    return Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
+                    var source = Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
+                    if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
+                    return source;
                 });
             var result = Tag.TagList(sources);
             return wrapLog($"{result.Count()}", result);

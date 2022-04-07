@@ -115,11 +115,14 @@ namespace ToSic.Sxc
             // So it actually looks like it's very module-scoped already, but had workarounds for it.
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
+            services.TryAddTransient<ICspService, CspService>(); // very experimental!
+            services.TryAddTransient<CspService>(); // very experimental!
             //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 
             services.TryAddTransient<IPageFeatures, PageFeatures>();
-            services.TryAddSingleton<IPageFeaturesManager, PageFeaturesManager>();
+            services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
+            services.TryAddSingleton<PageFeaturesCatalog>();
 
             // new in v12.02/12.04 Image Link Resize Helper
             services.TryAddTransient<ImgResizeLinker>();
@@ -158,11 +161,13 @@ namespace ToSic.Sxc
 
             // v13 Experimental LightSpeed
             services.TryAddTransient<IOutputCache, LightSpeed>();
+            //services.TryAddSingleton<AppResetMonitors>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services
                 .AddKoi()
+                .AddImageflowCustomization()
                 .AddSxcCoreFallbackServices();
 
             return services;
@@ -175,7 +180,13 @@ namespace ToSic.Sxc
 
             return services;
         }
+        public static IServiceCollection AddImageflowCustomization(this IServiceCollection services)
+        {
+            //services.AddTransient<IImageflowRewrite, ImageflowRewrite> ();
 
+            return services;
+        }
+        
         public static IServiceCollection AddNetVariations(this IServiceCollection services)
         {
 #if NETSTANDARD

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -11,9 +10,7 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Search;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Blocks.Output;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -23,22 +20,15 @@ namespace ToSic.Sxc.Engines
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public abstract class EngineBase : HasLog, IEngine
+    public abstract partial class EngineBase : HasLog, IEngine
     {
         protected readonly EngineBaseDependencies Helpers;
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
         [PrivateApi] protected IDataSource DataSource;
-#if NETFRAMEWORK
-#pragma warning disable CS0612
-        [PrivateApi] protected Purpose Purpose = Purpose.WebView;
-#pragma warning restore CS0612
-#endif
-        [PrivateApi] protected IBlock Block;
 
-        [PrivateApi]
-        private RenderStatusType PreRenderStatus { get; set; }
+        [PrivateApi] protected IBlock Block;
 
         [PrivateApi] public bool CompatibilityAutoLoadJQueryAndRvt { get; protected set; } = true;
 
@@ -54,17 +44,6 @@ namespace ToSic.Sxc.Engines
         }
 
         #endregion
-
-#if NETFRAMEWORK
-#pragma warning disable CS0612
-        /// <inheritdoc />
-        public void Init(IBlock block, Purpose purpose)
-        {
-            Purpose = purpose;
-            Init(block);
-        }
-#pragma warning restore CS0612
-#endif
 
         public void Init(IBlock block)
         {
@@ -86,7 +65,6 @@ namespace ToSic.Sxc.Engines
             TemplatePath = templatePath;
             App = Block.App;
             DataSource = Block.Data;
-            //Purpose = purpose;
 
             // check common errors
             CheckExpectedTemplateErrors();
@@ -96,7 +74,7 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
-            wrapLog(null);
+            wrapLog("ok");
         }
 
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
@@ -138,23 +116,10 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         protected virtual void Init() {}
 
-#if NETFRAMEWORK
         /// <inheritdoc />
-        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-        public virtual void CustomizeData() {}
-
-        /// <inheritdoc />
-        [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-        public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
-            DateTime beginDate)
+        public RenderEngineResult Render()
         {
-        }
-#endif 
-
-        /// <inheritdoc />
-        public string Render()
-        {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Call<RenderEngineResult>();
             // call engine internal feature to optionally change what data is actually used or prepared for search...
 #if NETFRAMEWORK
 #pragma warning disable CS0618
@@ -162,27 +127,16 @@ namespace ToSic.Sxc.Engines
 #pragma warning restore CS0618
 #endif
             // check if rendering is possible, or throw exceptions...
-            CheckExpectedNoRenderConditions();
+            var (renderStatus, message) = CheckExpectedNoRenderConditions();
 
-            if(PreRenderStatus == RenderStatusType.Unknown)
-                PreRenderStatus = RenderStatusType.Ok;
-
-
-            if (PreRenderStatus != RenderStatusType.Ok)
-                return wrapLog($"{nameof(PreRenderStatus)} not OK", AlternateRendering);
+            if (renderStatus != RenderStatusType.Ok)
+                return wrapLog($"{nameof(renderStatus)} not OK", new RenderEngineResult(message, false, null));
 
             var renderedTemplate = RenderTemplate();
             var depMan = Helpers.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
-            ActivateJsApi = result.Include2sxcJs;
-            return wrapLog("ok", result.Template);
+            return wrapLog("ok", result);
         }
-
-        [PrivateApi] public bool ActivateJsApi { get; private set; }
-
-        /// <inheritdoc/>
-        [PrivateApi] public List<IClientAsset> Assets => Helpers.BlockResourceExtractor.Assets;
-
 
         private void CheckExpectedTemplateErrors()
         {
@@ -193,18 +147,13 @@ namespace ToSic.Sxc.Engines
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
         }
 
-        [PrivateApi]
-        internal string AlternateRendering;
-
-        private void CheckExpectedNoRenderConditions()
+        private (RenderStatusType RenderStatus, string Message) CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
                 Block.Configuration.Content.All(e => e == null))
-            {
-                PreRenderStatus = RenderStatusType.MissingData;
+                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate);
 
-                AlternateRendering = ToolbarForEmptyTemplate;
-            }
+            return (RenderStatusType.Ok, null);
         }
 
         // todo: refactor - this should go somewhere, I just don't know where :)

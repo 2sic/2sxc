@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.PageFeatures
     {
         IReadOnlyDictionary<string, IPageFeature> Features { get; }
         
-        void Register(params IPageFeature[] features);
+        //void Register(params IPageFeature[] features);
 
         //List<IPageFeature> GetWithDependents(IPageService pageService, ILog log);
 

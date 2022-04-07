@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
-using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Web;
+using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
@@ -13,48 +13,27 @@ namespace ToSic.Sxc.Images
     public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     {
 
-        protected ResponsiveBase(ImageService imgService, ResponsiveParams responsiveParams, string logName)
+        protected ResponsiveBase(ImageService imgService, ResponsiveParams callParams, string logName)
             : base($"Img.{logName}")
         {
-            Call = responsiveParams;
+            Call = callParams;
             ImgService = imgService;
             ImgLinker = imgService.ImgLinker;
-            Settings = PrepareResizeSettings(Call.Settings, Call.Factor, Call.Advanced);
         }
         protected ResponsiveParams Call { get; }
         protected readonly ImgResizeLinker ImgLinker;
         protected readonly ImageService ImgService;
 
         protected OneResize ThisResize => _thisResize.Get(() => { 
-            var t = ImgLinker.ImageOnly(Call.Link.Url, Settings, Call.Field);
+            var t = ImgLinker.ImageOnly(Call.Link.Url, Settings as ResizeSettings, Call.Field);
             Log.SafeAdd(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
             return t;
         });
         private readonly ValueGetOnce<OneResize> _thisResize = new ValueGetOnce<OneResize>();
 
 
-        internal ResizeSettings Settings { get; }
+        internal IResizeSettings Settings => Call.Settings;
 
-
-        protected ResizeSettings PrepareResizeSettings(object settings, object factor, AdvancedSettings advanced)
-        {
-            var wrapLog = Log.SafeCall<ResizeSettings>(ImgService.Debug);
-            // 1. Prepare Settings
-            if (settings is ResizeSettings resSettings)
-            {
-                // If we have a modified factor, make sure we have that (this will copy the settings)
-                var newFactor = ParseObject.DoubleOrNullWithCalculation(factor);
-                Log.SafeAdd(ImgService.Debug, $"Is {nameof(ResizeSettings)}, now with new factor: {newFactor}, will clone/init");
-                resSettings = new ResizeSettings(resSettings, factor: newFactor ?? resSettings.Factor, advanced);
-            }
-            else
-            {
-                Log.SafeAdd(ImgService.Debug, $"Not {nameof(ResizeSettings)}, will create");
-                resSettings = ImgLinker.ResizeParamMerger.BuildResizeSettings(settings, factor: factor, advanced: advanced);
-            }
-
-            return wrapLog("ok", resSettings);
-        }
 
         /// <summary>
         /// ToString must be specified by each implementation
@@ -76,7 +55,7 @@ namespace ToSic.Sxc.Images
                 var tag = ThisResize.Recipe;
                 var dic = tag?.Attributes?
                     .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key))
-                    .ToDictionary(p => p.Key, p => p.Value); ;
+                    .ToDictionary(p => p.Key, p => p.Value);
                 if (dic != null)
                 {
                     Log.SafeAdd(ImgService.Debug, "will add properties from attributes");
@@ -108,9 +87,9 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.SafeCall<string>(ImgService.Debug);
             var part1 = Call.ImgClass;
-            object attrClassObj = null;
-            ThisResize.Recipe?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClassObj);
-            var attrClass = attrClassObj as string;
+            string attrClass = null;
+            ThisResize.Recipe?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClass);
+            // var attrClass = attrClassObj;
             var hasOnAttrs = !string.IsNullOrWhiteSpace(attrClass);
             var hasOnImgClass = !string.IsNullOrWhiteSpace(Call.ImgClass);
 
@@ -130,11 +109,11 @@ namespace ToSic.Sxc.Images
         private readonly ValueGetOnce<string> _srcSet = new ValueGetOnce<string>();
         private string SrcSetGenerator()
         {
-            var isEnabled = ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceMultipleSizes.NameId);
+            var isEnabled = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
             var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
             var wrapLog = Log.SafeCall<string>(ImgService.Debug, $"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
             var result = isEnabled && hasVariants
-                ? ImgLinker.SrcSet(Call.Link.Url, Settings, SrcSetType.Img, Call.Field)
+                ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.Field)
                 : null;
             return wrapLog(result, result);
         }
@@ -175,9 +154,9 @@ namespace ToSic.Sxc.Images
         private string SizesGenerator()
         {
             var wrapLog = Log.SafeCall<string>(ImgService.Debug);
-            if (!ImgService.Features.IsEnabled(FeaturesCatalog.ImageServiceSetSizes.NameId))
+            if (!ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId))
                 return wrapLog("disabled", null);
-            var sizes = ThisResize?.Recipe?.Sizes;
+            var sizes = ThisResize.Recipe?.Sizes;
             return wrapLog(sizes, sizes);
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using DotNetNuke.Web.Client;
+﻿using DotNetNuke.Web.Client;
 using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Dnn.Web
@@ -7,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Web
     public class DnnBlockResourceExtractor: BlockResourceExtractor
     {
 
-        public override (string Template, bool Include2sxcJs) Process(string renderedTemplate)
+        public override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
         {
             var wrapLog = Log.Call<(string, bool)>();
 

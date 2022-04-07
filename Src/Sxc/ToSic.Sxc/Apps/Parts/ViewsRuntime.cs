@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Apps
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = Parent.Data;
 			dataSource = Parent.DataSourceFactory.GetDataSource<EntityTypeFilter>(dataSource);
-		    ((EntityTypeFilter) dataSource).TypeName = Configuration.TemplateContentType;
+		    ((EntityTypeFilter) dataSource).TypeName = Eav.Apps.Configuration.TemplateContentType;
 		    _viewDs = dataSource;
 			return dataSource;
 		}
