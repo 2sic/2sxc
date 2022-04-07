@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace ToSic.Sxc.Web.Url
@@ -42,25 +43,71 @@ namespace ToSic.Sxc.Web.Url
         /// </summary>
         /// <param name="nvc"></param>
         /// <returns></returns>
-        public static string NvcToString(this NameValueCollection nvc)
+        public static string NvcToString(this NameValueCollection nvc) 
+            => NvcToString(nvc, "=", "&", "", "", true, null);
+
+        private class KeyValuePairTemp
         {
+            public string Key;
+            public string Value;
+            public string[] AllValues;
+        }
+
+        internal static string NvcToString(NameValueCollection nvc, string keyValueSeparator, string pairSeparator,
+            string terminator, string empty, bool repeatKeyForEachValue, string valueSeparator)
+        {
+            // Note 2dm: reworked this entire logic 2022-04-07, all tests passed, believe it's ok, but there is a minimal risk
             var allPairs = nvc.AllKeys
                 .SelectMany(key =>
                 {
-                    // Important - both key and values can be null; values can be a list of things
                     var values = nvc.GetValues(key);
-                    var noValues = (values == null || values.Length == 0);
+                    var noValues = values == null || values.Length == 0;
+                    if (!noValues)
+                    {
+                        values = values.Where(v => !string.IsNullOrEmpty(v)).ToArray();
+                        noValues = values.Length == 0;
+                    }
+
+                    // Key null; 2 options left, values or no values
                     if (key is null)
                         return noValues
-                            ? new string[0] // No keys or values, empty list
-                            : values.Select(v => v.ToString()).ToArray(); // in case values are without keys, join them like this
+                            ? Array.Empty<KeyValuePairTemp>()
+                            // If no key, treat the values as standalone keys
+                            : values.Select(v => new KeyValuePairTemp { Key = v, Value = null }).ToArray();
 
-                    return noValues
-                        ? new[] { key }
-                        : values.Select(v => key + (string.IsNullOrEmpty(v) ? "" : "=" + v));                        
+                    // Key not null, no values
+                    if (noValues) return new[] { new KeyValuePairTemp { Key = key, Value = null } };
+
+                    // Key null, values - two options - give as array or single item
+                    return repeatKeyForEachValue 
+                        ? values.Select(v => new KeyValuePairTemp { Key = key, Value = v.ToString() }) 
+                        : new[] { new KeyValuePairTemp { Key = key, Value = string.Join(valueSeparator, values) } };
                 })
+                .Select(set => set.Key + (string.IsNullOrEmpty(set.Value) ? "" : keyValueSeparator + set.Value))
+                //.SelectMany(set =>
+                //{
+                //    var key = set.Key;
+                //    // Important - both key and values can be null; values can be a list of things
+                //    var values = set.AllValues;// nvc.GetValues(key);
+                //    var noValues = (values == null || values.Length == 0);
+                //    if (key is null)
+                //    {
+                //        if (noValues) return Array.Empty<string>();
+                //        if (repeatKeyForEachValue)
+                //            return values.Select(v => v.ToString())
+                //                .ToArray();
+                //        return new[] { string.Join(valueSeparator, values) };
+                //    }
+
+                //    if (noValues) return new[] { key };
+
+                //    if (repeatKeyForEachValue)
+                //        return values.Select(v => key + (string.IsNullOrEmpty(v) ? "" : keyValueSeparator + v));
+
+                //    return new[] { key + (values.All(string.IsNullOrEmpty) ? "" : keyValueSeparator + string.Join(valueSeparator, values)) };
+                //})
                 .ToArray();
-            return allPairs.Any() ? string.Join("&", allPairs) : "";
+            return allPairs.Any() ? string.Join(pairSeparator, allPairs) + terminator : empty;
         }
 
 
