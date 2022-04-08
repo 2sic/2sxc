@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
-    <PackageReference Include="Oqtane.Shared" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.4" />
+    <PackageReference Include="Oqtane.Shared" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>
