@@ -58,7 +58,8 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// List of HttpHeaders to add to the response in format "key:value"
         /// </summary>
-        IList<string> HttpHeaders { get; }
+        //IList<string> HttpHeaders { get; }
+        IList<HttpHeader> HttpHeaders { get; }
 
         /// <summary>
         /// Optional HTTP-Status Code which the code returned.

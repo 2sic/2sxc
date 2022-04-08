@@ -48,7 +48,8 @@ namespace ToSic.Sxc.Blocks
 
         public override string ToString() => Html;
 
-        public IList<string> HttpHeaders { get; set; }
+        //public IList<string> HttpHeaders { get; set; }
+        public IList<HttpHeader> HttpHeaders { get; set; }
     }
 
     public class DependentApp : IDependentApp

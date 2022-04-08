@@ -39,12 +39,16 @@ namespace ToSic.Sxc.Dnn.Services
 
             var manualChanges = ManualFeatures(dnnPage, renderResult.FeaturesFromSettings);
 
-            var httpHeaderChanges = ApplayToHttpHeaders(page, renderResult.HttpHeaders);
+            try{
+                var httpHeaderChanges = ApplyHttpHeaders(page, renderResult);
+                count += httpHeaderChanges;
+            }
+            catch { /* ignore BETA feature */ }
 
             Log.Add("Will apply Header Status-Code changes if needed");
             ApplyHttpStatus(page, renderResult);
 
-            count += headChanges + manualChanges + httpHeaderChanges;
+            count += headChanges + manualChanges;
             Log.Add($"Applied {count} changes");
             return count;
         }
@@ -100,33 +104,24 @@ namespace ToSic.Sxc.Dnn.Services
                 dnnPage.AddToHead(h.Tag);
             return headChanges.Count;
         }
-        
-        private int ApplayToHttpHeaders(Page page, IList<string> httpHeaders)
+
+        private int ApplyHttpHeaders(Page page, IRenderResult result)
         {
             var wrapLog = Log.Call<int>();
+            var httpHeaders = result.HttpHeaders;
 
             if (page?.Response == null) return wrapLog("error, HttpResponse is null", 0);
             if (page.Response.HeadersWritten) return wrapLog("error, to late for adding http headers", 0);
-            if (httpHeaders == null || httpHeaders.Count == 0) return wrapLog("ok, no headers to add", 0);
+            if (httpHeaders?.Any() != true) return wrapLog("ok, no headers to add", 0);
 
             foreach (var httpHeader in httpHeaders)
             {
-                if (string.IsNullOrWhiteSpace(httpHeader)) continue;
-                string key;
-                string value;
-                var s = httpHeader.IndexOf(":");
-                if (s < 1)
-                {
-                    key = httpHeader;
-                    value = string.Empty;
-                }
-                else
-                {
-                    key = httpHeader.Substring(0, s);
-                    value = httpHeader.Substring(s + 1);
-                }
-                Log.Add($"add http header: {key}:{value}");
-                page.Response.Headers[key] = value;
+                if (string.IsNullOrWhiteSpace(httpHeader.Name)) continue;
+                Log.Add($"add http header: {httpHeader.Name}:{httpHeader.Value}");
+                // TODO: The CSP header can only exist once
+                // So to do this well, we'll need to merge them in future, 
+                // Ideally combining the existing one with any additional ones added here
+                page.Response.Headers[httpHeader.Name] = httpHeader.Value;
             }
             return wrapLog("ok", httpHeaders.Count);
         }
