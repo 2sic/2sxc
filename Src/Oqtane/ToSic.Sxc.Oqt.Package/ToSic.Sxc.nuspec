@@ -19,40 +19,40 @@
     <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
     <summary>2sxc 13 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="2.3.1" />
+      <dependency id="Oqtane.Framework" version="3.0.0" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.0.4" />
     </dependencies>
   </metadata>
   <files>
     <file src="images\2sxc13-500.png" target="images\" />
     <file src="README.md" target="docs\" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.dll" target="lib\net5.0" />
-    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net5.0\ToSic.*.pdb" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net6.0\ToSic.*.dll" target="lib\net6.0" />
+    <file src="..\ToSic.Sxc.Oqt.Package\bin\Release\net6.0\ToSic.*.pdb" target="lib\net6.0" />
     <file src="..\ToSic.Sxc.Oqt.Server\wwwroot\**\*.*" exclude="**\*.map;" target="wwwroot" />
     <!-- 3rd party dependencies -->
 
     <!-- ToSic.Sxc.Dnn.Main PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Connect.Koi.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Connect.Koi.dll" target="lib\net5.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\CsvHelper.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\CsvHelper.dll" target="lib\net5.0" />
     <!-- ToSic.Eav.ImportExport PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
     <!-- ToSic.Sxc.Razor PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net5.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net5.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net5.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net5.0\System.Data.SqlClient.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\System.Data.SqlClient.dll" target="lib\net5.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation default compilation context -->
     <!--<file src="..\..\..\..\oqtane-razor-refs\net6.0\refs\*.dll" target="refs\net6.0" />-->
 
