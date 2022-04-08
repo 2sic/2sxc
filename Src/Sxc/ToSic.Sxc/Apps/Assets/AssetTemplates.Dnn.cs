@@ -56,7 +56,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
-@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
+using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
 
 /*
 Custom code which views use to customize how dnn search treats data of that view.
