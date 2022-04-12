@@ -98,27 +98,6 @@
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
 
-      <!-- 2021-12-01 commented, not used in 2sxc 13+, #cleanup delete ca. April 2022 -->
-      <!-- for DNN 9.4.0 older entity framework core etc. 1.1.0 assemblies used by 2sxc v<13 -->
-      <!--
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.SqlServer.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Caching.Memory.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.DependencyInjection.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.Abstractions.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Logging.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Options.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Microsoft.Extensions.Primitives.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\Remotion.Linq.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Collections.Immutable.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.ComponentModel.Annotations.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Diagnostics.DiagnosticSource.dll" />
-      <Assembly2sxcInclude Include="$(OutDir)\System.Interactive.Async.dll" />
-      -->
-
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
@@ -176,8 +155,6 @@
     </CreateItem>
 
     <Copy SourceFiles="@(AssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
-    <!-- 2021-12-01 commented, not used in 2sxc 13+, delete in 2022 -->
-    <!--<Copy SourceFiles="@(Assembly2sxcInclude)" DestinationFolder="$(TempPackageFolder)\bin\2sxc" />-->
     <Copy SourceFiles="@(AssemblyHelper)" DestinationFolder="$(TempPackagePdbFolder)\bin" />
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(TempPackageFolder)\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(TempPackageFolder)" />
@@ -200,36 +177,11 @@
       <!-- DNN specific DLLs -->
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll" />
 
-      <!-- netstandard2.0/framework 4.7.2 assemblies -->
-      <!--<ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Configuration.Abstractions.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.DependencyInjection.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.FileProviders.Abstractions.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Hosting.Abstractions.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Logging.Abstractions.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.Extensions.Primitives.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Microsoft.IO.RecyclableMemoryStream.dll" />-->
+      <!-- DNN shared assemblies -->
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Buffers.dll" />
-      <!--<ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Memory.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Numerics.Vectors.dll" />
-      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\System.Runtime.CompilerServices.Unsafe.dll" />-->
     </ItemGroup>
 
     <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />
-
-    <!-- 2021-12-01 commented, not used in 2sxc 13+, #cleanup delete ca. April 2022 -->
-    <!-- include ImageResizer folder -->
-    <!--<ItemGroup>
-      <IResizeFiles Include="$(MSBuildProjectDirectory)/Extensions/ImageResizer/*.*" Exclude="**\*.dll" />
-    </ItemGroup>
-    <Copy SourceFiles="@(IResizeFiles)" DestinationFolder="$(TempPackageFolder)\Extensions\ImageResizer\%(RecursiveDir)" />
-    <ItemGroup>
-      <IResizeDllFiles Include="$(MSBuildProjectDirectory)/Extensions/ImageResizer/bin/ImageResizer.dll;
-                                $(MSBuildProjectDirectory)/Extensions/ImageResizer/bin/ImageResizer.Plugins.DiskCache.dll" />
-    </ItemGroup>
-    <Copy SourceFiles="@(IResizeDllFiles)" DestinationFolder="$(TempPackageFolder)\bin" />-->
-
 
     <!-- include koi folder -->
     <ItemGroup>

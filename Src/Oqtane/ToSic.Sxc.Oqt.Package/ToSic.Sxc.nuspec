@@ -32,36 +32,34 @@
     <!-- 3rd party dependencies -->
 
     <!-- ToSic.Sxc.Dnn.Main PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Connect.Koi.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Connect.Koi.dll" target="lib\net6.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\CsvHelper.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\CsvHelper.dll" target="lib\net6.0" />
     <!-- ToSic.Eav.ImportExport PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\ICSharpCode.SharpZipLib.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\ICSharpCode.SharpZipLib.dll" target="lib\net6.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net6.0" />
     <!-- ToSic.Sxc.Razor PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll" target="lib\net6.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Razor.Language.dll" target="lib\net6.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.CSharp.dll" target="lib\net6.0" />
     <!-- Microsoft.CodeAnalysis.Razor transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.dll" target="lib\net6.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net6.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net5.0" />
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net6.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\System.Data.SqlClient.dll" target="lib\net5.0" />
-    <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation default compilation context -->
-    <!--<file src="..\..\..\..\oqtane-razor-refs\net6.0\refs\*.dll" target="refs\net6.0" />-->
+    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\System.Data.SqlClient.dll" target="lib\net6.0" />
 
     <!-- ToSic.Imageflow.Oqtane 1.0.4 -->
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imageflow.*" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imazen.*" target="lib\net5.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Microsoft.IO.*" target="lib\net5.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imageflow.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imazen.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Microsoft.IO.*" target="lib\net6.0" />
     <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\runtimes\win*\**\*imageflow.*" target="runtimes" />
   </files>
 </package>
