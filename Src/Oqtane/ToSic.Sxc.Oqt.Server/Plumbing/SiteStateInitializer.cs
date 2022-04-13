@@ -10,13 +10,15 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
     public class SiteStateInitializer
     {
         public Lazy<SiteState> SiteStateLazy { get; }
+        public Lazy<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
         public Lazy<IAliasRepository> AliasRepositoryLazy { get; }
 
-        public SiteStateInitializer(Lazy<SiteState> siteStateLazy, IHttpContextAccessor httpContextAccessor,
+        public SiteStateInitializer(Lazy<SiteState> siteStateLazy, Lazy<Oqtane.Infrastructure.SiteState> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
             Lazy<IAliasRepository> aliasRepositoryLazy)
         {
             SiteStateLazy = siteStateLazy;
+            SiteState2Lazy = siteState2Lazy;
             HttpContextAccessor = httpContextAccessor;
             AliasRepositoryLazy = aliasRepositoryLazy;
         }
@@ -29,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
         {
             get
             {
-                if (SiteStateLazy.Value?.Alias != null) return SiteStateLazy.Value;
+                if (SiteStateLazy.Value?.Alias != null && SiteState2Lazy.Value?.Alias != null) return SiteStateLazy.Value;
                 InitIfEmpty();
                 return SiteStateLazy.Value;
             }
@@ -42,22 +44,26 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
         internal bool InitIfEmpty(int? siteId = null)
         {
             var siteState = SiteStateLazy.Value;
+            var siteState2 = SiteState2Lazy.Value; // In Oqtane 3.1 SiteState is preserved in 2 places.
 
             // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
             if (siteState == null) throw new ArgumentNullException(nameof(siteState));
 
+            // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
+            if (siteState2 == null) throw new ArgumentNullException(nameof(siteState2));
+
             // Check if alias already set, in which case we skip this
-            if (siteState.Alias != null) return true;
+            if (siteState.Alias != null && siteState2.Alias != null) return true;
 
             // For anything else we need the httpContext, otherwise skip
             var request = HttpContextAccessor?.HttpContext?.Request;
             if (request == null) return false;
 
             // Try HACK
-            object alias = null;
-            if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue("AliasFor2sxc", out alias) ?? false) && alias != null)
+            if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue("AliasFor2sxc", out var alias) ?? false) && alias != null)
             {
-                siteState.Alias = (Alias) alias;
+                siteState.Alias ??= (Alias) alias;
+                siteState2.Alias ??= (Alias) alias;
                 return false;
             }
 
@@ -86,6 +92,8 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
                     .ThenBy(a => a.Name)
                     .FirstOrDefault(a => url.StartsWith(a.Name, StringComparison.InvariantCultureIgnoreCase));
             }
+
+            siteState2.Alias ??= siteState.Alias;
 
             return siteState.Alias != null;
         }
