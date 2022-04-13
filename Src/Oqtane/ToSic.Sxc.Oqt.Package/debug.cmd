@@ -20,10 +20,10 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.AspNetCore.Mvc
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.AspNetCore.Razor.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.CodeAnalys*.*" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.Extensions.DependencyModel.dll" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
 
 @Echo(
-@Echo 2sxc Oqtane - ICSharpCode.SharpZipLib.dll
+@Echo 2sxc Oqtane - 3rd party deps
+XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\CsvHelper.dll" "%OqtaneBin%" /Y
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\ICSharpCode.SharpZipLib.dll" "%OqtaneBin%" /Y
 
 @Echo(
@@ -40,8 +40,9 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%
 XCOPY "..\..\packages\system.data.sqlclient\4.8.3\lib\netstandard2.0\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
 
 @Echo(
-@Echo nuget dependencies - Imazen ImageFlow
-XCOPY "..\..\packages\imazen.common\0.5.6\lib\netstandard2.0\Imazen.Common.dll" "%OqtaneBin%" /Y
+@Echo nuget dependencies - oqt-imageflow
+XCOPY "..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\*" "%OqtaneBin%" /Y
+XCOPY "..\..\packages\tosic.imageflow.oqtane\1.0.4\runtimes\*" "%OqtaneBin%\runtimes" /S /C /Y
 
 @Echo(
 @Echo Copy Koi DLLs
