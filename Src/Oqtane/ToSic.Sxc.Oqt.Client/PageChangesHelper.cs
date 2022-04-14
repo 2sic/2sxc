@@ -19,12 +19,13 @@ namespace ToSic.Sxc.Oqt.Client
                 .Where(r => r.ResourceType == ResourceType.Stylesheet)
                 .Select(a => new
                 {
-                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
+                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? "" : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     rel = "stylesheet",
                     href = a.Url,
                     type = "text/css",
                     integrity = "",
-                    crossorigin = ""
+                    crossorigin = "",
+                    insertbefore = "" // bug in Oqtane, needs to be an empty string instead of null or undefined
                 })
                 .Cast<object>()
                 .ToArray());
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Client
                 {
                     href = a.Url,
                     bundle = "", // not working when bundleId is provided
-                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? null : a.UniqueId,
+                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? "" : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     location = a.Location,
                     htmlAttributes = a.HtmlAttributes,
                     integrity = a.Integrity ?? "", // bug in Oqtane, needs to be an empty string to not throw errors
@@ -52,13 +53,12 @@ namespace ToSic.Sxc.Oqt.Client
             // 3. Inline JS code which was extracted from the template
             var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
             foreach (var inline in inlineResources)
-                await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? null : inline.UniqueId,
+                await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     "",
                     "",
                     "",
                     inline.Content,
-                    "body",
-                    "");
+                    "body");
         }
 
         public static async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, Interop interop)

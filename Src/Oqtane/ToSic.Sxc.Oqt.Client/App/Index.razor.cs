@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Oqt.App
                     // the razor component reported what it needs
                     if (ViewResults.SxcScripts != null)
                         foreach (var resource in ViewResults.SxcScripts)
-                            await interop.IncludeScript("", resource, "", "", "", "head", "");
+                            await interop.IncludeScript("", resource, "", "", "", "head");
 
                     if (ViewResults.SxcStyles != null)
                         foreach (var style in ViewResults.SxcStyles)
