@@ -60,10 +60,18 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             if (request == null) return false;
 
             // Try HACK
-            if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue("AliasFor2sxc", out var alias) ?? false) && alias != null)
+            if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue("AliasFor2sxc", out var alias2sxc) ?? false) && alias2sxc != null)
             {
-                siteState.Alias ??= (Alias) alias;
-                siteState2.Alias ??= (Alias) alias;
+                siteState.Alias ??= (Alias)alias2sxc;
+                siteState2.Alias ??= (Alias)alias2sxc;
+                return false;
+            }
+
+            // Oqtane cache on request
+            if ((HttpContextAccessor?.HttpContext?.Items.TryGetValue(Oqtane.Shared.Constants.HttpContextAliasKey, out var alias) ?? false) && alias != null)
+            {
+                siteState.Alias ??= (Alias)alias;
+                siteState2.Alias ??= (Alias)alias;
                 return false;
             }
 
