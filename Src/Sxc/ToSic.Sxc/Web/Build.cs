@@ -1,3 +1,4 @@
+using System.Web;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web
@@ -19,6 +20,10 @@ namespace ToSic.Sxc.Web
         /// so we just manually replace all apos to make sure it doesn't create invalid html
         /// </remarks>
         public static IHybridHtmlString Attribute(string name, string value)
-            => new HybridHtmlString($" {name}='{value.Replace("'", "&apos;")}'");
+            => new HybridHtmlString($" {name}='{MinimalHtmlAttributeEncode(value)}'");
+
+        private static string MinimalHtmlAttributeEncode(string value) => value?
+            //.Replace("\"", "&quot;")
+            .Replace("'", "&apos;");
     }
 }
