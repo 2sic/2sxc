@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             return id;
         }
 
-        public string Add(string cacheKey, OutputCacheItem data, int duration, AppState appState)
+        public string Add(string cacheKey, OutputCacheItem data, int duration, AppState appState, IList<string> appPaths = null)
         {
             try
             {
@@ -29,11 +29,15 @@ namespace ToSic.Sxc.Beta.LightSpeed
                 var policy = new CacheItemPolicy { SlidingExpiration = expiration };
                 // get new instance of ChangeMonitor and insert it to the cache item
                 policy.ChangeMonitors.Add(new AppResetMonitor(appState));
+
+                if (appPaths != null && appPaths.Count > 0)
+                    policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths));
+
                 Cache.Set(new CacheItem(cacheKey, data), policy);
                 return cacheKey;
             }
             catch
-            { 
+            {
                 /* ignore for now */
             }
 
