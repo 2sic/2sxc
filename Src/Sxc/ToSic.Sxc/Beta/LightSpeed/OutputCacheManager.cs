@@ -11,10 +11,11 @@ namespace ToSic.Sxc.Beta.LightSpeed
     {
         internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
-        internal string Id(int moduleId, int? userId, string suffix)
+        internal string Id(int moduleId, int? userId, string view, string suffix)
         {
             var id = GlobalCacheRoot + moduleId;
             if (userId.HasValue) id += ":" + userId.Value;
+            if (view != null) id += ":" + view;
             if (suffix != null) id += ":" + suffix;
             return id;
         }

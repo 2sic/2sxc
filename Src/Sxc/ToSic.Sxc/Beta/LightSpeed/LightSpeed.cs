@@ -90,13 +90,14 @@ namespace ToSic.Sxc.Beta.LightSpeed
         }
 
         private string CacheKey =>
-        _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, UserIdOrAnon, Suffix)));
+        _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, UserIdOrAnon, ViewKey, Suffix)));
         private readonly ValueGetOnce<string> _key = new ValueGetOnce<string>();
-
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
         private readonly ValueGetOnce<int?> _userId = new ValueGetOnce<int?>();
 
+        private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplateId.HasValue == true ? $"{_block.Configuration.AppId}:{_block.Configuration.View.Id}" : null);
+        private readonly ValueGetOnce<string> _viewKey = new ValueGetOnce<string>();
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);
         private readonly ValueGetOnce<OutputCacheItem> _existing = new ValueGetOnce<OutputCacheItem>();
