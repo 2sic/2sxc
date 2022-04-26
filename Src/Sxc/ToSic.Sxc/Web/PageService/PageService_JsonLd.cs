@@ -6,11 +6,11 @@ namespace ToSic.Sxc.Web.PageService
     {
         /// <inheritdoc />
         public void AddJsonLd(string jsonString)
-            => AddToHead(new ScriptJsonLd(_jsonService.ToJson(jsonString)));
+            => AddToHead(new ScriptJsonLd(jsonString));
 
         /// <inheritdoc />
         public void AddJsonLd(object jsonObject)
-            => AddToHead(new ScriptJsonLd(_jsonService.ToJson(jsonObject)));
+            => AddToHead(new ScriptJsonLd(jsonObject));
 
     }
 }

@@ -14,12 +14,10 @@ namespace ToSic.Sxc.Web.PageService
             ToSic.Sxc.Web.IPageService    // Keep for compatibility with some Apps released in v12
 #pragma warning restore CS0618
     {
-        private readonly IJsonService _jsonService;
         public PageServiceShared PageServiceShared { get; }
 
-        public PageService(PageServiceShared pageServiceShared, IJsonService jsonService) : base("2sxc.PgeSrv")
+        public PageService(PageServiceShared pageServiceShared) : base("2sxc.PgeSrv")
         {
-            _jsonService = jsonService;
             PageServiceShared = pageServiceShared;
         }
 

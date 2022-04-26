@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Services
 
         private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
         {
-            StringEscapeHandling = StringEscapeHandling.EscapeHtml // to prevent code-injection 
+            StringEscapeHandling = StringEscapeHandling.Default
         };
     }
 }
