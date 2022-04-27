@@ -14,8 +14,8 @@ ToSic.Sxc = {
     }
   },
   /**
-   * copy of Oqtane.Interop.includeScripts from Oqtane v3.0.3
-   * https://github.com/oqtane/oqtane.framework/blob/a47ecbdea91d8a2db56ad17d5a194842f9d1ce12/Oqtane.Server/wwwroot/js/interop.js#L201
+   * copy of Oqtane.Interop.includeScripts from Oqtane v3.1.0
+   * https://github.com/oqtane/oqtane.framework/blob/v3.1.0/Oqtane.Server/wwwroot/js/interop.js#L195..L243
    * with addition of httpAttributes support
    * @param {any} scripts
    */
@@ -58,6 +58,9 @@ ToSic.Sxc = {
                   }
                   if (path === scripts[s].href && scripts[s].crossorigin !== '') {
                     element.crossOrigin = scripts[s].crossorigin;
+                  }
+                  if (path === scripts[s].href && scripts[s].es6module === true) {
+                    element.type = "module";
                   }
                 }
               }

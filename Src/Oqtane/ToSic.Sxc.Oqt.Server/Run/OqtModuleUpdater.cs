@@ -115,7 +115,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var pageId = block.Context.Page.Id;
             var moduleId = block.Context.Module.Id;
             var pageModule = _pageModuleRepository.GetPageModule(pageId, moduleId);
-            pageModule.Title = titleItem.GetBestTitle();
+            pageModule.Title = System.Net.WebUtility.HtmlEncode(titleItem.GetBestTitle());
             _pageModuleRepository.UpdatePageModule(pageModule);
         }
     }

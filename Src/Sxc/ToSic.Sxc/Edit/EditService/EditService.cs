@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
@@ -11,10 +10,13 @@ namespace ToSic.Sxc.Edit.EditService
 {
     public partial class EditService : HasLog, IEditService
     {
-        public EditService(LazyInit<IRenderingHelper> renderHelper) : base("Sxc.Edit")
+
+        public EditService(IJsonService jsonService, LazyInit<IRenderingHelper> renderHelper) : base("Sxc.Edit")
         {
+            _jsonService = jsonService;
             _renderHelper = renderHelper.SetInit(h => h.Init(Block, Log));
         }
+        private readonly IJsonService _jsonService;
         private readonly LazyInit<IRenderingHelper> _renderHelper;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
@@ -41,7 +43,7 @@ namespace ToSic.Sxc.Edit.EditService
 
         /// <inheritdoc/>
         public IHybridHtmlString Attribute(string name, object value)
-            => !Enabled ? null : Build.Attribute(name, JsonConvert.SerializeObject(value));
+            => !Enabled ? null : Build.Attribute(name, _jsonService.ToJson(value));
 
         #endregion Attribute Helper
 

@@ -339,8 +339,7 @@
 @REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
 
 @REM Copy Imageflow and dependecies
-robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin *.dll
-robocopy $(ProjectDir)Extensions\Imageflow\bin\Imageflow $(Dev2sxcDnnRoot)bin\Imageflow *.dll
+robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
 
 @REM Copy the data folders
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "

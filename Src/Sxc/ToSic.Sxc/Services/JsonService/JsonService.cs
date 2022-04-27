@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Services
@@ -15,9 +13,14 @@ namespace ToSic.Sxc.Services
         public object ToObject(string json) => JsonConvert.DeserializeObject(json);
 
         /// <inheritdoc />
-        public string ToJson(object item) => JsonConvert.SerializeObject(item);
+        public string ToJson(object item) => JsonConvert.SerializeObject(item, JsonSerializerSettings);
 
         /// <inheritdoc />
-        public string ToJson(object item, int indentation) => JsonConvert.SerializeObject(item, Formatting.Indented);
+        public string ToJson(object item, int indentation) => JsonConvert.SerializeObject(item, Formatting.Indented, JsonSerializerSettings);
+
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
+        {
+            StringEscapeHandling = StringEscapeHandling.Default
+        };
     }
 }

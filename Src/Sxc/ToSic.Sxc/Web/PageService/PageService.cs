@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Web.PageService
     {
         public PageServiceShared PageServiceShared { get; }
 
-        public PageService(PageServiceShared pageServiceShared): base("2sxc.PgeSrv")
+        public PageService(PageServiceShared pageServiceShared) : base("2sxc.PgeSrv")
         {
             PageServiceShared = pageServiceShared;
         }

@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Dnn.Run
                     if (moduleByCulture == null || titleValue == null)
                         return;
 
-                    moduleByCulture.ModuleTitle = titleValue;
+                    moduleByCulture.ModuleTitle = System.Net.WebUtility.HtmlEncode(titleValue);
                     moduleController.UpdateModule(moduleByCulture);
                 }
                 catch { /* ignored */ }

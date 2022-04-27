@@ -57,11 +57,9 @@ namespace ToSic.Sxc.Oqt.Client.Services
             get => (_httpContextAccessor.HttpContext.Items[ExecutedKey] as bool?) ?? false;
             set => _httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
         }
-        private const string ExecutedKey = "PrerenderServiceExecuted"; 
+        private const string ExecutedKey = "PrerenderServiceExecuted";
 
-        private bool PrerenderingEnabled() => _pageState.Runtime == Oqtane.Shared.Runtime.Server /* for Oqt 2+ */;
-        // TODO: STV replace after update references to Oqt 3+
-        //public bool PrerenderingEnabled() => _site.RenderMode == "ServerPrerendered"; // The render mode for the site.
+        public bool PrerenderingEnabled() => _pageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
 
         // used for testing, just add to page url in query string ("?prerender")
         private bool HasQueryString() => _pageState.QueryString.ContainsKey(QueryStringKey);

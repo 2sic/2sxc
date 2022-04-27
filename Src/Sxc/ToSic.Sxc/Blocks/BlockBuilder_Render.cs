@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Blocks
                     ModuleId = Block.ParentId,
 
                     Assets = Assets, // TODO: this may fail on a sub-sub-template, must research
-                    CanCache = !err && Block.ContentGroupExists && Block.Configuration?.Exists == true,
+                    CanCache = !err && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
                 };
 
                 // case when we do not have an app

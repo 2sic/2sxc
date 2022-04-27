@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ISettingRepository settings,
             IUserPermissions userPermissions,
             ILogManager logger,
-            SiteState siteState) : base(logger, accessor)
+            Oqtane.Shared.SiteState siteState) : base(logger, accessor)
         {
             _accessor = accessor;
             _sxcOqtane = sxcOqtane;
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly IModuleDefinitionRepository _moduleDefinitions;
         private readonly ISettingRepository _settings;
         private readonly IUserPermissions _userPermissions;
-        private readonly SiteState _siteState;
+        private readonly Oqtane.Shared.SiteState _siteState;
 
         [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/Prepare")]
         //[Authorize(Policy = PolicyNames.ViewModule)]

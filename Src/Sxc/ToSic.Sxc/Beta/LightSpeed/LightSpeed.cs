@@ -1,7 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -12,7 +12,7 @@ using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Beta.LightSpeed
 {
-    public class LightSpeed: HasLog, IOutputCache
+    public class LightSpeed : HasLog, IOutputCache
     {
         public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights")
         {
@@ -32,7 +32,6 @@ namespace ToSic.Sxc.Beta.LightSpeed
         private IBlock _block;
         private AppState AppState => _block?.Context?.AppState;
 
-
         public bool Save(IRenderResult data)
         {
             var wrapLog = Log.Call<bool>();
@@ -47,9 +46,25 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
                 return wrapLog($"not added as duration is {duration}", false);
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState);
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState, AppPaths());
             Log.Add($"Cache Key: {cacheKey}");
             return wrapLog($"added for {duration}s", true);
+        }
+
+        private IList<string> AppPaths()
+        {
+            var app = (_block as BlockFromModule)?.App as Apps.App;
+            if (app == null) return null;
+
+            var paths = new List<string>() { app.PhysicalPath };
+
+            if (Directory.Exists(app.PhysicalPathShared)) paths.Add(app.PhysicalPathShared);
+
+            // TODO: stv, find better way to get ADAM folders (this will not work in Oqt)
+            //var adamPhysicalPath = app.PhysicalPath.Replace("\\2sxc\\", "\\adam\\");
+            //if (Directory.Exists(adamPhysicalPath)) paths.Add(adamPhysicalPath);
+
+            return paths;
         }
 
         private int Duration => _duration.Get(() =>
@@ -62,10 +77,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
         });
         private readonly ValueGetOnce<int> _duration = new ValueGetOnce<int>();
 
-
-
         private string Suffix => _suffix.Get(GetSuffix);
         private readonly ValueGetOnce<string> _suffix = new ValueGetOnce<string>();
+
         private string GetSuffix()
         {
             if (!AppConfig.ByUrlParam) return null;
@@ -75,18 +89,19 @@ namespace ToSic.Sxc.Beta.LightSpeed
             return urlParams;
         }
 
-
         private string CacheKey =>
-            _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, UserIdOrAnon, Suffix)));
+        _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, UserIdOrAnon, ViewKey, Suffix)));
         private readonly ValueGetOnce<string> _key = new ValueGetOnce<string>();
-
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
         private readonly ValueGetOnce<int?> _userId = new ValueGetOnce<int?>();
 
+        private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplateId.HasValue == true ? $"{_block.Configuration.AppId}:{_block.Configuration.View.Id}" : null);
+        private readonly ValueGetOnce<string> _viewKey = new ValueGetOnce<string>();
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);
         private readonly ValueGetOnce<OutputCacheItem> _existing = new ValueGetOnce<OutputCacheItem>();
+
         private OutputCacheItem ExistingGenerator()
         {
             var wrapLog = Log.Call<OutputCacheItem>();
@@ -102,13 +117,13 @@ namespace ToSic.Sxc.Beta.LightSpeed
             return wrapLog("found", result);
         }
 
-
         public OutputCacheItem Fresh => _fresh ?? (_fresh = new OutputCacheItem());
         private OutputCacheItem _fresh;
 
 
         public bool IsEnabled => _enabled.Get(IsEnabledGenerator);
         private readonly ValueGetOnce<bool> _enabled = new ValueGetOnce<bool>();
+
         private bool IsEnabledGenerator()
         {
             var wrapLog = Log.Call<bool>();
@@ -118,11 +133,9 @@ namespace ToSic.Sxc.Beta.LightSpeed
             return wrapLog($"app config: {ok}", ok);
         }
 
-
-
-
         public LightSpeedDecorator AppConfig => _lsd.Get(LightSpeedDecoratorGenerator);
         private readonly ValueGetOnce<LightSpeedDecorator> _lsd = new ValueGetOnce<LightSpeedDecorator>();
+
         private LightSpeedDecorator LightSpeedDecoratorGenerator()
         {
             var wrapLog = Log.Call<LightSpeedDecorator>();
@@ -131,11 +144,7 @@ namespace ToSic.Sxc.Beta.LightSpeed
             return wrapLog($"{decoEntityOrNull != null}", deco);
         }
 
-
         private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());
         private OutputCacheManager _ocm;
-
-
-
     }
 }
