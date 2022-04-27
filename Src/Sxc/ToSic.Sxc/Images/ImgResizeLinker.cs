@@ -18,13 +18,13 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Internal stuff")]
     public class ImgResizeLinker : HasLog, ICanDebug
     {
-        public ImgResizeLinker(Lazy<IFeaturesService> features, Lazy<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
+        public ImgResizeLinker(Lazy<IFeaturesInternal> features, Lazy<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
         {
             _features = features;
             _koi = koi;
             DimGen = new ResizeDimensionGenerator().Init(Log);
         }
-        private readonly Lazy<IFeaturesService> _features;
+        private readonly Lazy<IFeaturesInternal> _features;
         private readonly Lazy<ICss> _koi;
 
         public bool Debug { get; set; }
