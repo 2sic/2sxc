@@ -124,7 +124,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
-            result.Features = FeaturesHelpers.FeaturesUiBasedOnPermissions(_features, permCheck.UserMayOnAll(GrantSets.WritePublished)).ToList();
+            result.Features = FeaturesHelpers.FeaturesUiBasedOnPermissions(_features, permCheck.UserMayOnAll(GrantSets.WritePublished), context.User.IsAdmin).ToList();
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.InitApp(context.AppState, Log)
