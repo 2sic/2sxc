@@ -340,6 +340,17 @@
 
 @REM Copy Imageflow and dependecies
 robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
+if exist $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll (
+	@Echo delete: $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll
+	del $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll
+	rename $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
+)
+if exist $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll (
+	@Echo delete: $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll
+	del $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll
+	rename $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
+)
+
 
 @REM Copy the data folders
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
