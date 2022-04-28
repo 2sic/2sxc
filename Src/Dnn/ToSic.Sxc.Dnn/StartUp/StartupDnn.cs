@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
 
             // Register Sxc features before loading
-            Sxc.Configuration.Features.BuiltIn.Register(transientSp.Build<FeaturesCatalog>());
+            Sxc.Configuration.Features.BuiltInFeatures.Register(transientSp.Build<FeaturesCatalog>());
 
             // Load features from configuration
             var sysLoader = transientSp.Build<SystemLoader>();

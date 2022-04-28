@@ -6,7 +6,6 @@ namespace ToSic.Sxc.Web.PageService
     {
         public IEnumerable<string> Activate(params string[] keys) => Features.Activate(keys);
 
-        public IPageFeatures Features { get; }
 
     }
 }

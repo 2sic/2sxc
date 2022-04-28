@@ -1,5 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -9,10 +11,18 @@ namespace ToSic.Sxc.Web.PageService
     /// </summary>
     public partial class PageServiceShared: IChangeQueue
     {
-        public PageServiceShared(IPageFeatures features)
+
+        public PageServiceShared(IPageFeatures features, IFeaturesService featuresService)
         {
+            _featuresService = featuresService;
             Features = features;
         }
+
+        private readonly IFeaturesService _featuresService;
+        public IPageFeatures Features { get; }
+
+        public void InitPageParameters(IParameters pageParameters) => _pageParameters = _pageParameters ?? pageParameters;
+        private IParameters _pageParameters;
 
 
         /// <summary>

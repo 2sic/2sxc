@@ -3,7 +3,7 @@ using ToSic.Eav.Configuration;
 
 namespace ToSic.Sxc.Configuration.Features
 {
-    public partial class BuiltIn
+    public partial class BuiltInFeatures
     {
         public static readonly FeatureDefinition RazorThrowPartial = new FeatureDefinition(
             "RazorThrowPartial",

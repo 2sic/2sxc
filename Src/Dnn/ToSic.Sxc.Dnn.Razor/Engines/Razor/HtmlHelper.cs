@@ -7,7 +7,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
-using static ToSic.Sxc.Configuration.Features.BuiltIn;
+using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Engines.Razor
