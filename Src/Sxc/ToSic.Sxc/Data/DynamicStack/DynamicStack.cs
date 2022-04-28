@@ -56,8 +56,6 @@ namespace ToSic.Sxc.Data
             return wrapLog(result == null ? "null" : "ok", result);
         }
 
-        [PrivateApi]
-
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
         {

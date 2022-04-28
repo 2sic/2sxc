@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Web.JsContext
             var autoToolbar = ctx.UserMayEdit;
             if (!autoToolbar && block.BlockFeatureKeys.Any())
             {
-                var features = block.Context.PageServiceShared.Features.GetWithDependents(block.BlockFeatureKeys, Log);
+                var features = block.Context.PageServiceShared.PageFeatures.GetWithDependents(block.BlockFeatureKeys, Log);
                 autoToolbar = features.Contains(BuiltInFeatures.ModuleContext);
             }
 

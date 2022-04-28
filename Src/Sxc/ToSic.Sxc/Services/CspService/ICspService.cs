@@ -2,10 +2,10 @@
 {
     public interface ICspService
     {
-        /// <summary>
-        /// Name of the CSP header to be added, based on the report-only aspect
-        /// </summary>
-        string Name { get; }
+        ///// <summary>
+        ///// Name of the CSP header to be added, based on the report-only aspect
+        ///// </summary>
+        //string Name { get; }
 
         /// <summary>
         /// You can determine if CSP should report only. 

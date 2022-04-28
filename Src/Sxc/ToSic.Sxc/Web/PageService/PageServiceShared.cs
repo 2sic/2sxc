@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -14,14 +15,16 @@ namespace ToSic.Sxc.Web.PageService
     public partial class PageServiceShared: IChangeQueue
     {
 
-        public PageServiceShared(IPageFeatures features, IFeaturesService featuresService)
+        public PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, IUser user)
         {
-            _featuresService = featuresService;
-            Features = features;
+            FeaturesService = featuresService;
+            PageFeatures = pageFeatures;
+            User = user;
         }
 
-        private readonly IFeaturesService _featuresService;
-        public IPageFeatures Features { get; }
+        internal readonly IFeaturesService FeaturesService;
+        public IPageFeatures PageFeatures { get; }
+        public IUser User { get; }
 
         /// <summary>
         /// This must be called from any service which uses this with the dynamic data, so it can get settings / url parameters from the current page
@@ -30,11 +33,11 @@ namespace ToSic.Sxc.Web.PageService
         /// <param name="pageSettings"></param>
         public void InitPageStuff(IParameters pageParameters, DynamicStack pageSettings)
         {
-            _pageParameters = _pageParameters ?? pageParameters;
-            _pageSettings = _pageSettings ?? pageSettings?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem) as DynamicStack;
+            PageParameters = PageParameters ?? pageParameters;
+            PageSettings = PageSettings ?? pageSettings?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem) as DynamicStack;
         }
-        private IParameters _pageParameters;
-        private DynamicStack _pageSettings;
+        internal IParameters PageParameters;
+        internal DynamicStack PageSettings;
 
         /// <summary>
         /// How the changes given to this object should be processed.

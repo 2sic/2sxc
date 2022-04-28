@@ -1,21 +1,43 @@
-﻿using ToSic.Sxc.Data;
+﻿using ToSic.Eav.Context;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
+    /// <summary>
+    /// Helper class to read the dynamic settings for the current site or global to be used in CSP
+    /// </summary>
     public class CspSettingsReader
     {
-        //private const string EnabledField = "Enabled";
-        //private const string EnforceField = "Enforce";
-        //private const string PolicyField = "Policy";
+        public CspSettingsReader(DynamicStack settingsOrNull, IUser user)
+        {
+            _user = user;
+            _settingsOrNull = settingsOrNull;
+        }
+        private readonly IUser _user;
+        private readonly DynamicStack _settingsOrNull;
 
-        public DynamicStack SettingsOrNull { get; }
 
-        public CspSettingsReader(DynamicStack settingsOrNull) => SettingsOrNull = settingsOrNull;
+        public bool IsEnabled => SettingPreferred?.IsEnabled ?? SettingsAss?.IsEnabled == true;
 
-        public bool Enabled => (SettingsOrNull as dynamic)?.ContentSecurityPolicies?.All?.IsEnabled == true;
+        public bool IsEnforced => SettingPreferred?.IsEnforced ?? SettingsAss?.IsEnforced == true;
 
-        public bool Enforce => (SettingsOrNull as dynamic)?.ContentSecurityPolicies?.All?.IsEnforced == true;
+        public string Policies => SettingPreferred?.Policies ?? SettingsAss?.Policies as string;
 
-        public string Policy => (SettingsOrNull as dynamic)?.ContentSecurityPolicies?.All?.Policy as string;
+        private dynamic SettingsRoot => _settingsRoot.Get(() => (_settingsOrNull as dynamic)?.ContentSecurityPolicies);
+        private readonly ValueGetOnce<dynamic> _settingsRoot = new ValueGetOnce<dynamic>();
+
+        private dynamic SettingPreferred => _preferred.Get(() =>
+        {
+            if (_user.IsSuperUser) return SettingsRoot?.SystemAdmin;
+            if (_user.IsAdmin) return SettingsRoot?.SiteAdmin;
+            if (_user.IsAnonymous) return SettingsRoot?.Anonymous;
+            return null;
+        });
+        private readonly ValueGetOnce<dynamic> _preferred = new ValueGetOnce<dynamic>();
+
+        private dynamic SettingsAss => _all.Get(() => SettingsRoot?.All);
+        private readonly ValueGetOnce<dynamic> _all = new ValueGetOnce<dynamic>();
+
     }
 }

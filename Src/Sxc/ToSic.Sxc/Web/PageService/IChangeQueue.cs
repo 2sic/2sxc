@@ -27,6 +27,6 @@ namespace ToSic.Sxc.Web.PageService
         /// </summary>
         string HttpStatusMessage { get; set; }
 
-        IPageFeatures Features { get; }
+        //IPageFeatures Features { get; }
     }
 }

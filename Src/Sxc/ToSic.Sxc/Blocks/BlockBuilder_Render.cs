@@ -57,12 +57,12 @@ namespace ToSic.Sxc.Blocks
                         pss.Activate(BuiltInFeatures.ToolbarsAuto.Key);
                     }
 
-                    result.Features = pss.Features.GetFeaturesWithDependentsAndFlush(Log);
+                    result.Features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
 
                     // Head & Page Changes
                     result.HeadChanges = pss.GetHeadChangesAndFlush(Log);
                     result.PageChanges = pss.GetPropertyChangesAndFlush(Log);
-                    var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.Features.FeaturesFromSettingsGetNew(Log));
+                    var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(Log));
 
                     Assets.AddRange(newAssets);
                     result.Assets = Assets;
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Blocks
                             if (renderEngineResult.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
-                                Block.Context.PageServiceShared.Features.Activate(BuiltInFeatures.JsCore.Key);
+                                Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.Key);
                             }
 
                             // TODO: this should use the same pattern as features, waiting to be picked up
@@ -174,7 +174,7 @@ namespace ToSic.Sxc.Blocks
                 var addEditCtx = Block.Context.UserMayEdit;
                 if (!addEditCtx && Block.BlockFeatureKeys.Any())
                 {
-                    var features = Block.Context.PageServiceShared.Features.GetWithDependents(Block.BlockFeatureKeys, Log);
+                    var features = Block.Context.PageServiceShared.PageFeatures.GetWithDependents(Block.BlockFeatureKeys, Log);
                     addEditCtx = features.Contains(BuiltInFeatures.ModuleContext);
                 }
 
