@@ -17,6 +17,7 @@
                 case "jpeg":
                 case "gif":
                 case "svg":
+                case "webp":
                     return Image;
                 case "doc":
                 case "docx":
