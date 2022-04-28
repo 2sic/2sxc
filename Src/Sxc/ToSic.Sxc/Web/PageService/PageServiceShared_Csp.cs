@@ -10,24 +10,33 @@ namespace ToSic.Sxc.Web.PageService
 {
     public partial class PageServiceShared
     {
-        public bool CspEnabled => _enabled.Get(() =>
+        internal bool CspEnabled => _enabled.Get(() =>
             {
                 var enabled = _featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId);
                 if (!enabled) return false;
                 var enforce = _featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyEnforceTemp.NameId);
                 if (enforce) return true;
+
+                // Try settings
+                if (CspSettings.Enabled) return true;
+
                 var urlEnabled = _featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyTestUrl.NameId);
                 if (!urlEnabled) return false;
-
                 if (_pageParameters == null) return false;
 
-                return _pageParameters.TryGetValue("csp", out var cspParam) 
+                return _pageParameters.TryGetValue(CspService.CspUrlParameter, out var cspParam) 
                        && string.Equals("true", cspParam, StringComparison.InvariantCultureIgnoreCase);
             });
         private readonly ValueGetOnce<bool> _enabled = new ValueGetOnce<bool>();
 
+        internal bool CspEnforce => _cspReportOnly.Get(() => !CspSettings.Enforce);
+        private readonly ValueGetOnce<bool> _cspReportOnly = new ValueGetOnce<bool>();
+
         internal void AddCspService(CspService provider) => _cspServices.Add(provider);
         private readonly List<CspService> _cspServices = new List<CspService>();
+
+        private CspSettingsReader CspSettings => _cspSettings.Get(() => new CspSettingsReader(_pageSettings));
+        private readonly ValueGetOnce<CspSettingsReader> _cspSettings = new ValueGetOnce<CspSettingsReader>();
 
         public List<HttpHeader> CspHeaders
         {
@@ -35,14 +44,18 @@ namespace ToSic.Sxc.Web.PageService
             {
                 // This would group the headers by report-only and normal csp
                 // probably disable in future, as the setting should be global
-                var byType = _cspServices?
-                    .Where(cs => cs != null)
-                    .GroupBy(cs => cs.Name)
-                    .ToList();
+                var byType = _cspServices;
+                    //?
+                    //.Where(cs => cs != null)
+                    //.GroupBy(cs => cs.Name)
+                    //.ToList();
 
                 if (byType == null || !byType.Any()) return new List<HttpHeader>();
 
-                return byType.Select(list => CspHttpHeader(list.ToList())).ToList();
+                //return byType.Select(list => CspHttpHeader(list.ToList())).ToList();
+                var header = CspHttpHeader(_cspServices);
+                if (header == null) return new List<HttpHeader>();
+                return new List<HttpHeader>() { header };
             }
         }
 

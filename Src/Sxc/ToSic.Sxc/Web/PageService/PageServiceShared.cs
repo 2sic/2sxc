@@ -23,12 +23,16 @@ namespace ToSic.Sxc.Web.PageService
         private readonly IFeaturesService _featuresService;
         public IPageFeatures Features { get; }
 
+        /// <summary>
+        /// This must be called from any service which uses this with the dynamic data, so it can get settings / url parameters from the current page
+        /// </summary>
+        /// <param name="pageParameters"></param>
+        /// <param name="pageSettings"></param>
         public void InitPageStuff(IParameters pageParameters, DynamicStack pageSettings)
         {
             _pageParameters = _pageParameters ?? pageParameters;
             _pageSettings = _pageSettings ?? pageSettings?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem) as DynamicStack;
         }
-
         private IParameters _pageParameters;
         private DynamicStack _pageSettings;
 

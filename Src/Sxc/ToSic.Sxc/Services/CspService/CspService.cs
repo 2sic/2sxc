@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Services
         public const string CspHeaderNameReport = "Content-Security-Policy-Report-Only";
         public const string AllSrcName = "all-src";
         public const string DefaultSrcName = "default-src";
+        public const string CspUrlParameter = "csp";
 
         public CspService(PageServiceShared pageServiceShared): base($"{Constants.SxcLogName}.CspSvc")
         {
@@ -35,11 +36,11 @@ namespace ToSic.Sxc.Services
         }
 
 
-        public bool ReportOnly { get; set; } = true;
+        public bool IsEnforced => _pageSvcShared.CspEnforce;
 
-        public string Name => ReportOnly ? CspHeaderNameReport : CspHeaderNamePolicy;
+        public string Name => IsEnforced ? CspHeaderNameReport : CspHeaderNamePolicy;
 
-        public bool Enabled => _pageSvcShared.CspEnabled;
+        public bool IsEnabled => _pageSvcShared.CspEnabled;
 
         public void Add(string name, params string[] values)
         {

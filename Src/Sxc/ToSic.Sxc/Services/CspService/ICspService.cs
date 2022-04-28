@@ -10,12 +10,12 @@
         /// <summary>
         /// You can determine if CSP should report only. 
         /// </summary>
-        bool ReportOnly { get; set; }
-        
+        bool IsEnforced { get; }
+
         /// <summary>
         /// Tells you if CSP is enabled or not. You cannot change it.
         /// </summary>
-        bool Enabled { get; }
+        bool IsEnabled { get; }
 
         //void Activate();
         //void AddPolicy(string policy);
