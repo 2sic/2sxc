@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
@@ -28,6 +29,13 @@ namespace ToSic.Sxc.Data
                          ?? _Dependencies.DataBuilder.FakeEntity(_Dependencies.BlockOrNull?.AppId ?? 0);
 
             return SourceToDynamicEntity(source);
+        }
+
+        public dynamic GetStack(params string[] names)
+        {
+            var newStack = UnwrappedContents.GetStack(names);
+            var newDynStack = new DynamicStack("New", this._Dependencies, newStack.Sources.ToArray());
+            return newDynStack;
         }
 
         private IDynamicEntity SourceToDynamicEntity(IPropertyLookup source)

@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Web.PageService
             CodeRoot = codeRoot;
             Log.LinkTo(codeRoot?.Log);
 
-            PageServiceShared.InitPageParameters(codeRoot?.CmsContext?.Page?.Parameters);
+            PageServiceShared.InitPageStuff(codeRoot?.CmsContext?.Page?.Parameters, codeRoot?.Settings as DynamicStack);
 
             Log.Call(message: $"Linked {nameof(PageService)}")(null);
         }

@@ -20,7 +20,10 @@ namespace ToSic.Sxc.Data
         /// Added in 2sxc 12.03
         /// </remarks>
         dynamic GetSource(string name);
-        
+
+        [PrivateApi]
+        dynamic GetStack(params string[] names);
+
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
         /// <summary>
         /// Get a value of the entity. Usually you will prefer the quick access like
