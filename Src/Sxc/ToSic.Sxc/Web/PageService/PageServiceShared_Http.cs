@@ -26,13 +26,13 @@ namespace ToSic.Sxc.Web.PageService
 
         #endregion
 
-        #region CSP
+        //#region CSP
 
-        public PageLevelCsp Csp => _csp ?? (_csp = new PageLevelCsp(this));
-        private PageLevelCsp _csp;
+        //public PageLevelCsp Csp => _csp ?? (_csp = new PageLevelCsp(this));
+        //private PageLevelCsp _csp;
 
 
-        #endregion
+        //#endregion
 
     }
 }

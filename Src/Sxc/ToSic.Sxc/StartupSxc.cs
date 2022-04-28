@@ -22,6 +22,7 @@ using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
@@ -116,6 +117,7 @@ namespace ToSic.Sxc
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
             services.TryAddTransient<ICspService, CspService>();
+            services.TryAddScoped<ModuleLevelCsp>();  // important: must be scoped!
             //services.TryAddTransient<CspService>();
             //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules

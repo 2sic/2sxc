@@ -1,9 +1,10 @@
 ﻿using System;
-using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Configuration.ConfigurationStack;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.PageService
@@ -12,32 +13,32 @@ namespace ToSic.Sxc.Web.PageService
     /// This controller should collect what all the <see cref="ToSic.Sxc.Services.IPageService"/> objects do, for use on the final page
     /// It must be scoped, so that it's the same object across the entire page-lifecycle.
     /// </summary>
-    public partial class PageServiceShared: IChangeQueue
+    public partial class PageServiceShared: IChangeQueue // , INeedsDynamicCodeRoot
     {
 
-        public PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, IUser user)
+        public PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, ModuleLevelCsp csp)
         {
             FeaturesService = featuresService;
             PageFeatures = pageFeatures;
-            User = user;
+            Csp = csp;
         }
 
         internal readonly IFeaturesService FeaturesService;
         public IPageFeatures PageFeatures { get; }
-        public IUser User { get; }
+        public ModuleLevelCsp Csp { get; }
 
-        /// <summary>
-        /// This must be called from any service which uses this with the dynamic data, so it can get settings / url parameters from the current page
-        /// </summary>
-        /// <param name="pageParameters"></param>
-        /// <param name="pageSettings"></param>
-        public void InitPageStuff(IParameters pageParameters, DynamicStack pageSettings)
-        {
-            PageParameters = PageParameters ?? pageParameters;
-            PageSettings = PageSettings ?? pageSettings?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem) as DynamicStack;
-        }
-        internal IParameters PageParameters;
-        internal DynamicStack PageSettings;
+        ///// <summary>
+        ///// Connect to code root, so page-parameters and settings will be available later on.
+        ///// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
+        ///// </summary>
+        ///// <param name="codeRoot"></param>
+        //public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _codeRoot = codeRoot;
+        //private IDynamicCodeRoot _codeRoot;
+
+        //internal IParameters PageParameters => _pageParameters.Get(() => _codeRoot?.CmsContext?.Page?.Parameters);
+        //private readonly ValueGetOnce<IParameters> _pageParameters = new ValueGetOnce<IParameters>();
+        //internal DynamicStack PageSettings => _pageSettings.Get(() => _codeRoot?.Settings as DynamicStack);
+        //private readonly ValueGetOnce<DynamicStack> _pageSettings = new ValueGetOnce<DynamicStack>();
 
         /// <summary>
         /// How the changes given to this object should be processed.
