@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Configuration.Features
         );
         public static readonly FeatureDefinition ContentSecurityPolicyEnforceTemp = new FeatureDefinition(
             "ContentSecurityPolicyEnforceTemp",
-            new Guid("94c3d7e5-5d89-4a68-b710-95bfc29199ba"),
+            new Guid("ece0943d-f3c0-422c-9d06-c20b9b83df8d"),
             "Enable CSP on all pages (temporary setting).",
             false,
             false,

@@ -1,5 +1,8 @@
 ﻿using System.Linq;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageService;
 
@@ -9,24 +12,34 @@ namespace ToSic.Sxc.Services
     /// Very experimental, do not use
     /// </summary>
     [PrivateApi]
-    public class CspService : ICspService
+    public class CspService : HasLog, ICspService, INeedsDynamicCodeRoot
     {
         public const string CspHeaderNamePolicy = "Content-Security-Policy";
         public const string CspHeaderNameReport = "Content-Security-Policy-Report-Only";
+        public const string AllSrcName = "all-src";
+        public const string DefaultSrcName = "default-src";
 
-        public CspService(PageServiceShared page)
+        public CspService(PageServiceShared pageServiceShared): base($"{Constants.SxcLogName}.CspSvc")
         {
-            _page = page;
-            page.AddCspService(this);
+            _pageSvcShared = pageServiceShared;
+            pageServiceShared.AddCspService(this);
         }
-        private readonly PageServiceShared _page;
+        private readonly PageServiceShared _pageSvcShared;
         public CspParameters Policy = new CspParameters();
+
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        {
+            Log.LinkTo(codeRoot?.Log);
+            _pageSvcShared.InitPageStuff(codeRoot?.CmsContext?.Page?.Parameters, codeRoot?.Settings as DynamicStack);
+            Log.Call(message: $"Linked {nameof(CspService)}")(null);
+        }
+
 
         public bool ReportOnly { get; set; } = true;
 
         public string Name => ReportOnly ? CspHeaderNameReport : CspHeaderNamePolicy;
 
-        public bool Enabled => _page.CspEnabled;
+        public bool Enabled => _pageSvcShared.CspEnabled;
 
         public void Add(string name, params string[] values)
         {
@@ -40,7 +53,10 @@ namespace ToSic.Sxc.Services
         }
 
         #region Src commands
-        public void DefaultSrc(params string[] values) => Add("default-src", values);
+
+        public void AllSrc(params string[] values) => Add(AllSrcName, values);
+
+        public void DefaultSrc(params string[] values) => Add(DefaultSrcName, values);
         public void ChildSrc(params string[] values) => Add("child-src", values);
         public void ConnectSrc(params string[] values) => Add("connect-src", values);
         public void FontSrc(params string[] values) => Add("font-src", values);

@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Configuration.Features;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -17,6 +18,8 @@ namespace ToSic.Sxc.Web.PageService
                 if (enforce) return true;
                 var urlEnabled = _featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyTestUrl.NameId);
                 if (!urlEnabled) return false;
+
+                if (_pageParameters == null) return false;
 
                 return _pageParameters.TryGetValue("csp", out var cspParam) 
                        && string.Equals("true", cspParam, StringComparison.InvariantCultureIgnoreCase);
@@ -52,15 +55,18 @@ namespace ToSic.Sxc.Web.PageService
             var first = relevant.First();
             var mergedPolicy = first.Policy;
 
+            var finalizer = new CspParameterFinalizer();
+
             if (relevant.Count == 1)
-                return new HttpHeader(first.Name, mergedPolicy.ToString());
+                return new HttpHeader(first.Name, finalizer.Finalize(mergedPolicy).ToString());
 
             // If many, merge the settings of each additional policy list
             foreach (var cspS in relevant.Skip(1)) 
                 mergedPolicy.Add(cspS.Policy);
 
-            return new HttpHeader(first.Name, mergedPolicy.ToString());
+            return new HttpHeader(first.Name, finalizer.Finalize(mergedPolicy).ToString());
         }
+
 
     }
 }
