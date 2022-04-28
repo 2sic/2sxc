@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private readonly DynamicStack _settingsOrNull;
 
 
-        public bool IsEnabled => SettingPreferred?.IsEnabled ?? SettingsAll?.IsEnabled == true;
+        public bool IsEnabled => SettingPreferred?.IsEnabled ?? SettingsDefault?.IsEnabled == true;
 
-        public bool IsEnforced => SettingPreferred?.IsEnforced ?? SettingsAll?.IsEnforced == true;
+        public bool IsEnforced => SettingPreferred?.IsEnforced ?? SettingsDefault?.IsEnforced == true;
 
-        public string Policies => SettingPreferred?.Policies ?? SettingsAll?.Policies as string;
+        public string Policies => SettingPreferred?.Policies ?? SettingsDefault?.Policies as string;
 
         private dynamic SettingsRoot => _settingsRoot.Get(() => (_settingsOrNull as dynamic)?.ContentSecurityPolicies);
         private readonly ValueGetOnce<dynamic> _settingsRoot = new ValueGetOnce<dynamic>();
@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// <summary>
         /// The fallback settings, which will be null if in devMode, because then we shouldn't do a fallback
         /// </summary>
-        private dynamic SettingsAll => _devMode ? null : _all.Get(() => SettingsRoot?.All);
-        private readonly ValueGetOnce<dynamic> _all = new ValueGetOnce<dynamic>();
+        private dynamic SettingsDefault => _devMode ? null : _default.Get(() => SettingsRoot?.Default);
+        private readonly ValueGetOnce<dynamic> _default = new ValueGetOnce<dynamic>();
 
     }
 }
