@@ -40,6 +40,9 @@ namespace ToSic.Sxc.Dnn
 
         private static IServiceProvider _sp;
 
+        [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
+        public static IServiceProvider GetGlobalServiceProvider() => _sp;
+
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
         public static IServiceProvider GetPageScopedServiceProvider() => GetPageServiceProvider();
 
