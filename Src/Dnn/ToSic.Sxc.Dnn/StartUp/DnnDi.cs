@@ -165,12 +165,15 @@ namespace ToSic.Sxc.Dnn.StartUp
             {
                 try
                 {
+                    // replace default cache implementation with farm cache
+                    services.Remove(ServiceDescriptor.Singleton<IAppsCache, AppsCache>());
                     var appsCacheType = Type.GetType(appsCacheOverride);
                     services.TryAddSingleton(typeof(IAppsCache), appsCacheType);
                 }
                 catch
                 {
-                    /* ignore */
+                    /* fallback */
+                    services.TryAddSingleton<IAppsCache, AppsCache>();
                 }
             }
             
