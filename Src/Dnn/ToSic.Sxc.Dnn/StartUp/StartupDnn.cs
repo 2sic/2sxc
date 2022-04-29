@@ -40,9 +40,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Register Services if this has not happened yet
             // In Dnn9.4+ this was already done before
             // In older Dnn this didn't happen yet, so this is the latest it can happen
-            
-            // TODO: STV
-            // var newServiceProvider = DnnDi.GetPreparedServiceProvider?.Invoke();
+
+            // TODO: STV ... still is null
+            //var newServiceProvider = DnnDi.GetPreparedServiceProvider?.Invoke();
 
 
             DnnDi.RegisterServices(null);
