@@ -40,10 +40,16 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Register Services if this has not happened yet
             // In Dnn9.4+ this was already done before
             // In older Dnn this didn't happen yet, so this is the latest it can happen
+            
+            // TODO: STV
+            // var newServiceProvider = DnnDi.GetPreparedServiceProvider?.Invoke();
+
+
             DnnDi.RegisterServices(null);
 
             // Now activate the Service Provider, because some Dnn code still needs the static implementation
             DnnStaticDi.StaticDiReady();
+
 
 
             // Configure Newtonsoft Time zone handling

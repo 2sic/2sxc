@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Configuration;
 using System.Net.Http;
@@ -79,6 +80,8 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             _alreadyRegistered = true;
         }
+
+        public static Func<IServiceProvider> GetPreparedServiceProvider = null;
 
         /// <summary>
         /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
