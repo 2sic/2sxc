@@ -53,8 +53,8 @@ namespace ToSic.Sxc.Blocks
                     // Page Features
                     if (Block.Context.UserMayEdit)
                     {
-                        pss.Activate(BuiltInFeatures.Toolbars.Key);
-                        pss.Activate(BuiltInFeatures.ToolbarsAuto.Key);
+                        pss.Activate(BuiltInFeatures.Toolbars.NameId);
+                        pss.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
                     }
 
                     result.Features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Blocks
             {
                 var extracted = _resourceExtractor.Ready.Process(settingFeature.Html);
                 if (!extracted.Assets.Any()) continue;
-                Log.Add($"Moved Feature Html {settingFeature.Key} to assets");
+                Log.Add($"Moved Feature Html {settingFeature.NameId} to assets");
                 newAssets.AddRange(extracted.Assets);
                 settingFeature.Html = extracted.Html;
             }
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Blocks
                             if (renderEngineResult.ActivateJsApi)
                             {
                                 Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
-                                Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.Key);
+                                Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.NameId);
                             }
 
                             // TODO: this should use the same pattern as features, waiting to be picked up

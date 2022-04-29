@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Configuration;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// Important: if you want to add more services in a DI Startup, it must happen at Configure.
         /// If you do it earlier, the singleton retrieved then will not be the one at runtime.
         /// </remarks>
-        public PageFeaturesCatalog()
+        public PageFeaturesCatalog(LogHistory logHistory): base(logHistory, Constants.SxcLogName + ".PftCat", new CodeRef())
         {
             Register(
                 BuiltInFeatures.JQuery,
@@ -28,6 +29,6 @@ namespace ToSic.Sxc.Web.PageFeatures
             );
         }
 
-        protected override string GetKey(IPageFeature item) => item.Key;
+        //protected override string GetKey(IPageFeature item) => item.NameId;
     }
 }

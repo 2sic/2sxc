@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
     [PrivateApi("Internal / not final - neither name, namespace or anything")]
-    public interface IPageFeature
+    public interface IPageFeature : IHasIdentityNameId
     {
         /// <summary>
         /// Primary identifier to activate the feature
         /// </summary>
-        string Key { get; }
+        string NameId { get; }
 
         /// <summary>
         /// Name of this feature. 

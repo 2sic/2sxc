@@ -39,11 +39,11 @@ namespace ToSic.Sxc.Web.PageFeatures
             
             // Skip those already in the target
             var missing = requiredKeys.Where(si =>
-                !target.Any(c => c.Key.Equals(si, StringComparison.InvariantCultureIgnoreCase))).ToArray();
+                !target.Any(c => c.NameId.Equals(si, StringComparison.InvariantCultureIgnoreCase))).ToArray();
             return Get(missing);
         }
 
         private List<IPageFeature> Get(IEnumerable<string> keys) => 
-            Features.Values.Where(f => keys.Contains(f.Key, StringComparer.InvariantCultureIgnoreCase)).ToList();
+            Features.Values.Where(f => keys.Contains(f.NameId, StringComparer.InvariantCultureIgnoreCase)).ToList();
     }
 }
