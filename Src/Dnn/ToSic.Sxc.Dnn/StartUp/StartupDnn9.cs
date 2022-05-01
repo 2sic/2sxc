@@ -1,4 +1,5 @@
-﻿using DotNetNuke.DependencyInjection;
+﻿using System;
+using DotNetNuke.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ToSic.Sxc.Dnn.StartUp
@@ -18,10 +19,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // If Dnn < 9.4 is called, this will be called again from the Route-Registration code
             DnnDi.RegisterServices(services);
 
-            // TODO: @STV
             // Give it the Dnn 9 Global Service Provider
             // https://github.com/dnnsoftware/Dnn.Platform/blob/9f83285a15d23203cbaad72d62add864ab5b8c7f/DNN%20Platform/DotNetNuke.Web/Common/LazyServiceProvider.cs#L28
-            // DnnDi.GetPreparedServiceProvider = () => Globals.ServiceProvider; //.GetService(typeof(IServiceProvider));
+            DnnDi.GetPreparedServiceProvider = () => typeof(DotNetNuke.Common.Globals).GetField("dependencyProvider", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)?.GetValue(null) as IServiceProvider;
         }
     }
 }

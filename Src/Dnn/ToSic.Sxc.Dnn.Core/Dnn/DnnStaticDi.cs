@@ -15,8 +15,8 @@ namespace ToSic.Sxc.Dnn
     {
         public static IServiceCollection StaticServiceCollection = null;
 
-        public static void StaticDiReady() 
-            => _sp = StaticServiceCollection?.BuildServiceProvider()
+        public static void StaticDiReady(IServiceProvider sp = null) 
+            => _sp = sp ?? StaticServiceCollection?.BuildServiceProvider()
             ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
         /// <summary>

@@ -41,14 +41,13 @@ namespace ToSic.Sxc.Dnn.StartUp
             // In Dnn9.4+ this was already done before
             // In older Dnn this didn't happen yet, so this is the latest it can happen
             
-            // TODO: STV
-            // var newServiceProvider = DnnDi.GetPreparedServiceProvider?.Invoke();
+            var dnn9RootServiceProviderOrNull = DnnDi.GetPreparedServiceProvider?.Invoke();
 
 
             DnnDi.RegisterServices(null);
 
             // Now activate the Service Provider, because some Dnn code still needs the static implementation
-            DnnStaticDi.StaticDiReady();
+            DnnStaticDi.StaticDiReady(dnn9RootServiceProviderOrNull);
 
 
 
