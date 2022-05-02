@@ -58,4 +58,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Beta\" />
+  </ItemGroup>
+
 </Project>
