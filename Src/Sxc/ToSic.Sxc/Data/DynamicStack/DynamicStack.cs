@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Data
         public dynamic GetStack(params string[] names)
         {
             var newStack = UnwrappedContents.GetStack(names);
-            var newDynStack = new DynamicStack("New", this._Dependencies, newStack.Sources.ToArray());
+            var newDynStack = new DynamicStack("New", _Dependencies, newStack.Sources.ToArray());
             return newDynStack;
         }
 

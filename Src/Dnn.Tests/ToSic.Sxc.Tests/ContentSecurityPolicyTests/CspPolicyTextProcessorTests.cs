@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
             var result = _processor.Parse(singleString);
             Assert.AreEqual(1, result.Count);
             var first = result.First();
-            Assert.AreEqual(CspService.DefaultSrcName, first.Key);
+            Assert.AreEqual(CspConstants.DefaultSrcName, first.Key);
             Assert.AreEqual("'self'", first.Value);
         }
 

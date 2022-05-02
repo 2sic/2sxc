@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
         {
             var cspp = new CspParameters
             {
-                { CspService.AllSrcName, "" }
+                { CspConstants.AllSrcName, "" }
             };
             cspp = _finalizer.MergedWithAll(cspp);
             Assert.AreEqual("", cspp.ToString());
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
         {
             var cspp = new CspParameters
             {
-                { CspService.AllSrcName, "'self'" }
+                { CspConstants.AllSrcName, "'self'" }
             };
             cspp = _finalizer.MergedWithAll(cspp);
             Assert.AreEqual("default-src 'self';", cspp.ToString());
@@ -44,8 +44,8 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
         {
             var cspp = new CspParameters
             {
-                { CspService.DefaultSrcName, "'none'"},
-                { CspService.AllSrcName, "'self'" }
+                { CspConstants.DefaultSrcName, "'none'"},
+                { CspConstants.AllSrcName, "'self'" }
             };
             cspp = _finalizer.MergedWithAll(cspp);
             Assert.AreEqual("default-src 'none' 'self';", cspp.ToString());
@@ -56,9 +56,9 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
         {
             var cspp = new CspParameters
             {
-                { CspService.DefaultSrcName, "'none'"},
-                { CspService.DefaultSrcName, "'self'"},
-                { CspService.AllSrcName, "'self'" }
+                { CspConstants.DefaultSrcName, "'none'"},
+                { CspConstants.DefaultSrcName, "'self'"},
+                { CspConstants.AllSrcName, "'self'" }
             };
             cspp = _finalizer.Finalize(cspp);
             Assert.AreEqual("default-src 'none' 'self';", cspp.ToString());
@@ -77,8 +77,8 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
         {
             var cspp = new CspParameters
             {
-                { CspService.AllSrcName, "test" },
-                { CspService.AllSrcName, "test2" },
+                { CspConstants.AllSrcName, "test" },
+                { CspConstants.AllSrcName, "test2" },
             };
             cspp = _finalizer.DeduplicateValues(cspp);
             Assert.AreEqual("all-src test test2;", cspp.ToString());
@@ -89,8 +89,8 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
         {
             var cspp = new CspParameters
             {
-                { CspService.AllSrcName, "test" },
-                { CspService.AllSrcName, "test" },
+                { CspConstants.AllSrcName, "test" },
+                { CspConstants.AllSrcName, "test" },
             };
             cspp = _finalizer.DeduplicateValues(cspp);
             Assert.AreEqual("all-src test;", cspp.ToString());

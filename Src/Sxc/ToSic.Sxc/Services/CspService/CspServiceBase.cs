@@ -11,9 +11,6 @@ namespace ToSic.Sxc.Services
     [PrivateApi]
     public class CspServiceBase : HasLog, ICspService
     {
-        public const string AllSrcName = "all-src";
-        public const string DefaultSrcName = "default-src";
-
         public CspServiceBase(): base($"{Constants.SxcLogName}.CspSvc") { }
 
         public CspParameters Policy = new CspParameters();
@@ -35,9 +32,9 @@ namespace ToSic.Sxc.Services
 
         #region Src commands
 
-        public void AllSrc(params string[] values) => Add(AllSrcName, values);
+        public void AllSrc(params string[] values) => Add(CspConstants.AllSrcName, values);
 
-        public void DefaultSrc(params string[] values) => Add(DefaultSrcName, values);
+        public void DefaultSrc(params string[] values) => Add(CspConstants.DefaultSrcName, values);
         public void ChildSrc(params string[] values) => Add("child-src", values);
         public void ConnectSrc(params string[] values) => Add("connect-src", values);
         public void FontSrc(params string[] values) => Add("font-src", values);
