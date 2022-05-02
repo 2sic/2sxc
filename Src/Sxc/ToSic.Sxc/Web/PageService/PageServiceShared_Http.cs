@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Documentation;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -20,7 +19,7 @@ namespace ToSic.Sxc.Web.PageService
             _httpHeaders.Add(new HttpHeader(name, value));
 
         [PrivateApi]
-        public List<HttpHeader> HttpHeaders => _httpHeaders.Concat(Csp.CspHeaders()).ToList();
+        public List<HttpHeader> HttpHeaders => _httpHeaders; //.Concat(Csp.CspHeaders()).ToList();
 
         private readonly List<HttpHeader> _httpHeaders = new List<HttpHeader>();
 

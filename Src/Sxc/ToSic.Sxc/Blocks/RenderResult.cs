@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
@@ -48,8 +49,11 @@ namespace ToSic.Sxc.Blocks
 
         public override string ToString() => Html;
 
-        //public IList<string> HttpHeaders { get; set; }
         public IList<HttpHeader> HttpHeaders { get; set; }
+
+        public bool CspEnabled { get; set; } = false;
+        public bool CspEnforced { get; set; } = false;
+        public IList<CspParameters> CspParameters { get; set; }
     }
 
     public class DependentApp : IDependentApp

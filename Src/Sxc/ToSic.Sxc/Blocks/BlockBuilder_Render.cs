@@ -72,6 +72,10 @@ namespace ToSic.Sxc.Blocks
                     result.HttpStatusCode = pss.HttpStatusCode;
                     result.HttpStatusMessage = pss.HttpStatusMessage;
                     result.HttpHeaders = pss.HttpHeaders;
+
+                    result.CspEnabled = pss.Csp.IsEnabled;
+                    result.CspEnforced = pss.Csp.IsEnforced;
+                    result.CspParameters = pss.Csp.CspParameters();
                 }
 
                 _result = result;

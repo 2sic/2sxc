@@ -2,6 +2,7 @@
 using ToSic.Eav.Caching;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
@@ -78,6 +79,12 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi("not in use yet")]
         int ModuleId { get; }
+
+
+        bool CspEnabled { get; }
+        bool CspEnforced { get; }
+        IList<CspParameters> CspParameters { get; }
+
     }
 
     public interface IDependentApp: ITimestamped

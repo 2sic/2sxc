@@ -8,7 +8,6 @@ using ToSic.Sxc.Configuration.Features;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
@@ -97,16 +96,10 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         internal void AddCspService(CspServiceBase provider) => CspServices.Add(provider);
         internal readonly List<CspServiceBase> CspServices = new List<CspServiceBase>();
 
-        /// <summary>
-        /// Name of the CSP header to be added, based on the report-only aspect
-        /// </summary>
-        public string HeaderName => IsEnforced ? CspConstants.CspHeaderNamePolicy : CspConstants.CspHeaderNameReport;
-
-
-        public List<HttpHeader> CspHeaders()
+        public List<CspParameters> CspParameters()
         {
-            var wrapLog = Log.Call<List<HttpHeader>>();
-            if (!IsEnabled) return wrapLog("disabled", new List<HttpHeader>());
+            var wrapLog = Log.Call<List<CspParameters>>();
+            if (!IsEnabled) return wrapLog("disabled", new List<CspParameters>());
             if (Policies.Any())
             {
                 Log.Add("Policies found");
@@ -117,30 +110,11 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 AddCspService(policyCsp);
             }
 
-            if (!CspServices.Any()) return wrapLog("no services to add", new List<HttpHeader>());
-            var header = CspHttpHeader();
-            var result = header == null ? new List<HttpHeader>() : new List<HttpHeader> { header };
+            if (!CspServices.Any()) return wrapLog("no services to add", new List<CspParameters>());
+            var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
             return wrapLog("ok", result);
+
         }
-
-        private HttpHeader CspHttpHeader()
-        {
-            var wrapLog = Log.Call<HttpHeader>();
-            var relevant = CspServices.Where(cs => cs != null).ToList();
-            if (!relevant.Any()) return wrapLog("none relevant", null);
-            var first = relevant.First();
-            var mergedPolicy = first.Policy;
-
-            var finalizer = new CspParameterFinalizer().Init(Log);
-
-            if (relevant.Count == 1)
-                return wrapLog("found 1", new HttpHeader(HeaderName, finalizer.Finalize(mergedPolicy).ToString()));
-
-            // If many, merge the settings of each additional policy list
-            foreach (var cspS in relevant.Skip(1))
-                mergedPolicy.Add(cspS.Policy);
-
-            return wrapLog("merged", new HttpHeader(HeaderName, finalizer.Finalize(mergedPolicy).ToString()));
-        }
+        
     }
 }

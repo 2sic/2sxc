@@ -2,6 +2,7 @@
 using DotNetNuke.Web.Client.Providers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.UI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -9,6 +10,7 @@ using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
@@ -17,12 +19,12 @@ namespace ToSic.Sxc.Dnn.Services
     [PrivateApi]
     public class DnnPageChanges : HasLog<DnnPageChanges>
     {
-        public PageServiceShared PageServiceShared { get; }
 
-        public DnnPageChanges(PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(/*PageServiceShared pageServiceShared*/): base($"{DnnConstants.LogName}.PgeCng")
         {
-            PageServiceShared = pageServiceShared;
+            //PageServiceShared = pageServiceShared;
         }
+        //public PageServiceShared PageServiceShared { get; }
 
         public int Apply(Page page, IRenderResult renderResult)
         {
@@ -57,7 +59,8 @@ namespace ToSic.Sxc.Dnn.Services
         {
             var wrapLog = Log.Call<int>();
 
-            props = props ?? PageServiceShared.GetPropertyChangesAndFlush(Log);
+            // 2022-05-03 2dm - don't think the props are ever null, requiring access to the shared data
+            // props = props ?? PageServiceShared.GetPropertyChangesAndFlush(Log);
             foreach (var p in props)
                 switch (p.Property)
                 {
@@ -110,6 +113,10 @@ namespace ToSic.Sxc.Dnn.Services
             var wrapLog = Log.Call<int>();
             var httpHeaders = result.HttpHeaders;
 
+            // Register CSP changes for applying once all modules have been prepared
+            if (result.CspEnabled) 
+                PageCsp(result.CspEnabled, result.CspEnforced).Add(result.CspParameters);
+
             if (page?.Response == null) return wrapLog("error, HttpResponse is null", 0);
             if (page.Response.HeadersWritten) return wrapLog("error, to late for adding http headers", 0);
             if (httpHeaders?.Any() != true) return wrapLog("ok, no headers to add", 0);
@@ -124,6 +131,31 @@ namespace ToSic.Sxc.Dnn.Services
                 page.Response.Headers[httpHeader.Name] = httpHeader.Value;
             }
             return wrapLog("ok", httpHeaders.Count);
+        }
+
+        private PageLevelCsp PageCsp(bool enabled, bool enforced)
+        {
+            var key = "2sxcPageLevelCsp";
+            if (HttpContext.Current.Items.Contains(key))
+                return (PageLevelCsp)HttpContext.Current.Items[key];
+
+            // Not yet registered. Create, and register for on-end of request
+            var pageLevelCsp = new PageLevelCsp();
+            HttpContext.Current.Items[key] = pageLevelCsp;
+
+            // Register event to attach headers once the request is done and all Apps have registered their Csp
+            if (enabled)
+                HttpContext.Current.Response.AddOnSendingHeaders(context =>
+                {
+                    try
+                    {
+                        var headers = pageLevelCsp.CspHttpHeader();
+                        if (headers != null)
+                            context.Response.Headers[pageLevelCsp.HeaderName(enforced)] = headers;
+                    }
+                    catch { /* ignore */ }
+                });
+            return pageLevelCsp;
         }
 
 
