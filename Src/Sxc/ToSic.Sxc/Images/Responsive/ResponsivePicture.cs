@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "If enabled, ContentSecurityPolicy headers will be set. Note that APIs will always work, but not result in http headers if this is disabled. ",
             FeaturesCatalogRules.Security0Improved,
-            FeaturesBuiltIn.ForBeta
+            Eav.Configuration.BuiltInFeatures.ForBeta
         );
         
         public static readonly FeatureDefinition ContentSecurityPolicyTestUrl = new FeatureDefinition(
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "If enabled, you can add csp=true to any url to temporarily enable a policy and see if it works. Requires the CSP system to be enabled.",
             FeaturesCatalogRules.Security0Improved,
-            FeaturesBuiltIn.ForBeta
+            Eav.Configuration.BuiltInFeatures.ForBeta
         );
         public static readonly FeatureDefinition ContentSecurityPolicyEnforceTemp = new FeatureDefinition(
             "ContentSecurityPolicyEnforceTemp",
@@ -34,8 +34,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "Enable CSP on all pages. This is a temporary setting, till we have more configuration in normal Settings.",
             FeaturesCatalogRules.Security0Improved,
-            FeaturesBuiltIn.ForBeta
+            Eav.Configuration.BuiltInFeatures.ForBeta
         );
-
     }
 }

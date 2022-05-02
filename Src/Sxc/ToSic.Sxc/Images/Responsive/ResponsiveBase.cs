@@ -4,7 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Web;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 

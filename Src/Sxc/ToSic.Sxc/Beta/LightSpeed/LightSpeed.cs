@@ -6,7 +6,8 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using App = ToSic.Sxc.Apps.App;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -46,17 +47,20 @@ namespace ToSic.Sxc.Beta.LightSpeed
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
                 return wrapLog($"not added as duration is {duration}", false);
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState, AppPaths());
+
+            var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
+                ? AppPaths()
+                : null;
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState, appPathsToMonitor);
             Log.Add($"Cache Key: {cacheKey}");
             return wrapLog($"added for {duration}s", true);
         }
 
         private IList<string> AppPaths()
         {
-            var app = (_block as BlockFromModule)?.App as Apps.App;
-            if (app == null) return null;
+            if (!((_block as BlockFromModule)?.App is App app)) return null;
 
-            var paths = new List<string>() { app.PhysicalPath };
+            var paths = new List<string> { app.PhysicalPath };
 
             if (Directory.Exists(app.PhysicalPathShared)) paths.Add(app.PhysicalPathShared);
 

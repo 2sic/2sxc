@@ -118,7 +118,6 @@ namespace ToSic.Sxc
             services.TryAddScoped<PageServiceShared>();
             services.TryAddTransient<ICspService, CspService>();
             services.TryAddScoped<ModuleLevelCsp>();  // important: must be scoped!
-            //services.TryAddTransient<CspService>();
             //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 

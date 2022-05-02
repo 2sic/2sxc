@@ -9,7 +9,7 @@ using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;
 

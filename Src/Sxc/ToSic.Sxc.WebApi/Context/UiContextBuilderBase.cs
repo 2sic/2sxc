@@ -11,7 +11,7 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Web.JsContext;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {

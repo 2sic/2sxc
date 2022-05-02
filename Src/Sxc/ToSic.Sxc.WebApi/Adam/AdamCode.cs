@@ -7,7 +7,7 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
