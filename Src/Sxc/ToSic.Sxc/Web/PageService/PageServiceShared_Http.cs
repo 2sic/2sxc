@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Web.PageService
@@ -25,14 +25,6 @@ namespace ToSic.Sxc.Web.PageService
         private readonly List<HttpHeader> _httpHeaders = new List<HttpHeader>();
 
         #endregion
-
-        //#region CSP
-
-        //public PageLevelCsp Csp => _csp ?? (_csp = new PageLevelCsp(this));
-        //private PageLevelCsp _csp;
-
-
-        //#endregion
 
     }
 }

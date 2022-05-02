@@ -10,6 +10,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Web.LightSpeed;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App

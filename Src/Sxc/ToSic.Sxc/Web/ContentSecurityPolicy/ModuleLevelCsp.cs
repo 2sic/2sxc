@@ -14,12 +14,6 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
     public class ModuleLevelCsp: HasLog, INeedsDynamicCodeRoot
     {
-        public const string CspHeaderNamePolicy = "Content-Security-Policy";
-        public const string CspHeaderNameReport = "Content-Security-Policy-Report-Only";
-        public const string CspUrlParameter = "csp";
-        public const string CspUrlTrue = "true";
-        public const string CspUrlDev = "dev";
-
         #region Constructor
 
         public ModuleLevelCsp(IUser user, IFeaturesService featuresService): base(CspConstants.LogPrefix + ".ModLvl")
@@ -58,7 +52,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// </summary>
         private CspSettingsReader CspSettings => _cspSettings.Get(()
             => new CspSettingsReader(PageSettings, _user,
-                CspUrlParam.EqualsInsensitive(CspUrlDev), Log), Log, nameof(CspServices));
+                CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev), Log), Log, nameof(CspServices));
         private readonly ValueGetOnce<CspSettingsReader> _cspSettings = new ValueGetOnce<CspSettingsReader>();
 
         /// <summary>
@@ -80,7 +74,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             // Try settings
             if (CspSettings.IsEnabled) return true;
 
-            return CspUrlParam.EqualsInsensitive(CspUrlTrue) || CspUrlParam.EqualsInsensitive(CspUrlDev);
+            return CspUrlParam.EqualsInsensitive(CspConstants.CspUrlTrue) || CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev);
         }, Log, nameof(IsEnabled));
         private readonly ValueGetOnce<bool> _enabled = new ValueGetOnce<bool>();
 
@@ -89,7 +83,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             if (!_featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyTestUrl.NameId))
                 return null;
             if (PageParameters == null) return null;
-            PageParameters.TryGetValue(CspUrlParameter, out var cspParam);
+            PageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
             return cspParam;
         }, Log, nameof(CspUrlParam));
         private readonly ValueGetOnce<string> _cspUrlParam = new ValueGetOnce<string>();
@@ -106,7 +100,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// <summary>
         /// Name of the CSP header to be added, based on the report-only aspect
         /// </summary>
-        public string HeaderName => IsEnforced ? CspHeaderNamePolicy : CspHeaderNameReport;
+        public string HeaderName => IsEnforced ? CspConstants.CspHeaderNamePolicy : CspConstants.CspHeaderNameReport;
 
 
         public List<HttpHeader> CspHeaders()

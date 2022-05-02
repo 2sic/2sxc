@@ -9,6 +9,7 @@ using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Web.LightSpeed;
 using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
