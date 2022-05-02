@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 
@@ -7,13 +8,16 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// <summary>
     /// Helper class to read the dynamic settings for the current site or global to be used in CSP
     /// </summary>
-    public class CspSettingsReader
+    public class CspSettingsReader: HasLog
     {
-        public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode)
+        public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode, ILog parentLog): base(CspConstants.LogPrefix + ".Setting", parentLog)
         {
             _user = user;
             _devMode = devMode;
             _settingsOrNull = settingsOrNull;
+            
+            // Enable this for edge cases where we must debug deeply into each settings-stack
+            //if (_settingsOrNull != null) _settingsOrNull.Debug = true;
         }
         private readonly IUser _user;
         private readonly bool _devMode;
@@ -26,17 +30,18 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         public string Policies => SettingPreferred?.Policies ?? SettingsDefault?.Policies as string;
 
-        private dynamic SettingsRoot => _settingsRoot.Get(() => (_settingsOrNull as dynamic)?.ContentSecurityPolicies);
+        private dynamic SettingsRoot => _settingsRoot.Get(() => (_settingsOrNull as dynamic)?.ContentSecurityPolicies, Log, nameof(SettingsRoot));
         private readonly ValueGetOnce<dynamic> _settingsRoot = new ValueGetOnce<dynamic>();
 
         private dynamic SettingPreferred => _preferred.Get(() =>
         {
+            Log.Add($"Dev: {_devMode}; Super: {_user.IsSuperUser}; Admin: {_user.IsAdmin}; Anon: {_user.IsAnonymous}");
             if (_devMode) return SettingsRoot?.Dev;
             if (_user.IsSuperUser) return SettingsRoot?.SystemAdmin;
             if (_user.IsAdmin) return SettingsRoot?.SiteAdmin;
             if (_user.IsAnonymous) return SettingsRoot?.Anonymous;
             return null;
-        });
+        }, Log, nameof(SettingPreferred));
         private readonly ValueGetOnce<dynamic> _preferred = new ValueGetOnce<dynamic>();
 
         /// <summary>

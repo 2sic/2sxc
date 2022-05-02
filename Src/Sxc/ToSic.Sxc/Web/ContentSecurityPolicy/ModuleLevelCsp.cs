@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Configuration.Features;
@@ -11,7 +12,7 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class ModuleLevelCsp: INeedsDynamicCodeRoot
+    public class ModuleLevelCsp: HasLog, INeedsDynamicCodeRoot
     {
         public const string CspHeaderNamePolicy = "Content-Security-Policy";
         public const string CspHeaderNameReport = "Content-Security-Policy-Report-Only";
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         #region Constructor
 
-        public ModuleLevelCsp(IUser user, IFeaturesService featuresService)
+        public ModuleLevelCsp(IUser user, IFeaturesService featuresService): base(CspConstants.LogPrefix + ".ModLvl")
         {
             _user = user;
             _featuresService = featuresService;
@@ -35,12 +36,17 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
         /// </summary>
         /// <param name="codeRoot"></param>
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _codeRoot = codeRoot;
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        {
+            Log.LinkTo(codeRoot.Log);
+            _codeRoot = codeRoot;
+        }
+
         private IDynamicCodeRoot _codeRoot;
 
-        internal IParameters PageParameters => _pageParameters.Get(() => _codeRoot?.CmsContext?.Page?.Parameters);
+        internal IParameters PageParameters => _pageParameters.Get(() => _codeRoot?.CmsContext?.Page?.Parameters, Log, nameof(PageParameters));
         private readonly ValueGetOnce<IParameters> _pageParameters = new ValueGetOnce<IParameters>();
-        internal DynamicStack PageSettings => _pageSettings.Get(() => _codeRoot?.Settings as DynamicStack);
+        internal DynamicStack PageSettings => _pageSettings.Get(() => _codeRoot?.Settings as DynamicStack, Log, nameof(PageSettings));
         private readonly ValueGetOnce<DynamicStack> _pageSettings = new ValueGetOnce<DynamicStack>();
 
         #endregion
@@ -52,13 +58,13 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// </summary>
         private CspSettingsReader CspSettings => _cspSettings.Get(()
             => new CspSettingsReader(PageSettings, _user,
-                CspUrlParam.EqualsInsensitive(CspUrlDev)));
+                CspUrlParam.EqualsInsensitive(CspUrlDev), Log), Log, nameof(CspServices));
         private readonly ValueGetOnce<CspSettingsReader> _cspSettings = new ValueGetOnce<CspSettingsReader>();
 
         /// <summary>
         /// Enforce?
         /// </summary>
-        internal bool IsEnforced => _cspReportOnly.Get(() => CspSettings.IsEnforced);
+        internal bool IsEnforced => _cspReportOnly.Get(() => CspSettings.IsEnforced, Log, nameof(IsEnforced));
         private readonly ValueGetOnce<bool> _cspReportOnly = new ValueGetOnce<bool>();
 
         /// <summary>
@@ -74,16 +80,9 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             // Try settings
             if (CspSettings.IsEnabled) return true;
 
-            //if (!UrlEnabled) return false;
-            //if (_pageSvcShared.PageParameters == null) return false;
-
             return CspUrlParam.EqualsInsensitive(CspUrlTrue) || CspUrlParam.EqualsInsensitive(CspUrlDev);
-        });
+        }, Log, nameof(IsEnabled));
         private readonly ValueGetOnce<bool> _enabled = new ValueGetOnce<bool>();
-
-        //private bool UrlEnabled => _urlEnabled.Get(() =>
-        //    _pageSvcShared.FeaturesService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyTestUrl.NameId));
-        //private readonly ValueGetOnce<bool> _urlEnabled = new ValueGetOnce<bool>();
 
         private string CspUrlParam => _cspUrlParam.Get(() =>
         {
@@ -92,11 +91,11 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             if (PageParameters == null) return null;
             PageParameters.TryGetValue(CspUrlParameter, out var cspParam);
             return cspParam;
-        });
+        }, Log, nameof(CspUrlParam));
         private readonly ValueGetOnce<string> _cspUrlParam = new ValueGetOnce<string>();
 
         internal List<KeyValuePair<string, string>> Policies 
-            => _policies.Get(() => new CspPolicyTextProcessor().Parse(CspSettings.Policies));
+            => _policies.Get(() => new CspPolicyTextProcessor().Parse(CspSettings.Policies), Log, nameof(Policies));
         private readonly ValueGetOnce<List<KeyValuePair<string, string>>> _policies = new ValueGetOnce<List<KeyValuePair<string, string>>>();
 
         #endregion
@@ -112,37 +111,42 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         public List<HttpHeader> CspHeaders()
         {
-            if (!IsEnabled) return new List<HttpHeader>();
+            var wrapLog = Log.Call<List<HttpHeader>>();
+            if (!IsEnabled) return wrapLog("disabled", new List<HttpHeader>());
             if (Policies.Any())
             {
+                Log.Add("Policies found");
                 // Create a CspService which just contains these new policies for merging later on
                 var policyCsp = new CspServiceBase();
                 foreach (var policy in Policies)
                     policyCsp.Add(policy.Key, policy.Value);
                 AddCspService(policyCsp);
             }
-            if (!CspServices.Any()) return new List<HttpHeader>();
+
+            if (!CspServices.Any()) return wrapLog("no services to add", new List<HttpHeader>());
             var header = CspHttpHeader();
-            return header == null ? new List<HttpHeader>() : new List<HttpHeader> { header };
+            var result = header == null ? new List<HttpHeader>() : new List<HttpHeader> { header };
+            return wrapLog("ok", result);
         }
 
         private HttpHeader CspHttpHeader()
         {
+            var wrapLog = Log.Call<HttpHeader>();
             var relevant = CspServices.Where(cs => cs != null).ToList();
-            if (!relevant.Any()) return null;
+            if (!relevant.Any()) return wrapLog("none relevant", null);
             var first = relevant.First();
             var mergedPolicy = first.Policy;
 
-            var finalizer = new CspParameterFinalizer();
+            var finalizer = new CspParameterFinalizer().Init(Log);
 
             if (relevant.Count == 1)
-                return new HttpHeader(HeaderName, finalizer.Finalize(mergedPolicy).ToString());
+                return wrapLog("found 1", new HttpHeader(HeaderName, finalizer.Finalize(mergedPolicy).ToString()));
 
             // If many, merge the settings of each additional policy list
             foreach (var cspS in relevant.Skip(1))
                 mergedPolicy.Add(cspS.Policy);
 
-            return new HttpHeader(HeaderName, finalizer.Finalize(mergedPolicy).ToString());
+            return wrapLog("merged", new HttpHeader(HeaderName, finalizer.Finalize(mergedPolicy).ToString()));
         }
     }
 }

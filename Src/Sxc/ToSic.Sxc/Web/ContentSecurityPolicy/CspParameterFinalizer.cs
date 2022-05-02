@@ -1,50 +1,59 @@
 ﻿using System.Linq;
-using ToSic.Sxc.Services;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class CspParameterFinalizer
+    public class CspParameterFinalizer: HasLog
     {
+        public CspParameterFinalizer(): base(CspConstants.LogPrefix + ".ParFin")
+        {
+
+        }
+
         public CspParameters Finalize(CspParameters original)
         {
+            var wrapLog = Log.Call<CspParameters>();
             // Empty, skip
-            if (original == null || !original.HasKeys()) return original;
+            if (original == null || !original.HasKeys()) return wrapLog("none", original);
             var merged = MergedWithAll(original);
             var deduped = DeduplicateValues(merged);
-            return deduped;
+            return wrapLog("ok", deduped);
         }
 
         public CspParameters MergedWithAll(CspParameters original)
         {
+            var wrapLog = Log.Call<CspParameters>();
             // Empty, skip
-            if (original == null || !original.HasKeys()) return original;
+            if (original == null || !original.HasKeys()) return wrapLog("none", original);
             
             // Create copy and remove the All from it
             var copy = new CspParameters(original);
-            copy.Remove(CspService.AllSrcName);
+            copy.Remove(CspConstants.AllSrcName);
 
             // No values, skip
             var values = original
-                .GetValues(CspService.AllSrcName)
+                .GetValues(CspConstants.AllSrcName)
                 ?.Where(v => !string.IsNullOrWhiteSpace(v))
                 .ToArray();
-            if (values == null || values.Length == 0) return copy;
+            if (values == null || values.Length == 0) return wrapLog("no values", copy);
 
             // Make sure the default exists, as it must get all values from the all
-            copy.Add(CspService.DefaultSrcName, null);
+            copy.Add(CspConstants.DefaultSrcName, null);
             var keys = copy.AllKeys;
             foreach (var key in keys)
             foreach (var value in values)
                 copy.Add(key, value);
-            return copy;
+            return wrapLog("ok", copy);
         }
 
         public CspParameters DeduplicateValues(CspParameters original)
         {
+            var wrapLog = Log.Call<CspParameters>();
             // Empty, skip
-            if (original == null || !original.HasKeys()) return original;
+            if (original == null || !original.HasKeys()) return wrapLog("none", original);
             var copy = new CspParameters(original);
             var keys = copy.AllKeys;
+            var dedupeCount = 0;
             foreach (var key in keys)
             {
                 var values = copy.GetValues(key);
@@ -60,9 +69,10 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
                 foreach (var value in groupsOfSameValues) 
                     copy.Add(key, value.Key);
+                dedupeCount++;
             }
 
-            return copy;
+            return wrapLog($"deduped {dedupeCount}", copy);
         }
         
     }
