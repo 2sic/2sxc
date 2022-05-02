@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         public int? QueryId { get; }
         public string ContentTypeName { get; }
         public string AppUrl { get; }
+        public string AppSharedUrl { get; }
         public int? AppSettingsId { get; }
         public int? AppResourcesId { get; }
 
@@ -34,6 +35,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             Guid = block.Configuration?.Guid ?? Guid.Empty;
             AppId = block.AppId;
             AppUrl = app?.Path ?? "" + "/";
+            AppSharedUrl = app?.PathShared ?? "" + "/";
             AppSettingsId = app?.Settings?.Entity?.Attributes?.Count > 0
                 ? app?.Settings?.EntityId : null;    // the real id (if entity exists), 0 (if entity missing, but type has fields), or null (if not available)
             AppResourcesId = app?.Resources?.Entity?.Attributes?.Count > 0

@@ -169,9 +169,10 @@ namespace ToSic.Sxc.WebApi.Context
             var result = new ContextAppDto
             {
                 Id = App.AppId,
-                Url = App?.Path,
                 Name = App.Name,
                 Folder = App.Folder,
+                Url = App?.Path,
+                SharedUrl = App?.PathShared
             };
 
             // Stop now if we don't need advanced infos
