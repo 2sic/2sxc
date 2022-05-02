@@ -32,7 +32,9 @@ namespace ToSic.Sxc.Dnn
 
                     // first get a rendering helper - but since BlockBuilder may be null, create a new one
                     var renderingHelper = GetService<IRenderingHelper>().Init(Block, Log);
-                    var msg = renderingHelper.DesignErrorMessage(ex, true);
+                    var msg = renderingHelper.DesignErrorMessage(ex, true, 
+                        additionalInfo: $" - CONTEXT: Page: {TabId}; Module: {ModuleId}");
+
                     try
                     {
                         if (Block.Context.UserMayEdit)

@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn
             // add to insights-history for analytic
             GetService<LogHistory>().Add("module", Log);
             _stopwatch = Stopwatch.StartNew();
-            _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Instance:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
+            _entireLog = Log.Call(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'", useTimer: true);
             var callLog = Log.Call(useTimer: true);
 
             // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
