@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Configuration;
 using System.Web.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
@@ -41,13 +42,17 @@ namespace ToSic.Sxc.Dnn.StartUp
             // In Dnn9.4+ this was already done before
             // In older Dnn this didn't happen yet, so this is the latest it can happen
             
-            var dnn9RootServiceProviderOrNull = DnnDi.GetPreparedServiceProvider?.Invoke();
+            var globalServiceProvider = DnnDi.GetPreparedServiceProvider?.Invoke();
 
+            // Register services if it has not already happened before in Dnn9
+            // Give it null, so in case there is no previously registered collection it will create a new one
+            var serviceCollection = DnnDi.RegisterServices(null);
 
-            DnnDi.RegisterServices(null);
+            // if the global doesn't exist yet (dnn 7/8) then create it now
+            globalServiceProvider = globalServiceProvider ?? serviceCollection.BuildServiceProvider();
 
             // Now activate the Service Provider, because some Dnn code still needs the static implementation
-            DnnStaticDi.StaticDiReady(dnn9RootServiceProviderOrNull);
+            DnnStaticDi.StaticDiReady(globalServiceProvider);
 
 
 

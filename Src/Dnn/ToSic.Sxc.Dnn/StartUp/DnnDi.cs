@@ -53,10 +53,10 @@ namespace ToSic.Sxc.Dnn.StartUp
     {
         private static bool _alreadyRegistered;
 
-        public static void RegisterServices(IServiceCollection services)
+        public static IServiceCollection RegisterServices(IServiceCollection services)
         {
             if (_alreadyRegistered)
-                return;
+                return OriginalServiceCollection;
 
             // If this is called from Dnn 7 - 9.3 it won't have services, so we must create our own
             // This is because the old Dnn wasn't DI aware
@@ -76,12 +76,16 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<Permissions>();
 
             // Remember this for later, when we must start the Static Dependency Injection
-            DnnStaticDi.StaticServiceCollection = services;
+            OriginalServiceCollection = services;
+            //DnnStaticDi.StaticServiceCollection = services;
 
             _alreadyRegistered = true;
+            return services;
         }
 
         public static Func<IServiceProvider> GetPreparedServiceProvider = null;
+
+        public static IServiceCollection OriginalServiceCollection;
 
         /// <summary>
         /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
