@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/adam")]
 
     // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]
+    //[Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]
 
     public class AppAssetsController: WebApi.AppAssetsControllerBase
     {

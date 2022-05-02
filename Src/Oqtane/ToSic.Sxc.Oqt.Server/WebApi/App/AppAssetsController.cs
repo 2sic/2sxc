@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/assets")]
 
     // Beta routes
-    [Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
+    //[Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
     public class AppAssetsController: AppAssetsControllerBase
     {
         public AppAssetsController(AppAssetsDependencies dependencies) 

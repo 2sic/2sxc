@@ -13,6 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
     {
         public const string RouteAdam = "adam";
         public const string RouteAssets = "assets";
+        public const string RouteShared = "shared";
 
         public static readonly Regex RiskyDetector = ToSic.Eav.Security.Files.FileNames.RiskyDownloadDetector;
 
@@ -54,6 +55,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 "" => AdamPathWithoutAppName(contentRootPath, alias, filePath),
                 RouteAdam => AdamPath(contentRootPath, alias, appName, filePath),
                 RouteAssets => SxcPath(contentRootPath, alias, appName, filePath),
+                RouteShared => SharedPath(contentRootPath, appName, filePath),
                 _ => SxcPath(contentRootPath, alias, appName, filePath),
             };
 
@@ -75,6 +77,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         private static string SxcPath(string contentRootPath, Alias alias, string appName, string filePath)
             => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, alias.SiteId), appName, filePath).Backslash();
+
+        private static string SharedPath(string contentRootPath, string appName, string filePath)
+            => Path.Combine(contentRootPath, string.Format(OqtConstants.AppRootPublicBase, "Shared"), appName, filePath).Backslash();
 
     }
 }
