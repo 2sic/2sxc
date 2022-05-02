@@ -124,14 +124,14 @@ namespace ToSic.Sxc.Blocks
                     if (Block.DataIsMissing)
                     {
                         Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
-                        (body, err) = Block.Context.UserMayEdit
-                            ? ("", false) // stop further processing
-                            // end users should see server error as no js-side processing will happen
-                            : (RenderingHelper.DesignErrorMessage(
-                                new Exception("Data is missing - usually when a site is copied " +
-                                              "but the content / apps have not been imported yet" +
-                                              " - check 2sxc.org/help?tag=export-import"),
-                                true, "Error - needs admin to fix"), true);
+                        var blockId = Block.Configuration?.BlockIdentifierOrNull;
+                        var msg = "Data is missing. This is common when a site is copied " +
+                                  "but the content / apps have not been imported yet" +
+                                  " - check 2sxc.org/help?tag=export-import - " +
+                                  $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
+                            body = RenderingHelper.DesignErrorMessage(new Exception(msg),
+                                true);
+                        err = true;
                     }
                 }
                 #endregion
@@ -209,8 +209,7 @@ namespace ToSic.Sxc.Blocks
             if (!string.IsNullOrEmpty(notReady))
             {
                 Log.Add("system isn't ready,show upgrade message");
-                var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true,
-                    "Error - needs admin to fix this", encodeMessage: false); // don't encode, as it contains special links
+                var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true, encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 

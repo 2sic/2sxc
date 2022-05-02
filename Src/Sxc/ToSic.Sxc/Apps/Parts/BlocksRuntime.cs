@@ -6,9 +6,9 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps
 {
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Apps
                 .ToList();
         }
 
-        public IImmutableList<IEntity> ContentGroups() => _contentGroups ?? (_contentGroups = Parent.Entities.Get(BlockTypeName).ToImmutableArray()); // ContentGroupSource().Immutable;
+        public IImmutableList<IEntity> ContentGroups() => _contentGroups ?? (_contentGroups = Parent.Entities.Get(BlockTypeName).ToImmutableArray());
         private IImmutableList<IEntity> _contentGroups;
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
@@ -75,8 +75,9 @@ namespace ToSic.Sxc.Apps
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
             Log.Add($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
-                ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) {PreviewTemplateId = blockId.PreviewView}
+                ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) { PreviewTemplateId = blockId.PreviewView }
                 : GetBlockConfig(blockId.Guid);
+            result.BlockIdentifierOrNull = blockId;
             wrapLog(null);
             return result;
         }

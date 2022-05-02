@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
                 // find ZoneId, AppId and prepare settings for next values
                 var zoneId = _site.ZoneId; // ZoneMapper.GetZoneId(UnwrappedContents.SiteId);
-                var appId = GetInstanceAppId(zoneId); //appId ?? TestIds.Blog.App;
+                var (appId, appNameId) = GetInstanceAppId(zoneId); //appId ?? TestIds.Blog.App;
                 var block = Guid.Empty;
                 if (_settings.ContainsKey(Settings.ModuleSettingContentGroup))
                     Guid.TryParse(_settings[Settings.ModuleSettingContentGroup], out block);
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
                 if (_settings.TryGetValue(Settings.ModuleSettingsPreview, out var previewId) && !string.IsNullOrEmpty(previewId))
                     Guid.TryParse(previewId, out overrideView);
 
-                _blockIdentifier = new BlockIdentifier(zoneId, appId, block, overrideView);
+                _blockIdentifier = new BlockIdentifier(zoneId, appId, appNameId, block, overrideView);
 
                 return _blockIdentifier;
             }
@@ -101,15 +101,19 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private IBlockIdentifier _blockIdentifier;
 
 
-        private int GetInstanceAppId(int zoneId)
+        private (int AppId, string AppNameId) GetInstanceAppId(int zoneId)
         {
-            if (IsContent) return _appStates.DefaultAppId(zoneId);
+            var wrapLog = Log.Call<(int, string)>($"{zoneId}");
 
-            if (!_settings.ContainsKey(Settings.ModuleSettingApp)) return Eav.Constants.AppIdEmpty;
+            if (IsContent) 
+                return wrapLog("Content", (_appStates.DefaultAppId(zoneId), "Content"));
+
+            if (!_settings.ContainsKey(Settings.ModuleSettingApp)) 
+                return wrapLog(Eav.Constants.AppNameIdEmpty, (Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty));
 
             var guid = _settings[Settings.ModuleSettingApp] ?? "";
             var appId = _appFinderLazy.Value.Init(Log).FindAppId(zoneId, guid);
-            return appId;
+            return wrapLog("ok", (appId, guid));
 
         }
     }

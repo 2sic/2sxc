@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         #endregion
 
-        public const string DefaultVisitorError = "Error Showing Content - please login as system admin to see Details.";
+        public const string DefaultVisitorError = "Error Showing Content - please login as admin for details.";
 
         protected IContextOfBlock Context;
         protected IBlockBuilder BlockBuilder;

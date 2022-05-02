@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Dnn.Context
                 // find ZoneId, AppId and prepare settings for next values
                 // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
                 var zoneId = _site.ZoneId;
-                var appId = GetInstanceAppId(zoneId);
+                var (appId, appNameId) = GetInstanceAppIdAndName(zoneId);
                 var settings = UnwrappedContents.ModuleSettings;
 
                 // find block identifier
@@ -88,14 +88,14 @@ namespace ToSic.Sxc.Dnn.Context
                     : new Guid();
 
                 // Create identifier
-                return _blockIdentifier = new BlockIdentifier(zoneId, appId, blockGuid, overrideView);
+                return _blockIdentifier = new BlockIdentifier(zoneId, appId, appNameId, blockGuid, overrideView);
             }
         }
         private IBlockIdentifier _blockIdentifier;
 
-        private int GetInstanceAppId(int zoneId)
+        private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
         {
-            var wrapLog = Log.Call<int>(parameters: $"{zoneId}");
+            var wrapLog = Log.Call<(int, string)>($"{zoneId}");
 
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
@@ -103,18 +103,18 @@ namespace ToSic.Sxc.Dnn.Context
             if (IsContent)
             {
                 var appId = _appStates.DefaultAppId(zoneId);
-                return wrapLog($"{msg} - use Default app: {appId}", appId);
+                return wrapLog($"{msg} - use Default app: {appId}", (appId, "Content"));
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
                 var appId = _appFinderLazy.Ready.FindAppId(zoneId, guid);
-                return wrapLog($"{msg} AppG:{guid} = app:{appId}", appId);
+                return wrapLog($"{msg} AppG:{guid} = app:{appId}", (appId, guid));
             }
 
             Log.Add($"{msg} not found = null");
-            return wrapLog("not found", Eav.Constants.AppIdEmpty);
+            return wrapLog("not found", (Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty));
         }
     }
 }

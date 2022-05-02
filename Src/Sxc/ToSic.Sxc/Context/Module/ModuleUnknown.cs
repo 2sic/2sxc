@@ -8,10 +8,8 @@ namespace ToSic.Sxc.Context
 {
     public class ModuleUnknown: IModule, IIsUnknown
     {
-        public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> warn)
-        {
-
-        }
+        // ReSharper disable once UnusedParameter.Local
+        public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> warn) { }
 
         public IModule Init(int id, ILog parentLog)
         {
@@ -23,6 +21,6 @@ namespace ToSic.Sxc.Context
         public bool IsContent => true;
 
         public IBlockIdentifier BlockIdentifier =>
-            new BlockIdentifier(Eav.Constants.NullId, Eav.Constants.NullId, Guid.Empty, Guid.Empty);
+            new BlockIdentifier(Eav.Constants.NullId, Eav.Constants.NullId, Eav.Constants.NullNameId, Guid.Empty, Guid.Empty);
     }
 }
