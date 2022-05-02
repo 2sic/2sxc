@@ -20,6 +20,10 @@
         public const string AppRootPathOrLang = RootPathOrLang + "app";
         public const string AppRootPathNdLang = RootPathNdLang + "app";
 
+        public const string SharedRootNoLanguage = RootNoLanguage + "2sxc/shared";
+        public const string SharedRootPathOrLang = RootPathOrLang + "2sxc/shared";
+        public const string SharedRootPathNdLang = RootPathNdLang + "2sxc/shared";
+
         // Beta routes
         public const string WebApiStateRoot = "{alias:int}/api/sxc";
 

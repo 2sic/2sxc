@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -9,7 +8,8 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.PageService;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -53,6 +53,11 @@ namespace ToSic.Sxc.Code
             Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
             CmsContext = dependencies.CmsContext;
+
+            // Load the shared page service and make sure it has this code root, so future uses know about the context
+            // We don't need the result, but this ensures that it's initialized correctly
+            //GetService<PageServiceShared>();
+            GetService<ModuleLevelCsp>();
         }
 
         private readonly Dependencies Deps;
@@ -73,9 +78,9 @@ namespace ToSic.Sxc.Code
             return newService;
         }
 
-        [PrivateApi]
-        internal PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
-        private PiggyBack _piggyBack;
+        //[PrivateApi]
+        //internal PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
+        //private PiggyBack _piggyBack;
 
         [PrivateApi]
         public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility)

@@ -32,8 +32,8 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         public DnnEnvironmentInstaller(LogHistory logHistory, DnnInstallLogger installLogger, Lazy<IAppStates> appStatesLazy, Lazy<CmsRuntime> cmsRuntimeLazy, Lazy<RemoteRouterLink> remoteRouterLazy) : base("Dnn.InstCo")
         {
-            logHistory/*ServiceProvider.Build<LogHistory>()*/.Add("installation", Log);
-            _installLogger = installLogger; // ServiceProvider.Build<DnnInstallLogger>();
+            logHistory.Add(LogNames.LogHistoryGlobalInstallation, Log);
+            _installLogger = installLogger;
             _appStatesLazy = appStatesLazy;
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _remoteRouterLazy = remoteRouterLazy;

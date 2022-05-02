@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Configuration;
 using System.Web.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
@@ -40,10 +41,19 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Register Services if this has not happened yet
             // In Dnn9.4+ this was already done before
             // In older Dnn this didn't happen yet, so this is the latest it can happen
-            DnnDi.RegisterServices(null);
+            
+            var globalServiceProvider = DnnDi.GetPreparedServiceProvider?.Invoke();
+
+            // Register services if it has not already happened before in Dnn9
+            // Give it null, so in case there is no previously registered collection it will create a new one
+            var serviceCollection = DnnDi.RegisterServices(null);
+
+            // if the global doesn't exist yet (dnn 7/8) then create it now
+            globalServiceProvider = globalServiceProvider ?? serviceCollection.BuildServiceProvider();
 
             // Now activate the Service Provider, because some Dnn code still needs the static implementation
-            DnnStaticDi.StaticDiReady();
+            DnnStaticDi.StaticDiReady(globalServiceProvider);
+
 
 
             // Configure Newtonsoft Time zone handling
@@ -53,8 +63,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Getting the service provider in Configure is tricky business, because
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
-            var initialServiceProvider = DnnStaticDi.GetPageScopedServiceProvider();
-            var transientSp = initialServiceProvider;
+            var transientSp = DnnStaticDi.GetGlobalServiceProvider();// .GetPageScopedServiceProvider();
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
@@ -65,7 +74,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
 
             // Register Sxc features before loading
-            Sxc.Configuration.Features.BuiltIn.Register(transientSp.Build<FeaturesCatalog>());
+            Sxc.Configuration.Features.BuiltInFeatures.Register(transientSp.Build<FeaturesCatalog>());
 
             // Load features from configuration
             var sysLoader = transientSp.Build<SystemLoader>();

@@ -13,11 +13,14 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     public static class DnnStaticDi
     {
-        public static IServiceCollection StaticServiceCollection = null;
+        //public static IServiceCollection StaticServiceCollection = null;
+        //public static IServiceProvider GlobalServiceProvider = null;
+        public static void StaticDiReady(IServiceProvider sp = null) 
+            => _sp = sp ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
-        public static void StaticDiReady() 
-            => _sp = StaticServiceCollection?.BuildServiceProvider()
-            ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
+        //public static void StaticDiReady(IServiceProvider sp = null) 
+        //    => _sp = sp ?? StaticServiceCollection?.BuildServiceProvider()
+        //    ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
         /// <summary>
         /// This is a special internal resolver for static objects
@@ -39,6 +42,9 @@ namespace ToSic.Sxc.Dnn
         private static readonly Type ServiceScopeKey = typeof(IServiceScope);
 
         private static IServiceProvider _sp;
+
+        [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
+        public static IServiceProvider GetGlobalServiceProvider() => _sp;
 
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
         public static IServiceProvider GetPageScopedServiceProvider() => GetPageServiceProvider();

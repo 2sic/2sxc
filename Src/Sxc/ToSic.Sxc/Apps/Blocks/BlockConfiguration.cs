@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -14,6 +15,8 @@ namespace ToSic.Sxc.Apps.Blocks
         public  int AppId { get; }
         internal readonly bool ShowDrafts;
         internal Guid? PreviewTemplateId;
+
+        internal IBlockIdentifier BlockIdentifierOrNull; 
 
         private readonly CmsRuntime _cmsRuntime;
 

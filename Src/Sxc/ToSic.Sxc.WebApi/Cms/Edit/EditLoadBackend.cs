@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Admin.Features;
+using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
@@ -34,7 +33,8 @@ namespace ToSic.Sxc.WebApi.Cms
             ITargetTypes mdTargetTypes,
             EntityPickerApi entityPickerBackend,
             IAppStates appStates,
-            IFeaturesInternal features) : base(serviceProvider, "Cms.LoadBk")
+            IUiData uiData
+            ) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
             _contentGroupList = contentGroupList;
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _mdTargetTypes = mdTargetTypes;
             _entityPickerBackend = entityPickerBackend;
             _appStates = appStates;
-            _features = features;
+            _uiData = uiData;
         }
         
         private readonly EntityApi _entityApi;
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly ITargetTypes _mdTargetTypes;
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly IAppStates _appStates;
-        private readonly IFeaturesInternal _features;
+        private readonly IUiData _uiData;
 
         #endregion
 
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
-            result.Features = FeaturesHelpers.FeaturesUiBasedOnPermissions(_features, permCheck.UserMayOnAll(GrantSets.WritePublished)).ToList();
+            result.Features = _uiData.Features(context, permCheck);
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.InitApp(context.AppState, Log)

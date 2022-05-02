@@ -56,11 +56,7 @@ namespace ToSic.Sxc.Blocks
             public LazyInitLog<IBlockResourceExtractor> ResourceExtractor { get; }
         }
 
-        protected BlockBase(Dependencies dependencies, string logName) : base(logName)
-        {
-            _deps = dependencies;
-        }
-
+        protected BlockBase(Dependencies dependencies, string logName) : base(logName) => _deps = dependencies;
         private readonly Dependencies _deps;
 
         protected void Init(IContextOfBlock context, IAppIdentity appId, ILog parentLog)
@@ -104,13 +100,12 @@ namespace ToSic.Sxc.Blocks
 
             // Get App for this block
             Log.Add("About to create app");
-            App = _deps.AppLazy.Value // Context.ServiceProvider.Build<App>()
-                .PreInit(Context.Site)
-                .Init(this, _deps.AppConfigDelegateLazy.Value /*Context.ServiceProvider.Build<AppConfigDelegate>()*/.Init(Log).BuildForNewBlock(Context, this), Log);
+            App = _deps.AppLazy.Value.PreInit(Context.Site)
+                .Init(this, _deps.AppConfigDelegateLazy.Value.Init(Log).BuildForNewBlock(Context, this), Log);
             Log.Add("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = _deps.CmsLazy.Value /*Context.ServiceProvider.Build<CmsRuntime>()*/.Init(App, Context.UserMayEdit, Log);
+            var cms = _deps.CmsLazy.Value.Init(App, Context.UserMayEdit, Log);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
@@ -183,7 +178,7 @@ namespace ToSic.Sxc.Blocks
                 if (_dataSource != null) return _dataSource;
                 Log.Add(
                     $"About to load data source with possible app configuration provider. App is probably null: {App}");
-                _dataSource = _deps.BdsFactoryLazy.Value /*_bdsFactoryLazy.Value*/.Init(Log).GetBlockDataSource(this, App?.ConfigurationProvider);
+                _dataSource = _deps.BdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this, App?.ConfigurationProvider);
                 return _dataSource;
             }
         }

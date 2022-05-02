@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </remarks>
         public static PageFeature JsCore = new PageFeature("2sxc.JsCore", "2sxc core js APIs", needs: new[]
         {
-            PageContext.Key
+            PageContext.NameId
         });
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto", "Ensure that the toolbars automatically appear", needs: new[]
         {
-            PageContext.Key
+            PageContext.NameId
         });
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </remarks>
         public static PageFeature JsCms = new PageFeature("2sxc.JsCms", "2sxc inpage editing APIs", needs: new[]
             {
-                JsCore.Key,
-                ModuleContext.Key,
+                JsCore.NameId,
+                ModuleContext.NameId,
             },
             reqConditions: new List<Condition> { PublicEditForm.Condition });
 
@@ -65,9 +65,9 @@ namespace ToSic.Sxc.Web.PageFeatures
         public static PageFeature Toolbars =
             new PageFeature("2sxc.Toolbars", "2sxc InPage editing UIs / Toolbar", needs: new[]
             {
-                JsCore.Key,
-                ToolbarsAuto.Key,
-                JsCms.Key
+                JsCore.NameId,
+                ToolbarsAuto.NameId,
+                JsCms.NameId
             });
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Dnn.Web
         }
 
 
-        internal IList<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true).Features ?? new List<IPageFeature>());
+        internal IList<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true)?.Features ?? new List<IPageFeature>());
         private IList<IPageFeature> _features;
 
         public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Dnn.Web
             var wrapLog = Log.Call<IList<IPageFeature>>();
             // temporary solution, till the features are correctly activated in the block
             // auto-detect Blockbuilder params
-            if (features == null) features = Features;
+            features = features ?? Features;
 
             // normal scripts
             var editJs = features.Contains(BuiltInFeatures.JsCms);

@@ -20,6 +20,6 @@ namespace ToSic.Sxc.Blocks.Output
 
         string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);
 
-        string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null, bool addContextWrapper = false, bool encodeMessage = true);
+        string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null, string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true);
     }
 }

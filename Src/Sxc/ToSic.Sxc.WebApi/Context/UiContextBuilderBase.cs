@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Context
             public IAppStates AppStates { get; }
             public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
             public Lazy<LanguagesBackend> LanguagesBackend { get; }
-            public Lazy<IFeaturesService> Features { get; }
+            public Lazy<IFeaturesInternal> Features { get; }
 
             public Dependencies(
                 IContextOfSite siteCtx, 
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Context
                 IAppStates appStates, 
                 Lazy<AppUserLanguageCheck> appUserLanguageCheck, 
                 Lazy<LanguagesBackend> languagesBackend,
-                Lazy<IFeaturesService> features
+                Lazy<IFeaturesInternal> features
             )
             {
                 SiteCtx = siteCtx;
@@ -169,9 +169,10 @@ namespace ToSic.Sxc.WebApi.Context
             var result = new ContextAppDto
             {
                 Id = App.AppId,
-                Url = App?.Path,
                 Name = App.Name,
                 Folder = App.Folder,
+                Url = App?.Path,
+                SharedUrl = App?.PathShared
             };
 
             // Stop now if we don't need advanced infos

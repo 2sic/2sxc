@@ -23,15 +23,15 @@ namespace ToSic.Sxc.Dnn.Run
         /// Init Path After AppId must be in an own method, as each implementation may have something custom to handle this
         /// </summary>
         /// <returns></returns>
-        protected override bool InitPathAfterAppId(string path)
+        protected override bool InitPathAfterAppId()
         {
-            var wrapLog = Log.Call<bool>(path);
+            var wrapLog = Log.Call<bool>();
 
             try
             {
                 Log.Add($"Trying to build path based on tenant. If it's in search mode, the {nameof(ISite)} would be {Eav.Constants.NullId}. Id: {Site.Id}");
                 EnsureDnnSiteIsLoadedWhenDiFails();
-                base.InitPathAfterAppId(path);
+                base.InitPathAfterAppId();
                 return wrapLog(Path, true);
             }
             catch (Exception e)

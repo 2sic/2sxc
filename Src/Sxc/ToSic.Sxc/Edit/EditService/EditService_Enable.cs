@@ -34,16 +34,16 @@ namespace ToSic.Sxc.Edit.EditService
 
             var psf = Block?.Context?.PageServiceShared;
 
-            if (js == true || api ==true || forms == true) psf?.Activate(BuiltInFeatures.JsCore.Key);
+            if (js == true || api ==true || forms == true) psf?.Activate(BuiltInFeatures.JsCore.NameId);
 
             // only update the values if true, otherwise leave untouched
-            if (api == true || forms == true) psf?.Activate(BuiltInFeatures.JsCms.Key);
+            if (api == true || forms == true) psf?.Activate(BuiltInFeatures.JsCms.NameId);
 
-            if (styles.HasValue) psf?.Activate(BuiltInFeatures.Toolbars.Key);
+            if (styles.HasValue) psf?.Activate(BuiltInFeatures.Toolbars.NameId);
 
-            if (context.HasValue) psf?.Activate(BuiltInFeatures.ModuleContext.Key);
+            if (context.HasValue) psf?.Activate(BuiltInFeatures.ModuleContext.NameId);
 
-            if (autoToolbar.HasValue) psf?.Activate(BuiltInFeatures.ToolbarsAuto.Key);
+            if (autoToolbar.HasValue) psf?.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
 
             return null;
         }

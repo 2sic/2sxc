@@ -3,8 +3,8 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -22,11 +22,11 @@ namespace ToSic.Sxc.Blocks
         
         #region Constructor and DI
 
-        public BlockFromEntity(Dependencies dependencies, Lazy<AppFinder> appFinderLazy) : base(dependencies, "CB.Ent")
+        public BlockFromEntity(Dependencies dependencies, LazyInitLog<AppFinder> appFinderLazy) : base(dependencies, "CB.Ent")
         {
-            _appFinderLazy = appFinderLazy;
+            _appFinderLazy = appFinderLazy.SetLog(Log);
         }
-        private readonly Lazy<AppFinder> _appFinderLazy;
+        private readonly LazyInitLog<AppFinder> _appFinderLazy;
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {
@@ -85,16 +85,16 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         private IBlockIdentifier LoadBlockDefinition(int zoneId, IEntity blockDefinition, ILog log)
         {
-            var appName = blockDefinition.Value<string>(CbPropertyApp) ?? "";
-            IsContentApp = appName == Eav.Constants.DefaultAppGuid;
+            var appNameId = blockDefinition.Value<string>(CbPropertyApp) ?? "";
+            IsContentApp = appNameId == Eav.Constants.DefaultAppGuid;
             var temp = blockDefinition.Value<string>(CbPropertyContentGroup) ?? "";
             Guid.TryParse(temp, out var contentGroupGuid);
 
             temp = blockDefinition.Value<string>(ViewParts.TemplateContentType) ?? "";
             Guid.TryParse(temp, out var previewTemplateGuid);
 
-            var appId = _appFinderLazy.Value.Init(log)/* new ZoneRuntime().Init(zoneId, log)*/.FindAppId(zoneId, appName);
-            return new BlockIdentifier(zoneId, appId, contentGroupGuid, previewTemplateGuid);
+            var appId = _appFinderLazy.Ready.FindAppId(zoneId, appNameId);
+            return new BlockIdentifier(zoneId, appId, appNameId, contentGroupGuid, previewTemplateGuid);
         }
         #endregion
 

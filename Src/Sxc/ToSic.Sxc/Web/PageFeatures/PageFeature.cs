@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             string html = null,
             List<Condition> reqConditions = null)
         {
-            Key = key ?? throw new Exception("key is required");
+            NameId = key ?? throw new Exception("key is required");
             Name = name ?? throw new Exception("name is required");
             Html = html;
             Description = description ?? "";
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <summary>
         /// Primary identifier to activate the feature
         /// </summary>
-        public string Key { get; }
+        public string NameId { get; }
         
         /// <summary>
         /// Name of this feature. 

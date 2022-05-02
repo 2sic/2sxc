@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
@@ -30,6 +31,13 @@ namespace ToSic.Sxc.Data
             return SourceToDynamicEntity(source);
         }
 
+        public dynamic GetStack(params string[] names)
+        {
+            var newStack = UnwrappedContents.GetStack(names);
+            var newDynStack = new DynamicStack("New", _Dependencies, newStack.Sources.ToArray());
+            return newDynStack;
+        }
+
         private IDynamicEntity SourceToDynamicEntity(IPropertyLookup source)
         {
             if (source == null) return null;
@@ -47,8 +55,6 @@ namespace ToSic.Sxc.Data
             var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull);
             return wrapLog(result == null ? "null" : "ok", result);
         }
-
-        [PrivateApi]
 
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)

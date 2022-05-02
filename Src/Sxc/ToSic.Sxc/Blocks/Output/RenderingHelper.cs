@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         #endregion
 
-        public const string DefaultVisitorError = "Error Showing Content - please login as system admin to see Details.";
+        public const string DefaultVisitorError = "Error Showing Content - please login as admin for details.";
 
         protected IContextOfBlock Context;
         protected IBlockBuilder BlockBuilder;
@@ -79,10 +79,11 @@ namespace ToSic.Sxc.Blocks.Output
             return contextAttribs;
         }
 
-        public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null, bool addContextWrapper = false, bool encodeMessage = true)
+        public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null,
+            string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true)
         {
             const string prefix = "Error: ";
-            var msg = prefix + ex;
+            var msg = prefix + ex + additionalInfo;
             if (addToEventLog) _errorLogger?.LogException(ex);
 
             if (!Context.User.IsSuperUser)

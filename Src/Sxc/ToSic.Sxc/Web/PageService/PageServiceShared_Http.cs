@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -19,51 +20,19 @@ namespace ToSic.Sxc.Web.PageService
             _httpHeaders.Add(new HttpHeader(name, value));
 
         [PrivateApi]
-        public List<HttpHeader> HttpHeaders => _httpHeaders.Concat(CspHeaders).ToList();
+        public List<HttpHeader> HttpHeaders => _httpHeaders.Concat(Csp.CspHeaders()).ToList();
 
         private readonly List<HttpHeader> _httpHeaders = new List<HttpHeader>();
 
-        internal void AddCspService(CspService provider)
-        {
-            _cspServices = _cspServices ?? new List<CspService>();
-            _cspServices.Add(provider);
-        }
-        private List<CspService> _cspServices;
-
-        public List<HttpHeader> CspHeaders
-        {
-            get
-            {
-                var byType = _cspServices?
-                    .Where(cs => cs != null)
-                    .GroupBy(cs => cs.Name)
-                    .ToList();
-
-                if (byType == null || !byType.Any()) return new List<HttpHeader>();
-
-                return byType.Select(list => CspHttpHeader(list.ToList())).ToList();
-            }
-        }
-
-        private static HttpHeader CspHttpHeader(IReadOnlyCollection<CspService> servicesOfThisTypeOrNull)
-        {
-            if (servicesOfThisTypeOrNull == null) return null;
-
-            var relevant = servicesOfThisTypeOrNull.Where(cs => cs != null).ToList();
-            if (relevant?.Any() != true) return null;
-            var first = relevant.First();
-            var policy = first.Policy;
-
-            if (relevant.Count == 1)
-                return new HttpHeader(first.Name, policy.ToString());
-
-            // If many, merge the settings
-            foreach (var cspS in relevant.Skip(1)) policy.Add(cspS.Policy);
-
-            return new HttpHeader(first.Name, policy.ToString());
-        }
-
         #endregion
+
+        //#region CSP
+
+        //public PageLevelCsp Csp => _csp ?? (_csp = new PageLevelCsp(this));
+        //private PageLevelCsp _csp;
+
+
+        //#endregion
 
     }
 }

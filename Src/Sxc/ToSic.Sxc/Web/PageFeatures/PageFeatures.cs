@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             // Filter out the ones which were already added in a previous round
             var newFeatures = FeaturesFromSettings
                 // Put duplicates together
-                .GroupBy(f => f.Key)
+                .GroupBy(f => f.NameId)
                 // Only process the groups which have none that were already processed
                 .Where(g => g.All(f => !f.AlreadyProcessed)) // only keep the groups which only have false
                 // Keep only one of the group to then process

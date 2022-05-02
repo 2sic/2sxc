@@ -5,10 +5,10 @@ namespace ToSic.Sxc.Services
 {
     public class FeaturesService: HasLog, IFeaturesService, ICanDebug
     {
-        public FeaturesService(Eav.Configuration.IFeaturesService root) : base($"{Constants.SxcLogName}.FeatSv")
+        public FeaturesService(Eav.Configuration.IFeaturesInternal root) : base($"{Constants.SxcLogName}.FeatSv")
             => _root = root;
 
-        private readonly Eav.Configuration.IFeaturesService _root;
+        private readonly Eav.Configuration.IFeaturesInternal _root;
 
         public bool IsEnabled(params string[] nameIds)
         {
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Services
             return wrapLog($"{result}", result);
         }
 
-        public bool Valid => _root.Valid;
+        //public bool Valid => _root.Valid;
 
         public bool Debug { get; set; }
     }
