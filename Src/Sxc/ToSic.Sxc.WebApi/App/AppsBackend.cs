@@ -9,7 +9,6 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 

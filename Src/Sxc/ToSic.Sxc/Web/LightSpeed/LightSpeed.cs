@@ -11,7 +11,7 @@ using App = ToSic.Sxc.Apps.App;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
-namespace ToSic.Sxc.Beta.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeed : HasLog, IOutputCache
     {

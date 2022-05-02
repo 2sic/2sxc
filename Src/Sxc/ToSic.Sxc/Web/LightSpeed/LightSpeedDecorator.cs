@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Beta.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeedDecorator: EntityBasedType
     {

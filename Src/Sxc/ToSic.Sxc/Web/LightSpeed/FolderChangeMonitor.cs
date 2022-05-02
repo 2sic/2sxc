@@ -9,7 +9,7 @@ using System.Runtime.Caching.Hosting;
 using System.Text;
 using System.Threading;
 
-namespace ToSic.Sxc.Beta.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed
 {
     // based on https://raw.githubusercontent.com/microsoft/referencesource/master/System.Runtime.Caching/System/Caching/HostFileChangeMonitor.cs
     public class FolderChangeMonitor : FileChangeMonitor
