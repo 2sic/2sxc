@@ -30,32 +30,21 @@ namespace ToSic.Sxc.Blocks.Output
                 var idMatches = IdDetection.Match(match.Value);
                 var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
 
-                var providerName = "body";
-                var priority = JsDefaultPriority;
-
                 // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
                 // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
                 // ...and another for the priority etc.
 
                 // skip if not matched and setting only wants matches
-                if (ExtractOnlyEnableOptimization)
-                {
-                    var optMatch = OptimizeDetection.Match(match.Value);
-                    if (!optMatch.Success) continue;
-
-                    providerName = optMatch.Groups["Position"]?.Value ?? providerName;
-
-                    priority = GetPriority(optMatch, priority);
-
-                    if (priority <= 0) continue; // don't register/remove if not within specs
-                }
+                // bool skip;
+                var (skip, posInPage, priority) = CheckOptimizationSettings(match, "body", JsDefaultPriority);
+                if (skip) continue;
 
                 // get all Attributes
                 var (attributes, cspCode) = GetHtmlAttributes(match.Value);
                 var forCsp = cspCode == _pageServiceShared.CspEphemeralMarker;
 
                 // Register, then add to remove-queue
-                Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url, HtmlAttributes = attributes, WhitelistInCsp = forCsp });
+                Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = posInPage, Priority = priority, Url = url, HtmlAttributes = attributes, WhitelistInCsp = forCsp });
                 scriptMatchesToRemove.Add(match);
             }
 
@@ -63,6 +52,22 @@ namespace ToSic.Sxc.Blocks.Output
             scriptMatchesToRemove.Reverse();
             scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
             return wrapLog(null, renderedTemplate);
+        }
+
+        private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(Match match, string posInPage, int priority)
+        {
+            if (!ExtractOnlyEnableOptimization) return (true, null, 0);
+
+            var optMatch = OptimizeDetection.Match(match.Value);
+            if (!optMatch.Success) return (true, null, 0);
+
+            posInPage = optMatch.Groups[TokenPosition]?.Value ?? posInPage;
+
+            priority = GetPriority(optMatch, priority);
+
+            if (priority <= 0) return (true, null, 0); // don't register/remove if not within specs
+
+            return (false, posInPage, priority);
         }
 
 

@@ -7,6 +7,8 @@ namespace ToSic.Sxc.Blocks.Output
     {
         #region RegEx formulas and static compiled RegEx objects (performance)
 
+        private const string TokenPriority = "Priority";
+        private const string TokenPosition = "Position";
         private const string ClientDependencyRegex =
             "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
 
@@ -32,7 +34,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         private int GetPriority(Match optMatch, int defValue)
         {
-            var priority = (optMatch.Groups["Priority"]?.Value ?? "true").ToLowerInvariant();
+            var priority = (optMatch.Groups[TokenPriority]?.Value ?? "true").ToLowerInvariant();
             var prio = priority == "true" || priority == ""
                 ? defValue
                 : int.Parse(priority);

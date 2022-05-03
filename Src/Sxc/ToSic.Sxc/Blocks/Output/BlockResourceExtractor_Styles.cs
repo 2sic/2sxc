@@ -15,11 +15,6 @@ namespace ToSic.Sxc.Blocks.Output
             Log.Add($"Found {styleMatches.Count} external styles");
             foreach (Match match in styleMatches)
             {
-                var posInPage = "head"; // default for styles
-                var priority = CssDefaultPriority;
-
-                var optMatch = OptimizeDetection.Match(match.Value);
-
                 // Also get the ID (new in v12)
                 var idMatches = IdDetection.Match(match.Value);
                 var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
@@ -28,25 +23,20 @@ namespace ToSic.Sxc.Blocks.Output
                 // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
                 // ...and another for the priority etc.
 
+                // skip if not stylesheet
+                if (!StyleRelDetect.IsMatch(match.Value)) continue;
+
                 // skip if not matched and setting only wants matches
-                if (ExtractOnlyEnableOptimization)
-                {
-                    if (!optMatch.Success) continue;
+                var (skip, posInPage, priority) = CheckOptimizationSettings(match, "head", CssDefaultPriority);
+                if (skip) continue;
 
-                    // skip if not stylesheet
-                    if (!StyleRelDetect.IsMatch(match.Value)) continue;
-
-                    posInPage = optMatch.Groups["Position"]?.Value ?? posInPage;
-
-                    priority = GetPriority(optMatch, priority);
-
-                    // don't register/remove if not within specs
-                    if (priority <= 0) continue;
-                }
+                // get all Attributes
+                var (_, cspCode) = GetHtmlAttributes(match.Value);
+                var forCsp = cspCode == _pageServiceShared.CspEphemeralMarker;
 
                 // Register, then remember to remove later on
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-                Assets.Add(new ClientAsset { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url });
+                Assets.Add(new ClientAsset { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url, WhitelistInCsp = forCsp});
                 styleMatchesToRemove.Add(match);
             }
 
