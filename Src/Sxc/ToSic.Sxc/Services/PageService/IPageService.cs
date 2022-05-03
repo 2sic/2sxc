@@ -153,24 +153,53 @@ namespace ToSic.Sxc.Services
 
         #region Security
 
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
-        Attribute CspWhitelistAttribute { get; }
+        ///// <summary>
+        ///// ContentSecurityPolicy Whitelist Attribute for a tag.
+        ///// It adds an attribute to a `script` or `link` tag containing a random key.
+        ///// This will let the CSP automatically whitelist what is being imported here.
+        /////
+        ///// The random key is important, to prevent XSS.
+        ///// </summary>
+        ///// <remarks>
+        ///// Added in v13.10
+        ///// </remarks>
+        //Attribute CspWhitelistAttribute();
+
 
         /// <summary>
-        /// Tells you if CSP is enabled or not. You cannot change it in code.
-        ///
-        /// To enable, do this in the settings (Global or Site)
+        /// Add common html attributes to a `script` or `link` tag to enable optimizations and whitelist in CSP
         /// </summary>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
-        bool CspIsEnabled { get; }
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="optimize">Activate optimize, default is true</param>
+        /// <param name="priority">Optional priority of optimization. Must be more than 100 to have an effect.</param>
+        /// <param name="position">Optional position of the resource (`head`, `body`, `bottom`)</param>
+        /// <param name="whitelist">Automatically add to CSP-whitelist. This uses a random key to protect against XSS.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// History: Created in 2sxc 13.10
+        /// </remarks>
+        IHybridHtmlString AssetAttributes(
+            string noParamOrder = Eav.Parameters.Protector,
+            bool optimize = true,
+            int priority = 0,
+            string position = null, 
+            bool whitelist = true);
 
-        /// <summary>
-        /// You can determine if CSP should report only. You cannot change it in code.
-        ///
-        /// To enable, do this in the settings (Global or Site)
-        /// </summary>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
-        bool CspIsEnforced { get; }
+        ///// <summary>
+        ///// Tells you if CSP is enabled or not. You cannot change it in code.
+        /////
+        ///// To enable, do this in the settings (Global or Site)
+        ///// </summary>
+        //[PrivateApi("Beta / WIP")]
+        //bool CspIsEnabled { get; }
+
+        ///// <summary>
+        ///// You can determine if CSP should report only. You cannot change it in code.
+        /////
+        ///// To enable, do this in the settings (Global or Site)
+        ///// </summary>
+        //[PrivateApi("Beta / WIP")]
+        //bool CspIsEnforced { get; }
 
         /// <summary>
         /// Add a CSP rule where you also specify the name.
@@ -180,6 +209,9 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="name"></param>
         /// <param name="values"></param>
+        /// <remarks>
+        /// History: Created in 2sxc 13.10
+        /// </remarks>
         [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
         void AddCsp(string name, params string[] values);
 

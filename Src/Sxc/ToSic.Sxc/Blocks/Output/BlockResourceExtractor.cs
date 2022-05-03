@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Blocks.Output
         /// that we need to skip from adding in general HtmlAttributes dictionary
         /// because this special attributes are handled in custom way.
         /// </summary>
-        private static readonly List<string> SkipHtmlAttributes = new List<string> { "src", "id", "data-enableoptimizations", CspConstants.CspWhitelistAttribute };
+        private static readonly List<string> SkipHtmlAttributes = new List<string> { "src", "id", PageService.AssetOptimizationsAttributeName, CspConstants.CspWhitelistAttribute };
 
         #endregion
 

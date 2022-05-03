@@ -41,9 +41,6 @@ namespace ToSic.Sxc.Web.PageService
         [PrivateApi("not final yet, will probably change")]
         public PageChangeModes ChangeMode { get; set; } = PageChangeModes.Auto;
 
-        public Attribute CspWhitelistAttribute => CspIsEnabled 
-            ? Tag.Attr(CspConstants.CspWhitelistAttribute, PageServiceShared.CspEphemeralMarker) 
-            : null;
 
         public bool CspIsEnabled => _cspServiceLazy.Value.IsEnabled;
 
