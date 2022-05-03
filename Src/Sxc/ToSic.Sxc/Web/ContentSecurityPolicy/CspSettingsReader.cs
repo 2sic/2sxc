@@ -10,6 +10,11 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// </summary>
     public class CspSettingsReader: HasLog
     {
+        private const string FieldIsEnabled = "IsEnabled";
+        private const string FieldIsEnforced = "IsEnforced";
+        private const string FieldPolicies = "Policies";
+        private const string FieldCSPs = "ContentSecurityPolicies";
+
         public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode, ILog parentLog): base(CspConstants.LogPrefix + ".Setting", parentLog)
         {
             _user = user;
@@ -17,33 +22,33 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             _settingsOrNull = settingsOrNull;
 
             // Enable this for edge cases where we must debug deeply into each settings-stack
-            if (_settingsOrNull != null) _settingsOrNull.Debug = true;
+            //if (_settingsOrNull != null) _settingsOrNull.Debug = true;
         }
         private readonly IUser _user;
         private readonly bool _devMode;
         private readonly DynamicStack _settingsOrNull;
 
 
-        public bool IsEnabled => SettingPreferred.Setting?.Get("IsEnabled") ?? SettingsDefault?.Get("IsEnabled") == true;
+        public bool IsEnabled => SettingPreferred.Setting?.Get(FieldIsEnabled) ?? SettingsDefault?.Get(FieldIsEnabled) == true;
 
-        public bool IsEnforced => SettingPreferred.Setting?.Get("IsEnforced") ?? SettingsDefault?.Get("IsEnforced") == true;
+        public bool IsEnforced => SettingPreferred.Setting?.Get(FieldIsEnforced) ?? SettingsDefault?.Get(FieldIsEnforced) == true;
 
         public string Policies
         {
             get
             {
                 var pref = SettingPreferred;
-                if (pref.Setting?.Get("Policies") is string preferred)
+                if (pref.Setting?.Get(FieldPolicies) is string preferred)
                     return $"// Preferred for {pref.Name} \n" + preferred;
 
-                if (SettingsDefault?.Get("Policies") is string defPolicies)
+                if (SettingsDefault?.Get(FieldPolicies) is string defPolicies)
                     return $"// Default (not found on {pref.Name}) \n" + defPolicies;
                 
                 return null;
             }
         }
 
-        private DynamicEntity SettingsRoot => _settingsRoot.Get(() => _settingsOrNull.Get("ContentSecurityPolicies") as DynamicEntity, Log, nameof(SettingsRoot));
+        private DynamicEntity SettingsRoot => _settingsRoot.Get(() => _settingsOrNull.Get(FieldCSPs) as DynamicEntity, Log, nameof(SettingsRoot));
         private readonly ValueGetOnce<DynamicEntity> _settingsRoot = new ValueGetOnce<DynamicEntity>();
 
         private (string Name, DynamicEntity Setting) SettingPreferred => _preferred.Get(() =>

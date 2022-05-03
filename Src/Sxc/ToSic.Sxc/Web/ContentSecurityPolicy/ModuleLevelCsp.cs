@@ -37,16 +37,23 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         }
 
         private IDynamicCodeRoot _codeRoot;
+        private DynamicStack CodeRootSettings()
+        {
+            var stack = _codeRoot?.Settings as DynamicStack;
+            // Enable this for detailed debugging
+            //if (stack != null) stack.Debug = true;
+            return stack;
+        }
 
         internal IParameters PageParameters => _pageParameters.Get(() => _codeRoot?.CmsContext?.Page?.Parameters, Log, nameof(PageParameters));
         private readonly ValueGetOnce<IParameters> _pageParameters = new ValueGetOnce<IParameters>();
         
         internal DynamicStack PageSettings => _pageSettings.Get(
-            () => (_codeRoot?.Settings as DynamicStack)?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem), Log, nameof(PageSettings));
+            () => CodeRootSettings()?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem), Log, nameof(PageSettings));
         private readonly ValueGetOnce<DynamicStack> _pageSettings = new ValueGetOnce<DynamicStack>();
 
         internal DynamicStack AppSettings => _appSettings.Get(
-            () => (_codeRoot?.Settings as DynamicStack)?.GetStack(PartAppSystem), Log, nameof(PageSettings));
+            () => CodeRootSettings()?.GetStack(PartAppSystem), Log, nameof(PageSettings));
         private readonly ValueGetOnce<DynamicStack> _appSettings = new ValueGetOnce<DynamicStack>();
 
         #endregion
