@@ -3,7 +3,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Services
 {
-    [PublicApi("BETA!")]
+    
     public interface IContentSecurityPolicyService
     {
         /// <summary>

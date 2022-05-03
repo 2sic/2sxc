@@ -156,6 +156,33 @@ namespace ToSic.Sxc.Services
         [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
         Attribute CspWhitelistAttribute { get; }
 
+        /// <summary>
+        /// Tells you if CSP is enabled or not. You cannot change it in code.
+        ///
+        /// To enable, do this in the settings (Global or Site)
+        /// </summary>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
+        bool CspIsEnabled { get; }
+
+        /// <summary>
+        /// You can determine if CSP should report only. You cannot change it in code.
+        ///
+        /// To enable, do this in the settings (Global or Site)
+        /// </summary>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
+        bool CspIsEnforced { get; }
+
+        /// <summary>
+        /// Add a CSP rule where you also specify the name.
+        ///
+        /// Example: `cspService.Add("default-src", "'self'")`
+        ///
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="values"></param>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
+        void AddCsp(string name, params string[] values);
+
         #endregion
     }
 
