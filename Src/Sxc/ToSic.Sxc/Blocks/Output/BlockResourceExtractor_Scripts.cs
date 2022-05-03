@@ -1,0 +1,92 @@
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using ToSic.Sxc.Web;
+
+namespace ToSic.Sxc.Blocks.Output
+{
+    public abstract partial class BlockResourceExtractor
+    {
+        protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs)
+        {
+            var wrapLog = Log.Call<string>();
+
+            var scriptMatches = ScriptSrcDetection.Matches(renderedTemplate);
+            var scriptMatchesToRemove = new List<Match>();
+
+            Log.Add($"Found {scriptMatches.Count} external scripts");
+            foreach (Match match in scriptMatches)
+            {
+                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
+
+                // always remove 2sxc JS requests from template and ensure it's added the standard way
+                if (Is2SxcApiJs(url))
+                {
+                    include2SxcJs = true;
+                    scriptMatchesToRemove.Add(match);
+                    continue;
+                }
+
+                // Also get the ID (new in v12)
+                var idMatches = IdDetection.Match(match.Value);
+                var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
+
+                var providerName = "body";
+                var priority = JsDefaultPriority;
+
+                // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
+                // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
+                // ...and another for the priority etc.
+
+                // skip if not matched and setting only wants matches
+                if (ExtractOnlyEnableOptimization)
+                {
+                    var optMatch = OptimizeDetection.Match(match.Value);
+                    if (!optMatch.Success) continue;
+
+                    providerName = optMatch.Groups["Position"]?.Value ?? providerName;
+
+                    priority = GetPriority(optMatch, priority);
+
+                    if (priority <= 0) continue; // don't register/remove if not within specs
+                }
+
+                // get all Attributes
+                var (attributes, cspCode) = GetHtmlAttributes(match.Value);
+                var forCsp = cspCode == _pageServiceShared.CspEphemeralMarker;
+
+                // Register, then add to remove-queue
+                Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url, HtmlAttributes = attributes, WhitelistInCsp = forCsp });
+                scriptMatchesToRemove.Add(match);
+            }
+
+            // remove in reverse order, so that the indexes don't change as we remove scripts in the HTML
+            scriptMatchesToRemove.Reverse();
+            scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
+            return wrapLog(null, renderedTemplate);
+        }
+
+
+        protected string ExtractInlineScripts(string renderedTemplate)
+        {
+            var wrapLog = Log.Call<string>();
+
+            var scriptMatches = ScriptContentDetection.Matches(renderedTemplate);
+            var scriptMatchesToRemove = new List<Match>();
+
+            Log.Add($"Found {scriptMatches.Count} inline scripts");
+            var order = 1000;
+            foreach (Match match in scriptMatches)
+            {
+                // Register, then add to remove-queue
+                Assets.Add(new ClientAsset { IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value, IsExternal = false });
+                scriptMatchesToRemove.Add(match);
+            }
+
+            // remove in reverse order, so that the indexes don't change
+            scriptMatchesToRemove.Reverse();
+            scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
+            return wrapLog(null, renderedTemplate);
+        }
+
+    }
+}

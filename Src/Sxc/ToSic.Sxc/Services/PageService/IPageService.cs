@@ -153,8 +153,8 @@ namespace ToSic.Sxc.Services
 
         #region Security
 
-        [PrivateApi]
-        Attribute CspWhitelistAttribute();
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
+        Attribute CspWhitelistAttribute { get; }
 
         #endregion
     }

@@ -1,12 +1,14 @@
 ﻿using DotNetNuke.Web.Client;
 using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnBlockResourceExtractor: BlockResourceExtractor
     {
+        public DnnBlockResourceExtractor(PageServiceShared pageServiceShared): base(pageServiceShared) { }
 
-        public override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
+        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
         {
             var wrapLog = Log.Call<(string, bool)>();
 
