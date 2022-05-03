@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Services
+namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
     /// <summary>
     /// Very experimental, do not use

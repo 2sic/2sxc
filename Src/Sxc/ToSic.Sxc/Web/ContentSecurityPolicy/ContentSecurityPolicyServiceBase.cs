@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Services
+namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
     /// <summary>
     /// Very experimental, do not use

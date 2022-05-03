@@ -4,15 +4,14 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Images
 {
     /// <summary>
-    /// # BETA
     /// Settings how to resize an image for the `src` or `srcset` attributes.
     ///
     /// It's read only, to create it, use the <see cref="ToSic.Sxc.Services.IImageService"/>
     /// </summary>
     /// <remarks>
-    /// History: **BETA** To be released ca. 2sxc 13.10
+    /// History: Released 2sxc 13.10
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
+    [PublicApi("Still WIP")]
     public interface IResizeSettings
     {
         /// <summary>
