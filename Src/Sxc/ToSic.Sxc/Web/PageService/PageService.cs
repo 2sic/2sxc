@@ -1,6 +1,9 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -13,12 +16,12 @@ namespace ToSic.Sxc.Web.PageService
             ToSic.Sxc.Web.IPageService    // Keep for compatibility with some Apps released in v12
 #pragma warning restore CS0618
     {
-        public PageServiceShared PageServiceShared { get; }
 
         public PageService(PageServiceShared pageServiceShared) : base("2sxc.PgeSrv")
         {
             PageServiceShared = pageServiceShared;
         }
+        public PageServiceShared PageServiceShared { get; }
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
@@ -35,5 +38,7 @@ namespace ToSic.Sxc.Web.PageService
         [PrivateApi("not final yet, will probably change")]
         public PageChangeModes ChangeMode { get; set; } = PageChangeModes.Auto;
 
+        public Attribute CspWhitelistAttribute() 
+            => Tag.Attr(CspConstants.CspWhitelistAttribute, PageServiceShared.CspEphemeralMarker);
     }
 }

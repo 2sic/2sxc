@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Web.PageService
     /// This controller should collect what all the <see cref="ToSic.Sxc.Services.IPageService"/> objects do, for use on the final page
     /// It must be scoped, so that it's the same object across the entire page-lifecycle.
     /// </summary>
-    public partial class PageServiceShared: IChangeQueue // , INeedsDynamicCodeRoot
+    public partial class PageServiceShared: IChangeQueue
     {
 
         public PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, ModuleLevelCsp csp)
@@ -22,6 +23,9 @@ namespace ToSic.Sxc.Web.PageService
         internal readonly IFeaturesService FeaturesService;
         public IPageFeatures PageFeatures { get; }
         public ModuleLevelCsp Csp { get; }
+
+        public string CspEphemeralMarker => _cspEphemeralMarker.Get(() => new Random().Next(1000000, 9999999).ToString());
+        private ValueGetOnce<string> _cspEphemeralMarker = new ValueGetOnce<string>();
 
 
         /// <summary>

@@ -11,5 +11,7 @@
         public const string CspUrlParameter = "csp";
         public const string CspUrlTrue = "true";
         public const string CspUrlDev = "dev";
+
+        public const string CspWhitelistAttribute = "csp-whitelist";
     }
 }

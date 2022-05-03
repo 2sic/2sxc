@@ -150,6 +150,13 @@ namespace ToSic.Sxc.Services
         void Activate(params string[] keys);
 
         #endregion
+
+        #region Security
+
+        [PrivateApi]
+        Attribute CspWhitelistAttribute();
+
+        #endregion
     }
 
 }

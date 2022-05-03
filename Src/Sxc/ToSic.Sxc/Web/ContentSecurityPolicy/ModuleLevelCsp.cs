@@ -93,8 +93,8 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         #endregion
 
-        internal void AddCspService(CspServiceBase provider) => CspServices.Add(provider);
-        internal readonly List<CspServiceBase> CspServices = new List<CspServiceBase>();
+        internal void AddCspService(ContentSecurityPolicyServiceBase provider) => CspServices.Add(provider);
+        internal readonly List<ContentSecurityPolicyServiceBase> CspServices = new List<ContentSecurityPolicyServiceBase>();
 
         public List<CspParameters> CspParameters()
         {
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             {
                 Log.Add("Policies found");
                 // Create a CspService which just contains these new policies for merging later on
-                var policyCsp = new CspServiceBase();
+                var policyCsp = new ContentSecurityPolicyServiceBase();
                 foreach (var policy in Policies)
                     policyCsp.Add(policy.Key, policy.Value);
                 AddCspService(policyCsp);
