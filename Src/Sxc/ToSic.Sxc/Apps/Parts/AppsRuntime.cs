@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Apps
                         {
                             if (!appStateWithCacheInfo.IsCached(aId)) return false;
                             var appState = _appStates.Get(aId);
-                            return appState != null && appState.IsGlobal() && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
+                            return appState != null && appState.IsShared() && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
                         })
                         .Select(a => _appGenerator.New // ServiceProvider.Build<App>()
                             .PreInit(site)

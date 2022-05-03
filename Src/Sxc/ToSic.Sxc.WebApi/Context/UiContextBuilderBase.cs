@@ -198,7 +198,8 @@ namespace ToSic.Sxc.WebApi.Context
 
             result.Permissions = new HasPermissionsDto { Count = AppState.Metadata.Permissions.Count() };
 
-            result.IsGlobal = AppState.IsGlobal();
+            result.IsGlobal = AppState.IsShared();
+            result.IsShared = result.IsGlobal;
             result.IsInherited = AppState.IsInherited();
             return result;
         }

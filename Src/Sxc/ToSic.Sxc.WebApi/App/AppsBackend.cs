@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.App
                 Items = a.Data.List.Count(),
                 Thumbnail = a.Thumbnail,
                 Version = a.VersionSafe(),
-                IsGlobal = a.AppState.IsGlobal(),
+                IsGlobal = a.AppState.IsShared(),
                 IsInherited = a.AppState.IsInherited(),
                 Lightspeed = lightspeed,
             };
