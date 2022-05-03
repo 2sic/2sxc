@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -87,10 +88,11 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
+        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull, PropertyLookupPath path)
         {
+            path = path.KeepOrNew().Add("DynJacket", field);
             var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
-            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
+            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic", Path = path };
         }
 
         public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Data
 {
@@ -20,13 +22,11 @@ namespace ToSic.Sxc.Data
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <inheritdoc />
-        //public void SetDebug(bool debug) => _debug = debug;
-        //protected bool _debug;
         public bool Debug { get; set; }
 
 
         [PrivateApi("Internal")]
-        public abstract PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull);
+        public abstract PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path);
         
 
         
@@ -53,6 +53,9 @@ namespace ToSic.Sxc.Data
         public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);
 
         #endregion
+
+        protected ILog LogOrNull => _logOrNull.Get(() => _Dependencies.LogOrNull?.SubLogOrNull("DynEnt", Debug));
+        private readonly ValueGetOnce<ILog> _logOrNull = new ValueGetOnce<ILog>();
 
     }
 }

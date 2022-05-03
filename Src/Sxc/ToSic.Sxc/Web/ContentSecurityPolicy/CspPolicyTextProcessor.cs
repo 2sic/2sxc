@@ -1,13 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class CspPolicyTextProcessor
+    public class CspPolicyTextProcessor: HasLog
     {
+        public CspPolicyTextProcessor(ILog parentLog) : base(CspConstants.LogPrefix + ".TxtPrc", parentLog)
+        {
+        }
+
         public List<KeyValuePair<string,string>> Parse(string policyText)
         {
+            var wrapLog = Log.Call<List<KeyValuePair<string, string>>>();
+
             var result = new List<KeyValuePair<string,string>>();
             if (string.IsNullOrEmpty(policyText)) return result;
             var lines = policyText.SplitNewLine()
@@ -28,7 +35,8 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 result.Add(new KeyValuePair<string, string>(key, value));
             }
 
-            return result;
+            return wrapLog(result.Count.ToString(), result);
         }
+
     }
 }

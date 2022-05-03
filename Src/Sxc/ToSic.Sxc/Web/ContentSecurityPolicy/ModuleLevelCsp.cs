@@ -4,10 +4,11 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Configuration.Features;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Services;
+using static ToSic.Eav.Configuration.ConfigurationStack;
+using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
+using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
@@ -39,25 +40,39 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         internal IParameters PageParameters => _pageParameters.Get(() => _codeRoot?.CmsContext?.Page?.Parameters, Log, nameof(PageParameters));
         private readonly ValueGetOnce<IParameters> _pageParameters = new ValueGetOnce<IParameters>();
-        internal DynamicStack PageSettings => _pageSettings.Get(() => _codeRoot?.Settings as DynamicStack, Log, nameof(PageSettings));
+        
+        internal DynamicStack PageSettings => _pageSettings.Get(
+            () => (_codeRoot?.Settings as DynamicStack)?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem), Log, nameof(PageSettings));
         private readonly ValueGetOnce<DynamicStack> _pageSettings = new ValueGetOnce<DynamicStack>();
+
+        internal DynamicStack AppSettings => _appSettings.Get(
+            () => (_codeRoot?.Settings as DynamicStack)?.GetStack(PartAppSystem), Log, nameof(PageSettings));
+        private readonly ValueGetOnce<DynamicStack> _appSettings = new ValueGetOnce<DynamicStack>();
 
         #endregion
 
         #region Read Settings
 
         /// <summary>
-        /// CSP Settings Reader from Dynamic Entity
+        /// CSP Settings Reader from Dynamic Entity for the Site
         /// </summary>
-        private CspSettingsReader CspSettings => _cspSettings.Get(()
+        private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(()
             => new CspSettingsReader(PageSettings, _user,
                 CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev), Log), Log, nameof(CspServices));
-        private readonly ValueGetOnce<CspSettingsReader> _cspSettings = new ValueGetOnce<CspSettingsReader>();
+        private readonly ValueGetOnce<CspSettingsReader> _siteCspSettings = new ValueGetOnce<CspSettingsReader>();
+
+        /// <summary>
+        /// CSP Settings Reader from Dynamic Entity for the App
+        /// </summary>
+        private CspSettingsReader AppCspSettings => _appCspSettings.Get(()
+            => new CspSettingsReader(AppSettings, _user,
+                CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev), Log), Log, nameof(CspServices));
+        private readonly ValueGetOnce<CspSettingsReader> _appCspSettings = new ValueGetOnce<CspSettingsReader>();
 
         /// <summary>
         /// Enforce?
         /// </summary>
-        internal bool IsEnforced => _cspReportOnly.Get(() => CspSettings.IsEnforced, Log, nameof(IsEnforced));
+        internal bool IsEnforced => _cspReportOnly.Get(() => SiteCspSettings.IsEnforced, Log, nameof(IsEnforced));
         private readonly ValueGetOnce<bool> _cspReportOnly = new ValueGetOnce<bool>();
 
         /// <summary>
@@ -71,7 +86,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             if (enforce) return true;
 
             // Try settings
-            if (CspSettings.IsEnabled) return true;
+            if (SiteCspSettings.IsEnabled) return true;
 
             return CspUrlParam.EqualsInsensitive(CspConstants.CspUrlTrue) || CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev);
         }, Log, nameof(IsEnabled));
@@ -88,7 +103,14 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private readonly ValueGetOnce<string> _cspUrlParam = new ValueGetOnce<string>();
 
         internal List<KeyValuePair<string, string>> Policies 
-            => _policies.Get(() => new CspPolicyTextProcessor().Parse(CspSettings.Policies), Log, nameof(Policies));
+            => _policies.Get(() =>
+            {
+                var sitePolicies = SiteCspSettings.Policies;
+                var appPolicies = AppCspSettings.Policies;
+                Log.Add("site:" + sitePolicies);
+                Log.Add("app:" + appPolicies);
+                return new CspPolicyTextProcessor(Log).Parse($"{sitePolicies}\n{appPolicies}");
+            }, Log, nameof(Policies));
         private readonly ValueGetOnce<List<KeyValuePair<string, string>>> _policies = new ValueGetOnce<List<KeyValuePair<string, string>>>();
 
         #endregion
