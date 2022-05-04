@@ -4,7 +4,7 @@
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc</AssemblyName>
-    <Version>13.07.00</Version>
+    <Version>13.10.00</Version>
     <Deterministic>true</Deterministic>
     <FileAlignment>512</FileAlignment>
     <NoWarn>7035</NoWarn>
