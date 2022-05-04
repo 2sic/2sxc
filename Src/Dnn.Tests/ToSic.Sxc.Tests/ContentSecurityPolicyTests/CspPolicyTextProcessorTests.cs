@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
     [TestClass]
     public class CspPolicyTextProcessorTests
     {
-        private readonly CspPolicyTextProcessor _processor = new CspPolicyTextProcessor();
+        private readonly CspPolicyTextProcessor _processor = new CspPolicyTextProcessor(null);
 
         [TestMethod]
         public void EmptyWhenNull() => Assert.AreEqual(0, _processor.Parse(null).Count);
