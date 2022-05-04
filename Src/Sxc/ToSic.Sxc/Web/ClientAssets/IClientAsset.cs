@@ -17,6 +17,9 @@ namespace ToSic.Sxc.Web
         bool IsExternal { get; set; }
         string Content { get; set; }
 
+        bool WhitelistInCsp { get; set; }
+
+
         /// <summary>
         /// Used to store all other html attributes from html tag.
         /// </summary>

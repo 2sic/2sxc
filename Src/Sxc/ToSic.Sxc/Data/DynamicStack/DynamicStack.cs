@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -33,9 +34,10 @@ namespace ToSic.Sxc.Data
 
         public dynamic GetStack(params string[] names)
         {
-            var newStack = UnwrappedContents.GetStack(names);
+            var wrapLog = LogOrNull.SafeCall<dynamic>();
+            var newStack = UnwrappedContents.GetStack(LogOrNull, names);
             var newDynStack = new DynamicStack("New", _Dependencies, newStack.Sources.ToArray());
-            return newDynStack;
+            return wrapLog(null, newDynStack);
         }
 
         private IDynamicEntity SourceToDynamicEntity(IPropertyLookup source)
@@ -47,12 +49,13 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi("Internal")]
-        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
+        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path)
         {
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk", Debug);
+            path = path.KeepOrNew().Add("DynStack", field);
 
             var wrapLog = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
-            var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull);
+            var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull, path);
             return wrapLog(result == null ? "null" : "ok", result);
         }
 

@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Reflection;
 using Newtonsoft.Json;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -55,10 +56,11 @@ namespace ToSic.Sxc.Data
             => throw new NotSupportedException($"Setting a value on {nameof(DynamicReadObject)} is not supported");
 
         [PrivateApi]
-        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull)
+        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull, PropertyLookupPath path)
         {
+            path = path.KeepOrNew().Add("DynReadObj", field);
             var result = FindValueOrNull(field);
-            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
+            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic", Path = path };
         }
 
 

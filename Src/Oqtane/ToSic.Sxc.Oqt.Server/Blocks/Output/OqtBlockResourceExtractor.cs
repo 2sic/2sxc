@@ -1,10 +1,13 @@
 ﻿using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
     public class OqtBlockResourceExtractor: BlockResourceExtractor
     {
-        public override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
+        public OqtBlockResourceExtractor(PageServiceShared pageServiceShared): base(pageServiceShared) { }
+
+        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
         {
             var include2SxcJs = false;
 

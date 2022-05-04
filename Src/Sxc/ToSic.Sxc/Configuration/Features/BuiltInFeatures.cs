@@ -10,7 +10,16 @@ namespace ToSic.Sxc.Configuration.Features
                 RenderThrowPartialSystemAdmin,
                 ContentSecurityPolicy,
                 ContentSecurityPolicyTestUrl,
-                ContentSecurityPolicyEnforceTemp
+                ContentSecurityPolicyEnforceTemp,
+
+                // Patrons Perfectionist
+                ImageServiceMultiFormat, // v13
+                ImageServiceMultipleSizes,
+                ImageServiceSetSizes,
+                ImageServiceUseFactors,
+
+                LightSpeedOutputCache,
+                LightSpeedOutputCacheAppFileChanges
             );
 
 

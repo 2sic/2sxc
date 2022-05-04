@@ -8,13 +8,12 @@ using ToSic.Sxc.Images;
 namespace ToSic.Sxc.Services
 {
     /// <summary>
-    /// # BETA
     /// Service to help create responsive `img` and `picture` tags the best possible way.
     /// </summary>
     /// <remarks>
-    /// History: **BETA** Released ca. 2sxc 13.10
+    /// History: Released 2sxc 13.10
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still WIP")]
+    [PublicApi("Still WIP")]
     public interface IImageService: ICanDebug
     {
         /// <summary>

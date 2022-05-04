@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Runtime.Caching.Hosting;
 
-namespace ToSic.Sxc.Beta.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed
 {
     //  based on https://github.com/microsoft/referencesource/blob/master/System.Runtime.Caching/System/Caching/FileChangeNotificationSystem.cs
     public class FolderChangeNotificationSystem : IFileChangeNotificationSystem

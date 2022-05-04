@@ -4,7 +4,7 @@ using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Beta.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed
 {
     [PrivateApi]
     public class OutputCacheManager

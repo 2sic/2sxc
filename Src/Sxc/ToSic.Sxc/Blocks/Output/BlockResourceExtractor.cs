@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Blocks.Output
 {
-    public abstract class BlockResourceExtractor: HasLog, IBlockResourceExtractor
+    public abstract partial class BlockResourceExtractor: HasLog, IBlockResourceExtractor
     {
         #region Construction / DI
-        protected BlockResourceExtractor() : base("Sxc.AstOpt") { }
+
+        protected BlockResourceExtractor(PageServiceShared pageServiceShared) : base("Sxc.AstOpt") 
+            => _pageServiceShared = pageServiceShared;
+        private readonly PageServiceShared _pageServiceShared;
 
         #endregion
 
@@ -37,7 +44,7 @@ namespace ToSic.Sxc.Blocks.Output
         /// that we need to skip from adding in general HtmlAttributes dictionary
         /// because this special attributes are handled in custom way.
         /// </summary>
-        private static readonly List<string> SkipHtmlAttributes = new List<string> { "src", "id", "data-enableoptimizations" };
+        private static readonly List<string> SkipHtmlAttributes = new List<string> { "src", "id", PageService.AssetOptimizationsAttributeName, CspConstants.CspWhitelistAttribute };
 
         #endregion
 
@@ -59,128 +66,23 @@ namespace ToSic.Sxc.Blocks.Output
             return new RenderEngineResult(template, include2SxcJs, Assets);
         }
 
-        public abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate);
+        protected abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate);
 
 
-        protected string ExtractStyles(string renderedTemplate)
-        {
-            var wrapLog = Log.Call<string>();
-            var styleMatches = StyleDetection.Matches(renderedTemplate);
-            var styleMatchesToRemove = new List<Match>();
 
-            Log.Add($"Found {styleMatches.Count} external styles");
-            foreach (Match match in styleMatches)
-            {
-                var posInPage = "head"; // default for styles
-                var priority = CssDefaultPriority;
-
-                var optMatch = OptimizeDetection.Match(match.Value);
-
-                // Also get the ID (new in v12)
-                var idMatches = IdDetection.Match(match.Value);
-                var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
-
-                // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
-                // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
-                // ...and another for the priority etc.
-
-                // skip if not matched and setting only wants matches
-                if (ExtractOnlyEnableOptimization)
-                {
-                    if (!optMatch.Success) continue;
-
-                    // skip if not stylesheet
-                    if (!StyleRelDetect.IsMatch(match.Value)) continue;
-
-                    posInPage = optMatch.Groups["Position"]?.Value ?? posInPage;
-
-                    priority = GetPriority(optMatch, priority);
-
-                    // don't register/remove if not within specs
-                    if (priority <= 0) continue; 
-                }
-
-                // Register, then remember to remove later on
-                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-                Assets.Add(new ClientAsset { Id = id, IsJs = false, PosInPage = posInPage, Priority = priority, Url = url });
-                styleMatchesToRemove.Add(match);
-            }
-
-            styleMatchesToRemove.Reverse();
-            styleMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog(null, renderedTemplate);
-        }
-
-        protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs)
-        {
-            var wrapLog = Log.Call<string>();
-
-            var scriptMatches = ScriptSrcDetection.Matches(renderedTemplate);
-            var scriptMatchesToRemove = new List<Match>();
-
-            Log.Add($"Found {scriptMatches.Count} external scripts");
-            foreach (Match match in scriptMatches)
-            {
-                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
-
-                // always remove 2sxc JS requests from template and ensure it's added the standard way
-                if (Is2SxcApiJs(url))
-                {
-                    include2SxcJs = true;
-                    scriptMatchesToRemove.Add(match);
-                    continue;
-                }
-
-                // Also get the ID (new in v12)
-                var idMatches = IdDetection.Match(match.Value);
-                var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
-
-                var providerName = "body";
-                var priority = JsDefaultPriority;
-
-                // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
-                // ...so to improve this code, we would have to use 2 regexs - one for detecting "enable-optimizations" 
-                // ...and another for the priority etc.
-
-                // skip if not matched and setting only wants matches
-                if (ExtractOnlyEnableOptimization)
-                {
-                    var optMatch = OptimizeDetection.Match(match.Value);
-                    if (!optMatch.Success) continue;
-
-                    providerName = optMatch.Groups["Position"]?.Value ?? providerName;
-
-                    priority = GetPriority(optMatch, priority);
-
-                    if (priority <= 0) continue; // don't register/remove if not within specs
-                }
-
-                // get all Attributes
-                var attributes = GetHtmlAttributes(match.Value);
-
-                // Register, then add to remove-queue
-                Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = providerName, Priority = priority, Url = url, HtmlAttributes = attributes });
-                scriptMatchesToRemove.Add(match);
-            }
-
-            // remove in reverse order, so that the indexes don't change
-            scriptMatchesToRemove.Reverse();
-            scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog(null, renderedTemplate);
-        }
 
         /// <summary>
         /// Extract dictionary of html attributes
         /// </summary>
         /// <param name="htmlTag"></param>
         /// <returns></returns>
-        public static IDictionary<string, string> GetHtmlAttributes(string htmlTag)
+        public static (IDictionary<string, string> Attributes, string CspCode) GetHtmlAttributes(string htmlTag)
         {
-            if (string.IsNullOrWhiteSpace(htmlTag)) return null;
+            if (string.IsNullOrWhiteSpace(htmlTag)) return (null, null);
 
             var attributesMatch = AttributesDetection.Matches(htmlTag);
 
-            if (attributesMatch.Count == 0) return null;
+            if (attributesMatch.Count == 0) return (null, null);
 
             var attributes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             foreach (Match attributeMatch in attributesMatch)
@@ -195,31 +97,15 @@ namespace ToSic.Sxc.Blocks.Output
 
                 attributes[key] = value; // add or update
             }
-            return attributes;
+
+            var cspCode = attributesMatch.Cast<Match>()
+                .FirstOrDefault(m =>
+                    m.Groups["Key"]?.Value.EqualsInsensitive(CspConstants.CspWhitelistAttribute) == true)
+                ?.Groups["Value"]?.Value;
+            return (attributes, cspCode);
         }
 
 
-        protected string ExtractInlineScripts(string renderedTemplate)
-        {
-            var wrapLog = Log.Call<string>();
-
-            var scriptMatches = ScriptContentDetection.Matches(renderedTemplate);
-            var scriptMatchesToRemove = new List<Match>();
-
-            Log.Add($"Found {scriptMatches.Count} inline scripts");
-            var order = 1000;
-            foreach (Match match in scriptMatches)
-            {
-                // Register, then add to remove-queue
-                Assets.Add(new ClientAsset { IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value, IsExternal = false});
-                scriptMatchesToRemove.Add(match);
-            }
-
-            // remove in reverse order, so that the indexes don't change
-            scriptMatchesToRemove.Reverse();
-            scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog(null, renderedTemplate);
-        }
 
 
         /// <summary>
@@ -232,7 +118,7 @@ namespace ToSic.Sxc.Blocks.Output
         /// <param name="url"></param>
         /// <returns></returns>
         private static bool Is2SxcApiJs(string url) => url.ToLowerInvariant()
-            .Replace("\\", "/")
+            .ForwardSlash()
             .Contains("/js/2sxc.api");
 
         /// <summary>
@@ -247,37 +133,8 @@ namespace ToSic.Sxc.Blocks.Output
             return "~" + url;
         }
 
-        private int GetPriority(Match optMatch, int defValue)
-        {
-            var priority = (optMatch.Groups["Priority"]?.Value ?? "true").ToLowerInvariant();
-            var prio = priority == "true" || priority == ""
-                ? defValue
-                : int.Parse(priority);
-            return prio;
-        }
 
 
-        #region RegEx formulas and static compiled RegEx objects (performance)
-
-        private const string ClientDependencyRegex =
-            "\\sdata-enableoptimizations=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
-
-        private const string ScriptSrcFormula = "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))";
-        private const string ScriptContentFormula = @"<script[^>]*>(?<Content>(.|\n)*?)</script[^>]*>";
-        private const string StyleSrcFormula = "<link\\s([^>]*)href=('|\")(?<Src>.*?)('|\")([^>]*)(>.*?</link>|/?>)";
-        private const string StyleRelFormula = "('|\"|\\s)rel=('|\")stylesheet('|\")";
-        private const string IdFormula = "('|\"|\\s)id=('|\")(?<Id>.*?)('|\")";
-        private const string AttributesFormula = "\\s(?<Key>[\\w-]+(?=[^<]*>))=([\"'])(?<Value>.*?[^\\1][\\s\\S]+?)\\1|\\s(?<Key>[\\w-]+(?=.*?))";
-        
-        internal static readonly Regex ScriptSrcDetection = new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        internal static readonly Regex ScriptContentDetection = new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline);
-        internal static readonly Regex StyleDetection = new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        internal static readonly Regex StyleRelDetect = new Regex(StyleRelFormula, RegexOptions.IgnoreCase);
-        internal static readonly Regex OptimizeDetection = new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase);
-        internal static readonly Regex IdDetection = new Regex(IdFormula, RegexOptions.IgnoreCase);
-        internal static readonly Regex AttributesDetection = new Regex(AttributesFormula, RegexOptions.IgnoreCase);
-
-        #endregion
 
     }
 }

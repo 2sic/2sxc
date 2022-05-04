@@ -1,17 +1,16 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc.Services
+namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
     /// <summary>
     /// Very experimental, do not use
     /// </summary>
     [PrivateApi]
-    public class CspService : CspServiceBase, ICspService
+    public class ContentSecurityPolicyService : ContentSecurityPolicyServiceBase, IContentSecurityPolicyService
     {
-        public CspService(PageServiceShared pageServiceShared)
+        public ContentSecurityPolicyService(PageServiceShared pageServiceShared)
         {
             _pageSvcShared = pageServiceShared;
             pageServiceShared.Csp.AddCspService(this);

@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Beta.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed
 {
     public class OutputCacheItem
     {

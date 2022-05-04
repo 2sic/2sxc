@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.Data
                     Pdi = new PropertyDumpItem
                     {
                         Path = path + PropertyDumpItem.Separator + p.Key,
-                        Property = FindPropertyInternal(p.Key, languages, parentLogOrNull),
+                        Property = FindPropertyInternal(p.Key, languages, parentLogOrNull, new PropertyLookupPath().Add("DynReadObject", p.Key)),
                         SourceName = _dumpSourceName
                     }
                 })

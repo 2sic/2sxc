@@ -9,7 +9,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Data
 {

@@ -7,6 +7,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -72,6 +73,14 @@ namespace ToSic.Sxc.Blocks
                     result.HttpStatusCode = pss.HttpStatusCode;
                     result.HttpStatusMessage = pss.HttpStatusMessage;
                     result.HttpHeaders = pss.HttpHeaders;
+
+                    // CSP settings
+                    result.CspEnabled = pss.Csp.IsEnabled;
+                    result.CspEnforced = pss.Csp.IsEnforced;
+                    result.CspParameters = pss.Csp.CspParameters();
+                    // Whitelist any assets which were officially ok, or which were from the settings
+                    var additionalCsp = GetCspListFromAssets(Assets);
+                    if(additionalCsp != null) result.CspParameters.Add(additionalCsp);
                 }
 
                 _result = result;
@@ -85,6 +94,23 @@ namespace ToSic.Sxc.Blocks
             return wrapLog(null, _result);
         }
 
+        private CspParameters GetCspListFromAssets(List<IClientAsset> assets)
+        {
+            if (assets == null || assets.Count == 0) return null;
+            var toWhitelist = assets
+                .Where(a => a.WhitelistInCsp)
+                .Where(a => !a.Url.NeverNull().StartsWith("/")) // skip local files
+                .ToList();
+            if (!toWhitelist.Any()) return null;
+            var whitelist = new CspParameters();
+            foreach (var asset in toWhitelist)
+            {
+                whitelist.Add((asset.IsJs ? "script" : "style") + "-src", asset.Url);
+            }
+
+            return whitelist;
+        }
+
         private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)
         {
             var wrapLog = Log.Call<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
@@ -94,7 +120,12 @@ namespace ToSic.Sxc.Blocks
                 var extracted = _resourceExtractor.Ready.Process(settingFeature.Html);
                 if (!extracted.Assets.Any()) continue;
                 Log.Add($"Moved Feature Html {settingFeature.NameId} to assets");
+
+                // All resources from the settings are seen as safe
+                extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
+
                 newAssets.AddRange(extracted.Assets);
+                // Reset the HTML to what's left after extracting the resources
                 settingFeature.Html = extracted.Html;
             }
 

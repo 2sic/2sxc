@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 
-namespace ToSic.Sxc.Beta.LightSpeed
+namespace ToSic.Sxc.Web.LightSpeed
 {
     public interface IOutputCache: IHasLog
     {

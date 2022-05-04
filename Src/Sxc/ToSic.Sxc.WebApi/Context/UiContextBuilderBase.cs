@@ -11,7 +11,7 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Web.JsContext;
-using static ToSic.Eav.Configuration.FeaturesBuiltIn;
+using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
-            var isRealApp = App != null && App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
+            var isRealApp = AppState != null && !AppState.IsContentApp();// App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
             var tmp = new JsContextUser(Deps.SiteCtx.User);
             var dto = new ContextEnableDto
             {
@@ -165,33 +165,41 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected virtual ContextAppDto GetApp(Ctx flags)
         {
-            if (App == null) return null;
+            if (AppState == null || App == null) return null;
             var result = new ContextAppDto
             {
-                Id = App.AppId,
-                Name = App.Name,
-                Folder = App.Folder,
+                Id = AppState.AppId,
+                Name = AppState.Name,
+                Folder = AppState.Folder,
                 Url = App?.Path,
                 SharedUrl = App?.PathShared
             };
+
+            // Stop now if we don't need edit or advanced
+            if (!flags.HasFlag(Ctx.AppEdit) && !flags.HasFlag(Ctx.AppAdvanced)) return result;
+
+            result.IsGlobalApp = AppState.IsGlobalSettingsApp();
+            result.IsSiteApp = AppState.IsSiteSettingsApp();
+            // only check content if not global, as that has the same id
+            if (!result.IsGlobalApp) result.IsContentApp = AppState.IsContentApp();
 
             // Stop now if we don't need advanced infos
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             result.GettingStartedUrl = GetGettingStartedUrl();
-            result.Identifier = _appToLaterInitialize.NameId;
+            result.Identifier = AppState.NameId;
             
             // #SiteApp v13
-            result.SettingsScope = App.AppId == 1 
+            result.SettingsScope = AppState.IsGlobalSettingsApp()
                 ? "Global" 
-                : result.Identifier == Eav.Constants.PrimaryAppGuid 
+                : AppState.IsSiteSettingsApp()
                     ? "Site" 
                     : "App";
 
-            result.Permissions = new HasPermissionsDto { Count = App.Metadata.Permissions.Count() };
+            result.Permissions = new HasPermissionsDto { Count = AppState.Metadata.Permissions.Count() };
 
-            result.IsGlobal = App.AppState.IsGlobal();
-            result.IsInherited = App.AppState.IsInherited();
+            result.IsShared = AppState.IsShared();
+            result.IsInherited = AppState.IsInherited();
             return result;
         }
     }

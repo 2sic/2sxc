@@ -141,7 +141,7 @@ namespace ToSic.Sxc.Apps
                         () => _globalPaths.Value.GlobalPathTo(AppConstants.AppPrimaryIconFile, PathTypes.Link));
 
                 // standard app (not global) try to find app-icon in its (portal) app folder
-                if (!AppState.IsGlobal())
+                if (!AppState.IsShared())
                     if (File.Exists(PhysicalPath + "/" + AppConstants.AppIconFile))
                         return _thumbnail = Path + "/" + AppConstants.AppIconFile;
 

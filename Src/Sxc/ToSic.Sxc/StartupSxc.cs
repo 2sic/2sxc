@@ -5,7 +5,6 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
-using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
@@ -24,6 +23,7 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.JsContext;
+using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
@@ -116,9 +116,8 @@ namespace ToSic.Sxc
             // So it actually looks like it's very module-scoped already, but had workarounds for it.
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
-            services.TryAddTransient<ICspService, CspService>();
+            services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
             services.TryAddScoped<ModuleLevelCsp>();  // important: must be scoped!
-            //services.TryAddTransient<CspService>();
             //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 
@@ -163,8 +162,6 @@ namespace ToSic.Sxc
 
             // v13 Experimental LightSpeed
             services.TryAddTransient<IOutputCache, LightSpeed>();
-            //services.TryAddSingleton<AppResetMonitors>();
-            //services.TryAddSingleton<IFileChangeNotificationSystem, FolderChangeNotificationSystem>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

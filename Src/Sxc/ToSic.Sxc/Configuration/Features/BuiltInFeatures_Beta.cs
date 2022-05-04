@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "If enabled, then Html.Render or similar activities which throw an error won't stop the entire module, but just that part. ",
             FeaturesCatalogRules.Security0Neutral,
-            FeaturesBuiltIn.ForBeta
+            Eav.Configuration.BuiltInFeatures.ForCorePlusEnabled
         );
 
         public static readonly FeatureDefinition RenderThrowPartialSystemAdmin = new FeatureDefinition(
@@ -24,8 +24,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "If enabled, then Html.Render or similar activities which throw an error won't stop the entire module, but just that part. ",
             FeaturesCatalogRules.Security0Neutral,
-            FeaturesBuiltIn.ForBetaEnabled
+            Eav.Configuration.BuiltInFeatures.ForCorePlusEnabled
         );
-
     }
 }

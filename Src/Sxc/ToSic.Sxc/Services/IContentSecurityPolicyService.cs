@@ -1,6 +1,10 @@
-﻿namespace ToSic.Sxc.Services
+﻿using ToSic.Eav.Documentation;
+using ToSic.Sxc.Web;
+
+namespace ToSic.Sxc.Services
 {
-    public interface ICspService
+    
+    public interface IContentSecurityPolicyService
     {
         /// <summary>
         /// You can determine if CSP should report only. You cannot change it in code.
@@ -18,11 +22,16 @@
 
         /// <summary>
         /// Add a CSP rule where you also specify the name.
-        /// Usually you should use the direct name like <see cref="DefaultSrc"/> instead, but this is for cases where the API doesn't have a command for that setting. 
+        ///
+        /// Example: `cspService.Add("default-src", "'self'")`
+        ///
         /// </summary>
         /// <param name="name"></param>
         /// <param name="values"></param>
         void Add(string name, params string[] values);
+
+        //[PrivateApi]
+        //IHybridHtmlString WhitelistAttribute
 
         #region Specific Commands, probably not needed - will disable for now while it's not yet a public API
 

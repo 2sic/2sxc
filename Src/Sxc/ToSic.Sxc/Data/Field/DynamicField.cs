@@ -32,6 +32,11 @@ namespace ToSic.Sxc.Data
         public string Url => Value as string;
 
 
+        public IDynamicMetadata Metadata => _dynMeta.Get(() => new DynamicMetadata(MetadataOfItem, Parent.Entity, Parent._Dependencies));
+        private readonly ValueGetOnce<IDynamicMetadata> _dynMeta = new ValueGetOnce<IDynamicMetadata>();
+
+
+        /// <inheritdoc />
         public IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
                 if (!(Raw is string valString) || string.IsNullOrWhiteSpace(valString)) return null;

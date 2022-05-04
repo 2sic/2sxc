@@ -12,14 +12,15 @@ using ToSic.Sxc.Plumbing;
 namespace ToSic.Sxc.Images
 {
     /// <summary>
-    /// # BETA
-    /// 
     /// A recipe contains instructions how to generate tags etc. which can contain multiple resized images
     /// </summary>
     /// <remarks>
     /// All the properties are read-only. If you need to override anything, copy it and set the modified values, then use the copy. 
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still Beta / WIP")]
+    /// <remarks>
+    /// History: Released 2sxc 13.10
+    /// </remarks>
+    [PublicApi("Still Beta / WIP")]
     public class Recipe: ICanDump
     {
         [PrivateApi] public const string RuleForDefault = "default";

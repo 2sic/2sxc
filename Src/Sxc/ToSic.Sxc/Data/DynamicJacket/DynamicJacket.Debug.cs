@@ -2,6 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Data
             var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem
                 {
                     Path = path + PropertyDumpItem.Separator + p.Name,
-                    Property = FindPropertyInternal(p.Name, languages, parentLogOrNull),
+                    Property = FindPropertyInternal(p.Name, languages, parentLogOrNull, new PropertyLookupPath().Add("DynJacket", p.Name)),
                     SourceName = _dumpSourceName
             })
                 .ToList();

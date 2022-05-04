@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -28,13 +29,14 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi("Internal")]
-        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull)
+        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path)
         {
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt", Debug);
             var safeWrap = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return safeWrap("no entity", null);
-            var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull);
+            path = path.KeepOrNew().Add("DynEnt", field);
+            var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull, path);
 
             // new 12.05, very experimental
             //ApplyDynamicDataFeaturesToResult(field, propRequest);

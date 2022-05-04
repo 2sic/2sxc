@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
@@ -12,12 +13,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
-            var logOrNull = /*Debug ?*/ _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);// : null;
-            var safeWrap = // Debug
-                /*?*/ logOrNull.SafeCall<object>(Debug,
+            var logOrNull = _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
+            var safeWrap = logOrNull.SafeCall<object>(Debug,
                     $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
-                    "Debug: true")
-                /*: logOrNull.SafeCall<object>()*/;
+                    "Debug: true");
             
             // This determines if we should access & store in cache
             var useCache = language == null && lookup;
@@ -29,7 +28,7 @@ namespace ToSic.Sxc.Data
             // check if we already have it in the cache - but only in default languages
             if (useCache && _ValueCache.ContainsKey(field)) return safeWrap("cached", _ValueCache[field]);
 
-            var resultSet = FindPropertyInternal(field, languages, logOrNull);
+            var resultSet = FindPropertyInternal(field, languages, logOrNull, new PropertyLookupPath().Add("DynEntStart", field));
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (resultSet == null) return safeWrap("null", null);
@@ -69,9 +68,17 @@ namespace ToSic.Sxc.Data
             {
                 logOrNull?.SafeAdd($"Convert entity list as {nameof(DynamicEntity)}");
                 var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Dependencies);
-                if (Debug) dynEnt.Debug = true;// dynEnt.SetDebug(_debug);
+                if (Debug) dynEnt.Debug = true;
                 return safeWrap("ent-list, now dyn", dynEnt);
             }
+
+            // special debug of path if possible
+            try
+            {
+                var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? Array.Empty<string>());
+                logOrNull.SafeAdd($"Debug path: {finalPath}");
+            }
+            catch {/* ignore */}
 
             return safeWrap("unmodified", result);
         }

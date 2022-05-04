@@ -9,8 +9,8 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Beta.LightSpeed;
 using ToSic.Sxc.LookUp;
+using ToSic.Sxc.Web.LightSpeed;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.App
                 Items = a.Data.List.Count(),
                 Thumbnail = a.Thumbnail,
                 Version = a.VersionSafe(),
-                IsGlobal = a.AppState.IsGlobal(),
+                IsGlobal = a.AppState.IsShared(),
                 IsInherited = a.AppState.IsInherited(),
                 Lightspeed = lightspeed,
             };

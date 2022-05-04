@@ -10,12 +10,17 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// </summary>
     public class CspSettingsReader: HasLog
     {
+        private const string FieldIsEnabled = "IsEnabled";
+        private const string FieldIsEnforced = "IsEnforced";
+        private const string FieldPolicies = "Policies";
+        private const string FieldCSPs = "ContentSecurityPolicies";
+
         public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode, ILog parentLog): base(CspConstants.LogPrefix + ".Setting", parentLog)
         {
             _user = user;
             _devMode = devMode;
             _settingsOrNull = settingsOrNull;
-            
+
             // Enable this for edge cases where we must debug deeply into each settings-stack
             //if (_settingsOrNull != null) _settingsOrNull.Debug = true;
         }
@@ -24,31 +29,46 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private readonly DynamicStack _settingsOrNull;
 
 
-        public bool IsEnabled => SettingPreferred?.IsEnabled ?? SettingsDefault?.IsEnabled == true;
+        public bool IsEnabled => SettingPreferred.Setting?.Get(FieldIsEnabled) ?? SettingsDefault?.Get(FieldIsEnabled) == true;
 
-        public bool IsEnforced => SettingPreferred?.IsEnforced ?? SettingsDefault?.IsEnforced == true;
+        public bool IsEnforced => SettingPreferred.Setting?.Get(FieldIsEnforced) ?? SettingsDefault?.Get(FieldIsEnforced) == true;
 
-        public string Policies => SettingPreferred?.Policies ?? SettingsDefault?.Policies as string;
+        public string Policies
+        {
+            get
+            {
+                var pref = SettingPreferred;
+                if (pref.Setting?.Get(FieldPolicies) is string preferred)
+                    return $"// Preferred for {pref.Name} \n" + preferred;
 
-        private dynamic SettingsRoot => _settingsRoot.Get(() => (_settingsOrNull as dynamic)?.ContentSecurityPolicies, Log, nameof(SettingsRoot));
-        private readonly ValueGetOnce<dynamic> _settingsRoot = new ValueGetOnce<dynamic>();
+                if (SettingsDefault?.Get(FieldPolicies) is string defPolicies)
+                    return $"// Default (not found on {pref.Name}) \n" + defPolicies;
+                
+                return null;
+            }
+        }
 
-        private dynamic SettingPreferred => _preferred.Get(() =>
+        private DynamicEntity SettingsRoot => _settingsRoot.Get(() => _settingsOrNull?.Get(FieldCSPs) as DynamicEntity, Log, nameof(SettingsRoot));
+        private readonly ValueGetOnce<DynamicEntity> _settingsRoot = new ValueGetOnce<DynamicEntity>();
+
+        private (string Name, DynamicEntity Setting) SettingPreferred => _preferred.Get(() =>
         {
             Log.Add($"Dev: {_devMode}; Super: {_user.IsSuperUser}; Admin: {_user.IsAdmin}; Anon: {_user.IsAnonymous}");
-            if (_devMode) return SettingsRoot?.Dev;
-            if (_user.IsSuperUser) return SettingsRoot?.SystemAdmin;
-            if (_user.IsAdmin) return SettingsRoot?.SiteAdmin;
-            if (_user.IsAnonymous) return SettingsRoot?.Anonymous;
-            return null;
+            (string, DynamicEntity) GetName(string theName) => (theName, SettingsRoot?.Get(theName) as DynamicEntity);
+
+            if (_devMode) return GetName("Dev");
+            if (_user.IsSuperUser) return GetName("SystemAdmin");
+            if (_user.IsAdmin) return GetName("Admin");
+            if (_user.IsAnonymous) return GetName("Anonymous");
+            return ("none", null);
         }, Log, nameof(SettingPreferred));
-        private readonly ValueGetOnce<dynamic> _preferred = new ValueGetOnce<dynamic>();
+        private readonly ValueGetOnce<(string Name, DynamicEntity Settings)> _preferred = new ValueGetOnce<(string, DynamicEntity)>();
 
         /// <summary>
         /// The fallback settings, which will be null if in devMode, because then we shouldn't do a fallback
         /// </summary>
-        private dynamic SettingsDefault => _devMode ? null : _default.Get(() => SettingsRoot?.Default);
-        private readonly ValueGetOnce<dynamic> _default = new ValueGetOnce<dynamic>();
+        private DynamicEntity SettingsDefault => _devMode ? null : _default.Get(() => SettingsRoot?.Get("Default") as DynamicEntity);
+        private readonly ValueGetOnce<DynamicEntity> _default = new ValueGetOnce<DynamicEntity>();
 
     }
 }
