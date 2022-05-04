@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             }
         }
 
-        private DynamicEntity SettingsRoot => _settingsRoot.Get(() => _settingsOrNull.Get(FieldCSPs) as DynamicEntity, Log, nameof(SettingsRoot));
+        private DynamicEntity SettingsRoot => _settingsRoot.Get(() => _settingsOrNull?.Get(FieldCSPs) as DynamicEntity, Log, nameof(SettingsRoot));
         private readonly ValueGetOnce<DynamicEntity> _settingsRoot = new ValueGetOnce<DynamicEntity>();
 
         private (string Name, DynamicEntity Setting) SettingPreferred => _preferred.Get(() =>
