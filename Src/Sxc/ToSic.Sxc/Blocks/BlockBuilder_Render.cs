@@ -97,7 +97,10 @@ namespace ToSic.Sxc.Blocks
         private CspParameters GetCspListFromAssets(List<IClientAsset> assets)
         {
             if (assets == null || assets.Count == 0) return null;
-            var toWhitelist = assets.Where(a => a.WhitelistInCsp).ToList();
+            var toWhitelist = assets
+                .Where(a => a.WhitelistInCsp)
+                .Where(a => !a.Url.NeverNull().StartsWith("/")) // skip local files
+                .ToList();
             if (!toWhitelist.Any()) return null;
             var whitelist = new CspParameters();
             foreach (var asset in toWhitelist)
