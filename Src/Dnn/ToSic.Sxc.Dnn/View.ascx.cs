@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn
             var checkPortalIsReady = true;
             bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
 
-            #region Lightspeed - very experimental - deactivate before distribution
+            #region Lightspeed
             try
             {
                 if (OutputCache.Existing != null)
@@ -107,12 +107,18 @@ namespace ToSic.Sxc.Dnn
 
             IRenderResult data = null;
             var headersAndScriptsAdded = false;
+
+            var finalMessage = "";
             // skip this if something before this caused an error
             if (!IsError)
                 TryCatchAndLogToDnn(() =>
                 {
                     // Try to build the html and everything
-                    data = OutputCache?.Existing?.Data ?? RenderViewAndGatherJsCssSpecs();
+                    data = OutputCache?.Existing?.Data;
+
+                    finalMessage = OutputCache?.IsEnabled != true ? "" :  data != null ? "⚡⚡" : "⚡⏳";
+
+                    data = data ?? RenderViewAndGatherJsCssSpecs();
                     // in this case assets & page settings were not applied
                     try
                     {
@@ -142,7 +148,7 @@ namespace ToSic.Sxc.Dnn
 
             callLog(null);
             _stopwatch?.Stop();
-            _entireLog?.Invoke("✔");
+            _entireLog?.Invoke(IsError ? "⚠️" : finalMessage);
         }
 
         private IRenderResult RenderViewAndGatherJsCssSpecs()

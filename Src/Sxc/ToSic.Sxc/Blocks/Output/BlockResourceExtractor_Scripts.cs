@@ -56,10 +56,8 @@ namespace ToSic.Sxc.Blocks.Output
 
         private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(Match match, string posInPage, int priority)
         {
-            if (!ExtractOnlyEnableOptimization) return (true, null, 0);
-
             var optMatch = OptimizeDetection.Match(match.Value);
-            if (!optMatch.Success) return (true, null, 0);
+            if (!optMatch.Success && ExtractOnlyEnableOptimization) return (true, null, 0);
 
             posInPage = optMatch.Groups[TokenPosition]?.Value ?? posInPage;
 

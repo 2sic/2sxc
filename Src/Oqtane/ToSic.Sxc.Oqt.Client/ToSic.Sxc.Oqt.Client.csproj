@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
-    <Version>13.10.00</Version>
+    <Version>13.10.01</Version>
     <Authors>2sic</Authors>
     <Company>2sic</Company>
     <Description>2sic 2sxc Oqtane</Description>
