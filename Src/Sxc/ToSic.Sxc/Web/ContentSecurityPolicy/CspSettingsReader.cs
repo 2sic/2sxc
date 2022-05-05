@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             if (_devMode) return GetName("Dev");
             if (_user.IsSuperUser) return GetName("SystemAdmin");
-            if (_user.IsAdmin) return GetName("Admin");
+            if (_user.IsAdmin) return GetName("SiteAdmin");
             if (_user.IsAnonymous) return GetName("Anonymous");
             return ("none", null);
         }, Log, nameof(SettingPreferred));
