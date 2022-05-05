@@ -93,6 +93,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicEav01", "Integration\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SxcEdit01", "Integration\SxcEdit01\SxcEdit01.csproj", "{67672FFA-702D-423F-906E-5E6A6D6B9EFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Oqt.Server.Tests", "Oqtane\ToSic.Sxc.Oqt.ServerTests\ToSic.Sxc.Oqt.Server.Tests.csproj", "{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1223,6 +1225,38 @@ Global
 		{67672FFA-702D-423F-906E-5E6A6D6B9EFD}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{67672FFA-702D-423F-906E-5E6A6D6B9EFD}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{67672FFA-702D-423F-906E-5E6A6D6B9EFD}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|DNN.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|Any CPU.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|DNN.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|DNN.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|Windows-x64.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|Windows-x64.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|Windows-x86.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.DebugOqtane|Windows-x86.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|DNN.ActiveCfg = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|DNN.Build.0 = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|DNN.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{EEF5A15E-7B7B-45EF-B342-60BCA90492CF}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1267,7 +1301,7 @@ Global
 		{67672FFA-702D-423F-906E-5E6A6D6B9EFD} = {783FE270-1D23-4B43-8B17-C87C0697DBD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Imazen.Common.Storage;
 using Microsoft.AspNetCore.Hosting;
@@ -17,11 +18,6 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
         private const string AdamPath = "/adam/";
         private const string SxcPath = "/assets/";
         private const string SharedPath = "/shared/";
-
-        //private const string BetaPath = "/api/sxc/";
-        //private const string BetaAdamPath = BetaPath + "adam/";
-        //private const string BetaSxcPath = BetaPath + "sxc/";
-
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -45,13 +41,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
                 if (!SupportsPath(virtualPath)) return null;
 
                 // Get appName and filePath.
-                string appName;
-                string filePath;
-                //var rez = ContainsBetaPath(virtualPath)
-                //    ? GetBetaAppNameAndFilePath(virtualPath, out appName, out filePath)
-                //    : GetAppNameAndFilePath(virtualPath, out appName, out filePath);
-                var rez = GetAppNameAndFilePath(virtualPath, out appName, out filePath);
-                if (rez) return null;
+                if (!GetAppNameAndFilePath(virtualPath, out var appName, out var filePath))
+                    return null;
 
                 // Get route.
                 var route = GetRoute(virtualPath);
@@ -84,7 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             };
         }
 
-        private static bool GetAppNameAndFilePath(string virtualPath, out string appName, out string filePath)
+        public static bool GetAppNameAndFilePath(string virtualPath, out string appName, out string filePath)
         {
             // setup
             var temp = (ContainsSharedPath(virtualPath)) ? "shared/" : "app/";
@@ -94,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             var prefixStart = virtualPath.IndexOf(temp, StringComparison.OrdinalIgnoreCase);
             appName = virtualPath.Substring(prefixStart + temp.Length).TrimStart('/');
             var indexOfSlash = appName.IndexOf('/');
-            if (indexOfSlash < 1) return true;
+            if (indexOfSlash < 1) return false;
             appName = appName.Substring(0, indexOfSlash);
 
             // get filePath
@@ -103,47 +94,20 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             if (ContainsSharedPath(virtualPath)) temp = $"{SharedPath}{appName}/";
 
             var find = virtualPath.IndexOf(temp, StringComparison.OrdinalIgnoreCase);
-            if (find < 1) return true;
+            if (find < 1) return false;
             filePath = virtualPath.Substring(find + temp.Length).TrimStart('/');
 
-            return false;
+            return true;
         }
 
         private static bool ContainsSharedPath(string virtualPath)
             => virtualPath.Contains(SharedPath, StringComparison.OrdinalIgnoreCase);
 
         private static bool ContainsAdamPath(string virtualPath)
-            => virtualPath.Contains(AdamPath, StringComparison.OrdinalIgnoreCase);
+            => Regex.IsMatch(virtualPath, @"^.*app/[a-zA-Z \d-_]+/adam/.*$");
 
-        private static bool ContainsSxcPath(string virtualPath)
-            => virtualPath.Contains(SxcPath, StringComparison.OrdinalIgnoreCase);
-
-        //private static bool GetBetaAppNameAndFilePath(string virtualPath, out string appName, out string filePath)
-        //{
-        //    var path = string.Empty;
-        //    appName = string.Empty;
-        //    filePath = string.Empty;
-
-        //    if (ContainsBetaAdamPath(virtualPath)) path = AdamPath;
-        //    if (ContainsBetaSxcPath(virtualPath)) path = SxcPath;
-        //    var prefixStart = virtualPath.IndexOf(path, StringComparison.OrdinalIgnoreCase);
-        //    var appNameAndFilePath = virtualPath.Substring(prefixStart + path.Length).TrimStart('/');
-        //    var indexOfSlash = appNameAndFilePath.IndexOf('/');
-        //    if (indexOfSlash < 1) return true;
-
-        //    appName = appNameAndFilePath.Substring(0, indexOfSlash);
-        //    filePath = appNameAndFilePath.Substring(indexOfSlash + 1);
-
-        //    return false;
-        //}
-
-        //private static bool ContainsBetaPath(string virtualPath)
-        //    => virtualPath.Contains(BetaPath, StringComparison.OrdinalIgnoreCase);
-        //private static bool ContainsBetaAdamPath(string virtualPath)
-        //    => virtualPath.Contains(BetaAdamPath, StringComparison.OrdinalIgnoreCase);
-
-        //private static bool ContainsBetaSxcPath(string virtualPath)
-        //    => virtualPath.Contains(BetaSxcPath, StringComparison.OrdinalIgnoreCase);
+        public static bool ContainsSxcPath(string virtualPath)
+            => Regex.IsMatch(virtualPath, @"^.*app/[a-zA-Z \d-_]+/assets/.*$");
 
         private static string GetRoute(string virtualPath)
             => ContainsSharedPath(virtualPath) ? ContentFileHelper.RouteShared :
