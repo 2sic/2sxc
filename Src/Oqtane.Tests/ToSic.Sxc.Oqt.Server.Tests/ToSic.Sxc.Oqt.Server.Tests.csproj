@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj" />
+    <ProjectReference Include="..\..\Oqtane\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj" />
   </ItemGroup>
 
 </Project>
