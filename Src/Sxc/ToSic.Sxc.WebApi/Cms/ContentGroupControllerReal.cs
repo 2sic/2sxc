@@ -43,9 +43,10 @@ namespace ToSic.Sxc.WebApi.Cms
         public EntityInListDto Header(Guid guid)
         {
             Log.Add($"header for:{guid}");
-            var cg = GetContentGroup(guid);
+            var cg = GetContentGroup(guid, false);
 
             // new in v11 - this call might be run on a non-content-block, in which case we return null
+            if (cg.Entity == null) return null;
             if (cg.Entity.Type.Name != BlocksRuntime.BlockTypeName) return null;
 
             var header = cg.Header.FirstOrDefault();
@@ -178,7 +179,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private List<IEntity> FindContentGroupAndTypeName(Guid guid, string part, out string attributeSetName)
         {
             var wrapLog = Log.Call<List<IEntity>>($"{guid}, {part}");
-            var contentGroup = GetContentGroup(guid);
+            var contentGroup = GetContentGroup(guid, true);
             attributeSetName = null;
             var partIsContent = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase);
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
@@ -197,12 +198,13 @@ namespace ToSic.Sxc.WebApi.Cms
             return wrapLog(null, itemList);
         }
 
-        protected BlockConfiguration GetContentGroup(Guid contentGroupGuid)
+        private BlockConfiguration GetContentGroup(Guid contentGroupGuid, bool throwIfNotFound)
         {
             Log.Add($"get group:{contentGroupGuid}");
             var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(contentGroupGuid);
 
-            if (contentGroup == null)
+            // Note 2022-05-05 2dm - this can never be null, the check should be updated to check if the .Entity is null if this is important
+            if (contentGroup?.Entity == null && throwIfNotFound)
                 throw new Exception("BlockConfiguration with Guid " + contentGroupGuid + " does not exist.");
             return contentGroup;
         }
