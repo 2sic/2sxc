@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Services;
@@ -24,15 +26,25 @@ namespace ToSic.Sxc.Code
 
         public class Dependencies
         {
-            public Dependencies(IServiceProvider serviceProvider, Lazy<LogHistory> history, Lazy<IUser> user)
+            public Dependencies(IServiceProvider serviceProvider, Lazy<LogHistory> history, Lazy<IUser> user, 
+                // Dependencies to get primary app
+                Lazy<ISite> site,
+                Lazy<IZoneMapper> zoneMapper, 
+                Lazy<IAppStates> appStates)
             {
                 ServiceProvider = serviceProvider;
                 History = history;
                 User = user;
+                Site = site;
+                ZoneMapper = zoneMapper;
+                AppStates = appStates;
             }
             internal IServiceProvider ServiceProvider { get; }
             public Lazy<LogHistory> History { get; }
             public Lazy<IUser> User { get; }
+            public Lazy<ISite> Site { get; }
+            public Lazy<IZoneMapper> ZoneMapper { get; }
+            public Lazy<IAppStates> AppStates { get; }
         }
 
         public DynamicCodeService(Dependencies dependencies): base($"{Constants.SxcLogName}.DCS")
@@ -68,6 +80,7 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
+
         /// <inheritdoc />
         public IDynamicCode12 OfApp(int appId) => OfAppInternal(appId: appId);
         /// <inheritdoc />
@@ -97,6 +110,11 @@ namespace ToSic.Sxc.Code
             return wrapLog("ok", codeRoot);
         }
 
+
+        public IDynamicCode12 OfSite() => OfApp(GetPrimaryApp(null, _dependencies.Site.Value));
+
+        public IDynamicCode12 OfSite(int siteId) => OfApp(GetPrimaryApp(siteId, null));
+
         /// <inheritdoc />
         public IApp App(
             string noParamOrder = Eav.Parameters.Protector,
@@ -114,18 +132,33 @@ namespace ToSic.Sxc.Code
 
             // todo: lookup zoneId if not provided
             var realZoneId = zoneId ?? AppConstants.AutoLookupZone;
-            return App(zoneId ?? Eav.Constants.IdNotInitialized, realAppId, site, withUnpublished: withUnpublished);
+            return App(new AppIdentity(zoneId ?? Eav.Constants.IdNotInitialized, realAppId), site, withUnpublished: withUnpublished);
+        }
+
+        public IApp AppOfSite() => AppOfSite(siteId: null);
+
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public IApp AppOfSite(string noParamOrder = Parameters.Protector, int? siteId = null, ISite site = null, bool? withUnpublished = null)
+        {
+            var primaryApp = GetPrimaryApp(siteId, site);
+            return App(primaryApp, site, withUnpublished);
+        }
+
+        private AppState GetPrimaryApp(int? siteId, ISite site)
+        {
+            siteId = siteId ?? site?.Id ?? _dependencies.Site.Value.Id;
+            var zoneId = _dependencies.ZoneMapper.Value.GetZoneId(siteId.Value);
+            var primaryApp = _dependencies.AppStates.Value.GetPrimaryApp(zoneId, Log);
+            return primaryApp;
         }
 
 
-        private IApp App(int zoneId, int appId, ISite site, bool? withUnpublished = null)
+        private IApp App(IAppIdentity appIdentity, ISite site, bool? withUnpublished = null)
         {
-            var wrapLog = Log.Call<IApp>($"z:{zoneId}, a:{appId}, site:{site != null}, showDrafts: {withUnpublished}");
+            var wrapLog = Log.Call<IApp>($"{appIdentity.LogState()}, site:{site != null}, showDrafts: {withUnpublished}");
             var app = AppGenerator.New;
             if (site != null) app.PreInit(site);
-            var appStuff = app.Init(new AppIdentity(zoneId, appId),
-                AppConfigDelegateGenerator.New.Build(withUnpublished ?? _dependencies.User.Value.IsAdmin),
-                Log);
+            var appStuff = app.Init(appIdentity, AppConfigDelegateGenerator.New.Build(withUnpublished ?? _dependencies.User.Value.IsAdmin), Log);
             return wrapLog(null, appStuff);
         }
 
