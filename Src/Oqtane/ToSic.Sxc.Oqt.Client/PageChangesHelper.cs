@@ -64,21 +64,23 @@ namespace ToSic.Sxc.Oqt.Client
         public static async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, Interop interop)
         {
             // Go through Page Properties
-            foreach (var pagePropertyChanges in viewResults.PageProperties)
+            foreach (var p in viewResults.PageProperties)
             {
-                switch (pagePropertyChanges.Property)
+                switch (p.Property)
                 {
                     case OqtPageProperties.Title:
                         var title = await interop.GetTitleValue();
-                        await interop.UpdateTitle(UpdateProperty(title, pagePropertyChanges));
+                        await interop.UpdateTitle(UpdateProperty(title, p.InjectOriginalInValue(title)));
                         break;
                     case OqtPageProperties.Keywords:
                         var keywords = await interop.GetMetaTagContentByName("KEYWORDS");
-                        await interop.IncludeMeta("MetaKeywords", "name", "KEYWORDS", UpdateProperty(keywords, pagePropertyChanges), "id");
+                        await interop.IncludeMeta("MetaKeywords", "name", "KEYWORDS", 
+                            UpdateProperty(keywords, p.InjectOriginalInValue(keywords)), "id");
                         break;
                     case OqtPageProperties.Description:
                         var description = await interop.GetMetaTagContentByName("DESCRIPTION");
-                        await interop.IncludeMeta("MetaDescription", "name", "DESCRIPTION", UpdateProperty(description, pagePropertyChanges), "id");
+                        await interop.IncludeMeta("MetaDescription", "name", "DESCRIPTION", 
+                            UpdateProperty(description, p.InjectOriginalInValue(description)), "id");
                         break;
                     case OqtPageProperties.Base:
                         // For base - ignore for now as we don't know what side-effects this could have

@@ -9,7 +9,7 @@
         public void SetDescription(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Description, value, PageChangeModes.Prepend, placeholder);
 
         /// <inheritdoc />
-        public void SetKeywords(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Keywords, value, PageChangeModes.Prepend, placeholder);
+        public void SetKeywords(string value, string placeholder = null) => PageServiceShared.Queue(PageProperties.Keywords, value, PageChangeModes.Append, placeholder);
 
         /// <inheritdoc />
         public void SetHttpStatus(int statusCode, string message = null)

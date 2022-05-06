@@ -68,21 +68,17 @@ namespace ToSic.Sxc.Dnn.Services
                         dnnPage.AddBase(p.Value);
                         break;
                     case PageProperties.Title:
-                        dnnPage.Title = Helpers.UpdateProperty(dnnPage.Title, p);
+                        dnnPage.Title = Helpers.UpdateProperty(dnnPage.Title, p.InjectOriginalInValue(dnnPage.Title));
                         break;
                     case PageProperties.Description:
-                        dnnPage.Description = Helpers.UpdateProperty(dnnPage.Description, p);
+                        dnnPage.Description = Helpers.UpdateProperty(dnnPage.Description, p.InjectOriginalInValue(dnnPage.Description));
                         break;
                     case PageProperties.Keywords:
-                        dnnPage.Keywords = Helpers.UpdateProperty(dnnPage.Keywords, p);
+                        dnnPage.Keywords = Helpers.UpdateProperty(dnnPage.Keywords, p.InjectOriginalInValue(dnnPage.Keywords));
                         break;
-                        //default:
-                        //    throw new ArgumentOutOfRangeException();
                 }
 
             var count = props.Count;
-
-
 
             return wrapLog($"{count}", count);
         }
