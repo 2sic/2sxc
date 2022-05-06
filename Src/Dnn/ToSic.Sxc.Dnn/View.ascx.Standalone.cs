@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Dnn
             Response.Write(renderedTemplate);
             Response.Flush();
             Response.SuppressContent = true;
+            LogTimer.Done("Standalone");
             HttpContext.Current.ApplicationInstance.CompleteRequest();
         }
 
