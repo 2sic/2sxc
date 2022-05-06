@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Content
             Name = name,
             Description = description,
             Categories = "Common",
-            Version = "13.10.01",
+            Version = "13.10.02",
             Owner = "2sic Internet Solutions",
             Url = "https://2sxc.org",
             Contact = "@iJungleboy",
