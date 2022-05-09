@@ -41,6 +41,8 @@ namespace ToSic.Sxc.WebApi.AppStack
             }
 
             return results
+                .GroupBy(original => new {original.Path, original.SourceName}) // remove "duplicate" settings from results
+                .Select(g => g.OrderByDescending(i => i.AllOptions?.Count ?? 0).First())
                 .Select(r => new StackInfoDto(r))
                 .ToList();
         }
