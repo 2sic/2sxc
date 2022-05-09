@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Edit
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    [PublicApi]
+    [PrivateApi("Still WIP, should then be moved to servics!")]
     public interface IToolbarBuilder: IHybridHtmlString
     {
         /// <summary>

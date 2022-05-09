@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Sxc.Plumbing;
 
 
 namespace ToSic.Sxc.Web.PageService
@@ -7,6 +8,7 @@ namespace ToSic.Sxc.Web.PageService
     {
         public static string UpdateProperty(string original, PagePropertyChange change)
         {
+            change = InjectOriginalInValue(change, original);
             if (string.IsNullOrEmpty(original)) return change.Value ?? original;
 
             if (!string.IsNullOrEmpty(change.ReplacementIdentifier))
@@ -38,5 +40,26 @@ namespace ToSic.Sxc.Web.PageService
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        /// <summary>
+        /// If new value has placeholder token [original], token will be replaced
+        /// with old value, effectively injecting old value in new value
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="originalValue">old value</param>
+        public static PagePropertyChange InjectOriginalInValue(PagePropertyChange original, string originalValue)
+        {
+            if (string.IsNullOrEmpty(original.Value) || original.Value.IndexOf(OriginalToken, StringComparison.OrdinalIgnoreCase) == -1)
+                return original;
+
+            var clone = new PagePropertyChange(original);
+
+            clone.Value = clone.Value.ReplaceIgnoreCase(OriginalToken, originalValue);
+            clone.ChangeMode = PageChangeModes.Replace;
+
+            return original;
+        }
+
+        private const string OriginalToken = "[original]"; // new value can have [original] placeholder to inject old value in that position
     }
 }

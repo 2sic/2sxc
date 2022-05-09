@@ -20,11 +20,9 @@ namespace ToSic.Sxc.Dnn.Services
     public class DnnPageChanges : HasLog<DnnPageChanges>
     {
 
-        public DnnPageChanges(/*PageServiceShared pageServiceShared*/): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(): base($"{DnnConstants.LogName}.PgeCng")
         {
-            //PageServiceShared = pageServiceShared;
         }
-        //public PageServiceShared PageServiceShared { get; }
 
         public int Apply(Page page, IRenderResult renderResult)
         {
@@ -68,13 +66,13 @@ namespace ToSic.Sxc.Dnn.Services
                         dnnPage.AddBase(p.Value);
                         break;
                     case PageProperties.Title:
-                        dnnPage.Title = Helpers.UpdateProperty(dnnPage.Title, p.InjectOriginalInValue(dnnPage.Title));
+                        dnnPage.Title = Helpers.UpdateProperty(dnnPage.Title, p);
                         break;
                     case PageProperties.Description:
-                        dnnPage.Description = Helpers.UpdateProperty(dnnPage.Description, p.InjectOriginalInValue(dnnPage.Description));
+                        dnnPage.Description = Helpers.UpdateProperty(dnnPage.Description, p);
                         break;
                     case PageProperties.Keywords:
-                        dnnPage.Keywords = Helpers.UpdateProperty(dnnPage.Keywords, p.InjectOriginalInValue(dnnPage.Keywords));
+                        dnnPage.Keywords = Helpers.UpdateProperty(dnnPage.Keywords, p);
                         break;
                 }
 
