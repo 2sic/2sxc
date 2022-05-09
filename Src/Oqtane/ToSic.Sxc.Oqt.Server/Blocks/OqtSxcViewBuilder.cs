@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -21,12 +22,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         #region Constructor and DI
 
         public OqtSxcViewBuilder(
-            Blocks.Output.OqtPageOutput pageOutput, 
-            IContextOfBlock contextOfBlockEmpty, 
+            Output.OqtPageOutput pageOutput,
+            IContextOfBlock contextOfBlockEmpty,
             BlockFromModule blockModuleEmpty,
             IContextResolver contextResolverForLookUps,
             LogHistory logHistory,
-            GlobalTypesCheck globalTypesCheck, 
+            GlobalTypesCheck globalTypesCheck,
             IOutputCache outputCache
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             logHistory.Add("oqt-view", Log);
         }
 
-        public Blocks.Output.OqtPageOutput PageOutput { get; }
+        public Output.OqtPageOutput PageOutput { get; }
         private readonly IContextOfBlock _contextOfBlockEmpty;
         private readonly BlockFromModule _blockModuleEmpty;
         private readonly IContextResolver _contextResolverForLookUps;
@@ -66,24 +67,32 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             // Check if there is less than 50 global types and warn user to restart application
             if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
 
-            #region Lightspeed output caching
-            if (OutputCache?.Existing != null) Log.Add("Lightspeed hit - will use cached");
-            var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
-            OutputCache?.Save(renderResult);
-            #endregion
-
-            PageOutput.Init(this, renderResult);
-
-            var ret = new OqtViewResultsDto
+            OqtViewResultsDto ret = null;
+            var finalMessage = "";
+            LogTimer.DoInTimer(() =>
             {
-                Html = renderResult.Html, 
-                TemplateResources = PageOutput.GetSxcResources(),
-                SxcContextMetaName = PageOutput.AddContextMeta ? PageOutput.ContextMetaName : null,
-                SxcContextMetaContents = PageOutput.AddContextMeta ? PageOutput.ContextMetaContents(): null,
-                SxcScripts = PageOutput.Scripts().ToList(),
-                SxcStyles = PageOutput.Styles().ToList(),
-                PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
-            };
+                #region Lightspeed output caching
+                var callLog = Log.Call(useTimer: true);
+                if (OutputCache?.Existing != null) Log.Add("Lightspeed hit - will use cached");
+                var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
+                finalMessage = OutputCache?.IsEnabled != true ? "" : OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
+                OutputCache?.Save(renderResult);
+                #endregion
+                PageOutput.Init(this, renderResult);
+
+                ret = new OqtViewResultsDto
+                {
+                    Html = renderResult.Html,
+                    TemplateResources = PageOutput.GetSxcResources(),
+                    SxcContextMetaName = PageOutput.AddContextMeta ? PageOutput.ContextMetaName : null,
+                    SxcContextMetaContents = PageOutput.AddContextMeta ? PageOutput.ContextMetaContents() : null,
+                    SxcScripts = PageOutput.Scripts().ToList(),
+                    SxcStyles = PageOutput.Styles().ToList(),
+                    PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
+                };
+                callLog(null);
+            });
+            LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 
             return ret;
         }
@@ -93,27 +102,22 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         internal Site Site;
         internal Page Page;
         internal Module Module;
-        internal IBlock Block
+
+        internal IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
         {
-            get
-            {
-                if (_blockLoaded) return _block;
+            var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module, Log);
+            var block = _blockModuleEmpty.Init(ctx, Log);
+            // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
+            // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
+            // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
+            _contextResolverForLookUps.AttachRealBlock(() => block);
+            return block;
+        }));
+        private readonly ValueGetOnce<IBlock> _blockGetOnce = new();
 
-                var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module, Log);
-                _block = _blockModuleEmpty.Init(ctx, Log);
-                
-                // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
-                // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
-                // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
-                _contextResolverForLookUps.AttachRealBlock(() => _block);
-                
-                _blockLoaded = true;
-                return _block;
-            }
-        }
+        protected LogCall LogTimer => _logTimer.Get(() => Log.Call2(message: $"Page:{Page?.PageId} '{Page?.Title}', Module:{Module?.ModuleId} '{Module?.ControlTitle}'"));
+        private readonly ValueGetOnce<LogCall> _logTimer = new();
 
-        private IBlock _block;
-        private bool _blockLoaded;
 
         protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Block));
         private readonly ValueGetOnce<IOutputCache> _oc = new();
