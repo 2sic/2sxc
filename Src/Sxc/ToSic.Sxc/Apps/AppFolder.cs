@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Apps
 
         public string GetAppFolder()
         {
-            var ctx = _ctxResolver.BlockOrNull();
+            var ctx = _ctxResolver.AppNameRouteBlock("");
             return ctx.AppState.Folder;
         }
     }

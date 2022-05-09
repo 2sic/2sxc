@@ -7,11 +7,9 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn
@@ -46,8 +44,7 @@ namespace ToSic.Sxc.Dnn
                 if (appFolder == null)
                 {
                     log.Add("no folder found in url, will auto-detect");
-                    var block = sp.Build<DnnGetBlock>().GetCmsBlock(request, log);
-                    appFolder = block?.App?.Folder;
+                    appFolder = sp.Build<AppFolder>()?.GetAppFolder();
                 }
 
                 log.Add($"App Folder: {appFolder}");
