@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -40,8 +39,9 @@ namespace ToSic.Sxc.Web.LightSpeed
             if (data == null) return wrapLog("null", false);
             if (data.IsError) return wrapLog("error", false);
             if (!data.CanCache) return wrapLog("can't cache", false);
-            if (data.DependentApps?.Any() != true) return wrapLog("app not initialized", false);
             if (data == Existing?.Data) return wrapLog("not new", false);
+            if (data.DependentApps?.Any() != true) return wrapLog("app not initialized", false);
+            Log.Add($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
@@ -137,15 +137,14 @@ namespace ToSic.Sxc.Web.LightSpeed
             return wrapLog($"app config: {ok}", ok);
         }
 
-        public LightSpeedDecorator AppConfig => _lsd.Get(LightSpeedDecoratorGenerator);
+        public LightSpeedDecorator AppConfig => _lsd.Get(() => LightSpeedDecoratorGenerator(AppState));
         private readonly ValueGetOnce<LightSpeedDecorator> _lsd = new ValueGetOnce<LightSpeedDecorator>();
 
-        private LightSpeedDecorator LightSpeedDecoratorGenerator()
+        private LightSpeedDecorator LightSpeedDecoratorGenerator(AppState appState)
         {
             var wrapLog = Log.Call<LightSpeedDecorator>();
-            var decoEntityOrNull = AppState?.Metadata?.FirstOrDefaultOfType(LightSpeedDecorator.TypeName);
-            var deco = new LightSpeedDecorator(decoEntityOrNull);
-            return wrapLog($"{decoEntityOrNull != null}", deco);
+            var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
+            return wrapLog($"{decoFromPiggyBack.Entity != null}", decoFromPiggyBack);
         }
 
         private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());
