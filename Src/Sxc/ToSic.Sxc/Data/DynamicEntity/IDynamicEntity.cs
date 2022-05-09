@@ -58,13 +58,13 @@ namespace ToSic.Sxc.Data
         new object EntityTitle { get; }
 
         /// <summary>
-        /// **BETA**
-        ///
         /// Get a Field-object of a property of this entity, to use with services like the <see cref="Services.IImageService"/> which also need more information like the metadata.
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [WorkInProgressApi("WIP, to be released ca. 13.10")]
+        /// <remarks>
+        /// History: Added in v13.10
+        /// </remarks>
         IDynamicField Field(string name);
 
 
