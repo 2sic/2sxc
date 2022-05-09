@@ -115,7 +115,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         }));
         private readonly ValueGetOnce<IBlock> _blockGetOnce = new();
 
-        protected LogCall LogTimer => _logTimer.Get(() => Log.Call2(message: $"Page:{Page?.PageId} '{Page?.Title}', Module:{Module?.ModuleId} '{Module?.ControlTitle}'"));
+        protected LogCall LogTimer => _logTimer.Get(() => Log.Call2(message: $"Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
         private readonly ValueGetOnce<LogCall> _logTimer = new();
 
 
