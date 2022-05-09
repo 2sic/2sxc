@@ -7,12 +7,30 @@ namespace ToSic.Sxc.Blocks
 {
     public partial class BlockBuilder
     {
+        /// <summary>
+        /// This list is only populated on the root builder. Child builders don't actually use this.
+        /// </summary>
         public List<IClientAsset> Assets { get; private set; } = new List<IClientAsset>();
 
-        private void TransferEngineAssetsToParent(RenderEngineResult result)
+        /// <summary>
+        /// This list is only populated on the root builder. Child builders don't actually use this.
+        /// </summary>
+        public IList<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
+
+
+        private void PreSetAppDependenciesToRoot()
         {
-            if (!result.Assets.Any()) return;
+            if (Block == null) return;
             if (!(RootBuilder is BlockBuilder parentBlock)) return;
+            if (Block.AppId != 0)// && Block.App?.AppState != null)
+                parentBlock.DependentApps.Add(new DependentApp
+                    { AppId = Block.AppId /*, CacheTimestamp = Block.App.AppState.CacheTimestamp*/ });
+        }
+
+        private void TransferCurrentAssetsAndAppDependenciesToRoot(RenderEngineResult result)
+        {
+            if (!(RootBuilder is BlockBuilder parentBlock)) return;
+            if (!result.Assets.Any()) return;
             parentBlock.Assets.AddRange(result.Assets);
             parentBlock.Assets = parentBlock.Assets.OrderBy(a => a.PosInPage).ToList();
         }

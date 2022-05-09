@@ -42,8 +42,11 @@ namespace ToSic.Sxc.Blocks
                 };
 
                 // case when we do not have an app
-                if (Block.AppId != 0 && Block.App?.AppState != null)
-                    result.DependentApps.Add(new DependentApp { AppId = Block.AppId, CacheTimestamp = Block.App.AppState.CacheTimestamp });
+                if(DependentApps.Any())
+                    result.DependentApps.AddRange(DependentApps);
+                
+                //if (Block.AppId != 0 && Block.App?.AppState != null)
+                //    result.DependentApps.Add(new DependentApp { AppId = Block.AppId, CacheTimestamp = Block.App.AppState.CacheTimestamp });
 
                 // The remaining stuff should only happen at top-level
                 // Because once these properties are picked up, they are flushed
@@ -141,10 +144,14 @@ namespace ToSic.Sxc.Blocks
 
         private (string Html, bool Error) RenderInternal()
         {
-          var wrapLog = Log.Call<(string, bool)>();
+            var wrapLog = Log.Call<(string, bool)>();
 
             try
             {
+                // New 13.11 - must set appid etc. for dependencies before we start
+                // So that in a stack of renders, the top-most was set first
+                PreSetAppDependenciesToRoot();
+
                 // do pre-check to see if system is stable & ready
                 var (body, err) = GenerateErrorMsgIfInstallationNotOk();
 
@@ -186,7 +193,7 @@ namespace ToSic.Sxc.Blocks
                             }
 
                             // TODO: this should use the same pattern as features, waiting to be picked up
-                            TransferEngineAssetsToParent(renderEngineResult);
+                            TransferCurrentAssetsAndAppDependenciesToRoot(renderEngineResult);
                         }
                         else body = "";
                     }

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Blocks
         public string HttpStatusMessage { get; set; }
 
         /// <inheritdoc />
-        public IList<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
+        public List<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
 
 
         public int ModuleId { get; set; }
@@ -60,6 +60,6 @@ namespace ToSic.Sxc.Blocks
     {
         public int AppId { get; set; }
 
-        public long CacheTimestamp { get; set; }
+        //public long CacheTimestamp { get; set; }
     }
 }

@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Blocks
         string HttpStatusMessage { get; }
 
         [PrivateApi]
-        IList<IDependentApp> DependentApps { get; }
+        List<IDependentApp> DependentApps { get; }
 
         [PrivateApi("not in use yet")]
         int ModuleId { get; }
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Blocks
 
     }
 
-    public interface IDependentApp: ITimestamped
+    public interface IDependentApp //: ITimestamped
     {
         int AppId { get; }
     }
