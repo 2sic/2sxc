@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
-using App = ToSic.Sxc.Apps.App;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -14,12 +15,14 @@ namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeed : HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy) : base(Constants.SxcLogName + ".Lights")
         {
             _features = features;
+            _appStatesLazy = appStatesLazy;
         }
 
         private readonly IFeaturesService _features;
+        private readonly Lazy<IAppStates> _appStatesLazy;
 
         public IOutputCache Init(int moduleId, IBlock block)
         {
@@ -49,26 +52,39 @@ namespace ToSic.Sxc.Web.LightSpeed
                 return wrapLog($"not added as duration is {duration}", false);
 
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-                ? AppPaths()
+                ? AppPaths(data.DependentApps)
                 : null;
             var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState, appPathsToMonitor);
             Log.Add($"Cache Key: {cacheKey}");
             return wrapLog($"added for {duration}s", true);
         }
 
-        private IList<string> AppPaths()
+        // return physical paths for parent app and all dependent apps (portal and shared)
+        private IList<string> AppPaths(List<IDependentApp> dependentApps)
         {
-            if (!((_block as BlockFromModule)?.App is App app)) return null;
-
-            var paths = new List<string> { app.PhysicalPath };
-
-            if (Directory.Exists(app.PhysicalPathShared)) paths.Add(app.PhysicalPathShared);
+            if (dependentApps?.Any() != true) return null;
+            
+            var appStates = _appStatesLazy.Value;
+            var paths = new List<string>();
+            foreach (var appState in dependentApps.Select(da => appStates.Get(da.AppId)))
+            {
+                // TODO: find how to create paths is missing...
+                AddPathsFromPiggyBack(appState, "PhysicalPath", ()=> null, paths);
+                AddPathsFromPiggyBack(appState, "PhysicalPathShared", () => null, paths);
+            }
 
             // TODO: stv, find better way to get ADAM folders (this will not work in Oqt)
             //var adamPhysicalPath = app.PhysicalPath.Replace("\\2sxc\\", "\\adam\\");
             //if (Directory.Exists(adamPhysicalPath)) paths.Add(adamPhysicalPath);
 
             return paths;
+        }
+
+        private static void AddPathsFromPiggyBack(IHasPiggyBack appState, string key, Func<string> create, List<string> paths)
+        {
+            if (!appState.PiggyBack.Has(key)) return;
+            var path = appState.PiggyBack.GetOrGenerate<string>(key, create);
+            if (Directory.Exists(path)) paths.Add(path);
         }
 
         private int Duration => _duration.Get(() =>
