@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data.PiggyBack;
+using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -15,14 +15,16 @@ namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeed : HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy) : base(Constants.SxcLogName + ".Lights")
         {
             _features = features;
             _appStatesLazy = appStatesLazy;
+            _appPathsLazy = appPathsLazy;
         }
 
         private readonly IFeaturesService _features;
         private readonly Lazy<IAppStates> _appStatesLazy;
+        private readonly Lazy<AppPaths> _appPathsLazy;
 
         public IOutputCache Init(int moduleId, IBlock block)
         {
@@ -64,16 +66,17 @@ namespace ToSic.Sxc.Web.LightSpeed
         }
 
         // return physical paths for parent app and all dependent apps (portal and shared)
-        private static IList<string> AppPaths(List<AppState> appStates)
+        private IList<string> AppPaths(List<AppState> appStates)
         {
+            if (!((_block as BlockFromModule)?.App is App app)) return null;
             if (appStates?.Any() != true) return null;
-            
+
             var paths = new List<string>();
             foreach (var appState in appStates)
             {
-                // TODO: find how to create paths when is missing in PiggyBack
-                AddPathFromPiggyBack(appState, "PhysicalPath", ()=> null, paths);
-                AddPathFromPiggyBack(appState, "PhysicalPathShared", () => null, paths);
+                var appPaths = _appPathsLazy.Value.Init(app.Site, appState, Log);
+                if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
+                if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
             }
 
             // TODO: stv, find better way to get ADAM folders (this will not work in Oqt)
@@ -83,13 +86,6 @@ namespace ToSic.Sxc.Web.LightSpeed
             return paths;
         }
         private readonly ValueGetOnce<IList<string>> _appPaths = new ValueGetOnce<IList<string>>();
-
-        private static void AddPathFromPiggyBack(IHasPiggyBack appState, string key, Func<string> create, List<string> paths)
-        {
-            if (!appState.PiggyBack.Has(key)) return;
-            var path = appState.PiggyBack.GetOrGenerate<string>(key, create);
-            if (Directory.Exists(path)) paths.Add(path);
-        }
 
         private int Duration => _duration.Get(() =>
         {
