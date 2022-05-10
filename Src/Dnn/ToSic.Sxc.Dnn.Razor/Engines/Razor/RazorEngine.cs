@@ -185,7 +185,11 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             var wrapLog = Log.Call();
-            webPage.ConnectToRoot(_dnnDynCodeLazy.Value.Init(Block, Log, compatibility));
+            var dynCode = _dnnDynCodeLazy.Value;
+            // only do this if not already initialized
+            //if (dynCode.Block != null)
+                dynCode.InitDynCodeRoot(Block, Log, compatibility);
+            webPage.ConnectToRoot(dynCode);
 
             // New in 10.25 - ensure jquery is not included by default
             if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;

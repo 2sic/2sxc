@@ -117,7 +117,8 @@ namespace ToSic.Sxc
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
             services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
-            services.TryAddScoped<ModuleLevelCsp>();  // important: must be scoped!
+            services.TryAddTransient<CspOfApp>();   // must be transient
+            services.TryAddScoped<CspOfModule>();   // important: must be scoped!
             //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 

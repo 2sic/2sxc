@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Razor
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
-                var dynCode = _dynCodeRootLazy.Value.Init(Block, Log, Constants.CompatibilityLevel12);
+                var dynCode = _dynCodeRootLazy.Value.InitDynCodeRoot(Block, Log, Constants.CompatibilityLevel12);
 
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>

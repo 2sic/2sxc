@@ -57,7 +57,9 @@ namespace ToSic.Sxc.Code
             // Load the shared page service and make sure it has this code root, so future uses know about the context
             // We don't need the result, but this ensures that it's initialized correctly
             //GetService<PageServiceShared>();
-            GetService<ModuleLevelCsp>();
+
+            // Make sure we get and initialize (auto-connect) the app-level CSP if that exists or is enabled
+            GetService<CspOfApp>();
         }
 
         private readonly Dependencies Deps;
@@ -83,20 +85,22 @@ namespace ToSic.Sxc.Code
         //private PiggyBack _piggyBack;
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot Init(IBlock block, ILog parentLog, int compatibility)
+        public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)
         {
             Log.LinkTo(parentLog ?? block?.Log);
+            var cLog = Log.Call2<IDynamicCodeRoot>();
+
             CompatibilityLevel = compatibility;
             if (block == null)
-                return this;
+                return cLog.Done("no block", this);
 
-            ((CmsContext) CmsContext).Update(block);
+            ((CmsContext) CmsContext).AttachContext(block);
             Block = block;
             Data = block.Data;
 
             AttachApp(block.App);
 
-            return this;
+            return cLog.Done($"AppId: {App?.AppId}, Block: {block?.Configuration?.BlockIdentifierOrNull?.Guid}",  this);
         }
 
         /// <inheritdoc />
