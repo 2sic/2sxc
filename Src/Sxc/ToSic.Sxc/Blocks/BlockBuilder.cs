@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -35,6 +36,7 @@ namespace ToSic.Sxc.Blocks
             Generator<IRazorEngine> razorEngineGen, 
             Generator<TokenEngine> tokenEngineGen,
             LazyInitLog<IBlockResourceExtractor> resourceExtractor,
+            Lazy<IAppStates> appStatesLazy,
             ILog parentLog)
             : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
         {
@@ -42,6 +44,7 @@ namespace ToSic.Sxc.Blocks
             _renderHelpGen = renderHelpGen;
             _razorEngineGen = razorEngineGen;
             _tokenEngineGen = tokenEngineGen;
+            _appStatesLazy = appStatesLazy;
             _resourceExtractor = resourceExtractor.SetLog(Log);
             // the root block is the main container. If there is none yet, use this, as it will be the root
             RootBuilder = rootBlockBuilder ?? this;
@@ -52,6 +55,7 @@ namespace ToSic.Sxc.Blocks
         private readonly Generator<IRenderingHelper> _renderHelpGen;
         private readonly Generator<IRazorEngine> _razorEngineGen;
         private readonly Generator<TokenEngine> _tokenEngineGen;
+        private readonly Lazy<IAppStates> _appStatesLazy;
         private readonly LazyInitLog<IBlockResourceExtractor> _resourceExtractor;
 
         #endregion

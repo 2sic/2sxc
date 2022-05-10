@@ -25,6 +25,7 @@ namespace ToSic.Sxc.Blocks
         {
             public Dependencies(
                 Lazy<BlockDataSourceFactory> bdsFactoryLazy,
+                Lazy<IAppStates> appStatesLazy,
                 Lazy<App> appLazy,
                 Lazy<AppConfigDelegate> appConfigDelegateLazy,
                 Lazy<CmsRuntime> cmsLazy,
@@ -36,6 +37,7 @@ namespace ToSic.Sxc.Blocks
                 )
             {
                 BdsFactoryLazy = bdsFactoryLazy;
+                AppStatesLazy = appStatesLazy;
                 AppLazy = appLazy;
                 AppConfigDelegateLazy = appConfigDelegateLazy;
                 CmsLazy = cmsLazy;
@@ -46,6 +48,7 @@ namespace ToSic.Sxc.Blocks
                 ResourceExtractor = resourceExtractor;
             }
             internal Lazy<BlockDataSourceFactory> BdsFactoryLazy { get; }
+            internal Lazy<IAppStates> AppStatesLazy { get; }
             internal Lazy<App> AppLazy { get; }
             internal Lazy<AppConfigDelegate> AppConfigDelegateLazy { get; }
             internal Lazy<CmsRuntime> CmsLazy { get; }
@@ -78,7 +81,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, _deps.EnvInstGen, _deps.RenderHelpGen, _deps.RazorEngineGen, _deps.TokenEngineGen, _deps.ResourceExtractor, Log);
+            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, _deps.EnvInstGen, _deps.RenderHelpGen, _deps.RazorEngineGen, _deps.TokenEngineGen, _deps.ResourceExtractor, _deps.AppStatesLazy, Log);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
