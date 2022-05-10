@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Web.LightSpeed
                 return wrapLog($"not added as duration is {duration}", false);
 
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-                ? AppPaths(data.DependentApps)
+                ? _appPaths.Get(() =>AppPaths(data.DependentApps))
                 : null;
             var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState, appPathsToMonitor);
             Log.Add($"Cache Key: {cacheKey}");
@@ -79,6 +79,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 
             return paths;
         }
+        private readonly ValueGetOnce<IList<string>> _appPaths = new ValueGetOnce<IList<string>>();
 
         private static void AddPathFromPiggyBack(IHasPiggyBack appState, string key, Func<string> create, List<string> paths)
         {
