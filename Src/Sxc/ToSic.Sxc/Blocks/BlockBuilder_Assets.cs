@@ -23,8 +23,8 @@ namespace ToSic.Sxc.Blocks
             if (Block == null) return;
             if (!(RootBuilder is BlockBuilder parentBlock)) return;
             if (Block.AppId != 0)// && Block.App?.AppState != null)
-                parentBlock.DependentApps.Add(new DependentApp
-                    { AppId = Block.AppId /*, CacheTimestamp = Block.App.AppState.CacheTimestamp*/ });
+                if (parentBlock.DependentApps.All(a => a.AppId != Block.AppId)) // add dependent appId only ounce
+                    parentBlock.DependentApps.Add(new DependentApp { AppId = Block.AppId /*, CacheTimestamp = Block.App.AppState.CacheTimestamp*/ });
         }
 
         private void TransferCurrentAssetsAndAppDependenciesToRoot(RenderEngineResult result)

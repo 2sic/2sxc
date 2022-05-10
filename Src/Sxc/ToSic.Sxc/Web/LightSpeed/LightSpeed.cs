@@ -51,22 +51,25 @@ namespace ToSic.Sxc.Web.LightSpeed
             if (duration <= 0)
                 return wrapLog($"not added as duration is {duration}", false);
 
+            // get dependent appStates
+            var appStates = _appStatesLazy.Value;
+            var dependentAppsStates = data.DependentApps.Select(da => appStates.Get(da.AppId)).ToList();
+
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-                ? _appPaths.Get(() =>AppPaths(data.DependentApps))
+                ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
                 : null;
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState, appPathsToMonitor);
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor);
             Log.Add($"Cache Key: {cacheKey}");
             return wrapLog($"added for {duration}s", true);
         }
 
         // return physical paths for parent app and all dependent apps (portal and shared)
-        private IList<string> AppPaths(List<IDependentApp> dependentApps)
+        private static IList<string> AppPaths(List<AppState> appStates)
         {
-            if (dependentApps?.Any() != true) return null;
+            if (appStates?.Any() != true) return null;
             
-            var appStates = _appStatesLazy.Value;
             var paths = new List<string>();
-            foreach (var appState in dependentApps.Select(da => appStates.Get(da.AppId)))
+            foreach (var appState in appStates)
             {
                 // TODO: find how to create paths when is missing in PiggyBack
                 AddPathFromPiggyBack(appState, "PhysicalPath", ()=> null, paths);
