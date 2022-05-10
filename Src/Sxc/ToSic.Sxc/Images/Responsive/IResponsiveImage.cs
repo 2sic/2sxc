@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// The main url, used for main `src` property
         /// </summary>
-        /// <remarks>Added in v13.10.02</remarks>
+        /// <remarks>Added in v13.11</remarks>
         string Src { get; }
     }
 }
