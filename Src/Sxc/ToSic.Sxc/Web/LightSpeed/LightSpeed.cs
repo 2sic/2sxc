@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -15,8 +16,11 @@ namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeed : HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeedStats LightSpeedStats { get; }
+
+        public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats) : base(Constants.SxcLogName + ".Lights")
         {
+            LightSpeedStats = lightSpeedStats;
             _features = features;
             _appStatesLazy = appStatesLazy;
             _appPathsLazy = appPathsLazy;
@@ -64,8 +68,11 @@ namespace ToSic.Sxc.Web.LightSpeed
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
                 ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
                 : null;
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor);
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor, 
+                (x) => LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count - 1));
             Log.Add($"Cache Key: {cacheKey}");
+            if (cacheKey != "error") 
+                LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count + 1);
             return wrapLog($"added for {duration}s", true);
         }
 

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return id;
         }
 
-        public string Add(string cacheKey, OutputCacheItem data, int duration, List<AppState> appStates, IList<string> appPaths = null)
+        public string Add(string cacheKey, OutputCacheItem data, int duration, List<AppState> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
         {
             try
             {
@@ -36,6 +36,9 @@ namespace ToSic.Sxc.Web.LightSpeed
 
                 if (appPaths != null && appPaths.Count > 0)
                     policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths));
+
+                if (updateCallback != null)
+                    policy.UpdateCallback = updateCallback;
 
                 Cache.Set(new CacheItem(cacheKey, data), policy);
                 return cacheKey;
