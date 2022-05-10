@@ -60,9 +60,15 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         internal bool RegisterAppCsp(CspOfApp appCsp)
         {
-            var cLog = Log.Call2<bool>($"{appCsp?.AppId}");
-            if (appCsp == null) return cLog.Done("null", false);
-            if (AppCsps.Any(a => a.AppId == appCsp.AppId)) return cLog.Done($"app {appCsp.AppId} exists", false);
+            var cLog = Log.Call2<bool>($"appId: {appCsp?.AppId}");
+            if (appCsp == null)
+                return cLog.Done("null", false);
+
+            // Note: We tried not-adding duplicates but this doesn't work
+            // Because at the moment of registration, the AppId is often not known yet
+            // Do not delete this comment, as others will attempt this too
+            //if (AppCsps.Any(a => a.AppId == appCsp.AppId)) 
+            //    return cLog.Done($"app {appCsp.AppId} exists", false);
             AppCsps.Add(appCsp);
             return cLog.Done("added", true);
         }
@@ -134,27 +140,43 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         #endregion
 
 
-        internal List<KeyValuePair<string, string>> Policies 
-            => _policies.Get(() =>
-            {
-                var sitePolicies = SiteCspSettings.Policies;
+        private List<KeyValuePair<string, string>> Policies => _policies.Get(() =>
+        {
+            var sitePolicies = SiteCspSettings.Policies;
+            Log.Add($"Site.Policies: {sitePolicies}");
 
-                var appPolicies2 = AppCsps
-                    .Select(ac =>
-                    {
-                        var p = ac.AppPolicies;
-                        return p.HasValue() ? $"// AppId: {ac.AppId}\n{p}" : null;
-                    })
-                    .Where(p => p.HasValue())
-                    .ToList();
-
-                var appPolicies = string.Join("\n", appPolicies2);
-
-                Log.Add("site:" + sitePolicies);
-                Log.Add("app:" + appPolicies + $", from {AppCsps.Count} apps of which {appPolicies2.Count} had values");
-                return new CspPolicyTextProcessor(Log).Parse($"{sitePolicies}\n{appPolicies}");
-            }, Log, nameof(Policies));
+            var appPolicies = GetAppPolicies();
+            var merged = $"{sitePolicies}\n{appPolicies}";
+            Log.Add($"Merged: {merged}");
+            return new CspPolicyTextProcessor(Log).Parse(merged);
+        }, Log, nameof(Policies));
         private readonly ValueGetOnce<List<KeyValuePair<string, string>>> _policies = new ValueGetOnce<List<KeyValuePair<string, string>>>();
+
+        private string GetAppPolicies()
+        {
+            var cLog = Log.Call<string>();
+
+            var deduplicate = AppCsps
+                .GroupBy(ac => ac.AppId)
+                .Select(g => g.First())
+                .ToList();
+
+
+            var appPolicySets = deduplicate
+                .Select(ac =>
+                {
+                    var p = ac.AppPolicies;
+                    Log.Add($"App[{ac.AppId}]: {p}");
+                    return p.NullIfNoValue();
+                })
+                .Where(p => p.HasValue())
+                .ToList();
+
+            var appPolicies = string.Join("\n", appPolicySets);
+
+            return cLog($"Total: {AppCsps.Count}; Distinct: {deduplicate.Count}; With Value: {appPolicySets.Count}", appPolicies);
+        }
+
 
 
         internal void AddCspService(ContentSecurityPolicyServiceBase provider) => CspServices.Add(provider);
@@ -164,6 +186,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         {
             var wrapLog = Log.Call<List<CspParameters>>();
             if (!IsEnabled) return wrapLog("disabled", new List<CspParameters>());
+
             if (Policies.Any())
             {
                 Log.Add("Policies found");

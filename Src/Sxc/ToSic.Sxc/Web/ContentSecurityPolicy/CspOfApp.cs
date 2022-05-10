@@ -7,6 +7,10 @@ using static ToSic.Eav.Configuration.ConfigurationStack;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
+    /// <summary>
+    /// This object reads the CSP settings of an app and passes it to the <see cref="CspOfModule"/>.
+    /// This is important because a module can have multiple apps in it, so it must merge the Csp Settings
+    /// </summary>
     public class CspOfApp : HasLog, INeedsDynamicCodeRoot
     {
         public int AppId => _codeRoot?.Block?.AppId ?? 0;
@@ -43,15 +47,6 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         #endregion
 
-        #region 
-
-        //private DynamicStack CodeRootSettings()
-        //{
-        //    return stack;
-        //}
-
-        #endregion
-
         #region Read Settings
 
         public string AppPolicies => _appPolicies.Get(GetAppPolicies);
@@ -62,13 +57,15 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             var cLog = Log.Call2<string>(AppId.ToString());
 
             // Get Stack
-            var stack = _codeRoot?.Settings as DynamicStack;
+            if (!(_codeRoot?.Settings is DynamicStack stack)) 
+                return cLog.Done("no stack", null);
+
             // Enable this for detailed debugging
-            //if (stack != null) stack.Debug = true;
+            //stack.Debug = true;
 
             // Dynamic Stack of the App Settings
             var appSettings = stack?.GetStack(PartAppSystem) as DynamicStack;
-            Log.Add($"{nameof(stack)}: {stack != null}; {nameof(appSettings)}: {appSettings != null}");
+            Log.Add($"has {nameof(appSettings)}: {appSettings != null}");
 
             // CSP Settings Reader from Dynamic Entity for the App
             var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);
