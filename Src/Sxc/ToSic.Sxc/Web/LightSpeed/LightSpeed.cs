@@ -68,9 +68,9 @@ namespace ToSic.Sxc.Web.LightSpeed
             var paths = new List<string>();
             foreach (var appState in dependentApps.Select(da => appStates.Get(da.AppId)))
             {
-                // TODO: find how to create paths is missing...
-                AddPathsFromPiggyBack(appState, "PhysicalPath", ()=> null, paths);
-                AddPathsFromPiggyBack(appState, "PhysicalPathShared", () => null, paths);
+                // TODO: find how to create paths when is missing in PiggyBack
+                AddPathFromPiggyBack(appState, "PhysicalPath", ()=> null, paths);
+                AddPathFromPiggyBack(appState, "PhysicalPathShared", () => null, paths);
             }
 
             // TODO: stv, find better way to get ADAM folders (this will not work in Oqt)
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return paths;
         }
 
-        private static void AddPathsFromPiggyBack(IHasPiggyBack appState, string key, Func<string> create, List<string> paths)
+        private static void AddPathFromPiggyBack(IHasPiggyBack appState, string key, Func<string> create, List<string> paths)
         {
             if (!appState.PiggyBack.Has(key)) return;
             var path = appState.PiggyBack.GetOrGenerate<string>(key, create);
