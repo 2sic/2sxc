@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -24,6 +26,10 @@ namespace ToSic.Sxc.Images
             Log.LinkTo(_codeRootOrNull.Log);
         }
         private IDynamicCodeRoot _codeRootOrNull;
+        internal IEditService EditOrNull => _codeRootOrNull?.Edit;
+
+        internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _codeRootOrNull?.GetService<IToolbarService>());
+        private readonly ValueGetOnce<IToolbarService> _toolbarSvc = new ValueGetOnce<IToolbarService>();
 
         #endregion
 

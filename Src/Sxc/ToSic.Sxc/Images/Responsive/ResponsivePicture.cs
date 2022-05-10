@@ -2,7 +2,6 @@
 using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
@@ -18,8 +17,10 @@ namespace ToSic.Sxc.Images
         }
 
 
-        public Picture Picture => _picTag.Get(() => Tag.Picture(Sources, Img));
+        public Picture Picture => _picTag.Get(() => Razor.Blade.Tag.Picture(Sources, Img));
         private readonly ValueGetOnce<Picture> _picTag = new ValueGetOnce<Picture>();
+
+        protected override ITag GetOutermostTag() => Picture;
 
         public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Call.Link.Url, Settings));
         private readonly ValueGetOnce<TagList> _sourceTags = new ValueGetOnce<TagList>();
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Images
             var wrapLog = logOrNull.SafeCall<TagList>();
             // Check formats
             var defFormat = ImgService.GetFormat(url);
-            if (defFormat == null) return wrapLog("no format", Tag.TagList());
+            if (defFormat == null) return wrapLog("no format", Razor.Blade.Tag.TagList());
 
             // Determine if we have many formats, otherwise just use the current one
             var formats = defFormat.ResizeFormats.Any()
@@ -50,15 +51,13 @@ namespace ToSic.Sxc.Images
                     var srcSet = useMultiSrcSet
                         ? ImgLinker.SrcSet(url, formatSettings, SrcSetType.Source, Call.Field)
                         : ImgLinker.ImageOnly(url, formatSettings, Call.Field).Url;
-                    var source = Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
+                    var source = Razor.Blade.Tag.Source().Type(resizeFormat.MimeType).Srcset(srcSet);
                     if (!string.IsNullOrEmpty(Sizes)) source.Sizes(Sizes);
                     return source;
                 });
-            var result = Tag.TagList(sources);
+            var result = Razor.Blade.Tag.TagList(sources);
             return wrapLog($"{result.Count()}", result);
         }
 
-
-        public override string ToString() => Picture.ToString();
     }
 }

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public char? Operation { get; }
 
-        public string Command { get; }
+        public string Command { get; protected set; }
 
         public string CommandValue { get; protected set; }
 

@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data
 {
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Data
     /// History: Created in v13.10
     /// </remarks>
     [PublicApi]
-    public interface IDynamicField: IHasLink
+    public interface IDynamicField: IHasLink, IHasMetadata
     {
         /// <summary>
         /// The field name

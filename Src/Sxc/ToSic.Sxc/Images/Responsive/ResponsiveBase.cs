@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Images
         /// ToString must be specified by each implementation
         /// </summary>
         /// <returns></returns>
-        public abstract override string ToString();
+        public override string ToString() => Tag.ToString();
 
         /// <inheritdoc />
         public virtual Img Img
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Images
                 if (_imgTag != null) return _imgTag;
 
                 var wrapLog = Log.SafeCall<Img>(ImgService.Debug);
-                _imgTag = Tag.Img().Src(Url);
+                _imgTag = Razor.Blade.Tag.Img().Src(Src);
 
                 // Add all kind of attributes if specified
                 var tag = ThisResize.Recipe;
@@ -73,6 +73,35 @@ namespace ToSic.Sxc.Images
             }
         }
         private Img _imgTag;
+
+        public ITag Tag => _tag.Get(GetTagWithToolbar);
+        private readonly ValueGetOnce<ITag> _tag = new ValueGetOnce<ITag>();
+
+        protected virtual ITag GetOutermostTag() => Img;
+
+        private ITag GetTagWithToolbar()
+        {
+            var tag = GetOutermostTag();
+
+            // fairly experimental, don't want things to break
+            try
+            {
+                // attach edit if we are in edit-mode and the link was generated through a call
+                if (ImgService.EditOrNull?.Enabled != true) return tag;
+                if (Call.Field?.Parent == null) return tag;
+
+                // TODO: Determine if this is an "own" adam file
+                var isInSameEntity = Adam.Security.PathIsInItemAdam(Call.Field.Parent.EntityGuid, "", Src);
+                if (!isInSameEntity) return tag;
+
+                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Image(Call.Field);
+                var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
+                tag.TagAttributes.Add(toolbar);
+            }
+            catch { /* ignore */ }
+
+            return tag;
+        }
 
 
         /// <inheritdoc />
@@ -160,8 +189,11 @@ namespace ToSic.Sxc.Images
             return wrapLog(sizes, sizes);
         }
 
-        /// <inheritdoc />
-        public string Url => ThisResize.Url;
+        ///// <inheritdoc />
+        //[PrivateApi]
+        //public string Url => ThisResize.Url;
+
+        public string Src => ThisResize.Url;
 
     }
 }

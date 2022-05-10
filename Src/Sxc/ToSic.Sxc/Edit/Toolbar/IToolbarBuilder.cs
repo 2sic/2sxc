@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Edit
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    [PrivateApi("Still WIP, should then be moved to servics!")]
+    [PrivateApi("Still WIP, not sure if this will be published as this - but probably we will")]
     public interface IToolbarBuilder: IHybridHtmlString
     {
         /// <summary>
@@ -62,6 +62,15 @@ namespace ToSic.Sxc.Edit
             string ui = null,
             string parameters = null
         );
+
+        [PrivateApi("WIP 13.11")]
+        IToolbarBuilder Image(
+            object target,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null
+        );
+
 
         /// <summary>
         /// Add a `settings` rule to configure what the toolbar should look like. See [](xref:JsCode.Toolbars.Settings)
