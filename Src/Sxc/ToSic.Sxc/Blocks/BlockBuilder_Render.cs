@@ -8,7 +8,6 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -85,10 +84,6 @@ namespace ToSic.Sxc.Blocks
                     // Whitelist any assets which were officially ok, or which were from the settings
                     var additionalCsp = GetCspListFromAssets(Assets);
                     if(additionalCsp != null) result.CspParameters.Add(additionalCsp);
-
-                    // when dependent apps have disabled caching, parent app should not cache also 
-                    if (result.CanCache)
-                        result.CanCache = IsEnabledOnDependentApps();
                 }
 
                 _result = result;
@@ -102,23 +97,7 @@ namespace ToSic.Sxc.Blocks
             return wrapLog(null, _result);
         }
 
-        // find if caching is enabled on all dependent apps
-        private bool IsEnabledOnDependentApps()
-        {
-            if (DependentApps == null) return true;
-            var appStates = _appStatesLazy.Value;
-            foreach (var da in DependentApps)
-            {
-                var appState = appStates.Get(da.AppId);
-                var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
-                if (appConfig.IsEnabled == false)
-                {
-                    Log.Add($"cant cache because caching is disabled on dependent app {da.AppId}");
-                    return false;
-                };
-            }
-            return true;
-        }
+
         
         private CspParameters GetCspListFromAssets(List<IClientAsset> assets)
         {
