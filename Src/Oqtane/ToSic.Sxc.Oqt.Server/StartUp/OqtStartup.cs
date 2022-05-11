@@ -13,6 +13,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
+using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
@@ -120,9 +121,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 // Beta routes
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                
+                // Route for 2sxc UI
+                endpoints.Map("/Modules/ToSic.Sxc/dist/ng-edit/index.html", (context) => EditUi.HandleEditUi(context, env));
 
                 // Fallback route for 2sxc UI
-                endpoints.MapFallbackToFile("/Modules/ToSic.Sxc/dist/ng-edit/", "/Modules/ToSic.Sxc/dist/ng-edit/index.html");
+                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng-edit/", (context) => EditUi.HandleEditUi(context, env));
             });
         }
 
