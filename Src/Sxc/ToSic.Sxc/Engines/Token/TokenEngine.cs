@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Engines
             InitTokenReplace();
         }
 
-        private void InitDataHelper() => _data = _dynCodeRootLazy.Value.Init(Block, Log, Constants.CompatibilityLevel9Old);
+        private void InitDataHelper() => _data = _dynCodeRootLazy.Value.InitDynCodeRoot(Block, Log, Constants.CompatibilityLevel9Old);
 
         private void InitTokenReplace()
         {

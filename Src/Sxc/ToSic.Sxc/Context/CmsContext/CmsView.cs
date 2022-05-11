@@ -24,6 +24,6 @@ namespace ToSic.Sxc.Context
         /// <inheritdoc />
         public string Edition => _contents?.Edition;
 
-        public IMetadataOf Metadata => _contents.Metadata;
+        public IMetadataOf Metadata => _contents?.Metadata;
     }
 }

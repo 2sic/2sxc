@@ -38,7 +38,7 @@ namespace Custom.Hybrid
 
             // Use the ServiceProvider of the current request to build DynamicCodeRoot
             // Note that BlockOptional was already retrieved in the base class
-            _DynCodeRoot = context.HttpContext.RequestServices.Build<DynamicCodeRoot>().Init(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
+            _DynCodeRoot = context.HttpContext.RequestServices.Build<DynamicCodeRoot>().InitDynCodeRoot(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
 
             _AdamCode = GetService<AdamCode>().Init(_DynCodeRoot, Log);
 

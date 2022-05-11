@@ -1,5 +1,8 @@
-﻿using ToSic.Eav.Context;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -10,7 +13,7 @@ namespace ToSic.Sxc.Context
     /// This lets the code be platform agnostic, so that it works across implementations (Dnn, Oqtane, NopCommerce)
     /// </summary>
     [PrivateApi("we only show the interface in the docs")]
-    public class CmsContext: ICmsContext
+    public class CmsContext: HasLog, ICmsContext
     {
 
         #region Constructor
@@ -18,9 +21,10 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public CmsContext(IPlatform platform, IContextOfSite context)
+        public CmsContext(IPlatform platform, IContextOfSite context, IAppStates appStates) : base(Constants.SxcLogName + ".CmsCtx")
         {
             Context = context;
+            _appStates = appStates;
             Platform = platform;
         }
 
@@ -32,11 +36,16 @@ namespace ToSic.Sxc.Context
         /// </summary>
         public IContextOfSite Context;
 
+        private readonly IAppStates _appStates;
+
+        private AppState SiteAppState => _siteAppState.Get(() => _appStates.GetPrimaryApp(Context.Site.ZoneId, Log));
+        private readonly ValueGetOnce<AppState> _siteAppState = new ValueGetOnce<AppState>();
+
         /// <summary>
         /// System to extend the known context by more information if we're running inside a block
         /// </summary>
         /// <returns></returns>
-        internal CmsContext Update(IBlock block)
+        internal CmsContext AttachContext(IBlock block)
         {
             _block = block;
             Context = block.Context;
@@ -49,19 +58,19 @@ namespace ToSic.Sxc.Context
 
         public ICmsPlatform Platform { get; }
 
-        public ICmsSite Site => _site ?? (_site = new CmsSite(Context.Site, _block.Context?.AppState));
+        public ICmsSite Site => _site ?? (_site = new CmsSite(Context.Site, SiteAppState));
         private ICmsSite _site;
 
-        public ICmsPage Page => _page ?? (_page = new CmsPage((Context as IContextOfBlock)?.Page ?? new PageUnknown(null), _block.Context?.AppState));
+        public ICmsPage Page => _page ?? (_page = new CmsPage((Context as IContextOfBlock)?.Page ?? new PageUnknown(null), SiteAppState));
         private ICmsPage _page;
 
         public ICmsCulture Culture => _culture ?? (_culture = new CmsCulture(this));
         private ICmsCulture _culture;
 
-        public ICmsModule Module => _cmsModule ?? (_cmsModule = new CmsModule((Context as IContextOfBlock)?.Module ?? new ModuleUnknown(null), _block));
+        public ICmsModule Module => _cmsModule ?? (_cmsModule = new CmsModule(_block.Context?.Module ?? new ModuleUnknown(null), _block));
         private ICmsModule _cmsModule;
 
-        public ICmsUser User => _user ?? (_user = new CmsUser(Context.User, _block.Context?.AppState)); // Context.User as ICmsUser;
+        public ICmsUser User => _user ?? (_user = new CmsUser(Context.User, SiteAppState));
         private ICmsUser _user;
 
         public ICmsView View => _view ?? (_view = new CmsView(_block));

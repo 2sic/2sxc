@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Dnn
         public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
         {
             Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
-            return StaticBuild<DnnDynamicCodeRoot>().Init(blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as
+            return StaticBuild<DnnDynamicCodeRoot>().InitDynCodeRoot(blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as
                 DnnDynamicCodeRoot;
         }
 

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web.PageService
     public partial class PageServiceShared: IChangeQueue
     {
 
-        public PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, ModuleLevelCsp csp)
+        public PageServiceShared(IPageFeatures pageFeatures, IFeaturesService featuresService, CspOfModule csp)
         {
             FeaturesService = featuresService;
             PageFeatures = pageFeatures;
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Web.PageService
 
         internal readonly IFeaturesService FeaturesService;
         public IPageFeatures PageFeatures { get; }
-        public ModuleLevelCsp Csp { get; }
+        public CspOfModule Csp { get; }
 
         public string CspEphemeralMarker => _cspEphemeralMarker.Get(() => new Random().Next(100000000, 999999999).ToString());
         private readonly ValueGetOnce<string> _cspEphemeralMarker = new ValueGetOnce<string>();

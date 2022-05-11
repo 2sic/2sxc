@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Code
         {
             var wrapLog = Log.Call<IDynamicCode12>();
             MakeSureLogIsInHistory();
-            var codeRoot = CodeRootGenerator.New.Init(null, Log, Constants.CompatibilityLevel12);
+            var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(null, Log, Constants.CompatibilityLevel12);
             var app = App(zoneId: zoneId, appId: appId);
             codeRoot.AttachApp(app);
             return wrapLog("ok", codeRoot);
@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Code
             MakeSureLogIsInHistory();
             //var module = ModuleAndBlockBuilder.Ready.GetModule(pageId, moduleId);
             var cmsBlock = ModuleAndBlockBuilder.Ready.GetBlock(pageId, moduleId);
-            var codeRoot = CodeRootGenerator.New.Init(cmsBlock, Log, Constants.CompatibilityLevel12);
+            var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
 
             return wrapLog("ok", codeRoot);
         }
