@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
@@ -13,6 +14,9 @@ namespace ToSic.Sxc.Blocks
     {
         /// <inheritdoc />
         public string Html { get; set; }
+
+        public int Size => _size.Get(() => Html?.Length ?? 0);
+        private readonly ValueGetOnce<int> _size = new ValueGetOnce<int>();
 
         /// <inheritdoc />
         public bool CanCache { get; set; }
@@ -42,7 +46,7 @@ namespace ToSic.Sxc.Blocks
         public string HttpStatusMessage { get; set; }
 
         /// <inheritdoc />
-        public IList<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
+        public List<IDependentApp> DependentApps { get; } = new List<IDependentApp>();
 
 
         public int ModuleId { get; set; }
@@ -60,6 +64,6 @@ namespace ToSic.Sxc.Blocks
     {
         public int AppId { get; set; }
 
-        public long CacheTimestamp { get; set; }
+        //public long CacheTimestamp { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Data;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
@@ -33,5 +35,16 @@ namespace ToSic.Sxc.Web.LightSpeed
         public bool UrlParamCaseSensitive => Get(FieldUrlCaseSensitive, false);
 
         public string Advanced => Get(FieldAdvanced, "");
+
+        public static LightSpeedDecorator GetFromAppStatePiggyBack(AppState appState, ILog log)
+        {
+            var decoFromPiggyBack = appState?.PiggyBack.GetOrGenerate(appState, $"decorator-{TypeName}", () =>
+            {
+                log.SafeAdd("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
+                var decoEntityOrNullPb = appState?.Metadata?.FirstOrDefaultOfType(TypeName);
+                return new LightSpeedDecorator(decoEntityOrNullPb);
+            });
+            return decoFromPiggyBack ?? new LightSpeedDecorator(null);
+        }
     }
 }

@@ -15,6 +15,7 @@ using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
+using ToSic.Sxc.Startup;
 using ToSic.Sxc.WebApi;
 using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
@@ -82,15 +83,19 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
+            var sxcSysLoader = serviceProvider.Build<SxcSystemLoader>();
+            sxcSysLoader.StartUp();
+
             // Register Sxc features before loading
-            Sxc.Configuration.Features.BuiltInFeatures.Register(serviceProvider.Build<FeaturesCatalog>());
+            //Sxc.Configuration.Features.BuiltInFeatures.Register(serviceProvider.Build<FeaturesCatalog>());
 
             // Load features from configuration
             // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
             // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
             // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
-            var sysLoader = serviceProvider.Build<SystemLoader>();
-            sysLoader.StartUp();
+            
+            //var sysLoader = serviceProvider.Build<SystemLoader>();
+            //sysLoader.StartUp();
 
             // TODO: @STV - should we really add an error handler? I assume Oqtane has this already
             app.UseExceptionHandler("/error");

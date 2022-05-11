@@ -10,7 +10,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Search;
 
 namespace ToSic.Sxc.Dnn
@@ -54,7 +53,7 @@ namespace ToSic.Sxc.Dnn
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = ServiceProvider.Build<Cms.DnnPagePublishing>().Init(Log);
+                _publishing = ServiceProvider.Build<IPagePublishing>().Init(Log);
                 ServiceProvider.Build<LogHistory>().Add("dnn-publishing", Log);
                 return _publishing;
             }

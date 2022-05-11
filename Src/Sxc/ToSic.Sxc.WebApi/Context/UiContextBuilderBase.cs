@@ -89,6 +89,8 @@ namespace ToSic.Sxc.WebApi.Context
             if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
             if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite(flags);
             if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
+            if (flags.HasFlag(Ctx.User)) ctx.User = GetUser(flags);
+
             return ctx;
         }
 
@@ -201,6 +203,17 @@ namespace ToSic.Sxc.WebApi.Context
             result.IsShared = AppState.IsShared();
             result.IsInherited = AppState.IsInherited();
             return result;
+        }
+
+        protected virtual ContextUserDto GetUser(Ctx flags)
+        {
+            var userDto = new ContextUserDto();
+            var user = Deps.SiteCtx.User;
+            userDto.Id = user.Id;
+            userDto.IsSystemAdmin = user.IsSuperUser;
+            userDto.IsAnonymous = user.IsAnonymous;
+            userDto.IsSiteAdmin = user.IsAdmin;
+            return userDto;
         }
     }
 }

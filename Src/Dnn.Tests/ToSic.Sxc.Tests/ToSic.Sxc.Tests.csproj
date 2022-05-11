@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Adam\AdamSecurity.cs" />
     <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
+    <Compile Include="ConfigurationTests\VerifyPatronsPerfectionistPackage.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />

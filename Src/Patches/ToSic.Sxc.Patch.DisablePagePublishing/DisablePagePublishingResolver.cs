@@ -1,7 +1,6 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.Patch.DisablePagePublishing

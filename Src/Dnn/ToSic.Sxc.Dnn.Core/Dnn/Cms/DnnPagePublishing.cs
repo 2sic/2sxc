@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
             if (enabled)
             {
-                var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
+                var moduleVersionSettings = new ModuleVersions(instanceId, Log);
                 
                 // Get an new version number and submit it to DNN
                 // The submission must be made every time something changes, because a "discard" could have happened
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public int GetLatestVersion(int instanceId)
         {
-            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
+            var moduleVersionSettings = new ModuleVersions(instanceId, Log);
             var ver = moduleVersionSettings.GetLatestVersion();
             Log.Add($"GetLatestVersion(m:{instanceId}) = ver:{ver}");
             return ver;
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public int GetPublishedVersion(int instanceId)
         {
-            var moduleVersionSettings = new DnnPagePublishing.ModuleVersions(instanceId, Log);
+            var moduleVersionSettings = new ModuleVersions(instanceId, Log);
             var publ = moduleVersionSettings.GetPublishedVersion();
             Log.Add($"GetPublishedVersion(m:{instanceId}) = pub:{publ}");
             return publ;

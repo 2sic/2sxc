@@ -5,9 +5,9 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class PageLevelCsp: HasLog
+    public class CspOfPage: HasLog
     {
-        public PageLevelCsp(): base(CspConstants.LogPrefix + ".Page")
+        public CspOfPage(): base(CspConstants.LogPrefix + ".Page")
         {
         }
 

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Configuration.Features
         public static readonly FeatureDefinition LightSpeedOutputCache = new FeatureDefinition(
             "LightSpeedOutputCache",
             new Guid("61654bca-b76b-4c15-9173-5643de6b4baa"),
-            "LightSpeed Output Cache (BETA)",
+            "LightSpeed Output Cache",
             false,
             false,
             "High-Performance OutputCache",

@@ -15,8 +15,9 @@ namespace ToSic.Sxc.Services
     /// History
     /// * Introduced in v12.02 but on another namespace which still works for compatibility
     /// * Moved to ToSic.Sxc.Services in v13
+    /// * Added ability to use placeholder `[original]` in v13.11
     /// </remarks>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PublicApi]
     public interface IPageService
     {
         /// <summary>
@@ -27,27 +28,35 @@ namespace ToSic.Sxc.Services
         PageChangeModes ChangeMode { get; set; }
 
         /// <summary>
-        /// Add a standard base header tag.
-        /// <em>new in 3.0</em>
+        /// Add a standard base header tag or replace it if one is already provided.
         /// </summary>
         /// <param name="url">the optional url for the base tag - if null, will try to default to the real url for the current page</param>
         void SetBase(string url = null);
 
         /// <summary>
-        /// Set the Page Title.
-        /// It will either try to replace the placeholder (second parameter) or otherwise prefix it to the existing title. 
+        /// Set the Page Title. Behavior:
+        ///
+        /// * By default it will _prefix_ the new title - `SetTitle('My New Title - ')` = `My New Title - Blog - 2sxc.org`
+        /// * You can also use the new `[original]` token like `SetTitle('[original] - My New Title')` = `Blog - 2sxc.org - My New Title`
+        /// * You can add a placeholder to the page-title and tell SetTitle what it is. `SetTitle('My New Title', '2sxc.org') = `Blog - My New Title`
         /// </summary>
         void SetTitle(string value, string placeholder = null);
 
         /// <summary>
         /// Set the Page Description.
-        /// It will either try to replace the placeholder (second parameter) or otherwise prefix it to the existing title. 
+        /// It will either try to replace the placeholder (second parameter)
+        /// or _prefix_ it to the existing description (unless `[original]` is given).
+        ///
+        /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
         /// </summary>
         void SetDescription(string value, string placeholder = null);
 
         /// <summary>
         /// Set the Page Keywords. 
-        /// It will either try to replace the placeholder (second parameter) or otherwise prefix it to the existing title. 
+        /// It will either try to replace the placeholder (second parameter)
+        /// or _prefix_ it to the existing keywords  (unless `[original]` is given).
+        ///
+        /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
         /// </summary>
         void SetKeywords(string value, string placeholder = null);
 
@@ -76,7 +85,7 @@ namespace ToSic.Sxc.Services
 
         /// <summary>
         /// Add a standard meta header tag.
-        /// You may also want AddOpenGraph or AddJsonLd
+        /// You may also want to use <see cref="AddOpenGraph"/> or <see cref="AddJsonLd(string)"/>
         /// </summary>
         /// <param name="name"></param>
         /// <param name="content"></param>
@@ -153,19 +162,6 @@ namespace ToSic.Sxc.Services
 
         #region Security
 
-        ///// <summary>
-        ///// ContentSecurityPolicy Whitelist Attribute for a tag.
-        ///// It adds an attribute to a `script` or `link` tag containing a random key.
-        ///// This will let the CSP automatically whitelist what is being imported here.
-        /////
-        ///// The random key is important, to prevent XSS.
-        ///// </summary>
-        ///// <remarks>
-        ///// Added in v13.10
-        ///// </remarks>
-        //Attribute CspWhitelistAttribute();
-
-
         /// <summary>
         /// Add common html attributes to a `script` or `link` tag to enable optimizations and whitelist in CSP
         /// </summary>
@@ -185,22 +181,6 @@ namespace ToSic.Sxc.Services
             string position = null, 
             bool whitelist = true);
 
-        ///// <summary>
-        ///// Tells you if CSP is enabled or not. You cannot change it in code.
-        /////
-        ///// To enable, do this in the settings (Global or Site)
-        ///// </summary>
-        //[PrivateApi("Beta / WIP")]
-        //bool CspIsEnabled { get; }
-
-        ///// <summary>
-        ///// You can determine if CSP should report only. You cannot change it in code.
-        /////
-        ///// To enable, do this in the settings (Global or Site)
-        ///// </summary>
-        //[PrivateApi("Beta / WIP")]
-        //bool CspIsEnforced { get; }
-
         /// <summary>
         /// Add a CSP rule where you also specify the name.
         ///
@@ -210,9 +190,9 @@ namespace ToSic.Sxc.Services
         /// <param name="name"></param>
         /// <param name="values"></param>
         /// <remarks>
-        /// History: Created in 2sxc 13.10
+        /// History: Created in 2sxc 14
         /// </remarks>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP")]
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP v14")]
         void AddCsp(string name, params string[] values);
 
         #endregion

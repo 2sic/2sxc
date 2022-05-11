@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Data;
+using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Caching;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
-using App = ToSic.Sxc.Apps.App;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -15,12 +16,19 @@ namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeed : HasLog, IOutputCache
     {
-        public LightSpeed(IFeaturesService features) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeedStats LightSpeedStats { get; }
+
+        public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats) : base(Constants.SxcLogName + ".Lights")
         {
+            LightSpeedStats = lightSpeedStats;
             _features = features;
+            _appStatesLazy = appStatesLazy;
+            _appPathsLazy = appPathsLazy;
         }
 
         private readonly IFeaturesService _features;
+        private readonly Lazy<IAppStates> _appStatesLazy;
+        private readonly Lazy<AppPaths> _appPathsLazy;
 
         public IOutputCache Init(int moduleId, IBlock block)
         {
@@ -32,6 +40,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         private int _moduleId;
         private IBlock _block;
         private AppState AppState => _block?.Context?.AppState;
+        private IAppStates AppStates => _appStatesLazy.Value;
 
         public bool Save(IRenderResult data)
         {
@@ -40,8 +49,16 @@ namespace ToSic.Sxc.Web.LightSpeed
             if (data == null) return wrapLog("null", false);
             if (data.IsError) return wrapLog("error", false);
             if (!data.CanCache) return wrapLog("can't cache", false);
-            if (data.DependentApps?.Any() != true) return wrapLog("app not initialized", false);
             if (data == Existing?.Data) return wrapLog("not new", false);
+            if (data.DependentApps?.Any() != true) return wrapLog("app not initialized", false);
+
+            // get dependent appStates
+            var dependentAppsStates = data.DependentApps.Select(da => AppStates.Get(da.AppId)).ToList();
+
+            // when dependent apps have disabled caching, parent app should not cache also 
+            if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog("disabled in dependent app", false);
+
+            Log.Add($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
@@ -49,20 +66,46 @@ namespace ToSic.Sxc.Web.LightSpeed
                 return wrapLog($"not added as duration is {duration}", false);
 
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
-                ? AppPaths()
+                ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
                 : null;
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, AppState, appPathsToMonitor);
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor,
+                //(x) => LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count - 1));
+                (x) => LightSpeedStats.Remove(AppState.AppId, data.Size));
             Log.Add($"Cache Key: {cacheKey}");
+            if (cacheKey != "error") 
+                LightSpeedStats.Add(AppState.AppId, data.Size);
+                //LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count + 1);
             return wrapLog($"added for {duration}s", true);
         }
 
-        private IList<string> AppPaths()
+        // find if caching is enabled on all dependent apps
+        private bool IsEnabledOnDependentApps(List<AppState> appStates)
+        {
+            foreach (var appState in appStates)
+            {
+                var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
+                if (appConfig.IsEnabled == false)
+                {
+                    Log.Add($"cant cache because caching is disabled on dependent app {appState.AppId}");
+                    return false;
+                };
+            }
+            return true;
+        }
+
+        // return physical paths for parent app and all dependent apps (portal and shared)
+        private IList<string> AppPaths(List<AppState> appStates)
         {
             if (!((_block as BlockFromModule)?.App is App app)) return null;
+            if (appStates?.Any() != true) return null;
 
-            var paths = new List<string> { app.PhysicalPath };
-
-            if (Directory.Exists(app.PhysicalPathShared)) paths.Add(app.PhysicalPathShared);
+            var paths = new List<string>();
+            foreach (var appState in appStates)
+            {
+                var appPaths = _appPathsLazy.Value.Init(app.Site, appState, Log);
+                if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
+                if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
+            }
 
             // TODO: stv, find better way to get ADAM folders (this will not work in Oqt)
             //var adamPhysicalPath = app.PhysicalPath.Replace("\\2sxc\\", "\\adam\\");
@@ -70,6 +113,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 
             return paths;
         }
+        private readonly ValueGetOnce<IList<string>> _appPaths = new ValueGetOnce<IList<string>>();
 
         private int Duration => _duration.Get(() =>
         {
@@ -137,15 +181,14 @@ namespace ToSic.Sxc.Web.LightSpeed
             return wrapLog($"app config: {ok}", ok);
         }
 
-        public LightSpeedDecorator AppConfig => _lsd.Get(LightSpeedDecoratorGenerator);
+        public LightSpeedDecorator AppConfig => _lsd.Get(() => LightSpeedDecoratorGenerator(AppState));
         private readonly ValueGetOnce<LightSpeedDecorator> _lsd = new ValueGetOnce<LightSpeedDecorator>();
 
-        private LightSpeedDecorator LightSpeedDecoratorGenerator()
+        private LightSpeedDecorator LightSpeedDecoratorGenerator(AppState appState)
         {
             var wrapLog = Log.Call<LightSpeedDecorator>();
-            var decoEntityOrNull = AppState?.Metadata?.FirstOrDefaultOfType(LightSpeedDecorator.TypeName);
-            var deco = new LightSpeedDecorator(decoEntityOrNull);
-            return wrapLog($"{decoEntityOrNull != null}", deco);
+            var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
+            return wrapLog($"{decoFromPiggyBack.Entity != null}", decoFromPiggyBack);
         }
 
         private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());

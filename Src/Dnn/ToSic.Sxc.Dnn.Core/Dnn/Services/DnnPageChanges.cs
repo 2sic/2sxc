@@ -20,11 +20,9 @@ namespace ToSic.Sxc.Dnn.Services
     public class DnnPageChanges : HasLog<DnnPageChanges>
     {
 
-        public DnnPageChanges(/*PageServiceShared pageServiceShared*/): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(): base($"{DnnConstants.LogName}.PgeCng")
         {
-            //PageServiceShared = pageServiceShared;
         }
-        //public PageServiceShared PageServiceShared { get; }
 
         public int Apply(Page page, IRenderResult renderResult)
         {
@@ -76,13 +74,9 @@ namespace ToSic.Sxc.Dnn.Services
                     case PageProperties.Keywords:
                         dnnPage.Keywords = Helpers.UpdateProperty(dnnPage.Keywords, p);
                         break;
-                        //default:
-                        //    throw new ArgumentOutOfRangeException();
                 }
 
             var count = props.Count;
-
-
 
             return wrapLog($"{count}", count);
         }
@@ -133,14 +127,14 @@ namespace ToSic.Sxc.Dnn.Services
             return wrapLog("ok", httpHeaders.Count);
         }
 
-        private PageLevelCsp PageCsp(bool enabled, bool enforced)
+        private CspOfPage PageCsp(bool enabled, bool enforced)
         {
             var key = "2sxcPageLevelCsp";
             if (HttpContext.Current.Items.Contains(key))
-                return (PageLevelCsp)HttpContext.Current.Items[key];
+                return (CspOfPage)HttpContext.Current.Items[key];
 
             // Not yet registered. Create, and register for on-end of request
-            var pageLevelCsp = new PageLevelCsp();
+            var pageLevelCsp = new CspOfPage();
             HttpContext.Current.Items[key] = pageLevelCsp;
 
             // Register event to attach headers once the request is done and all Apps have registered their Csp

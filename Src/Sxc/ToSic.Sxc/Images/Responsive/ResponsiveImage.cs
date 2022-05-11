@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Configuration;
-using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Html5;
 
@@ -25,10 +23,5 @@ namespace ToSic.Sxc.Images
         });
         private readonly ValueGetOnce<Img> _img2 = new ValueGetOnce<Img>();
 
-
-
-
-
-        public override string ToString() => Img.ToString();
     }
 }

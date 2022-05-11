@@ -53,6 +53,7 @@ namespace ToSic.Sxc.Data
             return decItem != null ? new ImageDecorator(decItem) : null;
         });
         private readonly ValueGetOnce<ImageDecorator> _imgDec2 = new ValueGetOnce<ImageDecorator>();
-
+        
+        IMetadataOf IHasMetadata.Metadata => MetadataOfItem;
     }
 }

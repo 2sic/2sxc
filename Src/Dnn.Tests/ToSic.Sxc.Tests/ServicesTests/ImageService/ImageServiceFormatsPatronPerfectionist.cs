@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
     [TestClass]
     public class ImageServiceFormatsPatronPerfectionist : ImageServiceFormats
     {
-        // Start the test with a platform-info that has no patron
+        // Start the test with a platform-info that has a patron
         protected override IServiceCollection SetupServices(IServiceCollection services)
         {
             return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Images
     /// Goal is that different image formats and different sizes can have other quality specs.
     /// This is so WebP can use different quality params, or very small JGPs need a higher quality than lager JPGs
     /// </summary>
-    [WorkInProgressApi("WIP")]
+    [PublicApi]
     public class RecipeQuality
     {
         public RecipeQuality(RecipeQuality original, int forWidth, string forFormat, int quality)

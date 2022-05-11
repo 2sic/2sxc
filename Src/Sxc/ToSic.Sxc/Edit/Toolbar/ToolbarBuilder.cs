@@ -54,6 +54,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null
         ) => Add(new ToolbarRuleMetadata(target, contentTypes, ui, parameters));
 
+        [PrivateApi("WIP 13.11")]
+        public IToolbarBuilder Image(
+            object target,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null
+        ) => Add(new ToolbarRuleImage(target, ui, parameters));
+
         public IToolbarBuilder Settings(string noParamOrder = Eav.Parameters.Protector, string show = null,
             string hover = null, string follow = null, string classes = null, string autoAddMore = null, string ui = "", string parameters = "")
             => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,

@@ -27,6 +27,19 @@ namespace ToSic.Sxc.Services
         IDynamicCode12 OfModule(int pageId, int moduleId);
 
         /// <summary>
+        /// Get a <see cref="IDynamicCode12"/> object for the primary App of the current Site/Portal.
+        /// </summary>
+        /// <returns></returns>
+        IDynamicCode12 OfSite();
+
+        /// <summary>
+        /// Get a <see cref="IDynamicCode12"/> object for a specific Site/Portal.
+        /// </summary>
+        /// <returns></returns>
+        IDynamicCode12 OfSite(int siteId);
+
+
+        /// <summary>
         /// Get a <see cref="IDynamicCode12"/> object for a specific App.
         /// This is the simplest way to work with Dynamic Code for this App.
         ///
@@ -73,5 +86,29 @@ namespace ToSic.Sxc.Services
             int? appId = null,
             ISite site = null,
             bool? withUnpublished = null);
+
+        /// <summary>
+        /// Get a rich <see cref="Apps.IApp"/> object for the primary (aka Site) App of the _current_ Site/Portal and using permissions of the current user.
+        /// This is the simplest way to work with data of this App, but won't give you commands like `AsDynamic(...)`.
+        /// For more control, use the `AppOfSite` with parameters. 
+        /// </summary>
+        IApp AppOfSite();
+    
+        /// <summary>
+        /// Get a rich <see cref="Apps.IApp"/> object for the primary (aka Site) App. 
+        /// This is the simplest way to work with data of this App, but won't give you commands like `AsDynamic(...)`
+        /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="siteId">The SiteId which is the PortalId in DNN. Optional - without it, the current Site / Portal is used. </param>
+        /// <param name="site">Site information for further context (optional) </param>
+        /// <param name="withUnpublished">Determines if the App.Data gives you unpublished data (like in admin-mode) or just published data. If not set, will default to user permissions.</param>
+        /// <returns>An initialized App object which you can use to access App.Data</returns>
+        IApp AppOfSite(
+            // ReSharper disable once MethodOverloadWithOptionalParameter
+            string noParamOrder = Eav.Parameters.Protector,
+            int? siteId = null,
+            ISite site = null,
+            bool? withUnpublished = null);
     }
+
 }

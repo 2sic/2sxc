@@ -1,20 +1,23 @@
 ﻿using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data
 {
     /// <summary>
-    /// This is an interface which should describe a field.
-    /// It's important for APIs which can need to know more about the field holding an item, like:
+    /// This describes a field-property of an item/entity. 
+    /// It's used for APIs which can need to know more about the field holding an item, like:
     ///
-    /// - The field name
+    /// - The field name and parent reference
+    /// - The values in raw and converted
     /// - Any metadata of the field
+    /// 
     /// </summary>
     /// <remarks>
-    /// History: To be released v13.10
+    /// History: Created in v13.10
     /// </remarks>
-    [WorkInProgressApi("Work in progress, to be finalized ca. v13.10")]
-    public interface IDynamicField: IHasLink
+    [PublicApi]
+    public interface IDynamicField: IHasLink, IHasMetadata
     {
         /// <summary>
         /// The field name
@@ -22,17 +25,21 @@ namespace ToSic.Sxc.Data
         string Name { get; }
 
         /// <summary>
-        /// The parent object holding this field
+        /// The parent object of this field
         /// </summary>
         IDynamicEntity Parent { get; }
 
         /// <summary>
-        /// The raw value of the field, without any modifications
+        /// The raw value of the field, without any modifications.
+        /// If the value is `file:22` then Raw will also return `file:22`.
+        /// To get the value as a link, use <see cref="Value"/>
         /// </summary>
         dynamic Raw { get; }
 
         /// <summary>
-        /// The value of the field with modifications - for example, `file:22` would be converted to the real link
+        /// The value of the field with modifications.
+        /// For example, `file:22` would be converted to the real link.
+        /// To get the raw value, use <see cref="Raw"/>
         /// </summary>
         dynamic Value { get; }
 
@@ -45,7 +52,7 @@ namespace ToSic.Sxc.Data
         IDynamicMetadata Metadata { get; }
 
 
-        [PrivateApi]
+        [PrivateApi("Internal use only, may change at any time")]
         ImageDecorator ImageDecoratorOrNull { get; }
     }
 }

@@ -21,6 +21,11 @@ namespace ToSic.Sxc.Blocks
         string Html { get; }
 
         /// <summary>
+        /// WIP - should tell us how big this is in memory - estimate
+        /// </summary>
+        int Size { get; }
+
+        /// <summary>
         /// Determines if this render-result can be cached.
         /// Should be false in case of errors or not-yet initialized content
         /// </summary>
@@ -75,7 +80,7 @@ namespace ToSic.Sxc.Blocks
         string HttpStatusMessage { get; }
 
         [PrivateApi]
-        IList<IDependentApp> DependentApps { get; }
+        List<IDependentApp> DependentApps { get; }
 
         [PrivateApi("not in use yet")]
         int ModuleId { get; }
@@ -87,7 +92,7 @@ namespace ToSic.Sxc.Blocks
 
     }
 
-    public interface IDependentApp: ITimestamped
+    public interface IDependentApp //: ITimestamped
     {
         int AppId { get; }
     }

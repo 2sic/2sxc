@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return id;
         }
 
-        public string Add(string cacheKey, OutputCacheItem data, int duration, AppState appState, IList<string> appPaths = null)
+        public string Add(string cacheKey, OutputCacheItem data, int duration, List<AppState> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
         {
             try
             {
@@ -29,10 +30,15 @@ namespace ToSic.Sxc.Web.LightSpeed
                 var expiration = new TimeSpan(0, 0, duration);
                 var policy = new CacheItemPolicy { SlidingExpiration = expiration };
                 // get new instance of ChangeMonitor and insert it to the cache item
-                policy.ChangeMonitors.Add(new AppResetMonitor(appState));
+                if (appStates.Any())
+                    foreach(var appState in appStates)
+                        policy.ChangeMonitors.Add(new AppResetMonitor(appState));
 
                 if (appPaths != null && appPaths.Count > 0)
                     policy.ChangeMonitors.Add(new FolderChangeMonitor(appPaths));
+
+                if (updateCallback != null)
+                    policy.UpdateCallback = updateCallback;
 
                 Cache.Set(new CacheItem(cacheKey, data), policy);
                 return cacheKey;

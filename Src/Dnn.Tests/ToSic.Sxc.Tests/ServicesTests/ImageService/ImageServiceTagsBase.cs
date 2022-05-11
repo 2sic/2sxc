@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void UrlResized()
         {
             var svc = Build<IImageService>();
-            var url = TestModeImg ? svc.Img(ImgUrl).Url : svc.Picture(ImgUrl).Url;
+            var url = TestModeImg ? svc.Img(ImgUrl).Src : svc.Picture(ImgUrl).Src;
             AreEqual(ImgUrl, url);
         }
 

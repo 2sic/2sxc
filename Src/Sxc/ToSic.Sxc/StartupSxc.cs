@@ -20,6 +20,7 @@ using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.JsContext;
@@ -117,7 +118,8 @@ namespace ToSic.Sxc
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
             services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
-            services.TryAddScoped<ModuleLevelCsp>();  // important: must be scoped!
+            services.TryAddTransient<CspOfApp>();   // must be transient
+            services.TryAddScoped<CspOfModule>();   // important: must be scoped!
             //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 
@@ -160,8 +162,11 @@ namespace ToSic.Sxc
             services.TryAddTransient<DynamicCodeService.Dependencies>();
             services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
-            // v13 Experimental LightSpeed
+            // v13 LightSpeed
             services.TryAddTransient<IOutputCache, LightSpeed>();
+
+            // Sxc StartUp Routines
+            services.TryAddTransient<SxcSystemLoader>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

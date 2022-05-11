@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Razor.Html5;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
@@ -36,6 +37,12 @@ namespace ToSic.Sxc.Images
         Img Img { get; }
 
         /// <summary>
+        /// The outermost tag - name not yet final
+        /// </summary>
+        [PrivateApi("Name not yet final")]
+        ITag Tag { get; }
+
+        /// <summary>
         /// Determines if the image should be shown entirely.
         /// This usually means that the image is a logo or something, so cropping was not an option.
         /// This also usually means that the aspect ratio / height may be different than expected
@@ -69,6 +76,7 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// The main url, used for main `src` property
         /// </summary>
-        string Url { get; }
+        /// <remarks>Added in v13.11</remarks>
+        string Src { get; }
     }
 }
