@@ -68,11 +68,13 @@ namespace ToSic.Sxc.Web.LightSpeed
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
                 ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
                 : null;
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor, 
-                (x) => LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count - 1));
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor,
+                //(x) => LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count - 1));
+                (x) => LightSpeedStats.Remove(AppState.AppId, data.Size));
             Log.Add($"Cache Key: {cacheKey}");
             if (cacheKey != "error") 
-                LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count + 1);
+                LightSpeedStats.Add(AppState.AppId, data.Size);
+                //LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count + 1);
             return wrapLog($"added for {duration}s", true);
         }
 
