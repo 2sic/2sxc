@@ -16,7 +16,6 @@ namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeed : HasLog, IOutputCache
     {
-        public LightSpeedStats LightSpeedStats { get; }
 
         public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats) : base(Constants.SxcLogName + ".Lights")
         {
@@ -25,19 +24,21 @@ namespace ToSic.Sxc.Web.LightSpeed
             _appStatesLazy = appStatesLazy;
             _appPathsLazy = appPathsLazy;
         }
-
+        public LightSpeedStats LightSpeedStats { get; }
         private readonly IFeaturesService _features;
         private readonly Lazy<IAppStates> _appStatesLazy;
         private readonly Lazy<AppPaths> _appPathsLazy;
 
-        public IOutputCache Init(int moduleId, IBlock block)
+        public IOutputCache Init(int moduleId, int pageId, IBlock block)
         {
             var wrapLog = Log.Call<IOutputCache>($"mod: {moduleId}");
             _moduleId = moduleId;
+            _pageId = pageId;
             _block = block;
             return wrapLog($"{IsEnabled}", this);
         }
         private int _moduleId;
+        private int _pageId;
         private IBlock _block;
         private AppState AppState => _block?.Context?.AppState;
         private IAppStates AppStates => _appStatesLazy.Value;
@@ -69,31 +70,36 @@ namespace ToSic.Sxc.Web.LightSpeed
                 ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
                 : null;
             var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor,
-                //(x) => LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count - 1));
                 (x) => LightSpeedStats.Remove(AppState.AppId, data.Size));
-            Log.Add($"Cache Key: {cacheKey}");
+            Log.Add($"LightSpeed Cache Key: {cacheKey}");
             if (cacheKey != "error") 
                 LightSpeedStats.Add(AppState.AppId, data.Size);
-                //LightSpeedStats.ItemsCount.AddOrUpdate(AppState.AppId, 1, (id, count) => count + 1);
             return wrapLog($"added for {duration}s", true);
         }
 
-        // find if caching is enabled on all dependent apps
+        /// <summary>
+        /// find if caching is enabled on all dependent apps
+        /// </summary>
         private bool IsEnabledOnDependentApps(List<AppState> appStates)
         {
+            var cLog = Log.Call2<bool>();
             foreach (var appState in appStates)
             {
                 var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
                 if (appConfig.IsEnabled == false)
-                {
-                    Log.Add($"cant cache because caching is disabled on dependent app {appState.AppId}");
-                    return false;
-                };
+                    return cLog.Done($"Can't cache; caching disabled on dependent app {appState.AppId}", false);
             }
-            return true;
+            return cLog.Done("ok", true);
         }
 
-        // return physical paths for parent app and all dependent apps (portal and shared)
+        /// <summary>
+        /// Get physical paths for parent app and all dependent apps (portal and shared)
+        /// </summary>
+        /// <remarks>
+        /// Note: The App Paths are only the apps in /2sxc (global and per portal)
+        /// ADAM folders are not monitored
+        /// </remarks>
+        /// <returns>list of paths to monitor</returns>
         private IList<string> AppPaths(List<AppState> appStates)
         {
             if (!((_block as BlockFromModule)?.App is App app)) return null;
@@ -106,10 +112,6 @@ namespace ToSic.Sxc.Web.LightSpeed
                 if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
                 if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
             }
-
-            // TODO: stv, find better way to get ADAM folders (this will not work in Oqt)
-            //var adamPhysicalPath = app.PhysicalPath.Replace("\\2sxc\\", "\\adam\\");
-            //if (Directory.Exists(adamPhysicalPath)) paths.Add(adamPhysicalPath);
 
             return paths;
         }
@@ -137,8 +139,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return urlParams;
         }
 
-        private string CacheKey =>
-        _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, UserIdOrAnon, ViewKey, Suffix)));
+        private string CacheKey => _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix)));
         private readonly ValueGetOnce<string> _key = new ValueGetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);

@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly ValueGetOnce<LogCall> _logTimer = new();
 
 
-        protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Block));
+        protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Page?.PageId ?? 0, Block));
         private readonly ValueGetOnce<IOutputCache> _oc = new();
 
         #endregion

@@ -164,7 +164,7 @@ namespace ToSic.Sxc.Dnn
 
 
 
-        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(Log).Init(ModuleId, Block));
+        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(Log).Init(ModuleId, TabId, Block));
         private readonly ValueGetOnce<IOutputCache> _oc = new ValueGetOnce<IOutputCache>();
     }
 }
