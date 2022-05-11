@@ -8,6 +8,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.SexyContent.Dnn920;
 using ToSic.Sxc.Images.ImageflowRewrite;
+using ToSic.Sxc.Startup;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace ToSic.Sxc.Dnn.StartUp
@@ -73,17 +74,20 @@ namespace ToSic.Sxc.Dnn.StartUp
             globalConfig.AssetsVirtualUrl = DnnConstants.SysFolderRootVirtual + "assets/";
             globalConfig.SharedAppsFolder = "~/Portals/_default/" + AppConstants.AppsRootFolder + "/";
 
+            var sxcSysLoader = transientSp.Build<SxcSystemLoader>();
+            sxcSysLoader.StartUp();
+
             // Register Sxc features before loading
-            Sxc.Configuration.Features.BuiltInFeatures.Register(transientSp.Build<FeaturesCatalog>());
+            //Sxc.Configuration.Features.BuiltInFeatures.Register(transientSp.Build<FeaturesCatalog>());
 
             // Load features from configuration
-            var sysLoader = transientSp.Build<SystemLoader>();
-            sysLoader.StartUp();
+            //var sysLoader = transientSp.Build<SystemLoader>();
+            //sysLoader.StartUp();
 
             // After the SysLoader got the features, we must attach it to an old API which had was public
             // This was used in Mobius etc. to see if features are activated
 #pragma warning disable CS0618
-            Features.FeaturesFromDi = sysLoader.Features;
+            Features.FeaturesFromDi = /*sysLoader*/sxcSysLoader.SystemLoader.Features;
 #pragma warning restore CS0618
 
             // also register this because of a long DNN issue which was fixed, but we don't know if we're running in another version
