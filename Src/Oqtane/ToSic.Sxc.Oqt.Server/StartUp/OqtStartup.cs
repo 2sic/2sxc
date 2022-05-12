@@ -121,12 +121,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 // Beta routes
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                
-                // Route for 2sxc UI
-                endpoints.Map("/Modules/ToSic.Sxc/dist/ng-edit/index.html", (context) => EditUi.HandleEditUi(context, env));
 
+                // Route for 2sxc UI (after JS updates to use folder route (ending with /ng/ or /ng-edit/), this will probably not be necessary)
+                endpoints.Map("/Modules/ToSic.Sxc/dist/ng/ui.html", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
+                endpoints.Map("/Modules/ToSic.Sxc/dist/ng-edit/index.html", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\index.html"));
+                
                 // Fallback route for 2sxc UI
-                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng-edit/", (context) => EditUi.HandleEditUi(context, env));
+                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng/", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
+                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng-edit/", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\index.html"));
             });
         }
 
