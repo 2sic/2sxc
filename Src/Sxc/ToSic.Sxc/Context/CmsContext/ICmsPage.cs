@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context
 {
@@ -39,6 +40,8 @@ namespace ToSic.Sxc.Context
         /// </summary>
         [PrivateApi("Not yet official property, must decide if we'll put in on the ICmsPage or maybe on an ICmsUrl or something")]
         string Url { get; }
-
+        
+        [PrivateApi("WIP")]
+        IDynamicMetadata Metadata { get; }
     }
 }

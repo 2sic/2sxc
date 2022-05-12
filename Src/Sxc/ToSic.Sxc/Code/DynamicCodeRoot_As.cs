@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityDependencies);
 
-        private DynamicEntityDependencies DynamicEntityDependencies =>
+        internal DynamicEntityDependencies DynamicEntityDependencies =>
             _dynamicEntityDependencies
             ?? (_dynamicEntityDependencies = _serviceProvider.Build<DynamicEntityDependencies>().Init(Block, 
                 CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));

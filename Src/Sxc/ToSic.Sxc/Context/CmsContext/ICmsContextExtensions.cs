@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Context
     {
         public static string[] SafeLanguagePriorityCodes(this ICmsContext context)
         {
-            var site = (context as CmsContext)?.Context.Site;
+            var site = (context as CmsContext)?.CtxSite.Site;
             return site.SafeLanguagePriorityCodes();
         }
     }

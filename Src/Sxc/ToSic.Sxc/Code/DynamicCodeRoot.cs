@@ -33,15 +33,15 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies
         {
-            public Dependencies(IServiceProvider serviceProvider, ICmsContext cmsContext, Lazy<CodeCompiler> codeCompilerLazy, AppSettingsStack settingsStack)
+            public Dependencies(IServiceProvider serviceProvider, /*ICmsContext cmsContext,*/ Lazy<CodeCompiler> codeCompilerLazy, AppSettingsStack settingsStack)
             {
                 ServiceProvider = serviceProvider;
-                CmsContext = cmsContext;
+                //CmsContext = cmsContext;
                 CodeCompilerLazy = codeCompilerLazy;
                 SettingsStack = settingsStack;
             }
             internal IServiceProvider ServiceProvider { get; }
-            public ICmsContext CmsContext { get; }
+            //public ICmsContext CmsContext { get; }
             public Lazy<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
 
@@ -52,7 +52,8 @@ namespace ToSic.Sxc.Code
         {
             Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
-            CmsContext = dependencies.CmsContext;
+            //CmsContext = dependencies.CmsContext;
+            CmsContext = GetService<ICmsContext>();
 
             // Load the shared page service and make sure it has this code root, so future uses know about the context
             // We don't need the result, but this ensures that it's initialized correctly
@@ -91,14 +92,14 @@ namespace ToSic.Sxc.Code
             var cLog = Log.Call2<IDynamicCodeRoot>();
 
             CompatibilityLevel = compatibility;
+            //((CmsContext)CmsContext).AttachContext(this);
             if (block == null)
                 return cLog.Done("no block", this);
 
-            ((CmsContext) CmsContext).AttachContext(block);
             Block = block;
             Data = block.Data;
-
             AttachApp(block.App);
+
 
             return cLog.Done($"AppId: {App?.AppId}, Block: {block?.Configuration?.BlockIdentifierOrNull?.Guid}",  this);
         }
@@ -125,6 +126,7 @@ namespace ToSic.Sxc.Code
 
         #region Accessor to Root
 
+        // ReSharper disable once InconsistentNaming
         [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => this;
 
         #endregion
