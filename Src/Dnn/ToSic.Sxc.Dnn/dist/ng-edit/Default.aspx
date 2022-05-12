@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="dev.aspx.cs" Inherits="ToSic.Sxc.Dnn.dist.ng_edit.Dev" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="ToSic.Sxc.Dnn.dist.ng_edit.Default" %>
 
 <!DOCTYPE html>
 

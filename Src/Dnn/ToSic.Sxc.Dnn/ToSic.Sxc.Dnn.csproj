@@ -117,12 +117,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="dist\ng-edit\dev.aspx.cs">
-      <DependentUpon>dev.aspx</DependentUpon>
+    <Compile Include="dist\CachedPageBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\ng-edit\dev.aspx.designer.cs">
-      <DependentUpon>dev.aspx</DependentUpon>
+    <Compile Include="dist\ng-edit\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\ng-edit\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\ng\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\ng\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="DnnBusinessController.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
@@ -181,7 +191,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="dist\ng-edit\dev.aspx" />
+    <Content Include="dist\ng-edit\Default.aspx" />
+    <Content Include="dist\ng\Default.aspx" />
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
@@ -297,6 +308,8 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
+    <Content Include="dist\ng-edit\web.config" />
+    <Content Include="dist\ng\web.config" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>

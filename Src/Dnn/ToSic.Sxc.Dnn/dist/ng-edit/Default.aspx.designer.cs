@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.dist.ng_edit
 {
 
 
-    public partial class Dev
+    public partial class Default
     {
 
         /// <summary>

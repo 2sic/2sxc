@@ -1,11 +1,14 @@
 ﻿using DotNetNuke.Framework;
 using System;
+using System.IO;
+using System.Web;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Services;
 
-namespace ToSic.Sxc.Dnn.dist.ng_edit
+namespace ToSic.Sxc.Dnn.dist.ng
 {
-    public partial class Dev : CDefault
+    public partial class Default : CachedPageBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -16,15 +19,7 @@ namespace ToSic.Sxc.Dnn.dist.ng_edit
             //var pageService = sp.GetRequiredService<IPageService>();
             //pageService.AddCsp("test-csp", "2sxc");
 
-            ResponseIndex();
-        }
-
-        private void ResponseIndex()
-        {
-            var path = Server.MapPath("~/DesktopModules/ToSIC_SexyContent/dist/ng-edit/index.html");
-            if (!System.IO.File.Exists(path)) throw new Exception("File not found: " + path);
-            var html = System.IO.File.ReadAllText(path);
-            Response.Write(html);
+            PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng/ui.html");
         }
     }
 }
