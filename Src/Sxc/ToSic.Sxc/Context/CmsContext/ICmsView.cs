@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context
 {
@@ -47,10 +48,16 @@ namespace ToSic.Sxc.Context
         /// Get the views Metadata
         /// </summary>
         /// <remarks>
-        /// Added in v12.10
+        /// Added in v12.10; changed from IMetadataOf to IDynamicMetadata in 13.12 - WIP, must check no errors
         /// </remarks>
+        //#pragma warning disable CS0108, CS0114
+        //        IMetadataOf Metadata { get; }
+        //#pragma warning restore CS0108, CS0114
+        [PrivateApi("WIP")]
 #pragma warning disable CS0108, CS0114
-        IMetadataOf Metadata { get; }
+        IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
+
+
     }
 }

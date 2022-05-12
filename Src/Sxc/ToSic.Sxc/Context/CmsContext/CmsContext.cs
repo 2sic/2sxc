@@ -40,15 +40,8 @@ namespace ToSic.Sxc.Context
         /// System to extend the known context by more information if we're running inside a block
         /// </summary>
         /// <returns></returns>
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            CodeRoot = codeRoot;
-        }
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => CodeRoot = codeRoot;
 
-        //internal void AttachContext(IDynamicCodeRoot codeRoot)
-        //{
-        //    _codeRoot = codeRoot;
-        //}
 
         internal IDynamicCodeRoot CodeRoot;
         internal DynamicEntityDependencies DEDeps => (CodeRoot as DynamicCodeRoot)?.DynamicEntityDependencies;
@@ -57,7 +50,7 @@ namespace ToSic.Sxc.Context
         private readonly ValueGetOnce<AppState> _siteAppState = new ValueGetOnce<AppState>();
 
 
-        private IBlock RealBlock => _realBlock.Get(() => CodeRoot?.Block);
+        private IBlock RealBlockOrNull => _realBlock.Get(() => CodeRoot?.Block);
         private readonly ValueGetOnce<IBlock> _realBlock = new ValueGetOnce<IBlock>();
 
         internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => CodeRoot?.Block?.Context);
@@ -67,7 +60,7 @@ namespace ToSic.Sxc.Context
 
         public ICmsPlatform Platform { get; }
 
-        public ICmsSite Site => _site ?? (_site = new CmsSite(CtxSite.Site, SiteAppState));
+        public ICmsSite Site => _site ?? (_site = new CmsSite(this, SiteAppState));
         private ICmsSite _site;
 
         public ICmsPage Page => _page ?? (_page = new CmsPage(this, SiteAppState));
@@ -76,16 +69,16 @@ namespace ToSic.Sxc.Context
         public ICmsCulture Culture => _culture ?? (_culture = new CmsCulture(this));
         private ICmsCulture _culture;
 
-        public ICmsModule Module => _cmsModule ?? (_cmsModule = new CmsModule(RealBlock.Context?.Module ?? new ModuleUnknown(null), RealBlock));
+        public ICmsModule Module => _cmsModule ?? (_cmsModule = new CmsModule(this, RealBlockOrNull.Context?.Module ?? new ModuleUnknown(null), RealBlockOrNull));
         private ICmsModule _cmsModule;
 
-        public ICmsUser User => _user ?? (_user = new CmsUser(CtxSite.User, SiteAppState));
+        public ICmsUser User => _user ?? (_user = new CmsUser(this, SiteAppState));
         private ICmsUser _user;
 
-        public ICmsView View => _view ?? (_view = new CmsView(RealBlock));
+        public ICmsView View => _view ?? (_view = new CmsView(this, RealBlockOrNull));
         private ICmsView _view;
 
-        public ICmsBlock Block => _cmsBlock ?? (_cmsBlock = new CmsBlock(RealBlock));
+        public ICmsBlock Block => _cmsBlock ?? (_cmsBlock = new CmsBlock(RealBlockOrNull));
         private ICmsBlock _cmsBlock;
     }
 }

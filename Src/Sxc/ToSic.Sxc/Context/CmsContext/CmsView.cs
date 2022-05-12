@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Blocks;
 
@@ -8,9 +7,9 @@ using ToSic.Sxc.Blocks;
 namespace ToSic.Sxc.Context
 {
     [PrivateApi("Hide implementation")]
-    public class CmsView: Wrapper<IView>, ICmsView
+    public class CmsView: CmsContextPartBase<IView>, ICmsView
     {
-        public CmsView(IBlock block): base(block?.View) { }
+        public CmsView(CmsContext parent, IBlock block): base(parent, block?.View) { }
 
         /// <inheritdoc />
         public int Id => _contents?.Id ?? 0;
@@ -24,6 +23,8 @@ namespace ToSic.Sxc.Context
         /// <inheritdoc />
         public string Edition => _contents?.Edition;
 
-        public IMetadataOf Metadata => _contents?.Metadata;
+        protected override IMetadataOf GetMetadataOf()
+            => _contents?.Metadata;
+
     }
 }

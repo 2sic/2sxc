@@ -41,7 +41,9 @@ namespace ToSic.Sxc.Context
         [PrivateApi("Not yet official property, must decide if we'll put in on the ICmsPage or maybe on an ICmsUrl or something")]
         string Url { get; }
         
-        [PrivateApi("WIP")]
+        [PrivateApi("WIP")] 
+#pragma warning disable CS0108, CS0114
         IDynamicMetadata Metadata { get; }
+#pragma warning restore CS0108, CS0114
     }
 }
