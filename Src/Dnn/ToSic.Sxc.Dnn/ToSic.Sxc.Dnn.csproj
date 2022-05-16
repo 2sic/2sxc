@@ -308,8 +308,6 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
-    <Content Include="dist\ng-edit\web.config" />
-    <Content Include="dist\ng\web.config" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
@@ -395,6 +393,7 @@ robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
 robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
 robocopy /s "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ "
+@REM rename "%25BuildTarget%25\dist\ng-edit\index.html" eav-ui.html
 robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
 robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
 robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "

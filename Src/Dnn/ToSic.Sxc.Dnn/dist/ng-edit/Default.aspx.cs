@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.dist.ng_edit
             //var pageService = sp.GetRequiredService<IPageService>();
             //pageService.AddCsp("test-csp", "2sxc");
 
-            PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng-edit/index.html");
+            PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng-edit/eav-ui.html");
         }
     }
 }
