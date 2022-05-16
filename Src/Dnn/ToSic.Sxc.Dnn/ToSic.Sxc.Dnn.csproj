@@ -356,7 +356,7 @@
     <PostBuildEvent>@Echo Configuration='$(Configuration)'
 @Echo StartWith ='$(Configuration.StartsWith('Debug'))'
 @Echo Platform ='$(Platform)'
-@set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
+@set BuildTarget=%25Dev2sxcDnnRoot%25\DesktopModules\ToSIC_SexyContent
 @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
 @REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
 
