@@ -1,12 +1,10 @@
-﻿using DotNetNuke.Framework;
-using System;
+﻿using System;
 using System.IO;
-using System.Threading;
 using System.Web.Caching;
 
 namespace ToSic.Sxc.Dnn.dist
 {
-    public class CachedPageBase : CDefault
+    public class CachedPageBase : System.Web.UI.Page
     {
         protected void PageOutputCached(string virtualPath)
         {

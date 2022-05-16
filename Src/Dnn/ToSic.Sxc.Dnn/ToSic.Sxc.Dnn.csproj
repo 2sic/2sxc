@@ -389,11 +389,10 @@ robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
-robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
+robocopy "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ " /MIR /XF "*\Default.aspx"
 robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
-robocopy /s "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ "
-@REM rename "%25BuildTarget%25\dist\ng-edit\index.html" eav-ui.html
+robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S /XC /XO /XN
 robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
 robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
 robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "

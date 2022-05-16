@@ -1,10 +1,4 @@
-﻿using DotNetNuke.Framework;
-using System;
-using System.IO;
-using System.Web;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
-using ToSic.Sxc.Services;
+﻿using System;
 
 namespace ToSic.Sxc.Dnn.dist.ng_edit
 {
