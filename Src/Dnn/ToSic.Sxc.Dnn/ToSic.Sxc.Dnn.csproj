@@ -356,7 +356,7 @@
     <PostBuildEvent>@Echo Configuration='$(Configuration)'
 @Echo StartWith ='$(Configuration.StartsWith('Debug'))'
 @Echo Platform ='$(Platform)'
-@set BuildTarget=%25Dev2sxcDnnRoot%25\DesktopModules\ToSIC_SexyContent
+@set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
 @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
 @REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
 
@@ -389,7 +389,7 @@ robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
-robocopy "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ " /MIR /XF "*\Default.aspx"
+robocopy "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ " /MIR /XF "%25BuildTarget%25\dist\ng\Default.aspx" /XF "%25BuildTarget%25\dist\ng-edit\Default.aspx"
 robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
 robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S /XC /XO /XN
