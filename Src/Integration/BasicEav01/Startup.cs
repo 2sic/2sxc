@@ -56,7 +56,7 @@ namespace IntegrationSamples.BasicEav01
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "sys-2sxc");
 
             // Trigger start where the data etc. will be loaded & initialized
-            serviceProvider.GetRequiredService<SystemLoader>().StartUp();
+            serviceProvider.GetRequiredService<EavSystemLoader>().StartUp();
             // ----- End EAV stuff #2sxcIntegration -----
 
 

@@ -189,7 +189,6 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Integrate KOI Dnn-Parts
             services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
-            //services.ActivateKoi2Di();
             
             // new in v12.02 - RazorBlade DI
             services.TryAddScoped<DnnPageChanges>();
@@ -203,8 +202,6 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v12.05
             services.TryAddTransient<ILogService, DnnLogService>();
-
-            // v12.05
             services.TryAddTransient<IMailService, DnnMailService>();
 
             // v13
@@ -212,6 +209,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v13.04
             services.TryAddTransient<IUserInformationService, DnnUserInformationService>();
+
+            // v13.11/12
+            services.TryAddTransient<DnnSystemLoader>();
 
             return services;
         }

@@ -128,6 +128,8 @@
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
+    <Compile Include="Configuration.Features\BuiltInFeatures.cs" />
+    <Compile Include="Configuration.Features\BuiltInFeatures_CorePlus.cs" />
     <Compile Include="dist\CachedPageBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -179,6 +181,7 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
+    <Compile Include="StartUp\DnnSystemLoader.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

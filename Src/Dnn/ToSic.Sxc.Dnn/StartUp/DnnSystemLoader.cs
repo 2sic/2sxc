@@ -1,27 +1,28 @@
 ﻿using ToSic.Eav.Configuration;
+using ToSic.Sxc.Startup;
 
-namespace ToSic.Sxc.Startup
+namespace ToSic.Sxc.Dnn.StartUp
 {
-    public class SxcSystemLoader
+    public class DnnSystemLoader
     {
 
-        public SxcSystemLoader(EavSystemLoader eavLoader, FeaturesCatalog featuresCatalog)
+        public DnnSystemLoader(SxcSystemLoader sxcLoader, FeaturesCatalog featuresCatalog)
         {
             _featuresCatalog = featuresCatalog;
-            EavLoader = eavLoader;
+            SxcLoader = sxcLoader;
         }
         private readonly FeaturesCatalog _featuresCatalog;
-        public readonly EavSystemLoader EavLoader;
+        public readonly SxcSystemLoader SxcLoader;
 
         public void StartUp()
         {
             PreStartUp();
-            EavLoader.StartUp();
+            SxcLoader.StartUp();
         }
 
         public void PreStartUp()
         {
-            // Register Sxc features before loading
+            // Register Dnn features before loading
             Configuration.Features.BuiltInFeatures.Register(_featuresCatalog);
         }
     }
