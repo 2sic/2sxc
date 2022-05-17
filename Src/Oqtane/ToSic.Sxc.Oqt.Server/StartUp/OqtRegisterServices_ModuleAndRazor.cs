@@ -24,8 +24,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     internal static partial class OqtRegisterServices
     {
-
-
         /// <summary>
         /// Ensure that the module-concept works
         /// </summary>
@@ -41,8 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             
             // Page publishing - ATM neutral objects which don't do much
             services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
-            //services.TryAddTransient<IPagePublishingResolver, OqtPagePublishingResolver>();
-            services.AddTransient<IPagePublishingSettings, OqtPagePublishingSettings>(); // #SwitchServicePagePublishingResolver
+            services.AddTransient<IPagePublishingSettings, OqtPagePublishingSettings>(); // #SwitchServicePagePublishingResolver #2749
 
             services.TryAddTransient<OqtModuleHelper>();
 
@@ -74,7 +71,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // Views / Templates / Razor: Polymorphism Resolvers
             services.TryAddTransient<Sxc.Polymorphism.Koi>();
             services.TryAddTransient<Polymorphism.Permissions>();
-            //services.ActivateKoi2Di();
             services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, OqtKoiCssFrameworkDetector>();
 
             return services;

@@ -119,7 +119,7 @@
     <Compile Include="Compatibility\Sxc\ToSic.Sxc.Conversion.DataToDictionary.cs" />
     <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
-    <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishingSettings.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures.cs" />
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures_CorePlus.cs" />

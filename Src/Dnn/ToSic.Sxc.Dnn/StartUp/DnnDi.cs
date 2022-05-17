@@ -77,7 +77,6 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Remember this for later, when we must start the Static Dependency Injection
             OriginalServiceCollection = services;
-            //DnnStaticDi.StaticServiceCollection = services;
 
             _alreadyRegistered = true;
             return services;
@@ -123,21 +122,15 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
             services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
-            //services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
-            //services.TryAddTransient<DnnPermissionCheck>();
             services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
             services.TryAddTransient<IDnnContext, DnnContext>();
-            //services.TryAddTransient<ILinkHelper, DnnLinkService>(); // 2022-03-29 v13.05 2dm disabled this, as I cannot imagine anybody having used this in DI
             services.TryAddTransient<ILinkService, DnnLinkService>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
             services.TryAddTransient<DnnEnvironmentInstaller>(); // Dnn Only
-            // 2022-02-03 2dm - removed strange indirect access to constant
-            //services.TryAddTransient<DnnInstallLogger>(sp =>
-            //    ActivatorUtilities.CreateInstance<DnnInstallLogger>(sp, DnnEnvironmentInstaller.SaveUnimportantDetails));
             services.TryAddTransient<DnnInstallLogger>();
 
             // ADAM
@@ -147,8 +140,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
             services.TryAddTransient<IApiInspector, DnnApiInspector>();
-            // Moved to EAV WebApi
-            //services.TryAddScoped<ResponseMaker<HttpResponseMessage>, ResponseMakerNetFramework>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
@@ -166,11 +157,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // add page publishing
             services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
-            //services.TryAddTransient<IPagePublishingResolver, Cms.DnnPagePublishingResolver>();
 
-            // v13 option to not use page publishing... WIP #SwitchServicePagePublishingResolver
+            // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
             services.AddTransient<IPagePublishingSettings, Cms.DnnPagePublishingSettings>();
-            //services.AddTransient<IPagePublishingResolver, Cms.DnnDisablePagePublishingResolver>();
 
             if (appsCacheOverride != null)
             {
