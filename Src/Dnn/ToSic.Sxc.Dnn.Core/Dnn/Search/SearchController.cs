@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Search
     /// </remarks>
     public class SearchController : HasLog<SearchController>
     {
-        public SearchController(IServiceProvider serviceProvider, 
-            IAppsCache appsCache,
+        public SearchController(IServiceProvider serviceProvider,
+            AppsCacheSwitch appsCache,
             Generator<CodeCompiler> codeCompiler,
             Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
             Generator<ISite> site,
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Search
             _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
         }
         private readonly IServiceProvider _serviceProvider;
-        private readonly IAppsCache _appsCache;
+        private readonly AppsCacheSwitch _appsCache;
         private readonly Generator<CodeCompiler> _codeCompiler;
         private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
         private readonly Generator<ISite> _site;
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
-            _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
+            _appsCache.Value.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
             Block = _moduleAndBlockBuilder.Ready.GetBlock(DnnModule);
 
