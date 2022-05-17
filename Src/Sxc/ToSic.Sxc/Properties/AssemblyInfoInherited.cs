@@ -7,10 +7,9 @@ using static ToSic.Sxc.SharedAssemblyInfo;
 
 // For this to work, the .csproj file must also have some <generate...> set to false
 
-// TODO: @STV
-//[assembly: AssemblyVersion(AssemblyVersion)]
-//[assembly: AssemblyFileVersion(AssemblyVersion)]
-//[assembly: AssemblyInformationalVersion(AssemblyVersion)] 
-//[assembly: AssemblyProduct(SxcProduct)]
-//[assembly: AssemblyCompany(Company)]
-//[assembly: AssemblyCopyright(SxcCopyright)] 
+[assembly: AssemblyVersion(AssemblyVersion)]
+[assembly: AssemblyFileVersion(AssemblyVersion)]
+[assembly: AssemblyInformationalVersion(AssemblyVersion)]
+[assembly: AssemblyProduct(SxcProduct)]
+[assembly: AssemblyCompany(Company)]
+[assembly: AssemblyCopyright(SxcCopyright)]
