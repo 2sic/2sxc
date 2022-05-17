@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Oqtane.Infrastructure;
 using System.IO;
+using Microsoft.Extensions.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
@@ -106,6 +107,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            if (env.IsDevelopment())
+                app.UsePageResponseRewriteMiddleware();
 
             // endpoint mapping
             app.UseEndpoints(endpoints =>
