@@ -1,19 +1,19 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Oqtane.Infrastructure;
+using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
-using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
@@ -123,12 +123,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
 
                 // Route for 2sxc UI (after JS updates to use folder route (ending with /ng/ or /ng-edit/), probably this will not be necessary)
-                endpoints.Map("/Modules/ToSic.Sxc/dist/ng/ui.html", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
-                endpoints.Map("/Modules/ToSic.Sxc/dist/ng-edit/eav-ui.html", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\eav-ui.html"));
+                endpoints.Map("/Modules/ToSic.Sxc/dist/ng/ui.html", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
+                endpoints.Map("/Modules/ToSic.Sxc/dist/ng-edit/eav-ui.html", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\eav-ui.html"));
                 
                 // Fallback route for 2sxc UI
-                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng/", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
-                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng-edit/", (context) => EditUi.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\eav-ui.html"));
+                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng/", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
+                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng-edit/", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\eav-ui.html"));
             });
         }
 
