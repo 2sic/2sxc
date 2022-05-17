@@ -16,7 +16,6 @@
     <!-- Properties / Variables for the DNN Build which we need early on-->
     <PropertyGroup>
       <DnnManifestFile>DnnPackageBuilder/2sic_2SexyContent.dnn</DnnManifestFile>
-      <!-- <MSBuildCommunityTasksPath>$(SolutionDir)\BuildScripts</MSBuildCommunityTasksPath> -->
     </PropertyGroup>
 
     <!-- Get the Version out of the DNN Manifest for this release -->

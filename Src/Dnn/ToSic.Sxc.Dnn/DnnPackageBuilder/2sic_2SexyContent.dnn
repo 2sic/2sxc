@@ -54,7 +54,7 @@
             <script type="Install">
               <path>SqlDataProvider</path>
               <name>13.04.00.SqlDataProvider</name>
-              <version>13.11.01</version>
+              <version>13.04.00</version>
             </script>
             <script type="UnInstall">
               <path>SqlDataProvider</path>
