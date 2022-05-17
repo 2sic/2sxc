@@ -166,7 +166,11 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // add page publishing
             services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
-            services.TryAddTransient<IPagePublishingResolver, Cms.DnnPagePublishingResolver>();
+            //services.TryAddTransient<IPagePublishingResolver, Cms.DnnPagePublishingResolver>();
+
+            // v13 option to not use page publishing... WIP #SwitchServicePagePublishingResolver
+            services.AddTransient<IPagePublishingSettings, Cms.DnnPagePublishingSettings>();
+            //services.AddTransient<IPagePublishingResolver, Cms.DnnDisablePagePublishingResolver>();
 
             if (appsCacheOverride != null)
             {

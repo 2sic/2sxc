@@ -4,11 +4,11 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms
 {
-    internal class OqtPagePublishingResolver: PagePublishingResolverBase
+    internal class OqtPagePublishingSettings: PagePublishingSettingsBase
     {
         #region Constructor / DI
 
-        public OqtPagePublishingResolver() : base(OqtConstants.OqtLogPrefix) { }
+        public OqtPagePublishingSettings() : base(OqtConstants.OqtLogPrefix) { }
         
         #endregion
 

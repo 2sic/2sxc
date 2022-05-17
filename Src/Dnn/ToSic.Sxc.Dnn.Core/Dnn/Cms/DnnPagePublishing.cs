@@ -78,9 +78,9 @@ namespace ToSic.Sxc.Dnn.Cms
         public int GetPublishedVersion(int instanceId)
         {
             var moduleVersionSettings = new ModuleVersions(instanceId, Log);
-            var publ = moduleVersionSettings.GetPublishedVersion();
-            Log.Add($"GetPublishedVersion(m:{instanceId}) = pub:{publ}");
-            return publ;
+            var pubVersion = moduleVersionSettings.GetPublishedVersion();
+            Log.Add($"GetPublishedVersion(m:{instanceId}) = pub:{pubVersion}");
+            return pubVersion;
         }
 
 

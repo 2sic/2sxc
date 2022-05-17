@@ -1,8 +1,9 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
+using ToSic.Eav.Plumbing.DI;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Web.PageService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -17,7 +18,8 @@ namespace ToSic.Sxc.Context
         public ContextOfBlock(
             IPage page, 
             IModule module, 
-            Lazy<IPagePublishingResolver> publishingResolver,
+            //Lazy<IPagePublishingResolver> publishingResolver,
+            LazyInitLog<ServiceSwitcher<IPagePublishingSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
             ContextOfSiteDependencies contextOfSiteDependencies,
             ContextOfAppDependencies appDependencies)
@@ -26,10 +28,14 @@ namespace ToSic.Sxc.Context
             Page = page;
             Module = module;
             PageServiceShared = pageServiceShared;
+            //_publishingResolver = publishingResolver;
             _publishingResolver = publishingResolver;
+            // special check to prevent duplicate SetLog, because it could be cloned and already initialized
+            if (!_publishingResolver.HasInit)
+                _publishingResolver.SetLog(Log);
             Log.Rename("Sxc.CtxBlk");
         }
-        private readonly Lazy<IPagePublishingResolver> _publishingResolver;
+        private readonly LazyInitLog<ServiceSwitcher<IPagePublishingSettings>> _publishingResolver;
 
         #endregion
 
@@ -59,11 +65,11 @@ namespace ToSic.Sxc.Context
         public PageServiceShared PageServiceShared { get; }
 
         /// <inheritdoc />
-        public BlockPublishingState Publishing => _publishing ?? (_publishing = _publishingResolver.Value.GetPublishingState(Module?.Id ?? -1));
-        private BlockPublishingState _publishing;
+        public BlockPublishingSettings Publishing => _publishing ?? (_publishing = _publishingResolver.Ready.Value.SettingsOfModule(Module?.Id ?? -1));
+        private BlockPublishingSettings _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, Dependencies, Deps)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, /*_publishingResolver,*/ _publishingResolver, PageServiceShared, Dependencies, Deps)
             .Init(parentLog);
     }
 }

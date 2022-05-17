@@ -1,10 +1,10 @@
-﻿using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing.DI;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
-    public interface IPagePublishingResolver: IHasLog<IPagePublishingResolver>
+    public interface IPagePublishingSettings: IHasLog, ISwitchableService
     {
-        BlockPublishingState GetPublishingState(int instanceId);
+        BlockPublishingSettings SettingsOfModule(int moduleId);
     }
 }

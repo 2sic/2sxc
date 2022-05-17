@@ -4,11 +4,11 @@ using ToSic.Eav.Run.Unknown;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
-    internal class BasicPagePublishingResolver : PagePublishingResolverBase
+    public class BasicPagePublishingSettings : PagePublishingSettingsBase
     {
-        public BasicPagePublishingResolver(WarnUseOfUnknown<BasicPagePublishingResolver> warn) : base(LogNames.NotImplemented) { }
+        public BasicPagePublishingSettings(WarnUseOfUnknown<BasicPagePublishingSettings> warn) : base(LogNames.NotImplemented) { }
 
-        protected override PublishingMode LookupRequirements(int instanceId) 
+        protected override PublishingMode LookupRequirements(int moduleId) 
             => PublishingMode.DraftOptional;
     }
 }

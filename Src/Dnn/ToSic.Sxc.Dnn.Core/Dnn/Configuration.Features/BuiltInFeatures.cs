@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.Configuration.Features
     {
         public static void Register(FeaturesCatalog cat) =>
             cat.Register(
-                BuiltInFeatures.DnnPageWorkflowDisable
+                DnnPageWorkflow
             );
 
 

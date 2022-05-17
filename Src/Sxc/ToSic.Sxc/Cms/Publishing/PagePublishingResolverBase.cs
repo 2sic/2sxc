@@ -4,9 +4,9 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
-    public abstract class PagePublishingResolverBase: HasLog<IPagePublishingResolver>, IPagePublishingResolver
+    public abstract class PagePublishingSettingsBase: HasLog, IPagePublishingSettings
     {
-        protected PagePublishingResolverBase(string logPrefix) : base(logPrefix + ".PubRes") { }
+        protected PagePublishingSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }
 
         protected PublishingMode Requirements(int instanceId)
         {
@@ -23,15 +23,25 @@ namespace ToSic.Sxc.Cms.Publishing
         /// <summary>
         /// The lookup must be implemented for each platform
         /// </summary>
-        /// <param name="instanceId"></param>
+        /// <param name="moduleId"></param>
         /// <returns></returns>
-        protected abstract PublishingMode LookupRequirements(int instanceId);
+        protected abstract PublishingMode LookupRequirements(int moduleId);
 
-        public BlockPublishingState GetPublishingState(int instanceId)
+        public BlockPublishingSettings SettingsOfModule(int moduleId)
         {
-            var mode = Requirements(instanceId);
-            return new BlockPublishingState { ForceDraft = mode == PublishingMode.DraftRequired, Mode = mode };
+            var mode = Requirements(moduleId);
+            return new BlockPublishingSettings { ForceDraft = mode == PublishingMode.DraftRequired, Mode = mode };
         }
 
+        #region SwitchableService
+
+
+        public virtual string NameId => "Default";
+
+        public virtual bool IsViable() => true;
+
+        public virtual int Priority => 1;
+
+        #endregion
     }
 }
