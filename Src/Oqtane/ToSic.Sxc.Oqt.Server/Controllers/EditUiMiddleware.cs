@@ -5,9 +5,9 @@ using System.IO;
 using System.Runtime.Caching;
 using System.Threading.Tasks;
 
-namespace ToSic.Sxc.Oqt.Server.WebApi
+namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public class EditUi
+    public class EditUiMiddleware
     {
         private static readonly MemoryCache Cache = MemoryCache.Default;
 
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
             {
                 var path = Path.Combine(env.WebRootPath, virtualPath);
                 if (!File.Exists(path)) throw new FileNotFoundException("File not found: " + path);
-                
+
                 html = File.ReadAllBytes(path);
                 Cache.Set(key, html, GetCacheItemPolicy(path));
             }
