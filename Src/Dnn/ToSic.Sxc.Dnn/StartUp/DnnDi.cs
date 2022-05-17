@@ -204,7 +204,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IUserInformationService, DnnUserInformationService>();
 
             // v13.11/12
-            services.TryAddTransient<DnnSystemLoader>();
+            services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd
 
             return services;
         }

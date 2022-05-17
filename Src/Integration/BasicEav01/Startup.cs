@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Run;
 
 namespace IntegrationSamples.BasicEav01
 {
@@ -56,7 +57,7 @@ namespace IntegrationSamples.BasicEav01
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "sys-2sxc");
 
             // Trigger start where the data etc. will be loaded & initialized
-            serviceProvider.GetRequiredService<EavSystemLoader>().StartUp();
+            serviceProvider.GetRequiredService<SystemLoader>().StartUp();
             // ----- End EAV stuff #2sxcIntegration -----
 
 

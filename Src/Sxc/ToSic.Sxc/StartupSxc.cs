@@ -166,7 +166,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IOutputCache, LightSpeed>();
 
             // Sxc StartUp Routines
-            services.TryAddTransient<SxcSystemLoader>();
+            services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();    // must be Add, not TryAdd
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

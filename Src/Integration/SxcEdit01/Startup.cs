@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Run;
 using ToSic.Sxc;
 using ToSic.Sxc.WebApi;
 
@@ -57,7 +58,7 @@ namespace IntegrationSamples.SxcEdit01
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "sys-2sxc");
 
             // Trigger start where the data etc. will be loaded & initialized
-            serviceProvider.GetRequiredService<EavSystemLoader>().StartUp();
+            serviceProvider.GetRequiredService<SystemLoader>().StartUp();
             // ----- End EAV stuff #2sxcIntegration -----
 
             if (env.IsDevelopment())

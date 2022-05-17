@@ -149,6 +149,7 @@
     <Compile Include="Polymorphism\Permissions.cs" />
     <Compile Include="StartUp\CompilerDependencies.cs" />
     <Compile Include="StartUp\DnnDi.cs" />
+    <Compile Include="StartUp\DnnStartUpRegistrations.cs" />
     <Compile Include="StartUp\StartupDnn9.cs" />
     <Compile Include="StartUp\StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
@@ -179,7 +180,6 @@
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
     </Compile>
-    <Compile Include="StartUp\DnnSystemLoader.cs" />
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
