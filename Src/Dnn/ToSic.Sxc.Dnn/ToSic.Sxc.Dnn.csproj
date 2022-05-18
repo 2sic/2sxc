@@ -371,6 +371,8 @@
 @set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
 @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
 @REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
+xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\dnn9102-farm\Website\bin\" /y /i
+xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "c:\Projects\_Test\2sxc-evoq\2sxc-evoq910611-t01\Website\bin\" /y /i
 
 @REM Copy Imageflow and dependecies
 robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
