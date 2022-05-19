@@ -123,6 +123,7 @@
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures.cs" />
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures_CorePlus.cs" />
+    <Compile Include="Dnn\Context\DnnPage.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
     <Compile Include="Dnn\DnnModuleAndBlockBuilder.cs" />

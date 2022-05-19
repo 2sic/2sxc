@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
@@ -64,24 +65,36 @@ namespace ToSic.Sxc.Dnn
             var wrapLog = Log.Call<IContextOfBlock>();
             // Collect / assemble page information
             var activeTab = (context.Site as Site<PortalSettings>)?.UnwrappedContents?.ActiveTab;
-            context.Page.Init(activeTab?.TabID ?? Eav.Constants.NullId);
 
-            // the FullUrl will throw an error in DNN search scenarios
-            string url = null;
-            try
-            {
-                // skip during search (usual HttpContext is missing for search)
-                if (System.Web.HttpContext.Current == null) return wrapLog("no http-context, can't add page", context);
-
-                url = activeTab?.FullUrl.TrimLastSlash();
-                ((Page)context.Page).Url = url;
-            }
-            catch
-            {
-                /* ignore */
-            }
+            var page = (DnnPage)context.Page;
+            var url = page.InitPageIdAndUrl(activeTab);
 
             return wrapLog(url, context);
         }
+
+        //internal string InitPageIdAndUrl(Page page, TabInfo activeTab)
+        //{
+        //    page.Init(activeTab?.TabID ?? Eav.Constants.NullId);
+
+        //    // the FullUrl will throw an error in DNN search scenarios
+        //    string url = null;
+        //    try
+        //    {
+        //        // skip during search (usual HttpContext is missing for search)
+        //        if (System.Web.HttpContext.Current != null)
+        //        {
+        //            url = activeTab?.FullUrl.TrimLastSlash();
+        //            page.Url = url;
+        //        }
+        //        else
+        //            url = "no http-context, can't add page";
+        //    }
+        //    catch
+        //    {
+        //        /* ignore */
+        //    }
+
+        //    return url;
+        //}
     }
 }

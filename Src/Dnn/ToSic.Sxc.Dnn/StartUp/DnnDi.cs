@@ -110,6 +110,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             
             // Module cannot yet be scoped, until we have a per-module scope at some time
             services.TryAddTransient<IModule, DnnModule>();
+            services.TryAddTransient<IPage, DnnPage>();
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
