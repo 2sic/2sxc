@@ -42,21 +42,21 @@ namespace ToSic.Sxc.Images
         /// <returns></returns>
         private object GetBestSettings(object settings)
         {
-            var wrapLog = Log.SafeCall<object>(Debug);
+            var wrapLog = Log.Call2<object>(Debug);
             if (settings == null || settings is bool boolSettings && boolSettings)
-                return wrapLog("null/default", GetCodeRootSettingsByName("Content"));
+                return wrapLog.Return(GetCodeRootSettingsByName("Content"), "null/default");
 
             if (settings is string strName && !string.IsNullOrWhiteSpace(strName))
-                return wrapLog($"name: {strName}", GetCodeRootSettingsByName(strName));
+                return wrapLog.Return(GetCodeRootSettingsByName(strName), $"name: {strName}");
 
-            return wrapLog("unchanged", settings);
+            return wrapLog.Return(settings, "unchanged");
         }
 
         private dynamic GetCodeRootSettingsByName(string strName)
         {
-            var wrapLog = Log.SafeCall<object>(Debug, strName, message: $"code root: {_codeRootOrNull != null}");
+            var wrapLog = Log.Call2<object>(Debug, strName, message: $"code root: {_codeRootOrNull != null}");
             var result = (_codeRootOrNull?.Settings?.Images as ICanGetByName)?.Get(strName);
-            return wrapLog($"found: {result != null}", result);
+            return wrapLog.Return(result, $"found: {result != null}");
         }
 
         /// <summary>

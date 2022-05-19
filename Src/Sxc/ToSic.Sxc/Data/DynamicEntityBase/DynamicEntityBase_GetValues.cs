@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
             var logOrNull = _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
-            var safeWrap = logOrNull.SafeCall<object>(Debug,
+            var safeWrap = logOrNull.Call2<object>(Debug,
                     $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
                     "Debug: true");
             
@@ -26,12 +26,12 @@ namespace ToSic.Sxc.Data
             logOrNull?.SafeAdd($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
 
             // check if we already have it in the cache - but only in default languages
-            if (useCache && _ValueCache.ContainsKey(field)) return safeWrap("cached", _ValueCache[field]);
+            if (useCache && _ValueCache.ContainsKey(field)) return safeWrap.Return(_ValueCache[field], "cached");
 
             var resultSet = FindPropertyInternal(field, languages, logOrNull, new PropertyLookupPath().Add("DynEntStart", field));
 
             // check Entity is null (in cases where null-objects are asked for properties)
-            if (resultSet == null) return safeWrap("null", null);
+            if (resultSet == null) return safeWrap.ReturnNull("null");
 
             logOrNull?.SafeAdd($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
 
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Data
                 logOrNull?.SafeAdd("add to cache");
                 _ValueCache.Add(field, result);
             }
-            return safeWrap("ok", result);
+            return safeWrap.Return(result, "ok");
         }
 
 

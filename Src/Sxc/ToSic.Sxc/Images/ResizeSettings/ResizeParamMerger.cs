@@ -40,13 +40,13 @@ namespace ToSic.Sxc.Images
             AdvancedSettings advanced = default
         )
         {
-            var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
+            var wrapLog = Log.Call2<ResizeSettings>(Debug);
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes
             if (aspectRatio != null && height != null)
             {
-                wrapLog("error", null);
+                wrapLog.ReturnNull("error");
                 const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
             }
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Images
 
             resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
 
-            return wrapLog("ok", resizeParams);
+            return wrapLog.Return(resizeParams, "ok");
         }
 
         private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
