@@ -4,6 +4,7 @@ using DotNetNuke.Security.Permissions;
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 
@@ -64,28 +65,25 @@ namespace ToSic.Sxc.Dnn.Run
             return wrapLog("can't verify: false", false);
         }
 
-        private bool UserIsModuleAdmin()
-            => Log.Intercept(nameof(UserIsModuleAdmin),
-                () => Module != null && ModulePermissionController.CanAdminModule(Module));
+        private bool UserIsModuleAdmin() => Log.Intercept2(() => Module != null && ModulePermissionController.CanAdminModule(Module));
 
         private bool UserIsModuleEditor()
-            => Log.Intercept(nameof(UserIsModuleEditor),
-                () =>
+            => Log.Intercept2(() =>
+            {
+                if (Module == null) return false;
+
+                // This seems to throw errors during search :(
+                try
                 {
-                    if (Module == null) return false;
+                    // skip during search (usual HttpContext is missing for search)
+                    if (System.Web.HttpContext.Current == null) return false;
 
-                    // This seems to throw errors during search :(
-                    try
-                    {
-                        // skip during search (usual HttpContext is missing for search)
-                        if (System.Web.HttpContext.Current == null) return false;
-
-                        return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                });
+                    return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module);
+                }
+                catch
+                {
+                    return false;
+                }
+            });
     }
 }

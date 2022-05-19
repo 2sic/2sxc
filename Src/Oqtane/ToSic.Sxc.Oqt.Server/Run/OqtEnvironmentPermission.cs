@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
@@ -71,24 +72,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        protected bool UserIsModuleAdmin()
-            => Log.Intercept(nameof(UserIsModuleAdmin),
-                UserIsModuleEditor);
+        protected bool UserIsModuleAdmin() => Log.Intercept2(UserIsModuleEditor);
 
         protected bool UserIsModuleEditor()
-            => _userIsModuleEditor ??= Log.Intercept(nameof(UserIsModuleEditor),
-                () =>
+            => _userIsModuleEditor ??= Log.Intercept2(() =>
+            {
+                if (Module == null) return false;
+                try
                 {
-                    if (Module == null) return false;
-                    try
-                    {
-                        return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id, PermissionNames.Edit);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                });
+                    return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id,
+                        PermissionNames.Edit);
+                }
+                catch
+                {
+                    return false;
+                }
+            });
         private bool? _userIsModuleEditor;
     }
 }

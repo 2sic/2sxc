@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return urlParams;
         }
 
-        private string CacheKey => _key.Get(() => Log.Intercept(nameof(CacheKey), () => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix)));
+        private string CacheKey => _key.Get(() => Log.Intercept2(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix)));
         private readonly ValueGetOnce<string> _key = new ValueGetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
