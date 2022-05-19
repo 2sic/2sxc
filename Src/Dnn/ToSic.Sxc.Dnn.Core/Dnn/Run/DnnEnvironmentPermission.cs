@@ -65,10 +65,10 @@ namespace ToSic.Sxc.Dnn.Run
             return wrapLog("can't verify: false", false);
         }
 
-        private bool UserIsModuleAdmin() => Log.Intercept2(() => Module != null && ModulePermissionController.CanAdminModule(Module));
+        private bool UserIsModuleAdmin() => Log.Return(() => Module != null && ModulePermissionController.CanAdminModule(Module));
 
         private bool UserIsModuleEditor()
-            => Log.Intercept2(() =>
+            => Log.Return(() =>
             {
                 if (Module == null) return false;
 

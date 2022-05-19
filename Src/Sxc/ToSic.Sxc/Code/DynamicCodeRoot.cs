@@ -94,14 +94,14 @@ namespace ToSic.Sxc.Code
             CompatibilityLevel = compatibility;
             //((CmsContext)CmsContext).AttachContext(this);
             if (block == null)
-                return cLog.Done("no block", this);
+                return cLog.Return(this, "no block");
 
             Block = block;
             Data = block.Data;
             AttachApp(block.App);
 
 
-            return cLog.Done($"AppId: {App?.AppId}, Block: {block?.Configuration?.BlockIdentifierOrNull?.Guid}",  this);
+            return cLog.Return(this, $"AppId: {App?.AppId}, Block: {block?.Configuration?.BlockIdentifierOrNull?.Guid}");
         }
 
         /// <inheritdoc />

@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             // Get Stack
             if (!(_codeRoot?.Settings is DynamicStack stack)) 
-                return cLog.Done("no stack", null);
+                return cLog.ReturnNull("no stack");
 
             // Enable this for detailed debugging
             //stack.Debug = true;
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             // CSP Settings Reader from Dynamic Entity for the App
             var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);
             var policies = cspReader.Policies;
-            return cLog.Done(policies, policies);
+            return cLog.ReturnAndLog(policies);
         }
         #endregion
 

@@ -34,12 +34,12 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             var pref = SettingPreferred;
             if (pref.Setting?.Get(field) is object result)
-                return cLog.Done($"Preferred[{pref.Name}]: {result}", result);
+                return cLog.Return(result, $"Preferred[{pref.Name}]: {result}");
 
             if (SettingsDefault?.Get(field) is object result2)
-                return cLog.Done($"Default Source: {result2}", result2);
+                return cLog.Return(result2, $"Default Source: {result2}");
 
-            return cLog.Done("not found", null);
+            return cLog.ReturnNull("not found");
         }
 
         public bool IsEnabled => GetFromPreferredOrDefaultSource(FieldIsEnabled) as bool? == true;

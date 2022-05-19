@@ -87,9 +87,9 @@ namespace ToSic.Sxc.Web.LightSpeed
             {
                 var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
                 if (appConfig.IsEnabled == false)
-                    return cLog.Done($"Can't cache; caching disabled on dependent app {appState.AppId}", false);
+                    return cLog.Return(false, $"Can't cache; caching disabled on dependent app {appState.AppId}");
             }
-            return cLog.Done("ok", true);
+            return cLog.Return(true, "ok");
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return urlParams;
         }
 
-        private string CacheKey => _key.Get(() => Log.Intercept2(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix)));
+        private string CacheKey => _key.Get(() => Log.Return(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix)));
         private readonly ValueGetOnce<string> _key = new ValueGetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);

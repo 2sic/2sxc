@@ -72,10 +72,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        protected bool UserIsModuleAdmin() => Log.Intercept2(UserIsModuleEditor);
+        protected bool UserIsModuleAdmin() => Log.Return(UserIsModuleEditor);
 
         protected bool UserIsModuleEditor()
-            => _userIsModuleEditor ??= Log.Intercept2(() =>
+            => _userIsModuleEditor ??= Log.Return(() =>
             {
                 if (Module == null) return false;
                 try
