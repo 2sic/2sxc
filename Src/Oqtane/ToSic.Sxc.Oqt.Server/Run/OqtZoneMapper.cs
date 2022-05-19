@@ -9,6 +9,7 @@ using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (zoneSetting != null)
             {
                 if (!int.TryParse(zoneSetting.SettingValue, out var zId))
-                    throw new Exception(Log.A($"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int"));
+                    throw new Exception(Log.AddAndReuse($"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int"));
                 i = zId;
                 return true;
             }
