@@ -29,15 +29,14 @@ namespace ToSic.Sxc.Dnn.Run
 
         public override bool EnvironmentAllows(List<Grants> grants)
         {
-            var logWrap = Log.Call(() => $"[{string.Join(",", grants)}]");
+            var logWrap = Log.Call2<bool>(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
             if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsSiteAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
             if (ok) GrantedBecause = Conditions.EnvironmentGlobal;
-            logWrap($"{ok} because:{GrantedBecause}");
-            return ok;
+            return logWrap.Return(ok, $"{ok} because:{GrantedBecause}");
         }
 
         public override bool VerifyConditionOfEnvironment(string condition)
