@@ -30,10 +30,12 @@ namespace ToSic.Sxc.Dnn.WebApi
         private readonly Action<string> TimerWrapLog;
 
         protected override void Initialize(HttpControllerContext controllerContext)
-	    {
+        {
+            var callLog = Log.Call2();
             // Add the logger to the request, in case it's needed in error-reporting
 	        controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
 	        base.Initialize(controllerContext);
+            callLog.Done();
         }
 
         protected override void Dispose(bool disposing)

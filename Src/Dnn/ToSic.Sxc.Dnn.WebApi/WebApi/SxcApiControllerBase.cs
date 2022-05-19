@@ -1,6 +1,7 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.WebApi;
@@ -23,16 +24,13 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             SharedContextResolver = GetService<IContextResolver>();
-            SharedContextResolver.AttachRealBlock(() => BlockOfRequest);
+            SharedContextResolver.AttachRealBlock(GetBlock);
         }
 
         protected IContextResolver SharedContextResolver;
 
-        private IBlock BlockOfRequest
-            => _blockOfRequest ?? (_blockOfRequest = GetService<DnnGetBlock>().GetCmsBlock(Request, Log));
-        private IBlock _blockOfRequest;
-
-        [PrivateApi] protected IBlock GetBlock() => BlockOfRequest;
+        [PrivateApi] protected IBlock GetBlock() => _blockOfRequest.Get(() => GetService<DnnGetBlock>().GetCmsBlock(Request, Log));
+        private readonly ValueGetOnce<IBlock> _blockOfRequest = new ValueGetOnce<IBlock>();
 
     }
 }
