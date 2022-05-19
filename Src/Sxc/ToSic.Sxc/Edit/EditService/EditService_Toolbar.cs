@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
@@ -64,7 +65,7 @@ namespace ToSic.Sxc.Edit.EditService
                 // ensure that internally we always process it as an entity
                 var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
                 if (target != null && eTarget == null)
-                    Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
+                    Log.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
                 if (toolbar is IToolbarBuilder)
                 {
                     Log.Add("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");

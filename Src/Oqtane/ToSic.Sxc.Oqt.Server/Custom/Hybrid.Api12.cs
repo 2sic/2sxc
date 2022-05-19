@@ -45,7 +45,7 @@ namespace Custom.Hybrid
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
             {
-                Log.Add("DynCode.App is null");
+                Log.A("DynCode.App is null");
                 TryToAttachAppFromUrlParams(context);
             }
 
@@ -71,7 +71,7 @@ namespace Custom.Hybrid
                 if (appId != ToSic.Eav.Constants.NullId)
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
-                    Log.Add($"AppId: {appId}");
+                    Log.A($"AppId: {appId}");
                     var app = LoadAppOnly(appId, CtxResolver.Site().Site);
                     _DynCodeRoot.AttachApp(app);
                     found = true;

@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Dnn.Cms
                         ids.Add(cb.Configuration.Id);
                     }
 
-                    Log.Add(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]");
+                    Log.A(() => $"will publish id⋮{ids.Count} ids:[{ string.Join(",", ids.Select(i => i.ToString()).ToArray()) }]");
 
                     if (ids.Any())
                         appManager.Entities.Publish(ids.ToArray());
