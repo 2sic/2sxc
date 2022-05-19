@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Images
 
             if (settings is IResizeSettings typeSettings)
             {
-                Log.SafeAdd(Debug, $"Is {nameof(ResizeSettings)}, will clone/init");
+                wrapLog.A(Debug, $"Is {nameof(ResizeSettings)}, will clone/init");
                 return new ResizeSettings(
                     typeSettings,
                     format: resP.FormatOrNull(format),
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Images
 
             // Check if the settings is the expected type or null/other type
             var getSettings = settings as ICanGetByName;
-            Log.SafeAdd(Debug, $"Has Settings:{getSettings != null}");
+            wrapLog.A(Debug, $"Has Settings:{getSettings != null}");
 
 
             var formatValue = resP.FormatOrNull(format);
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Images
             var factorFinal = resP.FactorOrNull(factor) ?? IntIgnore;
             double arFinal = resP.AspectRatioOrNull(aspectRatio)
                              ?? resP.AspectRatioOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
-            Log.SafeAdd(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
+            Log.A(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
             var resizeSettings = new ResizeSettings(parameters.W, parameters.H,
                 safe.W, safe.H,

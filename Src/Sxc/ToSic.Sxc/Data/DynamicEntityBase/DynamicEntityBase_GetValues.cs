@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data
 
             // use the standard dimensions or overload
             var languages = language == null ? _Dependencies.Dimensions : new[] { language };
-            logOrNull?.SafeAdd($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
+            safeWrap.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
 
             // check if we already have it in the cache - but only in default languages
             if (useCache && _ValueCache.ContainsKey(field)) return safeWrap.Return(_ValueCache[field], "cached");
@@ -33,14 +33,14 @@ namespace ToSic.Sxc.Data
             // check Entity is null (in cases where null-objects are asked for properties)
             if (resultSet == null) return safeWrap.ReturnNull("null");
 
-            logOrNull?.SafeAdd($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
+            safeWrap.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
 
             var result = ValueAutoConverted(resultSet, lookup, field, logOrNull);
 
             // cache result, but only if using default languages
             if (useCache)
             {
-                logOrNull?.SafeAdd("add to cache");
+                safeWrap.A("add to cache");
                 _ValueCache.Add(field, result);
             }
             return safeWrap.Return(result, "ok");
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Data
                        && original.FieldType == DataTypes.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
             {
-                logOrNull?.SafeAdd($"Try to convert value - HasValueConverter: {_Dependencies.ValueConverterOrNull != null}");
+                safeWrap.A($"Try to convert value - HasValueConverter: {_Dependencies.ValueConverterOrNull != null}");
                 result = _Dependencies.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
                 return safeWrap.Return(result, "link-conversion");
             }
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Data
             // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
             if (result is IEnumerable<IEntity> children)
             {
-                logOrNull?.SafeAdd($"Convert entity list as {nameof(DynamicEntity)}");
+                safeWrap.A($"Convert entity list as {nameof(DynamicEntity)}");
                 var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Dependencies);
                 if (Debug) dynEnt.Debug = true;
                 return safeWrap.Return(dynEnt, "ent-list, now dyn");
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Data
             try
             {
                 var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? Array.Empty<string>());
-                logOrNull.SafeAdd($"Debug path: {finalPath}");
+                safeWrap.A($"Debug path: {finalPath}");
             }
             catch {/* ignore */}
 

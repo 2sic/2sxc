@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
             
             var useMultiSrcSet = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
 
-            Log.SafeAdd($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
+            wrapLog.A($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
 
             // Generate Meta Tags
             var sources = formats

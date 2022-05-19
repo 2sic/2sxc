@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Images
 
         protected OneResize ThisResize => _thisResize.Get(() => { 
             var t = ImgLinker.ImageOnly(Call.Link.Url, Settings as ResizeSettings, Call.Field);
-            Log.SafeAdd(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
+            Log.A(ImgService.Debug, $"{nameof(ThisResize)}: " + t?.Dump());
             return t;
         });
         private readonly ValueGetOnce<OneResize> _thisResize = new ValueGetOnce<OneResize>();
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Images
                     .ToDictionary(p => p.Key, p => p.Value);
                 if (dic != null)
                 {
-                    Log.SafeAdd(ImgService.Debug, "will add properties from attributes");
+                    Log.A(ImgService.Debug, "will add properties from attributes");
                     foreach (var a in dic)
                         _imgTag.Attr(a.Key, a.Value);
                 }
