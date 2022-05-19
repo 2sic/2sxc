@@ -103,33 +103,33 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                         $"Error: missing required 'action' route value.", "Not Found");
                 var action = (string) values["action"];
 
-                Log.Add(
+                Log.A(
                     $"TransformAsync route required values are present, alias:{alias.AliasId}, app:{appFolder}, ctrl:{controller}, act:{action}.");
 
                 var controllerTypeName = $"{controller}Controller";
-                Log.Add($"Controller TypeName: {controllerTypeName}");
+                Log.A($"Controller TypeName: {controllerTypeName}");
                 values.Add("controllerTypeName", controllerTypeName);
 
                 var edition = GetEdition(values);
-                Log.Add($"Edition: {edition}");
+                Log.A($"Edition: {edition}");
 
 
                 var controllerFolder = Path.Combine(aliasPart, appFolder, edition.Backslash(), "api");
-                Log.Add($"Controller Folder: {controllerFolder}");
+                Log.A($"Controller Folder: {controllerFolder}");
 
                 var area = $"{alias.SiteId}/{OqtConstants.ApiAppLinkPart}/{appFolder}/{edition}api";
-                Log.Add($"Area: {area}");
+                Log.A($"Area: {area}");
                 values.Add("area", area);
 
                 var controllerPath = Path.Combine(controllerFolder, controllerTypeName + ".cs");
-                Log.Add($"Controller Path: {controllerPath}");
+                Log.A($"Controller Path: {controllerPath}");
 
                 var apiFile = Path.Combine(_hostingEnvironment.ContentRootPath, controllerPath);
-                Log.Add($"Absolute Path: {apiFile}");
+                Log.A($"Absolute Path: {apiFile}");
                 values.Add("apiFile", apiFile);
 
                 var dllName = GetDllName(controllerFolder, apiFile);
-                Log.Add($"Dll Name: {dllName}");
+                Log.A($"Dll Name: {dllName}");
                 values.Add("dllName", dllName);
 
                 // help with path resolution for compilers running inside the created controller

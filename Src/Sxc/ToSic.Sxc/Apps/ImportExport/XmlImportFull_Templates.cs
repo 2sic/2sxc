@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Sxc.Blocks;
 
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
         protected void ImportXmlTemplates(XElement root)
         {
-            Log.Add("import xml templates");
+            Log.A("import xml templates");
             var templates = root.Element(XmlConstants.Templates);
             if (templates == null) return;
 
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Apps.ImportExport
 
                     var contentTypeStaticName = template.Attribute(XmlConstants.AttSetStatic).Value;
 
-                    Log.Add($"template:{name}, type:{contentTypeStaticName}, path:{path}");
+                    Log.A($"template:{name}, type:{contentTypeStaticName}, path:{path}");
 
                     if (!string.IsNullOrEmpty(contentTypeStaticName) && appState.GetContentType(contentTypeStaticName) == null)
                     {
@@ -182,7 +183,7 @@ namespace ToSic.Sxc.Apps.ImportExport
                 }
 
             }
-            Log.Add("import xml templates - completed");
+            Log.A("import xml templates - completed");
         }
 
 	}

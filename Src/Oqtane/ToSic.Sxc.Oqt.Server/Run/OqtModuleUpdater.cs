@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public void SetAppId(IModule instance, int? appId)
         {
-            Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
+            Log.A($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
             ClearPreview(instance.Id);
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         protected void ClearPreview(int instanceId)
         {
-            Log.Add($"ClearPreviewTemplate(iid: {instanceId})");
+            Log.A($"ClearPreviewTemplate(iid: {instanceId})");
             UpdateInstanceSetting(instanceId, Settings.ModuleSettingsPreview, null, Log);
         }
 
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// </summary>
         public void UpdateInstanceSetting(int instanceId, string key, string value, ILog log)
         {
-            log?.Add($"UpdateInstanceSetting(iid: {instanceId}, key: {key}, val: {value})");
+            log.A($"UpdateInstanceSetting(iid: {instanceId}, key: {key}, val: {value})");
 
             if (value == null)
                 _settingsHelper.DeleteSetting(EntityNames.Module, instanceId, key);
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
         public void SetContentGroup(int instanceId, bool wasCreated, Guid guid)
         {
-            Log.Add($"SetContentGroup(iid: {instanceId}, {nameof(wasCreated)}: {wasCreated}, guid: {guid})");
+            Log.A($"SetContentGroup(iid: {instanceId}, {nameof(wasCreated)}: {wasCreated}, guid: {guid})");
             // Remove Preview because it's not needed as soon Content is inserted
             ClearPreview(instanceId);
             // Update blockConfiguration Guid for this module
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public void UpdateTitle(IBlock block, IEntity titleItem)
         {
-            Log.Add("update title");
+            Log.A("update title");
 
             // Module tile is stored in PageModule, so we need moduleId and pageId to update it.
             var pageId = block.Context.Page.Id;

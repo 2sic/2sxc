@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Blocks
             ParentId = Context.Module.Id;
             ContentBlockId = blockNumberUnsureIfNeeded;
 
-            Log.Add($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
+            Log.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
@@ -96,13 +96,13 @@ namespace ToSic.Sxc.Blocks
             }
 
 
-            Log.Add("Real app specified, will load App object with Data");
+            Log.A("Real app specified, will load App object with Data");
 
             // Get App for this block
-            Log.Add("About to create app");
+            Log.A("About to create app");
             App = _deps.AppLazy.Value.PreInit(Context.Site)
                 .Init(this, _deps.AppConfigDelegateLazy.Value.Init(Log).BuildForNewBlock(Context, this), Log);
-            Log.Add("App created");
+            Log.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
             var cms = _deps.CmsLazy.Value.Init(App, Context.UserMayEdit, Log);
@@ -176,7 +176,7 @@ namespace ToSic.Sxc.Blocks
             get
             {
                 if (_dataSource != null) return _dataSource;
-                Log.Add(
+                Log.A(
                     $"About to load data source with possible app configuration provider. App is probably null: {App}");
                 _dataSource = _deps.BdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this, App?.ConfigurationProvider);
                 return _dataSource;

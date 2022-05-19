@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Apps.Blocks;
+﻿using ToSic.Eav.Logging;
+using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.DataSources
                 return wrapLog("need content-group, will use from sxc-context", Block.Configuration);
 
             // If we don't have a context, then look it up based on the InstanceId
-            Log.Add("need content-group, will construct as cannot use context");
+            Log.A("need content-group, will construct as cannot use context");
             if (!ModuleId.HasValue)
             {
                 SetError($"{nameof(CmsBlock)} cannot find Block Configuration", $"Neither InstanceContext nor {nameof(ModuleId)} found");

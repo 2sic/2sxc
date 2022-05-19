@@ -8,6 +8,7 @@ using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Context;
 
@@ -62,7 +63,7 @@ namespace ToSic.Sxc.Dnn.Run
             var wrapLog = Log.Call<ISite>($"{zoneId}");
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
-            Log.Add($"Sites/Portals Count: {portals.Count}");
+            Log.A($"Sites/Portals Count: {portals.Count}");
             var found = portals.Cast<PortalInfo>().Select(p =>
                 {
                     var pSettings = pinst.GetPortalSettings(p.PortalID);

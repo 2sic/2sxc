@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 int.TryParse(blockHeaderId, out var blockId);
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
-                    log.Add($"Inner Content: {blockId}");
+                    log.A($"Inner Content: {blockId}");
                     if (request.Headers.Contains("BlockIds"))
                     {
                         var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');

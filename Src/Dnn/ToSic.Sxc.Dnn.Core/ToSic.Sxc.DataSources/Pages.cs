@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.DataSources
         {
             var wrapLog = Log.Call<List<TempPageInfo>>();
             var siteId = PortalSettings.Current?.PortalId ?? -1;
-            Log.Add($"Portal Id {siteId}");
+            Log.A($"Portal Id {siteId}");
             List<TabInfo> pages;
             try
             {

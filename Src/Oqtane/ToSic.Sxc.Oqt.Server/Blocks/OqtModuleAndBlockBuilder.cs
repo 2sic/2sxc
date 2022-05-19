@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 _ => throw new ArgumentException("Given data is not a module")
             };
 
-            Log.Add($"Module: {oqtModule.ModuleId}");
+            Log.A($"Module: {oqtModule.ModuleId}");
             var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
             return wrapLog("ok", result);
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             context.Init(ParentLog);
             //Log.Add($"Will try-swap module info of {oqtModule.ModuleId} into site");
             //((OqtSite)context.Site).TrySwap(oqtModule, ParentLog);
-            Log.Add("Will init module");
+            Log.A("Will init module");
             ((OqtModule) context.Module).Init(oqtModule, ParentLog);
             return wrapLog(null, InitPageOnly(context));
         }

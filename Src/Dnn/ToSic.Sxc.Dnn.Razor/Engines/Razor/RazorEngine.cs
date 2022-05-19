@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
@@ -44,12 +45,12 @@ namespace ToSic.Sxc.Engines
         {
             get
             {
-                Log.Add($"Webpage get: {_webpage}");
+                Log.A($"Webpage get: {_webpage}");
                 return _webpage;
             }
             set
             {
-                Log.Add($"Webpage set: {value}");
+                Log.A($"Webpage set: {value}");
                 _webpage = value;
             }
             

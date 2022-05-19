@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Blocks
             }
             catch (Exception ex)
             {
-                Log.Add("Error!");
+                Log.A("Error!");
                 Log.Exception(ex);
             }
 
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Blocks
             {
                 var extracted = _resourceExtractor.Ready.Process(settingFeature.Html);
                 if (!extracted.Assets.Any()) continue;
-                Log.Add($"Moved Feature Html {settingFeature.NameId} to assets");
+                Log.A($"Moved Feature Html {settingFeature.NameId} to assets");
 
                 // All resources from the settings are seen as safe
                 extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
@@ -160,10 +160,10 @@ namespace ToSic.Sxc.Blocks
                 #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
                 {
-                    Log.Add("pre-init innerContent content is empty so no errors, will build");
+                    Log.A("pre-init innerContent content is empty so no errors, will build");
                     if (Block.DataIsMissing)
                     {
-                        Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
+                        Log.A("content-block is missing data - will show error or just stop if not-admin-user");
                         var blockId = Block.Configuration?.BlockIdentifierOrNull;
                         var msg = "Data is missing. This is common when a site is copied " +
                                   "but the content / apps have not been imported yet" +
@@ -182,7 +182,7 @@ namespace ToSic.Sxc.Blocks
                     {
                         if (Block.View != null) // when a content block is still new, there is no definition yet
                         {
-                            Log.Add("standard case, found template, will render");
+                            Log.A("standard case, found template, will render");
                             var engine = GetEngine();
                             var renderEngineResult = engine.Render();
                             body = renderEngineResult.Html;
@@ -190,7 +190,7 @@ namespace ToSic.Sxc.Blocks
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (renderEngineResult.ActivateJsApi)
                             {
-                                Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
+                                Log.A("template referenced 2sxc.api JS in script-tag: will enable");
                                 Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.NameId);
                             }
 
@@ -248,13 +248,13 @@ namespace ToSic.Sxc.Blocks
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {
-                Log.Add("system isn't ready,show upgrade message");
+                Log.A("system isn't ready,show upgrade message");
                 var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true, encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 
             InstallationOk = true;
-            Log.Add("system is ready, no upgrade-message to show");
+            Log.A("system is ready, no upgrade-message to show");
             return (null, false);
         }
 

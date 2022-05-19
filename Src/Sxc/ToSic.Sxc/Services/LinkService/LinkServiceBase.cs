@@ -54,16 +54,16 @@ namespace ToSic.Sxc.Services
                 throw new ArgumentException($"Only one of the parameters '{nameof(api)}' or '{nameof(pageId)}' can have a value.");
 
             var strParams = ParametersToString(parameters);
-            Log.Add($"parameters:{strParams}");
+            Log.A($"parameters:{strParams}");
  
             // TODO: unclear what would happen if a new parameter would replace an existing - would it just append? that wouldn't be good
             var url = api == null
                 ? ToPage(pageId, strParams, language)
                 : ToApi(api, strParams);
-            Log.Add($"url:{url}");
+            Log.A($"url:{url}");
 
             var processed = ExpandUrlIfNecessary(type, url);
-            Log.Add($"expandUrl:{processed}, t:{type}");
+            Log.A($"expandUrl:{processed}, t:{type}");
 
             return wrapLog("Ok", Tags.SafeUrl(processed).ToString());
         }

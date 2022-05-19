@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Dnn
             if (BuildComplete) return;
             var wrapLog = Log.Call();
             var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml");
-            Log.Add($"Will try to load code from '{codeFile}");
+            Log.A($"Will try to load code from '{codeFile}");
             try
             {
                 var compiled  = Parent.CreateInstance(codeFile);

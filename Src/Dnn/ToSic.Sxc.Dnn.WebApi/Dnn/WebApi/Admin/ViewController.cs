@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -75,7 +76,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             // create array with all 2sxc modules in this portal
             var allMods = new Pages.Pages(Log).AllModulesWithContent(PortalSettings.PortalId);
-            Log.Add($"Found {allMods.Count} modules");
+            Log.A($"Found {allMods.Count} modules");
 
             return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));
         }).Usage(appId, guid);

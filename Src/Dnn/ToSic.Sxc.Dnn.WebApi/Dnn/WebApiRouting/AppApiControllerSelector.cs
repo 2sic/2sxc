@@ -104,33 +104,33 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             {
                 // new for 2sxc 9.34 #1651
                 var edition = GetEdition(routeData);
-                log.Add($"Edition: {edition}");
+                log.A($"Edition: {edition}");
 
                 var site = (DnnSite)sp.Build<ISite>();
 
                 var controllerFolder = GetControllerFolder(site, appFolder, edition, shared: false);
-                log.Add($"Controller Folder: {controllerFolder}");
+                log.A($"Controller Folder: {controllerFolder}");
 
                 controllerPath = GetControllerPath(controllerFolder, controllerTypeName);
-                log.Add($"Controller Path: {controllerPath}");
+                log.A($"Controller Path: {controllerPath}");
 
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
                 // because when the file changes, the type-object will be different, so please don't optimize :)
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                     return HttpControllerDescriptor(request, controllerFolder, controllerPath, controllerTypeName, wrapLog);
 
-                log.Add("path not found, will check on shared location");
+                log.A("path not found, will check on shared location");
 
                 var sharedControllerFolder = GetControllerFolder(site, appFolder, edition, shared: true);
-                log.Add($"Shared Controller Folder: {sharedControllerFolder}");
+                log.A($"Shared Controller Folder: {sharedControllerFolder}");
 
                 var sharedControllerPath = GetControllerPath(sharedControllerFolder, controllerTypeName);
-                log.Add($"Shared Controller Path: {sharedControllerPath}");
+                log.A($"Shared Controller Path: {sharedControllerPath}");
 
                 if (File.Exists(HostingEnvironment.MapPath(sharedControllerPath)))
                     return HttpControllerDescriptor(request, sharedControllerFolder, sharedControllerPath, controllerTypeName, wrapLog);
 
-                log.Add("path not found in shared, error will be thrown in a moment");
+                log.A("path not found in shared, error will be thrown in a moment");
             }
             catch (Exception e)
             {

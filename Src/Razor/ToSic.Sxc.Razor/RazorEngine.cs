@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Custom.Hybrid;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
 
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Razor
         [PrivateApi]
         public async Task<TextWriter> RenderTask()
         {
-            Log.Add("will render into TextWriter");
+            Log.A("will render into TextWriter");
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;

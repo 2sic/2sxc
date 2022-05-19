@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.Pages
             var modules2Sxc = mc.GetModulesByDefinition(portalId, DnnConstants.ModuleNameContent).ToArray().Cast<ModuleInfo>().ToList();
             var dnnMod2SxcApp = mc.GetModulesByDefinition(portalId, DnnConstants.ModuleNameApp).ToArray().Cast<ModuleInfo>().ToList();
             var all = modules2Sxc.Union(dnnMod2SxcApp).ToList();
-            Log.Add($"Mods for Content: {modules2Sxc.Count}, App: {dnnMod2SxcApp.Count}, Total: {all.Count}");
+            Log.A($"Mods for Content: {modules2Sxc.Count}, App: {dnnMod2SxcApp.Count}, Total: {all.Count}");
 
             // filter the results
             var allMods = all

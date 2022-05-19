@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
         {
-            Log.Add("import content start");
+            Log.A("import content start");
             var result = new ImportResultDto();
 
             var allowSystemChanges = _user.IsSuperUser;
@@ -125,7 +125,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 var import = _importerLazy.Value.Init(zoneId, appId, true, true, Log);
                 import.ImportIntoDb(types, null);
 
-                Log.Add($"Purging {zoneId}/{appId}");
+                Log.A($"Purging {zoneId}/{appId}");
                 SystemManager.Purge(zoneId, appId);
 
                 // 3. possibly show messages / issues

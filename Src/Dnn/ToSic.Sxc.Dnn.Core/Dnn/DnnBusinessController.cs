@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Dnn
 
         public void PublishVersion(int instanceId, int version)
         {
-            Log.Add($"publish m#{instanceId}, v:{version}");
+            Log.A($"publish m#{instanceId}, v:{version}");
             Publishing.Publish(instanceId, version);
 
             try
@@ -83,11 +83,11 @@ namespace ToSic.Sxc.Dnn
 
 
         public void DeleteVersion(int instanceId, int version) 
-            => Log.Add("delete version is not supported");
+            => Log.A("delete version is not supported");
 
         public int RollBackVersion(int instanceId, int version)
         {
-            Log.Add("DNN tried to rollback version " + version + ", but 2sxc does not support this.");
+            Log.A("DNN tried to rollback version " + version + ", but 2sxc does not support this.");
 
             // Return the currently published version, because this is what the module's state is after this operation
             return Publishing.GetPublishedVersion(instanceId);
@@ -105,9 +105,9 @@ namespace ToSic.Sxc.Dnn
         /// <returns></returns>
         public string UpgradeModule(string version)
         {
-            Log.Add($"upgrade module - start for v:{version}");
+            Log.A($"upgrade module - start for v:{version}");
             var res = ServiceProvider.Build<DnnEnvironmentInstaller>().UpgradeModule(version);
-            Log.Add($"result:{res}");
+            Log.A($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
             return res;
         }

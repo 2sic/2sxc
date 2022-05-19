@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             // Dynamic Stack of the App Settings
             var appSettings = stack?.GetStack(PartAppSystem) as DynamicStack;
-            Log.Add($"has {nameof(appSettings)}: {appSettings != null}");
+            Log.A($"has {nameof(appSettings)}: {appSettings != null}");
 
             // CSP Settings Reader from Dynamic Entity for the App
             var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);

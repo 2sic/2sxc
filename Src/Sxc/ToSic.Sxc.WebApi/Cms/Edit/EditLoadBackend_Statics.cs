@@ -7,6 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Distinct()
                 .ToList();
 
-            Log.Add("Found these input types to load: " + string.Join(", ", fields));
+            Log.A("Found these input types to load: " + string.Join(", ", fields));
 
             var allInputType = typeRead.GetInputTypes();
 
@@ -80,19 +81,19 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Where(it => fields.Contains(it.Type))
                 .ToList();
 
-            if (found.Count == fields.Count) Log.Add("Found all");
+            if (found.Count == fields.Count) Log.A("Found all");
             else
             {
-                Log.Add(
+                Log.A(
                     $"It seems some input types were not found. Needed {fields.Count}, found {found.Count}. Will try to log details for this.");
                 try
                 {
                     var notFound = fields.Where(field => found.All(fnd => fnd.Type != field));
-                    Log.Add("Didn't find: " + string.Join(",", notFound));
+                    Log.A("Didn't find: " + string.Join(",", notFound));
                 }
                 catch (Exception)
                 {
-                    Log.Add("Ran into problems logging missing input types.");
+                    Log.A("Ran into problems logging missing input types.");
                 }
             }
 

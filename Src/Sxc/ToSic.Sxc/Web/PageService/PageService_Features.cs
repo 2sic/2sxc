@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.PageFeatures;
 using static ToSic.Eav.Configuration.ConfigurationConstants;
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Web.PageService
             var keysToRemove = new List<string>();
             foreach (var key in keys)
             {
-                Log.Add($"Key: {key}");
+                Log.A($"Key: {key}");
                 if (!(WebResources.Get(key) is DynamicEntity resConfig)) continue; // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
 
                 var enabled = resConfig.Get(WebResourceEnabledField) as bool?;
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Web.PageService
 
                 if (!(resConfig.Get(WebResourceHtmlField) is string html)) continue;
 
-                Log.Add("Found html and everything, will register");
+                Log.A("Found html and everything, will register");
                 // all ok so far
                 keysToRemove.Add(key);
                 PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(new PageFeatureFromSettings(key, "", "", html: html));

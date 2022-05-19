@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log)
         {
             var wrapLog = log.Call<List<IPageFeature>>();
-            log.Add("Try to get new specs from IPageService");
+            log.A("Try to get new specs from IPageService");
             //var features = FeatureKeys.ToList();
             //log.Add($"Got {features.Count} items");
             var unfolded = GetWithDependents(FeatureKeys.ToList(), log); // _pfm.GetWithDependents(features);
@@ -63,9 +63,9 @@ namespace ToSic.Sxc.Web.PageFeatures
         public List<IPageFeature> GetWithDependents(List<string> features, ILog log)
         {
             var wrapLog = log.Call<List<IPageFeature>>();
-            log.Add($"Got {features.Count} items");
+            log.A($"Got {features.Count} items");
             var unfolded = _pfm.GetWithDependents(features);
-            log.Add($"Got unfolded features {unfolded.Count}");
+            log.A($"Got unfolded features {unfolded.Count}");
             return wrapLog("ok", unfolded);
         }
 

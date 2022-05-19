@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Context
 
             if (!ok1 || !ok2) return null;
 
-            Log.Add($"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
+            Log.A($"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
             return new AppIdentity(zoneId, appId);
         }
 

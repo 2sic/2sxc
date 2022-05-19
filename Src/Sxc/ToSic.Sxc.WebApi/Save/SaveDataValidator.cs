@@ -132,13 +132,13 @@ namespace ToSic.Sxc.WebApi.Save
 
             if (previousEntity != null)
             {
-                Log.Add("found previous entity, will check types/ids/attributes");
+                Log.A("found previous entity, will check types/ids/attributes");
                 CompareTypes(count, previousEntity, newEntity);
 
                 // for saving, ensure we are using the DB entity-ID 
                 if (newEntity.EntityId == 0)
                 {
-                    Log.Add("found existing entity - will set the ID to that to overwrite");
+                    Log.A("found existing entity - will set the ID to that to overwrite");
                     newEntity.ResetEntityId(previousEntity.EntityId);
                 }
 
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.WebApi.Save
                 CompareAttributes(count, previousEntity, newEntity);
             }
             else
-                Log.Add("no previous entity found");
+                Log.A("no previous entity found");
 
             var ok = BuildExceptionIfHasIssues(out preparedException, "EntityIsOk() done");
 
@@ -169,7 +169,7 @@ namespace ToSic.Sxc.WebApi.Save
             if(originalEntity.EntityId != newEntity.EntityId)
                 Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
 
-            Log.Add($"Guids:{newEntity.EntityGuid}/{originalEntity.EntityGuid}");
+            Log.A($"Guids:{newEntity.EntityGuid}/{originalEntity.EntityGuid}");
             if(originalEntity.EntityGuid != newEntity.EntityGuid)
                 Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
             wrapLog("done");

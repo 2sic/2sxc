@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks.Output
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Blocks.Output
             var scriptMatches = ScriptSrcDetection.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
-            Log.Add($"Found {scriptMatches.Count} external scripts");
+            Log.A($"Found {scriptMatches.Count} external scripts");
             foreach (Match match in scriptMatches)
             {
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.Blocks.Output
             var scriptMatches = ScriptContentDetection.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
-            Log.Add($"Found {scriptMatches.Count} inline scripts");
+            Log.A($"Found {scriptMatches.Count} inline scripts");
             var order = 1000;
             foreach (Match match in scriptMatches)
             {

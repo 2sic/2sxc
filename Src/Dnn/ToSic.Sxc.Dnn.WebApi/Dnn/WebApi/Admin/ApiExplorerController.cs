@@ -8,6 +8,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
 
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
                     AppFolderUtilities.GetAppFolderVirtualPath(GetService<IServiceProvider>(), Request, GetService<ISite>(), Log), 
                     path);
 
-            Log.Add($"Controller Virtual Path: {controllerVirtualPath}");
+            Log.A($"Controller Virtual Path: {controllerVirtualPath}");
 
             if (!File.Exists(HostingEnvironment.MapPath(controllerVirtualPath)))
                 throw new Exception($"Error: can't find controller file: {controllerVirtualPath}");

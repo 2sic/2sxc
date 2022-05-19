@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Edit.EditService
             ItemToolbar itmToolbar;
             if (target is IToolbarBuilder)
             {
-                Log.Add("Using new modern Item-Toolbar, will ignore all other parameters.");
+                Log.A("Using new modern Item-Toolbar, will ignore all other parameters.");
                 itmToolbar = new ItemToolbar(null, toolbar: target);
             }
             else
@@ -68,12 +68,12 @@ namespace ToSic.Sxc.Edit.EditService
                     Log.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
                 if (toolbar is IToolbarBuilder)
                 {
-                    Log.Add("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
+                    Log.A("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
                     itmToolbar = new ItemToolbar(eTarget, toolbar: toolbar);
                 }
                 else
                 {
-                    Log.Add("Using classic mode, with all parameters.");
+                    Log.A("Using classic mode, with all parameters.");
                     itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings,
                         toolbar: toolbar);
                 }

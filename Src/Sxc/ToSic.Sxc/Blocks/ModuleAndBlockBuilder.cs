@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Blocks
         //{
         //    if (moduleInfo != null) return;
         //    var msg = $"Module is Null. Can't continue.";
-        //    Log.Add(msg);
+        //    Log.A(msg);
         //    throw new Exception(msg);
         //}
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (moduleInfo != null) return;
             var msg = $"Can't find module {moduleId} on page {pageId}. Maybe you reversed the ID-order?";
-            Log.Add(msg);
+            Log.A(msg);
             throw new Exception(msg);
         }
 

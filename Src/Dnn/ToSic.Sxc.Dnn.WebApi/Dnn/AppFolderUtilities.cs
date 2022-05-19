@@ -43,11 +43,11 @@ namespace ToSic.Sxc.Dnn
                 // only check for app folder if we don't have a context
                 if (appFolder == null)
                 {
-                    log.Add("no folder found in url, will auto-detect");
+                    log.A("no folder found in url, will auto-detect");
                     appFolder = sp.Build<AppFolder>()?.GetAppFolder();
                 }
 
-                log.Add($"App Folder: {appFolder}");
+                log.A($"App Folder: {appFolder}");
             }
             catch (Exception getBlockException)
             {

@@ -86,7 +86,7 @@ namespace ToSic.Sxc.LookUp
 
             // Find the standard DNN property sources if PortalSettings object is available
             var envLookups = _getEngineLazy.Ready.GetLookUpEngine(modId);
-            Log.Add($"Environment provided {envLookups.Sources.Count} sources");
+            Log.A($"Environment provided {envLookups.Sources.Count} sources");
 
             var provider = new LookUpEngine(envLookups, Log);
 
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.LookUp
             var http = _httpLazy.Value;
             if (http.Current != null)
             {
-                Log.Add("Found Http-Context, will ty to add params for querystring, server etc.");
+                Log.A("Found Http-Context, will ty to add params for querystring, server etc.");
 
 
                 // new (Oqt and Dnn)
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.LookUp
 #endif
             }
             else
-                Log.Add("No Http-Context found, won't add http params to look-up");
+                Log.A("No Http-Context found, won't add http params to look-up");
 
 
             provider.Add(new LookUpInAppProperty("app", appForLookup));

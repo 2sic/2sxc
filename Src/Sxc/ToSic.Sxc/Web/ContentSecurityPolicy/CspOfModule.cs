@@ -143,11 +143,11 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private List<KeyValuePair<string, string>> Policies => _policies.Get(() =>
         {
             var sitePolicies = SiteCspSettings.Policies;
-            Log.Add($"Site.Policies: {sitePolicies}");
+            Log.A($"Site.Policies: {sitePolicies}");
 
             var appPolicies = GetAppPolicies();
             var merged = $"{sitePolicies}\n{appPolicies}";
-            Log.Add($"Merged: {merged}");
+            Log.A($"Merged: {merged}");
             return new CspPolicyTextProcessor(Log).Parse(merged);
         }, Log, nameof(Policies));
         private readonly ValueGetOnce<List<KeyValuePair<string, string>>> _policies = new ValueGetOnce<List<KeyValuePair<string, string>>>();
@@ -166,7 +166,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 .Select(ac =>
                 {
                     var p = ac.AppPolicies;
-                    Log.Add($"App[{ac.AppId}]: {p}");
+                    Log.A($"App[{ac.AppId}]: {p}");
                     return p.NullIfNoValue();
                 })
                 .Where(p => p.HasValue())
@@ -189,7 +189,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             if (Policies.Any())
             {
-                Log.Add("Policies found");
+                Log.A("Policies found");
                 // Create a CspService which just contains these new policies for merging later on
                 var policyCsp = new ContentSecurityPolicyServiceBase();
                 foreach (var policy in Policies)

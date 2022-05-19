@@ -148,7 +148,7 @@ namespace ToSic.Sxc.Search
             try
             {
                 var useCustomViewController = !string.IsNullOrWhiteSpace(Block.View.ViewController); // new in 12.02
-                Log.Add($"Use new Custom View Controller: {useCustomViewController}");
+                Log.A($"Use new Custom View Controller: {useCustomViewController}");
                 if (useCustomViewController)
                 {
                     /* New mode in 12.02 using a custom ViewController */
@@ -156,9 +156,9 @@ namespace ToSic.Sxc.Search
                     if (customizeSearch == null) return wrapLog("exit", new List<SearchDocument>());
 
                     // Call CustomizeSearch in a try/catch
-                    Log.Add("execute CustomizeSearch");
+                    Log.A("execute CustomizeSearch");
                     customizeSearch.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
-                    Log.Add("Executed CustomizeSearch");
+                    Log.A("Executed CustomizeSearch");
                 }
                 else
                 {
@@ -170,11 +170,11 @@ namespace ToSic.Sxc.Search
 #pragma warning disable CS0618
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing
                     // The new model v12.02 won't need this
-                    Log.Add("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
+                    Log.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
                     engine.CustomizeData();
                     
                     // check if the cshtml has search customizations
-                    Log.Add("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
+                    Log.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
                     engine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
 #pragma warning restore CS0618
                 }
@@ -274,7 +274,7 @@ namespace ToSic.Sxc.Search
         {
             if (dataSource.Configuration?.LookUpEngine != null)
             {
-                Log.Add("Will try to attach dnn providers to DataSource LookUps");
+                Log.A("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
                     var getLookups = _dnnLookUpEngineResolver.Ready;
@@ -322,9 +322,9 @@ namespace ToSic.Sxc.Search
             var path = Path
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
                 .ForwardSlash();
-            Log.Add($"compile ViewController class on path: {path}/{Block.View.ViewController}");
+            Log.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
             var instance = _codeCompiler.New.InstantiateClass(block.View.ViewController, null, path, true);
-            Log.Add("got instance of compiled ViewController class");
+            Log.A("got instance of compiled ViewController class");
 
             // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
             if (!(instance is ICustomizeSearch customizeSearch)) return wrapLog("exit, class do not implements ICustomizeSearch", null);
@@ -332,7 +332,7 @@ namespace ToSic.Sxc.Search
             // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
             if (instance is DynamicCode instanceWithContext)
             {
-                Log.Add($"attach DynamicCode context to class instance");
+                Log.A($"attach DynamicCode context to class instance");
                 var parentDynamicCodeRoot = _dnnDynamicCodeRoot.New.InitDynCodeRoot(block, Log, Constants.CompatibilityLevel10);
                 instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
             }

@@ -4,6 +4,7 @@ using System.IO;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Sxc.Run;
 
@@ -38,14 +39,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
             if (!dnnFolderManager.FolderExists(siteId, destinationFolder))
             {
-                Log.Add($"Must create {destinationFolder} in site {siteId}");
+                Log.A($"Must create {destinationFolder} in site {siteId}");
                 dnnFolderManager.AddFolder(siteId, destinationFolder);
             }
             var folderInfo = dnnFolderManager.GetFolder(siteId, destinationFolder);
 
             void MassLog(string msg, Exception exception)
             {
-                Log.Add(msg);
+                Log.A(msg);
                 if (exception == null) return;
                 messages.Add(exception is InvalidFileExtensionException
                     ? new Message(msg, Message.MessageTypes.Error)
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             foreach (var sourceFilePath in files)
             {
                 var destinationFileName = Path.GetFileName(sourceFilePath);
-                Log.Add($"Try to copy '{sourceFilePath}' to '{destinationFileName}'");
+                Log.A($"Try to copy '{sourceFilePath}' to '{destinationFileName}'");
 
                 if (!dnnFileManager.FileExists(folderInfo, destinationFileName))
                 {
@@ -86,7 +87,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             // Call the method recursively to handle subdirectories
             foreach (var sourceFolderPath in Directory.GetDirectories(sourceFolder))
             {
-                Log.Add($"subfolder:{sourceFolderPath}");
+                Log.A($"subfolder:{sourceFolderPath}");
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "")
                     .TrimStart('\\'))
                     .Replace('\\', '/');
@@ -118,13 +119,13 @@ namespace ToSic.Sxc.Dnn.ImportExport
                 var directory = Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
                 if (directory == null)
                 {
-                    Log.Add($"Warning: File '{relativePath}', folder doesn't exist on drive");
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist on drive");
                     continue;
                 }
 
                 if (!folderManager.FolderExists(siteId, directory))
                 {
-                    Log.Add($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
                     continue;
                 }
 
@@ -132,13 +133,13 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
                 if (!fileManager.FileExists(folderInfo, fileName))
                 {
-                    Log.Add($"Warning: File '{relativePath}', file doesn't exist in DNN DB");
+                    Log.A($"Warning: File '{relativePath}', file doesn't exist in DNN DB");
                     continue;
                 }
 
                 var fileInfo = fileManager.GetFile(folderInfo, fileName);
                 fileIdMap.Add(fileId, fileInfo.FileId);
-                Log.Add($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
+                Log.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
             }
 
             wrapLog(null);
@@ -156,13 +157,13 @@ namespace ToSic.Sxc.Dnn.ImportExport
                 {
                     if (string.IsNullOrEmpty(folder.Value))
                     {
-                        Log.Add($"{folder.Key} / {folder.Value} is empty");
+                        Log.A($"{folder.Key} / {folder.Value} is empty");
                         continue;
                     }
                     var directory = Path.GetDirectoryName(folder.Value)?.Replace('\\', '/');
                     if (directory == null)
                     {
-                        Log.Add($"Parent folder of folder {folder.Value} doesn't exist");
+                        Log.A($"Parent folder of folder {folder.Value} doesn't exist");
                         continue;
                     }
                     // if not exist, create - important because we need for metadata assignment
@@ -172,14 +173,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
                         : folderManager.GetFolder(siteId, directory);
 
                     folderIdCorrectionList.Add(folder.Key, folderInfo.FolderID);
-                    Log.Add(
+                    Log.A(
                         $"Folder original #{folder.Key}/{folder.Value} - directory exists:{exists} placed in folder #{folderInfo.FolderID}");
                 }
                 catch (Exception)
                 {
                     var msg =
                         $"Had a problem with folder of '{folder.Key}' path '{folder.Value}' - you'll have to figure out yourself if this is a problem";
-                    Log.Add(msg);
+                    Log.A(msg);
                     importLog.Add(new Message(msg, Message.MessageTypes.Warning));
                 }
 

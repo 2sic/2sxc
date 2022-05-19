@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             // when dependent apps have disabled caching, parent app should not cache also 
             if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog("disabled in dependent app", false);
 
-            Log.Add($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
+            Log.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Web.LightSpeed
                 : null;
             var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor,
                 (x) => LightSpeedStats.Remove(AppState.AppId, data.Size));
-            Log.Add($"LightSpeed Cache Key: {cacheKey}");
+            Log.A($"LightSpeed Cache Key: {cacheKey}");
             if (cacheKey != "error") 
                 LightSpeedStats.Add(AppState.AppId, data.Size);
             return wrapLog($"added for {duration}s", true);

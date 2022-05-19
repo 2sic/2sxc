@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -73,7 +74,7 @@ namespace ToSic.Sxc.Apps
             var wrapLog = Log.Call($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
-            Log.Add($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
+            Log.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
                 ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) { PreviewTemplateId = blockId.PreviewView }
                 : GetBlockConfig(blockId.Guid);

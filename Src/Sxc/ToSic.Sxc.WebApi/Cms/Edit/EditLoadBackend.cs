@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -156,7 +157,7 @@ namespace ToSic.Sxc.WebApi.Cms
             foreach (var header in list
                 .Where(header => header.For?.Singleton == true && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
             {
-                Log.Add("Found an entity with the auto-lookup marker");
+                Log.A("Found an entity with the auto-lookup marker");
                 // try to find metadata for this
                 var mdFor = header.For;
                 // #TargetTypeIdInsteadOfTarget
@@ -170,7 +171,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 var mdList = mds.ToArray();
                 if (mdList.Length > 1)
                 {
-                    Log.Add($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
+                    Log.A($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
                     // must now sort by ID otherwise the order may be different after a few save operations
                     mdList = mdList.OrderBy(e => e.EntityId).ToArray();
                 }

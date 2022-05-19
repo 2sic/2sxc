@@ -3,6 +3,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps.Enums;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Services;
 
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         protected override PublishingMode LookupRequirements(int moduleId)
         {
-            Log.Add($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
+            Log.A($"Requirements(mod:{moduleId}) - checking first time (others will be cached)");
             try
             {
                 // TODO V14 - probably we can set ignoreCache to false then, as it's probably just a workaround for an old bug
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Dnn.Cms
             }
             catch
             {
-                Log.Add("Requirements had exception!");
+                Log.A("Requirements had exception!");
                 throw;
             }
         }

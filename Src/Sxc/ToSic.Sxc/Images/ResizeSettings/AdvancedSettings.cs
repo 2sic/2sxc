@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Images
             }
             catch (Exception ex)
             {
-                log?.Add($"error converting json to AdvancedSettings. Json: {value}");
+                log.A($"error converting json to AdvancedSettings. Json: {value}");
                 log?.Exception(ex);
             }
             return wrapLog.Return(new AdvancedSettings(), "new");

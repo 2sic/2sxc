@@ -44,12 +44,12 @@ namespace ToSic.Sxc.WebApi.Views
 
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
-            Log.Add($"get all a#{appId}");
+            Log.A($"get all a#{appId}");
             var cms = _cmsManagerLazy.Value.Init(_appStates.IdentityOfApp(appId), true, Log).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default /*Settings.AttributeSetScope*/).ToList();
             var viewList = cms.Views.GetAll().ToList();
-            Log.Add($"attribute list count:{attributeSetList.Count}, template count:{viewList.Count}");
+            Log.A($"attribute list count:{attributeSetList.Count}, template count:{viewList.Count}");
             var ser = (_convertToEavLight.Value as ConvertToEavLight);
             var views = viewList.Select(view => new ViewDetailsDto
             {
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Views
         public bool Delete(int appId, int id)
         {
             // todo: extra security to only allow zone change if host user
-            Log.Add($"delete a{appId}, t:{id}");
+            Log.A($"delete a{appId}, t:{id}");
             var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var cms = _cmsManagerLazy.Value.Init(app, Log);
             cms.Views.DeleteView(id);

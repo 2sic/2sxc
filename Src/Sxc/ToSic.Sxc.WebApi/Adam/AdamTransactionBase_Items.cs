@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Adam
         {
             var wrapLog = Log.Call<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
 
-            Log.Add("starting permissions checks");
+            Log.A("starting permissions checks");
             if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
                 return wrapLog("user is restricted, and doesn't have permissions on field - return null", null);
 
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Adam
             if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out _))
                 return wrapLog("user is restricted (no read-published rights) and item is published - return null", null);
 
-            Log.Add("first permission checks passed");
+            Log.A("first permission checks passed");
 
             // This will contain the list of items
             var list = new List<AdamItemDto>();
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // ensure that it's super user, or the folder is really part of this item
             if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var ex))
             {
-                Log.Add("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
+                Log.A("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
                 Log.Exception(ex);
                 throw ex;
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
         {
-            Log.Add($"upload one subfold:{subFolder}, file: {originalFileName}");
+            Log.A($"upload one subfold:{subFolder}, file: {originalFileName}");
 
             // make sure the file name we'll use doesn't contain injected path-traversal
             originalFileName = Path.GetFileName(originalFileName);
@@ -89,7 +90,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 .Replace("#", "hash");
 
             if (fileName != originalFileName)
-                Log.Add($"cleaned file name from'{originalFileName}' to '{fileName}'");
+                Log.A($"cleaned file name from'{originalFileName}' to '{fileName}'");
 
             var eavFile = fs.Add(parentFolder, stream, fileName, true);
 

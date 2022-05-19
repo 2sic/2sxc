@@ -92,7 +92,7 @@ namespace ToSic.Sxc.WebApi.App
         /// <returns></returns>
         public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
         {
-            Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
+            Log.A($"get and serialize after security check type:{contentType}, path:{appPath}");
 
             // first try to find in all entities incl. drafts
             var itm = getOne(AppState.List);
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
         {
-            Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
+            Log.A($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
             // if app-path specified, use that app, otherwise use from context
 
@@ -140,14 +140,14 @@ namespace ToSic.Sxc.WebApi.App
             var dataController = DataController(AppState);
             if (id == null)
             {
-                Log.Add($"create new entity because id is null");
+                Log.A($"create new entity because id is null");
                 var metadata = GetMetadata(newContentItemCaseInsensitive);
-                Log.Add($"metadata: {metadata}");
+                Log.A($"metadata: {metadata}");
 
                 var ids = dataController.Create(contentType, new List<Dictionary<string, object>> { cleanedNewItem }, metadata);
                 id = ids.FirstOrDefault();
 
-                Log.Add($"new entity id: {id}");
+                Log.A($"new entity id: {id}");
                 var added = AddParentRelationship(newContentItemCaseInsensitive, id.Value);
             }
             else
@@ -227,7 +227,7 @@ namespace ToSic.Sxc.WebApi.App
 
         private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit)
         {
-            Log.Add($"init eav for a#{appId}");
+            Log.A($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = _entToDicLazy.Value;
             ser.WithGuid = true;
@@ -241,7 +241,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public void Delete(string contentType, int id, string appPath)
         {
-            Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
+            Log.A($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
             // don't allow type "any" on this
@@ -256,7 +256,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public void Delete(string contentType, Guid guid, string appPath)
         {
-            Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
+            Log.A($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
             var entityApi = _entityApi.Init(AppState.AppId, Context.UserMayEdit, Log);

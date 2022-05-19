@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             var block = GetBlock();
-            Log.Add($"HasBlock: {block != null}");
+            Log.A($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
             var compatibilityLevel = this is IDynamicCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.WebApi
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
             {
-                Log.Add("DynCode.App is null");
+                Log.A("DynCode.App is null");
                 TryToAttachAppFromUrlParams();
             }
 
@@ -89,7 +90,7 @@ namespace ToSic.Sxc.WebApi
                 if (appId != Eav.Constants.NullId)
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
-                    Log.Add($"AppId: {appId}");
+                    Log.A($"AppId: {appId}");
                     var app = Factory.App(appId, false, parentLog: Log);
                     _DynCodeRoot.AttachApp(app);
                     found = true;

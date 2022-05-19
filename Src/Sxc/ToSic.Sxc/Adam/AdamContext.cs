@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Adam
             if (Security.MustThrowIfAccessingRootButNotAllowed(usePortalRoot, out var exception))
                 throw exception;
 
-            Log.Add("check if feature enabled");
+            Log.A("check if feature enabled");
             var sysFeatures = ServiceProvider.Build<IFeaturesInternal>();
             if (Security.UserIsRestricted && !sysFeatures.Enabled(FeaturesForRestrictedUsers))
             {

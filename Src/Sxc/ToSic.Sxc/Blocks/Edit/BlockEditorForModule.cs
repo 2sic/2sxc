@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Run;
 
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         internal override void UpdateTitle(IEntity titleItem)
         {
-            Log.Add("update title");
+            Log.A("update title");
             PlatformModuleUpdater.UpdateTitle(Block, titleItem);
         }
 

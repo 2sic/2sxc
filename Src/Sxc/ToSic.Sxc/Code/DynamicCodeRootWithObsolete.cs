@@ -5,6 +5,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.Sxc.Data;
@@ -75,7 +76,7 @@ namespace ToSic.Sxc.Code
         /// </remarks>
         private void TryToBuildElementList()
         {
-            _root.Log.Add("try to build old List");
+            _root.Log.A("try to build old List");
             _list = new List<Element>();
 
             if (_root.Data == null || _root.Block.View == null) return;

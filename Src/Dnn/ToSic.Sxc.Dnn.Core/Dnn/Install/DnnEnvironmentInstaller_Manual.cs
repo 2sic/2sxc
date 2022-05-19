@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Run;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Install
             var callLog = Log.Call<bool>();
             if (IsUpgradeRunning)
             {
-                Log.Add("Upgrade is still running");
+                Log.A("Upgrade is still running");
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 3-4 minutes, please restart the web application.");
             }
 

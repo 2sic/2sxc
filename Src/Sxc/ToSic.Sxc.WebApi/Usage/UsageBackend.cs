@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Context;
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Usage
 
             var blocks = cms.Blocks.AllWithView();
 
-            Log.Add($"Found {blocks.Count} content blocks");
+            Log.A($"Found {blocks.Count} content blocks");
 
             var result = finalBuilder(views, blocks);
 

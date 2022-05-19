@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn
             var wrapLog = Log.Call<BlockFromModule>(useTimer: true);
             if (module == null) throw new ArgumentNullException(nameof(module));
             if (!(module is ModuleInfo dnnModule)) throw new ArgumentException("Given data is not a module");
-            Log.Add($"Module: {dnnModule.ModuleID}");
+            Log.A($"Module: {dnnModule.ModuleID}");
 
             var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
@@ -52,9 +52,9 @@ namespace ToSic.Sxc.Dnn
             var wrapLog = Log.Call<IContextOfBlock>();
             var context = _contextGenerator.New;
             context.Init(ParentLog);
-            Log.Add($"Will try-swap module info of {dnnModule.ModuleID} into site");
+            Log.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
-            Log.Add("Will init module");
+            Log.A("Will init module");
             ((DnnModule)context.Module).Init(dnnModule, ParentLog);
             return wrapLog(null, InitPageOnly(context));
         }

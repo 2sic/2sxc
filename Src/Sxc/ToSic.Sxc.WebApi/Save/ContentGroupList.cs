@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Save
 
             foreach (var bundle in pairsOrSingleItems)
             {
-                Log.Add("processing:" + bundle.Key);
+                Log.A("processing:" + bundle.Key);
                 var entity = CmsManager.Read.AppState.List.One(bundle.First().Header.ListParent());
                 var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
                 
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Save
 
                 var willAdd = primaryItem.Header.ListAdd();
 
-                Log.Add($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
+                Log.A($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
                 var fieldPair = targetIsContentBlock
                     ? ViewParts.PickFieldPair(primaryItem.Header.Group.Part)

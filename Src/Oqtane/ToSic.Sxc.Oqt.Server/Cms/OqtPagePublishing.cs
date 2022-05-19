@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Cms
             var containerId = (context as IContextOfBlock)?.Module.Id ?? Eav.Constants.IdNotInitialized;
             var userId = 0;
             var enabled = false;
-            Log.Add($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");
+            Log.A($"DoInsidePublishing(module:{containerId}, user:{userId}, enabled:{enabled})");
             if (enabled)
             {
                 /* ignore */
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.Cms
 
             var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
-            Log.Add("/DoInsidePublishing");
+            Log.A("/DoInsidePublishing");
         }
 
 
@@ -40,6 +40,6 @@ namespace ToSic.Sxc.Oqt.Server.Cms
 
 
         public void Publish(int instanceId, int version) 
-            => Log.Add($"Publish(m:{instanceId}, v:{version}) - not supported in Oqtane, publish never happened ");
+            => Log.A($"Publish(m:{instanceId}, v:{version}) - not supported in Oqtane, publish never happened ");
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Xml.Linq;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Repositories;
 
 namespace ToSic.Sxc.Apps.ImportExport
@@ -29,18 +30,18 @@ namespace ToSic.Sxc.Apps.ImportExport
             if (!ok)
                 return wrapLog("error", false);
 
-            Log.Add("Now import templates - if found");
+            Log.A("Now import templates - if found");
 
             var xmlSource = doc.Element(XmlConstants.RootNode) 
                 ?? throw new Exception("error import - xmlSource should always exist");
 
             if (xmlSource.Elements(XmlConstants.Templates).Any())
             {
-                Log.Add("found some templates");
+                Log.A("found some templates");
                 ImportXmlTemplates(xmlSource);
             }
             else
-                Log.Add("No templates found");
+                Log.A("No templates found");
 
             return wrapLog("ok", true);
         }

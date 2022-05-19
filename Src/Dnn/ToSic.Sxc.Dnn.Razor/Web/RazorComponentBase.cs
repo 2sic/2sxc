@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web
             ConnectToRoot(typedParent._DynCodeRoot);
             try
             {
-                Log.Add("@RenderPage:" + VirtualPath);
+                Log.A("@RenderPage:" + VirtualPath);
             } catch { /* ignore */ }
         }
 

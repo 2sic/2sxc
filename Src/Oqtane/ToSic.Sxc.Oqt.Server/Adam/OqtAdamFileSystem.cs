@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 var oqtFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
                 oqtFile.Name = newName;
                 OqtFileRepository.UpdateFile(oqtFile);
-                Log.Add($"VirtualFile {oqtFile.FileId} renamed to {oqtFile.Name}");
+                Log.A($"VirtualFile {oqtFile.FileId} renamed to {oqtFile.Name}");
 
                 callLog("ok");
             }
@@ -179,12 +179,12 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 // don't do anything - this happens when multiple processes try to add the folder at the same time
                 // like when two fields in a dialog cause the web-api to create the folders in parallel calls
                 // see also https://github.com/2sic/2sxc/issues/811
-                Log.Add("error in SQL, probably folder already exists");
+                Log.A("error in SQL, probably folder already exists");
             }
             catch (NullReferenceException)
             {
                 // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
-                Log.Add("error, probably folder already exists");
+                Log.A("error, probably folder already exists");
             }
 
             callLog("?");
@@ -202,7 +202,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var callLog = Log.Call($"..., {newName}");
             var fld = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
             WipConstants.AdamNotImplementedYet();
-            Log.Add("Not implement yet in Oqtane");
+            Log.A("Not implement yet in Oqtane");
             //FolderRepository.RenameFolder(fld, newName);
             callLog("ok");
         }

@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.Run
                 return wrapLog($"module: {result}", result);
             }
 
-            Log.Add("trying to check permission " + _salPrefix + ", but don't have module in context");
+            Log.A("trying to check permission " + _salPrefix + ", but don't have module in context");
             return wrapLog("can't verify: false", false);
         }
 

@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             _watcher.Renamed += OnRenamed;
 
             // Begin watching.
-            Log.Add($"Begin watching: {appApiSource}.");
+            Log.A($"Begin watching: {appApiSource}.");
             _watcher.EnableRaisingEvents = true;
         }
 
@@ -57,19 +57,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
         public void Dispose()
         {
-            Log.Add("Stop watching.");
+            Log.A("Stop watching.");
             _watcher.EnableRaisingEvents = false;
             _watcher?.Dispose();
         }
 
         private void OnChanged(object source, FileSystemEventArgs e)
         {
-            Log.Add($"Change type: {e.ChangeType}, file: {e.FullPath}, update: {CompiledAppApiControllers.TryUpdate(e.FullPath, true, false)}.");
+            Log.A($"Change type: {e.ChangeType}, file: {e.FullPath}, update: {CompiledAppApiControllers.TryUpdate(e.FullPath, true, false)}.");
         }
 
         private void OnRenamed(object source, RenamedEventArgs e)
         {
-            Log.Add($"Renamed: {e.OldFullPath} to {e.FullPath}, update: {CompiledAppApiControllers.TryUpdate(e.OldFullPath, true, false)}.");
+            Log.A($"Renamed: {e.OldFullPath} to {e.FullPath}, update: {CompiledAppApiControllers.TryUpdate(e.OldFullPath, true, false)}.");
         }
     }
 }

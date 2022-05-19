@@ -43,7 +43,7 @@ namespace ToSic.Sxc.DataSources
             var viewDataSourceUpstream = view?.Query == null
                 ? moduleDataSource
                 : null;
-            Log.Add($"use query upstream:{viewDataSourceUpstream != null}");
+            Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
             var viewDataSource = dsFactory.GetDataSource<Block>(block, viewDataSourceUpstream, configurationProvider);
 
@@ -54,18 +54,18 @@ namespace ToSic.Sxc.DataSources
                 viewDataSource.Publish.Enabled = view.PublishData;
                 viewDataSource.Publish.Streams = view.StreamsToPublish;
 
-                Log.Add($"use template, & query#{view.Query?.Id}");
+                Log.A($"use template, & query#{view.Query?.Id}");
                 // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
                 if (view.Query != null)
                 {
-                    Log.Add("Generate query");
+                    Log.A("Generate query");
                     var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, Log);
-                    Log.Add("attaching");
+                    Log.A("attaching");
                     viewDataSource.SetOut(query);
                 }
             }
             else
-                Log.Add("no template override");
+                Log.A("no template override");
 
             return wrapLog("ok", viewDataSource);
         }

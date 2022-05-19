@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
         public Assembly Compile(string filePath, string dllName)
         {
-            Log.Add($"Starting compilation of: '{filePath}'");
+            Log.A($"Starting compilation of: '{filePath}'");
 
             var sourceCode = File.ReadAllText(filePath);
 
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
                     foreach (var diagnostic in failures)
                     {
-                        Log.Add("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                        Log.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 

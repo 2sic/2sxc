@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Adam
                 ? userMayAdminSiteFiles
                 : userMayAdminSomeFiles);
 
-            Log.Add($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
+            Log.A($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
 
             return callLog(null, this);
         }
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         internal bool UserIsNotRestrictedOrItemIsDraft(Guid guid, out HttpExceptionAbstraction exp)
         {
-            Log.Add($"check if user is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
+            Log.A($"check if user is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
             exp = null;
             // check that if the user should only see drafts, he doesn't see items of normal data
             if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Adam
             var itm = AdamContext.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
-            exp = HttpException.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));
+            exp = HttpException.PermissionDenied(Log.AddAndReuse("user is restricted and may not see published, but item exists and is published - not allowed"));
             return false;
         }
 
@@ -97,12 +97,12 @@ namespace ToSic.Sxc.Adam
                                       fieldDef.Type != DataTypes.String))
             {
                 preparedException = HttpException.BadRequest("Requested field '" + AdamContext.ItemField + "' type doesn't allow upload");
-                Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
+                Log.A($"field type:{fieldDef?.Type} - does not allow upload");
                 result = false;
             }
             else
             {
-                Log.Add($"field type:{fieldDef.Type}");
+                Log.A($"field type:{fieldDef.Type}");
                 preparedException = null;
                 result = true;
             }

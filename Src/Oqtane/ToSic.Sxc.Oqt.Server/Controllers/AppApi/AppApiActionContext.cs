@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
         public ActionContext Provide(HttpContext context, RouteValueDictionary values)
         {
-            Log.Add($"get values: {values.Count}");
+            Log.A($"get values: {values.Count}");
 
             var routeData = new RouteData(values);
 
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             //var candidates = actionSelector.SelectCandidates(routeContext);
 
             var displayName = GetDisplayName(values);
-            Log.Add($"app-api: {displayName}");
+            Log.A($"app-api: {displayName}");
 
             // our custom selector for app api methods
             var candidates = actionDescriptorCollectionProvider.ActionDescriptors.Items.Where(
@@ -54,13 +54,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                      && i.ActionConstraints.Any(c => (c.ToString() ?? "").Contains("HttpMethodActionConstraint"))
             ).ToList();
 
-            Log.Add(candidates.Count > 0
+            Log.A(candidates.Count > 0
                 ? $"ok, have candidates: {candidates.Count}"
                 : $"error, missing candidates: {candidates.Count}, can't find right method for action: {values["action"]} on controller: {values["controller"]}.");
 
             if (candidates.Count == 0) throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, $"Can't find right method for action: {values["action"]} on controller: {values["controller"]}.", "Not Found");
 
-            Log.Add($"actionDescriptor SelectBestCandidate");
+            Log.A($"actionDescriptor SelectBestCandidate");
             var actionDescriptor = actionSelector.SelectBestCandidate(routeContext, candidates);
 
             var actionContext = new ActionContext(context, routeData, actionDescriptor);

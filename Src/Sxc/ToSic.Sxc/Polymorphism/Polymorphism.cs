@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Polymorphism
                 var rInfo = Cache.FirstOrDefault(r => r.Name.Equals(Resolver, StringComparison.InvariantCultureIgnoreCase));
                 if (rInfo == null)
                     return wrapLog("resolver not found", null);
-                Log.Add($"resolver for {Resolver} found");
+                Log.A($"resolver for {Resolver} found");
                 var editionResolver = (IResolver)_serviceProvider.GetService(rInfo.Type);
                 var result = editionResolver.Edition(Parameters, Log);
 

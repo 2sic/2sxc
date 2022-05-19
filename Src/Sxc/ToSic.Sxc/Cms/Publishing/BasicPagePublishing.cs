@@ -29,8 +29,8 @@ namespace ToSic.Sxc.Cms.Publishing
 
         public void Publish(int instanceId, int version)
         {
-            Log.Add($"Publish(m:{instanceId}, v:{version})");
-            Log.Add("publish never happened ");
+            Log.A($"Publish(m:{instanceId}, v:{version})");
+            Log.A("publish never happened ");
         }
 
     }

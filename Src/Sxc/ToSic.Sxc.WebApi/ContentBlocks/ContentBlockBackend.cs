@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         public void AddItem(int? index = null)
         {
-            Log.Add($"add order:{index}");
+            Log.A($"add order:{index}");
             // use dnn versioning - this is always part of page
             _publishing.DoInsidePublishing(ContextOfBlock, _ 
                 => CmsManagerOfBlock.Blocks.AddEmptyItem(Block.Configuration, index, Block.Context.Publishing.ForceDraft));
@@ -68,7 +69,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         
         public bool PublishPart(string part, int index)
         {
-            Log.Add($"try to publish #{index} on '{part}'");
+            Log.A($"try to publish #{index} on '{part}'");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
             return BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).Publish(part, index);
         }
@@ -76,17 +77,17 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         public AjaxRenderDto RenderV2(int templateId, string lang, string root)
         {
             var wrapLog = Log.Call<AjaxRenderDto>();
-            Log.Add("1. Get Render result");
+            Log.A("1. Get Render result");
             var result = RenderToResult(templateId, lang);
 
-            Log.Add("2.1. Build Resources");
+            Log.A("2.1. Build Resources");
             var resources = new List<AjaxResourceDtoWIP>();
             var ver = Settings.Version.ToString();
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
                 resources.Add(new AjaxResourceDtoWIP
                     { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + InpageCms.TurnOnJs, "v", ver) });
 
-            Log.Add("2.2. Add JS & CSS which were stripped before");
+            Log.A("2.2. Add JS & CSS which were stripped before");
             resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP
             {
                 // Note: Url can be empty if it has contents
@@ -96,20 +97,20 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 Attributes = asset.HtmlAttributes,
             }));
 
-            Log.Add("3. Add manual resources (fancybox etc.)");
+            Log.A("3. Add manual resources (fancybox etc.)");
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
             var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
             var optimizer = _optimizer.Value;
             if(optimizer is BlockResourceExtractor withInternal)
                 withInternal.ExtractOnlyEnableOptimization = false;
 
-            Log.Add("4.1. Process optimizers");
+            Log.A("4.1. Process optimizers");
             var renderResult = optimizer.Process(mergedFeatures);
             var rest = renderResult.Html;
             if (!string.IsNullOrWhiteSpace(rest)) 
-                Log.Add("Warning: Rest after extraction should be empty - not handled ATM");
+                Log.A("Warning: Rest after extraction should be empty - not handled ATM");
 
-            Log.Add("4.2. Add more resources based on processed");
+            Log.A("4.2. Add more resources based on processed");
             resources.AddRange(renderResult.Assets.Select(asset => new AjaxResourceDtoWIP
             {
                 Url = asset.Url,

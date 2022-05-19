@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             var contentBlockId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             if (contentBlockId >= 0) return wrapLog("found block", block);
 
-            Log.Add($"Inner Content: {contentBlockId}");
+            Log.A($"Inner Content: {contentBlockId}");
             var entityBlock = _blkFromEntGen.New.Init(block, contentBlockId, Log);
             return wrapLog("found inner block", entityBlock);
         }

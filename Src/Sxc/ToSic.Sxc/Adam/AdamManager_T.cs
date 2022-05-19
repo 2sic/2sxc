@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Adam
                     Add(pathToCheck);
                 else
                 {
-                    Log.Add($"subfolder {pathToCheck} not found");
+                    Log.A($"subfolder {pathToCheck} not found");
                     return callLog("not found", null);
                 }
             }

@@ -1,6 +1,7 @@
 ﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
@@ -17,10 +18,10 @@ namespace ToSic.Sxc.Dnn.WebApi
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
 		public bool Delete(int tabId, int modId)
 		{
-            Log.Add($"delete mod:{modId} on tab:{tabId}");
+            Log.A($"delete mod:{modId} on tab:{tabId}");
 		    var mc = new DotNetNuke.Entities.Modules.ModuleController();
             mc.DeleteTabModule(tabId, modId, true);
-            Log.Add("delete completed");
+            Log.A("delete completed");
             return true;
 		}
 

@@ -60,14 +60,14 @@ namespace ToSic.Sxc.Dnn.Install
 
             if (block.App != null)
             {
-                Log.Add("Will check if site is ready and template folder exists");
+                Log.A("Will check if site is ready and template folder exists");
                 EnsureSiteIsConfiguredAndTemplateFolderExists(block, appFolderInitializerLazy);
 
                 // If no exception was raised inside, everything is fine - must cache
                 CachedModuleResults.AddOrUpdate(_module.ModuleId, true, (id, value) => true);
             }
             else
-                Log.Add("skip, content-block not ready");
+                Log.A("skip, content-block not ready");
 
             return timerWrap("ok", true);
         }

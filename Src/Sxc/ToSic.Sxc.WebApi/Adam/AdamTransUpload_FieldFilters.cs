@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -15,9 +16,9 @@ namespace ToSic.Sxc.WebApi.Adam
             var extension = Path.GetExtension(fileName)?.TrimStart('.') ?? "";
             var hasNonAzChars = new Regex("[^a-z]", RegexOptions.IgnoreCase);
 
-            Log.Add($"found additional file filter: {additionalFilter}");
+            Log.A($"found additional file filter: {additionalFilter}");
             var filters = additionalFilter.Split(',').Select(f => f.Trim()).ToList();
-            Log.Add($"found {filters.Count} filters in {additionalFilter}, will test on {fileName} with ext {extension}");
+            Log.A($"found {filters.Count} filters in {additionalFilter}, will test on {fileName} with ext {extension}");
 
             foreach (var f in filters)
             {
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 }
                 catch
                 {
-                    Log.Add($"filter {f} was detected as reg-ex but threw error");
+                    Log.A($"filter {f} was detected as reg-ex but threw error");
                 }
 
             }

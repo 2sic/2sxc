@@ -91,7 +91,7 @@ namespace ToSic.Sxc.WebApi.Admin
         {
             if (FinalBuilder == null)
             {
-                Log.Add("Error, FinalBuilder implementation is not set.");
+                Log.A("Error, FinalBuilder implementation is not set.");
                 throw new ArgumentException("FinalBuilder implementation is not set.");
             }
             return _usageBackend.Ready.ViewUsage(appId, guid, FinalBuilder);

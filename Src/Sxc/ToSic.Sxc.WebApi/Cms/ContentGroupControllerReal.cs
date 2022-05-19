@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public EntityInListDto Header(Guid guid)
         {
-            Log.Add($"header for:{guid}");
+            Log.A($"header for:{guid}");
             var cg = GetContentGroup(guid, false);
 
             // new in v11 - this call might be run on a non-content-block, in which case we return null
@@ -126,7 +126,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public List<EntityInListDto> ItemList(Guid guid, string part)
         {
-            Log.Add($"item list for:{guid}");
+            Log.A($"item list for:{guid}");
             var cg = Context.AppState.List.One(guid);
             var itemList = cg.Children(part);
 
@@ -145,7 +145,7 @@ namespace ToSic.Sxc.WebApi.Cms
         // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
         public bool ItemList(/*IContextOfBlock context,*/ Guid guid, List<EntityInListDto> list,  string part = null)
         {
-            Log.Add($"list for:{guid}, items:{list?.Count}");
+            Log.A($"list for:{guid}, items:{list?.Count}");
             if (list == null) throw new ArgumentNullException(nameof(list));
 
             _publishing.Ready.DoInsidePublishing(Context, args =>
@@ -190,7 +190,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
             if (contentGroup.View == null)
             {
-                Log.Add("Something found, but doesn't seem to be a content-group. Cancel.");
+                Log.A("Something found, but doesn't seem to be a content-group. Cancel.");
                 return wrapLog(null, null);
             }
 
@@ -200,7 +200,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private BlockConfiguration GetContentGroup(Guid contentGroupGuid, bool throwIfNotFound)
         {
-            Log.Add($"get group:{contentGroupGuid}");
+            Log.A($"get group:{contentGroupGuid}");
             var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(contentGroupGuid);
 
             // Note 2022-05-05 2dm - this can never be null, the check should be updated to check if the .Entity is null if this is important

@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Code
             var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
             if (hasErrorMessage != null)
             {
-                Log.Add($"Error: {hasErrorMessage}");
+                Log.A($"Error: {hasErrorMessage}");
                 wrapLog("failed");
                 if (throwOnError) throw new Exception(hasErrorMessage);
                 return null;
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Code
                     }
                     catch (Exception ex)
                     {
-                        Log.Add(possibleErrorMessage);
+                        Log.A(possibleErrorMessage);
                         if(throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
                     }
 
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Code
 
             if (ErrorMessage != null)
             {
-                Log.Add(ErrorMessage + $"; throw error: {throwOnError}");
+                Log.A(ErrorMessage + $"; throw error: {throwOnError}");
                 wrapLog("failed");
                 if (throwOnError) throw new Exception(ErrorMessage);
                 return null;
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Code
             virtualPath = virtualPath.ForwardSlash();// .Replace("\\", "/");
             if (!virtualPath.StartsWith("/"))
             {
-                Log.Add($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
+                Log.A($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
                 if (relativePath == null)
                     return "Unexpected null value on relativePath";
 
@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Code
                 relativePath = relativePath.SuffixSlash();// += "/";
                 //virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(Path.Combine(relativePath, virtualPath));
                 virtualPath = Path.Combine(relativePath, virtualPath).ToAbsolutePathForwardSlash();
-                Log.Add($"final virtual path: '{virtualPath}'");
+                Log.A($"final virtual path: '{virtualPath}'");
             }
 
             if (virtualPath.IndexOf(":", StringComparison.InvariantCultureIgnoreCase) > -1)

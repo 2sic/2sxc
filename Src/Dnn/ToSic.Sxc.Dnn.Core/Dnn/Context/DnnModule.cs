@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Dnn.Context
                 return wrapLog($"{msg} AppG:{guid} = app:{appId}", (appId, guid));
             }
 
-            Log.Add($"{msg} not found = null");
+            Log.A($"{msg} not found = null");
             return wrapLog("not found", (Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty));
         }
     }

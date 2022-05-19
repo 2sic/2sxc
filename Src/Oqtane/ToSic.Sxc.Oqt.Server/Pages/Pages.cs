@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Pages
 
             var sxcAll = sxcContents.Union(sxcApps).ToList();
 
-            Log.Add($"Mods for Content: {sxcContents.Count}, App: {sxcApps.Count}, Total: {sxcAll.Count}");
+            Log.A($"Mods for Content: {sxcContents.Count}, App: {sxcApps.Count}, Total: {sxcAll.Count}");
 
             var settings = _settingRepository.GetSettings(EntityNames.Module).ToList();
             foreach (var pageModule in sxcAll)

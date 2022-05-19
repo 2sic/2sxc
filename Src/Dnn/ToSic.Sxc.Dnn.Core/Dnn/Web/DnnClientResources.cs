@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Dnn.Web
             if (!readJs && !editJs && !editCss && !features.Any())
                 return wrapLog("nothing to add", features);
 
-            Log.Add("user is editor, or template requested js/css, will add client material");
+            Log.A("user is editor, or template requested js/css, will add client material");
 
             // register scripts and css
             RegisterClientDependencies(Page, readJs, editJs, editCss, features);
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Dnn.Web
             // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
             // so we have to move adding the header to here.
             // MustAddHeaders may have been set earlier by the engine, or now by the various js added
-            Log.Add($"{nameof(MustAddHeaders)}={MustAddHeaders}");
+            Log.A($"{nameof(MustAddHeaders)}={MustAddHeaders}");
             if (MustAddHeaders) Header.AddHeaders();
 
             return wrapLog("ok", features);
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Dnn.Web
         public void EnforcePre1025Behavior()
         {
             // If we got this far, we want the old behavior which always enables headers etc.
-            Log.Add(nameof(EnforcePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
+            Log.A(nameof(EnforcePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             MustAddHeaders = true;
         }
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Dnn.Web
             // add read-js
             if (readJs || editJs)
             {
-                Log.Add("add $2sxc api and headers");
+                Log.A("add $2sxc api and headers");
                 RegisterJs(page, ver, root + InpageCms.CoreJs, true, priority);
                 MustAddHeaders = true;
             }
@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Dnn.Web
             // add edit-js (commands, manage, etc.)
             if (editJs)
             {
-                Log.Add("add 2sxc edit api; also request jQuery and anti-forgery");
+                Log.A("add 2sxc edit api; also request jQuery and anti-forgery");
                 // note: the inpage only works if it's not in the head, so we're adding it below
                 RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
             }

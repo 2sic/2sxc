@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Code
                 _headerTried = true;
                 _header = TryToBuildFirstOfStream(ViewParts.StreamHeader);
                 if (_header != null) return _header;
-                Log.Add($"Header not yet found in {ViewParts.StreamHeader}, will try {ViewParts.StreamHeaderOld}");
+                Log.A($"Header not yet found in {ViewParts.StreamHeader}, will try {ViewParts.StreamHeaderOld}");
                 return _header = TryToBuildFirstOfStream(ViewParts.StreamHeaderOld);
             }
         }

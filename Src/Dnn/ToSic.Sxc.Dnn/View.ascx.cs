@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Dnn
                 var callLog = Log.Call(useTimer: true);
 
                 // #lightspeed
-                if (OutputCache?.Existing != null) Log.Add("Lightspeed hit - will use cached");
+                if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
 
                 IRenderResult data = null;
                 var headersAndScriptsAdded = false;

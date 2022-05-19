@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         public void SetAppId(IModule instance, int? appId)
         {
-            Log.Add($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
+            Log.A($"SetAppIdForInstance({instance.Id}, -, appid: {appId})");
             // Reset temporary template
             ClearPreview(instance.Id);
 
@@ -75,13 +75,13 @@ namespace ToSic.Sxc.Dnn.Run
 
         protected void ClearPreview(int instanceId)
         {
-            Log.Add($"ClearPreviewTemplate(iid: {instanceId})");
+            Log.A($"ClearPreviewTemplate(iid: {instanceId})");
             UpdateInstanceSettingForAllLanguages(instanceId, Settings.ModuleSettingsPreview, null, Log);
         }
 
         public void SetContentGroup(int instanceId, bool blockExists, Guid guid)
         {
-            Log.Add($"SetContentGroup(iid: {instanceId}, {nameof(blockExists)}: {blockExists}, guid: {guid})");
+            Log.A($"SetContentGroup(iid: {instanceId}, {nameof(blockExists)}: {blockExists}, guid: {guid})");
             // Remove Preview because it's not needed as soon Content is inserted
             ClearPreview(instanceId);
             // Update blockConfiguration Guid for this module
@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         public void UpdateTitle(IBlock block, IEntity titleItem)
         {
-            Log.Add("update title");
+            Log.A("update title");
 
             var languages = _zoneMapper.CulturesWithState(block.Context.Site);
 
@@ -157,7 +157,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// </summary>
         public static void UpdateInstanceSettingForAllLanguages(int instanceId, string key, string value, ILog log)
         {
-            log?.Add($"UpdateInstanceSettingForAllLanguages(iid: {instanceId}, key: {key}, val: {value})");
+            log.A($"UpdateInstanceSettingForAllLanguages(iid: {instanceId}, key: {key}, val: {value})");
             var moduleController = new ModuleController();
 
             // Find this module in other languages and update contentGroupGuid

@@ -122,7 +122,7 @@ namespace ToSic.Sxc.Images
         {
             void IfDebugLogPair<T>(string prefix, (T W, T H) values)
             {
-                if (Debug) Log.Add($"{prefix}: W:{values.W}, H:{values.H}");
+                if (Debug) Log.A($"{prefix}: W:{values.W}, H:{values.H}");
             }
 
             // Try to pre-process parameters and prefer them

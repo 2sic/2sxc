@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Apps.Blocks
 
         public BlockConfiguration(IEntity entity, CmsRuntime cmsRuntime, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
         {
-            Log.Add("Entity is " + (entity == null ? "" : "not") + " null");
+            Log.A("Entity is " + (entity == null ? "" : "not") + " null");
             _cmsRuntime = cmsRuntime;
             ZoneId = cmsRuntime.ZoneId;
             AppId = cmsRuntime.AppId;

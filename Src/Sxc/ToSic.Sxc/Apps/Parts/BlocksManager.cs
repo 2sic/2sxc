@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Apps
 
 		    if (!blockConfiguration.Exists)
 		    {
-		        Log.Add($"doesn't exist, will create new CG with template#{templateId}");
+		        Log.A($"doesn't exist, will create new CG with template#{templateId}");
 		        return appMan.Entities.Create(BlocksRuntime.BlockTypeName, new Dictionary<string, object>
 		        {
 		            {ViewParts.TemplateContentType, new List<int> {templateId}},
@@ -31,7 +32,7 @@ namespace ToSic.Sxc.Apps
 		    }
 		    else
 		    {
-		        Log.Add($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
+		        Log.A($"exists, create for group#{blockConfiguration.Guid} with template#{templateId}");
 		        appMan.Entities.UpdateParts(blockConfiguration.Entity.EntityId,
 		            new Dictionary<string, object> {{ ViewParts.TemplateContentType, new List<int?> {templateId}}});
 
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Apps
 
         public int NewBlockReference(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
         {
-            Log.Add($"get CB parent:{parentId}, field:{field}, order:{sortOrder}, app:{app}, guid:{guid}");
+            Log.A($"get CB parent:{parentId}, field:{field}, order:{sortOrder}, app:{app}, guid:{guid}");
             var contentTypeName = AppConstants.ContentGroupRefTypeName;
             var values = new Dictionary<string, object>
             {

@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Engines
             var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog("no edition detected", null);
-            Log.Add($"edition {edition} detected");
+            Log.A($"edition {edition} detected");
 
             var testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Engines
                 return wrapLog($"edition {edition}", testPath);
             }
 
-            Log.Add("tried inserting path, will check if sub-path");
+            Log.A("tried inserting path, will check if sub-path");
             var firstSlash = subPath.IndexOf('/');
             if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
 

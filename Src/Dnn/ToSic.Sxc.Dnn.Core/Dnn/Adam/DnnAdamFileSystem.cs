@@ -119,18 +119,18 @@ namespace ToSic.Sxc.Dnn.Adam
                 // don't do anything - this happens when multiple processes try to add the folder at the same time
                 // like when two fields in a dialog cause the web-api to create the folders in parallel calls
                 // see also https://github.com/2sic/2sxc/issues/811
-                Log.Add("error in DNN SQL, probably folder already exists");
+                Log.A("error in DNN SQL, probably folder already exists");
             }
             catch (FolderAlreadyExistsException)
             {
                 // Dnn reports it already exists - it shouldn't have got here because that was checked before
                 // but I guess depending on the DNN version this isn't 100% reliable
-                Log.Add("Dnn says folder already exists");
+                Log.A("Dnn says folder already exists");
             }
             catch (NullReferenceException)
             {
                 // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
-                Log.Add("error, probably folder already exists");
+                Log.A("error, probably folder already exists");
             }
 
             callLog("?");
