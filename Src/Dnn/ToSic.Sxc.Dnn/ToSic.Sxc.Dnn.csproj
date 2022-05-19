@@ -370,23 +370,22 @@
 @Echo Platform ='$(Platform)'
 @set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
 @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
-@REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
-xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\dnn9102-farm\Website\bin\" /y /i
-xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "c:\Projects\_Test\2sxc-evoq\2sxc-evoq910611-t01\Website\bin\" /y /i
+@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
+@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\dnn9102-farm\Website\bin\" /y /i
+@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\_Test\2sxc-evoq\2sxc-evoq910611-t01\Website\bin\" /y /i
 
 @REM Copy Imageflow and dependecies
 robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
-if exist $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll (
-	@Echo delete: $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll
-	del $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll
-	rename $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
+if exist $(TargetDir)runtimes\win-x64\native\imageflow.dll (
+	@Echo delete: $(TargetDir)runtimes\win-x64\native\imageflow.dll
+	del $(TargetDir)runtimes\win-x64\native\imageflow.dll
+	rename $(TargetDir)runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
 )
-if exist $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll (
-	@Echo delete: $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll
-	del $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll
-	rename $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
+if exist $(TargetDir)runtimes\win-x86\native\imageflow.dll (
+	@Echo delete: $(TargetDir)runtimes\win-x86\native\imageflow.dll
+	del $(TargetDir)runtimes\win-x86\native\imageflow.dll
+	rename $(TargetDir)runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
 )
-
 
 @REM Copy the data folders
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
