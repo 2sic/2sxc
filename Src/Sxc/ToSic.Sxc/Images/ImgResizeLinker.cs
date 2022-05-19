@@ -50,13 +50,13 @@ namespace ToSic.Sxc.Images
             string parameters = default
             )
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
+            var wrapLog = (Debug ? Log : null).Call2<string>($"{nameof(url)}:{url}");
 
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is ResizeSettings resizeSettings)
             {
                 var basic = ImageOnly(url, resizeSettings, field).Url;
-                return wrapLog("prepared:" + basic, basic);
+                return wrapLog.Return(basic, "prepared:" + basic);
             }
 
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Images
                 parameters: parameters);
 
             var result = ImageOnly(url, resizeSettings, field).Url;
-            return wrapLog("built:" + result, result);
+            return wrapLog.Return(result, "built:" + result);
         }
 
         public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
@@ -146,19 +146,19 @@ namespace ToSic.Sxc.Images
 
         private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<bool>();
+            var wrapLog = (Debug ? Log : null).Call2<bool>();
             if (key == null || value == null)
-                return wrapLog($"Won't add '{key}', since key or value are null", false);
+                return wrapLog.Return(false, $"Won't add '{key}', since key or value are null");
 
             var strValue = value.ToString();
             if (string.IsNullOrEmpty(strValue))
-                return wrapLog($"Won't add '{key}' since value as string would be null", false);
+                return wrapLog.Return(false, $"Won't add '{key}' since value as string would be null");
 
             if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase))
-                return wrapLog($"Won't add '{key}' since value would be irrelevant", false);
+                return wrapLog.Return(false, $"Won't add '{key}' since value would be irrelevant");
 
             resizer.Add(key, strValue);
-            return wrapLog($"Added key {key}", true);
+            return wrapLog.Return(true, $"Added key {key}");
         }
 
 

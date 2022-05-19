@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Data
 
         protected object ValueAutoConverted(PropertyRequest original, bool lookup, string field, ILog logOrNull)
         {
-            var safeWrap = logOrNull.SafeCall<object>($"..., {nameof(lookup)}: {lookup}, {nameof(field)}: {field}");
+            var safeWrap = logOrNull.Call2<object>($"..., {nameof(lookup)}: {lookup}, {nameof(field)}: {field}");
             var result = original.Result;
             var parent = original.Source as IEntity;
             // New mechanism to not use resolve-hyperlink
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Data
             {
                 logOrNull?.SafeAdd($"Try to convert value - HasValueConverter: {_Dependencies.ValueConverterOrNull != null}");
                 result = _Dependencies.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
-                return safeWrap("link-conversion", result);
+                return safeWrap.Return(result, "link-conversion");
             }
 
             // note 2021-06-07 previously in created sub-entities with modified language-list; I think this is wrong
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Data
                 logOrNull?.SafeAdd($"Convert entity list as {nameof(DynamicEntity)}");
                 var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Dependencies);
                 if (Debug) dynEnt.Debug = true;
-                return safeWrap("ent-list, now dyn", dynEnt);
+                return safeWrap.Return(dynEnt, "ent-list, now dyn");
             }
 
             // special debug of path if possible
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Data
             }
             catch {/* ignore */}
 
-            return safeWrap("unmodified", result);
+            return safeWrap.Return(result, "unmodified");
         }
 
     }

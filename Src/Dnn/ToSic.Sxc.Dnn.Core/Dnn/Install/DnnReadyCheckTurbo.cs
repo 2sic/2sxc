@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
         {
-            var wrapLog = Log.SafeCall<bool>($"AppId: {block.AppId}");
+            var wrapLog = Log.Call2<bool>($"AppId: {block.AppId}");
 
             var sexyFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppFolder));
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Dnn.Install
                 tm.EnsureTemplateFolderExists(block.Context.AppState, false);
             }
 
-            return wrapLog($"Completed init for module {_module.ModuleId} showing {block.AppId}", true);
+            return wrapLog.Return(true, $"Completed init for module {_module.ModuleId} showing {block.AppId}");
         }
 
         internal static ConcurrentDictionary<int, bool> CachedModuleResults = new ConcurrentDictionary<int, bool>();
