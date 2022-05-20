@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Images
         private int HeightFromAspectRatioOrFactor((int Width, int Height) dims, double factor, bool useAspectRatio, double aspectRatio)
         {
             var maybeLog = Debug ? Log : null;
-            var wrapLog = maybeLog.Call2<int>();
+            var wrapLog = maybeLog.Fn<int>();
 
             var hasAspectRatio = !DNearZero(aspectRatio);
 
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Images
         internal (int W, int H) KeepInRangeProportional((int W, int H) original)
         {
             var maybeLog = Debug ? Log : null;
-            var wrapLog = maybeLog.Call2<(int, int)>();
+            var wrapLog = maybeLog.Fn<(int, int)>();
 
             // Simple case - it fits into the max-range
             if (original.W <= MaxSize && original.H <= MaxSize)

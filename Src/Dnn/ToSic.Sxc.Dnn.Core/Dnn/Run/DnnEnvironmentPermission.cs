@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         public override bool EnvironmentAllows(List<Grants> grants)
         {
-            var logWrap = Log.Call2<bool>(() => $"[{string.Join(",", grants)}]");
+            var logWrap = Log.Fn<bool>(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
             if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsSiteAdmin()

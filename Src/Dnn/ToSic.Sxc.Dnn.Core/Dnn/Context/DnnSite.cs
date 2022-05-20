@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn.Context
 
         public DnnSite Swap(PortalSettings settings, ILog extLogOrNull)
         {
-            var wrapLog = extLogOrNull.Call2<DnnSite>();
+            var wrapLog = extLogOrNull.Fn<DnnSite>();
             _contents = KeepBestPortalSettings(settings);
 
             // reset language info to be sure to get it from the latest source
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn.Context
         /// <returns></returns>
         private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog extLogOrNull = null)
         {
-            var safeWrap = extLogOrNull.Call2<PortalSettings>();
+            var safeWrap = extLogOrNull.Fn<PortalSettings>();
 
             // in case we don't have an HTTP Context with current portal settings, don't try anything
             if (PortalSettings.Current == null) return safeWrap.Return(settings, "null, use given");

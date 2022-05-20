@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         private object GetFromPreferredOrDefaultSource(string field)
         {
-            var cLog = Log.Call2<object>(field);
+            var cLog = Log.Fn<object>(field);
 
             var pref = SettingPreferred;
             if (pref.Setting?.Get(field) is object result)

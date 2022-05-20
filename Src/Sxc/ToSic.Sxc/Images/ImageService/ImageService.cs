@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Images
         /// <returns></returns>
         private object GetBestSettings(object settings)
         {
-            var wrapLog = Log.Call2<object>(Debug);
+            var wrapLog = Log.Fn<object>(Debug);
             if (settings == null || settings is bool boolSettings && boolSettings)
                 return wrapLog.Return(GetCodeRootSettingsByName("Content"), "null/default");
 
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Images
 
         private dynamic GetCodeRootSettingsByName(string strName)
         {
-            var wrapLog = Log.Call2<object>(Debug, strName, message: $"code root: {_codeRootOrNull != null}");
+            var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {_codeRootOrNull != null}");
             var result = (_codeRootOrNull?.Settings?.Images as ICanGetByName)?.Get(strName);
             return wrapLog.Return(result, $"found: {result != null}");
         }

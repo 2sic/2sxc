@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Images
             {
                 if (_imgTag != null) return _imgTag;
 
-                var wrapLog = Log.Call2<Img>(ImgService.Debug);
+                var wrapLog = Log.Fn<Img>(ImgService.Debug);
                 _imgTag = Razor.Blade.Tag.Img().Src(Src);
 
                 // Add all kind of attributes if specified
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Images
         private readonly ValueGetOnce<string> _imgClass = new ValueGetOnce<string>();
         private string ClassGenerator()
         {
-            var wrapLog = Log.Call2<string>(ImgService.Debug);
+            var wrapLog = Log.Fn<string>(ImgService.Debug);
             var part1 = Call.ImgClass;
             string attrClass = null;
             ThisResize.Recipe?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClass);
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Images
         {
             var isEnabled = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
             var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
-            var wrapLog = Log.Call2<string>(ImgService.Debug, $"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
+            var wrapLog = Log.Fn<string>(ImgService.Debug, $"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
             var result = isEnabled && hasVariants
                 ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.Field)
                 : null;
@@ -155,7 +155,7 @@ namespace ToSic.Sxc.Images
         private string WidthGenerator()
         {
             var setWidth = ThisResize.Recipe?.SetWidth;
-            var wrapLog = Log.Call2<string>(ImgService.Debug, $"setWidth: {setWidth}, Width: {ThisResize.Width}");
+            var wrapLog = Log.Fn<string>(ImgService.Debug, $"setWidth: {setWidth}, Width: {ThisResize.Width}");
             var result = setWidth == true && ThisResize.Width != 0
                 ? ThisResize.Width.ToString()
                 : null;
@@ -170,7 +170,7 @@ namespace ToSic.Sxc.Images
         private string HeightGenerator()
         {
             var setHeight = ThisResize.Recipe?.SetHeight;
-            var wrapLog = Log.Call2<string>(ImgService.Debug, $"setHeight: {setHeight}, Height: {ThisResize.Height}");
+            var wrapLog = Log.Fn<string>(ImgService.Debug, $"setHeight: {setHeight}, Height: {ThisResize.Height}");
             var result = setHeight == true && ThisResize.Height != 0
                 ? ThisResize.Height.ToString()
                 : null;
@@ -182,7 +182,7 @@ namespace ToSic.Sxc.Images
         private readonly ValueGetOnce<string> _sizes = new ValueGetOnce<string>();
         private string SizesGenerator()
         {
-            var wrapLog = Log.Call2<string>(ImgService.Debug);
+            var wrapLog = Log.Fn<string>(ImgService.Debug);
             if (!ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId))
                 return wrapLog.ReturnNull("disabled");
             var sizes = ThisResize.Recipe?.Sizes;

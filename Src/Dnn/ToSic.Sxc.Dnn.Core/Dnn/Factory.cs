@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         {
-            var wrapLog = parentLog.Call2<IBlockBuilder>($"{pageId}, {modId}");
+            var wrapLog = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
             var builder = StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(pageId, modId).BlockBuilder;
             return wrapLog.Return(builder , "ok");
         }

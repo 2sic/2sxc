@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
             var logOrNull = _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
-            var safeWrap = logOrNull.Call2<object>(Debug,
+            var safeWrap = logOrNull.Fn<object>(Debug,
                     $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
                     "Debug: true");
             
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Data
 
         protected object ValueAutoConverted(PropertyRequest original, bool lookup, string field, ILog logOrNull)
         {
-            var safeWrap = logOrNull.Call2<object>($"..., {nameof(lookup)}: {lookup}, {nameof(field)}: {field}");
+            var safeWrap = logOrNull.Fn<object>($"..., {nameof(lookup)}: {lookup}, {nameof(field)}: {field}");
             var result = original.Result;
             var parent = original.Source as IEntity;
             // New mechanism to not use resolve-hyperlink

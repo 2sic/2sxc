@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
         {
-            var wrapLog = Log.Call2<bool>($"AppId: {block.AppId}");
+            var wrapLog = Log.Fn<bool>($"AppId: {block.AppId}");
 
             var sexyFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppFolder));

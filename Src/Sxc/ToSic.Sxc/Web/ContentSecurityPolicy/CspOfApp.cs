@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             Log.LinkTo(codeRoot.Log);
-            var wrapLog = Log.Call2();
+            var wrapLog = Log.Fn();
             _codeRoot = codeRoot;
 
             // Also connect upstream CspOfModule in case it's not yet connected
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         private string GetAppPolicies()
         {
-            var cLog = Log.Call2<string>(AppId.ToString());
+            var cLog = Log.Fn<string>(AppId.ToString());
 
             // Get Stack
             if (!(_codeRoot?.Settings is DynamicStack stack)) 

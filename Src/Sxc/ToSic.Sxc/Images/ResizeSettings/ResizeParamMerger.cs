@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
             AdvancedSettings advanced = default
         )
         {
-            var wrapLog = Log.Call2<ResizeSettings>(Debug);
+            var wrapLog = Log.Fn<ResizeSettings>(Debug);
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes

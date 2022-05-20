@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             _alreadyConnected = true;
             Log.LinkTo(codeRoot.Log);
             _codeRoot = codeRoot;
-            Log.Call2().Done();
+            Log.Fn().Done();
         }
 
         private bool _alreadyConnected;
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         internal bool RegisterAppCsp(CspOfApp appCsp)
         {
-            var cLog = Log.Call2<bool>($"appId: {appCsp?.AppId}");
+            var cLog = Log.Fn<bool>($"appId: {appCsp?.AppId}");
             if (appCsp == null)
                 return cLog.Return(false, "null");
 

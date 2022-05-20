@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Images
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {
             var logOrNull = ImgService.Debug ? Log : null;
-            var wrapLog = logOrNull.Call2<TagList>();
+            var wrapLog = logOrNull.Fn<TagList>();
             // Check formats
             var defFormat = ImgService.GetFormat(url);
             if (defFormat == null) return wrapLog.Return(Razor.Blade.Tag.TagList(), "no format");

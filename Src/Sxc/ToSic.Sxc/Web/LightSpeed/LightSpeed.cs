@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         /// </summary>
         private bool IsEnabledOnDependentApps(List<AppState> appStates)
         {
-            var cLog = Log.Call2<bool>();
+            var cLog = Log.Fn<bool>();
             foreach (var appState in appStates)
             {
                 var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);

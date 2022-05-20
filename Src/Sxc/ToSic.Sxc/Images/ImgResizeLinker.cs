@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Images
             string parameters = default
             )
         {
-            var wrapLog = (Debug ? Log : null).Call2<string>($"{nameof(url)}:{url}");
+            var wrapLog = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");
 
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is ResizeSettings resizeSettings)
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Images
 
         private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")
         {
-            var wrapLog = (Debug ? Log : null).Call2<bool>();
+            var wrapLog = (Debug ? Log : null).Fn<bool>();
             if (key == null || value == null)
                 return wrapLog.Return(false, $"Won't add '{key}', since key or value are null");
 

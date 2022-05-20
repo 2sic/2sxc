@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Data
 
         public dynamic GetStack(params string[] names)
         {
-            var wrapLog = LogOrNull.Call2<dynamic>();
+            var wrapLog = LogOrNull.Fn<dynamic>();
             var newStack = UnwrappedContents.GetStack(LogOrNull, names);
             var newDynStack = new DynamicStack("New", _Dependencies, newStack.Sources.ToArray());
             return wrapLog.Return(newDynStack);
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Data
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk", Debug);
             path = path.KeepOrNew().Add("DynStack", field);
 
-            var wrapLog = logOrNull.Call2<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
+            var wrapLog = logOrNull.Fn<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
             var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull, path);
             return wrapLog.Return(result, result == null ? "null" : "ok");
         }

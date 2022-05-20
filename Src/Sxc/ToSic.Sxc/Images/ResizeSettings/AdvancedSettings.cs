@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Images
         [PrivateApi]
         public static AdvancedSettings FromJson(object value, ILog log = null)
         {
-            var wrapLog = log.Call2<AdvancedSettings>();
+            var wrapLog = log.Fn<AdvancedSettings>();
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
