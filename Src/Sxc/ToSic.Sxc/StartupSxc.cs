@@ -165,6 +165,9 @@ namespace ToSic.Sxc
             // v13 LightSpeed
             services.TryAddTransient<IOutputCache, LightSpeed>();
 
+            // v13 Site
+            services.TryAddTransient<ICmsSite, CmsSite>();
+
             // Sxc StartUp Routines
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();    // must be Add, not TryAdd
 

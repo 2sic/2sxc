@@ -1,6 +1,8 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Data;
+using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Context
 {
@@ -47,6 +49,12 @@ namespace ToSic.Sxc.Context
 #pragma warning disable CS0108, CS0114
         IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
+
+        [PrivateApi]
+        ICmsSite Init(CmsContext parent, AppState appState);
+
+        [PrivateApi("WIP v13/14")]
+        IApp App { get; }
 
     }
 }

@@ -28,12 +28,14 @@ namespace ToSic.Sxc.Context
             IPlatform platform, 
             IContextOfSite initialContext, 
             Lazy<IPage> pageLazy,
-            IAppStates appStates
+            IAppStates appStates,
+            Lazy<ICmsSite> cmsSiteLazy
         ) : base(Constants.SxcLogName + ".CmsCtx")
         {
             _initialContext = initialContext;
             _pageLazy = pageLazy;
             _appStates = appStates;
+            _cmsSiteLazy = cmsSiteLazy;
             Platform = platform;
         }
         private readonly IContextOfSite _initialContext;
@@ -43,15 +45,15 @@ namespace ToSic.Sxc.Context
         private readonly ValueGetOnce<IContextOfSite> _ctxSite = new ValueGetOnce<IContextOfSite>();
 
         private readonly IAppStates _appStates;
+        private readonly Lazy<ICmsSite> _cmsSiteLazy;
 
         /// <summary>
         /// System to extend the known context by more information if we're running inside a block
         /// </summary>
         /// <returns></returns>
         public void ConnectToRoot(IDynamicCodeRoot codeRoot) => CodeRoot = codeRoot;
-
-
         internal IDynamicCodeRoot CodeRoot;
+
         internal DynamicEntityDependencies DEDeps => (CodeRoot as DynamicCodeRoot)?.DynamicEntityDependencies;
 
         private AppState SiteAppState => _siteAppState.Get(() => _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log));
@@ -68,8 +70,8 @@ namespace ToSic.Sxc.Context
 
         public ICmsPlatform Platform { get; }
 
-        public ICmsSite Site => _site ?? (_site = new CmsSite(this, SiteAppState));
-        private ICmsSite _site;
+        public ICmsSite Site => _site.Get(() => _cmsSiteLazy.Value.Init(this, SiteAppState));
+        private readonly ValueGetOnce<ICmsSite> _site = new ValueGetOnce<ICmsSite>();
 
         public ICmsPage Page => _page ?? (_page = new CmsPage(this, SiteAppState, _pageLazy));
         private ICmsPage _page;
