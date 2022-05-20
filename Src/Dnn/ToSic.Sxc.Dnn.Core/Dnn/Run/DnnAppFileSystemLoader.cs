@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.Run
             catch (Exception e)
             {
                 // ignore
-                Log.Exception(e);
+                Log.Ex(e);
                 return wrapLog("error", false);
             }
         }

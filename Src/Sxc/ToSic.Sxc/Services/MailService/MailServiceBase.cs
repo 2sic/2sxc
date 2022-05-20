@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Services
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
+                Log.Ex(ex);
                 wrapLog("error");
                 if (_userLazy.Value.IsSuperUser)
                     throw;

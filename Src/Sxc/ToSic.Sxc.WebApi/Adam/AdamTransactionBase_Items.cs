@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Adam
             if (!AdamContext.Security.SuperUserOrAccessingItemFolder(currentFolder.Path, out var ex))
             {
                 Log.A("user is not super-user and folder doesn't seem to be an ADAM folder of this item - will throw");
-                Log.Exception(ex);
+                Log.Ex(ex);
                 throw ex;
             }
 

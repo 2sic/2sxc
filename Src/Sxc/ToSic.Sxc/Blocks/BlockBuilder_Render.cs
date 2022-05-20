@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Blocks
             catch (Exception ex)
             {
                 Log.A("Error!");
-                Log.Exception(ex);
+                Log.Ex(ex);
             }
 
             return wrapLog(null, _result);

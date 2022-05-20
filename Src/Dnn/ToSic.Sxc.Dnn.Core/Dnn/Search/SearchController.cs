@@ -200,7 +200,7 @@ namespace ToSic.Sxc.Search
         private List<SearchDocument> LogErrorForExit(Exception e, ModuleInfo modInfo)
         {
             DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
-            Log.Exception(e);
+            Log.Ex(e);
             return new List<SearchDocument>();
         }
         
@@ -284,7 +284,7 @@ namespace ToSic.Sxc.Search
                 catch (Exception e)
                 {
                     // Log but keep going, as it's bad, but the lookups may not be important for this module
-                    Log.Exception(e);
+                    Log.Ex(e);
                 }
             }
         }

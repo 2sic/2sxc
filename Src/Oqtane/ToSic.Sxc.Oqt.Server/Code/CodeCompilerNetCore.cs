@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
+                Log.Ex(ex);
                 ErrorMessage =
                     $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " +
                     ex.Message;

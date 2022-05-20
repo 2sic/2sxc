@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
+                Log.Ex(ex);
                 return wrapLog("error", new List<TempPageInfo>());
             }
 
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.DataSources
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
+                Log.Ex(ex);
                 return wrapLog("error", new List<TempPageInfo>());
             }
         }

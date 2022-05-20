@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Engines
             catch (ConfigurationErrorsException exc)
             {
                 var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
-                Log.Exception(e);
+                Log.Ex(e);
                 throw e;
             }
         }
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception maybeIEntityCast)
             {
-                Log.Exception(maybeIEntityCast);
+                Log.Ex(maybeIEntityCast);
                 ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
@@ -141,7 +141,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
+                Log.Ex(ex);
                 ErrorHelp.AddHelpIfKnownError(ex);
                 throw;
             }
