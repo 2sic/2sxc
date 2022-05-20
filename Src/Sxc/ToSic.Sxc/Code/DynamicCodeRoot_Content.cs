@@ -41,16 +41,16 @@ namespace ToSic.Sxc.Code
 
         private dynamic TryToBuildFirstOfStream(string sourceStream)
         {
-            var wrapLog = Log.Call<dynamic>(sourceStream);
-            if (Data == null || Block.View == null) return wrapLog("no data/block", null);
-            if (!Data.Out.ContainsKey(sourceStream)) return wrapLog("stream not found", null);
+            var wrapLog = Log.Fn<dynamic>(sourceStream);
+            if (Data == null || Block.View == null) return wrapLog.ReturnNull("no data/block");
+            if (!Data.Out.ContainsKey(sourceStream)) return wrapLog.ReturnNull("stream not found");
 
             var list = Data[sourceStream].List;
             return !list.Any()
-                ? wrapLog("first is null", null) 
-                : wrapLog("found", new DynamicEntity(list, null, null, null, DynamicEntityDependencies));
+                ? wrapLog.ReturnNull("first is null") 
+                : wrapLog.Return(new DynamicEntity(list, null, null, null, DynamicEntityDependencies), "found");
         }
-
+        
         #endregion
     }
 }

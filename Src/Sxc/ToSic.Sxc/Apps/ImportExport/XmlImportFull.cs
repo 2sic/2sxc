@@ -25,10 +25,10 @@ namespace ToSic.Sxc.Apps.ImportExport
 
         public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)
         {
-            var wrapLog = Log.Call<bool>(parameters: $"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
+            var wrapLog = Log.Fn<bool>(parameters: $"{zoneId}, {appId}, ..., {leaveExistingValuesUntouched}");
             var ok = base.ImportXml(zoneId, appId, doc, leaveExistingValuesUntouched);
             if (!ok)
-                return wrapLog("error", false);
+                return wrapLog.Return(false, "error");
 
             Log.A("Now import templates - if found");
 
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Apps.ImportExport
             else
                 Log.A("No templates found");
 
-            return wrapLog("ok", true);
+            return wrapLog.Return(true, "ok");
         }
 
     }

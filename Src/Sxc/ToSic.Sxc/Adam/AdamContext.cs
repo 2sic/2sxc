@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Adam
         {
             Log.LinkTo(parentLog);
             //var appId = context.AppState.AppId;
-            var callLog = Log.Call<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
+            var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;
 
             Permissions = ServiceProvider.Build<MultiPermissionsTypes>()
@@ -70,12 +70,12 @@ namespace ToSic.Sxc.Adam
 
             }
 
-            if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog(null, this);
+            if (string.IsNullOrEmpty(contentType) || string.IsNullOrEmpty(fieldName)) return callLog.Return(this);
 
             Attribute = AttributeDefinition(context.AppState, contentType, fieldName);
             if (!Security.FileTypeIsOkForThisField(out var exp))
                 throw exp;
-            return callLog(null, this);
+            return callLog.Return(this);
         }
 
         #endregion

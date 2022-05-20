@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Apps
     {
         public static bool DeleteQueryIfNotUsedByView(this CmsManager cms, int id, ILog log)
         {
-            var wrapLog = log.Call<bool>($"delete pipe:{id} on app:{cms.AppId}");
+            var wrapLog = log.Fn<bool>($"delete pipe:{id} on app:{cms.AppId}");
 
             // Stop if views still use this Query
             var viewUsingQuery = cms.Read.Views.GetAll()
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Apps
                 throw new Exception(
                     $"Query is used by Views and cant be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}");
 
-            return wrapLog("ok", cms.Queries.Delete(id));
+            return wrapLog.Return(cms.Queries.Delete(id), "ok");
         }
 
     }

@@ -67,18 +67,18 @@ namespace ToSic.Sxc.Images
             var result = ImageOnly(url, resizeSettings, field).Url;
             return wrapLog.Return(result, "built:" + result);
         }
-
+        
         public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
         {
-            var wrapLog = Log.Call<OneResize>();
+            var wrapLog = Log.Fn<OneResize>();
             var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
-            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
+            return wrapLog.Return(ConstructUrl(url, settings, srcSetSettings, field), "no srcset");
         }
-
+        
 
         public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IDynamicField field = null)
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
 
             var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
 
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Images
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetParts?.Length ?? 0) == 0)
-                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field).Url);
+                return wrapLog.Return(ConstructUrl(url, settings, srcSetSettings, field).Url, "no srcset");
 
             var results = srcSetParts.Select(ssPart =>
             {
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Images
             });
             var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix));
 
-            return wrapLog("srcset", result);
+            return wrapLog.Return(result, "srcset");
         }
 
 

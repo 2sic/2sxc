@@ -45,10 +45,10 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         /// </summary>
         public AssetEditInfo Asset(int appId, int templateId = 0, string path = null, bool global = false)
         {
-            var wrapLog = Log.Call<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
+            var wrapLog = Log.Fn<AssetEditInfo>($"asset templ:{templateId}, path:{path}, global:{global}");
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
             assetEditor.EnsureUserMayEditAssetOrThrow();
-            return wrapLog(null, assetEditor.EditInfoWithSource);
+            return wrapLog.Return(assetEditor.EditInfoWithSource);
         }
 
         /// <summary>
@@ -56,10 +56,10 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         /// </summary>
         public bool Asset(int appId, AssetEditInfo template, int templateId, string path, bool global)
         {
-            var wrapLog = Log.Call<bool>($"templ:{templateId}, global:{global}, path:{path}");
+            var wrapLog = Log.Fn<bool>($"templ:{templateId}, global:{global}, path:{path}");
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
             assetEditor.Source = template.Code;
-            return wrapLog(null, true);
+            return wrapLog.Return(true);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
                 Global = global,
                 TemplateKey = templateKey,
             };
-            var wrapLog = Log.Call<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+            var wrapLog = Log.Fn<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
 
             assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
 
@@ -97,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             // get and prepare template content
             var body = GetTemplateContent(assetFromTemplateDto);
 
-            return wrapLog("Created", assetEditor.Create(body));
+            return wrapLog.Return(assetEditor.Create(body), "Created");
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
 
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(int appId, int templateId, bool global, string path)
         {
-            var wrapLog = Log.Call<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
+            var wrapLog = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
             var app = _appStates.Get(appId);
             var assetEditor = _assetEditorGenerator.New;
 
@@ -145,21 +145,21 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             else
                 assetEditor.Init(app, path, global, templateId, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow();
-            return wrapLog(null, assetEditor);
+            return wrapLog.Return(assetEditor);
         }
 
         private AssetEditor GetAssetEditorOrThrowIfInsufficientPermissions(AppFile assetFromTemplateDto)
         {
-            var wrapLog = Log.Call<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
+            var wrapLog = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
             var app = _appStates.Get(assetFromTemplateDto.AppId);
             var assetEditor = _assetEditorGenerator.New.Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
-            return wrapLog(null, assetEditor);
+            return wrapLog.Return(assetEditor);
         }
 
         public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool b)
         {
-            var wrapLog = Log.Call<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
+            var wrapLog = Log.Fn<TemplatePreviewDto>($"create a#{appId}, path:{path}, global:{b}, key:{templateKey}");
             var templatePreviewDto = new TemplatePreviewDto();
 
             try
@@ -195,7 +195,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
                 templatePreviewDto.IsValid = string.IsNullOrEmpty(templatePreviewDto.Error);
             }
 
-            return wrapLog("GetPreview", templatePreviewDto);
+            return wrapLog.Return(templatePreviewDto, "GetPreview");
         }
     }
 }

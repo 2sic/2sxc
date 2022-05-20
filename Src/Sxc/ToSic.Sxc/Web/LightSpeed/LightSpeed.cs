@@ -31,11 +31,11 @@ namespace ToSic.Sxc.Web.LightSpeed
 
         public IOutputCache Init(int moduleId, int pageId, IBlock block)
         {
-            var wrapLog = Log.Call<IOutputCache>($"mod: {moduleId}");
+            var wrapLog = Log.Fn<IOutputCache>($"mod: {moduleId}");
             _moduleId = moduleId;
             _pageId = pageId;
             _block = block;
-            return wrapLog($"{IsEnabled}", this);
+            return wrapLog.Return(this, $"{IsEnabled}");
         }
         private int _moduleId;
         private int _pageId;
@@ -45,26 +45,26 @@ namespace ToSic.Sxc.Web.LightSpeed
 
         public bool Save(IRenderResult data)
         {
-            var wrapLog = Log.Call<bool>();
-            if (!IsEnabled) return wrapLog("disabled", false);
-            if (data == null) return wrapLog("null", false);
-            if (data.IsError) return wrapLog("error", false);
-            if (!data.CanCache) return wrapLog("can't cache", false);
-            if (data == Existing?.Data) return wrapLog("not new", false);
-            if (data.DependentApps?.Any() != true) return wrapLog("app not initialized", false);
+            var wrapLog = Log.Fn<bool>();
+            if (!IsEnabled) return wrapLog.Return(false, "disabled");
+            if (data == null) return wrapLog.Return(false, "null");
+            if (data.IsError) return wrapLog.Return(false, "error");
+            if (!data.CanCache) return wrapLog.Return(false, "can't cache");
+            if (data == Existing?.Data) return wrapLog.Return(false, "not new");
+            if (data.DependentApps?.Any() != true) return wrapLog.Return(false, "app not initialized");
 
             // get dependent appStates
             var dependentAppsStates = data.DependentApps.Select(da => AppStates.Get(da.AppId)).ToList();
 
             // when dependent apps have disabled caching, parent app should not cache also 
-            if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog("disabled in dependent app", false);
+            if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog.Return(false, "disabled in dependent app");
 
             Log.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
-                return wrapLog($"not added as duration is {duration}", false);
+                return wrapLog.Return(false, $"not added as duration is {duration}");
 
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
                 ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             Log.A($"LightSpeed Cache Key: {cacheKey}");
             if (cacheKey != "error") 
                 LightSpeedStats.Add(AppState.AppId, data.Size);
-            return wrapLog($"added for {duration}s", true);
+            return wrapLog.Return(true, $"added for {duration}s");
         }
 
         /// <summary>
@@ -153,17 +153,17 @@ namespace ToSic.Sxc.Web.LightSpeed
 
         private OutputCacheItem ExistingGenerator()
         {
-            var wrapLog = Log.Call<OutputCacheItem>();
-            if (AppState == null) return wrapLog("no app", null);
+            var wrapLog = Log.Fn<OutputCacheItem>();
+            if (AppState == null) return wrapLog.ReturnNull("no app");
 
             var result = IsEnabled ? Ocm.Get(CacheKey) : null;
-            if (result == null) return wrapLog("not in cache", null);
+            if (result == null) return wrapLog.ReturnNull("not in cache");
 
             // compare cache time-stamps
             var dependentApp = result.Data?.DependentApps?.FirstOrDefault();
-            if (dependentApp == null) return wrapLog("no dep app", null);
+            if (dependentApp == null) return wrapLog.ReturnNull("no dep app");
 
-            return wrapLog("found", result);
+            return wrapLog.Return(result, "found");
         }
 
         public OutputCacheItem Fresh => _fresh ?? (_fresh = new OutputCacheItem());
@@ -175,11 +175,11 @@ namespace ToSic.Sxc.Web.LightSpeed
 
         private bool IsEnabledGenerator()
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             var feat = _features.IsEnabled(LightSpeedOutputCache.NameId);
-            if (!feat) return wrapLog("feature disabled", false);
+            if (!feat) return wrapLog.Return(false, "feature disabled");
             var ok = AppConfig.IsEnabled;
-            return wrapLog($"app config: {ok}", ok);
+            return wrapLog.Return(ok, $"app config: {ok}");
         }
 
         public LightSpeedDecorator AppConfig => _lsd.Get(() => LightSpeedDecoratorGenerator(AppState));
@@ -187,9 +187,9 @@ namespace ToSic.Sxc.Web.LightSpeed
 
         private LightSpeedDecorator LightSpeedDecoratorGenerator(AppState appState)
         {
-            var wrapLog = Log.Call<LightSpeedDecorator>();
+            var wrapLog = Log.Fn<LightSpeedDecorator>();
             var decoFromPiggyBack = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
-            return wrapLog($"{decoFromPiggyBack.Entity != null}", decoFromPiggyBack);
+            return wrapLog.Return(decoFromPiggyBack, $"{decoFromPiggyBack.Entity != null}");
         }
 
         private OutputCacheManager Ocm => _ocm ?? (_ocm = new OutputCacheManager());

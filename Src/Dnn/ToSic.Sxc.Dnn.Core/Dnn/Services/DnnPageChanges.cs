@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Services
 
         public int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
         {
-            var wrapLog = Log.Call<int>();
+            var wrapLog = Log.Fn<int>();
 
             // 2022-05-03 2dm - don't think the props are ever null, requiring access to the shared data
             // props = props ?? PageServiceShared.GetPropertyChangesAndFlush(Log);
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Dnn.Services
 
             var count = props.Count;
 
-            return wrapLog($"{count}", count);
+            return wrapLog.Return(count, $"{count}");
         }
 
         private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
@@ -104,16 +104,16 @@ namespace ToSic.Sxc.Dnn.Services
 
         private int ApplyHttpHeaders(Page page, IRenderResult result)
         {
-            var wrapLog = Log.Call<int>();
+            var wrapLog = Log.Fn<int>();
             var httpHeaders = result.HttpHeaders;
 
             // Register CSP changes for applying once all modules have been prepared
             if (result.CspEnabled) 
                 PageCsp(result.CspEnabled, result.CspEnforced).Add(result.CspParameters);
 
-            if (page?.Response == null) return wrapLog("error, HttpResponse is null", 0);
-            if (page.Response.HeadersWritten) return wrapLog("error, to late for adding http headers", 0);
-            if (httpHeaders?.Any() != true) return wrapLog("ok, no headers to add", 0);
+            if (page?.Response == null) return wrapLog.Return(0, "error, HttpResponse is null");
+            if (page.Response.HeadersWritten) return wrapLog.Return(0, "error, to late for adding http headers");
+            if (httpHeaders?.Any() != true) return wrapLog.Return(0, "ok, no headers to add");
 
             foreach (var httpHeader in httpHeaders)
             {
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Dnn.Services
                 // Ideally combining the existing one with any additional ones added here
                 page.Response.Headers[httpHeader.Name] = httpHeader.Value;
             }
-            return wrapLog("ok", httpHeaders.Count);
+            return wrapLog.Return(httpHeaders.Count, "ok");
         }
 
         private CspOfPage PageCsp(bool enabled, bool enforced)

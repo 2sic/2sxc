@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         public override IBlock GetBlock<TPlatformModule>(TPlatformModule module)
         {
-            var wrapLog = Log.Call<IBlock>();
+            var wrapLog = Log.Fn<IBlock>();
             if (module == null) throw new ArgumentNullException(nameof(module));
 
             var oqtModule = module switch
@@ -66,28 +66,28 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             Log.A($"Module: {oqtModule.ModuleId}");
             var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule)
         {
-            var wrapLog = Log.Call<IContextOfBlock>();
+            var wrapLog = Log.Fn<IContextOfBlock>();
             var context = _contextGenerator.New;
             context.Init(ParentLog);
             //Log.Add($"Will try-swap module info of {oqtModule.ModuleId} into site");
             //((OqtSite)context.Site).TrySwap(oqtModule, ParentLog);
             Log.A("Will init module");
             ((OqtModule) context.Module).Init(oqtModule, ParentLog);
-            return wrapLog(null, InitPageOnly(context));
+            return wrapLog.Return(InitPageOnly(context));
         }
 
         private IContextOfBlock InitPageOnly(IContextOfBlock context)
         {
-            var wrapLog = Log.Call<IContextOfBlock>();
+            var wrapLog = Log.Fn<IContextOfBlock>();
             // Collect / assemble page information
             context.Page.Init(_requestHelper.TryGetPageId());
             var url = context.Page.Url;
-            return wrapLog(url, context);
+            return wrapLog.Return(context, url);
         }
     }
 }

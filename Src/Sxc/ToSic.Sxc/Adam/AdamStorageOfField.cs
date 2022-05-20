@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Identity;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Adam
 {
@@ -22,14 +23,14 @@ namespace ToSic.Sxc.Adam
 
         protected override string GeneratePath(string subFolder)
         {
-            var callLog = Log.Call<string>(subFolder);
+            var callLog = Log.Fn<string>(subFolder);
             var result = AdamConstants.ItemFolderMask
                 .Replace("[AdamRoot]", Manager.Path)
                 .Replace("[Guid22]", Mapper.GuidCompress(_entityGuid))
                 .Replace("[FieldName]", _fieldName)
                 .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
                 .Replace("//", "/");
-            return callLog(result, result);
+            return callLog.Return(result, result);
         }
     }
 }

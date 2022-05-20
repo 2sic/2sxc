@@ -28,7 +28,7 @@ namespace ToSic.Sxc.DataSources
 
         protected override List<TempPageInfo> GetPagesInternal()
         {
-            var wrapLog = Log.Call<List<TempPageInfo>>();
+            var wrapLog = Log.Fn<List<TempPageInfo>>();
             var siteId = PortalSettings.Current?.PortalId ?? -1;
             Log.A($"Portal Id {siteId}");
             List<TabInfo> pages;
@@ -39,10 +39,10 @@ namespace ToSic.Sxc.DataSources
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                return wrapLog("error", new List<TempPageInfo>());
+                return wrapLog.Return(new List<TempPageInfo>(), "error");
             }
 
-            if (pages == null || !pages.Any()) return wrapLog("null/empty", new List<TempPageInfo>());
+            if (pages == null || !pages.Any()) return wrapLog.Return(new List<TempPageInfo>(), "null/empty");
 
 
             try
@@ -64,12 +64,12 @@ namespace ToSic.Sxc.DataSources
                         Modified = p.LastModifiedOnDate
                     })
                     .ToList();
-                return wrapLog("found", result);
+                return wrapLog.Return(result, "found");
             }
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                return wrapLog("error", new List<TempPageInfo>());
+                return wrapLog.Return(new List<TempPageInfo>(), "error");
             }
         }
         

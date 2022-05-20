@@ -43,10 +43,10 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
         {
-            var timerWrap = Log.Call<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", useTimer: true);
+            var timerWrap = Log.Fn<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", startTimer: true);
 
             if (CachedModuleResults.TryGetValue(_module.ModuleId, out var exists) && exists)
-                return timerWrap("Previous check completed, will skip", true);
+                return timerWrap.Return(true, "Previous check completed, will skip");
 
             // throw better error if SxcInstance isn't available
             // not sure if this doesn't have side-effects...
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Install
 
             // check things if it's a module of this portal (ensure everything is ok, etc.)
             var isSharedModule = _module.ModuleConfiguration.PortalID != _module.ModuleConfiguration.OwnerPortalID;
-            if (isSharedModule) return timerWrap("skip, shared", false);
+            if (isSharedModule) return timerWrap.Return(false, "skip, shared");
 
             if (block.App != null)
             {
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Install
             else
                 Log.A("skip, content-block not ready");
 
-            return timerWrap("ok", true);
+            return timerWrap.Return(true, "ok");
         }
 
         /// <summary>

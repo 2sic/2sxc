@@ -58,14 +58,14 @@ namespace ToSic.Sxc.Dnn.Context
 
         public DnnSite TrySwap(ModuleInfo module, ILog extLog)
         {
-            var wrapLog = extLog.Call<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
+            var wrapLog = extLog.Fn<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
 
-            if (module == null) return wrapLog("no module", this);
-            if (module.OwnerPortalID < 0) return wrapLog("no change, owner < 0", this);
+            if (module == null) return wrapLog.Return(this, "no module");
+            if (module.OwnerPortalID < 0) return wrapLog.Return(this, "no change, owner < 0");
 
             var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
             Swap(modulePortalSettings, extLog);
-            return wrapLog("", this);
+            return wrapLog.Return(this);
         }
 
         /// <summary>

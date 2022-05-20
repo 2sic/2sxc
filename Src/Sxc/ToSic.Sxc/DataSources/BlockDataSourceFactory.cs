@@ -30,7 +30,7 @@ namespace ToSic.Sxc.DataSources
             var view = block.View;
             var showDrafts = block.Context.UserMayEdit;
 
-            var wrapLog = Log.Call<IBlockDataSource>($"mid:{block.Context.Module.Id}, draft:{showDrafts}, view:{block.View?.Name}");
+            var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, draft:{showDrafts}, view:{block.View?.Name}");
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Ready;
             var initialSource = dsFactory.GetPublishing(block, showDrafts, configurationProvider);
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.DataSources
             else
                 Log.A("no template override");
 
-            return wrapLog("ok", viewDataSource);
+            return wrapLog.Return(viewDataSource, "ok");
         }
     }
 }

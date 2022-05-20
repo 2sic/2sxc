@@ -23,11 +23,11 @@ namespace ToSic.Sxc.Dnn.Web
 
         public bool AddHeaders()
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             // ensure we only do this once
-            if (MarkAddedAndReturnIfAlreadyDone()) return wrapLog("already", false);
+            if (MarkAddedAndReturnIfAlreadyDone()) return wrapLog.Return(false, "already");
             var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
-            if (string.IsNullOrEmpty(siteRoot)) return wrapLog("no path", false);
+            if (string.IsNullOrEmpty(siteRoot)) return wrapLog.Return(false, "no path");
 
             var apiRoots = GetApiRoots(siteRoot);
 
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.Web
 #pragma warning disable CS0618
             HtmlPage.AddMeta(InpageCms.MetaName, json);
 #pragma warning restore CS0618
-            return wrapLog("added", true);
+            return wrapLog.Return(true, "added");
         }
 
         internal static Tuple<string, string> GetApiRoots(string siteRoot = null)

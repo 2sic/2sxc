@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Usage
 
         public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
-            var wrapLog = Log.Call<IEnumerable<ViewDto>>($"{appId}, {guid}");
+            var wrapLog = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
             var context = _ctxResolver.BlockOrApp(appId);
 
             // extra security to only allow zone change if host user
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi.Usage
 
             var result = finalBuilder(views, blocks);
 
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
     }
 }

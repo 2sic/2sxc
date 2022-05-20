@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Install
 
         public bool ResumeAbortedUpgrade()
         {
-            var callLog = Log.Call<bool>();
+            var callLog = Log.Fn<bool>();
             if (IsUpgradeRunning)
             {
                 Log.A("Upgrade is still running");
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Install
 
             // Restart application
             HttpRuntime.UnloadAppDomain();
-            return callLog("ok", true);
+            return callLog.Return(true, "ok");
         }
 
 

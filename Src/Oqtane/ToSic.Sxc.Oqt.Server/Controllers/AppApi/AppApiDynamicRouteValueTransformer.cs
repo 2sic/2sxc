@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         {
             return await Task.Run(() =>
             {
-                var wrapLog = Log.Call<RouteValueDictionary>();
+                var wrapLog = Log.Fn<RouteValueDictionary>();
 
                 #region Ensure required alias
 
@@ -137,7 +137,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
                 httpContext.Request?.HttpContext.Items.Add(HttpContextKeyForAppFolder, appFolder);
 
-                return wrapLog($"ok, TransformAsync route required values are prepared", values);
+                return wrapLog.Return(values, $"ok, TransformAsync route required values are prepared");
             });
         }
 

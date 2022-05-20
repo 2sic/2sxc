@@ -103,17 +103,17 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         private (int AppId, string AppNameId) GetInstanceAppId(int zoneId)
         {
-            var wrapLog = Log.Call<(int, string)>($"{zoneId}");
+            var wrapLog = Log.Fn<(int, string)>($"{zoneId}");
 
             if (IsContent) 
-                return wrapLog("Content", (_appStates.DefaultAppId(zoneId), "Content"));
+                return wrapLog.Return((_appStates.DefaultAppId(zoneId), "Content"), "Content");
 
             if (!_settings.ContainsKey(Settings.ModuleSettingApp)) 
-                return wrapLog(Eav.Constants.AppNameIdEmpty, (Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty));
+                return wrapLog.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);
 
             var guid = _settings[Settings.ModuleSettingApp] ?? "";
             var appId = _appFinderLazy.Value.Init(Log).FindAppId(zoneId, guid);
-            return wrapLog("ok", (appId, guid));
+            return wrapLog.Return((appId, guid), "ok");
 
         }
     }

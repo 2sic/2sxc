@@ -76,7 +76,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         public AjaxRenderDto RenderV2(int templateId, string lang, string root)
         {
-            var wrapLog = Log.Call<AjaxRenderDto>();
+            var wrapLog = Log.Fn<AjaxRenderDto>();
             Log.A("1. Get Render result");
             var result = RenderToResult(templateId, lang);
 
@@ -118,16 +118,16 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 Attributes = asset.HtmlAttributes,
             }));
 
-            return wrapLog("ok", new AjaxRenderDto
+            return wrapLog.Return(new AjaxRenderDto
             {
                 Html = result.Html,
                 Resources = resources
-            });
+            }, "ok");
         }
 
         private IRenderResult RenderToResult(int templateId, string lang)
         {
-            var callLog = Log.Call<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
+            var callLog = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
             //SetThreadCulture(lang);
 
             // if a preview templateId was specified, swap to that
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             }
 
             var result = Block.BlockBuilder.Run(true);
-            return callLog("ok", result);
+            return callLog.Return(result, "ok");
         }
 
     }

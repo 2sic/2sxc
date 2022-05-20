@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
         public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
         {
-            var wrapLog = Log.Call<List<Message>>($"{sourceFolder}, {destinationFolder}");
+            var wrapLog = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
             var messages = new List<Message>();
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
@@ -94,8 +94,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
                 TransferFilesToSite(sourceFolderPath, newDestinationFolder);
             }
 
-
-            return wrapLog(null,  messages);
+            return wrapLog.Return(messages);
         }
 
         public override Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;

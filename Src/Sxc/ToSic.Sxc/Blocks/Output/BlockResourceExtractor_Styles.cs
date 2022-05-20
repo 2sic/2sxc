@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Blocks.Output
     {
         protected string ExtractStyles(string renderedTemplate)
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
             var styleMatches = StyleDetection.Matches(renderedTemplate);
             var styleMatchesToRemove = new List<Match>();
 
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Blocks.Output
 
             styleMatchesToRemove.Reverse();
             styleMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog(null, renderedTemplate);
+            return wrapLog.Return(renderedTemplate);
         }
 
 

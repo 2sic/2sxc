@@ -3,9 +3,11 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -18,16 +20,16 @@ namespace ToSic.Sxc.Dnn
     {
         internal static string GetAppFolderVirtualPath(IServiceProvider sp, HttpRequestMessage request, ISite site, ILog log)
         {
-            var wrapLog = log.Call<string>();
+            var wrapLog = log.Fn<string>();
 
             var appFolder = GetAppFolder(sp, request, log, wrapLog);
 
             var appFolderVirtualPath = Path.Combine(((DnnSite)site).AppsRootRelative, appFolder).ForwardSlash();
 
-            return wrapLog($"Ok, AppFolder Virtual Path: {appFolderVirtualPath}", appFolderVirtualPath);
+            return wrapLog.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
         }
 
-        internal static string GetAppFolder<T>(IServiceProvider sp, HttpRequestMessage request, ILog log, Func<string, T, T> wrapLog)
+        internal static string GetAppFolder<T>(IServiceProvider sp, HttpRequestMessage request, ILog log, LogCall<T> wrapLog)
         {
             const string errPrefix = "Api Controller Finder Error: ";
             const string errSuffix = "Check event-log, code and inner exception. ";
@@ -65,12 +67,12 @@ namespace ToSic.Sxc.Dnn
             return appFolder;
         }
 
-        internal static HttpResponseException ReportToLogAndThrow<T>(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, Func<string, T, T> wrapLog)
+        internal static HttpResponseException ReportToLogAndThrow<T>(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, LogCall<T> wrapLog)
         {
             var helpText = ErrorHelp.HelpText(e);
             var exception = new Exception(msg + helpText, e);
             DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
-            wrapLog("error", default);
+            wrapLog.Return(default, "error");
             return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
         }
     }

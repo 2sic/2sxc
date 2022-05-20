@@ -10,13 +10,13 @@ namespace ToSic.Sxc.Cms.Publishing
 
         protected PublishingMode Requirements(int instanceId)
         {
-            var wrapLog = Log.Call<PublishingMode>($"{instanceId}");
-            if (instanceId < 0) return wrapLog("no instance", PublishingMode.DraftOptional);
-            if (Cache.ContainsKey(instanceId)) return wrapLog("in cache", Cache[instanceId]);
+            var wrapLog = Log.Fn<PublishingMode>($"{instanceId}");
+            if (instanceId < 0) return wrapLog.Return(PublishingMode.DraftOptional, "no instance");
+            if (Cache.ContainsKey(instanceId)) return wrapLog.Return(Cache[instanceId], "in cache");
 
             var decision = LookupRequirements(instanceId);
             Cache.TryAdd(instanceId, decision);
-            return wrapLog("decision: ", decision);
+            return wrapLog.Return(decision, $"decision:{decision}");
         }
         protected static readonly ConcurrentDictionary<int, PublishingMode> Cache = new ConcurrentDictionary<int, PublishingMode>();
 

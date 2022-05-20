@@ -122,22 +122,22 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc/>
         protected override string RenderTemplate()
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
             var writer = new StringWriter();
             Render(writer);
-            return wrapLog("ok", writer.ToString());
+            return wrapLog.Return(writer.ToString(), "ok");
         }
 
         private object CreateWebPageInstance()
         {
-            var wrapLog = Log.Call<object>();
+            var wrapLog = Log.Fn<object>();
             try
             {
                 var compiledType = BuildManager.GetCompiledType(TemplatePath);
                 object objectValue = null;
                 if (compiledType != null)
                     objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
-                return wrapLog("ok", objectValue);
+                return wrapLog.Return(objectValue, "ok");
             }
             catch (Exception ex)
             {
@@ -149,8 +149,8 @@ namespace ToSic.Sxc.Engines
 
         private bool InitWebpage()
         {
-            var wrapLog = Log.Call<bool>();
-            if (string.IsNullOrEmpty(TemplatePath)) return wrapLog("null path", false);
+            var wrapLog = Log.Fn<bool>();
+            if (string.IsNullOrEmpty(TemplatePath)) return wrapLog.Return(false, "null path");
 
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             // ReSharper disable once JoinNullCheckWithUsage
@@ -180,7 +180,7 @@ namespace ToSic.Sxc.Engines
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618, CS0612
             InitHelpers(pageToInit, compatibility);
-            return wrapLog("ok", true);
+            return wrapLog.Return(true, "ok");
         }
 
         private void InitHelpers(RazorComponentBase webPage, int compatibility)

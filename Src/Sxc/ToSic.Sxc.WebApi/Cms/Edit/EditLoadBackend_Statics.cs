@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
         internal JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
             ContentTypeRuntime typeRead, AppState appState)
         {
-            var wrapLog = Log.Call<JsonEntity>();
+            var wrapLog = Log.Fn<JsonEntity>();
             // attach original metadata assignment when creating a new one
             JsonEntity ent;
             if (bundle.Entity != null)
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             catch { /* ignore experimental */ }
 
-            return wrapLog(null, ent);
+            return wrapLog.Return(ent);
         }
 
         internal static List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, ContentTypeRuntime typeRead)
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, ContentTypeRuntime typeRead)
         {
-            var wrapLog = Log.Call<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
+            var wrapLog = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
             var fields = contentTypes
                 .SelectMany(t => t.Attributes)
                 .Select(a => a.InputType)
@@ -97,15 +97,15 @@ namespace ToSic.Sxc.WebApi.Cms
                 }
             }
 
-            return wrapLog($"{found.Count}", found);
+            return wrapLog.Return(found, $"{found.Count}");
         }
 
         internal IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
         {
-            var wrapLog = Log.Call<IEntity>();
+            var wrapLog = Log.Fn<IEntity>();
             var type = typeRead.Get(header.ContentTypeName);
             var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, 0, type);
-            return wrapLog(null, ent);
+            return wrapLog.Return(ent);
         }
     }
 }

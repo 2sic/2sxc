@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Dnn.Context
 
         private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
         {
-            var wrapLog = Log.Call<(int, string)>($"{zoneId}");
+            var wrapLog = Log.Fn<(int, string)>($"{zoneId}");
 
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
@@ -103,18 +103,18 @@ namespace ToSic.Sxc.Dnn.Context
             if (IsContent)
             {
                 var appId = _appStates.DefaultAppId(zoneId);
-                return wrapLog($"{msg} - use Default app: {appId}", (appId, "Content"));
+                return wrapLog.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
                 var appId = _appFinderLazy.Ready.FindAppId(zoneId, guid);
-                return wrapLog($"{msg} AppG:{guid} = app:{appId}", (appId, guid));
+                return wrapLog.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
             }
 
             Log.A($"{msg} not found = null");
-            return wrapLog("not found", (Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty));
+            return wrapLog.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
         }
     }
 }

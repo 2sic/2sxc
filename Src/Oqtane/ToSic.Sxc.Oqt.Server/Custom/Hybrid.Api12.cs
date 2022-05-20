@@ -90,14 +90,14 @@ namespace Custom.Hybrid
         /// <returns></returns>
         private IApp LoadAppOnly(int appId, ISite site)
         {
-            var wrapLog = Log.Call<IApp>($"{appId}");
+            var wrapLog = Log.Fn<IApp>($"{appId}");
             var showDrafts = false;
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
                 GetService<AppConfigDelegate>().Init(Log).Build(showDrafts),
                 Log);
-            return wrapLog(null, appStuff);
+            return wrapLog.Return(appStuff);
         }
     }
 }

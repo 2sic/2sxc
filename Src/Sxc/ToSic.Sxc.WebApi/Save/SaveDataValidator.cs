@@ -108,12 +108,12 @@ namespace ToSic.Sxc.WebApi.Save
 
         internal bool EntityIsOk(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             if (newEntity == null)
             {
                 Add($"entity {count} couldn't deserialize");
                 var notOk = BuildExceptionIfHasIssues(out preparedException);
-                return wrapLog("newEntity is null", notOk);
+                return wrapLog.Return(notOk, "newEntity is null");
             }
 
             // New #2595 allow saving empty metadata decorator entities
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Save
                 Add($"entity {count} doesn't have attributes (or they are invalid)");
 
             var ok = BuildExceptionIfHasIssues(out preparedException, "EntityIsOk() done");
-            return wrapLog("", ok);
+            return wrapLog.Return(ok);
         }
 
         internal bool IfUpdateValidateAndCorrectIds(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)

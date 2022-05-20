@@ -46,11 +46,11 @@ namespace ToSic.Sxc.Context
             get
             {
                 if (base.AppIdentity != null) return base.AppIdentity;
-                var wrapLog = Log.Call<IAppIdentity>();
+                var wrapLog = Log.Fn<IAppIdentity>();
                 var identifier = Module?.BlockIdentifier;
-                if (identifier == null) return wrapLog("no mod-block-id", null);
+                if (identifier == null) return wrapLog.ReturnNull("no mod-block-id");
                 AppIdentity = identifier;
-                return wrapLog(null, base.AppIdentity);
+                return wrapLog.Return(base.AppIdentity);
             }
         }
 

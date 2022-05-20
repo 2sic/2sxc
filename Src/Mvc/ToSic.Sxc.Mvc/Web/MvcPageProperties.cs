@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Mvc.Web
 
         public string ContextHeader()
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
 
             var pageId = 0;
             var siteRoot = MvcConstants.SiteRoot;
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Mvc.Web
 
             var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();
 
-            return wrapLog(meta, meta);
+            return wrapLog.Return(meta, meta);
         }
 
         private string AntiForgeryToken()

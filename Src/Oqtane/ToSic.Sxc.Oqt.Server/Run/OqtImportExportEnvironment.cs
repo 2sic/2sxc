@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
         public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
         {
-            var wrapLog = Log.Call<List<Message>>($"{sourceFolder}, {destinationFolder}");
+            var wrapLog = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
             var messages = new List<Message>();
             var files = IO.Directory.GetFiles(sourceFolder, "*.*");
             var siteId = Site.Id;
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 TransferFilesToSite(sourceFolderPath, newDestinationFolder);
             }
 
-            return wrapLog(null, messages);
+            return wrapLog.Return(messages);
         }
 
         public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version;
@@ -186,7 +186,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
         {
-            var callLog = Log.Call<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
+            var callLog = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
 
             var fullContentPath = IO.Path.Combine(_oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
             IO.Directory.CreateDirectory(fullContentPath);
@@ -208,7 +208,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 ImageWidth = 0
             };
             var oqtFile = _oqtFileRepository.AddFile(oqtFileData);
-            return callLog("ok", oqtFile);
+            return callLog.Return(oqtFile, "ok");
         }
 
         private bool FolderExists(string path) => GetOqtFolderByName(path) != null;
@@ -224,9 +224,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private Folder AddFolder(string path)
         {
             path = EnsureOqtaneFolderFormat(path);
-            var callLog = Log.Call<Folder>(path);
+            var callLog = Log.Fn<Folder>(path);
 
-            if (FolderExists(path)) return callLog("error, missing folder", null);
+            if (FolderExists(path)) return callLog.ReturnNull("error, missing folder");
 
             try
             {
@@ -238,7 +238,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 // Create the new virtual folder
                 var newFolder = CreateVirtualFolder(parentFolder, path, subfolder);
-                return callLog("ok", newFolder);
+                return callLog.Return(newFolder, "ok");
             }
             catch (SqlException)
             {
@@ -253,7 +253,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 Log.A("error, probably folder already exists");
             }
 
-            return callLog("?", null);
+            return callLog.ReturnNull("?");
         }
 
         // ensure backslash on the end of path, but not on the start

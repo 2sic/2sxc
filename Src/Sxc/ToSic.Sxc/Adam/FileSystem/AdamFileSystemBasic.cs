@@ -58,15 +58,14 @@ namespace ToSic.Sxc.Adam
         /// <returns></returns>
         public string FindUniqueFileName(IFolder parentFolder, string fileName)
         {
-            var callLog = Log.Call<string>($"..., {fileName}");
+            var callLog = Log.Fn<string>($"..., {fileName}");
 
-            var folder = parentFolder;
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
-            for (var i = 1; i < MaxSameFileRetries && File.Exists(_adamPaths.PhysicalPath(Path.Combine(folder.Path, Path.GetFileName(fileName)))); i++)
+            for (var i = 1; i < MaxSameFileRetries && File.Exists(_adamPaths.PhysicalPath(Path.Combine(parentFolder.Path, Path.GetFileName(fileName)))); i++)
                 fileName = $"{name}-{i}{ext}";
-
-            return callLog(fileName, fileName);
+            
+            return callLog.Return(fileName, fileName);
         }
 
 

@@ -30,9 +30,9 @@ namespace ToSic.Sxc.WebApi.Adam
         {
             Log.LinkTo(parentLog);
             var context = appId > 0 ? _ctxResolver.BlockOrApp(appId) : _ctxResolver.AppNameRouteBlock(null);
-            var logCall = Log.Call<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
+            var logCall = Log.Fn<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
-            return logCall(null, this as T);
+            return logCall.Return(this as T);
         }
 
         void IAdamTransactionBase.Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog)

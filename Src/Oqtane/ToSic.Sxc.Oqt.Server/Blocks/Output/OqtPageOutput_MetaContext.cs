@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Server.WebApi;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
         /// <returns></returns>
         public string ContextMetaContents()
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
 
             var pageId = Parent?.Page.PageId ?? -1;
             var siteRoot = GetSiteRoot(_siteState);
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
                 uiRoot: OqtConstants.UiRoot + "/",
                 rvtHeader: Oqtane.Shared.Constants.AntiForgeryTokenHeaderName,
                 rvt: AntiForgeryToken());
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         public string ContextMetaName => InpageCms.MetaName;

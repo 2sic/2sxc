@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Save
 
         internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             var groupItems = items.Where(i => i.Header.ListHas())
                 .GroupBy(i => i.Header.ListParent().ToString() + i.Header.ListIndex() + i.Header.ListAdd())
                 .ToList();
@@ -57,17 +57,17 @@ namespace ToSic.Sxc.WebApi.Save
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
             return groupItems.Any() 
-                ? wrapLog(null, PostSaveUpdateIdsInParent(block, ids, groupItems)) 
-                : wrapLog("no additional group processing necessary", true);
+                ? wrapLog.Return(PostSaveUpdateIdsInParent(block, ids, groupItems)) 
+                : wrapLog.Return(true, "no additional group processing necessary");
         }
 
         private bool PostSaveUpdateIdsInParent(IBlock block,
             Dictionary<Guid, int> postSaveIds,
             IEnumerable<IGrouping<string, BundleWithHeader<IEntity>>> pairsOrSingleItems)
         {
-            var wrapLog = Log.Call<bool>($"{_appIdentity.AppId}");
+            var wrapLog = Log.Fn<bool>($"{_appIdentity.AppId}");
 
-            if (block == null) return wrapLog("no block, nothing to update", true);
+            if (block == null) return wrapLog.Return(true, "no block, nothing to update");
 
             // todo: if no block given, skip all this
 
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.WebApi.Save
 
             // update-module-title
             BlockEditorBase.GetEditor(block, _blkEdtForMod, _blkEdtForEnt).UpdateTitle();
-            return wrapLog("ok", true);
+            return wrapLog.Return(true, "ok");
         }
 
         private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)
@@ -147,7 +147,7 @@ namespace ToSic.Sxc.WebApi.Save
 
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
         {
-            var wrapLog = Log.Call<List<ItemIdentifier>>();
+            var wrapLog = Log.Fn<List<ItemIdentifier>>();
             var newItems = new List<ItemIdentifier>();
             foreach (var identifier in identifiers)
             {
@@ -182,7 +182,7 @@ namespace ToSic.Sxc.WebApi.Save
                 // Default case - just a normal identifier
                 newItems.Add(identifier);
             }
-            return wrapLog(null, newItems);
+            return wrapLog.Return(newItems);
         }
 
 

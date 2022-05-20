@@ -41,15 +41,15 @@ namespace ToSic.Sxc.Dnn.Run
 
         public override bool VerifyConditionOfEnvironment(string condition)
         {
-            var wrapLog = Log.Call<bool>(condition);
+            var wrapLog = Log.Fn<bool>(condition);
             if (!condition.ToLowerInvariant().StartsWith(_salPrefix)) 
-                return wrapLog("unknown condition: false", false);
+                return wrapLog.Return(false, "unknown condition: false");
 
             var salWord = condition.Substring(_salPrefix.Length);
             var sal = (SecurityAccessLevel)Enum.Parse(typeof(SecurityAccessLevel), salWord);
             // check anonymous - this is always valid, even if not in a module context
             if (sal == SecurityAccessLevel.Anonymous)
-                return wrapLog("anonymous, always true", true);
+                return wrapLog.Return(true, "anonymous, always true");
 
             // check within module context
             if (Module != null)
@@ -57,11 +57,11 @@ namespace ToSic.Sxc.Dnn.Run
                 // TODO: STV WHERE DOES THE MODULE COME FROM?
                 // IT APPEARS THAT IT'S MISSING IN NORMAL REST CALLS
                 var result = ModulePermissionController.HasModuleAccess(sal, CustomPermissionKey, Module);
-                return wrapLog($"module: {result}", result);
+                return wrapLog.Return(result, $"module: {result}");
             }
 
             Log.A("trying to check permission " + _salPrefix + ", but don't have module in context");
-            return wrapLog("can't verify: false", false);
+            return wrapLog.Return(false, "can't verify: false");
         }
 
         private bool UserIsModuleAdmin() => Log.Return(() => Module != null && ModulePermissionController.CanAdminModule(Module));

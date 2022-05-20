@@ -66,12 +66,12 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
-            var callLog = Log.Call<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
+            var callLog = Log.Fn<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
             var dnnFolder = _dnnFolders.GetFolder(parent.AsDnn().SysId);
             var dnnFile = _dnnFiles.AddFile(dnnFolder, Path.GetFileName(fileName), body);
-            return callLog("ok", GetFile(dnnFile.FileId));
+            return callLog.Return(GetFile(dnnFile.FileId), "ok");
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Dnn.Adam
         /// <returns></returns>
         private string FindUniqueFileName(IFolder parentFolder, string fileName)
         {
-            var callLog = Log.Call<string>($"..., {fileName}");
+            var callLog = Log.Fn<string>($"..., {fileName}");
 
             var dnnFolder = _dnnFolders.GetFolder(parentFolder.AsDnn().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Dnn.Adam
             for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries && _dnnFiles.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
                 fileName = $"{name}-{i}{ext}";
 
-            return callLog(fileName, fileName);
+            return callLog.Return(fileName, fileName);
         }
 
         #endregion
@@ -153,20 +153,20 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public Folder<int, int> Get(string path)
         {
-            var callLog = Log.Call<Folder<int, int>>(path);
-            return callLog(null, DnnToAdam(_dnnFolders.GetFolder(AdamContext.Site.Id, path)));
+            var callLog = Log.Fn<Folder<int, int>>(path);
+            return callLog.Return(DnnToAdam(_dnnFolders.GetFolder(AdamContext.Site.Id, path)));
         }
-
+        
         public List<Folder<int, int>> GetFolders(IFolder folder)
         {
-            var callLog = Log.Call<List<Folder<int, int>>>();
+            var callLog = Log.Fn<List<Folder<int, int>>>();
             var fldObj = GetDnnFolder(folder.AsDnn().SysId);
             if(fldObj == null) return new List<Folder<int, int>>();
 
             var firstList = _dnnFolders.GetFolders(fldObj);
             var folders = firstList?.Select(DnnToAdam).ToList()
                           ?? new List<Folder<int, int>>();
-            return callLog($"{folders.Count}", folders);
+            return callLog.Return(folders, $"{folders.Count}");
         }
 
         public Folder<int, int> GetFolder(int folderId) => DnnToAdam(GetDnnFolder(folderId));
@@ -183,7 +183,7 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public List<File<int, int>> GetFiles(IFolder folder)
         {
-            var callLog = Log.Call<List<File<int, int>>>();
+            var callLog = Log.Fn<List<File<int, int>>>();
             var fldObj = _dnnFolders.GetFolder(folder.AsDnn().SysId);
             // sometimes the folder doesn't exist for whatever reason
             if (fldObj == null) return  new List<File<int, int>>();
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Dnn.Adam
             var firstList = _dnnFolders.GetFiles(fldObj);
             var files = firstList?.Select(DnnToAdam).ToList()
                      ?? new List<File<int, int>>();
-            return callLog($"{files.Count}", files);
+            return callLog.Return(files, $"{files.Count}");
         }
 
         #endregion
@@ -205,11 +205,11 @@ namespace ToSic.Sxc.Dnn.Adam
 
         private Folder<int, int> DnnToAdam(IFolderInfo dnnFolderInfo)
         {
-            var callLog = Log.Call<Folder<int, int>>();
+            var callLog = Log.Fn<Folder<int, int>>();
             
             if (dnnFolderInfo == null) throw new ArgumentNullException(nameof(dnnFolderInfo), ErrorDnnObjectNull);
 
-            return callLog(null, new Folder<int, int>(AdamContext)
+            return callLog.Return(new Folder<int, int>(AdamContext)
             {
                 Path = dnnFolderInfo.FolderPath,
                 SysId = dnnFolderInfo.FolderID,
@@ -227,11 +227,11 @@ namespace ToSic.Sxc.Dnn.Adam
 
         private File<int, int> DnnToAdam(IFileInfo dnnFileInfo)
         {
-            var callLog = Log.Call<File<int, int>>();
+            var callLog = Log.Fn<File<int, int>>();
             
             if (dnnFileInfo == null) throw new ArgumentNullException(nameof(dnnFileInfo), ErrorDnnObjectNull);
 
-            return callLog(null, new File<int, int>(AdamContext)
+            return callLog.Return(new File<int, int>(AdamContext)
             {
                 FullName = dnnFileInfo.FileName,
                 Extension = dnnFileInfo.Extension,

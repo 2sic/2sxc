@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Web.PageService
 
         private string[] AddManualResources(string[] keys)
         {
-            var wrapLog = Log.Call<string[]>();
+            var wrapLog = Log.Fn<string[]>();
             var keysToRemove = new List<string>();
             foreach (var key in keys)
             {
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Web.PageService
 
             // drop keys which were already taken care of
             keys = keys.Where(k => !keysToRemove.Contains(k)).ToArray();
-            return wrapLog(null, keys);
+            return wrapLog.Return(keys);
         }
 
         private DynamicEntity WebResources

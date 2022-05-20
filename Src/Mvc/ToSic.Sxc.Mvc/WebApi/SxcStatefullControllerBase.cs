@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Context;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Mvc.WebApi
 
         protected IBlock GetBlock(bool allowNoContextFound = true)
         {
-            var wrapLog = Log.Call<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
+            var wrapLog = Log.Fn<IBlock>(parameters: $"request:..., {nameof(allowNoContextFound)}: {allowNoContextFound}");
 
             var containerId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId, -1);
             var contentblockId = GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.Mvc.WebApi
 
             if (containerId == -1 || pageId == -1 || instance == null)
             {
-                if (allowNoContextFound) return wrapLog("not found", null);
+                if (allowNoContextFound) return wrapLog.ReturnNull("not found");
                 throw new Exception("No context found, cannot continue");
             }
 
@@ -63,12 +64,12 @@ namespace ToSic.Sxc.Mvc.WebApi
             IBlock block = HttpContext.RequestServices.Build<BlockFromModule>().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
-            if (contentblockId > 0) return wrapLog("found", block);
+            if (contentblockId > 0) return wrapLog.Return(block, "found");
 
             Log.Add($"Inner Content: {contentblockId}");
             block = HttpContext.RequestServices.Build<BlockFromEntity>().Init(block, contentblockId, Log);
 
-            return wrapLog("found", block);
+            return wrapLog.Return(block, "found");
         }
 
         private T GetTypedHeader<T>(string headerName, T fallback)

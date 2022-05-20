@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Services
         {
             var result = _root.IsEnabled(nameIds);
             if (!Debug) return result;
-            var wrapLog = Log.Call<bool>(string.Join(",", nameIds ?? Array.Empty<string>()));
-            return wrapLog($"{result}", result);
+            var wrapLog = Log.Fn<bool>(string.Join(",", nameIds ?? Array.Empty<string>()));
+            return wrapLog.Return(result, $"{result}");
         }
 
         //public bool Valid => _root.Valid;

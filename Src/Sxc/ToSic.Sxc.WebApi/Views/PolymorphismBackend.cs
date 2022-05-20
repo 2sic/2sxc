@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Polymorphism;
 
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Views
 
         public PolymorphismDto Polymorphism(int appId)
         {
-            var callLog = Log.Call<dynamic>($"a#{appId}");
+            var callLog = Log.Fn<dynamic>($"a#{appId}");
             var appState = _appStates.Get(appId);
             var poly = _polymorphism.Init(appState.List, Log);
             var result = new PolymorphismDto
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.WebApi.Views
                 Resolver = poly.Resolver, 
                 TypeName = PolymorphismConstants.Name
             };
-            return callLog(null, result);
+            return callLog.Return(result);
         }
     }
 }

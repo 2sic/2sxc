@@ -25,10 +25,10 @@ namespace ToSic.Sxc.Blocks
         public BlockFromModule Init(IContextOfBlock ctx, ILog parentLog)
         {
             Init(ctx, ctx.Module.BlockIdentifier, parentLog);
-            var wrapLog = Log.Call<BlockFromModule>(useTimer: true);
+            var wrapLog = Log.Fn<BlockFromModule>(startTimer: true);
             IsContentApp = ctx.Module.IsContent;
             CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
-            return wrapLog("ok", this);
+            return wrapLog.Return(this, "ok");
         }
 
     }

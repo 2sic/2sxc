@@ -107,7 +107,7 @@ namespace ToSic.Sxc.DataSources
 
         private ImmutableList<IEntity> GetInStream()
         {
-            var callLog = Log.Call<ImmutableList<IEntity>>();
+            var callLog = Log.Fn<ImmutableList<IEntity>>();
             
             // Check if in not connected, in which case we must find it yourself
             if (!In.ContainsKey(Eav.Constants.DefaultStreamName))
@@ -118,7 +118,7 @@ namespace ToSic.Sxc.DataSources
                 Attach(publishing);
             }
 
-            return callLog(null, In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
+            return callLog.Return(In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
         }
 
         private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, /*IEntity demo,*/ int entityId)

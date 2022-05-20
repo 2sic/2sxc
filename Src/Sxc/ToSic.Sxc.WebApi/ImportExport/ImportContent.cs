@@ -105,7 +105,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ImportResultDto ImportContentType(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
         {
-            var callLog = Log.Call<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+            var callLog = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
             try
             {
@@ -129,12 +129,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 SystemManager.Purge(zoneId, appId);
 
                 // 3. possibly show messages / issues
-                return callLog("ok", new ImportResultDto(true));
+                return callLog.Return(new ImportResultDto(true), "ok");
             }
             catch (Exception ex)
             {
                 _envLogger.LogException(ex);
-                return callLog("error", new ImportResultDto(false, ex.Message, Message.MessageTypes.Error));
+                return callLog.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
             }
         }
     }

@@ -91,23 +91,23 @@ namespace ToSic.Sxc.Code
 
         private IDynamicCode12 OfAppInternal(int? zoneId = null, int? appId = null)
         {
-            var wrapLog = Log.Call<IDynamicCode12>();
+            var wrapLog = Log.Fn<IDynamicCode12>();
             MakeSureLogIsInHistory();
             var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(null, Log, Constants.CompatibilityLevel12);
             var app = App(zoneId: zoneId, appId: appId);
             codeRoot.AttachApp(app);
-            return wrapLog("ok", codeRoot);
+            return wrapLog.Return(codeRoot, "ok");
         }
 
         public IDynamicCode12 OfModule(int pageId, int moduleId)
         {
-            var wrapLog = Log.Call<IDynamicCodeRoot>($"{pageId}, {moduleId}");
+            var wrapLog = Log.Fn<IDynamicCodeRoot>($"{pageId}, {moduleId}");
             MakeSureLogIsInHistory();
             //var module = ModuleAndBlockBuilder.Ready.GetModule(pageId, moduleId);
             var cmsBlock = ModuleAndBlockBuilder.Ready.GetBlock(pageId, moduleId);
             var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
 
-            return wrapLog("ok", codeRoot);
+            return wrapLog.Return(codeRoot, "ok");
         }
 
 
@@ -155,11 +155,11 @@ namespace ToSic.Sxc.Code
 
         private IApp App(IAppIdentity appIdentity, ISite site, bool? withUnpublished = null)
         {
-            var wrapLog = Log.Call<IApp>($"{appIdentity.LogState()}, site:{site != null}, showDrafts: {withUnpublished}");
+            var wrapLog = Log.Fn<IApp>($"{appIdentity.LogState()}, site:{site != null}, showDrafts: {withUnpublished}");
             var app = AppGenerator.New;
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(appIdentity, AppConfigDelegateGenerator.New.Build(withUnpublished ?? _dependencies.User.Value.IsAdmin), Log);
-            return wrapLog(null, appStuff);
+            return wrapLog.Return(appStuff);
         }
 
     }

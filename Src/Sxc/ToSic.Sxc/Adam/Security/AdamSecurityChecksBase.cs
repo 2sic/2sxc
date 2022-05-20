@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
         internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var callLog = Log.Call<AdamSecurityChecksBase>();
+            var callLog = Log.Fn<AdamSecurityChecksBase>();
             AdamContext = adamContext;
 
             var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Adam
 
             Log.A($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
 
-            return callLog(null, this);
+            return callLog.Return(this);
         }
 
         internal AdamContext AdamContext;
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Adam
 
         internal bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             var fieldDef = AdamContext.Attribute;
             bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Adam
                 preparedException = null;
                 result = true;
             }
-            return wrapLog(result.ToString(), result);
+            return wrapLog.Return(result, result.ToString());
         }
 
 

@@ -152,7 +152,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
 
             foreach (var header in list
                 .Where(header => header.For?.Singleton == true && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
@@ -178,7 +178,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
             }
 
-            return wrapLog("ok", true);
+            return wrapLog.Return(true, "ok");
         }
     }
 }

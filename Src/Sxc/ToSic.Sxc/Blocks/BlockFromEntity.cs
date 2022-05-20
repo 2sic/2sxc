@@ -32,22 +32,22 @@ namespace ToSic.Sxc.Blocks
         {
             var ctx = parent.Context.Clone(Log) as IContextOfBlock;
             Init(ctx, parent, parentLog);
-            var wrapLog = Log.Call<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}", useTimer: true);
-            return wrapLog(null, CompleteInit(parent, blockEntity));
+            var wrapLog = Log.Fn<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}", startTimer: true);
+            return wrapLog.Return(CompleteInit(parent, blockEntity));
         }
 
         public BlockFromEntity Init(IBlock parent, int contentBlockId, ILog parentLog)
         {
             var ctx = parent.Context.Clone(Log) as IContextOfBlock;
             Init(ctx, parent, parentLog);
-            var wrapLog = Log.Call<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}");
+            var wrapLog = Log.Fn<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}");
             var blockEntity = GetBlockEntity(parent, contentBlockId);
-            return wrapLog(null, CompleteInit(parent, blockEntity));
+            return wrapLog.Return(CompleteInit(parent, blockEntity));
         }
-
+        
         private BlockFromEntity CompleteInit(IBlock parent, IEntity blockEntity)
         {
-            var wrapLog = Log.Call<BlockFromEntity>();
+            var wrapLog = Log.Fn<BlockFromEntity>();
             Entity = blockEntity;
             Parent = parent;
             var blockId = LoadBlockDefinition(parent.ZoneId, blockEntity, Log);
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Blocks
             AppId = blockId.AppId;
 
             CompleteInit(parent.BlockBuilder, blockId, -blockEntity.EntityId);
-            return wrapLog("ok", this);
+            return wrapLog.Return(this, "ok");
         }
         #endregion
 

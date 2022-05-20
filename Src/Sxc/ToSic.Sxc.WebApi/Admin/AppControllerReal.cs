@@ -78,9 +78,9 @@ namespace ToSic.Sxc.WebApi.Admin
 
         public bool FlushCache(int zoneId, int appId)
         {
-            var wrapLog = Log.Call<bool>($"{zoneId}, {appId}");
+            var wrapLog = Log.Fn<bool>($"{zoneId}, {appId}");
             _systemManagerLazy.Ready.Purge(zoneId, appId);
-            return wrapLog("ok", true);
+            return wrapLog.Return(true, "ok");
         }
 
         public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
@@ -103,16 +103,16 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <returns></returns>
         public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, string renameApp)
         {
-            var wrapLog = Log.Call<ImportResultDto>();
+            var wrapLog = Log.Fn<ImportResultDto>();
 
             if (!uploadInfo.HasFiles())
-                return wrapLog("no file uploaded", new ImportResultDto(false, "no file uploaded"));
+                return wrapLog.Return(new ImportResultDto(false, "no file uploaded"), "no file uploaded");
 
             var (_, stream) = uploadInfo.GetStream(0);
-
+            
             var result = _importAppLazy.Ready.Import(stream, zoneId, renameApp);
 
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
     }
 }

@@ -25,15 +25,15 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         {
             try
             {
-                var wrapLog = Log.Call<string>();
+                var wrapLog = Log.Fn<string>();
                 var relevant = CspParameters.Where(cs => cs != null).ToList();
-                if (!relevant.Any()) return wrapLog("none relevant", null);
+                if (!relevant.Any()) return wrapLog.ReturnNull("none relevant");
                 var mergedPolicy = relevant.First();
 
                 var finalizer = new CspParameterFinalizer().Init(Log);
 
                 if (relevant.Count == 1)
-                    return wrapLog("found 1", finalizer.Finalize(mergedPolicy).ToString());
+                    return wrapLog.Return(finalizer.Finalize(mergedPolicy).ToString(), "found 1");
 
                 // Pre-copy, so we never change the original!
                 mergedPolicy = new CspParameters(mergedPolicy);
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 foreach (var cspS in relevant.Skip(1))
                     mergedPolicy.Add(cspS);
 
-                return wrapLog("merged", finalizer.Finalize(mergedPolicy).ToString());
+                return wrapLog.Return(finalizer.Finalize(mergedPolicy).ToString(), "merged");
             }
             catch (Exception e)
             {

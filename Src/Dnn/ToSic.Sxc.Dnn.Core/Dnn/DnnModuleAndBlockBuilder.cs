@@ -38,38 +38,38 @@ namespace ToSic.Sxc.Dnn
 
         public override IBlock GetBlock<TPlatformModule>(TPlatformModule module)
         {
-            var wrapLog = Log.Call<BlockFromModule>(useTimer: true);
+            var wrapLog = Log.Fn<BlockFromModule>(startTimer: true);
             if (module == null) throw new ArgumentNullException(nameof(module));
             if (!(module is ModuleInfo dnnModule)) throw new ArgumentException("Given data is not a module");
             Log.A($"Module: {dnnModule.ModuleID}");
 
             var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule)
         {
-            var wrapLog = Log.Call<IContextOfBlock>();
+            var wrapLog = Log.Fn<IContextOfBlock>();
             var context = _contextGenerator.New;
             context.Init(ParentLog);
             Log.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
             Log.A("Will init module");
             ((DnnModule)context.Module).Init(dnnModule, ParentLog);
-            return wrapLog(null, InitPageOnly(context));
+            return wrapLog.Return(InitPageOnly(context));
         }
 
         private IContextOfBlock InitPageOnly(IContextOfBlock context)
         {
-            var wrapLog = Log.Call<IContextOfBlock>();
+            var wrapLog = Log.Fn<IContextOfBlock>();
             // Collect / assemble page information
             var activeTab = (context.Site as Site<PortalSettings>)?.UnwrappedContents?.ActiveTab;
 
             var page = (DnnPage)context.Page;
             var url = page.InitPageIdAndUrl(activeTab);
 
-            return wrapLog(url, context);
+            return wrapLog.Return(context, url);
         }
 
         //internal string InitPageIdAndUrl(Page page, TabInfo activeTab)

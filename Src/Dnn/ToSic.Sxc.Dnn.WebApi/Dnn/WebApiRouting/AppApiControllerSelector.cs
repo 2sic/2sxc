@@ -14,6 +14,7 @@ using System.Web.Http.Routing;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Routing;
@@ -82,10 +83,10 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             var log = new Log("Sxc.Http", null, request?.RequestUri?.AbsoluteUri);
             AddToInsightsHistory(request?.RequestUri?.AbsoluteUri, log);
 
-            var wrapLog = log.Call<HttpControllerDescriptor>();
+            var wrapLog = log.Fn<HttpControllerDescriptor>();
 
             if (!HandleRequestWithThisController(request))
-                return wrapLog("upstream", PreviousSelector.SelectController(request));
+                return wrapLog.Return(PreviousSelector.SelectController(request), "upstream");
 
             // Do this once and early, to be really sure we always use the same one
             var sp = DnnStaticDi.GetPageScopedServiceProvider();
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             var controllerTypeName = routeData.Values[VarNames.Controller] + "Controller";
 
             // Now Handle the 2sxc app-api queries
-
+            
             // Figure out the Path, or show error for that
             var appFolder = AppFolderUtilities.GetAppFolder(sp, request, log, wrapLog);
 
@@ -161,8 +162,8 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             => Path.Combine(controllerFolder + controllerTypeName + ".cs");
 
         private HttpControllerDescriptor HttpControllerDescriptor(HttpRequestMessage request, 
-            string controllerFolder, string controllerPath, string controllerTypeName, 
-            Func<string, HttpControllerDescriptor, HttpControllerDescriptor> wrapLog)
+            string controllerFolder, string controllerPath, string controllerTypeName,
+            LogCall<HttpControllerDescriptor> wrapLog)
         {
             var assembly = BuildManager.GetCompiledAssembly(controllerPath);
             var type = assembly.GetType(controllerTypeName, true, true);
@@ -171,7 +172,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
             var descriptor = new HttpControllerDescriptor(_config, type.Name, type);
-            return wrapLog("ok", descriptor);
+            return wrapLog.Return(descriptor, "ok");
         }
 
         private static void AddToInsightsHistory(string url, ILog log)

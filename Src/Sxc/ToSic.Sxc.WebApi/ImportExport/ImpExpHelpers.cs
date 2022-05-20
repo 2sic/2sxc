@@ -26,16 +26,16 @@ namespace ToSic.Sxc.WebApi.ImportExport
         /// <returns></returns>
         internal IApp GetAppAndCheckZoneSwitchPermissions(int zoneId, int appId, IUser user, int contextZoneId)
         {
-            var wrapLog = Log.Call<IApp>($"superuser: {user.IsSuperUser}");
+            var wrapLog = Log.Fn<IApp>($"superuser: {user.IsSuperUser}");
             if (!user.IsSuperUser && zoneId != contextZoneId)
             {
-                wrapLog("error", null);
+                wrapLog.ReturnNull("error");
                 throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
             }
 
             var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId),
                 _configProvider.Build(true), Log);
-            return wrapLog(null, app);
+            return wrapLog.Return(app);
         }
 
     }

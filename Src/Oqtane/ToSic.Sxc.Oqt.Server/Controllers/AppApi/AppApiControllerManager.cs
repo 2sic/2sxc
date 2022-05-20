@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         /// <returns></returns>
         public async ValueTask<bool> PrepareController(RouteValueDictionary values)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
 
             var apiFile = (string)values["apiFile"];
             var dllName = (string)values["dllName"];
@@ -54,9 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 if (updated)
                     RemoveController(dllName, apiFile);
                 else
-                    return wrapLog(
-                        $"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.",
-                        true);
+                    return wrapLog.Return(true, $"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.");
             }
 
             Log.A($"We need to prepare controller for: {apiFile}.");
@@ -84,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // Register new AppApi Controller.
             AddController(dllName, assembly);
 
-            return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", true);
+            return wrapLog.Return(true,$"ok, Controller is compiled and added to ApplicationParts: {apiFile}.");
         }
 
         private void AddController(string dllName, Assembly assembly)

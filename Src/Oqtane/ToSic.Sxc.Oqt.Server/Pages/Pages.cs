@@ -24,9 +24,9 @@ namespace ToSic.Sxc.Oqt.Server.Pages
             _settingRepository = settingRepository;
         }
 
-        public List<Oqtane.Models.PageModule> AllModulesWithContent(int siteId)
+        public List<PageModule> AllModulesWithContent(int siteId)
         {
-            var wrapLog = Log.Call<List<Oqtane.Models.PageModule>>($"{siteId}");
+            var wrapLog = Log.Fn<List<PageModule>>($"{siteId}");
 
             // create an array with all modules
             var sxcContents = _pageModuleRepository.GetPageModules(siteId)
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.Pages
                 .Where(m => m.Module.Settings.ContainsKey(Settings.ModuleSettingContentGroup) && m.Module.Settings[Settings.ModuleSettingContentGroup] != Guid.Empty.ToString())
                 .ToList();
 
-            return wrapLog($"{allMods.Count}", allMods);
+            return wrapLog.Return(allMods, $"{allMods.Count}");
         }
 
 

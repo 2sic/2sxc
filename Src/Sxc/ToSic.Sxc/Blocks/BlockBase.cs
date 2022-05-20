@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Blocks
 
         protected bool CompleteInit(IBlockBuilder rootBuilderOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
 
             ParentId = Context.Module.Id;
             ContentBlockId = blockNumberUnsureIfNeeded;
@@ -85,16 +85,13 @@ namespace ToSic.Sxc.Blocks
             if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
             {
                 DataIsMissing = true;
-                return wrapLog("stop: app & data are missing", true);
+                return wrapLog.Return(true, "stop: app & data are missing");
             }
 
             // If no app yet, stop now with BlockBuilder created
             if (AppId == Eav.Constants.AppIdEmpty)
-            {
-                var msg = $"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}";
-                return wrapLog(msg, true);
-            }
-
+                return wrapLog.Return(true,
+                    $"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
 
             Log.A("Real app specified, will load App object with Data");
 
@@ -114,12 +111,12 @@ namespace ToSic.Sxc.Blocks
             {
                 DataIsMissing = true;
                 App = null;
-                return wrapLog($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", true);
+                return wrapLog.Return(true, $"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
             View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
-            return wrapLog($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}", true);
+            return wrapLog.Return(true, $"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
 
         #endregion

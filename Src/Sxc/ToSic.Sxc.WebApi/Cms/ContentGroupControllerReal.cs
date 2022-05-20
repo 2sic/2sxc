@@ -96,7 +96,7 @@ namespace ToSic.Sxc.WebApi.Cms
         // TODO: WIP changing this from ContentGroup editing to any list editing
         public ReplacementListDto Replace(Guid guid, string part, int index)
         {
-            var wrapLog = Log.Call<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
+            var wrapLog = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
             part = part.ToLowerInvariant();
 
             var itemList = FindContentGroupAndTypeName(guid, part, out var typeName)
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 : null;
 
             var result = new ReplacementListDto { SelectedId = selectedId, Items = results, ContentTypeName = ct.NameId };
-            return wrapLog(null, result);
+            return wrapLog.Return(result);
         }
 
 
@@ -178,24 +178,21 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private List<IEntity> FindContentGroupAndTypeName(Guid guid, string part, out string attributeSetName)
         {
-            var wrapLog = Log.Call<List<IEntity>>($"{guid}, {part}");
+            var wrapLog = Log.Fn<List<IEntity>>($"{guid}, {part}");
             var contentGroup = GetContentGroup(guid, true);
             attributeSetName = null;
             var partIsContent = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase);
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
             var itemList = partIsContent ? contentGroup.Content : contentGroup.Header;
 
-            if (itemList == null) return wrapLog(null, null);
+            if (itemList == null) return wrapLog.ReturnNull();
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
             if (contentGroup.View == null)
-            {
-                Log.A("Something found, but doesn't seem to be a content-group. Cancel.");
-                return wrapLog(null, null);
-            }
+                return wrapLog.ReturnNull("Something found, but doesn't seem to be a content-group. Cancel.");
 
             attributeSetName = partIsContent ? contentGroup.View.ContentType : contentGroup.View.HeaderType;
-            return wrapLog(null, itemList);
+            return wrapLog.Return(itemList);
         }
 
         private BlockConfiguration GetContentGroup(Guid contentGroupGuid, bool throwIfNotFound)

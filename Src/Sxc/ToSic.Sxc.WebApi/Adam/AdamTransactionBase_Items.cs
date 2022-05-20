@@ -13,18 +13,18 @@ namespace ToSic.Sxc.WebApi.Adam
         /// <inheritdoc />
         public IList<AdamItemDto> ItemsInField(string subFolderName, bool autoCreate = false)
         {
-            var wrapLog = Log.Call<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
+            var wrapLog = Log.Fn<IList<AdamItemDto>>($"Subfolder: {subFolderName}");
 
             Log.A("starting permissions checks");
             if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
-                return wrapLog("user is restricted, and doesn't have permissions on field - return null", null);
+                return wrapLog.ReturnNull("user is restricted, and doesn't have permissions on field - return null");
 
             // check that if the user should only see drafts, he doesn't see items of published data
             if (!AdamContext.Security.UserIsNotRestrictedOrItemIsDraft(AdamContext.ItemGuid, out _))
-                return wrapLog("user is restricted (no read-published rights) and item is published - return null", null);
+                return wrapLog.ReturnNull("user is restricted (no read-published rights) and item is published - return null");
 
             Log.A("first permission checks passed");
-
+            
             // This will contain the list of items
             var list = new List<AdamItemDto>();
             
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             // if no root exists then quit now
             if (!autoCreate && root == null) 
-                return wrapLog("no folder", list);
+                return wrapLog.Return(list, "no folder");
 
             // try to see if we can get into the subfolder - will throw error if missing
             var currentFolder = AdamContext.AdamRoot.Folder(subFolderName, false);
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 .ToList();
             list.AddRange(adamFiles);
 
-            return wrapLog($"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{list.Count}", list.ToList());
+            return wrapLog.Return(list.ToList(), $"ok - fld⋮{adamFolders.Count}, files⋮{adamFiles.Count} tot⋮{list.Count}");
         }
 
     }

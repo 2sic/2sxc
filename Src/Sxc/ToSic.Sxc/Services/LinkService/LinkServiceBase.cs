@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Services
             string language = null
             )
         {
-            var wrapLog = Log.Call<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
+            var wrapLog = Log.Fn<string>($"pid:{pageId},api:{api},t:{type},l:{language}");
 
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(To)}", $"{nameof(pageId)},{nameof(parameters)},{nameof(api)}");
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Services
             var processed = ExpandUrlIfNecessary(type, url);
             Log.A($"expandUrl:{processed}, t:{type}");
 
-            return wrapLog("Ok", Tags.SafeUrl(processed).ToString());
+            return wrapLog.Return(Tags.SafeUrl(processed).ToString(), "ok");
         }
 
         private string ExpandUrlIfNecessary(string type, string url)

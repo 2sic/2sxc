@@ -106,11 +106,11 @@ namespace ToSic.Sxc.WebApi.Views
             bundle.Assets.Add(asset1);
         }
 
-
+        
 
         public ImportResultDto ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
         {
-            var callLog = Log.Call<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+            var callLog = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
             try
             {
@@ -146,12 +146,12 @@ namespace ToSic.Sxc.WebApi.Views
                 foreach (var asset in assets) assetMan.Create(GetRealPath(app, asset), asset);
 
                 // 3. possibly show messages / issues
-                return callLog("ok", new ImportResultDto(true));
+                return callLog.Return(new ImportResultDto(true), "ok");
             }
             catch (Exception ex)
             {
                 _envLogger.LogException(ex);
-                return callLog("error", new ImportResultDto(false, ex.Message, Message.MessageTypes.Error));
+                return callLog.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
             }
         }
 

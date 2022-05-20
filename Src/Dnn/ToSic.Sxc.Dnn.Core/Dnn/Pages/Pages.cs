@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Pages
 
         public List<ModuleWithContent> AllModulesWithContent(int portalId)
         {
-            var wrapLog = Log.Call<List<ModuleWithContent>>($"{portalId}");
+            var wrapLog = Log.Fn<List<ModuleWithContent>>($"{portalId}");
             var mc = ModuleController.Instance;
             var tabC = TabController.Instance;
 
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn.Pages
                 .Where(set => set.ContentGroup != Guid.Empty)
                 .ToList();
 
-            return wrapLog($"{allMods.Count}", result);
+            return wrapLog.Return(result, $"{allMods.Count}");
         }
     }
 }

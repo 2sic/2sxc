@@ -159,20 +159,20 @@ namespace ToSic.Sxc.WebApi.App
 
         private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive, int addedEntityId)
         {
-            var wrapLog = Log.Call<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+            var wrapLog = Log.Fn<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
             if (!newContentItemCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
-                return wrapLog("'ParentRelationship' key is missing", false);
+                return wrapLog.Return(false, "'ParentRelationship' key is missing");
 
             var parentRelationship = newContentItemCaseInsensitive[SaveApiAttributes.ParentRelationship] as JObject;
-            if (parentRelationship == null) return wrapLog($"'{SaveApiAttributes.ParentRelationship}' value is null", false);
+            if (parentRelationship == null) return wrapLog.Return(false, $"'{SaveApiAttributes.ParentRelationship}' value is null");
 
             var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
-            if (!parentGuid.HasValue) return wrapLog($"'{SaveApiAttributes.ParentRelParent}' guid is missing", false);
+            if (!parentGuid.HasValue) return wrapLog.Return(false, $"'{SaveApiAttributes.ParentRelParent}' guid is missing");
 
             var parentEntity = AppState.List.One(parentGuid.Value);
-            if (parentEntity == null) return wrapLog("Parent entity is missing", false);
-
+            if (parentEntity == null) return wrapLog.Return(false, "Parent entity is missing");
+            
             //var entityId = (int?)parentRelationship["EntityId"];
             var ids = new[] { addedEntityId as int? };
             var index = (int)parentRelationship[SaveApiAttributes.ParentRelIndex];
@@ -182,18 +182,18 @@ namespace ToSic.Sxc.WebApi.App
 
             AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
 
-            //return wrapLog($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}", true);
-            return wrapLog($"new ParentRelationship p:{parentGuid},f:{field},i:{index}", true);
+            //return wrapLog.Return(true, $"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}");
+            return wrapLog.Return(true, $"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }
 
         private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
         {
-            var wrapLog = Log.Call<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+            var wrapLog = Log.Fn<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
-            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog("'For' key is missing", null);
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog.ReturnNull("'For' key is missing");
 
             var metadataFor = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor] as JObject;
-            if (metadataFor == null) return wrapLog("'For' value is null", null);
+            if (metadataFor == null) return wrapLog.ReturnNull("'For' value is null");
 
             var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]), null)
             {
@@ -201,7 +201,7 @@ namespace ToSic.Sxc.WebApi.App
                 KeyNumber = (int?) metadataFor[Attributes.NumberNiceName],
                 KeyString = (string) metadataFor[Attributes.StringNiceName]
             };
-            return wrapLog($"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}", metaData);
+            return wrapLog.Return(metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
         }
 
         private static int GetTargetType(JToken target)

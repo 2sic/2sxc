@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Context
 
         public IContextOfBlock Configure(IModule module)
         {
-            var wrapLog = Log.Call<IContextOfBlock>($"{module?.Id}");
+            var wrapLog = Log.Fn<IContextOfBlock>($"{module?.Id}");
             if (module == null) throw new ArgumentNullException(nameof(module));
             if (AlreadyConfigured) throw new Exception($"{nameof(Configure)} can only be called once. Then you need a new service.");
             var configured = ConfigureImplementation(module);
             AlreadyConfigured = true;
-            return wrapLog("ok", configured);
+            return wrapLog.Return(configured, "ok");
         }
 
         protected abstract IContextOfBlock ConfigureImplementation(IModule module);

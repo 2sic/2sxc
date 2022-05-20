@@ -81,7 +81,7 @@ namespace ToSic.Sxc.LookUp
         {
             var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
 
-            var wrapLog = Log.Call<LookUpEngine>($"module: {modId}, app: {appForLookup?.AppId} ..., ...");
+            var wrapLog = Log.Fn<LookUpEngine>($"module: {modId}, app: {appForLookup?.AppId} ..., ...");
 
 
             // Find the standard DNN property sources if PortalSettings object is available
@@ -139,7 +139,7 @@ namespace ToSic.Sxc.LookUp
                 var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockForLookup);
                 provider.Add(blockBuilderLookUp);
             }
-            return wrapLog("ok", provider);
+            return wrapLog.Return(provider, "ok");
         }
     }
 }

@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
-            var callLog = Log.Call<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
+            var callLog = Log.Fn<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
             var fullContentPath = _serverPaths.FullContentPath(parent.Path);
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 ImageWidth = 0
             };
             var oqtFile = OqtFileRepository.AddFile(oqtFileData);
-            return callLog("ok", GetFile(oqtFile.FileId));
+            return callLog.Return(GetFile(oqtFile.FileId), "ok");
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         /// <returns></returns>
         private new string FindUniqueFileName(IFolder parentFolder, string fileName)
         {
-            var callLog = Log.Call<string>($"..., {fileName}");
+            var callLog = Log.Fn<string>($"..., {fileName}");
 
             var dnnFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                             && System.IO.File.Exists(Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
-            return callLog(fileName, fileName);
+            return callLog.Return(fileName, fileName);
         }
 
         #endregion
@@ -218,14 +218,14 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new List<Folder<int, int>> GetFolders(IFolder folder)
         {
-            var callLog = Log.Call<List<Folder<int, int>>>();
+            var callLog = Log.Fn<List<Folder<int, int>>>();
             var fldObj = GetOqtFolder(folder.AsOqt().SysId);
             if(fldObj == null) return new List<Folder<int, int>>();
 
             var firstList = GetSubFoldersRecursive(fldObj);
             var folders = firstList?.Select(OqtToAdam).ToList()
                           ?? new List<Folder<int, int>>();
-            return callLog($"{folders.Count}", folders);
+            return callLog.Return(folders, $"{folders.Count}");
         }
 
         private List<Folder> GetSubFoldersRecursive(Folder parentFolder, List<Folder> allFolders = null, List<Folder> subFolders = null)
@@ -251,7 +251,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new List<File<int, int>> GetFiles(IFolder folder)
         {
-            var callLog = Log.Call<List<File<int, int>>>();
+            var callLog = Log.Fn<List<File<int, int>>>();
             var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
             // sometimes the folder doesn't exist for whatever reason
             if (fldObj == null) return  new List<File<int, int>>();
@@ -260,7 +260,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var firstList = OqtFileRepository.GetFiles(fldObj.FolderId);
             var files = firstList?.Select(OqtToAdam).ToList()
                      ?? new List<File<int, int>>();
-            return callLog($"{files.Count}", files);
+            return callLog.Return(files, $"{files.Count}");
         }
 
         #endregion

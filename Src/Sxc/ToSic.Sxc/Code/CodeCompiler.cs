@@ -135,14 +135,14 @@ namespace ToSic.Sxc.Code
 
         private bool AttachRelativePath(string virtualPath, object instance)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
+
+            if (!(instance is ICreateInstance codeForwarding)) 
+                return wrapLog.Return(false, "didn't attach");
+
             // in case it supports shared code again, give it the relative path
-            if (instance is ICreateInstance codeForwarding)
-            {
-                codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
-                return wrapLog("attached", true);
-            }
-            return wrapLog("didn't attach", false);
+            codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
+            return wrapLog.Return(true, "attached");
         }
     }
 }

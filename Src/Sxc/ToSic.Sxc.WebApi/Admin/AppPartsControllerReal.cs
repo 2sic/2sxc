@@ -65,17 +65,17 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <exception cref="ArgumentException"></exception>
         public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
         {
-            var wrapLog = Log.Call<ImportResultDto>();
+            var wrapLog = Log.Fn<ImportResultDto>();
 
             if (!uploadInfo.HasFiles()) 
-                return wrapLog("no file uploaded", new ImportResultDto(false, "no file uploaded"));
+                return wrapLog.Return(new ImportResultDto(false, "no file uploaded"), "no file uploaded");
 
             var (fileName, stream) = uploadInfo.GetStream(0);
 
             var result = _importContent.New.Init(_user.Value, Log)
                 .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: _context.Ready.Site.DefaultCultureCode);
 
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         #endregion

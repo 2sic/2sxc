@@ -67,11 +67,11 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
-            var callLog = Log.Call<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
+            var callLog = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var results = _adamItems.Value
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .ItemsInField(subfolder);
-            return callLog("ok", results);
+            return callLog.Return(results, "ok");
         }
 
         public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)

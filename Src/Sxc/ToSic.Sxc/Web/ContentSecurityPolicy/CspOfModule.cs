@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         private string GetAppPolicies()
         {
-            var cLog = Log.Call<string>();
+            var cLog = Log.Fn<string>();
 
             var deduplicate = AppCsps
                 .GroupBy(ac => ac.AppId)
@@ -174,7 +174,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             var appPolicies = string.Join("\n", appPolicySets);
 
-            return cLog($"Total: {AppCsps.Count}; Distinct: {deduplicate.Count}; With Value: {appPolicySets.Count}", appPolicies);
+            return cLog.Return(appPolicies, $"Total: {AppCsps.Count}; Distinct: {deduplicate.Count}; With Value: {appPolicySets.Count}");
         }
 
 
@@ -184,8 +184,8 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         public List<CspParameters> CspParameters()
         {
-            var wrapLog = Log.Call<List<CspParameters>>();
-            if (!IsEnabled) return wrapLog("disabled", new List<CspParameters>());
+            var wrapLog = Log.Fn<List<CspParameters>>();
+            if (!IsEnabled) return wrapLog.Return(new List<CspParameters>(), "disabled");
 
             if (Policies.Any())
             {
@@ -197,9 +197,9 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 AddCspService(policyCsp);
             }
 
-            if (!CspServices.Any()) return wrapLog("no services to add", new List<CspParameters>());
+            if (!CspServices.Any()) return wrapLog.Return(new List<CspParameters>(), "no services to add");
             var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
 
         }
         
