@@ -39,24 +39,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             // In some cases this may be called 2x - so we must avoid doing it again
             if (_alreadyConfigured) return;
 
-            // Register Services if this has not happened yet
-            // In Dnn9.4+ this was already done before
-            // In older Dnn this didn't happen yet, so this is the latest it can happen
-            
-            var globalServiceProvider = DnnDi.GetPreparedServiceProvider?.Invoke();
-
-            // Register services if it has not already happened before in Dnn9
-            // Give it null, so in case there is no previously registered collection it will create a new one
-            var serviceCollection = DnnDi.RegisterServices(null);
-
-            // if the global doesn't exist yet (dnn 7/8) then create it now
-            globalServiceProvider = globalServiceProvider ?? serviceCollection.BuildServiceProvider();
-
-            // Now activate the Service Provider, because some Dnn code still needs the static implementation
-            DnnStaticDi.StaticDiReady(globalServiceProvider);
-
-
-
             // Configure Newtonsoft Time zone handling
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
