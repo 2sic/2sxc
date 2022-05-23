@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
@@ -16,7 +18,7 @@ namespace ToSic.Sxc.Edit
     /// * Added in 2sxc 13
     /// </remarks>
     [PrivateApi("Still WIP, not sure if this will be published as this - but probably we will")]
-    public interface IToolbarBuilder: IHybridHtmlString
+    public interface IToolbarBuilder: IHybridHtmlString, IHasLog
     {
         /// <summary>
         /// Add one or more rules according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
@@ -54,13 +56,15 @@ namespace ToSic.Sxc.Edit
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
+        /// * parameter context added in 2sxc 14
         /// </remarks>
         IToolbarBuilder Metadata(
             object target,
             string contentTypes,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
-            string parameters = null
+            string parameters = null,
+            string context = null
         );
 
         [PrivateApi("WIP 13.11")]
@@ -104,5 +108,9 @@ namespace ToSic.Sxc.Edit
         /// </summary>
         /// <returns></returns>
         string ToString();
+
+
+        [PrivateApi]
+        IToolbarBuilder Init(IAppIdentity currentApp);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web
 {
@@ -9,6 +11,7 @@ namespace ToSic.Sxc.Web
     {
         public const char QuerySeparator = '?';
         public const char FragmentSeparator = '#';
+        public const char ValuePairSeparator = '&';
         public const string ProtocolColon = ":";
         public const string Slash = "/";
         public const string ProtocolSeparator = "://";
@@ -94,7 +97,7 @@ namespace ToSic.Sxc.Web
 
         private string ExtractQuery(string rest)
         {
-            var queryStart = rest.IndexOf('?');
+            var queryStart = rest.IndexOf(QuerySeparator);
             if (queryStart < 0) return rest;
             Query = rest.Substring(queryStart + 1);
             return rest.Substring(0, queryStart);
@@ -143,6 +146,13 @@ namespace ToSic.Sxc.Web
         {
             if (!string.IsNullOrEmpty(Query)) urlStringBuilder.Append($"{QuerySeparator}{Query}");
             if (!string.IsNullOrEmpty(Fragment)) urlStringBuilder.Append($"{FragmentSeparator}{Fragment}");
+        }
+
+        public static string ConnectParameters(params string[] parameters)
+        {
+            if (parameters == null || parameters.Length == 0) return "";
+            var realParams = parameters.Where(p => !string.IsNullOrWhiteSpace(p)).ToArray();
+            return string.Join(ValuePairSeparator.ToString(), realParams);
         }
     }
 }

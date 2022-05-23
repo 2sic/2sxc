@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -44,10 +45,10 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Stop if nothing to add
             if (!hasGeneratedCmdParams && !hasCmdParams) return result;
             
-            result += "?";
-            if (hasGeneratedCmdParams) result += genCmdParams;
-            if (hasGeneratedCmdParams && hasCmdParams) result += "&";
-            if (hasCmdParams) result += Parameters;
+            result += "?" + UrlParts.ConnectParameters(genCmdParams, Parameters);
+            //if (hasGeneratedCmdParams) result += genCmdParams;
+            //if (hasGeneratedCmdParams && hasCmdParams) result += "&";
+            //if (hasCmdParams) result += Parameters;
             return result;
         }
 

@@ -13,7 +13,9 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Edit;
 using ToSic.Sxc.Edit.EditService;
+using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
@@ -147,6 +149,10 @@ namespace ToSic.Sxc
             services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
             services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
             services.TryAddTransient<IImageService, ImageService>();
+            
+            // v14
+            services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
+            services.TryAddTransient<ToolbarBuilder.Dependencies>();
 
             // 13 - cleaning up handling of app paths
             services.TryAddTransient<AppFolderInitializer>();

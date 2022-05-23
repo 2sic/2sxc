@@ -1,23 +1,31 @@
 ﻿using System.Linq;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarRuleMetadata: ToolbarRule
+    public class ToolbarRuleMetadata: ToolbarRuleTargeted
     {
-        public ToolbarRuleMetadata(object target, string contentTypes, string ui = null, string parameters = null) : base("metadata", operation: '+', ui: ui, parameters: parameters)
+        public ToolbarRuleMetadata(
+            object target, 
+            string contentTypes, 
+            string ui = null, 
+            string parameters = null,
+            string context = null
+        ) : base(target, "metadata", operation: '+', ui: ui, parameters: parameters, context: context)
         {
-            _target = target;
             _contentTypes = contentTypes;
         }
-        private readonly object _target;
         private readonly string _contentTypes;
 
-        public override string GeneratedCommandParams()
+        public override string GeneratedCommandParams() 
+            => UrlParts.ConnectParameters(MetadataCommandParams(), base.GeneratedCommandParams());
+
+        private string MetadataCommandParams()
         {
             if (string.IsNullOrWhiteSpace(_contentTypes)) return "error=NoContentType";
             if (_contentTypes.Contains(",")) return "error=CommaFoundInContentType";
-            if (!(_target is IHasMetadata hasMetadata)) return "error=TargetWithoutMetadata";
+            if (!(Target is IHasMetadata hasMetadata)) return "error=TargetWithoutMetadata";
 
             // 1. check if it's a valid target
             var targetId = hasMetadata.Metadata.Target;
