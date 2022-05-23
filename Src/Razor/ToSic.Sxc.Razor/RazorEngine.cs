@@ -33,10 +33,10 @@ namespace ToSic.Sxc.Razor
         /// <inheritdoc/>
         protected override string RenderTemplate()
         {
-            Log.Call();
+            var wrapCall = Log.Fn<string>();
             var task = RenderTask();
             task.Wait();
-            return task.Result.ToString();
+            return wrapCall.Return(task.Result.ToString());
         }
 
         [PrivateApi]

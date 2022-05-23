@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public new OqtModule Init(Module module, ILog parentLog)
         {
-            var wrapLog = Log.Call($"id:{module.ModuleId}");
+            var wrapLog = Log.Fn<OqtModule>($"id:{module.ModuleId}");
             base.Init(module, parentLog);
 
             InitializeIsPrimary(module);
@@ -43,9 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
             _id = module.ModuleId;
 
-            wrapLog("ok");
-
-            return this;
+            return wrapLog.Return(this, "ok");
         }
 
         /// <summary>

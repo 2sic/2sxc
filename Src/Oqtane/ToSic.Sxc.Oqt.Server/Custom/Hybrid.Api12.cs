@@ -57,7 +57,7 @@ namespace Custom.Hybrid
 
         private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             var found = false;
             try
             {
@@ -79,7 +79,7 @@ namespace Custom.Hybrid
             }
             catch { /* ignore */ }
 
-            wrapLog(found.ToString());
+            wrapLog.Done(found.ToString());
         }
 
         /// <summary>

@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             LogTimer.DoInTimer(() =>
             {
                 #region Lightspeed output caching
-                var callLog = Log.Call(useTimer: true);
+                var callLog = Log.Fn(startTimer: true);
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
                 var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
                 finalMessage = OutputCache?.IsEnabled != true ? "" : OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     SxcStyles = PageOutput.Styles().ToList(),
                     PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
                 };
-                callLog(null);
+                callLog.Done();
             });
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 

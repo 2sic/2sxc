@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
-            var wrapLog = Log.Call($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
+            var wrapLog = Log.Fn($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
 
             foreach (var file in filesAndPaths)
             {
@@ -142,12 +142,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 Log.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
             }
 
-            wrapLog(null);
+            wrapLog.Done();
         }
 
         public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
-            var wrapLog = Log.Call($"folders and paths: {foldersAndPath.Count}");
+            var wrapLog = Log.Fn($"folders and paths: {foldersAndPath.Count}");
 
             foreach (var folder in foldersAndPath)
                 try
@@ -181,7 +181,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                     importLog.Add(new Message(msg, Message.MessageTypes.Warning));
                 }
 
-            wrapLog($"done - final count {folderIdCorrectionList.Count}");
+            wrapLog.Done($"done - final count {folderIdCorrectionList.Count}");
         }
 
         private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)

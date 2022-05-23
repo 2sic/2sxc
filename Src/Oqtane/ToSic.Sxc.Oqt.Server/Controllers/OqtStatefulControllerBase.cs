@@ -16,14 +16,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
 
             base.OnActionExecuting(context);
 
             var getBlock = GetService<OqtGetBlock>().Init(Log);
             CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
             BlockOptional = CtxResolver.RealBlockOrNull();
-            wrapLog(null);
+            wrapLog.Done();
         }
 
         // TODO: 2021-09-20 2dm this should probably be removed - I don't think the context should be available on this class, but I'm not sure 
