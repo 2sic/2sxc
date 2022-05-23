@@ -110,9 +110,10 @@ namespace ToSic.Sxc.Web
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             // if (!(parent is IDynamicCodeRoot isDynCode)) return;
-            var wrapLog = Log.Fn();
             _DynCodeRoot = codeRoot; // isDynCode;
             _log = new Log("Rzr.Comp", _DynCodeRoot?.Log);
+            // TODO: @STV - you had moved this to before the connect! that shouldn't happen, as it will confuse the log which is attached during init. 
+            var wrapLog = Log.Fn();
             wrapLog.Done("ok");
         }
     }

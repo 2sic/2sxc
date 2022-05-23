@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Polymorphism
                 return wrapLog.ReturnNull("unknown param");
             var isSuper = _oqtUser.IsSuperUser;
             var result = isSuper ? "staging" : "live";
-            return wrapLog.Return(result, result);
+            return wrapLog.ReturnAndLog(result);
         }
     }
 }

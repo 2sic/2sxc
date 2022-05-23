@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Apps
             Parent.Entities.UpdateParts(cbEnt.EntityId, updateDic);
             #endregion
 
-            return callLog.Return(entityId, $"{entityId}");
+            return callLog.ReturnAndLog(entityId);
         }
 
 

@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Adam
                 preparedException = null;
                 result = true;
             }
-            return wrapLog.Return(result, result.ToString());
+            return wrapLog.ReturnAndLog(result);
         }
 
 

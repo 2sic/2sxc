@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Mvc.Web
 
             var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();
 
-            return wrapLog.Return(meta, meta);
+            return wrapLog.ReturnAndLog(meta);
         }
 
         private string AntiForgeryToken()

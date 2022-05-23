@@ -36,8 +36,9 @@ namespace ToSic.Sxc.Dnn.Context
         /// </summary>
         public new DnnModule Init(ModuleInfo item, ILog parentLog)
         {
-            var warpLog = Log.Fn<DnnModule>($"{item?.ModuleID}");
             base.Init(item, parentLog);
+            // TODO: @STV - you had moved this to before the init, that shouldn't happen, as it will confuse the log which is attached during init. 
+            var warpLog = Log.Fn<DnnModule>($"{item?.ModuleID}");
             return warpLog.Return(this);
         }
 
@@ -47,9 +48,10 @@ namespace ToSic.Sxc.Dnn.Context
         /// </summary>
         public override IModule Init(int moduleId, ILog parentLog)
         {
-            var wrapLog = Log.Fn<IModule>($"{moduleId}");
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
             Init(mod, parentLog);
+            // TODO: @STV - you had moved this to before the init, that shouldn't happen, as it will confuse the log which is attached during init. 
+            var wrapLog = Log.Fn<IModule>($"{moduleId}");
             return wrapLog.Return(this);
         }
 

@@ -84,14 +84,14 @@ namespace ToSic.Sxc.Search
             // Start by getting the module info
             DnnModule = (module as Module<ModuleInfo>)?.UnwrappedContents;
             var wrapLog = Log.Fn<string>($"start search for mod#{DnnModule?.ModuleID}");
-            if (DnnModule == null) return wrapLog.Return("no module", "cancel");
+            if (DnnModule == null) return wrapLog.ReturnAndLog("no module");
             
             // This changes site in whole scope
             DnnSite = ((DnnSite)_site.New).TrySwap(DnnModule, Log);
 
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
-            if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog.Return("no app id", "cancel");
+            if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog.ReturnAndLog("no app id");
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
@@ -99,11 +99,11 @@ namespace ToSic.Sxc.Search
 
             Block = _moduleAndBlockBuilder.Ready.GetBlock(DnnModule);
 
-            if (Block.View == null) return wrapLog.Return("no view", "cancel");
-            if (Block.View.SearchIndexingDisabled) return wrapLog.Return("search disabled", "cancel"); // new in 12.02
+            if (Block.View == null) return wrapLog.ReturnAndLog("no view");
+            if (Block.View.SearchIndexingDisabled) return wrapLog.ReturnAndLog("search disabled"); // new in 12.02
 
             // This list will hold all EAV entities to be indexed
-            if (Block.Data == null) return wrapLog.Return("DataSource null", "cancel");
+            if (Block.Data == null) return wrapLog.ReturnAndLog("DataSource null");
 
 
             // Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Search
 
             // Get all streams to index
             var streamsToIndex = GetStreamsToIndex();
-            if (!streamsToIndex.Any()) return wrapLog.Return("no streams to index", "cancel");
+            if (!streamsToIndex.Any()) return wrapLog.ReturnAndLog("no streams to index");
 
 
             // Convert DNN SearchDocuments from 2sxc SearchInfos

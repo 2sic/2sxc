@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Save
             }
 
             var ok= BuildExceptionIfHasIssues(out preparedException, "ContainsOnlyExpectedNodes() done");
-            return wrapLog.Return(ok, $"{ok}");
+            return wrapLog.ReturnAndLog(ok);
         }
 
         /// <summary>

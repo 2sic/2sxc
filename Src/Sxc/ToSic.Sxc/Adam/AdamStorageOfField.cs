@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Adam
                 .Replace("[FieldName]", _fieldName)
                 .Replace("[SubFolder]", subFolder) // often blank, so it will just be removed
                 .Replace("//", "/");
-            return callLog.Return(result, result);
+            return callLog.ReturnAndLog(result);
         }
     }
 }

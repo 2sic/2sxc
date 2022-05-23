@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Polymorphism
                 return wrapLog.ReturnNull("unknown param");
             var isSuper = PortalSettings.Current?.UserInfo?.IsSuperUser ?? false;
             var result = isSuper ? "staging" : "live";
-            return wrapLog.Return(result, result);
+            return wrapLog.ReturnAndLog(result);
         }
     }
 }

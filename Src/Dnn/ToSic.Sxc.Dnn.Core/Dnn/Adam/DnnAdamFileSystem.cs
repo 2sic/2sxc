@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Dnn.Adam
             for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries && _dnnFiles.FileExists(dnnFolder, Path.GetFileName(fileName)); i++)
                 fileName = $"{name}-{i}{ext}";
 
-            return callLog.Return(fileName, fileName);
+            return callLog.ReturnAndLog(fileName);
         }
 
         #endregion
