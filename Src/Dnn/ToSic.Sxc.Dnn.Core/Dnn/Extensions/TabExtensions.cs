@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Dnn
     /// <remarks>
     /// WIP v13.11+
     /// </remarks>
-    [PrivateApi]
+    [PrivateApi("WIP v14")]
     public static class UserControlBaseExtensions
     {
         public static T GetService<T>(this UserControlBase skinOrModule)
