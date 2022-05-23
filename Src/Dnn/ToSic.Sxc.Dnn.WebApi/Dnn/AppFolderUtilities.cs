@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Http.Controllers;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
@@ -12,6 +11,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
+using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn
@@ -46,7 +46,9 @@ namespace ToSic.Sxc.Dnn
                 if (appFolder == null)
                 {
                     log.A("no folder found in url, will auto-detect");
-                    appFolder = sp.Build<AppFolder>()?.GetAppFolder();
+                    appFolder = sp.Build<AppFolder>()?
+                        .Init(() => sp.Build<DnnGetBlock>().GetCmsBlock(request, log))
+                        .GetAppFolder();
                 }
 
                 log.A($"App Folder: {appFolder}");
