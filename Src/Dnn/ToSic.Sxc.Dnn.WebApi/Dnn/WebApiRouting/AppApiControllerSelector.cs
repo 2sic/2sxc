@@ -14,7 +14,6 @@ using System.Web.Http.Routing;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Routing;

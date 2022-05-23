@@ -2,7 +2,6 @@
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Paths;

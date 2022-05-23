@@ -6,7 +6,6 @@ using System.Web.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
