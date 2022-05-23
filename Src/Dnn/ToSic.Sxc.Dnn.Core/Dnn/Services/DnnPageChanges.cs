@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Services
 
         public int Apply(Page page, IRenderResult renderResult)
         {
-            Log.Add("Will apply PageChanges");
+            Log.A("Will apply PageChanges");
 
             if (renderResult == null) return 0;
 
@@ -45,17 +45,17 @@ namespace ToSic.Sxc.Dnn.Services
             }
             catch { /* ignore BETA feature */ }
 
-            Log.Add("Will apply Header Status-Code changes if needed");
+            Log.A("Will apply Header Status-Code changes if needed");
             ApplyHttpStatus(page, renderResult);
 
             count += headChanges + manualChanges;
-            Log.Add($"Applied {count} changes");
+            Log.A($"Applied {count} changes");
             return count;
         }
 
         public int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
         {
-            var wrapLog = Log.Call<int>();
+            var wrapLog = Log.Fn<int>();
 
             // 2022-05-03 2dm - don't think the props are ever null, requiring access to the shared data
             // props = props ?? PageServiceShared.GetPropertyChangesAndFlush(Log);
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Dnn.Services
 
             var count = props.Count;
 
-            return wrapLog($"{count}", count);
+            return wrapLog.Return(count, $"{count}");
         }
 
         private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
@@ -104,27 +104,27 @@ namespace ToSic.Sxc.Dnn.Services
 
         private int ApplyHttpHeaders(Page page, IRenderResult result)
         {
-            var wrapLog = Log.Call<int>();
+            var wrapLog = Log.Fn<int>();
             var httpHeaders = result.HttpHeaders;
 
             // Register CSP changes for applying once all modules have been prepared
             if (result.CspEnabled) 
                 PageCsp(result.CspEnabled, result.CspEnforced).Add(result.CspParameters);
 
-            if (page?.Response == null) return wrapLog("error, HttpResponse is null", 0);
-            if (page.Response.HeadersWritten) return wrapLog("error, to late for adding http headers", 0);
-            if (httpHeaders?.Any() != true) return wrapLog("ok, no headers to add", 0);
+            if (page?.Response == null) return wrapLog.Return(0, "error, HttpResponse is null");
+            if (page.Response.HeadersWritten) return wrapLog.Return(0, "error, to late for adding http headers");
+            if (httpHeaders?.Any() != true) return wrapLog.Return(0, "ok, no headers to add");
 
             foreach (var httpHeader in httpHeaders)
             {
                 if (string.IsNullOrWhiteSpace(httpHeader.Name)) continue;
-                Log.Add($"add http header: {httpHeader.Name}:{httpHeader.Value}");
+                Log.A($"add http header: {httpHeader.Name}:{httpHeader.Value}");
                 // TODO: The CSP header can only exist once
                 // So to do this well, we'll need to merge them in future, 
                 // Ideally combining the existing one with any additional ones added here
                 page.Response.Headers[httpHeader.Name] = httpHeader.Value;
             }
-            return wrapLog("ok", httpHeaders.Count);
+            return wrapLog.Return(httpHeaders.Count, "ok");
         }
 
         private CspOfPage PageCsp(bool enabled, bool enforced)
@@ -158,13 +158,13 @@ namespace ToSic.Sxc.Dnn.Services
             if (page?.Response == null || result?.HttpStatusCode == null) return;
 
             var code = result.HttpStatusCode.Value;
-            Log.Add($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
+            Log.A($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");
             page.Response.StatusCode = code;
             // Skip IIS & upstream redirects to a custom 404 so the Dnn page is preserved
             page.Response.TrySkipIisCustomErrors = true;
             if (result.HttpStatusMessage == null) return;
 
-            Log.Add($"Custom status Description '{result.HttpStatusMessage}'.");
+            Log.A($"Custom status Description '{result.HttpStatusMessage}'.");
             page.Response.StatusDescription = result.HttpStatusMessage;
         }
 

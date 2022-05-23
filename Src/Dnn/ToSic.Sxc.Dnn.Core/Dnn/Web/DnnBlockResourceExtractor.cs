@@ -1,4 +1,5 @@
 ﻿using DotNetNuke.Web.Client;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Web.PageService;
 
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Web
 
         protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
         {
-            var wrapLog = Log.Call<(string, bool)>();
+            var wrapLog = Log.Fn<(string, bool)>();
 
             // Set priority for later processing?
             JsDefaultPriority = (int)FileOrder.Js.DefaultPriority;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Web
             // Handle Scripts
             renderedTemplate = ExtractStyles(renderedTemplate);
 
-            return wrapLog("ok", (renderedTemplate, include2SxcJs));
+            return wrapLog.Return((renderedTemplate, include2SxcJs), "ok");
         }
     }
 }

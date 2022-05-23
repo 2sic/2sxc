@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             Log.LinkTo(codeRoot.Log);
-            var wrapLog = Log.Call2();
+            var wrapLog = Log.Fn();
             _codeRoot = codeRoot;
 
             // Also connect upstream CspOfModule in case it's not yet connected
@@ -54,23 +54,23 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         private string GetAppPolicies()
         {
-            var cLog = Log.Call2<string>(AppId.ToString());
+            var cLog = Log.Fn<string>(AppId.ToString());
 
             // Get Stack
             if (!(_codeRoot?.Settings is DynamicStack stack)) 
-                return cLog.Done("no stack", null);
+                return cLog.ReturnNull("no stack");
 
             // Enable this for detailed debugging
             //stack.Debug = true;
 
             // Dynamic Stack of the App Settings
             var appSettings = stack?.GetStack(PartAppSystem) as DynamicStack;
-            Log.Add($"has {nameof(appSettings)}: {appSettings != null}");
+            Log.A($"has {nameof(appSettings)}: {appSettings != null}");
 
             // CSP Settings Reader from Dynamic Entity for the App
             var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);
             var policies = cspReader.Policies;
-            return cLog.Done(policies, policies);
+            return cLog.ReturnAndLog(policies);
         }
         #endregion
 

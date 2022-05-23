@@ -1,6 +1,7 @@
 ﻿using System;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
@@ -37,51 +38,63 @@ namespace ToSic.Sxc.Dnn
 
         public override IBlock GetBlock<TPlatformModule>(TPlatformModule module)
         {
-            var wrapLog = Log.Call<BlockFromModule>(useTimer: true);
+            var wrapLog = Log.Fn<BlockFromModule>(startTimer: true);
             if (module == null) throw new ArgumentNullException(nameof(module));
             if (!(module is ModuleInfo dnnModule)) throw new ArgumentException("Given data is not a module");
-            Log.Add($"Module: {dnnModule.ModuleID}");
+            Log.A($"Module: {dnnModule.ModuleID}");
 
             var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule)
         {
-            var wrapLog = Log.Call<IContextOfBlock>();
+            var wrapLog = Log.Fn<IContextOfBlock>();
             var context = _contextGenerator.New;
             context.Init(ParentLog);
-            Log.Add($"Will try-swap module info of {dnnModule.ModuleID} into site");
+            Log.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
-            Log.Add("Will init module");
+            Log.A("Will init module");
             ((DnnModule)context.Module).Init(dnnModule, ParentLog);
-            return wrapLog(null, InitPageOnly(context));
+            return wrapLog.Return(InitPageOnly(context));
         }
 
         private IContextOfBlock InitPageOnly(IContextOfBlock context)
         {
-            var wrapLog = Log.Call<IContextOfBlock>();
+            var wrapLog = Log.Fn<IContextOfBlock>();
             // Collect / assemble page information
             var activeTab = (context.Site as Site<PortalSettings>)?.UnwrappedContents?.ActiveTab;
-            context.Page.Init(activeTab?.TabID ?? Eav.Constants.NullId);
 
-            // the FullUrl will throw an error in DNN search scenarios
-            string url = null;
-            try
-            {
-                // skip during search (usual HttpContext is missing for search)
-                if (System.Web.HttpContext.Current == null) return wrapLog("no http-context, can't add page", context);
+            var page = (DnnPage)context.Page;
+            var url = page.InitPageIdAndUrl(activeTab);
 
-                url = activeTab?.FullUrl.TrimLastSlash();
-                ((Page)context.Page).Url = url;
-            }
-            catch
-            {
-                /* ignore */
-            }
-
-            return wrapLog(url, context);
+            return wrapLog.Return(context, url);
         }
+
+        //internal string InitPageIdAndUrl(Page page, TabInfo activeTab)
+        //{
+        //    page.Init(activeTab?.TabID ?? Eav.Constants.NullId);
+
+        //    // the FullUrl will throw an error in DNN search scenarios
+        //    string url = null;
+        //    try
+        //    {
+        //        // skip during search (usual HttpContext is missing for search)
+        //        if (System.Web.HttpContext.Current != null)
+        //        {
+        //            url = activeTab?.FullUrl.TrimLastSlash();
+        //            page.Url = url;
+        //        }
+        //        else
+        //            url = "no http-context, can't add page";
+        //    }
+        //    catch
+        //    {
+        //        /* ignore */
+        //    }
+
+        //    return url;
+        //}
     }
 }

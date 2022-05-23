@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditDto Load(int appId, List<ItemIdentifier> items)
         {
             // Security check
-            var wrapLog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
+            var wrapLog = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
 
             var context = _ctxResolver.BlockOrApp(appId);
 
@@ -136,12 +137,11 @@ namespace ToSic.Sxc.WebApi.Cms
             } 
             catch (Exception) { /* ignore */ }
 
-            // done - return
-            wrapLog($"ready, sending items:{result.Items.Count}, " +
-                    $"types:{result.ContentTypes.Count}, " +
-                    $"inputs:{result.InputTypes.Count}, " +
-                    $"feats:{result.Features.Count}");
-            return result;
+            // done
+            return wrapLog.Return(result, $"ready, sending items:{result.Items.Count}, " +
+                                   $"types:{result.ContentTypes.Count}, " +
+                                   $"inputs:{result.InputTypes.Count}, " +
+                                   $"feats:{result.Features.Count}");
         }
 
 
@@ -151,12 +151,12 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
 
             foreach (var header in list
                 .Where(header => header.For?.Singleton == true && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
             {
-                Log.Add("Found an entity with the auto-lookup marker");
+                Log.A("Found an entity with the auto-lookup marker");
                 // try to find metadata for this
                 var mdFor = header.For;
                 // #TargetTypeIdInsteadOfTarget
@@ -170,14 +170,14 @@ namespace ToSic.Sxc.WebApi.Cms
                 var mdList = mds.ToArray();
                 if (mdList.Length > 1)
                 {
-                    Log.Add($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
+                    Log.A($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
                     // must now sort by ID otherwise the order may be different after a few save operations
                     mdList = mdList.OrderBy(e => e.EntityId).ToArray();
                 }
                 header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
             }
 
-            return wrapLog("ok", true);
+            return wrapLog.Return(true, "ok");
         }
     }
 }

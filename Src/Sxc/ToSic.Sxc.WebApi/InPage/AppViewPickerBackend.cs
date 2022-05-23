@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Ui;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
@@ -52,18 +53,17 @@ namespace ToSic.Sxc.WebApi.InPage
 
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
-            var callLog = Log.Call<Guid?>($"{templateId}, {forceCreateContentGroup}");
+            var callLog = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return callLog("ok", BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SaveTemplateId(templateId, forceCreateContentGroup));
+            return callLog.Return(BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SaveTemplateId(templateId, forceCreateContentGroup), "ok");
         }
 
         public bool Publish(int id)
         {
-            var callLog = Log.Call<bool>($"{id}");
+            var callLog = Log.Fn<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
             CmsManagerOfBlock.Entities.Publish(id);
-            return callLog("ok", true);
+            return callLog.Return(true, "ok");
         }
-
     }
 }

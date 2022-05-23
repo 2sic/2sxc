@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -54,32 +55,31 @@ namespace ToSic.Sxc.Apps
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {
-            var wrapLog = Log.Call($"get CG#{contentGroupGuid}");
+            var wrapLog = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
             var groupEntity = ContentGroups().One(contentGroupGuid);
             var found = groupEntity != null;
-            wrapLog(found ? "found" : "missing");
-            return found
+            return wrapLog.Return(found
                 ? new BlockConfiguration(groupEntity, Parent, _cultureResolver.CurrentCultureCode, Log).WarnIfMissingData()
                 : new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log)
                 {
                     PreviewTemplateId = Guid.Empty,
                     DataIsMissing = true
-                };
+                }, 
+                found ? "found" : "missing");
         }
         
 
         internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
         {
-            var wrapLog = Log.Call($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
+            var wrapLog = Log.Fn<BlockConfiguration>($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
-            Log.Add($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
+            Log.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
                 ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) { PreviewTemplateId = blockId.PreviewView }
                 : GetBlockConfig(blockId.Guid);
             result.BlockIdentifierOrNull = blockId;
-            wrapLog(null);
-            return result;
+            return wrapLog.Return(result);
         }
 
     }

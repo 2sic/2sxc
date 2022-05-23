@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Formats;
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Save
         {
             var allowWriteLive = permCheck.UserMayOnAll(GrantSets.WritePublished);
             var forceDraft = !allowWriteLive;
-            Log.Add($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");
+            Log.A($"allowWrite: {allowWriteLive} forceDraft: {forceDraft}");
 
             // list of saved IDs
             Dictionary<Guid, int> postSaveIds = null;
@@ -58,18 +59,18 @@ namespace ToSic.Sxc.WebApi.Save
             // use dnn versioning if partOfPage
             if (partOfPage)
             {
-                Log.Add("partOfPage - save with publishing");
+                Log.A("partOfPage - save with publishing");
                 var versioning = _pagePublishing.Init(Log);
                 versioning.DoInsidePublishing(Context,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }
             else
             {
-                Log.Add("partOfPage false, save without publishing");
+                Log.A("partOfPage false, save without publishing");
                 postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
             }
 
-            Log.Add(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");
+            Log.A(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");
             return postSaveIds;
         }
 

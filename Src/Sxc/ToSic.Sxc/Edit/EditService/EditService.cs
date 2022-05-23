@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Logging;
+﻿using System;
+using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
@@ -22,13 +24,14 @@ namespace ToSic.Sxc.Edit.EditService
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             Log.LinkTo(codeRoot.Log);
-            SetBlock(codeRoot.Block);
+            SetBlock(codeRoot, codeRoot.Block);
         }
 
-        public IEditService SetBlock(IBlock block)
+        public IEditService SetBlock(IDynamicCodeRoot codeRoot, IBlock block)
         {
             Block = block;
-            Enabled = Block?.Context.UserMayEdit ?? false;
+            var user = codeRoot?.CmsContext?.User;
+            Enabled = Block?.Context.UserMayEdit ?? (user?.IsSiteAdmin ?? false) || (user?.IsSystemAdmin ?? false);
             if(Log.Parent == null && block != null) Log.LinkTo(block.Log);
             return this;
         }

@@ -18,10 +18,10 @@ namespace ToSic.Sxc.Compatibility
         public static void LogBlockDetails(IBlock block, ILog log)
         {
             if (block == null) return;
-            log.Add($"Site ({block.Context?.Site?.Id}): {block.Context?.Site?.UrlRoot}");
-            log.Add($"Page ({block.Context?.Page?.Id}): {block.Context?.Page?.Url}");
-            log.Add($"App ({block.App?.AppId}) Name: {block.App?.Name}");
-            log.Add($"View ({block.View?.Id}): {block.View?.Name}");
+            log.A($"Site ({block.Context?.Site?.Id}): {block.Context?.Site?.UrlRoot}");
+            log.A($"Page ({block.Context?.Page?.Id}): {block.Context?.Page?.Url}");
+            log.A($"App ({block.App?.AppId}) Name: {block.App?.Name}");
+            log.A($"View ({block.View?.Id}): {block.View?.Name}");
 
         }
     }

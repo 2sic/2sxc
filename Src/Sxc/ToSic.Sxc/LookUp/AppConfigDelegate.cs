@@ -38,18 +38,16 @@ namespace ToSic.Sxc.LookUp
         {
             var showDrafts = context.UserMayEdit;
 
-            var wrapLog = Log.Call($"showDrafts: {showDrafts}");
+            var wrapLog = Log.Fn<Func<App, IAppDataConfiguration>>($"showDrafts: {showDrafts}");
 
-
-            wrapLog("ok");
-            return appToUse =>
+            return wrapLog.Return(appToUse =>
             {
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var lookUpEngine = GetLookupEngineForContext(context, appToUse as IApp, block);
 
                 // return results
                 return new AppDataConfiguration(showDrafts, lookUpEngine);
-            };
+            },"ok");
         }
 
         /// <summary>
@@ -58,12 +56,10 @@ namespace ToSic.Sxc.LookUp
         internal Func<App, IAppDataConfiguration> Build(IBlock block)
         {
             var log = new Log("Sxc.CnfPrv", block.Log);
-            var wrapLog = log.Call();
+            var wrapLog = log.Fn<Func<App, IAppDataConfiguration>>();
             var showDrafts = block.Context.UserMayEdit;
             var existingLookups = block.Data.Configuration.LookUpEngine;
-
-            wrapLog("ok");
-            return appToUse => new AppDataConfiguration(showDrafts, existingLookups);
+            return wrapLog.Return(appToUse => new AppDataConfiguration(showDrafts, existingLookups), "ok");
         }
 
         /// <summary>
@@ -81,12 +77,12 @@ namespace ToSic.Sxc.LookUp
         {
             var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
 
-            var wrapLog = Log.Call<LookUpEngine>($"module: {modId}, app: {appForLookup?.AppId} ..., ...");
+            var wrapLog = Log.Fn<LookUpEngine>($"module: {modId}, app: {appForLookup?.AppId} ..., ...");
 
 
             // Find the standard DNN property sources if PortalSettings object is available
             var envLookups = _getEngineLazy.Ready.GetLookUpEngine(modId);
-            Log.Add($"Environment provided {envLookups.Sources.Count} sources");
+            Log.A($"Environment provided {envLookups.Sources.Count} sources");
 
             var provider = new LookUpEngine(envLookups, Log);
 
@@ -94,7 +90,7 @@ namespace ToSic.Sxc.LookUp
             var http = _httpLazy.Value;
             if (http.Current != null)
             {
-                Log.Add("Found Http-Context, will ty to add params for querystring, server etc.");
+                Log.A("Found Http-Context, will ty to add params for querystring, server etc.");
 
 
                 // new (Oqt and Dnn)
@@ -120,7 +116,7 @@ namespace ToSic.Sxc.LookUp
 #endif
             }
             else
-                Log.Add("No Http-Context found, won't add http params to look-up");
+                Log.A("No Http-Context found, won't add http params to look-up");
 
 
             provider.Add(new LookUpInAppProperty("app", appForLookup));
@@ -139,7 +135,7 @@ namespace ToSic.Sxc.LookUp
                 var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockForLookup);
                 provider.Add(blockBuilderLookUp);
             }
-            return wrapLog("ok", provider);
+            return wrapLog.Return(provider, "ok");
         }
     }
 }

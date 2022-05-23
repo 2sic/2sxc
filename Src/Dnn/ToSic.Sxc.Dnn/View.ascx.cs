@@ -2,7 +2,6 @@
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Paths;
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.Dnn
 
         private ILog Log { get; } = new Log("Sxc.View");
 
-        protected LogCall LogTimer => _logTimer.Get(() => Log.Call2(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
+        protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
         private readonly ValueGetOnce<LogCall> _logTimer = new ValueGetOnce<LogCall>();
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.Dnn
                 GetService<LogHistory>().Add("module", Log);
                 LogTimer.Stopwatch.Start();
 
-                var callLog = Log.Call(useTimer: true);
+                var callLog = Log.Fn(startTimer: true);
 
                 // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
                 var checkPortalIsReady = true;
@@ -98,10 +97,10 @@ namespace ToSic.Sxc.Dnn
         {
             var finalMessage = "";
             LogTimer.DoInTimer(() => { 
-                var callLog = Log.Call(useTimer: true);
+                var callLog = Log.Fn(startTimer: true);
 
                 // #lightspeed
-                if (OutputCache?.Existing != null) Log.Add("Lightspeed hit - will use cached");
+                if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
 
                 IRenderResult data = null;
                 var headersAndScriptsAdded = false;
@@ -143,14 +142,14 @@ namespace ToSic.Sxc.Dnn
                 if (IsError && !headersAndScriptsAdded)
                     DnnClientResources?.AddEverything(data?.Features);
 
-                callLog(null);
+                callLog.Done();
             });
             LogTimer.Done(IsError ? "⚠️" : finalMessage);
         }
 
         private IRenderResult RenderViewAndGatherJsCssSpecs()
         {
-            var callLog = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
+            var callLog = Log.Fn(message: $"module {ModuleId} on page {TabId}", startTimer: true);
             var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
             {
@@ -164,7 +163,7 @@ namespace ToSic.Sxc.Dnn
 
 
 
-        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(Log).Init(ModuleId, Block));
+        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(Log).Init(ModuleId, TabId, Block));
         private readonly ValueGetOnce<IOutputCache> _oc = new ValueGetOnce<IOutputCache>();
     }
 }

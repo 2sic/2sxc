@@ -62,8 +62,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             // This is because the old Dnn wasn't DI aware
             if (services == null) services = new ServiceCollection();
 
-            var appsCache = GetAppsCacheOverride();
-            services.AddDnn(appsCache)
+            //var appsCache = GetAppsCacheOverride(); // 2022-05-18: commented because it not in use anymore
+            services.AddDnn(/*appsCache*/)
                 .AddAdamWebApi<int, int>()
                 .AddSxcWebApi()
                 .AddSxcCore()
@@ -77,7 +77,6 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Remember this for later, when we must start the Static Dependency Injection
             OriginalServiceCollection = services;
-            //DnnStaticDi.StaticServiceCollection = services;
 
             _alreadyRegistered = true;
             return services;
@@ -87,19 +86,20 @@ namespace ToSic.Sxc.Dnn.StartUp
 
         public static IServiceCollection OriginalServiceCollection;
 
-        /// <summary>
-        /// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
-        /// </summary>
-        /// <returns></returns>
-        internal static string GetAppsCacheOverride()
-        {
-            var farmCacheName = ConfigurationManager.AppSettings["EavAppsCache"];
-            if (string.IsNullOrWhiteSpace(farmCacheName)) return null;
-            return farmCacheName;
-        }
+        // 2022-05-18: commented because it not in use anymore
+        ///// <summary>
+        ///// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
+        ///// </summary>
+        ///// <returns></returns>
+        //internal static string GetAppsCacheOverride()
+        //{
+        //    var farmCacheName = ConfigurationManager.AppSettings["EavAppsCache"];
+        //    if (string.IsNullOrWhiteSpace(farmCacheName)) return null;
+        //    return farmCacheName;
+        //}
 
 
-        public static IServiceCollection AddDnn(this IServiceCollection services, string appsCacheOverride)
+        public static IServiceCollection AddDnn(this IServiceCollection services /*, string appsCacheOverride*/)
         {
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
@@ -110,6 +110,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             
             // Module cannot yet be scoped, until we have a per-module scope at some time
             services.TryAddTransient<IModule, DnnModule>();
+            services.TryAddTransient<IPage, DnnPage>();
             services.TryAddTransient<IValueConverter, DnnValueConverter>();
 
             services.TryAddTransient<XmlExporter, DnnXmlExporter>();
@@ -123,21 +124,15 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IZoneMapper, DnnZoneMapper>();
 
             services.TryAddTransient<IBlockResourceExtractor, DnnBlockResourceExtractor>();
-            //services.TryAddTransient<AppPermissionCheck, DnnPermissionCheck>();
-            //services.TryAddTransient<DnnPermissionCheck>();
             services.TryAddTransient<IEnvironmentPermission, DnnEnvironmentPermission>();
 
             services.TryAddTransient<IDnnContext, DnnContext>();
-            //services.TryAddTransient<ILinkHelper, DnnLinkService>(); // 2022-03-29 v13.05 2dm disabled this, as I cannot imagine anybody having used this in DI
             services.TryAddTransient<ILinkService, DnnLinkService>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
             services.TryAddTransient<DnnEnvironmentInstaller>(); // Dnn Only
-            // 2022-02-03 2dm - removed strange indirect access to constant
-            //services.TryAddTransient<DnnInstallLogger>(sp =>
-            //    ActivatorUtilities.CreateInstance<DnnInstallLogger>(sp, DnnEnvironmentInstaller.SaveUnimportantDetails));
             services.TryAddTransient<DnnInstallLogger>();
 
             // ADAM
@@ -147,8 +142,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Settings / WebApi stuff
             services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
             services.TryAddTransient<IApiInspector, DnnApiInspector>();
-            // Moved to EAV WebApi
-            //services.TryAddScoped<ResponseMaker<HttpResponseMessage>, ResponseMakerNetFramework>(); // must be scoped, as the api-controller must init this for use in other parts
 
             // new #2160
             services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
@@ -166,30 +159,33 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // add page publishing
             services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
-            services.TryAddTransient<IPagePublishingResolver, Cms.DnnPagePublishingResolver>();
 
-            if (appsCacheOverride != null)
-            {
-                try
-                {
-                    // replace default cache implementation with farm cache
-                    services.Remove(ServiceDescriptor.Singleton<IAppsCache, AppsCache>());
-                    var appsCacheType = Type.GetType(appsCacheOverride);
-                    services.TryAddSingleton(typeof(IAppsCache), appsCacheType);
-                }
-                catch
-                {
-                    /* fallback */
-                    services.TryAddSingleton<IAppsCache, AppsCache>();
-                }
-            }
-            
+            // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
+            services.AddTransient<IPagePublishingSettings, Cms.DnnPagePublishingSettings>();
+
+            // 2022-05-18: commented because it not in use anymore
+            // new cache implements IAppsCacheSwitchable and it is registered with DNN DI.
+            //if (appsCacheOverride != null)
+            //{
+            //    try
+            //    {
+            //        // replace default cache implementation with farm cache
+            //        services.Remove(ServiceDescriptor.Singleton<IAppsCache, AppsCache>());
+            //        var appsCacheType = Type.GetType(appsCacheOverride);
+            //        services.TryAddSingleton(typeof(IAppsCache), appsCacheType);
+            //    }
+            //    catch
+            //    {
+            //        /* fallback */
+            //        services.TryAddSingleton<IAppsCache, AppsCache>();
+            //    }
+            //}
+
             // new in v12 - .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();
 
             // Integrate KOI Dnn-Parts
             services.TryAddTransient<Connect.Koi.Detectors.ICssFrameworkDetector, Connect.Koi.Dnn.DetectAndCacheDnnThemeCssFramework>();
-            //services.ActivateKoi2Di();
             
             // new in v12.02 - RazorBlade DI
             services.TryAddScoped<DnnPageChanges>();
@@ -203,8 +199,6 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v12.05
             services.TryAddTransient<ILogService, DnnLogService>();
-
-            // v12.05
             services.TryAddTransient<IMailService, DnnMailService>();
 
             // v13
@@ -212,6 +206,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v13.04
             services.TryAddTransient<IUserInformationService, DnnUserInformationService>();
+
+            // v13.12
+            services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd
 
             return services;
         }

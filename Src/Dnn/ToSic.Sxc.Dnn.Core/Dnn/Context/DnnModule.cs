@@ -37,8 +37,8 @@ namespace ToSic.Sxc.Dnn.Context
         public new DnnModule Init(ModuleInfo item, ILog parentLog)
         {
             base.Init(item, parentLog);
-            Log.Call($"{item?.ModuleID}")(null);
-            return this;
+            var warpLog = Log.Fn<DnnModule>($"{item?.ModuleID}");
+            return warpLog.Return(this);
         }
 
         /// <summary>
@@ -49,8 +49,8 @@ namespace ToSic.Sxc.Dnn.Context
         {
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
             Init(mod, parentLog);
-            Log.Call($"{moduleId}")(null);
-            return this;
+            var wrapLog = Log.Fn<IModule>($"{moduleId}");
+            return wrapLog.Return(this);
         }
 
         #endregion
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Dnn.Context
 
         private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
         {
-            var wrapLog = Log.Call<(int, string)>($"{zoneId}");
+            var wrapLog = Log.Fn<(int, string)>($"{zoneId}");
 
             var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
 
@@ -103,18 +103,18 @@ namespace ToSic.Sxc.Dnn.Context
             if (IsContent)
             {
                 var appId = _appStates.DefaultAppId(zoneId);
-                return wrapLog($"{msg} - use Default app: {appId}", (appId, "Content"));
+                return wrapLog.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
                 var appId = _appFinderLazy.Ready.FindAppId(zoneId, guid);
-                return wrapLog($"{msg} AppG:{guid} = app:{appId}", (appId, guid));
+                return wrapLog.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
             }
 
-            Log.Add($"{msg} not found = null");
-            return wrapLog("not found", (Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty));
+            Log.A($"{msg} not found = null");
+            return wrapLog.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
         }
     }
 }

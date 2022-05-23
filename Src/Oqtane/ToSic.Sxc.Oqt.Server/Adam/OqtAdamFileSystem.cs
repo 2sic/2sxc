@@ -34,11 +34,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamContext;
             _adamPaths.Init(adamContext, Log);
-            wrapLog("ok");
-            return this;
+            return wrapLog.Return(this, "ok");
         }
 
         protected AdamManager<int, int> AdamContext;
@@ -65,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new void Rename(IFile file, string newName)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             try
             {
                 var path = _serverPaths.FullContentPath(file.Path);
@@ -76,27 +75,27 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 var oqtFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
                 oqtFile.Name = newName;
                 OqtFileRepository.UpdateFile(oqtFile);
-                Log.Add($"VirtualFile {oqtFile.FileId} renamed to {oqtFile.Name}");
-
-                callLog("ok");
+                Log.A($"VirtualFile {oqtFile.FileId} renamed to {oqtFile.Name}");
+                
+                callLog.Done("ok");
             }
             catch (Exception e)
             {
-                callLog($"Error:{e.Message}; {e.InnerException}");
+                callLog.Done($"Error:{e.Message}; {e.InnerException}");
             }
         }
-
+        
         public new void Delete(IFile file)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             var dnnFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
             OqtFileRepository.DeleteFile(dnnFile.FileId);
-            callLog("ok");
+            callLog.Done("ok");
         }
 
         public new File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
-            var callLog = Log.Call<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
+            var callLog = Log.Fn<File<int, int>>($"..., ..., {fileName}, {ensureUniqueName}");
             if (ensureUniqueName)
                 fileName = FindUniqueFileName(parent, fileName);
             var fullContentPath = _serverPaths.FullContentPath(parent.Path);
@@ -119,7 +118,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 ImageWidth = 0
             };
             var oqtFile = OqtFileRepository.AddFile(oqtFileData);
-            return callLog("ok", GetFile(oqtFile.FileId));
+            return callLog.Return(GetFile(oqtFile.FileId), "ok");
         }
 
         /// <summary>
@@ -131,7 +130,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         /// <returns></returns>
         private new string FindUniqueFileName(IFolder parentFolder, string fileName)
         {
-            var callLog = Log.Call<string>($"..., {fileName}");
+            var callLog = Log.Fn<string>($"..., {fileName}");
 
             var dnnFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
@@ -140,7 +139,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                             && System.IO.File.Exists(Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
-            return callLog(fileName, fileName);
+            return callLog.Return(fileName, fileName);
         }
 
         #endregion
@@ -158,7 +157,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public new void AddFolder(string path)
         {
             path = path.Backslash();
-            var callLog = Log.Call(path);
+            var callLog = Log.Fn(path);
 
             if (FolderExists(path)) return;
 
@@ -172,22 +171,22 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
                 // Create the new virtual folder
                 CreateVirtualFolder(parentFolder, path, subfolder);
-                callLog("ok");
+                callLog.Done("ok");
             }
             catch (SqlException)
             {
                 // don't do anything - this happens when multiple processes try to add the folder at the same time
                 // like when two fields in a dialog cause the web-api to create the folders in parallel calls
                 // see also https://github.com/2sic/2sxc/issues/811
-                Log.Add("error in SQL, probably folder already exists");
+                Log.A("error in SQL, probably folder already exists");
             }
             catch (NullReferenceException)
             {
                 // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
-                Log.Add("error, probably folder already exists");
+                Log.A("error, probably folder already exists");
             }
 
-            callLog("?");
+            callLog.Done("?");
         }
 
         private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
@@ -199,33 +198,33 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new void Rename(IFolder folder, string newName)
         {
-            var callLog = Log.Call($"..., {newName}");
+            var callLog = Log.Fn($"..., {newName}");
             var fld = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
             WipConstants.AdamNotImplementedYet();
-            Log.Add("Not implement yet in Oqtane");
+            Log.A("Not implement yet in Oqtane");
             //FolderRepository.RenameFolder(fld, newName);
-            callLog("ok");
+            callLog.Done("ok");
         }
 
         public new void Delete(IFolder folder)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             OqtFolderRepository.DeleteFolder(folder.AsOqt().SysId);
-            callLog("ok");
+            callLog.Done("ok");
         }
 
         public new Folder<int, int> Get(string path) => OqtToAdam(GetOqtFolderByName(path));
 
         public new List<Folder<int, int>> GetFolders(IFolder folder)
         {
-            var callLog = Log.Call<List<Folder<int, int>>>();
+            var callLog = Log.Fn<List<Folder<int, int>>>();
             var fldObj = GetOqtFolder(folder.AsOqt().SysId);
             if(fldObj == null) return new List<Folder<int, int>>();
 
             var firstList = GetSubFoldersRecursive(fldObj);
             var folders = firstList?.Select(OqtToAdam).ToList()
                           ?? new List<Folder<int, int>>();
-            return callLog($"{folders.Count}", folders);
+            return callLog.Return(folders, $"{folders.Count}");
         }
 
         private List<Folder> GetSubFoldersRecursive(Folder parentFolder, List<Folder> allFolders = null, List<Folder> subFolders = null)
@@ -251,7 +250,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new List<File<int, int>> GetFiles(IFolder folder)
         {
-            var callLog = Log.Call<List<File<int, int>>>();
+            var callLog = Log.Fn<List<File<int, int>>>();
             var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
             // sometimes the folder doesn't exist for whatever reason
             if (fldObj == null) return  new List<File<int, int>>();
@@ -260,7 +259,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var firstList = OqtFileRepository.GetFiles(fldObj.FolderId);
             var files = firstList?.Select(OqtToAdam).ToList()
                      ?? new List<File<int, int>>();
-            return callLog($"{files.Count}", files);
+            return callLog.Return(files, $"{files.Count}");
         }
 
         #endregion

@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Web.PageService
         public IList<HeadChange> Headers { get; } = new List<HeadChange>();
         public IList<HeadChange> GetHeadChangesAndFlush(ILog log)
         {
-            var wrapLog = log.Call<IList<HeadChange>>();
+            var wrapLog = log.Fn<IList<HeadChange>>();
             var changes = Headers.ToArray().ToList();
             Headers.Clear();
-            return wrapLog($"{changes.Count}", changes);
+            return wrapLog.Return(changes, $"{changes.Count}");
         }
 
 

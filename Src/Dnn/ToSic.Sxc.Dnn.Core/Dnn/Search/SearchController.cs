@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Search
     /// </remarks>
     public class SearchController : HasLog<SearchController>
     {
-        public SearchController(IServiceProvider serviceProvider, 
-            IAppsCache appsCache,
+        public SearchController(IServiceProvider serviceProvider,
+            AppsCacheSwitch appsCache,
             Generator<CodeCompiler> codeCompiler,
             Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
             Generator<ISite> site,
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Search
             _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
         }
         private readonly IServiceProvider _serviceProvider;
-        private readonly IAppsCache _appsCache;
+        private readonly AppsCacheSwitch _appsCache;
         private readonly Generator<CodeCompiler> _codeCompiler;
         private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
         private readonly Generator<ISite> _site;
@@ -83,27 +83,27 @@ namespace ToSic.Sxc.Search
         {
             // Start by getting the module info
             DnnModule = (module as Module<ModuleInfo>)?.UnwrappedContents;
-            var wrapLog = Log.Call<string>($"start search for mod#{DnnModule?.ModuleID}");
-            if (DnnModule == null) return wrapLog("cancel", "no module");
+            var wrapLog = Log.Fn<string>($"start search for mod#{DnnModule?.ModuleID}");
+            if (DnnModule == null) return wrapLog.ReturnAndLog("no module");
             
             // This changes site in whole scope
             DnnSite = ((DnnSite)_site.New).TrySwap(DnnModule, Log);
 
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
-            if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog("cancel", "no app id");
+            if (appId == AppConstants.AppIdNotFound || appId == Eav.Constants.NullId) return wrapLog.ReturnAndLog("no app id");
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
-            _appsCache.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
+            _appsCache.Value.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
             Block = _moduleAndBlockBuilder.Ready.GetBlock(DnnModule);
 
-            if (Block.View == null) return wrapLog("cancel", "no view");
-            if (Block.View.SearchIndexingDisabled) return wrapLog("cancel", "search disabled"); // new in 12.02
+            if (Block.View == null) return wrapLog.ReturnAndLog("no view");
+            if (Block.View.SearchIndexingDisabled) return wrapLog.ReturnAndLog("search disabled"); // new in 12.02
 
             // This list will hold all EAV entities to be indexed
-            if (Block.Data == null) return wrapLog("cancel", "DataSource null");
+            if (Block.Data == null) return wrapLog.ReturnAndLog("DataSource null");
 
 
             // Attach DNN Lookup Providers so query-params like [DateTime:Now] or [Portal:PortalId] will work
@@ -111,14 +111,14 @@ namespace ToSic.Sxc.Search
 
             // Get all streams to index
             var streamsToIndex = GetStreamsToIndex();
-            if (!streamsToIndex.Any()) return wrapLog("cancel", "no streams to index");
+            if (!streamsToIndex.Any()) return wrapLog.ReturnAndLog("no streams to index");
 
 
             // Convert DNN SearchDocuments from 2sxc SearchInfos
             SearchItems = BuildInitialSearchInfos(streamsToIndex, DnnModule);
 
             // all ok
-            return wrapLog("ok", null);
+            return wrapLog.ReturnNull("ok");
         }
 
         /// <summary>The DnnModule will be initialized, and must exist for the search-index to provide data.</summary>
@@ -140,25 +140,25 @@ namespace ToSic.Sxc.Search
             Log.Preserve = false;
             
             // Log with infos, to ensure errors are caught
-            var wrapLog = Log.Call<IList<SearchDocument>>();
+            var wrapLog = Log.Fn<IList<SearchDocument>>();
             var exitMessage = InitAllAndVerifyIfOk(module);
             if (exitMessage != null) 
-                return wrapLog(exitMessage, new List<SearchDocument>());
+                return wrapLog.Return(new List<SearchDocument>(), exitMessage);
 
             try
             {
                 var useCustomViewController = !string.IsNullOrWhiteSpace(Block.View.ViewController); // new in 12.02
-                Log.Add($"Use new Custom View Controller: {useCustomViewController}");
+                Log.A($"Use new Custom View Controller: {useCustomViewController}");
                 if (useCustomViewController)
                 {
                     /* New mode in 12.02 using a custom ViewController */
                     var customizeSearch = CreateAndInitViewController(DnnSite, Block);
-                    if (customizeSearch == null) return wrapLog("exit", new List<SearchDocument>());
+                    if (customizeSearch == null) return wrapLog.Return(new List<SearchDocument>(), "exit");
 
                     // Call CustomizeSearch in a try/catch
-                    Log.Add("execute CustomizeSearch");
+                    Log.A("execute CustomizeSearch");
                     customizeSearch.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
-                    Log.Add("Executed CustomizeSearch");
+                    Log.A("Executed CustomizeSearch");
                 }
                 else
                 {
@@ -170,18 +170,18 @@ namespace ToSic.Sxc.Search
 #pragma warning disable CS0618
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing
                     // The new model v12.02 won't need this
-                    Log.Add("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
+                    Log.A("Will run CustomizeData() in the Razor Engine which will call it in the Razor if exists");
                     engine.CustomizeData();
                     
                     // check if the cshtml has search customizations
-                    Log.Add("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
+                    Log.A("Will run CustomizeSearch() in the Razor Engine which will call it in the Razor if exists");
                     engine.CustomizeSearch(SearchItems, Block.Context.Module, beginDate);
 #pragma warning restore CS0618
                 }
             }
             catch (Exception e)
             {
-                return wrapLog("error, so return nothing to ensure we don't bleed unexpected infos", LogErrorForExit(e, DnnModule));
+                return wrapLog.Return(LogErrorForExit(e, DnnModule), "error, so return nothing to ensure we don't bleed unexpected infos");
             }
 
             // At the of the code, add it to insights / history. This must happen at the end.
@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Search
             // reduce load by only keeping recently modified items
             var searchDocuments = KeepOnlyChangesSinceLastIndex(beginDate, SearchItems);
 
-            return wrapLog($"{searchDocuments.Count}", searchDocuments);
+            return wrapLog.Return(searchDocuments, $"{searchDocuments.Count}");
         }
 
         
@@ -200,7 +200,7 @@ namespace ToSic.Sxc.Search
         private List<SearchDocument> LogErrorForExit(Exception e, ModuleInfo modInfo)
         {
             DnnEnvironmentLogger.AddSearchExceptionToLog(modInfo, e, nameof(SearchController));
-            Log.Exception(e);
+            Log.Ex(e);
             return new List<SearchDocument>();
         }
         
@@ -232,7 +232,7 @@ namespace ToSic.Sxc.Search
         /// </summary>
         private Dictionary<string, List<ISearchItem>> BuildInitialSearchInfos(KeyValuePair<string, IDataStream>[] streamsToIndex, ModuleInfo dnnModule)
         {
-            var wrapLog = Log.Call<Dictionary<string, List<ISearchItem>>>();
+            var wrapLog = Log.Fn<Dictionary<string, List<ISearchItem>>>();
             var language = dnnModule.CultureCode;
             var searchInfoDictionary = new Dictionary<string, List<ISearchItem>>();
             foreach (var stream in streamsToIndex)
@@ -264,7 +264,7 @@ namespace ToSic.Sxc.Search
                 }));
             }
 
-            return wrapLog($"{searchInfoDictionary.Count}", searchInfoDictionary);
+            return wrapLog.Return(searchInfoDictionary, $"{searchInfoDictionary.Count}");
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace ToSic.Sxc.Search
         {
             if (dataSource.Configuration?.LookUpEngine != null)
             {
-                Log.Add("Will try to attach dnn providers to DataSource LookUps");
+                Log.A("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
                     var getLookups = _dnnLookUpEngineResolver.Ready;
@@ -284,7 +284,7 @@ namespace ToSic.Sxc.Search
                 catch (Exception e)
                 {
                     // Log but keep going, as it's bad, but the lookups may not be important for this module
-                    Log.Exception(e);
+                    Log.Ex(e);
                 }
             }
         }
@@ -294,7 +294,7 @@ namespace ToSic.Sxc.Search
         /// </summary>
         private KeyValuePair<string, IDataStream>[] GetStreamsToIndex()
         {
-            var wrapLog = Log.Call<KeyValuePair<string, IDataStream>[]>();
+            var wrapLog = Log.Fn<KeyValuePair<string, IDataStream>[]>();
             // Check if we should filter the streams - new in 12.02
             var streamsToKeep = Block.View.SearchIndexingStreams
                 .Split(',')
@@ -312,32 +312,32 @@ namespace ToSic.Sxc.Search
                     .Where(s => streamsToKeep.Contains(s.Key, InvariantCultureIgnoreCase))
                     .ToArray();
             
-            return wrapLog($"{streamsToIndex.Length}", streamsToIndex);
+            return wrapLog.Return(streamsToIndex, $"{streamsToIndex.Length}");
         }
 
         private ICustomizeSearch CreateAndInitViewController(DnnSite site, IBlock block)
         {
-            var wrapLog = Log.Call<ICustomizeSearch>();
+            var wrapLog = Log.Fn<ICustomizeSearch>();
             // 1. Get and compile the view.ViewController
             var path = Path
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
                 .ForwardSlash();
-            Log.Add($"compile ViewController class on path: {path}/{Block.View.ViewController}");
+            Log.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
             var instance = _codeCompiler.New.InstantiateClass(block.View.ViewController, null, path, true);
-            Log.Add("got instance of compiled ViewController class");
+            Log.A("got instance of compiled ViewController class");
 
             // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-            if (!(instance is ICustomizeSearch customizeSearch)) return wrapLog("exit, class do not implements ICustomizeSearch", null);
+            if (!(instance is ICustomizeSearch customizeSearch)) return wrapLog.ReturnNull("exit, class do not implements ICustomizeSearch");
 
             // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
             if (instance is DynamicCode instanceWithContext)
             {
-                Log.Add($"attach DynamicCode context to class instance");
+                Log.A($"attach DynamicCode context to class instance");
                 var parentDynamicCodeRoot = _dnnDynamicCodeRoot.New.InitDynCodeRoot(block, Log, Constants.CompatibilityLevel10);
                 instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
             }
 
-            return wrapLog("instance ok", customizeSearch);
+            return wrapLog.Return(customizeSearch, "instance ok");
         }
 
         private string StripHtmlAndHtmlDecode(string text) => HttpUtility.HtmlDecode(Regex.Replace(text, "<.*?>", string.Empty));

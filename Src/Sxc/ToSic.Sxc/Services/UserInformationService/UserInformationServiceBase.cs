@@ -33,15 +33,15 @@ namespace ToSic.Sxc.Services
 
         public UserInformationDto Find(string identityToken)
         {
-            var wrapLog = Log.Call<UserInformationDto>($"t:{identityToken}");
+            var wrapLog = Log.Fn<UserInformationDto>($"t:{identityToken}");
 
             var userId = UserId(identityToken);
-            if (userId == AnonymousUser.Id) return wrapLog("Ok", AnonymousUser);
-            if (userId == UnknownUser.Id) return wrapLog("Err", UnknownUser);
+            if (userId == AnonymousUser.Id) return wrapLog.Return(AnonymousUser, "ok");
+            if (userId == UnknownUser.Id) return wrapLog.Return(UnknownUser, "err");
 
             var userDto = PlatformUserInformationDto(userId);
 
-            return userDto != null ? wrapLog("Ok", userDto) : wrapLog("Err", UnknownUser);
+            return userDto != null ? wrapLog.Return(userDto, "ok") : wrapLog.Return(UnknownUser, "err");
         }
 
         /// <summary>
@@ -56,18 +56,20 @@ namespace ToSic.Sxc.Services
         /// <returns></returns>
         private int UserId(string identityToken)
         {
-            var wrapLog = Log.Call<int>($"t:{identityToken}");
+            var wrapLog = Log.Fn<int>($"t:{identityToken}");
 
             if (string.IsNullOrEmpty(identityToken))
-                return wrapLog("Err", UnknownUser.Id);
+                return wrapLog.Return(UnknownUser.Id, "err");
 
             if (identityToken.Equals(Constants.Anonymous, StringComparison))
-                return wrapLog("Ok (anonymous)", AnonymousUser.Id);
+                return wrapLog.Return(AnonymousUser.Id, "ok (anonymous)");
 
             if (identityToken.StartsWith(PlatformIdentityTokenPrefix(), StringComparison))
                 identityToken = identityToken.Substring(PlatformIdentityTokenPrefix().Length);
 
-            return int.TryParse(identityToken, out var userId) ? wrapLog($"Ok (u:{userId})", userId) : wrapLog("Err", UnknownUser.Id);
+            return int.TryParse(identityToken, out var userId) 
+                ? wrapLog.Return(userId, $"ok (u:{userId})") 
+                : wrapLog.Return(UnknownUser.Id, "err");
         }
     }
 }

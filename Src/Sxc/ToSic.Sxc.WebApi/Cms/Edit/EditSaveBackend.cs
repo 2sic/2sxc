@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public Dictionary<Guid, int> Save(EditDto package, bool partOfPage)
         {
-            Log.Add($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
+            Log.A($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
             var validator = new SaveDataValidator(package, Log);
             // perform some basic validation checks
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Cms
             //var targetAppId = package.Items.First().Header.Group.ContentBlockAppId;
             //if (targetAppId != 0)
             //{
-            //    Log.Add($"detected content-block app to use: {targetAppId}; in context of app {contextAppId}");
+            //    Log.A($"detected content-block app to use: {targetAppId}; in context of app {contextAppId}");
             //    appId = targetAppId;
             //}
 
@@ -132,7 +132,7 @@ namespace ToSic.Sxc.WebApi.Cms
             })
             .ToList();
 
-            Log.Add("items to save generated, all data tests passed");
+            Log.A("items to save generated, all data tests passed");
 
             return _pagePublishing.SaveInPagePublishing(_ctxResolver.RealBlockOrNull(), _appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),

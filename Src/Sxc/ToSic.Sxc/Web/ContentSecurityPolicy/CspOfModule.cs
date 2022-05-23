@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             _alreadyConnected = true;
             Log.LinkTo(codeRoot.Log);
             _codeRoot = codeRoot;
-            Log.Call2().Done();
+            Log.Fn().Done();
         }
 
         private bool _alreadyConnected;
@@ -60,9 +60,9 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         internal bool RegisterAppCsp(CspOfApp appCsp)
         {
-            var cLog = Log.Call2<bool>($"appId: {appCsp?.AppId}");
+            var cLog = Log.Fn<bool>($"appId: {appCsp?.AppId}");
             if (appCsp == null)
-                return cLog.Done("null", false);
+                return cLog.Return(false, "null");
 
             // Note: We tried not-adding duplicates but this doesn't work
             // Because at the moment of registration, the AppId is often not known yet
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             //if (AppCsps.Any(a => a.AppId == appCsp.AppId)) 
             //    return cLog.Done($"app {appCsp.AppId} exists", false);
             AppCsps.Add(appCsp);
-            return cLog.Done("added", true);
+            return cLog.Return(true, "added");
         }
 
         #endregion
@@ -143,18 +143,18 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private List<KeyValuePair<string, string>> Policies => _policies.Get(() =>
         {
             var sitePolicies = SiteCspSettings.Policies;
-            Log.Add($"Site.Policies: {sitePolicies}");
+            Log.A($"Site.Policies: {sitePolicies}");
 
             var appPolicies = GetAppPolicies();
             var merged = $"{sitePolicies}\n{appPolicies}";
-            Log.Add($"Merged: {merged}");
+            Log.A($"Merged: {merged}");
             return new CspPolicyTextProcessor(Log).Parse(merged);
         }, Log, nameof(Policies));
         private readonly ValueGetOnce<List<KeyValuePair<string, string>>> _policies = new ValueGetOnce<List<KeyValuePair<string, string>>>();
 
         private string GetAppPolicies()
         {
-            var cLog = Log.Call<string>();
+            var cLog = Log.Fn<string>();
 
             var deduplicate = AppCsps
                 .GroupBy(ac => ac.AppId)
@@ -166,7 +166,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 .Select(ac =>
                 {
                     var p = ac.AppPolicies;
-                    Log.Add($"App[{ac.AppId}]: {p}");
+                    Log.A($"App[{ac.AppId}]: {p}");
                     return p.NullIfNoValue();
                 })
                 .Where(p => p.HasValue())
@@ -174,7 +174,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             var appPolicies = string.Join("\n", appPolicySets);
 
-            return cLog($"Total: {AppCsps.Count}; Distinct: {deduplicate.Count}; With Value: {appPolicySets.Count}", appPolicies);
+            return cLog.Return(appPolicies, $"Total: {AppCsps.Count}; Distinct: {deduplicate.Count}; With Value: {appPolicySets.Count}");
         }
 
 
@@ -184,12 +184,12 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         public List<CspParameters> CspParameters()
         {
-            var wrapLog = Log.Call<List<CspParameters>>();
-            if (!IsEnabled) return wrapLog("disabled", new List<CspParameters>());
+            var wrapLog = Log.Fn<List<CspParameters>>();
+            if (!IsEnabled) return wrapLog.Return(new List<CspParameters>(), "disabled");
 
             if (Policies.Any())
             {
-                Log.Add("Policies found");
+                Log.A("Policies found");
                 // Create a CspService which just contains these new policies for merging later on
                 var policyCsp = new ContentSecurityPolicyServiceBase();
                 foreach (var policy in Policies)
@@ -197,9 +197,9 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 AddCspService(policyCsp);
             }
 
-            if (!CspServices.Any()) return wrapLog("no services to add", new List<CspParameters>());
+            if (!CspServices.Any()) return wrapLog.Return(new List<CspParameters>(), "no services to add");
             var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
 
         }
         

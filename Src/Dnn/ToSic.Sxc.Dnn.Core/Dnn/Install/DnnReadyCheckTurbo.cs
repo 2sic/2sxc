@@ -23,16 +23,16 @@ namespace ToSic.Sxc.Dnn.Install
         /// <param name="log"></param>
         public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy, ILog log)
         {
-            var wrapLog = log.Call(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
+            var wrapLog = log.Fn(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
             if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
             {
                 // all ok, skip
-                wrapLog("quick-check: ready");
+                wrapLog.Done("quick-check: ready");
                 return;
             }
 
             new DnnReadyCheckTurbo(module, log).EnsureSiteAndAppFoldersAreReadyInternal(block, appFolderInitializerLazy);
-            wrapLog("deep-check: ready");
+            wrapLog.Done("deep-check: ready");
         }
 
         private DnnReadyCheckTurbo(PortalModuleBase module, ILog parentLog) : base("Dnn.PreChk", parentLog) => _module = module;
@@ -43,10 +43,10 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
         {
-            var timerWrap = Log.Call<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", useTimer: true);
+            var timerWrap = Log.Fn<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", startTimer: true);
 
             if (CachedModuleResults.TryGetValue(_module.ModuleId, out var exists) && exists)
-                return timerWrap("Previous check completed, will skip", true);
+                return timerWrap.Return(true, "Previous check completed, will skip");
 
             // throw better error if SxcInstance isn't available
             // not sure if this doesn't have side-effects...
@@ -56,20 +56,20 @@ namespace ToSic.Sxc.Dnn.Install
 
             // check things if it's a module of this portal (ensure everything is ok, etc.)
             var isSharedModule = _module.ModuleConfiguration.PortalID != _module.ModuleConfiguration.OwnerPortalID;
-            if (isSharedModule) return timerWrap("skip, shared", false);
+            if (isSharedModule) return timerWrap.Return(false, "skip, shared");
 
             if (block.App != null)
             {
-                Log.Add("Will check if site is ready and template folder exists");
+                Log.A("Will check if site is ready and template folder exists");
                 EnsureSiteIsConfiguredAndTemplateFolderExists(block, appFolderInitializerLazy);
 
                 // If no exception was raised inside, everything is fine - must cache
                 CachedModuleResults.AddOrUpdate(_module.ModuleId, true, (id, value) => true);
             }
             else
-                Log.Add("skip, content-block not ready");
+                Log.A("skip, content-block not ready");
 
-            return timerWrap("ok", true);
+            return timerWrap.Return(true, "ok");
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
         {
-            var wrapLog = Log.SafeCall<bool>($"AppId: {block.AppId}");
+            var wrapLog = Log.Fn<bool>($"AppId: {block.AppId}");
 
             var sexyFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppFolder));
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Dnn.Install
                 tm.EnsureTemplateFolderExists(block.Context.AppState, false);
             }
 
-            return wrapLog($"Completed init for module {_module.ModuleId} showing {block.AppId}", true);
+            return wrapLog.Return(true, $"Completed init for module {_module.ModuleId} showing {block.AppId}");
         }
 
         internal static ConcurrentDictionary<int, bool> CachedModuleResults = new ConcurrentDictionary<int, bool>();

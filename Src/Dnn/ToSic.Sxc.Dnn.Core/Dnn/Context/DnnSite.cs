@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn.Context
 
         public DnnSite Swap(PortalSettings settings, ILog extLogOrNull)
         {
-            var wrapLog = extLogOrNull.SafeCall<DnnSite>();
+            var wrapLog = extLogOrNull.Fn<DnnSite>();
             _contents = KeepBestPortalSettings(settings);
 
             // reset language info to be sure to get it from the latest source
@@ -53,19 +53,19 @@ namespace ToSic.Sxc.Dnn.Context
             _defaultLanguage = null;
             _zoneId = null;
 
-            return wrapLog($"Site Id {Id}", this);
+            return wrapLog.Return(this, $"Site Id {Id}");
         }
 
         public DnnSite TrySwap(ModuleInfo module, ILog extLog)
         {
-            var wrapLog = extLog.Call<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
+            var wrapLog = extLog.Fn<DnnSite>($"Owner Site: {module?.OwnerPortalID}, Current Site: {module?.PortalID}");
 
-            if (module == null) return wrapLog("no module", this);
-            if (module.OwnerPortalID < 0) return wrapLog("no change, owner < 0", this);
+            if (module == null) return wrapLog.Return(this, "no module");
+            if (module.OwnerPortalID < 0) return wrapLog.Return(this, "no change, owner < 0");
 
             var modulePortalSettings = new PortalSettings(module.OwnerPortalID);
             Swap(modulePortalSettings, extLog);
-            return wrapLog("", this);
+            return wrapLog.Return(this);
         }
 
         /// <summary>
@@ -79,18 +79,18 @@ namespace ToSic.Sxc.Dnn.Context
         /// <returns></returns>
         private static PortalSettings KeepBestPortalSettings(PortalSettings settings, ILog extLogOrNull = null)
         {
-            var safeWrap = extLogOrNull.SafeCall<PortalSettings>();
+            var safeWrap = extLogOrNull.Fn<PortalSettings>();
 
             // in case we don't have an HTTP Context with current portal settings, don't try anything
-            if (PortalSettings.Current == null) return safeWrap("null", settings);
+            if (PortalSettings.Current == null) return safeWrap.Return(settings, "null, use given");
 
             // If we don't have settings, or they point to the same portal, then use that
-            if (settings == null) return safeWrap("null, use current", PortalSettings.Current);
-            if (settings == PortalSettings.Current) return safeWrap("is current, use current", PortalSettings.Current);
-            if (settings.PortalId == PortalSettings.Current.PortalId) return safeWrap("id=current, use current", PortalSettings.Current);
+            if (settings == null) return safeWrap.Return(PortalSettings.Current, "null, use current");
+            if (settings == PortalSettings.Current) return safeWrap.Return(PortalSettings.Current, "is current, use current");
+            if (settings.PortalId == PortalSettings.Current.PortalId) return safeWrap.Return(PortalSettings.Current, "id=current, use current");
 
             // fallback: use supplied settings
-            return safeWrap("use new settings", settings);
+            return safeWrap.Return(settings, "use new settings");
         }
 
 

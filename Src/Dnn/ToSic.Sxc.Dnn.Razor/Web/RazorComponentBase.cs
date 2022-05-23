@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web
             ConnectToRoot(typedParent._DynCodeRoot);
             try
             {
-                Log.Add("@RenderPage:" + VirtualPath);
+                Log.A("@RenderPage:" + VirtualPath);
             } catch { /* ignore */ }
         }
 
@@ -68,13 +68,13 @@ namespace ToSic.Sxc.Web
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrapLog = Log.Call<dynamic>($"{virtualPath}, ..., {name}");
+            var wrapLog = Log.Fn<dynamic>($"{virtualPath}, ..., {name}");
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             var result = path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         [PrivateApi]
@@ -110,11 +110,11 @@ namespace ToSic.Sxc.Web
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             // if (!(parent is IDynamicCodeRoot isDynCode)) return;
-
             _DynCodeRoot = codeRoot; // isDynCode;
             _log = new Log("Rzr.Comp", _DynCodeRoot?.Log);
-            var wrapLog = Log.Call();
-            wrapLog("ok");
+            // TODO: @STV - you had moved this to before the connect! that shouldn't happen, as it will confuse the log which is attached during init. 
+            var wrapLog = Log.Fn();
+            wrapLog.Done("ok");
         }
     }
 

@@ -47,24 +47,24 @@ namespace ToSic.Sxc.Polymorphism
 
         public string Edition()
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
             try
             {
-                if (string.IsNullOrEmpty(Resolver)) return wrapLog("no resolver", null);
+                if (string.IsNullOrEmpty(Resolver)) return wrapLog.ReturnNull("no resolver");
 
                 var rInfo = Cache.FirstOrDefault(r => r.Name.Equals(Resolver, StringComparison.InvariantCultureIgnoreCase));
                 if (rInfo == null)
-                    return wrapLog("resolver not found", null);
-                Log.Add($"resolver for {Resolver} found");
+                    return wrapLog.ReturnNull("resolver not found");
+                Log.A($"resolver for {Resolver} found");
                 var editionResolver = (IResolver)_serviceProvider.GetService(rInfo.Type);
                 var result = editionResolver.Edition(Parameters, Log);
 
-                return wrapLog(null, result);
+                return wrapLog.Return(result);
             }
             // We don't expect errors - but such a simple helper just shouldn't be able to throw errors
             catch
             {
-                return wrapLog("error", null);
+                return wrapLog.ReturnNull("error");
             }
         }
 

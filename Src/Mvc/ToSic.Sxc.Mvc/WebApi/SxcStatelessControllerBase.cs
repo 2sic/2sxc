@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
 
@@ -55,9 +56,9 @@ namespace ToSic.Sxc.Mvc.WebApi
 
     internal class LogWrapper: IDisposable
     {
-        private readonly Action<string> _timerWrapLog;
+        private readonly LogCall _timerWrapLog;
 
-        internal LogWrapper(ILog log) => _timerWrapLog = log.Call(message: "timer", useTimer: true);
-        public void Dispose() => _timerWrapLog(null);
+        internal LogWrapper(ILog log) => _timerWrapLog = log.Fn(message: "timer", startTimer: true);
+        public void Dispose() => _timerWrapLog.Done();
     }
 }

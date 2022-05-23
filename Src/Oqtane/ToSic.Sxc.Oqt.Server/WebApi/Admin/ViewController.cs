@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             // create list with all 2sxc modules in this site
             var allMods = _pages.Ready.AllModulesWithContent(Real.SiteId);
-            Log.Add($"Found {allMods.Count} modules");
+            Log.A($"Found {allMods.Count} modules");
 
             return views.Select(vwb => _pages.Ready.ViewDtoBuilder(vwb, blocks, allMods));
         }).Usage(appId, guid);

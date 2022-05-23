@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         {
             var decoFromPiggyBack = appState?.PiggyBack.GetOrGenerate(appState, $"decorator-{TypeName}", () =>
             {
-                log.SafeAdd("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
+                log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
                 var decoEntityOrNullPb = appState?.Metadata?.FirstOrDefaultOfType(TypeName);
                 return new LightSpeedDecorator(decoEntityOrNullPb);
             });

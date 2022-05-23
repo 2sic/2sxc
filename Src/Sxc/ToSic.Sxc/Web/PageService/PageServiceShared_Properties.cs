@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Web.PageService
 
         public IList<PagePropertyChange> GetPropertyChangesAndFlush(ILog log)
         {
-            var wrapLog = log.Call<IList<PagePropertyChange>>();
+            var wrapLog = log.Fn<IList<PagePropertyChange>>();
             var changes = PropertyChanges.ToArray().ToList();
             PropertyChanges.Clear();
-            return wrapLog($"{changes.Count}", changes);
+            return wrapLog.Return(changes, $"{changes.Count}");
         }
 
         /// <summary>

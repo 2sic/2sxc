@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Context
 {
@@ -56,5 +57,11 @@ namespace ToSic.Sxc.Context
         /// New in 2sxc 12
         /// </remarks>
         bool IsSiteDeveloper { get; }
+
+        [PrivateApi("WIP")]
+#pragma warning disable CS0108, CS0114
+        IDynamicMetadata Metadata { get; }
+#pragma warning restore CS0108, CS0114
+
     }
 }

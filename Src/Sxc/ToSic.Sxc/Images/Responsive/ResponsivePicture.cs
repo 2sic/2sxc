@@ -28,10 +28,10 @@ namespace ToSic.Sxc.Images
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {
             var logOrNull = ImgService.Debug ? Log : null;
-            var wrapLog = logOrNull.SafeCall<TagList>();
+            var wrapLog = logOrNull.Fn<TagList>();
             // Check formats
             var defFormat = ImgService.GetFormat(url);
-            if (defFormat == null) return wrapLog("no format", Razor.Blade.Tag.TagList());
+            if (defFormat == null) return wrapLog.Return(Razor.Blade.Tag.TagList(), "no format");
 
             // Determine if we have many formats, otherwise just use the current one
             var formats = defFormat.ResizeFormats.Any()
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
             
             var useMultiSrcSet = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
 
-            Log.SafeAdd($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
+            wrapLog.A($"{nameof(formats)}: {formats.Count}, {nameof(useMultiSrcSet)}: {useMultiSrcSet}");
 
             // Generate Meta Tags
             var sources = formats
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Images
                     return source;
                 });
             var result = Razor.Blade.Tag.TagList(sources);
-            return wrapLog($"{result.Count()}", result);
+            return wrapLog.Return(result, $"{result.Count()}");
         }
 
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Reflection;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var siteId = siteStateInitializer.InitializedState.Alias.SiteId;
             var appFolder = GetService<AppFolder>().GetAppFolder();
             var pathFromRoot = OqtServerPaths.GetAppApiPath(siteId, appFolder, path);
-            Log.Add($"Controller path from root: {pathFromRoot}");
+            Log.A($"Controller path from root: {pathFromRoot}");
 
             // get full path
             var oqtServerPaths = GetService<IServerPaths>();

@@ -7,6 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
         internal JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
             ContentTypeRuntime typeRead, AppState appState)
         {
-            var wrapLog = Log.Call<JsonEntity>();
+            var wrapLog = Log.Fn<JsonEntity>();
             // attach original metadata assignment when creating a new one
             JsonEntity ent;
             if (bundle.Entity != null)
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             catch { /* ignore experimental */ }
 
-            return wrapLog(null, ent);
+            return wrapLog.Return(ent);
         }
 
         internal static List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, ContentTypeRuntime typeRead)
@@ -65,14 +66,14 @@ namespace ToSic.Sxc.WebApi.Cms
 
         internal List<InputTypeInfo> GetNecessaryInputTypes(List<JsonContentType> contentTypes, ContentTypeRuntime typeRead)
         {
-            var wrapLog = Log.Call<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
+            var wrapLog = Log.Fn<List<InputTypeInfo>>($"{nameof(contentTypes)}: {contentTypes.Count}");
             var fields = contentTypes
                 .SelectMany(t => t.Attributes)
                 .Select(a => a.InputType)
                 .Distinct()
                 .ToList();
 
-            Log.Add("Found these input types to load: " + string.Join(", ", fields));
+            Log.A("Found these input types to load: " + string.Join(", ", fields));
 
             var allInputType = typeRead.GetInputTypes();
 
@@ -80,31 +81,31 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Where(it => fields.Contains(it.Type))
                 .ToList();
 
-            if (found.Count == fields.Count) Log.Add("Found all");
+            if (found.Count == fields.Count) Log.A("Found all");
             else
             {
-                Log.Add(
+                Log.A(
                     $"It seems some input types were not found. Needed {fields.Count}, found {found.Count}. Will try to log details for this.");
                 try
                 {
                     var notFound = fields.Where(field => found.All(fnd => fnd.Type != field));
-                    Log.Add("Didn't find: " + string.Join(",", notFound));
+                    Log.A("Didn't find: " + string.Join(",", notFound));
                 }
                 catch (Exception)
                 {
-                    Log.Add("Ran into problems logging missing input types.");
+                    Log.A("Ran into problems logging missing input types.");
                 }
             }
 
-            return wrapLog($"{found.Count}", found);
+            return wrapLog.Return(found, $"{found.Count}");
         }
 
         internal IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
         {
-            var wrapLog = Log.Call<IEntity>();
+            var wrapLog = Log.Fn<IEntity>();
             var type = typeRead.Get(header.ContentTypeName);
             var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, 0, type);
-            return wrapLog(null, ent);
+            return wrapLog.Return(ent);
         }
     }
 }

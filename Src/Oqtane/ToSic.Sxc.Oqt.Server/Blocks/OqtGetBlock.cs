@@ -65,16 +65,16 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         internal IBlock InitializeBlock()
         {
-            var wrapLog = Log.Call<IBlock>();
+            var wrapLog = Log.Fn<IBlock>();
 
             // WebAPI calls can contain the original parameters that made the page, so that views can respect that
             var moduleId = TryGetModuleId();
             if (moduleId == Eav.Constants.NullId)
-                return wrapLog("missing block because ModuleId not found in request", null);
+                return wrapLog.ReturnNull("missing block because ModuleId not found in request");
 
             var pageId = TryGetPageId();
             if (pageId == Eav.Constants.NullId)
-                return wrapLog("missing block because PageId not found in request", null);
+                return wrapLog.ReturnNull("missing block because PageId not found in request");
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
             var ctx = _cntOfBlkGen.New.Init(pageId, module, Log);
@@ -82,33 +82,33 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             // only if it's negative, do we load the inner block
             var contentBlockId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
-            if (contentBlockId >= 0) return wrapLog("found block", block);
+            if (contentBlockId >= 0) return wrapLog.Return(block, "found block");
 
-            Log.Add($"Inner Content: {contentBlockId}");
+            Log.A($"Inner Content: {contentBlockId}");
             var entityBlock = _blkFromEntGen.New.Init(block, contentBlockId, Log);
-            return wrapLog("found inner block", entityBlock);
+            return wrapLog.Return(entityBlock, "found inner block");
         }
 
         private int TryGetPageId()
         {
-            var wrapLog = Log.Call<int>();
+            var wrapLog = Log.Fn<int>();
 
             var pageId = requestHelper.TryGetPageId();
 
             return pageId == Eav.Constants.NullId
-                ? wrapLog("error, pageId not found", Eav.Constants.NullId) 
-                : wrapLog("ok, found pageId", pageId);
+                ? wrapLog.Return(Eav.Constants.NullId, "error, pageId not found") 
+                : wrapLog.Return(pageId, "ok, found pageId");
         }
 
         private int TryGetModuleId()
         {
-            var wrapLog = Log.Call<int>();
+            var wrapLog = Log.Fn<int>();
 
             var moduleId = requestHelper.TryGetModuleId();
 
             return moduleId == Eav.Constants.NullId
-                ? wrapLog("error, moduleId not found", Eav.Constants.NullId)
-                : wrapLog("ok, found moduleId", moduleId);
+                ? wrapLog.Return(Eav.Constants.NullId, "error, moduleId not found")
+                : wrapLog.Return(moduleId, "ok, found moduleId");
         }
     }
 }

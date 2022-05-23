@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage)
         {
-            Log.Add($"Reset App {zoneId}/{appId}");
+            Log.A($"Reset App {zoneId}/{appId}");
             var result = new ImportResultDto();
 
             SecurityHelpers.ThrowIfNotAdmin(_user);

@@ -57,9 +57,9 @@ namespace ToSic.Sxc.Dnn
         /// <returns>An initialized CMS Block, ready to use/render</returns>
         public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         {
-            var wrapLog = parentLog.SafeCall<IBlockBuilder>($"{pageId}, {modId}");
+            var wrapLog = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
             var builder = StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(pageId, modId).BlockBuilder;
-            return wrapLog("ok", builder);
+            return wrapLog.Return(builder , "ok");
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace ToSic.Sxc.Dnn
         {
             Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             var log = new Log("Dnn.Factry", parentLog ?? NewLog());
-            log.Add($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
+            log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = StaticBuild<App>();
             if (site != null) app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(zoneId, appId), 

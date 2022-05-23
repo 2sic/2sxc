@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
 
-            var userMayEdit = (CmsContext as CmsContext)?.Context?.UserMayEdit ?? false;
+            var userMayEdit = (CmsContext as CmsContext)?.CtxSite?.UserMayEdit ?? false;
 
             var initialSource = DataSourceFactory.GetPublishing(
                 App, userMayEdit, ConfigurationProvider as LookUpEngine);

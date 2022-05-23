@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public AppExportInfoDto GetAppInfo(int zoneId, int appId)
         {
-            Log.Add($"get app info for app:{appId} and zone:{zoneId}");
+            Log.A($"get app info for app:{appId} and zone:{zoneId}");
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
         {
-            Log.Add($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
+            Log.A($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 #endif
 
         {
-            Log.Add($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
+            Log.A($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
@@ -111,13 +111,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var fileName =
                 $"2sxcApp_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}{addOnWhenContainingContent}.zip";
-            Log.Add($"file name:{fileName}");
+            Log.A($"file name:{fileName}");
 
             using (var fileStream = zipExport.ExportApp(includeContentGroups, resetAppGuid))
             {
 
                 var fileBytes = fileStream.ToArray();
-                Log.Add("will stream so many bytes:" + fileBytes.Length);
+                Log.A("will stream so many bytes:" + fileBytes.Length);
                 var mimeType = MimeHelper.FallbackType;
 #if NETSTANDARD
                 return new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };

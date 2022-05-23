@@ -14,6 +14,14 @@
     <TargetFrameworkProfile />
     <Deterministic>true</Deterministic>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <!-- end: Don't generate... -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,6 +106,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
+      <Link>Properties\AssemblyInfoInherited.cs</Link>
+    </Compile>
     <Compile Include="Compatibility\Eav\ToSic.Eav.Factory.cs" />
     <Compile Include="Compatibility\ToSic.Eav.Configuration.Features.cs" />
     <Compile Include="Compatibility\Sxc\OldDataToDictionaryWrapper.cs" />
@@ -108,8 +119,11 @@
     <Compile Include="Compatibility\Sxc\ToSic.Sxc.Conversion.DataToDictionary.cs" />
     <Compile Include="Custom.Dnn\Code12.cs" />
     <Compile Include="Dnn\Adam\DnnAdam.cs" />
-    <Compile Include="Dnn\Cms\DnnPagePublishingResolver.cs" />
+    <Compile Include="Dnn\Cms\DnnPagePublishingSettings.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
+    <Compile Include="Dnn\Configuration.Features\BuiltInFeatures.cs" />
+    <Compile Include="Dnn\Configuration.Features\BuiltInFeatures_CorePlus.cs" />
+    <Compile Include="Dnn\Context\DnnPage.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
     <Compile Include="Dnn\DnnModuleAndBlockBuilder.cs" />
@@ -120,6 +134,7 @@
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
+    <Compile Include="Dnn\Extensions\TabExtensions.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_IsRunning.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Manual.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Messages.cs" />

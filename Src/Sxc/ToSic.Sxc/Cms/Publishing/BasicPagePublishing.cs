@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Cms.Publishing
 
         public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
-            wrapLog(null);
+            wrapLog.Done();
         }
 
 
@@ -29,8 +29,8 @@ namespace ToSic.Sxc.Cms.Publishing
 
         public void Publish(int instanceId, int version)
         {
-            Log.Add($"Publish(m:{instanceId}, v:{version})");
-            Log.Add("publish never happened ");
+            Log.A($"Publish(m:{instanceId}, v:{version})");
+            Log.A("publish never happened ");
         }
 
     }

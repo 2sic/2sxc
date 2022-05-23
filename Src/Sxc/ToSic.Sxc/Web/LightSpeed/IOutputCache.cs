@@ -7,13 +7,11 @@ namespace ToSic.Sxc.Web.LightSpeed
     {
         bool IsEnabled { get; }
 
-        IOutputCache Init(int moduleId, IBlock block);
+        IOutputCache Init(int moduleId, int pageId, IBlock block);
 
         OutputCacheItem Existing { get; }
 
         OutputCacheItem Fresh { get; }
-
-        //bool IsInCache { get; }
 
         bool Save(IRenderResult data);
     }

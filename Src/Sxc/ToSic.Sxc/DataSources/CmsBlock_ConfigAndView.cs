@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Apps.Blocks;
+﻿using ToSic.Eav.Logging;
+using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -13,16 +14,16 @@ namespace ToSic.Sxc.DataSources
 
         private BlockConfiguration LoadBlockConfiguration()
         {
-            var wrapLog = Log.Call<BlockConfiguration>();
+            var wrapLog = Log.Fn<BlockConfiguration>();
             if (UseSxcInstanceContentGroup)
-                return wrapLog("need content-group, will use from sxc-context", Block.Configuration);
+                return wrapLog.Return(Block.Configuration, "need content-group, will use from sxc-context");
 
             // If we don't have a context, then look it up based on the InstanceId
-            Log.Add("need content-group, will construct as cannot use context");
+            Log.A("need content-group, will construct as cannot use context");
             if (!ModuleId.HasValue)
             {
                 SetError($"{nameof(CmsBlock)} cannot find Block Configuration", $"Neither InstanceContext nor {nameof(ModuleId)} found");
-                return wrapLog("Error, no module-id", null);
+                return wrapLog.ReturnNull("Error, no module-id");
             }
 
             var userMayEdit = HasInstanceContext && Block.Context.UserMayEdit;
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.DataSources
                 : _lazyCmsRuntime.Value.Init(this, userMayEdit, Log);
             var container = _moduleLazy.Value.Init(ModuleId.Value, Log);
             var blockId = container.BlockIdentifier;
-            return wrapLog("ok", cms.Blocks.GetOrGeneratePreviewConfig(blockId));
+            return wrapLog.Return(cms.Blocks.GetOrGeneratePreviewConfig(blockId), "ok");
         }
 
 

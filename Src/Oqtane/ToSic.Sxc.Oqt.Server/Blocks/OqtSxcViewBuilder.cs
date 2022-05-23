@@ -2,7 +2,6 @@
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Call;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -72,8 +71,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             LogTimer.DoInTimer(() =>
             {
                 #region Lightspeed output caching
-                var callLog = Log.Call(useTimer: true);
-                if (OutputCache?.Existing != null) Log.Add("Lightspeed hit - will use cached");
+                var callLog = Log.Fn(startTimer: true);
+                if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
                 var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
                 finalMessage = OutputCache?.IsEnabled != true ? "" : OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
                 OutputCache?.Save(renderResult);
@@ -90,7 +89,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     SxcStyles = PageOutput.Styles().ToList(),
                     PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
                 };
-                callLog(null);
+                callLog.Done();
             });
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 
@@ -115,11 +114,11 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         }));
         private readonly ValueGetOnce<IBlock> _blockGetOnce = new();
 
-        protected LogCall LogTimer => _logTimer.Get(() => Log.Call2(message: $"Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
+        protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
         private readonly ValueGetOnce<LogCall> _logTimer = new();
 
 
-        protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Block));
+        protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Page?.PageId ?? 0, Block));
         private readonly ValueGetOnce<IOutputCache> _oc = new();
 
         #endregion

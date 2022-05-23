@@ -30,8 +30,11 @@ namespace ToSic.Sxc
             // basic environment, pages, modules etc.
             services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
             services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
-            services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
+            //services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
             services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
+
+            // This must never have a TRY! but only an AddTransient, as many can be registered by this type
+            services.AddTransient<IPagePublishingSettings, NoPagePublishingSettings>(); // new v13 BETA #SwitchServicePagePublishingResolver
 
             // Code / Dynamic Code
             services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();
@@ -45,7 +48,6 @@ namespace ToSic.Sxc
             services.TryAddTransient<IAdamFileSystem<string, string>, AdamFileSystemBasic>();
 
             // v12.05 - linkhelperunknown - for testing etc.
-            //services.TryAddTransient<ILinkHelper, LinkHelperUnknown>();
             services.TryAddTransient<ILinkService, LinkServiceUnknown>();
 
             // v12.05

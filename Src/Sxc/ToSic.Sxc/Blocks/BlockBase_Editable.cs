@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks
         //    {
         //        return Context.ShowDrafts;
         //        if (_editAllowed.HasValue) return _editAllowed.Value;
-        //        Log.Add($"will find if editing is allowed, app is probably null {App}");
+        //        Log.A($"will find if editing is allowed, app is probably null {App}");
         //        return (_editAllowed = Context.ServiceProvider.Build<AppPermissionCheck>()
         //                   .ForAppInInstance(Context, this, Log).UserMay(GrantSets.WriteSomething)).Value;
         //    }

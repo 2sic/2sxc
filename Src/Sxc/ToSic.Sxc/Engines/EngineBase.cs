@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Engines
 
         public void Init(IBlock block)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             Block = block;
             var view = Block.View;
 
@@ -74,29 +74,29 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
-            wrapLog("ok");
+            wrapLog.Done("ok");
         }
 
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
-            var wrapLog = Log.Call<string>($"{root}, {subPath}");
+            var wrapLog = Log.Fn<string>($"{root}, {subPath}");
             view.EditionPath = subPath.ToAbsolutePathForwardSlash();
             var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log);
             var edition = polymorph.Edition();
-            if (edition == null) return wrapLog("no edition detected", null);
-            Log.Add($"edition {edition} detected");
+            if (edition == null) return wrapLog.ReturnNull("no edition detected");
+            Log.A($"edition {edition} detected");
 
             var testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
             if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
             {
                 view.Edition = edition;
                 view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
-                return wrapLog($"edition {edition}", testPath);
+                return wrapLog.Return(testPath, $"edition {edition}");
             }
 
-            Log.Add("tried inserting path, will check if sub-path");
+            Log.A("tried inserting path, will check if sub-path");
             var firstSlash = subPath.IndexOf('/');
-            if (firstSlash == -1) return wrapLog($"edition {edition} not found", null);
+            if (firstSlash == -1) return wrapLog.ReturnNull($"edition {edition} not found");
 
             subPath = subPath.Substring(firstSlash + 1);
             testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
@@ -104,10 +104,10 @@ namespace ToSic.Sxc.Engines
             {
                 view.Edition = edition;
                 view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
-                return wrapLog($"edition {edition} up one path", testPath);
+                return wrapLog.Return(testPath, $"edition {edition} up one path");
             }
 
-            return wrapLog($"edition {edition} not found", null);
+            return wrapLog.ReturnNull($"edition {edition} not found");
         }
 
         [PrivateApi]
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public RenderEngineResult Render()
         {
-            var wrapLog = Log.Call<RenderEngineResult>();
+            var wrapLog = Log.Fn<RenderEngineResult>();
             // call engine internal feature to optionally change what data is actually used or prepared for search...
 #if NETFRAMEWORK
 #pragma warning disable CS0618
@@ -130,12 +130,12 @@ namespace ToSic.Sxc.Engines
             var (renderStatus, message) = CheckExpectedNoRenderConditions();
 
             if (renderStatus != RenderStatusType.Ok)
-                return wrapLog($"{nameof(renderStatus)} not OK", new RenderEngineResult(message, false, null));
+                return wrapLog.Return(new RenderEngineResult(message, false, null), $"{nameof(renderStatus)} not OK");
 
             var renderedTemplate = RenderTemplate();
             var depMan = Helpers.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         private void CheckExpectedTemplateErrors()

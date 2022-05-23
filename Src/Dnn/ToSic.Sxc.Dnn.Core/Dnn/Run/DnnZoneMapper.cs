@@ -8,6 +8,7 @@ using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Context;
 
@@ -59,10 +60,10 @@ namespace ToSic.Sxc.Dnn.Run
 
         public override ISite SiteOfZone(int zoneId)
         {
-            var wrapLog = Log.Call<ISite>($"{zoneId}");
+            var wrapLog = Log.Fn<ISite>($"{zoneId}");
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
-            Log.Add($"Sites/Portals Count: {portals.Count}");
+            Log.A($"Sites/Portals Count: {portals.Count}");
             var found = portals.Cast<PortalInfo>().Select(p =>
                 {
                     var pSettings = pinst.GetPortalSettings(p.PortalID);
@@ -71,10 +72,10 @@ namespace ToSic.Sxc.Dnn.Run
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-
+            
             return found == null 
-                ? wrapLog("not found", (DnnSite)null) 
-                : wrapLog($"found {found.PortalId}", ((DnnSite)_spForNewSites.Build<ISite>()).Swap(found, Log));
+                ? wrapLog.Return((DnnSite)null, "not found") 
+                : wrapLog.Return(((DnnSite)_spForNewSites.Build<ISite>()).Swap(found, Log), $"found {found.PortalId}");
         }
 
         /// <inheritdoc />

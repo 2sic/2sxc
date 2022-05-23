@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
@@ -21,12 +22,12 @@ namespace ToSic.Sxc.Blocks.Renderers
             // if not the expected content-type, just output a hidden html placeholder
             if (entity.Type.Name != AppConstants.ContentGroupRefTypeName)
             {
-                log.Add("empty, will return hidden html placeholder");
+                log.A("empty, will return hidden html placeholder");
                 return string.Format(EmptyMessage, entity.EntityId);
             }
 
             // render it
-            log.Add("found, will render");
+            log.A("found, will render");
             var cb = blkFrmEntGen.New.Init(parentBlock, entity, log);
             var result = cb.BlockBuilder.Run(false);
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks.Output
@@ -8,11 +9,11 @@ namespace ToSic.Sxc.Blocks.Output
     {
         protected string ExtractStyles(string renderedTemplate)
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
             var styleMatches = StyleDetection.Matches(renderedTemplate);
             var styleMatchesToRemove = new List<Match>();
 
-            Log.Add($"Found {styleMatches.Count} external styles");
+            Log.A($"Found {styleMatches.Count} external styles");
             foreach (Match match in styleMatches)
             {
                 // Also get the ID (new in v12)
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Blocks.Output
 
             styleMatchesToRemove.Reverse();
             styleMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog(null, renderedTemplate);
+            return wrapLog.Return(renderedTemplate);
         }
 
 

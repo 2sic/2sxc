@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.DataSources
@@ -16,13 +17,13 @@ namespace ToSic.Sxc.DataSources
             IEntity presentationDemoEntity, 
             bool isListHeader)
         {
-            Log.Add($"get stream content⋮{contentList.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentationList?.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
+            Log.A($"get stream content⋮{contentList.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentationList?.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
             try
             {
                 // if no template is defined, return empty list
                 if (BlockConfiguration.View == null && OverrideView == null)
                 {
-                    Log.Add("no template definition - will return empty list");
+                    Log.A("no template definition - will return empty list");
                     return ImmutableArray<IEntity>.Empty;
                 }
 
@@ -32,7 +33,7 @@ namespace ToSic.Sxc.DataSources
                 // If no Content Elements exist and type is content (means, presentationList is not null), add an empty entity (demo entry will be taken for this)
                 if (contentList.Count == 0 && presentationList != null)
                 {
-                    Log.Add("empty list, will add a null-item");
+                    Log.A("empty list, will add a null-item");
                     contentEntities.Add(null);
                 }
 
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.DataSources
                     throw new Exception("problems looping items - had to stop on id " + i + "; current entity is " + entityId + "; prev is " + prevIdForErrorReporting, ex);
                 }
 
-                Log.Add($"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
+                Log.A($"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
                 return entitiesToDeliver.ToImmutableArray();
             }
             catch (Exception ex)
@@ -106,18 +107,18 @@ namespace ToSic.Sxc.DataSources
 
         private ImmutableList<IEntity> GetInStream()
         {
-            var callLog = Log.Call<ImmutableList<IEntity>>();
+            var callLog = Log.Fn<ImmutableList<IEntity>>();
             
             // Check if in not connected, in which case we must find it yourself
             if (!In.ContainsKey(Eav.Constants.DefaultStreamName))
             {
                 var showDrafts = Block?.Context?.UserMayEdit ?? false;
-                Log.Add($"In not attached, will auto-attach with showDrafts: {showDrafts}");
+                Log.A($"In not attached, will auto-attach with showDrafts: {showDrafts}");
                 var publishing = DataSourceFactory.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
                 Attach(publishing);
             }
 
-            return callLog(null, In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
+            return callLog.Return(In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
         }
 
         private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, /*IEntity demo,*/ int entityId)

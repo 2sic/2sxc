@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Web.PageService
         {
             CodeRoot = codeRoot;
             Log.LinkTo(codeRoot?.Log);
-            Log.Call(message: $"Linked {nameof(PageService)}")(null);
+            Log.Fn(message: $"Linked {nameof(PageService)}").Done();
         }
 
         public IDynamicCodeRoot CodeRoot;

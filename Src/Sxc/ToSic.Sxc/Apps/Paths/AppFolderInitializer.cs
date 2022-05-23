@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Apps.Paths
         /// </summary>
         public void EnsureTemplateFolderExists(AppState appState, bool isShared)
         {
-            var wrapLog = Log.Call($"{isShared}");
+            var wrapLog = Log.Fn($"{isShared}");
             var portalPath = isShared
                 ? ServerPaths.FullAppPath(_globalConfiguration.SharedAppsFolder)
                 : _site.AppsRootPhysicalFull ?? "";
@@ -51,13 +51,13 @@ namespace ToSic.Sxc.Apps.Paths
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(appState.Folder))
             {
-                wrapLog("Folder name not given, won't create");
+                wrapLog.Done("Folder name not given, won't create");
                 return;
             }
 
             var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, appState.Folder));
             contentFolder.Create();
-            wrapLog("ok");
+            wrapLog.Done("ok");
         }
         
     }

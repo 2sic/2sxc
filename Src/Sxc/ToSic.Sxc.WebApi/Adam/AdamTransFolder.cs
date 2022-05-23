@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
         {
-            var logCall = Log.Call<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
+            var logCall = Log.Fn<IList<AdamItemDto>>($"get folders for subfld:{parentSubfolder}, new:{newFolder}");
             if (AdamContext.Security.UserIsRestricted && !AdamContext.Security.FieldPermissionOk(GrantSets.ReadSomething))
                 return null;
 
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // now access the subfolder, creating it if missing (which is what we want
             AdamContext.AdamRoot.Folder(newFolderPath, true);
 
-            return logCall("ok", ItemsInField(parentSubfolder));
+            return logCall.Return(ItemsInField(parentSubfolder), "ok");
         }
     }
 }

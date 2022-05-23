@@ -72,19 +72,21 @@ namespace ToSic.Sxc.WebApi.Sys
         /// <returns></returns>
         public THttpResponseType RemotePackage(string packageUrl, IModule container)
         {
-            var wrapLog = Log.Call<THttpResponseType>();
+            var wrapLog = Log.Fn<THttpResponseType>();
 
             var isApp = !container.IsContent;
 
-            Log.Add("install package:" + packageUrl);
+            Log.A("install package:" + packageUrl);
 
             var block = container.BlockIdentifier;
             var (success, messages) = _impFromRemoteLazy.Value.Init(_userLazy.Value, Log)
                 .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
-            Log.Add("install completed with success:" + success);
+            Log.A("install completed with success:" + success);
 
-            return success ? wrapLog("Ok",_responseMaker.Ok()) : wrapLog("Error",_responseMaker.InternalServerError(MessageBuilder(messages)));
+            return success 
+                ? wrapLog.Return(_responseMaker.Ok(),"ok") 
+                : wrapLog.Return(_responseMaker.InternalServerError(MessageBuilder(messages)), "error");
         }
 
         private static string MessageBuilder(List<Message> messages)

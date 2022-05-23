@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Edit.EditService
             string apps = null,
             int max = 100)
         {
-            Log.Add("ctx attribs - enabled:{Enabled}");
+            Log.A("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(ContextAttributes), $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 

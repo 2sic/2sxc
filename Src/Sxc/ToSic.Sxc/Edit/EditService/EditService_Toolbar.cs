@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
@@ -45,9 +46,9 @@ namespace ToSic.Sxc.Edit.EditService
             object settings,
             object toolbar)
         {
-            var wrapLog = Log.Call<IHybridHtmlString>($"enabled:{Enabled}; inline{inTag}");
-            if (!Enabled) return wrapLog("not enabled", null);
-            if (!IsConditionOk(condition)) return wrapLog("condition false", null);
+            var wrapLog = Log.Fn<IHybridHtmlString>($"enabled:{Enabled}; inline{inTag}");
+            if (!Enabled) return wrapLog.ReturnNull("not enabled");
+            if (!IsConditionOk(condition)) return wrapLog.ReturnNull("condition false");
 
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
                 $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
@@ -56,7 +57,7 @@ namespace ToSic.Sxc.Edit.EditService
             ItemToolbar itmToolbar;
             if (target is IToolbarBuilder)
             {
-                Log.Add("Using new modern Item-Toolbar, will ignore all other parameters.");
+                Log.A("Using new modern Item-Toolbar, will ignore all other parameters.");
                 itmToolbar = new ItemToolbar(null, toolbar: target);
             }
             else
@@ -64,15 +65,15 @@ namespace ToSic.Sxc.Edit.EditService
                 // ensure that internally we always process it as an entity
                 var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
                 if (target != null && eTarget == null)
-                    Log.Warn("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
+                    Log.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
                 if (toolbar is IToolbarBuilder)
                 {
-                    Log.Add("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
+                    Log.A("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
                     itmToolbar = new ItemToolbar(eTarget, toolbar: toolbar);
                 }
                 else
                 {
-                    Log.Add("Using classic mode, with all parameters.");
+                    Log.A("Using classic mode, with all parameters.");
                     itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings,
                         toolbar: toolbar);
                 }
@@ -81,31 +82,31 @@ namespace ToSic.Sxc.Edit.EditService
             var result = inTag
                 ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())
                 : new HybridHtmlString(itmToolbar.Toolbar);
-            return wrapLog("ok", result);
+            return wrapLog.Return(result,"ok");
         }
 
         private bool IsConditionOk(object condition)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
 
             // Null = no condition and certainly not false, say ok
-            if (condition == null) return wrapLog("null,true", true);
+            if (condition == null) return wrapLog.Return(true, "null,true");
 
             // Bool (non-null) and nullable
-            if (condition is bool b && b == false) return wrapLog($"{false}", false);
-            if (condition as bool? == false) return wrapLog("null false", false);
+            if (condition is bool b && b == false) return wrapLog.Return(false, $"{false}");
+            if (condition as bool? == false) return wrapLog.Return(false, "null false");
 
             // Int are only false if exactly 0
-            if (condition is int i && i == 0) return wrapLog("int 0", false);
-            if (condition as int? == 0) return wrapLog("int nullable 0", false);
+            if (condition is int i && i == 0) return wrapLog.Return(false, "int 0");
+            if (condition as int? == 0) return wrapLog.Return(false, "int nullable 0");
 
             // String
             if (condition is string s &&
                 string.Equals(s, false.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                return wrapLog("string false", false);
+                return wrapLog.Return(false, "string false");
 
             // Anything else: true
-            return wrapLog("default,true", true);
+            return wrapLog.Return(true, "default,true");
         }
 
     }

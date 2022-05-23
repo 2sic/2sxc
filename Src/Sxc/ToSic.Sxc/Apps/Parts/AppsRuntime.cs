@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Apps
@@ -27,7 +28,7 @@ namespace ToSic.Sxc.Apps
 
         public IList<AppUiInfo> GetSelectableApps(ISite site, string filter)
         {
-            var callLog = Log.Call<IList<AppUiInfo>>(filter);
+            var callLog = Log.Fn<IList<AppUiInfo>>(filter);
             var list =
                 GetApps(site, null)
                     .Where(a => a.Name != Eav.Constants.ContentAppName 
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Apps
                     })
                     .ToList();
 
-            if (string.IsNullOrWhiteSpace(filter)) return callLog("unfiltered", list);
+            if (string.IsNullOrWhiteSpace(filter)) return callLog.Return(list, "unfiltered");
 
             // New feature in 10.27 - if app-list is provided, only return these
             var appNames = filter.Split(',')
@@ -55,7 +56,7 @@ namespace ToSic.Sxc.Apps
             list = list.Where(ap => appNames
                     .Any(name => string.Equals(name, ap.Name, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
-            return callLog(null, list);
+            return callLog.Return(list);
         }
 
         /// <summary>

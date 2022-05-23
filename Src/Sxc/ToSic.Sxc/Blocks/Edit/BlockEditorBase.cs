@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Blocks.Edit
         public Guid? SaveTemplateId(int templateId, bool forceCreateContentGroup)
         {
             Guid? result;
-            Log.Add($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
+            Log.A($"save template#{templateId}, CG-exists:{BlockConfiguration.Exists} forceCreateCG:{forceCreateContentGroup}");
 
             // if it exists or has a force-create, then write to the Content-Group, otherwise it's just a preview
             if (BlockConfiguration.Exists || forceCreateContentGroup)
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         public bool Publish(string part, int sortOrder)
         {
-            Log.Add($"publish part{part}, order:{sortOrder}");
+            Log.A($"publish part{part}, order:{sortOrder}");
             var contentGroup = BlockConfiguration;
             var contEntity = contentGroup[part][sortOrder];
             var presKey = part.ToLowerInvariant() == ViewParts.ContentLower 

@@ -52,18 +52,18 @@ namespace ToSic.Sxc.Images
         [PrivateApi]
         public static AdvancedSettings FromJson(object value, ILog log = null)
         {
-            var wrapLog = log.SafeCall<AdvancedSettings>();
+            var wrapLog = log.Fn<AdvancedSettings>();
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog("create", JsonConvert.DeserializeObject<AdvancedSettings>(advString));
+                    return wrapLog.Return(JsonConvert.DeserializeObject<AdvancedSettings>(advString), "create");
             }
             catch (Exception ex)
             {
-                log?.Add($"error converting json to AdvancedSettings. Json: {value}");
-                log?.Exception(ex);
+                log.A($"error converting json to AdvancedSettings. Json: {value}");
+                log?.Ex(ex);
             }
-            return wrapLog("new", new AdvancedSettings());
+            return wrapLog.Return(new AdvancedSettings(), "new");
         }
 
         [PrivateApi]

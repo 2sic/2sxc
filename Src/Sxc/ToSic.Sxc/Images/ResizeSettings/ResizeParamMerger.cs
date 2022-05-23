@@ -40,13 +40,13 @@ namespace ToSic.Sxc.Images
             AdvancedSettings advanced = default
         )
         {
-            var wrapLog = Log.SafeCall<ResizeSettings>(Debug);
+            var wrapLog = Log.Fn<ResizeSettings>(Debug);
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes
             if (aspectRatio != null && height != null)
             {
-                wrapLog("error", null);
+                wrapLog.ReturnNull("error");
                 const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
             }
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Images
 
             if (settings is IResizeSettings typeSettings)
             {
-                Log.SafeAdd(Debug, $"Is {nameof(ResizeSettings)}, will clone/init");
+                wrapLog.A(Debug, $"Is {nameof(ResizeSettings)}, will clone/init");
                 return new ResizeSettings(
                     typeSettings,
                     format: resP.FormatOrNull(format),
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Images
 
             // Check if the settings is the expected type or null/other type
             var getSettings = settings as ICanGetByName;
-            Log.SafeAdd(Debug, $"Has Settings:{getSettings != null}");
+            wrapLog.A(Debug, $"Has Settings:{getSettings != null}");
 
 
             var formatValue = resP.FormatOrNull(format);
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Images
 
             resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
 
-            return wrapLog("ok", resizeParams);
+            return wrapLog.Return(resizeParams, "ok");
         }
 
         private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
@@ -122,7 +122,7 @@ namespace ToSic.Sxc.Images
         {
             void IfDebugLogPair<T>(string prefix, (T W, T H) values)
             {
-                if (Debug) Log.Add($"{prefix}: W:{values.W}, H:{values.H}");
+                if (Debug) Log.A($"{prefix}: W:{values.W}, H:{values.H}");
             }
 
             // Try to pre-process parameters and prefer them
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Images
             var factorFinal = resP.FactorOrNull(factor) ?? IntIgnore;
             double arFinal = resP.AspectRatioOrNull(aspectRatio)
                              ?? resP.AspectRatioOrNull(settingsOrNull?.Get(AspectRatioField)) ?? IntIgnore;
-            Log.SafeAdd(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
+            Log.A(Debug, $"Resize Factor: {factorFinal}, Aspect Ratio: {arFinal}");
 
             var resizeSettings = new ResizeSettings(parameters.W, parameters.H,
                 safe.W, safe.H,

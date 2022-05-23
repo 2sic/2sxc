@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ToSic.Sxc.Dnn.Core")]
 [assembly: AssemblyDescription("2sxc core module for Dnn")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("2sic Internet Solutions")]
-[assembly: AssemblyProduct("2sxc Dnn Core")]
-[assembly: AssemblyCopyright("Copyright © 2sic 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,16 +19,5 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("13.11.00")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.WebApi")]
 [assembly: InternalsVisibleTo("ToSic.Sxc.Dnn.Razor")]

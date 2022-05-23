@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Images
     /// <remarks>
     /// History: Released 2sxc 13.10
     /// </remarks>
-    [PublicApi("Still WIP")]
+    [PublicApi]
     public interface IResponsiveImage: IHybridHtmlString
     {
         /// <summary>

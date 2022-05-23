@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Apps
             base.Init(appId, buildConfig, parentLog);
             if (buildConfig != null) return this;
             Log.Rename("App.SxcLgt");
-            Log.Add("App only initialized for light use - .Data shouldn't be used");
+            Log.A("App only initialized for light use - .Data shouldn't be used");
             return this;
         }
 

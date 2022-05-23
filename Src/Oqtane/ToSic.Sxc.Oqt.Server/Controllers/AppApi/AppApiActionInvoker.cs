@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             var actionInvoker = actionInvokerFactory.CreateInvoker(actionContext);
 
-            Log.Add($"invoke app api action");
+            Log.A($"invoke app api action");
             await actionInvoker.InvokeAsync();
         }
     }

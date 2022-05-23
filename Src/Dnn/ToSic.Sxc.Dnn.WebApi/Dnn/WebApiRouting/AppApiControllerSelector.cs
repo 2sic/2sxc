@@ -82,10 +82,10 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             var log = new Log("Sxc.Http", null, request?.RequestUri?.AbsoluteUri);
             AddToInsightsHistory(request?.RequestUri?.AbsoluteUri, log);
 
-            var wrapLog = log.Call<HttpControllerDescriptor>();
+            var wrapLog = log.Fn<HttpControllerDescriptor>();
 
             if (!HandleRequestWithThisController(request))
-                return wrapLog("upstream", PreviousSelector.SelectController(request));
+                return wrapLog.Return(PreviousSelector.SelectController(request), "upstream");
 
             // Do this once and early, to be really sure we always use the same one
             var sp = DnnStaticDi.GetPageScopedServiceProvider();
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             var controllerTypeName = routeData.Values[VarNames.Controller] + "Controller";
 
             // Now Handle the 2sxc app-api queries
-
+            
             // Figure out the Path, or show error for that
             var appFolder = AppFolderUtilities.GetAppFolder(sp, request, log, wrapLog);
 
@@ -104,33 +104,33 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             {
                 // new for 2sxc 9.34 #1651
                 var edition = GetEdition(routeData);
-                log.Add($"Edition: {edition}");
+                log.A($"Edition: {edition}");
 
                 var site = (DnnSite)sp.Build<ISite>();
 
                 var controllerFolder = GetControllerFolder(site, appFolder, edition, shared: false);
-                log.Add($"Controller Folder: {controllerFolder}");
+                log.A($"Controller Folder: {controllerFolder}");
 
                 controllerPath = GetControllerPath(controllerFolder, controllerTypeName);
-                log.Add($"Controller Path: {controllerPath}");
+                log.A($"Controller Path: {controllerPath}");
 
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
                 // because when the file changes, the type-object will be different, so please don't optimize :)
                 if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
                     return HttpControllerDescriptor(request, controllerFolder, controllerPath, controllerTypeName, wrapLog);
 
-                log.Add("path not found, will check on shared location");
+                log.A("path not found, will check on shared location");
 
                 var sharedControllerFolder = GetControllerFolder(site, appFolder, edition, shared: true);
-                log.Add($"Shared Controller Folder: {sharedControllerFolder}");
+                log.A($"Shared Controller Folder: {sharedControllerFolder}");
 
                 var sharedControllerPath = GetControllerPath(sharedControllerFolder, controllerTypeName);
-                log.Add($"Shared Controller Path: {sharedControllerPath}");
+                log.A($"Shared Controller Path: {sharedControllerPath}");
 
                 if (File.Exists(HostingEnvironment.MapPath(sharedControllerPath)))
                     return HttpControllerDescriptor(request, sharedControllerFolder, sharedControllerPath, controllerTypeName, wrapLog);
 
-                log.Add("path not found in shared, error will be thrown in a moment");
+                log.A("path not found in shared, error will be thrown in a moment");
             }
             catch (Exception e)
             {
@@ -161,8 +161,8 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             => Path.Combine(controllerFolder + controllerTypeName + ".cs");
 
         private HttpControllerDescriptor HttpControllerDescriptor(HttpRequestMessage request, 
-            string controllerFolder, string controllerPath, string controllerTypeName, 
-            Func<string, HttpControllerDescriptor, HttpControllerDescriptor> wrapLog)
+            string controllerFolder, string controllerPath, string controllerTypeName,
+            LogCall<HttpControllerDescriptor> wrapLog)
         {
             var assembly = BuildManager.GetCompiledAssembly(controllerPath);
             var type = assembly.GetType(controllerTypeName, true, true);
@@ -171,7 +171,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
             var descriptor = new HttpControllerDescriptor(_config, type.Name, type);
-            return wrapLog("ok", descriptor);
+            return wrapLog.Return(descriptor, "ok");
         }
 
         private static void AddToInsightsHistory(string url, ILog log)

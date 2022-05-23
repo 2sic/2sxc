@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         public List<KeyValuePair<string,string>> Parse(string policyText)
         {
-            var wrapLog = Log.Call<List<KeyValuePair<string, string>>>();
+            var wrapLog = Log.Fn<List<KeyValuePair<string, string>>>();
 
             var result = new List<KeyValuePair<string,string>>();
             if (string.IsNullOrEmpty(policyText)) return result;
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 result.Add(new KeyValuePair<string, string>(key, value));
             }
 
-            return wrapLog(result.Count.ToString(), result);
+            return wrapLog.Return(result, result.Count.ToString());
         }
 
     }

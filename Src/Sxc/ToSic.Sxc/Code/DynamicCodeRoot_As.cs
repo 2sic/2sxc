@@ -6,6 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityDependencies);
 
-        private DynamicEntityDependencies DynamicEntityDependencies =>
+        internal DynamicEntityDependencies DynamicEntityDependencies =>
             _dynamicEntityDependencies
             ?? (_dynamicEntityDependencies = _serviceProvider.Build<DynamicEntityDependencies>().Init(Block, 
                 CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
@@ -40,34 +41,34 @@ namespace ToSic.Sxc.Code
 
         private dynamic AsDynamicInternal(object dynObject)
         {
-            var wrapLog = Log.Call<dynamic>();
+            var wrapLog = Log.Fn<dynamic>();
             switch (dynObject)
             {
                 case null:
-                    return wrapLog("null", AsDynamic(null as string));
+                    return wrapLog.Return(AsDynamic(null as string), "null");
                 case string strObject:
-                    return wrapLog("string", AsDynamic(strObject));
+                    return wrapLog.Return(AsDynamic(strObject), "string");
                 case IDynamicEntity dynEnt:
-                    return wrapLog("DynamicEntity", dynEnt);
+                    return wrapLog.Return(dynEnt, "DynamicEntity");
                 // New case - should avoid re-converting dynamic json, DynamicStack etc.
                 case ISxcDynamicObject sxcDyn:
-                    return wrapLog("Dynamic Something", sxcDyn);
+                    return wrapLog.Return(sxcDyn, "Dynamic Something");
                 case IEntity entity:
-                    return wrapLog("IEntity", new DynamicEntity(entity, DynamicEntityDependencies));
+                    return wrapLog.Return(new DynamicEntity(entity, DynamicEntityDependencies), "IEntity");
                 case DynamicObject typedDynObject:
-                    return wrapLog("DynamicObject", typedDynObject);
+                    return wrapLog.Return(typedDynObject, "DynamicObject");
                 default:
                     // Check value types - note that it won't catch strings, but these were handled above
-                    if (dynObject.GetType().IsValueType) return wrapLog("bad call - value type", dynObject);
+                    if (dynObject.GetType().IsValueType) return wrapLog.Return(dynObject, "bad call - value type");
 
                     // 2021-09-14 new - just convert to a DynamicReadObject
                     var result = DynamicHelpers.WrapIfPossible(dynObject, true, true, false);
-                    if (!(result is null)) return wrapLog("converted to dyn-read", result);
+                    if (!(result is null)) return wrapLog.Return(result, "converted to dyn-read");
 
                     // Note 2dm 2021-09-14 returning the original object was actually the default till now.
                     // Unknown conversion, just return the original and see what happens/breaks
                     // probably not a good solution
-                    return wrapLog("unknown, return original", dynObject);
+                    return wrapLog.Return(dynObject, "unknown, return original");
             }
         }
 

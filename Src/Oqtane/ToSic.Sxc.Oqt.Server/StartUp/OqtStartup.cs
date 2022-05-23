@@ -1,17 +1,20 @@
-﻿using System.IO;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Oqtane.Infrastructure;
+using System.IO;
+using Microsoft.Extensions.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
+using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
@@ -72,8 +75,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //HostEnvironment = env;
-
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -83,19 +84,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
-            var sxcSysLoader = serviceProvider.Build<SxcSystemLoader>();
-            sxcSysLoader.StartUp();
-
-            // Register Sxc features before loading
-            //Sxc.Configuration.Features.BuiltInFeatures.Register(serviceProvider.Build<FeaturesCatalog>());
 
             // Load features from configuration
             // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
             // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
             // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
             
-            //var sysLoader = serviceProvider.Build<SystemLoader>();
-            //sysLoader.StartUp();
+            var sxcSysLoader = serviceProvider.Build<SystemLoader>();
+            sxcSysLoader.StartUp();
 
             // TODO: @STV - should we really add an error handler? I assume Oqtane has this already
             app.UseExceptionHandler("/error");
@@ -105,6 +101,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            if (env.IsDevelopment())
+                app.UsePageResponseRewriteMiddleware();
 
             // endpoint mapping
             app.UseEndpoints(endpoints =>
@@ -121,8 +120,13 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
 
+                // Route for 2sxc UI (after JS updates to use folder route (ending with /ng/ or /ng-edit/), probably this will not be necessary)
+                endpoints.Map("/Modules/ToSic.Sxc/dist/ng/ui.html", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
+                endpoints.Map("/Modules/ToSic.Sxc/dist/ng-edit/eav-ui.html", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\eav-ui.html"));
+                
                 // Fallback route for 2sxc UI
-                endpoints.MapFallbackToFile("/Modules/ToSic.Sxc/dist/ng-edit/", "/Modules/ToSic.Sxc/dist/ng-edit/index.html");
+                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng/", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng\ui.html"));
+                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng-edit/", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\eav-ui.html"));
             });
         }
 

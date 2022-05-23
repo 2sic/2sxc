@@ -23,14 +23,14 @@ namespace ToSic.Sxc.Apps.Paths
 
         public string IconPathOrNull(IApp app, IView view, PathTypes type)
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
             // 1. Check if the file actually exists
             var iconFile = IconPath(app, view, PathTypes.PhysFull);
             var exists = File.Exists(iconFile);
 
             // 2. Return as needed
             var result = exists ? IconPath(app, view, type) : null;
-            return wrapLog(result ?? "not found", result);
+            return wrapLog.Return(result, result ?? "not found");
         }
 
         private string IconPath(IApp app, IView view, PathTypes type)

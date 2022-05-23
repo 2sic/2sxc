@@ -45,7 +45,7 @@ namespace Custom.Hybrid
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
             {
-                Log.Add("DynCode.App is null");
+                Log.A("DynCode.App is null");
                 TryToAttachAppFromUrlParams(context);
             }
 
@@ -57,7 +57,7 @@ namespace Custom.Hybrid
 
         private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             var found = false;
             try
             {
@@ -71,7 +71,7 @@ namespace Custom.Hybrid
                 if (appId != ToSic.Eav.Constants.NullId)
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
-                    Log.Add($"AppId: {appId}");
+                    Log.A($"AppId: {appId}");
                     var app = LoadAppOnly(appId, CtxResolver.Site().Site);
                     _DynCodeRoot.AttachApp(app);
                     found = true;
@@ -79,7 +79,7 @@ namespace Custom.Hybrid
             }
             catch { /* ignore */ }
 
-            wrapLog(found.ToString());
+            wrapLog.Done(found.ToString());
         }
 
         /// <summary>
@@ -90,14 +90,14 @@ namespace Custom.Hybrid
         /// <returns></returns>
         private IApp LoadAppOnly(int appId, ISite site)
         {
-            var wrapLog = Log.Call<IApp>($"{appId}");
+            var wrapLog = Log.Fn<IApp>($"{appId}");
             var showDrafts = false;
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
                 GetService<AppConfigDelegate>().Init(Log).Build(showDrafts),
                 Log);
-            return wrapLog(null, appStuff);
+            return wrapLog.Return(appStuff);
         }
     }
 }

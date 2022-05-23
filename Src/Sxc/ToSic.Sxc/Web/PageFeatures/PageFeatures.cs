@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web.PageFeatures
 
         public List<PageFeatureFromSettings> FeaturesFromSettingsGetNew(ILog log)
         {
-            var wrapLog = log.Call<List<PageFeatureFromSettings>>();
+            var wrapLog = log.Fn<List<PageFeatureFromSettings>>();
             // Filter out the ones which were already added in a previous round
             var newFeatures = FeaturesFromSettings
                 // Put duplicates together
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             // Mark the new ones as processed now, so they won't be processed in future
             newFeatures.ForEach(f => f.AlreadyProcessed = true);
             var asIPageFeature = newFeatures;//.Cast<IPageFeature>().ToList();
-            return wrapLog($"{asIPageFeature.Count}", asIPageFeature);
+            return wrapLog.Return(asIPageFeature, $"{asIPageFeature.Count}");
         }
 
 
@@ -49,24 +49,24 @@ namespace ToSic.Sxc.Web.PageFeatures
 
         public List<IPageFeature> GetFeaturesWithDependentsAndFlush(ILog log)
         {
-            var wrapLog = log.Call<List<IPageFeature>>();
-            log.Add("Try to get new specs from IPageService");
+            var wrapLog = log.Fn<List<IPageFeature>>();
+            log.A("Try to get new specs from IPageService");
             //var features = FeatureKeys.ToList();
             //log.Add($"Got {features.Count} items");
             var unfolded = GetWithDependents(FeatureKeys.ToList(), log); // _pfm.GetWithDependents(features);
             //log.Add($"Got unfolded features {unfolded.Count}");
             FeatureKeys.Clear();
-            return wrapLog("ok", unfolded);
+            return wrapLog.Return(unfolded, "ok");
         }
 
         /// <inheritdoc />
         public List<IPageFeature> GetWithDependents(List<string> features, ILog log)
         {
-            var wrapLog = log.Call<List<IPageFeature>>();
-            log.Add($"Got {features.Count} items");
+            var wrapLog = log.Fn<List<IPageFeature>>();
+            log.A($"Got {features.Count} items");
             var unfolded = _pfm.GetWithDependents(features);
-            log.Add($"Got unfolded features {unfolded.Count}");
-            return wrapLog("ok", unfolded);
+            log.A($"Got unfolded features {unfolded.Count}");
+            return wrapLog.Return(unfolded, "ok");
         }
 
     }

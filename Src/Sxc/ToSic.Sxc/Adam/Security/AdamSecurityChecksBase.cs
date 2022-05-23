@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
         internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var callLog = Log.Call<AdamSecurityChecksBase>();
+            var callLog = Log.Fn<AdamSecurityChecksBase>();
             AdamContext = adamContext;
 
             var firstChecker = AdamContext.Permissions.PermissionCheckers.First().Value;
@@ -33,9 +33,9 @@ namespace ToSic.Sxc.Adam
                 ? userMayAdminSiteFiles
                 : userMayAdminSomeFiles);
 
-            Log.Add($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
+            Log.A($"adminSome:{userMayAdminSomeFiles}, restricted:{UserIsRestricted}");
 
-            return callLog(null, this);
+            return callLog.Return(this);
         }
 
         internal AdamContext AdamContext;
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         internal bool UserIsNotRestrictedOrItemIsDraft(Guid guid, out HttpExceptionAbstraction exp)
         {
-            Log.Add($"check if user is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
+            Log.A($"check if user is restricted ({UserIsRestricted}) or if the item '{guid}' is draft");
             exp = null;
             // check that if the user should only see drafts, he doesn't see items of normal data
             if (!UserIsRestricted || FieldPermissionOk(GrantSets.ReadPublished)) return true;
@@ -83,13 +83,13 @@ namespace ToSic.Sxc.Adam
             var itm = AdamContext.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
-            exp = HttpException.PermissionDenied(Log.Add("user is restricted and may not see published, but item exists and is published - not allowed"));
+            exp = HttpException.PermissionDenied(Log.AddAndReuse("user is restricted and may not see published, but item exists and is published - not allowed"));
             return false;
         }
 
         internal bool FileTypeIsOkForThisField(out HttpExceptionAbstraction preparedException)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             var fieldDef = AdamContext.Attribute;
             bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
@@ -97,16 +97,16 @@ namespace ToSic.Sxc.Adam
                                       fieldDef.Type != DataTypes.String))
             {
                 preparedException = HttpException.BadRequest("Requested field '" + AdamContext.ItemField + "' type doesn't allow upload");
-                Log.Add($"field type:{fieldDef?.Type} - does not allow upload");
+                Log.A($"field type:{fieldDef?.Type} - does not allow upload");
                 result = false;
             }
             else
             {
-                Log.Add($"field type:{fieldDef.Type}");
+                Log.A($"field type:{fieldDef.Type}");
                 preparedException = null;
                 result = true;
             }
-            return wrapLog(result.ToString(), result);
+            return wrapLog.ReturnAndLog(result);
         }
 
 

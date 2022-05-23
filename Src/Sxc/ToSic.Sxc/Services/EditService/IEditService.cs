@@ -254,6 +254,6 @@ namespace ToSic.Sxc.Services
         IHybridHtmlString Attribute(string name, object value);
 
         [PrivateApi("internal use only")]
-        IEditService SetBlock(IBlock block);
+        IEditService SetBlock(IDynamicCodeRoot codeRoot, IBlock block);
     }
 }

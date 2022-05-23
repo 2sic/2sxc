@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Save
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))
                 throw HttpException.PermissionDenied(error);
 
-            Log.Add("passed security checks");
+            Log.A("passed security checks");
             return permCheck;
         }
     }

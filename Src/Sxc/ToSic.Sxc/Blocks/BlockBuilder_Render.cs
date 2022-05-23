@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Blocks
         public IRenderResult Run(bool topLevel = true)
         {
             if (_result != null) return _result;
-            var wrapLog = Log.Call<IRenderResult>();
+            var wrapLog = Log.Fn<IRenderResult>();
             try
             {
                 var (html, err) = RenderInternal();
@@ -90,11 +90,11 @@ namespace ToSic.Sxc.Blocks
             }
             catch (Exception ex)
             {
-                Log.Add("Error!");
-                Log.Exception(ex);
+                Log.A("Error!");
+                Log.Ex(ex);
             }
 
-            return wrapLog(null, _result);
+            return wrapLog.Return(_result);
         }
 
 
@@ -118,13 +118,13 @@ namespace ToSic.Sxc.Blocks
 
         private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)
         {
-            var wrapLog = Log.Call<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
+            var wrapLog = Log.Fn<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
             var newAssets = new List<IClientAsset>();
             foreach (var settingFeature in featuresFromSettings)
             {
                 var extracted = _resourceExtractor.Ready.Process(settingFeature.Html);
                 if (!extracted.Assets.Any()) continue;
-                Log.Add($"Moved Feature Html {settingFeature.NameId} to assets");
+                Log.A($"Moved Feature Html {settingFeature.NameId} to assets");
 
                 // All resources from the settings are seen as safe
                 extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
@@ -139,14 +139,14 @@ namespace ToSic.Sxc.Blocks
                 .Cast<IPageFeature>()
                 .ToList();
 
-            return wrapLog($"New: {newAssets.Count}; Rest: {featsLeft.Count}", (newAssets, featsLeft));
+            return wrapLog.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
         }
 
         private IRenderResult _result;
 
         private (string Html, bool Error) RenderInternal()
         {
-            var wrapLog = Log.Call<(string, bool)>();
+            var wrapLog = Log.Fn<(string, bool)>();
 
             try
             {
@@ -160,10 +160,10 @@ namespace ToSic.Sxc.Blocks
                 #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
                 {
-                    Log.Add("pre-init innerContent content is empty so no errors, will build");
+                    Log.A("pre-init innerContent content is empty so no errors, will build");
                     if (Block.DataIsMissing)
                     {
-                        Log.Add("content-block is missing data - will show error or just stop if not-admin-user");
+                        Log.A("content-block is missing data - will show error or just stop if not-admin-user");
                         var blockId = Block.Configuration?.BlockIdentifierOrNull;
                         var msg = "Data is missing. This is common when a site is copied " +
                                   "but the content / apps have not been imported yet" +
@@ -182,7 +182,7 @@ namespace ToSic.Sxc.Blocks
                     {
                         if (Block.View != null) // when a content block is still new, there is no definition yet
                         {
-                            Log.Add("standard case, found template, will render");
+                            Log.A("standard case, found template, will render");
                             var engine = GetEngine();
                             var renderEngineResult = engine.Render();
                             body = renderEngineResult.Html;
@@ -190,7 +190,7 @@ namespace ToSic.Sxc.Blocks
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (renderEngineResult.ActivateJsApi)
                             {
-                                Log.Add("template referenced 2sxc.api JS in script-tag: will enable");
+                                Log.A("template referenced 2sxc.api JS in script-tag: will enable");
                                 Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.NameId);
                             }
 
@@ -227,11 +227,11 @@ namespace ToSic.Sxc.Blocks
                     : body;
                 #endregion
 
-                return wrapLog(null, (result, err));
+                return wrapLog.Return((result, err));
             }
             catch (Exception ex)
             {
-                return wrapLog("error", (RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true));
+                return wrapLog.Return((RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true), "error");
             }
         }
 
@@ -248,13 +248,13 @@ namespace ToSic.Sxc.Blocks
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {
-                Log.Add("system isn't ready,show upgrade message");
+                Log.A("system isn't ready,show upgrade message");
                 var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true, encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 
             InstallationOk = true;
-            Log.Add("system is ready, no upgrade-message to show");
+            Log.A("system is ready, no upgrade-message to show");
             return (null, false);
         }
 
@@ -265,13 +265,13 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IEngine GetEngine()
         {
-            var wrapLog = Log.Call<IEngine>();
-            if (_engine != null) return wrapLog("cached", _engine);
+            var wrapLog = Log.Fn<IEngine>();
+            if (_engine != null) return wrapLog.Return(_engine, "cached");
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
-            if (Block.View == null) return wrapLog("no view", null);
+            if (Block.View == null) return wrapLog.ReturnNull("no view");
             _engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
             _engine.Init(Log).Init(Block);
-            return wrapLog("created", _engine);
+            return wrapLog.Return(_engine, "created");
         }
         private IEngine _engine;
 

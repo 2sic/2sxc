@@ -50,13 +50,13 @@ namespace ToSic.Sxc.Images
             string parameters = default
             )
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<string>($"{nameof(url)}:{url}");
+            var wrapLog = (Debug ? Log : null).Fn<string>($"{nameof(url)}:{url}");
 
             // Modern case - all settings have already been prepared, the other settings are ignored
             if (settings is ResizeSettings resizeSettings)
             {
                 var basic = ImageOnly(url, resizeSettings, field).Url;
-                return wrapLog("prepared:" + basic, basic);
+                return wrapLog.Return(basic, "prepared:" + basic);
             }
 
             resizeSettings = ResizeParamMerger.BuildResizeSettings(
@@ -65,20 +65,20 @@ namespace ToSic.Sxc.Images
                 parameters: parameters);
 
             var result = ImageOnly(url, resizeSettings, field).Url;
-            return wrapLog("built:" + result, result);
+            return wrapLog.Return(result, "built:" + result);
         }
-
+        
         public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
         {
-            var wrapLog = Log.Call<OneResize>();
+            var wrapLog = Log.Fn<OneResize>();
             var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
-            return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field));
+            return wrapLog.Return(ConstructUrl(url, settings, srcSetSettings, field), "no srcset");
         }
-
+        
 
         public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IDynamicField field = null)
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
 
             var srcSetSettings = settings.Find(srcSetType, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
 
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Images
 
             // Basic case -no srcSet config. In this case the src-set can just contain the url.
             if ((srcSetParts?.Length ?? 0) == 0)
-                return wrapLog("no srcset", ConstructUrl(url, settings, srcSetSettings, field).Url);
+                return wrapLog.Return(ConstructUrl(url, settings, srcSetSettings, field).Url, "no srcset");
 
             var results = srcSetParts.Select(ssPart =>
             {
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Images
             });
             var result = string.Join(",\n", results.Select(r => r.UrlWithSuffix));
 
-            return wrapLog("srcset", result);
+            return wrapLog.Return(result, "srcset");
         }
 
 
@@ -146,19 +146,19 @@ namespace ToSic.Sxc.Images
 
         private bool ImgAddIfRelevant(NameValueCollection resizer, string key, object value, string irrelevant = "")
         {
-            var wrapLog = (Debug ? Log : null).SafeCall<bool>();
+            var wrapLog = (Debug ? Log : null).Fn<bool>();
             if (key == null || value == null)
-                return wrapLog($"Won't add '{key}', since key or value are null", false);
+                return wrapLog.Return(false, $"Won't add '{key}', since key or value are null");
 
             var strValue = value.ToString();
             if (string.IsNullOrEmpty(strValue))
-                return wrapLog($"Won't add '{key}' since value as string would be null", false);
+                return wrapLog.Return(false, $"Won't add '{key}' since value as string would be null");
 
             if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase))
-                return wrapLog($"Won't add '{key}' since value would be irrelevant", false);
+                return wrapLog.Return(false, $"Won't add '{key}' since value would be irrelevant");
 
             resizer.Add(key, strValue);
-            return wrapLog($"Added key {key}", true);
+            return wrapLog.Return(true, $"Added key {key}");
         }
 
 

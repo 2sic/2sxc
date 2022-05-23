@@ -4,6 +4,7 @@ using DotNetNuke.Security.Permissions;
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 
@@ -28,28 +29,27 @@ namespace ToSic.Sxc.Dnn.Run
 
         public override bool EnvironmentAllows(List<Grants> grants)
         {
-            var logWrap = Log.Call(() => $"[{string.Join(",", grants)}]");
+            var logWrap = Log.Fn<bool>(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
             if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsSiteAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
             if (ok) GrantedBecause = Conditions.EnvironmentGlobal;
-            logWrap($"{ok} because:{GrantedBecause}");
-            return ok;
+            return logWrap.Return(ok, $"{ok} because:{GrantedBecause}");
         }
 
         public override bool VerifyConditionOfEnvironment(string condition)
         {
-            var wrapLog = Log.Call<bool>(condition);
+            var wrapLog = Log.Fn<bool>(condition);
             if (!condition.ToLowerInvariant().StartsWith(_salPrefix)) 
-                return wrapLog("unknown condition: false", false);
+                return wrapLog.Return(false, "unknown condition: false");
 
             var salWord = condition.Substring(_salPrefix.Length);
             var sal = (SecurityAccessLevel)Enum.Parse(typeof(SecurityAccessLevel), salWord);
             // check anonymous - this is always valid, even if not in a module context
             if (sal == SecurityAccessLevel.Anonymous)
-                return wrapLog("anonymous, always true", true);
+                return wrapLog.Return(true, "anonymous, always true");
 
             // check within module context
             if (Module != null)
@@ -57,35 +57,32 @@ namespace ToSic.Sxc.Dnn.Run
                 // TODO: STV WHERE DOES THE MODULE COME FROM?
                 // IT APPEARS THAT IT'S MISSING IN NORMAL REST CALLS
                 var result = ModulePermissionController.HasModuleAccess(sal, CustomPermissionKey, Module);
-                return wrapLog($"module: {result}", result);
+                return wrapLog.Return(result, $"module: {result}");
             }
 
-            Log.Add("trying to check permission " + _salPrefix + ", but don't have module in context");
-            return wrapLog("can't verify: false", false);
+            Log.A("trying to check permission " + _salPrefix + ", but don't have module in context");
+            return wrapLog.Return(false, "can't verify: false");
         }
 
-        private bool UserIsModuleAdmin()
-            => Log.Intercept(nameof(UserIsModuleAdmin),
-                () => Module != null && ModulePermissionController.CanAdminModule(Module));
+        private bool UserIsModuleAdmin() => Log.Return(() => Module != null && ModulePermissionController.CanAdminModule(Module));
 
         private bool UserIsModuleEditor()
-            => Log.Intercept(nameof(UserIsModuleEditor),
-                () =>
+            => Log.Return(() =>
+            {
+                if (Module == null) return false;
+
+                // This seems to throw errors during search :(
+                try
                 {
-                    if (Module == null) return false;
+                    // skip during search (usual HttpContext is missing for search)
+                    if (System.Web.HttpContext.Current == null) return false;
 
-                    // This seems to throw errors during search :(
-                    try
-                    {
-                        // skip during search (usual HttpContext is missing for search)
-                        if (System.Web.HttpContext.Current == null) return false;
-
-                        return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                });
+                    return ModulePermissionController.HasModuleAccess(SecurityAccessLevel.Edit, "", Module);
+                }
+                catch
+                {
+                    return false;
+                }
+            });
     }
 }

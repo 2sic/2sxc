@@ -30,16 +30,16 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         private object GetFromPreferredOrDefaultSource(string field)
         {
-            var cLog = Log.Call2<object>(field);
+            var cLog = Log.Fn<object>(field);
 
             var pref = SettingPreferred;
             if (pref.Setting?.Get(field) is object result)
-                return cLog.Done($"Preferred[{pref.Name}]: {result}", result);
+                return cLog.Return(result, $"Preferred[{pref.Name}]: {result}");
 
             if (SettingsDefault?.Get(field) is object result2)
-                return cLog.Done($"Default Source: {result2}", result2);
+                return cLog.Return(result2, $"Default Source: {result2}");
 
-            return cLog.Done("not found", null);
+            return cLog.ReturnNull("not found");
         }
 
         public bool IsEnabled => GetFromPreferredOrDefaultSource(FieldIsEnabled) as bool? == true;
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         private (string Name, DynamicEntity Setting) SettingPreferred => _preferred.Get(() =>
         {
-            Log.Add($"Dev: {_devMode}; Super: {_user.IsSuperUser}; Admin: {_user.IsAdmin}; Anon: {_user.IsAnonymous}");
+            Log.A($"Dev: {_devMode}; Super: {_user.IsSuperUser}; Admin: {_user.IsAdmin}; Anon: {_user.IsAnonymous}");
             (string, DynamicEntity) GetName(string theName) => (theName, SettingsRoot?.Get(theName) as DynamicEntity);
 
             if (_devMode) return GetName("Dev");

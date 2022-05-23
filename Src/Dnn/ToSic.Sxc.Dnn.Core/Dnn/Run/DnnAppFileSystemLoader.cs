@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Dnn.Run
@@ -25,20 +26,20 @@ namespace ToSic.Sxc.Dnn.Run
         /// <returns></returns>
         protected override bool InitPathAfterAppId()
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
 
             try
             {
-                Log.Add($"Trying to build path based on tenant. If it's in search mode, the {nameof(ISite)} would be {Eav.Constants.NullId}. Id: {Site.Id}");
+                Log.A($"Trying to build path based on tenant. If it's in search mode, the {nameof(ISite)} would be {Eav.Constants.NullId}. Id: {Site.Id}");
                 EnsureDnnSiteIsLoadedWhenDiFails();
                 base.InitPathAfterAppId();
-                return wrapLog(Path, true);
+                return wrapLog.Return(true, Path);
             }
             catch (Exception e)
             {
                 // ignore
-                Log.Exception(e);
-                return wrapLog("error", false);
+                Log.Ex(e);
+                return wrapLog.Return(false, "error");
             }
         }
 
@@ -49,13 +50,13 @@ namespace ToSic.Sxc.Dnn.Run
         /// <returns></returns>
         private bool EnsureDnnSiteIsLoadedWhenDiFails()
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             if (Site.Id != Eav.Constants.NullId/* && Site.Id != 0*/) // 2021-12-09 2dm disabled zero check, because portal 0 is actually very common
-                return wrapLog($"All ok since siteId isn't {Eav.Constants.NullId}", true);
-            Log.Add($"SiteId = {Site.Id} - not found. Must be in search mode or something else DI-style failed, will try to find correct PortalSettings");
+                return wrapLog.Return(true, $"All ok since siteId isn't {Eav.Constants.NullId}");
+            Log.A($"SiteId = {Site.Id} - not found. Must be in search mode or something else DI-style failed, will try to find correct PortalSettings");
             ZoneMapper.Init(Log);
             Site = ZoneMapper.SiteOfApp(AppId);
-            return wrapLog($"SiteId: {Site.Id}", true);
+            return wrapLog.Return(true, $"SiteId: {Site.Id}");
         }
 
     }

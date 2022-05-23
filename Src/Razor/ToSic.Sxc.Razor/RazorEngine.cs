@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Custom.Hybrid;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
 
@@ -32,16 +33,16 @@ namespace ToSic.Sxc.Razor
         /// <inheritdoc/>
         protected override string RenderTemplate()
         {
-            Log.Call();
+            var wrapCall = Log.Fn<string>();
             var task = RenderTask();
             task.Wait();
-            return task.Result.ToString();
+            return wrapCall.Return(task.Result.ToString());
         }
 
         [PrivateApi]
         public async Task<TextWriter> RenderTask()
         {
-            Log.Add("will render into TextWriter");
+            Log.A("will render into TextWriter");
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;

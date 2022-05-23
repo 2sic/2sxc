@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Adam
 
         internal Folder<TFolderId, TFileId> Folder(string path, bool autoCreate)
         {
-            var callLog = Log.Call<Folder<TFolderId, TFileId>>($"{path}, {autoCreate}");
+            var callLog = Log.Fn<Folder<TFolderId, TFileId>>($"{path}, {autoCreate}");
             
             // create all folders to ensure they exist. Must do one-by-one because the environment must have it in the catalog
             var pathParts = path.Split('/');
@@ -65,12 +65,12 @@ namespace ToSic.Sxc.Adam
                     Add(pathToCheck);
                 else
                 {
-                    Log.Add($"subfolder {pathToCheck} not found");
-                    return callLog("not found", null);
+                    Log.A($"subfolder {pathToCheck} not found");
+                    return callLog.ReturnNull("not found");
                 }
             }
 
-            return callLog("ok", Folder(path));
+            return callLog.Return(Folder(path), "ok");
         }
 
         #region Type specific results which the base class already offers the interface to

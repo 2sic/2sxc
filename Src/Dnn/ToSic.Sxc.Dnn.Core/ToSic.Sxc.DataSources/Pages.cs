@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
@@ -27,9 +28,9 @@ namespace ToSic.Sxc.DataSources
 
         protected override List<TempPageInfo> GetPagesInternal()
         {
-            var wrapLog = Log.Call<List<TempPageInfo>>();
+            var wrapLog = Log.Fn<List<TempPageInfo>>();
             var siteId = PortalSettings.Current?.PortalId ?? -1;
-            Log.Add($"Portal Id {siteId}");
+            Log.A($"Portal Id {siteId}");
             List<TabInfo> pages;
             try
             {
@@ -37,11 +38,11 @@ namespace ToSic.Sxc.DataSources
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
-                return wrapLog("error", new List<TempPageInfo>());
+                Log.Ex(ex);
+                return wrapLog.Return(new List<TempPageInfo>(), "error");
             }
 
-            if (pages == null || !pages.Any()) return wrapLog("null/empty", new List<TempPageInfo>());
+            if (pages == null || !pages.Any()) return wrapLog.Return(new List<TempPageInfo>(), "null/empty");
 
 
             try
@@ -63,12 +64,12 @@ namespace ToSic.Sxc.DataSources
                         Modified = p.LastModifiedOnDate
                     })
                     .ToList();
-                return wrapLog("found", result);
+                return wrapLog.Return(result, "found");
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
-                return wrapLog("error", new List<TempPageInfo>());
+                Log.Ex(ex);
+                return wrapLog.Return(new List<TempPageInfo>(), "error");
             }
         }
         

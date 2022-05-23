@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// Publishing information about the current context
         /// </summary>
-        BlockPublishingState Publishing { get; }
+        BlockPublishingSettings Publishing { get; }
 
         /// <summary>
         /// WIP

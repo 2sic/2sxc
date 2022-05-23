@@ -29,17 +29,17 @@ namespace ToSic.Sxc.Dnn.LookUp
         /// <inheritdoc />
         public ILookUpEngine GetLookUpEngine(int moduleId)
         {
-            var wrapLog = Log.Call<ILookUpEngine>("" + moduleId);
+            var wrapLog = Log.Fn<ILookUpEngine>("" + moduleId);
             var portalSettings = PortalSettings.Current;
             return portalSettings == null 
-                ? wrapLog("no context", new LookUpEngine(Log)) 
-                : wrapLog("with site", GenerateDnnBasedLookupEngine(portalSettings, moduleId));
+                ? wrapLog.Return(new LookUpEngine(Log), "no context") 
+                : wrapLog.Return(GenerateDnnBasedLookupEngine(portalSettings, moduleId), "with site");
         }
 
         [PrivateApi]
         public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
         {
-            var wrapLog = Log.Call<LookUpEngine>($"..., {moduleId}");
+            var wrapLog = Log.Fn<LookUpEngine>($"..., {moduleId}");
             var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = _cultureResolver.SafeCurrentCultureInfo();
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn.LookUp
 
             // Not implemented in Dnn: "Tenant" source
 
-            return wrapLog(null, providers);
+            return wrapLog.Return(providers);
         }
     }
 }

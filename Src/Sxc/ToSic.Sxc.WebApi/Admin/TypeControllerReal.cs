@@ -106,10 +106,10 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <exception cref="ArgumentException"></exception>
         public ImportResultDto Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
         {
-            var wrapLog = Log.Call<ImportResultDto>();
+            var wrapLog = Log.Fn<ImportResultDto>();
 
             if (!uploadInfo.HasFiles())
-                return wrapLog("no file uploaded", new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error));
+                return wrapLog.Return(new ImportResultDto(false, "no file uploaded", Message.MessageTypes.Error), "no file uploaded");
 
             var streams = new List<FileUploadDto>();
             for (var i = 0; i < uploadInfo.Count; i++)
@@ -120,7 +120,7 @@ namespace ToSic.Sxc.WebApi.Admin
             var result = _importContent.New.Init(_userLazy.Value, Log)
                 .ImportContentType(zoneId, appId, streams, _context.Ready.Site.DefaultCultureCode);
 
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
     }
 }

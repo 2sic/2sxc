@@ -26,15 +26,15 @@ namespace ToSic.Sxc.Code
 
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
-            var wrapLog = Log.Call($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
+            var wrapLog = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
             //string ErrorMessage = null;
 
             // Perform various checks on the path values
             var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
             if (hasErrorMessage != null)
             {
-                Log.Add($"Error: {hasErrorMessage}");
-                wrapLog("failed");
+                Log.A($"Error: {hasErrorMessage}");
+                wrapLog.ReturnNull("failed");
                 if (throwOnError) throw new Exception(hasErrorMessage);
                 return null;
             }
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Code
                     }
                     catch (Exception ex)
                     {
-                        Log.Add(possibleErrorMessage);
+                        Log.A(possibleErrorMessage);
                         if(throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
                     }
 
@@ -79,18 +79,16 @@ namespace ToSic.Sxc.Code
 
             if (ErrorMessage != null)
             {
-                Log.Add(ErrorMessage + $"; throw error: {throwOnError}");
-                wrapLog("failed");
+                Log.A(ErrorMessage + $"; throw error: {throwOnError}");
+                wrapLog.ReturnNull("failed");
                 if (throwOnError) throw new Exception(ErrorMessage);
                 return null;
             }
 
             var instance = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
             AttachRelativePath(virtualPath, instance);
-
-            wrapLog($"found: {instance != null}");
-            return instance;
-
+            
+            return wrapLog.Return(instance, $"found: {instance != null}");
         }
 
         protected abstract Assembly GetAssembly(string virtualPath, string className);
@@ -114,7 +112,7 @@ namespace ToSic.Sxc.Code
             virtualPath = virtualPath.ForwardSlash();// .Replace("\\", "/");
             if (!virtualPath.StartsWith("/"))
             {
-                Log.Add($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
+                Log.A($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
                 if (relativePath == null)
                     return "Unexpected null value on relativePath";
 
@@ -123,7 +121,7 @@ namespace ToSic.Sxc.Code
                 relativePath = relativePath.SuffixSlash();// += "/";
                 //virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(Path.Combine(relativePath, virtualPath));
                 virtualPath = Path.Combine(relativePath, virtualPath).ToAbsolutePathForwardSlash();
-                Log.Add($"final virtual path: '{virtualPath}'");
+                Log.A($"final virtual path: '{virtualPath}'");
             }
 
             if (virtualPath.IndexOf(":", StringComparison.InvariantCultureIgnoreCase) > -1)
@@ -135,14 +133,14 @@ namespace ToSic.Sxc.Code
 
         private bool AttachRelativePath(string virtualPath, object instance)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
+
+            if (!(instance is ICreateInstance codeForwarding)) 
+                return wrapLog.Return(false, "didn't attach");
+
             // in case it supports shared code again, give it the relative path
-            if (instance is ICreateInstance codeForwarding)
-            {
-                codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
-                return wrapLog("attached", true);
-            }
-            return wrapLog("didn't attach", false);
+            codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
+            return wrapLog.Return(true, "attached");
         }
     }
 }

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Apps.Assets
 
         public List<TemplateInfo> GetTemplates()
         {
-            var callLog = Log.Call<List<TemplateInfo>>(nameof(GetTemplates));
+            var callLog = Log.Fn<List<TemplateInfo>>(nameof(GetTemplates));
 
             if (_templates == null) _templates = new List<TemplateInfo>
             {
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Apps.Assets
                 EmptyFile,
             };
 
-            return callLog(null, _templates);
+            return callLog.Return(_templates);
         }
 
         private static List<TemplateInfo> _templates;

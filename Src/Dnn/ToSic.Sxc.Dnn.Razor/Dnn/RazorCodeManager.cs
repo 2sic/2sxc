@@ -60,9 +60,9 @@ namespace ToSic.Sxc.Dnn
         private void TryToBuildCode()
         {
             if (BuildComplete) return;
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml");
-            Log.Add($"Will try to load code from '{codeFile}");
+            Log.A($"Will try to load code from '{codeFile}");
             try
             {
                 var compiled  = Parent.CreateInstance(codeFile);
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Dnn
             }
 
             BuildComplete = true;
-            wrapLog(null);
+            wrapLog.Done(null);
         }
 
         private static Exception ImproveExceptionMessage(Exception innerException)

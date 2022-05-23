@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Assets;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
     {
         public List<string> All(int appId, bool global = false, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false)
         {
-            Log.Add($"list a#{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
+            Log.A($"list a#{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
             // set global access security if ok...
             if (global && !_user.IsSuperUser)
                 throw new NotSupportedException("only host user may access global files");

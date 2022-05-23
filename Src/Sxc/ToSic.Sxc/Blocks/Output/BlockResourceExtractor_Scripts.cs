@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Logging;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks.Output
@@ -8,12 +9,12 @@ namespace ToSic.Sxc.Blocks.Output
     {
         protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs)
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
 
             var scriptMatches = ScriptSrcDetection.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
-            Log.Add($"Found {scriptMatches.Count} external scripts");
+            Log.A($"Found {scriptMatches.Count} external scripts");
             foreach (Match match in scriptMatches)
             {
                 var url = FixUrlWithSpaces(match.Groups["Src"].Value);
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Blocks.Output
             // remove in reverse order, so that the indexes don't change as we remove scripts in the HTML
             scriptMatchesToRemove.Reverse();
             scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog(null, renderedTemplate);
+            return wrapLog.Return(renderedTemplate);
         }
 
         private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(Match match, string posInPage, int priority)
@@ -71,12 +72,12 @@ namespace ToSic.Sxc.Blocks.Output
 
         protected string ExtractInlineScripts(string renderedTemplate)
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
 
             var scriptMatches = ScriptContentDetection.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
-            Log.Add($"Found {scriptMatches.Count} inline scripts");
+            Log.A($"Found {scriptMatches.Count} inline scripts");
             var order = 1000;
             foreach (Match match in scriptMatches)
             {
@@ -88,7 +89,7 @@ namespace ToSic.Sxc.Blocks.Output
             // remove in reverse order, so that the indexes don't change
             scriptMatchesToRemove.Reverse();
             scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog(null, renderedTemplate);
+            return wrapLog.Return(renderedTemplate);
         }
 
     }

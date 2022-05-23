@@ -66,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Views
 
         public THttpResponseType DownloadViewAsJson(int appId, int viewId)
         {
-            var logCall = Log.Call($"{appId}, {viewId}");
+            var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user);
             var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var cms = _cmsManagerLazy.Value.Init(app, Log);
@@ -91,10 +91,9 @@ namespace ToSic.Sxc.WebApi.Views
             serializer.Init(cms.AppState, Log);
             var serialized = serializer.Serialize(bundle, 0);
 
-            logCall("ok");
-            return _responseMaker.File(serialized,
+            return logCall.Return(_responseMaker.File(serialized,
                 ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
-                .RemoveNonFilenameCharacters());
+                .RemoveNonFilenameCharacters()), "ok");
         }
 
         private void TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)
@@ -106,11 +105,11 @@ namespace ToSic.Sxc.WebApi.Views
             bundle.Assets.Add(asset1);
         }
 
-
+        
 
         public ImportResultDto ImportView(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
         {
-            var callLog = Log.Call<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
+            var callLog = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
 
             try
             {
@@ -146,12 +145,12 @@ namespace ToSic.Sxc.WebApi.Views
                 foreach (var asset in assets) assetMan.Create(GetRealPath(app, asset), asset);
 
                 // 3. possibly show messages / issues
-                return callLog("ok", new ImportResultDto(true));
+                return callLog.Return(new ImportResultDto(true), "ok");
             }
             catch (Exception ex)
             {
                 _envLogger.LogException(ex);
-                return callLog("error", new ImportResultDto(false, ex.Message, Message.MessageTypes.Error));
+                return callLog.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
             }
         }
 

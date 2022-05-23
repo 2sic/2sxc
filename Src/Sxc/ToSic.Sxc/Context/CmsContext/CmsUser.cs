@@ -1,18 +1,17 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Context
 {
-    public class CmsUser: Wrapper<IUser>, ICmsUser
+    public class CmsUser: CmsContextPartBase<IUser>, ICmsUser
     {
-        private readonly AppState _appState;
-
-        public CmsUser(IUser user, AppState appState) : base(user)
+        public CmsUser(CmsContext parent, AppState appState) : base(parent, parent.CtxSite.User)
         {
             _appState = appState;
         }
+
+        private readonly AppState _appState;
 
         public int Id => _contents.Id;
 
@@ -22,9 +21,7 @@ namespace ToSic.Sxc.Context
 
         public bool IsSiteDeveloper => _contents.IsDesigner;
 
-        public IMetadataOf Metadata
-            => _metadata ?? (_metadata = _appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
-        private IMetadataOf _metadata;
-
+        protected override IMetadataOf GetMetadataOf() 
+            => _appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")");
     }
 }

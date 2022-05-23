@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public EntityInListDto Header(Guid guid)
         {
-            Log.Add($"header for:{guid}");
+            Log.A($"header for:{guid}");
             var cg = GetContentGroup(guid, false);
 
             // new in v11 - this call might be run on a non-content-block, in which case we return null
@@ -60,12 +60,12 @@ namespace ToSic.Sxc.WebApi.Cms
                 Type = header?.Type.NameId ?? cg.View.HeaderType
             };
         }
-
+        
 
         // TODO: probably should move to a Manager
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
         {
-            var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
+            var wrapLog = Log.Fn($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
 
             void InternalSave(VersioningActionInfo args)
             {
@@ -89,14 +89,14 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // use dnn versioning - this is always part of page
             _versioning.New.DoInsidePublishing(Context, InternalSave);
-            wrapLog(null);
+            wrapLog.Done();
         }
 
 
         // TODO: WIP changing this from ContentGroup editing to any list editing
         public ReplacementListDto Replace(Guid guid, string part, int index)
         {
-            var wrapLog = Log.Call<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
+            var wrapLog = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
             part = part.ToLowerInvariant();
 
             var itemList = FindContentGroupAndTypeName(guid, part, out var typeName)
@@ -120,13 +120,13 @@ namespace ToSic.Sxc.WebApi.Cms
                 : null;
 
             var result = new ReplacementListDto { SelectedId = selectedId, Items = results, ContentTypeName = ct.NameId };
-            return wrapLog(null, result);
+            return wrapLog.Return(result);
         }
 
 
         public List<EntityInListDto> ItemList(Guid guid, string part)
         {
-            Log.Add($"item list for:{guid}");
+            Log.A($"item list for:{guid}");
             var cg = Context.AppState.List.One(guid);
             var itemList = cg.Children(part);
 
@@ -145,7 +145,7 @@ namespace ToSic.Sxc.WebApi.Cms
         // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
         public bool ItemList(/*IContextOfBlock context,*/ Guid guid, List<EntityInListDto> list,  string part = null)
         {
-            Log.Add($"list for:{guid}, items:{list?.Count}");
+            Log.A($"list for:{guid}, items:{list?.Count}");
             if (list == null) throw new ArgumentNullException(nameof(list));
 
             _publishing.Ready.DoInsidePublishing(Context, args =>
@@ -178,29 +178,26 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private List<IEntity> FindContentGroupAndTypeName(Guid guid, string part, out string attributeSetName)
         {
-            var wrapLog = Log.Call<List<IEntity>>($"{guid}, {part}");
+            var wrapLog = Log.Fn<List<IEntity>>($"{guid}, {part}");
             var contentGroup = GetContentGroup(guid, true);
             attributeSetName = null;
             var partIsContent = string.Equals(part, ViewParts.ContentLower, OrdinalIgnoreCase);
             // try to get the entityId. Sometimes it will try to get #0 which doesn't exist yet, that's why it has these checks
             var itemList = partIsContent ? contentGroup.Content : contentGroup.Header;
 
-            if (itemList == null) return wrapLog(null, null);
+            if (itemList == null) return wrapLog.ReturnNull();
 
             // not sure what this check is for, just leaving it in for now (2015-09-19 2dm)
             if (contentGroup.View == null)
-            {
-                Log.Add("Something found, but doesn't seem to be a content-group. Cancel.");
-                return wrapLog(null, null);
-            }
+                return wrapLog.ReturnNull("Something found, but doesn't seem to be a content-group. Cancel.");
 
             attributeSetName = partIsContent ? contentGroup.View.ContentType : contentGroup.View.HeaderType;
-            return wrapLog(null, itemList);
+            return wrapLog.Return(itemList);
         }
 
         private BlockConfiguration GetContentGroup(Guid contentGroupGuid, bool throwIfNotFound)
         {
-            Log.Add($"get group:{contentGroupGuid}");
+            Log.A($"get group:{contentGroupGuid}");
             var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(contentGroupGuid);
 
             // Note 2022-05-05 2dm - this can never be null, the check should be updated to check if the .Entity is null if this is important

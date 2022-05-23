@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
         public Assembly Compile(string filePath, string dllName)
         {
-            Log.Add($"Starting compilation of: '{filePath}'");
+            Log.A($"Starting compilation of: '{filePath}'");
 
             var sourceCode = File.ReadAllText(filePath);
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
         private Assembly CompileSourceCode(string path, string sourceCode, string dllName)
         {
-            var wrapLog = Log.Call($"Source code compilation: {dllName}.");
+            var wrapLog = Log.Fn($"Source code compilation: {dllName}.");
             var encoding = Encoding.UTF8;
             var pdbName = $"{dllName}.pdb";
             using (var peStream = new MemoryStream())
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
                 if (!result.Success)
                 {
-                    wrapLog("Compilation done with error.");
+                    wrapLog.Done("Compilation done with error.");
 
                     var errors = new List<string>();
 
@@ -82,14 +82,14 @@ namespace ToSic.Sxc.Oqt.Server.Code
 
                     foreach (var diagnostic in failures)
                     {
-                        Log.Add("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                        Log.A("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
                         errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
                     }
 
                     throw new IOException(String.Join("\n", errors));
                 }
 
-                wrapLog("Compilation done without any error.");
+                wrapLog.Done("Compilation done without any error.");
 
                 peStream.Seek(0, SeekOrigin.Begin);
                 pdbStream?.Seek(0, SeekOrigin.Begin);

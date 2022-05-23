@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         /// <returns></returns>
         public async ValueTask<bool> PrepareController(RouteValueDictionary values)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
 
             var apiFile = (string)values["apiFile"];
             var dllName = (string)values["dllName"];
@@ -50,16 +50,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // Alternatively remove older version of AppApi controller (if we got updated flag from file system watcher).
             if (_compiledAppApiControllers.TryGetValue(apiFile, out var updated))
             {
-                Log.Add($"_compiledAppApiControllers have value: {updated} for: {apiFile}.");
+                Log.A($"_compiledAppApiControllers have value: {updated} for: {apiFile}.");
                 if (updated)
                     RemoveController(dllName, apiFile);
                 else
-                    return wrapLog(
-                        $"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.",
-                        true);
+                    return wrapLog.Return(true, $"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.");
             }
 
-            Log.Add($"We need to prepare controller for: {apiFile}.");
+            Log.A($"We need to prepare controller for: {apiFile}.");
 
             // Check for AppApi file
             if (!File.Exists(apiFile))
@@ -74,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 throw new IOException($"Error, missing AppApi code in file {Path.GetFileName(apiFile)}.");
 
             // Build new AppApi Controller
-            Log.Add($"Compile assembly: {apiFile}, {dllName}");
+            Log.A($"Compile assembly: {apiFile}, {dllName}");
             var assembly = new Compiler().Compile(apiFile, dllName);
 
             // Add new key to concurrent dictionary, before registering new AppAPi controller.
@@ -84,12 +82,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // Register new AppApi Controller.
             AddController(dllName, assembly);
 
-            return wrapLog($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.", true);
+            return wrapLog.Return(true,$"ok, Controller is compiled and added to ApplicationParts: {apiFile}.");
         }
 
         private void AddController(string dllName, Assembly assembly)
         {
-            Log.Add($"Add ApplicationPart: {dllName}");
+            Log.A($"Add ApplicationPart: {dllName}");
             _partManager.ApplicationParts.Add(new CompilationReferencesProvider(assembly));
             // Notify change
             NotifyChange();
@@ -97,7 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
         private void RemoveController(string dllName, string apiFile)
         {
-            Log.Add($"In ApplicationParts, find AppApi controller: {dllName}.");
+            Log.A($"In ApplicationParts, find AppApi controller: {dllName}.");
             // In edge cases the part may be already registered more than once, so we want to really clean all
             var applicationParts = _partManager.ApplicationParts
                 .Where(a => a.Name.Equals($"{dllName}.dll"))
@@ -107,17 +105,17 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             {
                 foreach (var applicationPart in applicationParts)
                 {
-                    Log.Add($"From ApplicationParts, remove AppApi controller: {dllName}.");
+                    Log.A($"From ApplicationParts, remove AppApi controller: {dllName}.");
                     _partManager.ApplicationParts.Remove(applicationPart);
 
-                    Log.Add(_compiledAppApiControllers.TryRemove(apiFile, out var removeValue)
+                    Log.A(_compiledAppApiControllers.TryRemove(apiFile, out var removeValue)
                         ? $"Value removed: {removeValue} for {apiFile}."
                         : $"Error, can't remove value for {apiFile}.");
                 }
                 NotifyChange();
             }
             else
-                Log.Add($"In ApplicationParts, can't find AppApi controller: {dllName}");
+                Log.A($"In ApplicationParts, can't find AppApi controller: {dllName}");
         }
 
         private static void NotifyChange()

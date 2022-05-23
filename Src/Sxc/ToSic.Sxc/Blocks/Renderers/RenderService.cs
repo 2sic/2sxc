@@ -23,7 +23,8 @@ namespace ToSic.Sxc.Blocks
     {
 
 
-        public RenderService(GeneratorLog<IEditService> editGenerator, 
+        public RenderService(
+            GeneratorLog<IEditService> editGenerator, 
             LazyInitLog<IModuleAndBlockBuilder> builder,
             Generator<BlockFromEntity> blkFrmEntGen
             ) : base("Sxc.RndSvc", initialMessage:"()")
@@ -36,7 +37,13 @@ namespace ToSic.Sxc.Blocks
         private readonly GeneratorLog<IEditService> _editGenerator;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log.LinkTo(codeRoot.Log);
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        {
+            _codeRoot = codeRoot;
+            Log.LinkTo(codeRoot.Log);
+        }
+
+        private IDynamicCodeRoot _codeRoot;
 
 
         /// <summary>
@@ -90,16 +97,21 @@ namespace ToSic.Sxc.Blocks
 
         public IRenderResult Module(int pageId, int moduleId)
         {
-            var wrapLog = Log.Call<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
+            var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
             var block = _builder.Ready.GetBlock(pageId, moduleId).BlockBuilder;
             var result = block.Run(true);
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
 
         /// <summary>
         /// create edit-object which is necessary for context attributes
         /// We need a new one for each parent
         /// </summary>
-        private IEditService GetEdit(DynamicEntity parent) => _editGenerator.New.SetBlock(parent._Dependencies.BlockOrNull);
+        private IEditService GetEdit(DynamicEntity parent)
+        {
+            var newEdit = _editGenerator.New;
+            newEdit.ConnectToRoot(_codeRoot);
+            return newEdit.SetBlock(_codeRoot, parent._Dependencies.BlockOrNull);
+        }
     }
 }

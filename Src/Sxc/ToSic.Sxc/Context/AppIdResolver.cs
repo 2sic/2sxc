@@ -30,13 +30,13 @@ namespace ToSic.Sxc.Context
         /// <returns></returns>
         internal int GetAppIdFromPath(int zoneId, string appPath, bool required)
         {
-            var wrapLog = Log.Call<int>($"{zoneId}, {appPath}, {required}");
+            var wrapLog = Log.Fn<int>($"{zoneId}, {appPath}, {required}");
             // get app from AppName
             var aid = _appFinder/* _zoneRuntime.Init(zoneId, Log)*/.FindAppId(zoneId, appPath, true);
             if (aid <= Eav.Constants.AppIdEmpty && required)
                 throw new Exception($"App required but can't find App based on the name '{appPath}'");
 
-            return wrapLog($"found app:{aid}", aid);
+            return wrapLog.Return(aid, $"found app:{aid}");
         }
 
 
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Context
 
             if (!ok1 || !ok2) return null;
 
-            Log.Add($"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
+            Log.A($"Params in URL detected - will use appId:{appId}, zoneId:{zoneId}");
             return new AppIdentity(zoneId, appId);
         }
 

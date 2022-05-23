@@ -3,6 +3,7 @@ using DotNetNuke.Web.Api;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
@@ -11,7 +12,7 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
-    [SupportedModules("2sxc,2sxc-app")]
+    //[SupportedModules("2sxc,2sxc-app")]
     [ValidateAntiForgeryToken]
     public class EditController : SxcApiControllerBase<EditControllerReal>, IEditController
     {
@@ -21,15 +22,18 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
 
         /// <inheritdoc />
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
-        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId)
-            => Real.Load(items, appId);
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [AllowAnonymous]   // will check security internally, so assume no requirements
+        public EditDto Load([FromBody] List<ItemIdentifier> items, int appId) 
+            => Log.Return(() => Real.Load(items, appId));
 
         /// <inheritdoc />
         [HttpPost]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
+        [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => Real.Save(package, appId, partOfPage);
+            => Log.Return(() => Real.Save(package, appId, partOfPage));
+
 
         /// <inheritdoc />
         [HttpGet]

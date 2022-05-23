@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = null)
         {
-            var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}");
+            var wrapLog = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
             // verify that read-access to these content-types is permitted
             var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
@@ -76,10 +76,9 @@ namespace ToSic.Sxc.WebApi.App
             var result = _entityApi.Init(AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
                 .GetEntities(contentType)
                 ?.ToList();
-            wrapLog("found: " + result?.Count);
-            return result;
+            return wrapLog.Return(result, "found: " + result?.Count);
         }
-
+        
 
         #endregion
 
@@ -92,7 +91,7 @@ namespace ToSic.Sxc.WebApi.App
         /// <returns></returns>
         public IDictionary<string, object> GetOne(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
         {
-            Log.Add($"get and serialize after security check type:{contentType}, path:{appPath}");
+            Log.A($"get and serialize after security check type:{contentType}, path:{appPath}");
 
             // first try to find in all entities incl. drafts
             var itm = getOne(AppState.List);
@@ -113,7 +112,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null, string appPath = null)
         {
-            Log.Add($"create or update type:{contentType}, id:{id}, path:{appPath}");
+            Log.A($"create or update type:{contentType}, id:{id}, path:{appPath}");
 
             // if app-path specified, use that app, otherwise use from context
 
@@ -140,14 +139,14 @@ namespace ToSic.Sxc.WebApi.App
             var dataController = DataController(AppState);
             if (id == null)
             {
-                Log.Add($"create new entity because id is null");
+                Log.A($"create new entity because id is null");
                 var metadata = GetMetadata(newContentItemCaseInsensitive);
-                Log.Add($"metadata: {metadata}");
+                Log.A($"metadata: {metadata}");
 
                 var ids = dataController.Create(contentType, new List<Dictionary<string, object>> { cleanedNewItem }, metadata);
                 id = ids.FirstOrDefault();
 
-                Log.Add($"new entity id: {id}");
+                Log.A($"new entity id: {id}");
                 var added = AddParentRelationship(newContentItemCaseInsensitive, id.Value);
             }
             else
@@ -159,20 +158,20 @@ namespace ToSic.Sxc.WebApi.App
 
         private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive, int addedEntityId)
         {
-            var wrapLog = Log.Call<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+            var wrapLog = Log.Fn<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
             if (!newContentItemCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
-                return wrapLog("'ParentRelationship' key is missing", false);
+                return wrapLog.Return(false, "'ParentRelationship' key is missing");
 
             var parentRelationship = newContentItemCaseInsensitive[SaveApiAttributes.ParentRelationship] as JObject;
-            if (parentRelationship == null) return wrapLog($"'{SaveApiAttributes.ParentRelationship}' value is null", false);
+            if (parentRelationship == null) return wrapLog.Return(false, $"'{SaveApiAttributes.ParentRelationship}' value is null");
 
             var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
-            if (!parentGuid.HasValue) return wrapLog($"'{SaveApiAttributes.ParentRelParent}' guid is missing", false);
+            if (!parentGuid.HasValue) return wrapLog.Return(false, $"'{SaveApiAttributes.ParentRelParent}' guid is missing");
 
             var parentEntity = AppState.List.One(parentGuid.Value);
-            if (parentEntity == null) return wrapLog("Parent entity is missing", false);
-
+            if (parentEntity == null) return wrapLog.Return(false, "Parent entity is missing");
+            
             //var entityId = (int?)parentRelationship["EntityId"];
             var ids = new[] { addedEntityId as int? };
             var index = (int)parentRelationship[SaveApiAttributes.ParentRelIndex];
@@ -182,18 +181,18 @@ namespace ToSic.Sxc.WebApi.App
 
             AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
 
-            //return wrapLog($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}", true);
-            return wrapLog($"new ParentRelationship p:{parentGuid},f:{field},i:{index}", true);
+            //return wrapLog.Return(true, $"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}");
+            return wrapLog.Return(true, $"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }
 
         private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
         {
-            var wrapLog = Log.Call<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+            var wrapLog = Log.Fn<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
-            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog("'For' key is missing", null);
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog.ReturnNull("'For' key is missing");
 
             var metadataFor = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor] as JObject;
-            if (metadataFor == null) return wrapLog("'For' value is null", null);
+            if (metadataFor == null) return wrapLog.ReturnNull("'For' value is null");
 
             var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]), null)
             {
@@ -201,7 +200,7 @@ namespace ToSic.Sxc.WebApi.App
                 KeyNumber = (int?) metadataFor[Attributes.NumberNiceName],
                 KeyString = (string) metadataFor[Attributes.StringNiceName]
             };
-            return wrapLog($"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}", metaData);
+            return wrapLog.Return(metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
         }
 
         private static int GetTargetType(JToken target)
@@ -227,7 +226,7 @@ namespace ToSic.Sxc.WebApi.App
 
         private IConvertToEavLight InitEavAndSerializer(int appId, bool userMayEdit)
         {
-            Log.Add($"init eav for a#{appId}");
+            Log.A($"init eav for a#{appId}");
             // Improve the serializer so it's aware of the 2sxc-context (module, portal etc.)
             var ser = _entToDicLazy.Value;
             ser.WithGuid = true;
@@ -241,7 +240,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public void Delete(string contentType, int id, string appPath)
         {
-            Log.Add($"delete id:{id}, type:{contentType}, path:{appPath}");
+            Log.A($"delete id:{id}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
             // don't allow type "any" on this
@@ -256,7 +255,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public void Delete(string contentType, Guid guid, string appPath)
         {
-            Log.Add($"delete guid:{guid}, type:{contentType}, path:{appPath}");
+            Log.A($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
             var entityApi = _entityApi.Init(AppState.AppId, Context.UserMayEdit, Log);

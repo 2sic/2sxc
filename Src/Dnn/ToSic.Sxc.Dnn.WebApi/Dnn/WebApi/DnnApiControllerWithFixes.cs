@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected DnnApiControllerWithFixes(string logSuffix) 
 	    {
             Log = new Log("Api." + logSuffix, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
-            TimerWrapLog = Log.Call(message: "timer", useTimer: true);
+            TimerWrapLog = Log.Fn(message: "timer", startTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
             GetService<LogHistory>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
@@ -27,18 +27,20 @@ namespace ToSic.Sxc.Dnn.WebApi
         }
 
         // ReSharper disable once InconsistentNaming
-        private readonly Action<string> TimerWrapLog;
+        private readonly LogCall TimerWrapLog;
 
         protected override void Initialize(HttpControllerContext controllerContext)
-	    {
+        {
+            var callLog = Log.Fn();
             // Add the logger to the request, in case it's needed in error-reporting
 	        controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
 	        base.Initialize(controllerContext);
+            callLog.Done();
         }
 
         protected override void Dispose(bool disposing)
         {
-            TimerWrapLog(null);
+            TimerWrapLog.Done();
             base.Dispose(disposing);
         }
 

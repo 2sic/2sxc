@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
@@ -44,12 +45,12 @@ namespace ToSic.Sxc.Engines
         {
             get
             {
-                Log.Add($"Webpage get: {_webpage}");
+                Log.A($"Webpage get: {_webpage}");
                 return _webpage;
             }
             set
             {
-                Log.Add($"Webpage set: {value}");
+                Log.A($"Webpage set: {value}");
                 _webpage = value;
             }
             
@@ -91,7 +92,7 @@ namespace ToSic.Sxc.Engines
             catch (ConfigurationErrorsException exc)
             {
                 var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
-                Log.Exception(e);
+                Log.Ex(e);
                 throw e;
             }
         }
@@ -103,15 +104,15 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         public void Render(TextWriter writer)
         {
-            var wrapLog = Log.Call(message: "will render into TextWriter");
+            var wrapLog = Log.Fn(message: "will render into TextWriter");
             try
             {
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
-                wrapLog("ok");
+                wrapLog.Done("ok");
             }
             catch (Exception maybeIEntityCast)
             {
-                Log.Exception(maybeIEntityCast);
+                Log.Ex(maybeIEntityCast);
                 ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
@@ -121,26 +122,26 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc/>
         protected override string RenderTemplate()
         {
-            var wrapLog = Log.Call<string>();
+            var wrapLog = Log.Fn<string>();
             var writer = new StringWriter();
             Render(writer);
-            return wrapLog("ok", writer.ToString());
+            return wrapLog.Return(writer.ToString(), "ok");
         }
 
         private object CreateWebPageInstance()
         {
-            var wrapLog = Log.Call<object>();
+            var wrapLog = Log.Fn<object>();
             try
             {
                 var compiledType = BuildManager.GetCompiledType(TemplatePath);
                 object objectValue = null;
                 if (compiledType != null)
                     objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
-                return wrapLog("ok", objectValue);
+                return wrapLog.Return(objectValue, "ok");
             }
             catch (Exception ex)
             {
-                Log.Exception(ex);
+                Log.Ex(ex);
                 ErrorHelp.AddHelpIfKnownError(ex);
                 throw;
             }
@@ -148,8 +149,8 @@ namespace ToSic.Sxc.Engines
 
         private bool InitWebpage()
         {
-            var wrapLog = Log.Call<bool>();
-            if (string.IsNullOrEmpty(TemplatePath)) return wrapLog("null path", false);
+            var wrapLog = Log.Fn<bool>();
+            if (string.IsNullOrEmpty(TemplatePath)) return wrapLog.Return(false, "null path");
 
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             // ReSharper disable once JoinNullCheckWithUsage
@@ -179,12 +180,12 @@ namespace ToSic.Sxc.Engines
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618, CS0612
             InitHelpers(pageToInit, compatibility);
-            return wrapLog("ok", true);
+            return wrapLog.Return(true, "ok");
         }
 
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             var dynCode = _dnnDynCodeLazy.Value;
             // only do this if not already initialized
             //if (dynCode.Block != null)
@@ -193,7 +194,7 @@ namespace ToSic.Sxc.Engines
 
             // New in 10.25 - ensure jquery is not included by default
             if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;
-            wrapLog(null);
+            wrapLog.Done();
         }
 
 

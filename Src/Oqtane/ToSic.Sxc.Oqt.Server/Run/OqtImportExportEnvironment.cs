@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Adam;
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
         public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
         {
-            var wrapLog = Log.Call<List<Message>>($"{sourceFolder}, {destinationFolder}");
+            var wrapLog = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
             var messages = new List<Message>();
             var files = IO.Directory.GetFiles(sourceFolder, "*.*");
             var siteId = Site.Id;
@@ -50,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             if (!IO.Directory.Exists(destinationFolderFullPath))
             {
-                Log.Add($"Must create {destinationFolder} in site {siteId}");
+                Log.A($"Must create {destinationFolder} in site {siteId}");
                 IO.Directory.CreateDirectory(destinationFolderFullPath);
                 AddFolder(destinationFolder);
             }
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             void MassLog(string msg, Exception exception)
             {
-                Log.Add(msg);
+                Log.A(msg);
                 if (exception == null) return;
                 messages.Add(new Message(msg, Message.MessageTypes.Warning));
                 //Exceptions.LogException(exception);
@@ -68,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             foreach (var sourceFilePath in files)
             {
                 var destinationFileName = IO.Path.GetFileName(sourceFilePath);
-                Log.Add($"Try to copy '{sourceFilePath}' to '{destinationFileName}'");
+                Log.A($"Try to copy '{sourceFilePath}' to '{destinationFileName}'");
 
                 if (!FileExists(folderInfo, destinationFileName))
                 {
@@ -93,21 +94,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
             // Call the method recursively to handle subdirectories
             foreach (var sourceFolderPath in IO.Directory.GetDirectories(sourceFolder))
             {
-                Log.Add($"subfolder:{sourceFolderPath}");
+                Log.A($"subfolder:{sourceFolderPath}");
                 var newDestinationFolder = IO.Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "")
                     .TrimStart('\\'))
                     .Replace('\\', '/');
                 TransferFilesToSite(sourceFolderPath, newDestinationFolder);
             }
 
-            return wrapLog(null, messages);
+            return wrapLog.Return(messages);
         }
 
         public override Version TenantVersion => typeof(OqtImportExportEnvironment).Assembly.GetName().Version;
 
         public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
-            var wrapLog = Log.Call($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
+            var wrapLog = Log.Fn($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
 
             foreach (var file in filesAndPaths)
             {
@@ -118,13 +119,13 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var directory = IO.Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
                 if (directory == null)
                 {
-                    Log.Add($"Warning: File '{relativePath}', folder doesn't exist on drive");
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist on drive");
                     continue;
                 }
 
                 if (!FolderExists(directory))
                 {
-                    Log.Add($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
                     continue;
                 }
 
@@ -132,34 +133,34 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 if (!FileExists(folderInfo, fileName))
                 {
-                    Log.Add($"Warning: File '{relativePath}', file doesn't exist in DNN DB");
+                    Log.A($"Warning: File '{relativePath}', file doesn't exist in DNN DB");
                     continue;
                 }
 
                 var fileInfo = GetFile(folderInfo, fileName);
                 fileIdMap.Add(fileId, fileInfo.FileId);
-                Log.Add($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
+                Log.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
             }
 
-            wrapLog(null);
+            wrapLog.Done();
         }
 
         public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
-            var wrapLog = Log.Call($"folders and paths: {foldersAndPath.Count}");
+            var wrapLog = Log.Fn($"folders and paths: {foldersAndPath.Count}");
 
             foreach (var folder in foldersAndPath)
                 try
                 {
                     if (string.IsNullOrEmpty(folder.Value))
                     {
-                        Log.Add($"{folder.Key} / {folder.Value} is empty");
+                        Log.A($"{folder.Key} / {folder.Value} is empty");
                         continue;
                     }
                     var directory = IO.Path.GetDirectoryName(folder.Value);
                     if (directory == null)
                     {
-                        Log.Add($"Parent folder of folder {folder.Value} doesn't exist");
+                        Log.A($"Parent folder of folder {folder.Value} doesn't exist");
                         continue;
                     }
                     // if not exist, create - important because we need for metadata assignment
@@ -169,23 +170,23 @@ namespace ToSic.Sxc.Oqt.Server.Run
                         : GetOqtFolderByName(directory);
 
                     folderIdCorrectionList.Add(folder.Key, folderInfo.FolderId);
-                    Log.Add(
+                    Log.A(
                         $"Folder original #{folder.Key}/{folder.Value} - directory exists:{exists} placed in folder #{folderInfo.FolderId}");
                 }
                 catch (Exception)
                 {
                     var msg =
                         $"Had a problem with folder of '{folder.Key}' path '{folder.Value}' - you'll have to figure out yourself if this is a problem";
-                    Log.Add(msg);
+                    Log.A(msg);
                     importLog.Add(new Message(msg, Message.MessageTypes.Warning));
                 }
 
-            wrapLog($"done - final count {folderIdCorrectionList.Count}");
+            wrapLog.Done($"done - final count {folderIdCorrectionList.Count}");
         }
 
         private File Add(Folder parent, IO.Stream body, string fileName, OqtSite oqtSite)
         {
-            var callLog = Log.Call<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
+            var callLog = Log.Fn<File>($"Add {fileName}, folderId:{parent.FolderId}, siteId {oqtSite.Id}");
 
             var fullContentPath = IO.Path.Combine(_oqtServerPaths.FullContentPath(oqtSite.ContentPath), parent.Path);
             IO.Directory.CreateDirectory(fullContentPath);
@@ -207,7 +208,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 ImageWidth = 0
             };
             var oqtFile = _oqtFileRepository.AddFile(oqtFileData);
-            return callLog("ok", oqtFile);
+            return callLog.Return(oqtFile, "ok");
         }
 
         private bool FolderExists(string path) => GetOqtFolderByName(path) != null;
@@ -223,9 +224,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private Folder AddFolder(string path)
         {
             path = EnsureOqtaneFolderFormat(path);
-            var callLog = Log.Call<Folder>(path);
+            var callLog = Log.Fn<Folder>(path);
 
-            if (FolderExists(path)) return callLog("error, missing folder", null);
+            if (FolderExists(path)) return callLog.ReturnNull("error, missing folder");
 
             try
             {
@@ -237,22 +238,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 // Create the new virtual folder
                 var newFolder = CreateVirtualFolder(parentFolder, path, subfolder);
-                return callLog("ok", newFolder);
+                return callLog.Return(newFolder, "ok");
             }
             catch (SqlException)
             {
                 // don't do anything - this happens when multiple processes try to add the folder at the same time
                 // like when two fields in a dialog cause the web-api to create the folders in parallel calls
                 // see also https://github.com/2sic/2sxc/issues/811
-                Log.Add("error in SQL, probably folder already exists");
+                Log.A("error in SQL, probably folder already exists");
             }
             catch (NullReferenceException)
             {
                 // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
-                Log.Add("error, probably folder already exists");
+                Log.A("error, probably folder already exists");
             }
 
-            return callLog("?", null);
+            return callLog.ReturnNull("?");
         }
 
         // ensure backslash on the end of path, but not on the start

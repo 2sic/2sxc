@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {
-            Log.Add($"");
+            Log.A($"");
 
             if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.WriteSomething, out var exp))
                 throw exp;
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 fs.Rename(target, newName);
             }
 
-            Log.Add("rename complete");
+            Log.A("rename complete");
             return true;
         }
     }

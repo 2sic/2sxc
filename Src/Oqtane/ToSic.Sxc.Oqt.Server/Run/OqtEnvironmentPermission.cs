@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
@@ -37,15 +38,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override bool EnvironmentAllows(List<Grants> grants)
         {
-            var logWrap = Log.Call(() => $"[{string.Join(",", grants)}]");
+            var logWrap = Log.Fn<bool>(() => $"[{string.Join(",", grants)}]");
             var ok = UserIsSuperuser(); // superusers are always ok
             if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsSiteAdmin()
                      || UserIsModuleAdmin()
                      || UserIsModuleEditor();
             if (ok) GrantedBecause = Conditions.EnvironmentGlobal;
-            logWrap($"{ok} because:{GrantedBecause}");
-            return ok;
+            return logWrap.Return(ok, $"{ok} because:{GrantedBecause}");
         }
 
         public override bool VerifyConditionOfEnvironment(string condition)
@@ -71,24 +71,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        protected bool UserIsModuleAdmin()
-            => Log.Intercept(nameof(UserIsModuleAdmin),
-                UserIsModuleEditor);
+        protected bool UserIsModuleAdmin() => Log.Return(UserIsModuleEditor);
 
         protected bool UserIsModuleEditor()
-            => _userIsModuleEditor ??= Log.Intercept(nameof(UserIsModuleEditor),
-                () =>
+            => _userIsModuleEditor ??= Log.Return(() =>
+            {
+                if (Module == null) return false;
+                try
                 {
-                    if (Module == null) return false;
-                    try
-                    {
-                        return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id, PermissionNames.Edit);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                });
+                    return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id,
+                        PermissionNames.Edit);
+                }
+                catch
+                {
+                    return false;
+                }
+            });
         private bool? _userIsModuleEditor;
     }
 }

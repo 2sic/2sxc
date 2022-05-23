@@ -22,12 +22,12 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         internal IBlock GetCmsBlock(HttpRequestMessage request, ILog log)
         {
-            var wrapLog = log.Call<IBlock>(useTimer: true);
+            var wrapLog = log.Fn<IBlock>(startTimer: true);
 
             var moduleInfo = request.FindModuleInfo();
 
             if (moduleInfo == null)
-                return wrapLog("request ModuleInfo not found", null);
+                return wrapLog.ReturnNull("request ModuleInfo not found");
 
             var block = _moduleAndBlockBuilder.New.Init(log).GetBlock(moduleInfo);
 
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 int.TryParse(blockHeaderId, out var blockId);
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
-                    log.Add($"Inner Content: {blockId}");
+                    log.A($"Inner Content: {blockId}");
                     if (request.Headers.Contains("BlockIds"))
                     {
                         var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 }
             }
 
-            return wrapLog("ok", block);
+            return wrapLog.Return(block, "ok");
         }
 
         private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, string[] blockIds, ILog log)

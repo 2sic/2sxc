@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
@@ -11,27 +12,27 @@ namespace ToSic.Sxc.WebApi.Adam
 
         internal bool CustomFileFilterOk(string additionalFilter, string fileName)
         {
-            var wrapLog = Log.Call<bool>();
+            var wrapLog = Log.Fn<bool>();
             var extension = Path.GetExtension(fileName)?.TrimStart('.') ?? "";
             var hasNonAzChars = new Regex("[^a-z]", RegexOptions.IgnoreCase);
 
-            Log.Add($"found additional file filter: {additionalFilter}");
+            Log.A($"found additional file filter: {additionalFilter}");
             var filters = additionalFilter.Split(',').Select(f => f.Trim()).ToList();
-            Log.Add($"found {filters.Count} filters in {additionalFilter}, will test on {fileName} with ext {extension}");
+            Log.A($"found {filters.Count} filters in {additionalFilter}, will test on {fileName} with ext {extension}");
 
             foreach (var f in filters)
             {
                 // just a-z characters
                 if (!hasNonAzChars.IsMatch(f))
                     if (string.Equals(extension, f, StringComparison.InvariantCultureIgnoreCase))
-                        return wrapLog($"filter {f} matched filename {fileName}", true);
+                        return wrapLog.Return(true, $"filter {f} matched filename {fileName}");
                     else
                         continue;
 
                 // could be regex or simple *.ext
                 if (f.StartsWith("*."))
                     if (string.Equals(extension, f.Substring(2), StringComparison.InvariantCultureIgnoreCase))
-                        return wrapLog($"filter {f} matched filename {fileName}", true);
+                        return wrapLog.Return(true, $"filter {f} matched filename {fileName}");
                     else
                         continue;
 
@@ -39,16 +40,16 @@ namespace ToSic.Sxc.WebApi.Adam
                 try
                 {
                     if (new Regex(f, RegexOptions.IgnoreCase).IsMatch(fileName))
-                        return wrapLog($"filter {f} matched filename {fileName}", true);
+                        return wrapLog.Return(true, $"filter {f} matched filename {fileName}");
                 }
                 catch
                 {
-                    Log.Add($"filter {f} was detected as reg-ex but threw error");
+                    Log.A($"filter {f} was detected as reg-ex but threw error");
                 }
 
             }
 
-            return false;
+            return wrapLog.Return(false);
         }
 
         #endregion

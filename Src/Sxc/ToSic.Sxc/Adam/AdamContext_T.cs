@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
         public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var logCall = Log.Call<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
+            var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
             AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
             AdamRoot = usePortalRoot
                 ? new AdamStorageOfSite<TFolderId, TFileId>(AdamManager) as AdamStorage<TFolderId, TFileId>
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Adam
 
             base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, parentLog);
             
-            return logCall(null, this);
+            return logCall.Return(this);
         }
 
 

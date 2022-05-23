@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Context;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Usage
 
         public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
-            var wrapLog = Log.Call<IEnumerable<ViewDto>>($"{appId}, {guid}");
+            var wrapLog = Log.Fn<IEnumerable<ViewDto>>($"{appId}, {guid}");
             var context = _ctxResolver.BlockOrApp(appId);
 
             // extra security to only allow zone change if host user
@@ -40,11 +41,11 @@ namespace ToSic.Sxc.WebApi.Usage
 
             var blocks = cms.Blocks.AllWithView();
 
-            Log.Add($"Found {blocks.Count} content blocks");
+            Log.A($"Found {blocks.Count} content blocks");
 
             var result = finalBuilder(views, blocks);
 
-            return wrapLog("ok", result);
+            return wrapLog.Return(result, "ok");
         }
     }
 }

@@ -35,6 +35,14 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <!-- end: Don't generate... -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,8 +105,11 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml" />
     <Reference Include="ToSic.Imageflow.Dnn, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\Imageflow\Dnn\ToSic.Imageflow.Dnn.dll</HintPath>
@@ -114,10 +125,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
+      <Link>Properties\AssemblyInfoInherited.cs</Link>
+    </Compile>
+    <Compile Include="dist\CachedPageBase.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\ng-edit\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\ng-edit\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="dist\ng\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="dist\ng\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="DnnBusinessController.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
     <Compile Include="StartUp\CompilerDependencies.cs" />
     <Compile Include="StartUp\DnnDi.cs" />
+    <Compile Include="StartUp\DnnStartUpRegistrations.cs" />
     <Compile Include="StartUp\StartupDnn9.cs" />
     <Compile Include="StartUp\StartupDnn.cs" />
     <Compile Include="DnnWebForms\PagePicker.ascx.cs">
@@ -171,6 +203,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
+    <Content Include="dist\ng-edit\Default.aspx" />
+    <Content Include="dist\ng\Default.aspx" />
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
@@ -334,23 +368,24 @@
     <PostBuildEvent>@Echo Configuration='$(Configuration)'
 @Echo StartWith ='$(Configuration.StartsWith('Debug'))'
 @Echo Platform ='$(Platform)'
-@set BuildTarget=%25Dev2sxcDnnRoot%25\DesktopModules\ToSIC_SexyContent
+@set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
 @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
-@REM xcopy "C:\Projects\2sxc-dnn742\Website\bin\ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
+@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
+@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\dnn9102-farm\Website\bin\" /y /i
+@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\_Test\2sxc-evoq\2sxc-evoq910611-t01\Website\bin\" /y /i
 
 @REM Copy Imageflow and dependecies
 robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
-if exist $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll (
-	@Echo delete: $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll
-	del $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll
-	rename $(Dev2sxcDnnRoot)bin\runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
+if exist $(TargetDir)runtimes\win-x64\native\imageflow.dll (
+	@Echo delete: $(TargetDir)runtimes\win-x64\native\imageflow.dll
+	del $(TargetDir)runtimes\win-x64\native\imageflow.dll
+	rename $(TargetDir)runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
 )
-if exist $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll (
-	@Echo delete: $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll
-	del $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll
-	rename $(Dev2sxcDnnRoot)bin\runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
+if exist $(TargetDir)runtimes\win-x86\native\imageflow.dll (
+	@Echo delete: $(TargetDir)runtimes\win-x86\native\imageflow.dll
+	del $(TargetDir)runtimes\win-x86\native\imageflow.dll
+	rename $(TargetDir)runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
 )
-
 
 @REM Copy the data folders
 robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
@@ -367,9 +402,10 @@ robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
-robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
+robocopy "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ " /MIR /XF "%25BuildTarget%25\dist\ng\Default.aspx" /XF "%25BuildTarget%25\dist\ng-edit\Default.aspx"
 robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
+robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S /XC /XO /XN
 robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
 robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
 robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "

@@ -32,16 +32,16 @@ namespace ToSic.Sxc.Data
         public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path)
         {
             var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt", Debug);
-            var safeWrap = logOrNull.SafeCall<PropertyRequest>($"{nameof(field)}: {field}", "DynEntity");
+            var safeWrap = logOrNull.Fn<PropertyRequest>($"{nameof(field)}: {field}", "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
-            if (Entity == null) return safeWrap("no entity", null);
+            if (Entity == null) return safeWrap.ReturnNull("no entity");
             path = path.KeepOrNew().Add("DynEnt", field);
             var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull, path);
 
             // new 12.05, very experimental
             //ApplyDynamicDataFeaturesToResult(field, propRequest);
 
-            return safeWrap(null, propRequest);
+            return safeWrap.Return(propRequest);
         }
 
         // V12.10? This is just PoC to show that we could auto-dynamic data. Will not be available yet

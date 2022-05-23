@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)
         {
-            Log.Add($"delete");
+            Log.A($"delete");
             if (!AdamContext.Security.UserIsPermittedOnField(GrantSets.DeleteSomething, out var exp))
                 throw exp;
 
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 fs.Delete(target);
             }
 
-            Log.Add("delete complete");
+            Log.A("delete complete");
             return true;
         }
 
