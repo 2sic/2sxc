@@ -37,7 +37,6 @@ namespace ToSic.Sxc.Dnn.Context
         public new DnnModule Init(ModuleInfo item, ILog parentLog)
         {
             base.Init(item, parentLog);
-            // TODO: @STV - you had moved this to before the init, that shouldn't happen, as it will confuse the log which is attached during init. 
             var warpLog = Log.Fn<DnnModule>($"{item?.ModuleID}");
             return warpLog.Return(this);
         }
@@ -50,7 +49,6 @@ namespace ToSic.Sxc.Dnn.Context
         {
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
             Init(mod, parentLog);
-            // TODO: @STV - you had moved this to before the init, that shouldn't happen, as it will confuse the log which is attached during init. 
             var wrapLog = Log.Fn<IModule>($"{moduleId}");
             return wrapLog.Return(this);
         }

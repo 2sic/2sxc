@@ -106,7 +106,6 @@ namespace ToSic.Sxc.Edit.EditService
                 return wrapLog.Return(false, "string false");
 
             // Anything else: true
-            // TODO: @STV - carefuly - you had put Return(false, ...) before ! you can remove the comment after review
             return wrapLog.Return(true, "default,true");
         }
 
