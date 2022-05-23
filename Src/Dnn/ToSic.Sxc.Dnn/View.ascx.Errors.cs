@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav.Logging.Call;
 using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Dnn
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="action"></param>
         /// <param name="timerWrap"></param>
-        private void TryCatchAndLogToDnn(Action action, Action<string> timerWrap = null)
+        private void TryCatchAndLogToDnn(Action action, LogCall timerWrap = null)
         {
             try
             {
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.Dnn
             }
             finally
             {
-                timerWrap?.Invoke(null);
+                timerWrap?.Done();
             }
         }
 

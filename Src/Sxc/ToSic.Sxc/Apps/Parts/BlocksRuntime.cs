@@ -55,23 +55,23 @@ namespace ToSic.Sxc.Apps
 
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {
-            var wrapLog = Log.Call($"get CG#{contentGroupGuid}");
+            var wrapLog = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
             var groupEntity = ContentGroups().One(contentGroupGuid);
             var found = groupEntity != null;
-            wrapLog(found ? "found" : "missing");
-            return found
+            return wrapLog.Return(found
                 ? new BlockConfiguration(groupEntity, Parent, _cultureResolver.CurrentCultureCode, Log).WarnIfMissingData()
                 : new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log)
                 {
                     PreviewTemplateId = Guid.Empty,
                     DataIsMissing = true
-                };
+                }, 
+                found ? "found" : "missing");
         }
         
 
         internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
         {
-            var wrapLog = Log.Call($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
+            var wrapLog = Log.Fn<BlockConfiguration>($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
             Log.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
@@ -79,8 +79,7 @@ namespace ToSic.Sxc.Apps
                 ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) { PreviewTemplateId = blockId.PreviewView }
                 : GetBlockConfig(blockId.Guid);
             result.BlockIdentifierOrNull = blockId;
-            wrapLog(null);
-            return result;
+            return wrapLog.Return(result);
         }
 
     }

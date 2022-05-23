@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public IEnumerable<IDictionary<string, object>> GetItems(string contentType, string appPath = null)
         {
-            var wrapLog = Log.Call($"get entities type:{contentType}, path:{appPath}");
+            var wrapLog = Log.Fn<IEnumerable<IDictionary<string, object>>>($"get entities type:{contentType}, path:{appPath}");
 
             // verify that read-access to these content-types is permitted
             var permCheck = ThrowIfNotAllowedInType(contentType, GrantSets.ReadSomething, AppState);
@@ -76,10 +76,9 @@ namespace ToSic.Sxc.WebApi.App
             var result = _entityApi.Init(AppState.AppId, permCheck.EnsureAny(GrantSets.ReadDraft), Log)
                 .GetEntities(contentType)
                 ?.ToList();
-            wrapLog("found: " + result?.Count);
-            return result;
+            return wrapLog.Return(result, "found: " + result?.Count);
         }
-
+        
 
         #endregion
 

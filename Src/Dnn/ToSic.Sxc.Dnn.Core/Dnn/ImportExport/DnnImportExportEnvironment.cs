@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         public override void MapExistingFilesToImportSet(Dictionary<int, string> filesAndPaths, Dictionary<int, int> fileIdMap)
         {
-            var wrapLog = Log.Call($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
+            var wrapLog = Log.Fn($"files: {filesAndPaths.Count}, map size: {fileIdMap.Count}");
             var siteId = Site.Id;
 
             var fileManager = FileManager.Instance;
@@ -141,12 +141,12 @@ namespace ToSic.Sxc.Dnn.ImportExport
                 Log.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
             }
 
-            wrapLog(null);
+            wrapLog.Done();
         }
 
         public override void CreateFoldersAndMapToImportIds(Dictionary<int, string> foldersAndPath, Dictionary<int, int> folderIdCorrectionList, List<Message> importLog)
         {
-            var wrapLog = Log.Call($"folders and paths: {foldersAndPath.Count}");
+            var wrapLog = Log.Fn($"folders and paths: {foldersAndPath.Count}");
             var siteId = Site.Id;
 
             var folderManager = FolderManager.Instance;
@@ -183,7 +183,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
                     importLog.Add(new Message(msg, Message.MessageTypes.Warning));
                 }
 
-            wrapLog($"done - final count {folderIdCorrectionList.Count}");
+            wrapLog.Done($"done - final count {folderIdCorrectionList.Count}");
         }
 
         #endregion

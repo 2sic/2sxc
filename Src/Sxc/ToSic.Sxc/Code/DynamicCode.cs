@@ -34,9 +34,9 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            Log.LinkTo(codeRoot?.Log);
-            Log.Call()(null);
             _DynCodeRoot = codeRoot;
+            Log.LinkTo(codeRoot?.Log);
+            Log.Fn().Done();
         }
 
         /// <inheritdoc />

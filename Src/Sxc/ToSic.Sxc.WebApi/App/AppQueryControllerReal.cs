@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.App
             int? appId, string stream = null,
             bool includeGuid = false)
         {
-            var wrapLog = Log.Call($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
+            var wrapLog = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
 
             var appCtx = appId != null ? _ctxResolver.BlockOrApp(appId.Value) : _ctxResolver.BlockRequired();
 
@@ -64,8 +64,7 @@ namespace ToSic.Sxc.WebApi.App
             var app = GetService<Apps.App>().Init(appCtx.AppState.AppId, Log, maybeBlock, appCtx.UserMayEdit);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
-            wrapLog(null);
-            return result;
+            return wrapLog.Return(result);
         }
 
         #endregion
@@ -78,7 +77,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParameters more, string stream)
         {
-            var wrapLog = Log.Call($"path:{appPath}, name:{name}, stream: {stream}");
+            var wrapLog = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
 
@@ -89,8 +88,7 @@ namespace ToSic.Sxc.WebApi.App
 
             // now just run the default query check and serializer
             var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, appCtx.UserMayEdit, more);
-            wrapLog(null);
-            return result;
+            return wrapLog.Return(result);
         }
 
 
@@ -106,13 +104,13 @@ namespace ToSic.Sxc.WebApi.App
                 bool userMayEdit,
                 QueryParameters more)
         {
-            var wrapLog = Log.Call($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
+            var wrapLog = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
             var query = app.GetQuery(name);
 
             if (query == null)
             {
                 var msg = $"query '{name}' not found";
-                wrapLog(msg);
+                wrapLog.ReturnNull(msg);
                 throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found");
             }
 
@@ -126,7 +124,7 @@ namespace ToSic.Sxc.WebApi.App
             if (!(readExplicitlyAllowed || isAdmin))
             {
                 var msg = $"Request not allowed. User does not have read permissions for query '{name}'";
-                wrapLog(msg);
+                wrapLog.ReturnNull(msg);
                 throw new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed");
             }
 
@@ -136,8 +134,7 @@ namespace ToSic.Sxc.WebApi.App
             serializer.WithGuid = includeGuid;
             if (stream == AllStreams) stream = null;
             var result = serializer.Convert(query, stream?.Split(','), more?.Guids);
-            wrapLog(null);
-            return result;
+            return wrapLog.Return(result);
         }
     }
 }

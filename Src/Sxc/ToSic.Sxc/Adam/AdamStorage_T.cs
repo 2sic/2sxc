@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Adam
+﻿using ToSic.Eav.Logging;
+
+namespace ToSic.Sxc.Adam
 {
     public abstract class AdamStorage<TFolderId, TFileId>: AdamStorage
     {
@@ -17,10 +19,9 @@
         /// </remarks>
         internal Folder<TFolderId, TFileId> Folder(string subFolder, bool autoCreate)
         {
-            var callLog = Log.Call($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
+            var callLog = Log.Fn<Folder<TFolderId, TFileId>>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
             var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
-            callLog("ok");
-            return fld;
+            return callLog.Return(fld, "ok");
         }
 
 

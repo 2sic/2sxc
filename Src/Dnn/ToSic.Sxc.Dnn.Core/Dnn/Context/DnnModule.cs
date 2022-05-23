@@ -36,9 +36,9 @@ namespace ToSic.Sxc.Dnn.Context
         /// </summary>
         public new DnnModule Init(ModuleInfo item, ILog parentLog)
         {
+            var warpLog = Log.Fn<DnnModule>($"{item?.ModuleID}");
             base.Init(item, parentLog);
-            Log.Call($"{item?.ModuleID}")(null);
-            return this;
+            return warpLog.Return(this);
         }
 
         /// <summary>
@@ -47,10 +47,10 @@ namespace ToSic.Sxc.Dnn.Context
         /// </summary>
         public override IModule Init(int moduleId, ILog parentLog)
         {
+            var wrapLog = Log.Fn<IModule>($"{moduleId}");
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
             Init(mod, parentLog);
-            Log.Call($"{moduleId}")(null);
-            return this;
+            return wrapLog.Return(this);
         }
 
         #endregion

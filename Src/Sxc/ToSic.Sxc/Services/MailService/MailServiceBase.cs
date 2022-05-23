@@ -40,17 +40,17 @@ namespace ToSic.Sxc.Services
         /// <inheritdoc />
         public void Send(MailMessage message)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             try
             {
                 using (var client = SmtpClient()) 
                     client.Send(message);
-                wrapLog("ok");
+                wrapLog.Done("ok");
             }
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                wrapLog("error");
+                wrapLog.Done("error");
                 if (_userLazy.Value.IsSuperUser)
                     throw;
                 else
@@ -122,7 +122,7 @@ namespace ToSic.Sxc.Services
             object attachments = null)
         {
             // Note: don't log all the parameters here, because we'll do it again on the Create-call
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}",
                 $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Services
                 isHtml: isHtml, encoding: encoding, attachments: attachments);
 
             Send(mailMessage);
-            wrapLog("done");
+            wrapLog.Done("done");
         }
 
         public MailAddress MailAddress(string addressType, object mailAddress)

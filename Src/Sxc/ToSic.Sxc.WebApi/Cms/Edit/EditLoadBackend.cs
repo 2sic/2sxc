@@ -64,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditDto Load(int appId, List<ItemIdentifier> items)
         {
             // Security check
-            var wrapLog = Log.Call($"load many a#{appId}, items⋮{items.Count}");
+            var wrapLog = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
 
             var context = _ctxResolver.BlockOrApp(appId);
 
@@ -137,12 +137,11 @@ namespace ToSic.Sxc.WebApi.Cms
             } 
             catch (Exception) { /* ignore */ }
 
-            // done - return
-            wrapLog($"ready, sending items:{result.Items.Count}, " +
-                    $"types:{result.ContentTypes.Count}, " +
-                    $"inputs:{result.InputTypes.Count}, " +
-                    $"feats:{result.Features.Count}");
-            return result;
+            // done
+            return wrapLog.Return(result, $"ready, sending items:{result.Items.Count}, " +
+                                   $"types:{result.ContentTypes.Count}, " +
+                                   $"inputs:{result.InputTypes.Count}, " +
+                                   $"feats:{result.Features.Count}");
         }
 
 

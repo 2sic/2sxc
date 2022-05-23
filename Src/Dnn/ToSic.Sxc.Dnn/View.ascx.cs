@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn
                 GetService<LogHistory>().Add("module", Log);
                 LogTimer.Stopwatch.Start();
 
-                var callLog = Log.Call(useTimer: true);
+                var callLog = Log.Fn(startTimer: true);
 
                 // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
                 var checkPortalIsReady = true;
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn
         {
             var finalMessage = "";
             LogTimer.DoInTimer(() => { 
-                var callLog = Log.Call(useTimer: true);
+                var callLog = Log.Fn(startTimer: true);
 
                 // #lightspeed
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
@@ -143,14 +143,14 @@ namespace ToSic.Sxc.Dnn
                 if (IsError && !headersAndScriptsAdded)
                     DnnClientResources?.AddEverything(data?.Features);
 
-                callLog(null);
+                callLog.Done();
             });
             LogTimer.Done(IsError ? "⚠️" : finalMessage);
         }
 
         private IRenderResult RenderViewAndGatherJsCssSpecs()
         {
-            var callLog = Log.Call(message: $"module {ModuleId} on page {TabId}", useTimer: true);
+            var callLog = Log.Fn(message: $"module {ModuleId} on page {TabId}", startTimer: true);
             var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
             {

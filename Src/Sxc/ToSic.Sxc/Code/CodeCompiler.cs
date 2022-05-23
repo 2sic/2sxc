@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Code
 
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
-            var wrapLog = Log.Call($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
+            var wrapLog = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
             //string ErrorMessage = null;
 
             // Perform various checks on the path values
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Code
             if (hasErrorMessage != null)
             {
                 Log.A($"Error: {hasErrorMessage}");
-                wrapLog("failed");
+                wrapLog.ReturnNull("failed");
                 if (throwOnError) throw new Exception(hasErrorMessage);
                 return null;
             }
@@ -80,17 +80,15 @@ namespace ToSic.Sxc.Code
             if (ErrorMessage != null)
             {
                 Log.A(ErrorMessage + $"; throw error: {throwOnError}");
-                wrapLog("failed");
+                wrapLog.ReturnNull("failed");
                 if (throwOnError) throw new Exception(ErrorMessage);
                 return null;
             }
 
             var instance = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
             AttachRelativePath(virtualPath, instance);
-
-            wrapLog($"found: {instance != null}");
-            return instance;
-
+            
+            return wrapLog.Return(instance, $"found: {instance != null}");
         }
 
         protected abstract Assembly GetAssembly(string virtualPath, string className);

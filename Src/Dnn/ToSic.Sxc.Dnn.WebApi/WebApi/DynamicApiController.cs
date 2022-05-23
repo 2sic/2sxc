@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi
 
         private void TryToAttachAppFromUrlParams()
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             var found = false;
             try
             {
@@ -97,7 +97,7 @@ namespace ToSic.Sxc.WebApi
                 }
             } catch { /* ignore */ }
 
-            wrapLog(found.ToString());
+            wrapLog.Done(found.ToString());
         }
 
 

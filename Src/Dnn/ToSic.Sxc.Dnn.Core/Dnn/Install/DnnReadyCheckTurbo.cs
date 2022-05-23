@@ -23,16 +23,16 @@ namespace ToSic.Sxc.Dnn.Install
         /// <param name="log"></param>
         public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy, ILog log)
         {
-            var wrapLog = log.Call(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
+            var wrapLog = log.Fn(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
             if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
             {
                 // all ok, skip
-                wrapLog("quick-check: ready");
+                wrapLog.Done("quick-check: ready");
                 return;
             }
 
             new DnnReadyCheckTurbo(module, log).EnsureSiteAndAppFoldersAreReadyInternal(block, appFolderInitializerLazy);
-            wrapLog("deep-check: ready");
+            wrapLog.Done("deep-check: ready");
         }
 
         private DnnReadyCheckTurbo(PortalModuleBase module, ILog parentLog) : base("Dnn.PreChk", parentLog) => _module = module;

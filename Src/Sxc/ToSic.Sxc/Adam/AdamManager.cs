@@ -44,12 +44,11 @@ namespace ToSic.Sxc.Adam
             Log.LinkTo(parentLog);
             AppContext = ctx;
 
-            var callLog = Log.Call();
+            var callLog = Log.Fn<AdamManager>();
             Site = AppContext.Site;
             AppRuntime.Init(AppContext.AppState, AppContext.UserMayEdit, null);
             CompatibilityLevel = compatibility;
-            callLog("ready");
-            return this;
+            return callLog.Return(this, "ready");
         }
         
         public IContextOfApp AppContext { get; private set; }

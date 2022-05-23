@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Save
         /// <returns></returns>
         internal bool ContainsOnlyExpectedNodes(out HttpExceptionAbstraction preparedException)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn<bool>();
             if (Package.ContentTypes != null) Add("package contained content-types, unexpected!");
             if (Package.InputTypes != null) Add("package contained input types, unexpected!");
             if (Package.Features != null) Add("package contained features, unexpected!");
@@ -51,8 +51,7 @@ namespace ToSic.Sxc.WebApi.Save
             }
 
             var ok= BuildExceptionIfHasIssues(out preparedException, "ContainsOnlyExpectedNodes() done");
-            wrapLog($"{ok}");
-            return ok;
+            return wrapLog.Return(ok, $"{ok}");
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Save
         /// </summary>
         private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list)
         {
-            var wrapLog = Log.Call($"{list.Count}");
+            var wrapLog = Log.Fn($"{list.Count}");
             foreach (var item in list)
             {
                 if (item.Header == null || item.Entity == null)
@@ -75,7 +74,7 @@ namespace ToSic.Sxc.WebApi.Save
                 }
             }
 
-            wrapLog("done");
+            wrapLog.Done("done");
         }
 
         /// <summary>
@@ -83,11 +82,11 @@ namespace ToSic.Sxc.WebApi.Save
         /// </summary>
         private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
         {
-            var wrapLog = Log.Call($"{list.Count}");
+            var wrapLog = Log.Fn($"{list.Count}");
             var groupAssignments = list.Select(i => i.Header.Group).Where(g => g != null).ToList();
             if (groupAssignments.Count == 0)
             {
-                wrapLog("none of the items is part of a list/group");
+                wrapLog.Done("none of the items is part of a list/group");
                 return;
             }
 
@@ -102,7 +101,7 @@ namespace ToSic.Sxc.WebApi.Save
                     Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
             }
 
-            wrapLog("done");
+            wrapLog.Done("done");
         }
 
 
@@ -126,7 +125,7 @@ namespace ToSic.Sxc.WebApi.Save
 
         internal bool IfUpdateValidateAndCorrectIds(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn<bool>();
             var previousEntity = AppRead.Entities.Get(newEntity.EntityId)
                                  ?? AppRead.Entities.Get(newEntity.EntityGuid);
 
@@ -150,34 +149,33 @@ namespace ToSic.Sxc.WebApi.Save
 
             var ok = BuildExceptionIfHasIssues(out preparedException, "EntityIsOk() done");
 
-            wrapLog($"{ok}");
-            return ok;
+            return wrapLog.Return(ok, $"{ok}");
         }
 
 
         private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity)
         {
-            var wrapLog = Log.Call($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
+            var wrapLog = Log.Fn($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
             if(originalEntity.Type.NameId != newEntity.Type.NameId)
                 Add($"entity type mismatch on {count}");
-            wrapLog("done");
+            wrapLog.Done("done");
         }
 
         private void CompareIdentities(int count, IEntityLight originalEntity, IEntityLight newEntity)
         {
-            var wrapLog = Log.Call($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
+            var wrapLog = Log.Fn($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
             if(originalEntity.EntityId != newEntity.EntityId)
                 Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
 
             Log.A($"Guids:{newEntity.EntityGuid}/{originalEntity.EntityGuid}");
             if(originalEntity.EntityGuid != newEntity.EntityGuid)
                 Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
-            wrapLog("done");
+            wrapLog.Done("done");
         }
 
         private void CompareAttributes(int count, IEntity original, IEntity ent)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
 
             if (original.Attributes.Count != ent.Attributes.Count)
                 Add($"entity {count} has different amount " +
@@ -194,7 +192,7 @@ namespace ToSic.Sxc.WebApi.Save
                             $"- '{origAttr.Value.Type}'/'{newAttr.Value.Type}'");
                 }
 
-            wrapLog("done");
+            wrapLog.Done("done");
         }
     }
 }

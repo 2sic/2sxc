@@ -20,10 +20,9 @@ namespace ToSic.Sxc.Dnn.Adam
         public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamManager, ILog parentLog)
         {
             Log.LinkTo(parentLog);
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamManager;
-            wrapLog("ok");
-            return this;
+            return wrapLog.Return(this, "ok");
         }
 
 
@@ -50,18 +49,18 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public void Rename(IFile file, string newName)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
             _dnnFiles.RenameFile(dnnFile, newName);
-            callLog("ok");
+            callLog.Done("ok");
         }
 
         public void Delete(IFile file)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             var dnnFile = _dnnFiles.GetFile(file.AsDnn().SysId);
             _dnnFiles.DeleteFile(dnnFile);
-            callLog("ok");
+            callLog.Done("ok");
         }
 
         public File<int, int> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
@@ -108,11 +107,11 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public void AddFolder(string path)
         {
-            var callLog = Log.Call(path);
+            var callLog = Log.Fn(path);
             try
             {
                 _dnnFolders.AddFolder(AdamContext.Site.Id, path);
-                callLog("ok");
+                callLog.Done("ok");
             }
             catch (SqlException)
             {
@@ -133,22 +132,22 @@ namespace ToSic.Sxc.Dnn.Adam
                 Log.A("error, probably folder already exists");
             }
 
-            callLog("?");
+            callLog.Done("?");
         }
 
         public void Rename(IFolder folder, string newName)
         {
-            var callLog = Log.Call($"..., {newName}");
+            var callLog = Log.Fn($"..., {newName}");
             var fld = _dnnFolders.GetFolder(folder.AsDnn().SysId);
             _dnnFolders.RenameFolder(fld, newName);
-            callLog("ok");
+            callLog.Done("ok");
         }
 
         public void Delete(IFolder folder)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             _dnnFolders.DeleteFolder(folder.AsDnn().SysId);
-            callLog("ok");
+            callLog.Done("ok");
         }
 
         public Folder<int, int> Get(string path)

@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Dnn.Web
 
         public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
         {
-            var wrapLog = Log.Call($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
+            var wrapLog = Log.Fn($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
 
             var features = overrideFeatures ?? Features;
 
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Dnn.Web
             if (features.Contains(BuiltInFeatures.TurnOn))
                 RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
 
-            wrapLog("ok");
+            wrapLog.Done("ok");
         }
 
 

@@ -26,21 +26,21 @@ namespace ToSic.Sxc.WebApi.Cms
         
         public void Move(Guid? parent, string fields, int index, int toIndex)
         {
-            var wrapLog = Log.Call($"change order sort:{index}, dest:{toIndex}");
+            var wrapLog = Log.Fn($"change order sort:{index}, dest:{toIndex}");
             var entMan = CmsManagerOfBlock.Entities;
             ModifyList(FindOrThrow(parent), fields, 
                 (entity, fieldList, versioning) => entMan.FieldListMove(entity, fieldList, index, toIndex, versioning));
-            wrapLog(null);
+            wrapLog.Done();
         }
-
+        
 
         public void Delete(Guid? parent, string fields, int index)
         {
-            var wrapLog = Log.Call($"remove from index:{index}");
+            var wrapLog = Log.Fn($"remove from index:{index}");
             var entMan = CmsManagerOfBlock.Entities;
             ModifyList(FindOrThrow(parent), fields, 
                 (entity, fieldList, versioning) => entMan.FieldListRemove(entity, fieldList, index, versioning));
-            wrapLog(null);
+            wrapLog.Done();
         }
 
 

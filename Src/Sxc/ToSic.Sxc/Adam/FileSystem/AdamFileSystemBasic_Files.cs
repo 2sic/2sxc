@@ -25,17 +25,17 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         public void Rename(IFile file, string newName)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName);
-            callLog(null);
+            callLog.Done();
         }
 
         /// <inheritdoc />
         public void Delete(IFile file)
         {
-            var callLog = Log.Call();
+            var callLog = Log.Fn();
             File.Delete(_adamPaths.PhysicalPath(file.Path));
-            callLog(null);
+            callLog.Done();
         }
 
         /// <inheritdoc />

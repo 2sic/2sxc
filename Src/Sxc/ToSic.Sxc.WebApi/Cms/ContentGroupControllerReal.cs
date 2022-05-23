@@ -60,12 +60,12 @@ namespace ToSic.Sxc.WebApi.Cms
                 Type = header?.Type.NameId ?? cg.View.HeaderType
             };
         }
-
+        
 
         // TODO: probably should move to a Manager
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
         {
-            var wrapLog = Log.Call($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
+            var wrapLog = Log.Fn($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
 
             void InternalSave(VersioningActionInfo args)
             {
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // use dnn versioning - this is always part of page
             _versioning.New.DoInsidePublishing(Context, InternalSave);
-            wrapLog(null);
+            wrapLog.Done();
         }
 
 

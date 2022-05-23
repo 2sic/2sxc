@@ -104,11 +104,11 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         public void Render(TextWriter writer)
         {
-            var wrapLog = Log.Call(message: "will render into TextWriter");
+            var wrapLog = Log.Fn(message: "will render into TextWriter");
             try
             {
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
-                wrapLog("ok");
+                wrapLog.Done("ok");
             }
             catch (Exception maybeIEntityCast)
             {
@@ -185,7 +185,7 @@ namespace ToSic.Sxc.Engines
 
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             var dynCode = _dnnDynCodeLazy.Value;
             // only do this if not already initialized
             //if (dynCode.Block != null)
@@ -194,7 +194,7 @@ namespace ToSic.Sxc.Engines
 
             // New in 10.25 - ensure jquery is not included by default
             if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;
-            wrapLog(null);
+            wrapLog.Done();
         }
 
 

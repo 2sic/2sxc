@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Engines
 
         public void Init(IBlock block)
         {
-            var wrapLog = Log.Call();
+            var wrapLog = Log.Fn();
             Block = block;
             var view = Block.View;
 
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
-            wrapLog("ok");
+            wrapLog.Done("ok");
         }
 
         private string TryToFindPolymorphPath(string root, IView view, string subPath)

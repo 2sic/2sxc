@@ -110,11 +110,10 @@ namespace ToSic.Sxc.Web
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             // if (!(parent is IDynamicCodeRoot isDynCode)) return;
-
+            var wrapLog = Log.Fn();
             _DynCodeRoot = codeRoot; // isDynCode;
             _log = new Log("Rzr.Comp", _DynCodeRoot?.Log);
-            var wrapLog = Log.Call();
-            wrapLog("ok");
+            wrapLog.Done("ok");
         }
     }
 
