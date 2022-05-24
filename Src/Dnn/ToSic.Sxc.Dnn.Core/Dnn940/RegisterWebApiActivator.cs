@@ -1,8 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using DotNetNuke.Web.Api;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
-using DotNetNuke.Web.Api;
 
 // This is a special workaround for DNN 9.4
 // Review the readme.md to understand how and why
@@ -15,14 +13,10 @@ namespace ToSic.Sxc.Dnn940
     {
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
-            // todo: 2020-01-07 probably replace the version check with this:
-            // DotNetNukeContext.Current.Application.Version
+            // commented out since 2022-05-25 because in 2sxc v14 minimal version of dnn is 9.6.1
+            //var dnnVersion = DotNetNukeContext.Current.Application.Version;
 
-            // override the DNN 9.4 activator to activate it both the DNN way and the 2sxc way
-            var dnnVersion = typeof(DotNetNuke.Common.Globals).GetTypeInfo()
-                .Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
-
-            if (new Version(dnnVersion.Version).CompareTo(new Version(9, 4)) < 0) return;
+            //if (dnnVersion.CompareTo(new Version(9, 4)) < 0) return;
 
             var config = GlobalConfiguration.Configuration;
 
