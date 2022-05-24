@@ -16,13 +16,12 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         [PrivateApi]
-        public IRenderingHelper RenderingHelper => _rendHelp2.Get(() => _deps.RenderHelpGen.New.Init(Block, Log));
-        private readonly ValueGetOnce<IRenderingHelper> _rendHelp2 = new ValueGetOnce<IRenderingHelper>();
+        public IRenderingHelper RenderingHelper => _rendHelp.Get(() => _deps.RenderHelpGen.New.Init(Block, Log));
+        private readonly ValueGetOnce<IRenderingHelper> _rendHelp = new ValueGetOnce<IRenderingHelper>();
 
-        public string Render() => Run(true).Html;
-
-        public IRenderResult Run(bool topLevel = true)
+        public IRenderResult Run(bool topLevel)
         {
+            // Cache Result on multiple runs
             if (_result != null) return _result;
             var wrapLog = Log.Fn<IRenderResult>();
             try
@@ -33,8 +32,6 @@ namespace ToSic.Sxc.Blocks
                     Html = html,
                     IsError = err,
                     ModuleId = Block.ParentId,
-
-                    Assets = Assets, // TODO: this may fail on a sub-sub-template, must research
                     CanCache = !err && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
                 };
 
@@ -48,7 +45,7 @@ namespace ToSic.Sxc.Blocks
                 if (topLevel)
                 {
                     var allChanges = _deps.PageChangeSummary.Ready
-                        .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Assets, Block.Context.UserMayEdit);
+                        .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Block.Context.UserMayEdit);
 
                     // Head & Page Changes
                     result.HeadChanges = allChanges.HeadChanges;
@@ -77,8 +74,6 @@ namespace ToSic.Sxc.Blocks
 
             return wrapLog.Return(_result);
         }
-
-        
 
         private IRenderResult _result;
 
@@ -133,7 +128,8 @@ namespace ToSic.Sxc.Blocks
                             }
 
                             // TODO: this should use the same pattern as features, waiting to be picked up
-                            TransferCurrentAssetsAndAppDependenciesToRoot(renderEngineResult);
+                            //TransferCurrentAssetsToRoot(renderEngineResult);
+                            Block.Context.PageServiceShared.AddAssets(renderEngineResult);
                         }
                         else body = "";
                     }

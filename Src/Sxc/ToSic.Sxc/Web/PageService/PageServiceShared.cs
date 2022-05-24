@@ -1,10 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.PageService
@@ -52,32 +49,6 @@ namespace ToSic.Sxc.Web.PageService
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ChangeMode), ChangeMode, null);
             }
-        }
-
-        public IRenderResult FinalizeAndGetAllChanges(bool enableEdit, ILog log)
-        {
-            if (enableEdit)
-            {
-                Activate(BuiltInFeatures.Toolbars.NameId);
-                Activate(BuiltInFeatures.ToolbarsAuto.NameId);
-            }
-
-            var result = new RenderResult
-            {
-                Features = PageFeatures.GetFeaturesWithDependentsAndFlush(log),
-                HeadChanges = GetHeadChangesAndFlush(log),
-                PageChanges = GetPropertyChangesAndFlush(log),
-                HttpStatusCode = HttpStatusCode,
-                HttpStatusMessage = HttpStatusMessage,
-                HttpHeaders = HttpHeaders,
-
-                // CSP settings
-                CspEnabled = Csp.IsEnabled,
-                CspEnforced = Csp.IsEnforced,
-                CspParameters = Csp.CspParameters(),
-
-            };
-            return result;
         }
 
     }

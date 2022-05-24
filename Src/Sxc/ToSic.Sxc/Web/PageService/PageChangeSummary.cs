@@ -16,24 +16,25 @@ namespace ToSic.Sxc.Web.PageService
     public class PageChangeSummary: HasLog
     {
 
-        public PageChangeSummary(LazyInitLog<IBlockResourceExtractor> resourceExtractor) : base(Constants.SxcLogName + "PgChSm")
-        {
-            _resourceExtractor = resourceExtractor.SetLog(Log);
-        }
+        public PageChangeSummary(LazyInitLog<IBlockResourceExtractor> resourceExtractor) : base(Constants.SxcLogName + "PgChSm") 
+            => _resourceExtractor = resourceExtractor.SetLog(Log);
         private readonly LazyInitLog<IBlockResourceExtractor> _resourceExtractor;
 
-        public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, List<IClientAsset> assets, bool enableEdit)
+        public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
         {
             var callLog = Log.Fn<IRenderResult>();
+
             if (enableEdit)
             {
                 pss.Activate(BuiltInFeatures.Toolbars.NameId);
                 pss.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
             }
 
+            var assets = pss.Assets;
             var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(Log));
 
             assets.AddRange(newAssets);
+            assets = assets.OrderBy(a => a.PosInPage).ToList();
 
             var result = new RenderResult
             {
