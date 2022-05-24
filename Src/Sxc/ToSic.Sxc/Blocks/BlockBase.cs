@@ -28,24 +28,19 @@ namespace ToSic.Sxc.Blocks
                 Lazy<App> appLazy,
                 Lazy<AppConfigDelegate> appConfigDelegateLazy,
                 Lazy<CmsRuntime> cmsLazy,
-                LazyInitLog<BlockBuilder> blockBuilder
-                //BlockBuilder.Dependencies BbDependencies
-                )
+                LazyInitLog<BlockBuilder> blockBuilder)
             {
                 BdsFactoryLazy = bdsFactoryLazy;
                 AppLazy = appLazy;
                 AppConfigDelegateLazy = appConfigDelegateLazy;
                 CmsLazy = cmsLazy;
                 BlockBuilder = blockBuilder;
-                //this.BbDependencies = BbDependencies;
             }
             internal Lazy<BlockDataSourceFactory> BdsFactoryLazy { get; }
             internal Lazy<App> AppLazy { get; }
             internal Lazy<AppConfigDelegate> AppConfigDelegateLazy { get; }
             internal Lazy<CmsRuntime> CmsLazy { get; }
             public LazyInitLog<BlockBuilder> BlockBuilder { get; }
-
-            //public BlockBuilder.Dependencies BbDependencies { get; }
         }
 
         protected BlockBase(Dependencies dependencies, string logName) : base(logName)

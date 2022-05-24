@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -19,7 +16,7 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         [PrivateApi]
-        public IRenderingHelper RenderingHelper => _rendHelp2.Get(() => _renderHelpGen.New.Init(Block, Log));
+        public IRenderingHelper RenderingHelper => _rendHelp2.Get(() => _deps.RenderHelpGen.New.Init(Block, Log));
         private readonly ValueGetOnce<IRenderingHelper> _rendHelp2 = new ValueGetOnce<IRenderingHelper>();
 
         public string Render() => Run(true).Html;
@@ -45,45 +42,29 @@ namespace ToSic.Sxc.Blocks
                 if (DependentApps.Any())
                     result.DependentApps.AddRange(DependentApps);
 
-                //if (Block.AppId != 0 && Block.App?.AppState != null)
-                //    result.DependentApps.Add(new DependentApp { AppId = Block.AppId, CacheTimestamp = Block.App.AppState.CacheTimestamp });
-
                 // The remaining stuff should only happen at top-level
                 // Because once these properties are picked up, they are flushed
                 // So only the top-level should get them
                 if (topLevel)
                 {
-                    var pss = Block.Context.PageServiceShared;
-                    // Page Features
-                    if (Block.Context.UserMayEdit)
-                    {
-                        pss.Activate(BuiltInFeatures.Toolbars.NameId);
-                        pss.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
-                    }
-
-                    result.Features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
+                    var allChanges = _deps.PageChangeSummary.Ready
+                        .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Assets, Block.Context.UserMayEdit);
 
                     // Head & Page Changes
-                    result.HeadChanges = pss.GetHeadChangesAndFlush(Log);
-                    result.PageChanges = pss.GetPropertyChangesAndFlush(Log);
-                    var (newAssets, rest) = ConvertSettingsAssetsIntoReal(pss.PageFeatures.FeaturesFromSettingsGetNew(Log));
+                    result.HeadChanges = allChanges.HeadChanges;
+                    result.PageChanges = allChanges.PageChanges;
+                    result.Assets = allChanges.Assets;
+                    result.Features = allChanges.Features;
+                    result.FeaturesFromSettings = allChanges.FeaturesFromSettings;
 
-                    Assets.AddRange(newAssets);
-                    result.Assets = Assets;
-
-                    result.FeaturesFromSettings = rest;
-
-                    result.HttpStatusCode = pss.HttpStatusCode;
-                    result.HttpStatusMessage = pss.HttpStatusMessage;
-                    result.HttpHeaders = pss.HttpHeaders;
+                    result.HttpStatusCode = allChanges.HttpStatusCode;
+                    result.HttpStatusMessage = allChanges.HttpStatusMessage;
+                    result.HttpHeaders = allChanges.HttpHeaders;
 
                     // CSP settings
-                    result.CspEnabled = pss.Csp.IsEnabled;
-                    result.CspEnforced = pss.Csp.IsEnforced;
-                    result.CspParameters = pss.Csp.CspParameters();
-                    // Whitelist any assets which were officially ok, or which were from the settings
-                    var additionalCsp = GetCspListFromAssets(Assets);
-                    if(additionalCsp != null) result.CspParameters.Add(additionalCsp);
+                    result.CspEnabled = allChanges.CspEnabled;
+                    result.CspEnforced = allChanges.CspEnforced;
+                    result.CspParameters = allChanges.CspParameters;
                 }
 
                 _result = result;
@@ -97,50 +78,7 @@ namespace ToSic.Sxc.Blocks
             return wrapLog.Return(_result);
         }
 
-
         
-        private CspParameters GetCspListFromAssets(List<IClientAsset> assets)
-        {
-            if (assets == null || assets.Count == 0) return null;
-            var toWhitelist = assets
-                .Where(a => a.WhitelistInCsp)
-                .Where(a => !a.Url.NeverNull().StartsWith("/")) // skip local files
-                .ToList();
-            if (!toWhitelist.Any()) return null;
-            var whitelist = new CspParameters();
-            foreach (var asset in toWhitelist)
-            {
-                whitelist.Add((asset.IsJs ? "script" : "style") + "-src", asset.Url);
-            }
-
-            return whitelist;
-        }
-
-        private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)
-        {
-            var wrapLog = Log.Fn<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
-            var newAssets = new List<IClientAsset>();
-            foreach (var settingFeature in featuresFromSettings)
-            {
-                var extracted = _resourceExtractor.Ready.Process(settingFeature.Html);
-                if (!extracted.Assets.Any()) continue;
-                Log.A($"Moved Feature Html {settingFeature.NameId} to assets");
-
-                // All resources from the settings are seen as safe
-                extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
-
-                newAssets.AddRange(extracted.Assets);
-                // Reset the HTML to what's left after extracting the resources
-                settingFeature.Html = extracted.Html;
-            }
-
-            var featsLeft = featuresFromSettings
-                .Where(f => !string.IsNullOrWhiteSpace(f.Html))
-                .Cast<IPageFeature>()
-                .ToList();
-
-            return wrapLog.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
-        }
 
         private IRenderResult _result;
 
@@ -244,7 +182,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (InstallationOk) return (null, false);
 
-            var installer = _envInstGen.New;
+            var installer = _deps.EnvInstGen.New;
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {
@@ -269,7 +207,7 @@ namespace ToSic.Sxc.Blocks
             if (_engine != null) return wrapLog.Return(_engine, "cached");
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return wrapLog.ReturnNull("no view");
-            _engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
+            _engine = _deps.EngineFactory.CreateEngine(Block.View);
             _engine.Init(Log).Init(Block);
             return wrapLog.Return(_engine, "created");
         }

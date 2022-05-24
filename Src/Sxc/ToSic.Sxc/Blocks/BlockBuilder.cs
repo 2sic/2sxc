@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -23,26 +24,25 @@ namespace ToSic.Sxc.Blocks
                 EngineFactory engineFactory,
                 Generator<IEnvironmentInstaller> envInstGen, 
                 Generator<IRenderingHelper> renderHelpGen,
-                LazyInitLog<IBlockResourceExtractor> resourceExtractor
-            )
+                LazyInitLog<PageChangeSummary> pageChangeSummary)
             {
                 EngineFactory = engineFactory;
                 EnvInstGen = envInstGen;
                 RenderHelpGen = renderHelpGen;
-                ResourceExtractor = resourceExtractor;
+                PageChangeSummary = pageChangeSummary;
             }
 
             public EngineFactory EngineFactory { get; }
             public Generator<IEnvironmentInstaller> EnvInstGen { get; }
             public Generator<IRenderingHelper> RenderHelpGen { get; }
-            public LazyInitLog<IBlockResourceExtractor> ResourceExtractor { get; }
+            public LazyInitLog<PageChangeSummary> PageChangeSummary { get; }
         }
 
         #region Constructor
         public BlockBuilder(Dependencies dependencies) : base("Sxc.BlkBld")
         {
             _deps = dependencies;
-            _deps.ResourceExtractor.SetLog(Log);
+            _deps.PageChangeSummary.SetLog(Log);
         }
         private readonly Dependencies _deps;
 

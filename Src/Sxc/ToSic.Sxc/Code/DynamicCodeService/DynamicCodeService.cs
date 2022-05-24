@@ -20,13 +20,13 @@ namespace ToSic.Sxc.Code
     /// </summary>
     public class DynamicCodeService: HasLog, IDynamicCodeService
     {
-        private readonly Dependencies _dependencies;
-
         #region Constructor and Init
 
         public class Dependencies
         {
-            public Dependencies(IServiceProvider serviceProvider, Lazy<LogHistory> history, Lazy<IUser> user, 
+            public Dependencies(IServiceProvider serviceProvider, 
+                Lazy<LogHistory> history, 
+                Lazy<IUser> user, 
                 // Dependencies to get primary app
                 Lazy<ISite> site,
                 Lazy<IZoneMapper> zoneMapper, 
@@ -58,6 +58,7 @@ namespace ToSic.Sxc.Code
             AppConfigDelegateGenerator = newScopedServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
             ModuleAndBlockBuilder = newScopedServiceProvider.Build<LazyInitLog<IModuleAndBlockBuilder>>().SetLog(Log);
         }
+        private readonly Dependencies _dependencies;
         protected readonly Generator<DynamicCodeRoot> CodeRootGenerator;
         protected readonly Generator<App> AppGenerator;
         protected readonly GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator;
