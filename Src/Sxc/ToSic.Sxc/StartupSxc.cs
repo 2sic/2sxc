@@ -56,6 +56,11 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockEditorForModule>();
             services.TryAddTransient<BlockEditorBaseDependencies>();
 
+            // Engine and Rendering
+            services.TryAddTransient<EngineFactory>();
+            services.TryAddTransient<BlockBuilder>();
+            services.TryAddTransient<BlockBuilder.Dependencies>();
+
             // Block functionality
             services.TryAddTransient<BlockDataSourceFactory>();
             services.TryAddTransient<BlockFromModule>();
@@ -119,6 +124,7 @@ namespace ToSic.Sxc
             // So it actually looks like it's very module-scoped already, but had workarounds for it.
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
+            services.TryAddTransient<PageChangeSummary>();
             services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
             services.TryAddTransient<CspOfApp>();   // must be transient
             services.TryAddScoped<CspOfModule>();   // important: must be scoped!

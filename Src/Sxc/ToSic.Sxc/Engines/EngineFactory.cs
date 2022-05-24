@@ -3,13 +3,19 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Engines
 {
-    internal class EngineFactory
+    public class EngineFactory
     {
-        public static IEngine CreateEngine(IView view, Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen)
+
+        public EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen)
         {
-            return view.IsRazor
-                ? (IEngine)razorEngineGen.New
-                : tokenEngineGen.New;
+            _razorEngineGen = razorEngineGen;
+            _tokenEngineGen = tokenEngineGen;
         }
+        private readonly Generator<IRazorEngine> _razorEngineGen;
+        private readonly Generator<TokenEngine> _tokenEngineGen;
+
+        public IEngine CreateEngine(IView view) => view.IsRazor
+            ? (IEngine)_razorEngineGen.New
+            : _tokenEngineGen.New;
     }
 }

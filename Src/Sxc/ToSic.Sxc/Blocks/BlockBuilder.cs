@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
@@ -19,41 +17,52 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
     public partial class BlockBuilder : HasLog, IBlockBuilder
     {
-        #region Info for current runtime instance
+        public class Dependencies
+        {
+            public Dependencies(
+                EngineFactory engineFactory,
+                Generator<IEnvironmentInstaller> envInstGen, 
+                Generator<IRenderingHelper> renderHelpGen,
+                LazyInitLog<IBlockResourceExtractor> resourceExtractor
+            )
+            {
+                EngineFactory = engineFactory;
+                EnvInstGen = envInstGen;
+                RenderHelpGen = renderHelpGen;
+                ResourceExtractor = resourceExtractor;
+            }
 
-        /// <inheritdoc />
-        public IBlock Block { get; }
-
-        public IBlockBuilder RootBuilder { get; }
-        #endregion
-
+            public EngineFactory EngineFactory { get; }
+            public Generator<IEnvironmentInstaller> EnvInstGen { get; }
+            public Generator<IRenderingHelper> RenderHelpGen { get; }
+            public LazyInitLog<IBlockResourceExtractor> ResourceExtractor { get; }
+        }
 
         #region Constructor
-        internal BlockBuilder(IBlockBuilder rootBlockBuilder, 
-            IBlock cb, 
-            Generator<IEnvironmentInstaller> envInstGen, 
-            Generator<IRenderingHelper> renderHelpGen,
-            Generator<IRazorEngine> razorEngineGen, 
-            Generator<TokenEngine> tokenEngineGen,
-            LazyInitLog<IBlockResourceExtractor> resourceExtractor,
-            ILog parentLog)
-            : base("Sxc.BlkBld", parentLog, $"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}")
+        public BlockBuilder(Dependencies dependencies) : base("Sxc.BlkBld")
         {
-            _envInstGen = envInstGen;
-            _renderHelpGen = renderHelpGen;
-            _razorEngineGen = razorEngineGen;
-            _tokenEngineGen = tokenEngineGen;
-            _resourceExtractor = resourceExtractor.SetLog(Log);
+            _deps = dependencies;
+            _deps.ResourceExtractor.SetLog(Log);
+        }
+        private readonly Dependencies _deps;
+
+        public BlockBuilder Init(IBlockBuilder rootBlockBuilder, IBlock cb)
+        {
+            Log.A($"get CmsInstance for a:{cb?.AppId} cb:{cb?.ContentBlockId}");
             // the root block is the main container. If there is none yet, use this, as it will be the root
             RootBuilder = rootBlockBuilder ?? this;
             Block = cb;
+            return this;
         }
+        #region Info for current runtime instance
 
-        private readonly Generator<IEnvironmentInstaller> _envInstGen;
-        private readonly Generator<IRenderingHelper> _renderHelpGen;
-        private readonly Generator<IRazorEngine> _razorEngineGen;
-        private readonly Generator<TokenEngine> _tokenEngineGen;
-        private readonly LazyInitLog<IBlockResourceExtractor> _resourceExtractor;
+        /// <inheritdoc />
+        public IBlock Block { get; private set; }
+
+        public IBlockBuilder RootBuilder { get; private set; }
+        #endregion
+
+
 
         #endregion
 

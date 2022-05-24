@@ -42,15 +42,15 @@ namespace ToSic.Sxc.Search
     /// </remarks>
     public class SearchController : HasLog<SearchController>
     {
-        public SearchController(IServiceProvider serviceProvider,
+        public SearchController(
+            IServiceProvider serviceProvider,
             AppsCacheSwitch appsCache,
             Generator<CodeCompiler> codeCompiler,
             Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
             Generator<ISite> site,
-            Generator<IRazorEngine> razorEngineGen, 
-            Generator<TokenEngine> tokenEngineGen,
             LazyInitLog<IModuleAndBlockBuilder> moduleAndBlockBuilder,
-            LazyInitLog<DnnLookUpEngineResolver> dnnLookUpEngineResolver
+            LazyInitLog<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
+            EngineFactory engineFactory
             ) : base("DNN.Search")
         {
             _serviceProvider = serviceProvider;
@@ -58,8 +58,7 @@ namespace ToSic.Sxc.Search
             _codeCompiler = codeCompiler;
             _dnnDynamicCodeRoot = dnnDynamicCodeRoot;
             _site = site;
-            _razorEngineGen = razorEngineGen;
-            _tokenEngineGen = tokenEngineGen;
+            _engineFactory = engineFactory;
             _dnnLookUpEngineResolver = dnnLookUpEngineResolver.SetLog(Log);
             _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
         }
@@ -68,8 +67,7 @@ namespace ToSic.Sxc.Search
         private readonly Generator<CodeCompiler> _codeCompiler;
         private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
         private readonly Generator<ISite> _site;
-        private readonly Generator<IRazorEngine> _razorEngineGen;
-        private readonly Generator<TokenEngine> _tokenEngineGen;
+        private readonly EngineFactory _engineFactory;
         private readonly LazyInitLog<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
@@ -164,7 +162,7 @@ namespace ToSic.Sxc.Search
                 {
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
-                    var engine = EngineFactory.CreateEngine(Block.View, _razorEngineGen, _tokenEngineGen);
+                    var engine = _engineFactory.CreateEngine(Block.View);
                     engine.Init(Log).Init(Block, Purpose.IndexingForSearch);
 
 #pragma warning disable CS0618

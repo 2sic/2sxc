@@ -119,11 +119,9 @@ namespace ToSic.Sxc.Dnn
                         try
                         {
                             var pageChanges = GetService<DnnPageChanges>();
-                            pageChanges.Apply(Page, data); // note: if Assets == null, it will take the default
+                            pageChanges.Apply(Page, data);
                         }
                         catch{ /* ignore */ }
-
-                        // todo: #Lightspeed Page property changes!
 
                         // call this after rendering templates, because the template may change what resources are registered
                         DnnClientResources.AddEverything(data.Features);

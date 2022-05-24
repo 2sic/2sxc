@@ -103,7 +103,6 @@ namespace ToSic.Sxc.Code
         {
             var wrapLog = Log.Fn<IDynamicCodeRoot>($"{pageId}, {moduleId}");
             MakeSureLogIsInHistory();
-            //var module = ModuleAndBlockBuilder.Ready.GetModule(pageId, moduleId);
             var cmsBlock = ModuleAndBlockBuilder.Ready.GetBlock(pageId, moduleId);
             var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
 

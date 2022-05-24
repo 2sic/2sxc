@@ -28,35 +28,32 @@ namespace ToSic.Sxc.Blocks
                 Lazy<App> appLazy,
                 Lazy<AppConfigDelegate> appConfigDelegateLazy,
                 Lazy<CmsRuntime> cmsLazy,
-                Generator<IEnvironmentInstaller> envInstGen,
-                Generator<IRenderingHelper> renderHelpGen,
-                Generator<IRazorEngine> razorEngineGen, 
-                Generator<TokenEngine> tokenEngineGen,
-                LazyInitLog<IBlockResourceExtractor> resourceExtractor
+                LazyInitLog<BlockBuilder> blockBuilder
+                //BlockBuilder.Dependencies BbDependencies
                 )
             {
                 BdsFactoryLazy = bdsFactoryLazy;
                 AppLazy = appLazy;
                 AppConfigDelegateLazy = appConfigDelegateLazy;
                 CmsLazy = cmsLazy;
-                EnvInstGen = envInstGen;
-                RenderHelpGen = renderHelpGen;
-                RazorEngineGen = razorEngineGen;
-                TokenEngineGen = tokenEngineGen;
-                ResourceExtractor = resourceExtractor;
+                BlockBuilder = blockBuilder;
+                //this.BbDependencies = BbDependencies;
             }
             internal Lazy<BlockDataSourceFactory> BdsFactoryLazy { get; }
             internal Lazy<App> AppLazy { get; }
             internal Lazy<AppConfigDelegate> AppConfigDelegateLazy { get; }
             internal Lazy<CmsRuntime> CmsLazy { get; }
-            internal Generator<IEnvironmentInstaller> EnvInstGen { get; }
-            internal Generator<IRenderingHelper> RenderHelpGen { get; }
-            internal Generator<IRazorEngine> RazorEngineGen { get; }
-            internal Generator<TokenEngine> TokenEngineGen { get; }
-            public LazyInitLog<IBlockResourceExtractor> ResourceExtractor { get; }
+            public LazyInitLog<BlockBuilder> BlockBuilder { get; }
+
+            //public BlockBuilder.Dependencies BbDependencies { get; }
         }
 
-        protected BlockBase(Dependencies dependencies, string logName) : base(logName) => _deps = dependencies;
+        protected BlockBase(Dependencies dependencies, string logName) : base(logName)
+        {
+            _deps = dependencies;
+            _deps.BlockBuilder.SetLog(Log);
+        }
+
         private readonly Dependencies _deps;
 
         protected void Init(IContextOfBlock context, IAppIdentity appId, ILog parentLog)
@@ -78,7 +75,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = new BlockBuilder(rootBuilderOrNull, this, _deps.EnvInstGen, _deps.RenderHelpGen, _deps.RazorEngineGen, _deps.TokenEngineGen, _deps.ResourceExtractor, Log);
+            BlockBuilder = _deps.BlockBuilder.Ready /*new BlockBuilder(_deps.BbDependencies).Init(Log)*/.Init(rootBuilderOrNull, this);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder

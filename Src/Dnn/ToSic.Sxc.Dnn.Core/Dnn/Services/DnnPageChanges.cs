@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Services
             return count;
         }
 
-        public int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
+        private int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
         {
             var wrapLog = Log.Fn<int>();
 
