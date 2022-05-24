@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.PageFeatures;
 using static ToSic.Eav.Configuration.ConfigurationConstants;
@@ -56,17 +57,8 @@ namespace ToSic.Sxc.Web.PageService
             return wrapLog.Return(keys);
         }
 
-        private DynamicEntity WebResources
-        {
-            get
-            {
-                if (_alreadyTriedToFindWebResources) return _webResources;
-                _webResources = (CodeRoot?.Settings as DynamicStack)?.Get(WebResourcesNode) as DynamicEntity;
-                _alreadyTriedToFindWebResources = true;
-                return _webResources;
-            }
-        }
-        private DynamicEntity _webResources;
-        private bool _alreadyTriedToFindWebResources;
+        private DynamicEntity WebResources => _webResources.Get(() => (CodeRoot?.Settings as DynamicStack)?.Get(WebResourcesNode) as DynamicEntity);
+        private readonly ValueGetOnce<DynamicEntity> _webResources = new ValueGetOnce<DynamicEntity>();
+        
     }
 }

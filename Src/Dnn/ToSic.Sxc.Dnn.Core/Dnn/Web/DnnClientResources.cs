@@ -11,34 +11,32 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
-using ToSic.Sxc.Web.PageService;
 using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     public class DnnClientResources: HasLog
     {
-        public PageServiceShared PageServiceShared { get; }
-        protected BlockBuilder BlockBuilder;
-        protected Page Page;
-        protected DnnJsApiHeader Header;
-
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnClientResources(PageServiceShared pageServiceShared): base($"{DnnConstants.LogName}.JsCss")
+        public DnnClientResources(): base($"{DnnConstants.LogName}.JsCss")
         {
-            PageServiceShared = pageServiceShared;
         }
         
-        public DnnClientResources Init(Page page, IBlockBuilder blockBuilder, ILog parentLog)
+        public DnnClientResources Init(Page page, bool? forcePre1025Behavior, IBlockBuilder blockBuilder, ILog parentLog)
         {
             Log.LinkTo(parentLog);
+            _forcePre1025Behavior = forcePre1025Behavior;
             Page = page;
             BlockBuilder = blockBuilder as BlockBuilder;
             Header = new DnnJsApiHeader(Log);
             return this;
         }
+        protected BlockBuilder BlockBuilder;
+        protected Page Page;
+        protected DnnJsApiHeader Header;
+        protected bool? _forcePre1025Behavior;
 
 
         internal IList<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true)?.Features ?? new List<IPageFeature>());
@@ -92,14 +90,9 @@ namespace ToSic.Sxc.Dnn.Web
         /// but any old behaviour, incl. no-view defined, etc. should activate compatibility
         /// </summary>
         /// <returns></returns>
-        public bool NeedsPre1025Behavior()
-        {
-            var alwaysNeedsAntiForgeryAndHeader = BlockBuilder
-                                          ?.GetEngine()
-                                          ?.CompatibilityAutoLoadJQueryAndRvt
-                                      ?? true;
-            return alwaysNeedsAntiForgeryAndHeader;
-        }
+        public bool NeedsPre1025Behavior() => _forcePre1025Behavior
+                                              ?? BlockBuilder?.GetEngine()?.CompatibilityAutoLoadJQueryAndRvt
+                                              ?? true;
 
 
         public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)

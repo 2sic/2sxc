@@ -50,14 +50,18 @@ namespace ToSic.Sxc.Code
         public DynamicCodeService(Dependencies dependencies): base($"{Constants.SxcLogName}.DCS")
         {
             _dependencies = dependencies;
-            var newScopedServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
+            ScopedServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
             // Important: These generators must be built inside the scope, so they must be made here
             // and not come from the constructor injection
-            CodeRootGenerator = newScopedServiceProvider.Build<Generator<DynamicCodeRoot>>();
-            AppGenerator = newScopedServiceProvider.Build<Generator<App>>();
-            AppConfigDelegateGenerator = newScopedServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
-            ModuleAndBlockBuilder = newScopedServiceProvider.Build<LazyInitLog<IModuleAndBlockBuilder>>().SetLog(Log);
+            CodeRootGenerator = ScopedServiceProvider.Build<Generator<DynamicCodeRoot>>();
+            AppGenerator = ScopedServiceProvider.Build<Generator<App>>();
+            AppConfigDelegateGenerator = ScopedServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
+            ModuleAndBlockBuilder = ScopedServiceProvider.Build<LazyInitLog<IModuleAndBlockBuilder>>().SetLog(Log);
         }
+        /// <summary>
+        /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects
+        /// </summary>
+        protected IServiceProvider ScopedServiceProvider { get; }
         private readonly Dependencies _dependencies;
         protected readonly Generator<DynamicCodeRoot> CodeRootGenerator;
         protected readonly Generator<App> AppGenerator;
