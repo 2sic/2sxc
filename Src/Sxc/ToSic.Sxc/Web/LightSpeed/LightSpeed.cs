@@ -46,25 +46,25 @@ namespace ToSic.Sxc.Web.LightSpeed
         public bool Save(IRenderResult data)
         {
             var wrapLog = Log.Fn<bool>();
-            if (!IsEnabled) return wrapLog.Return(false, "disabled");
-            if (data == null) return wrapLog.Return(false, "null");
-            if (data.IsError) return wrapLog.Return(false, "error");
-            if (!data.CanCache) return wrapLog.Return(false, "can't cache");
-            if (data == Existing?.Data) return wrapLog.Return(false, "not new");
-            if (data.DependentApps?.Any() != true) return wrapLog.Return(false, "app not initialized");
+            if (!IsEnabled) return wrapLog.ReturnFalse("disabled");
+            if (data == null) return wrapLog.ReturnFalse("null");
+            if (data.IsError) return wrapLog.ReturnFalse("error");
+            if (!data.CanCache) return wrapLog.ReturnFalse("can't cache");
+            if (data == Existing?.Data) return wrapLog.ReturnFalse("not new");
+            if (data.DependentApps?.Any() != true) return wrapLog.ReturnFalse("app not initialized");
 
             // get dependent appStates
             var dependentAppsStates = data.DependentApps.Select(da => AppStates.Get(da.AppId)).ToList();
 
             // when dependent apps have disabled caching, parent app should not cache also 
-            if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog.Return(false, "disabled in dependent app");
+            if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog.ReturnFalse("disabled in dependent app");
 
             Log.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
             var duration = Duration;
             // only add if we really have a duration; -1 is disabled, 0 is not set...
             if (duration <= 0)
-                return wrapLog.Return(false, $"not added as duration is {duration}");
+                return wrapLog.ReturnFalse($"not added as duration is {duration}");
 
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
                 ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             Log.A($"LightSpeed Cache Key: {cacheKey}");
             if (cacheKey != "error") 
                 LightSpeedStats.Add(AppState.AppId, data.Size);
-            return wrapLog.Return(true, $"added for {duration}s");
+            return wrapLog.ReturnTrue($"added for {duration}s");
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace ToSic.Sxc.Web.LightSpeed
             {
                 var appConfig = LightSpeedDecorator.GetFromAppStatePiggyBack(appState, Log);
                 if (appConfig.IsEnabled == false)
-                    return cLog.Return(false, $"Can't cache; caching disabled on dependent app {appState.AppId}");
+                    return cLog.ReturnFalse($"Can't cache; caching disabled on dependent app {appState.AppId}");
             }
-            return cLog.Return(true, "ok");
+            return cLog.ReturnTrue("ok");
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         {
             var wrapLog = Log.Fn<bool>();
             var feat = _features.IsEnabled(LightSpeedOutputCache.NameId);
-            if (!feat) return wrapLog.Return(false, "feature disabled");
+            if (!feat) return wrapLog.ReturnFalse("feature disabled");
             var ok = AppConfig.IsEnabled;
             return wrapLog.Return(ok, $"app config: {ok}");
         }

@@ -58,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Save
             // only add if the header wants it, AND we started with ID unknown
             return groupItems.Any() 
                 ? wrapLog.Return(PostSaveUpdateIdsInParent(block, ids, groupItems)) 
-                : wrapLog.Return(true, "no additional group processing necessary");
+                : wrapLog.ReturnTrue("no additional group processing necessary");
         }
 
         private bool PostSaveUpdateIdsInParent(IBlock block,
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Save
         {
             var wrapLog = Log.Fn<bool>($"{_appIdentity.AppId}");
 
-            if (block == null) return wrapLog.Return(true, "no block, nothing to update");
+            if (block == null) return wrapLog.ReturnTrue("no block, nothing to update");
 
             // todo: if no block given, skip all this
 
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.WebApi.Save
 
             // update-module-title
             BlockEditorBase.GetEditor(block, _blkEdtForMod, _blkEdtForEnt).UpdateTitle();
-            return wrapLog.Return(true, "ok");
+            return wrapLog.ReturnTrue("ok");
         }
 
         private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)

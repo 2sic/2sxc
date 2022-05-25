@@ -148,17 +148,17 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = (Debug ? Log : null).Fn<bool>();
             if (key == null || value == null)
-                return wrapLog.Return(false, $"Won't add '{key}', since key or value are null");
+                return wrapLog.ReturnFalse($"Won't add '{key}', since key or value are null");
 
             var strValue = value.ToString();
             if (string.IsNullOrEmpty(strValue))
-                return wrapLog.Return(false, $"Won't add '{key}' since value as string would be null");
+                return wrapLog.ReturnFalse($"Won't add '{key}' since value as string would be null");
 
             if (strValue.Equals(irrelevant, StringComparison.InvariantCultureIgnoreCase))
-                return wrapLog.Return(false, $"Won't add '{key}' since value would be irrelevant");
+                return wrapLog.ReturnFalse($"Won't add '{key}' since value would be irrelevant");
 
             resizer.Add(key, strValue);
-            return wrapLog.Return(true, $"Added key {key}");
+            return wrapLog.ReturnTrue($"Added key {key}");
         }
 
 

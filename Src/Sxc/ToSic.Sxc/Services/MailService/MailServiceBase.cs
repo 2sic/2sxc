@@ -164,26 +164,26 @@ namespace ToSic.Sxc.Services
                 case MailAddressCollection inputMailAddressCollection:
                     foreach (var mailAddress in inputMailAddressCollection) 
                         targetMails.Add(mailAddress);
-                    return wrapLog.Return(true, nameof(MailAddressCollection));
+                    return wrapLog.ReturnTrue(nameof(MailAddressCollection));
 
                 case IEnumerable<MailAddress> inputMailAddressesArray:
                     foreach (var mailAddress in inputMailAddressesArray) 
                         targetMails.Add(mailAddress);
-                    return wrapLog.Return(true, nameof(IEnumerable<MailAddress>));
+                    return wrapLog.ReturnTrue(nameof(IEnumerable<MailAddress>));
 
                 case IEnumerable<string> inputStringArray:
                     foreach (var emailAddress in inputStringArray)
                         if (!string.IsNullOrEmpty(emailAddress))
                             targetMails.Add(emailAddress);
-                    return wrapLog.Return(true, nameof(IEnumerable<string>));
+                    return wrapLog.ReturnTrue(nameof(IEnumerable<string>));
 
                 case string inputString: 
                     if (!string.IsNullOrEmpty(inputString)) 
                         targetMails.Add(NormalizeEmailSeparators(inputString));
-                    return wrapLog.Return(true, "string");
+                    return wrapLog.ReturnTrue("string");
 
                 case null:
-                    return wrapLog.Return(true, "null");
+                    return wrapLog.ReturnTrue("null");
 
                 default:
                     throw new ArgumentException($"Trying to parse e-mails for {addressType} but got unknown type for {nameof(mailAddresses)}");
@@ -203,30 +203,30 @@ namespace ToSic.Sxc.Services
             {
                 case Attachment inputAttachment:
                     targetAttachments.Add(inputAttachment);
-                    return wrapLog.Return(true, nameof(Attachment));
+                    return wrapLog.ReturnTrue(nameof(Attachment));
 
                 case AttachmentCollection attachmentCollection:
                     foreach (var attachment in attachmentCollection) 
                         targetAttachments.Add(attachment);
-                    return wrapLog.Return(true, nameof(AttachmentCollection));
+                    return wrapLog.ReturnTrue(nameof(AttachmentCollection));
 
                 case IEnumerable<Attachment> inputAttachmentsArray:
                     foreach (var attachment in inputAttachmentsArray) 
                         targetAttachments.Add(attachment);
-                    return wrapLog.Return(true, nameof(IEnumerable<Attachment>));
+                    return wrapLog.ReturnTrue(nameof(IEnumerable<Attachment>));
 
                 case IFile inputFile:
                     targetAttachments.Add(new Attachment(
                         new FileStream(inputFile.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                         inputFile.FullName));
-                    return wrapLog.Return(true, nameof(IFile));
+                    return wrapLog.ReturnTrue(nameof(IFile));
 
                 case IEnumerable<IFile> inputFiles:
                     foreach (var file in inputFiles)
                         targetAttachments.Add(new Attachment(
                             new FileStream(file.PhysicalPath, FileMode.Open, FileAccess.Read, FileShare.Read),
                             file.FullName));
-                    return wrapLog.Return(true, nameof(IEnumerable<IFile>));
+                    return wrapLog.ReturnTrue(nameof(IEnumerable<IFile>));
 
                 default:
                     throw new ArgumentException($"Unknown type for {nameof(attachments)}");

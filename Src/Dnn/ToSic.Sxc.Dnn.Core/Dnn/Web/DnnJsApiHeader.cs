@@ -25,9 +25,9 @@ namespace ToSic.Sxc.Dnn.Web
         {
             var wrapLog = Log.Fn<bool>();
             // ensure we only do this once
-            if (MarkAddedAndReturnIfAlreadyDone()) return wrapLog.Return(false, "already");
+            if (MarkAddedAndReturnIfAlreadyDone()) return wrapLog.ReturnFalse("already");
             var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
-            if (string.IsNullOrEmpty(siteRoot)) return wrapLog.Return(false, "no path");
+            if (string.IsNullOrEmpty(siteRoot)) return wrapLog.ReturnFalse("no path");
 
             var apiRoots = GetApiRoots(siteRoot);
 
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.Web
 #pragma warning disable CS0618
             HtmlPage.AddMeta(InpageCms.MetaName, json);
 #pragma warning restore CS0618
-            return wrapLog.Return(true, "added");
+            return wrapLog.ReturnTrue("added");
         }
 
         internal static Tuple<string, string> GetApiRoots(string siteRoot = null)

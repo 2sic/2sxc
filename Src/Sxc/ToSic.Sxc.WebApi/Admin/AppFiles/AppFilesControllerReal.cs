@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             var wrapLog = Log.Fn<bool>($"templ:{templateId}, global:{global}, path:{path}");
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(appId, templateId, global, path);
             assetEditor.Source = template.Code;
-            return wrapLog.Return(true);
+            return wrapLog.ReturnTrue();
         }
 
         /// <summary>
