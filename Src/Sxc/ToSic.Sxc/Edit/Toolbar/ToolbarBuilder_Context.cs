@@ -56,9 +56,14 @@ namespace ToSic.Sxc.Edit.Toolbar
                 return callLog.Return(entity.AppId, "entity-appid");
             if (target is IDynamicEntity dynEntity)
                 return callLog.Return(dynEntity.Entity?.AppId ?? NoAppId, "dyn entity");
-            if (target is IHasMetadata md && md.Metadata.Any()) 
-                return callLog.Return(md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata");
-            return -1;
+            if (target is IHasMetadata md)
+            {
+                if (md.Metadata.Any()) 
+                    return callLog.Return(md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata");
+                if (md.Metadata is IMetadataInternals mdInternal)
+                    return mdInternal.Context("todo")?.AppId ?? NoAppId;
+            }
+            return NoAppId;
         }
     }
 }

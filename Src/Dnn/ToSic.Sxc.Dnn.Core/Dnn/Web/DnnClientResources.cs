@@ -80,9 +80,10 @@ namespace ToSic.Sxc.Dnn.Web
         public void EnforcePre1025Behavior()
         {
             // If we got this far, we want the old behavior which always enables headers etc.
-            Log.A(nameof(EnforcePre1025Behavior) + ": Activate Anti-Forgery for compatibility with old behavior");
+            var l = Log.Fn(message: "Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             MustAddHeaders = true;
+            l.Done();
         }
 
         /// <summary>
