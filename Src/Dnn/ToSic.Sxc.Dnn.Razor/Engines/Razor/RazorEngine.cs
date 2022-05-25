@@ -150,7 +150,7 @@ namespace ToSic.Sxc.Engines
         private bool InitWebpage()
         {
             var wrapLog = Log.Fn<bool>();
-            if (string.IsNullOrEmpty(TemplatePath)) return wrapLog.Return(false, "null path");
+            if (string.IsNullOrEmpty(TemplatePath)) return wrapLog.ReturnFalse("null path");
 
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             // ReSharper disable once JoinNullCheckWithUsage
@@ -180,7 +180,7 @@ namespace ToSic.Sxc.Engines
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618, CS0612
             InitHelpers(pageToInit, compatibility);
-            return wrapLog.Return(true, "ok");
+            return wrapLog.ReturnTrue("ok");
         }
 
         private void InitHelpers(RazorComponentBase webPage, int compatibility)

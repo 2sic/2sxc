@@ -33,13 +33,13 @@ namespace ToSic.Sxc.Dnn.Run
                 Log.A($"Trying to build path based on tenant. If it's in search mode, the {nameof(ISite)} would be {Eav.Constants.NullId}. Id: {Site.Id}");
                 EnsureDnnSiteIsLoadedWhenDiFails();
                 base.InitPathAfterAppId();
-                return wrapLog.Return(true, Path);
+                return wrapLog.ReturnTrue(Path);
             }
             catch (Exception e)
             {
                 // ignore
                 Log.Ex(e);
-                return wrapLog.Return(false, "error");
+                return wrapLog.ReturnFalse("error");
             }
         }
 
@@ -52,11 +52,11 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var wrapLog = Log.Fn<bool>();
             if (Site.Id != Eav.Constants.NullId/* && Site.Id != 0*/) // 2021-12-09 2dm disabled zero check, because portal 0 is actually very common
-                return wrapLog.Return(true, $"All ok since siteId isn't {Eav.Constants.NullId}");
+                return wrapLog.ReturnTrue($"All ok since siteId isn't {Eav.Constants.NullId}");
             Log.A($"SiteId = {Site.Id} - not found. Must be in search mode or something else DI-style failed, will try to find correct PortalSettings");
             ZoneMapper.Init(Log);
             Site = ZoneMapper.SiteOfApp(AppId);
-            return wrapLog.Return(true, $"SiteId: {Site.Id}");
+            return wrapLog.ReturnTrue($"SiteId: {Site.Id}");
         }
 
     }

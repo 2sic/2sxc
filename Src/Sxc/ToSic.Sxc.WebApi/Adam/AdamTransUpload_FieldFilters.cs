@@ -25,14 +25,14 @@ namespace ToSic.Sxc.WebApi.Adam
                 // just a-z characters
                 if (!hasNonAzChars.IsMatch(f))
                     if (string.Equals(extension, f, StringComparison.InvariantCultureIgnoreCase))
-                        return wrapLog.Return(true, $"filter {f} matched filename {fileName}");
+                        return wrapLog.ReturnTrue($"filter {f} matched filename {fileName}");
                     else
                         continue;
 
                 // could be regex or simple *.ext
                 if (f.StartsWith("*."))
                     if (string.Equals(extension, f.Substring(2), StringComparison.InvariantCultureIgnoreCase))
-                        return wrapLog.Return(true, $"filter {f} matched filename {fileName}");
+                        return wrapLog.ReturnTrue($"filter {f} matched filename {fileName}");
                     else
                         continue;
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             }
 
-            return wrapLog.Return(false);
+            return wrapLog.ReturnFalse();
         }
 
         #endregion

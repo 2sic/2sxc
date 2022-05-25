@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.InPage
             var callLog = Log.Fn<bool>($"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
             CmsManagerOfBlock.Entities.Publish(id);
-            return callLog.Return(true, "ok");
+            return callLog.ReturnTrue("ok");
         }
     }
 }

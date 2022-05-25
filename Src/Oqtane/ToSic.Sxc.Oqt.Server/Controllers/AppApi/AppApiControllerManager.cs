@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 if (updated)
                     RemoveController(dllName, apiFile);
                 else
-                    return wrapLog.Return(true, $"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.");
+                    return wrapLog.ReturnTrue($"ok, nothing to do, AppApi Controller is already compiled and added to ApplicationPart: {apiFile}.");
             }
 
             Log.A($"We need to prepare controller for: {apiFile}.");
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             // Register new AppApi Controller.
             AddController(dllName, assembly);
 
-            return wrapLog.Return(true,$"ok, Controller is compiled and added to ApplicationParts: {apiFile}.");
+            return wrapLog.ReturnTrue($"ok, Controller is compiled and added to ApplicationParts: {apiFile}.");
         }
 
         private void AddController(string dllName, Assembly assembly)

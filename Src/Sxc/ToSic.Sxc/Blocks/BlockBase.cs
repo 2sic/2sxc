@@ -77,13 +77,12 @@ namespace ToSic.Sxc.Blocks
             if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
             {
                 DataIsMissing = true;
-                return wrapLog.Return(true, "stop: app & data are missing");
+                return wrapLog.ReturnTrue("stop: app & data are missing");
             }
 
             // If no app yet, stop now with BlockBuilder created
             if (AppId == Eav.Constants.AppIdEmpty)
-                return wrapLog.Return(true,
-                    $"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+                return wrapLog.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
 
             Log.A("Real app specified, will load App object with Data");
 
@@ -103,12 +102,12 @@ namespace ToSic.Sxc.Blocks
             {
                 DataIsMissing = true;
                 App = null;
-                return wrapLog.Return(true, $"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+                return wrapLog.ReturnTrue($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
             View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
-            return wrapLog.Return(true, $"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+            return wrapLog.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
 
         #endregion

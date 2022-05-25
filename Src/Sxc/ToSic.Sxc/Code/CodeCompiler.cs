@@ -136,11 +136,11 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Fn<bool>();
 
             if (!(instance is ICreateInstance codeForwarding)) 
-                return wrapLog.Return(false, "didn't attach");
+                return wrapLog.ReturnFalse("didn't attach");
 
             // in case it supports shared code again, give it the relative path
             codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
-            return wrapLog.Return(true, "attached");
+            return wrapLog.ReturnTrue("attached");
         }
     }
 }

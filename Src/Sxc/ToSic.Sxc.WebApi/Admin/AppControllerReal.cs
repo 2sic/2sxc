@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Admin
         {
             var wrapLog = Log.Fn<bool>($"{zoneId}, {appId}");
             _systemManagerLazy.Ready.Purge(zoneId, appId);
-            return wrapLog.Return(true, "ok");
+            return wrapLog.ReturnTrue("ok");
         }
 
         public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)

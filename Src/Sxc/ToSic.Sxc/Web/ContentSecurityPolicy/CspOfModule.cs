@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         {
             var cLog = Log.Fn<bool>($"appId: {appCsp?.AppId}");
             if (appCsp == null)
-                return cLog.Return(false, "null");
+                return cLog.ReturnFalse("null");
 
             // Note: We tried not-adding duplicates but this doesn't work
             // Because at the moment of registration, the AppId is often not known yet
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             //if (AppCsps.Any(a => a.AppId == appCsp.AppId)) 
             //    return cLog.Done($"app {appCsp.AppId} exists", false);
             AppCsps.Add(appCsp);
-            return cLog.Return(true, "added");
+            return cLog.ReturnTrue("added");
         }
 
         #endregion
