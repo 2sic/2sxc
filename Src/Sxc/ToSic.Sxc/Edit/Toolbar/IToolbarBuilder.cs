@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
@@ -112,5 +113,8 @@ namespace ToSic.Sxc.Edit
 
         [PrivateApi]
         IToolbarBuilder Init(IAppIdentity currentApp);
+
+        [PrivateApi]
+        ToolbarContext Context();
     }
 }

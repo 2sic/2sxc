@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
-using ToSic.Sxc.Web.Url;
 using static System.String;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -14,15 +12,19 @@ namespace ToSic.Sxc.Edit.Toolbar
     internal class ItemToolbar
     {
         protected readonly List<ItemToolbarAction> Actions = new List<ItemToolbarAction>();
-        protected readonly object ToolbarObj;
+        protected readonly object ClassicToolbarOrNull;
         protected readonly List<string> ToolbarV10;
         protected readonly object Settings;
+        protected readonly IToolbarBuilder ToolbarBuilderOrNull;
 
         protected readonly ItemToolbarAction TargetV10;
 
         public ItemToolbar(IEntity entity, string actions = null, string newType = null, object prefill = null, object settings = null, object toolbar = null)
         {
             Settings = settings;
+
+            // Store the toolbar if it's a toolbar builder
+            ToolbarBuilderOrNull = toolbar as IToolbarBuilder;
 
             // Case 1 - use the simpler string format in V10.27
             var toolbarAsStringArray = ToolbarV10OrNull(toolbar);
@@ -46,7 +48,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 if (actions != null || newType != null || prefill != null)
                     throw new Exception(
                         "trying to build toolbar but got both toolbar and actions/prefill/newType - this is conflicting, cannot continue");
-                ToolbarObj = toolbar;
+                ClassicToolbarOrNull = toolbar;
                 return;
             }
             
@@ -70,7 +72,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         private string ToolbarObjJson() => JsonConvert.SerializeObject(
-            ToolbarObj ?? (Actions.Count == 1 ? Actions.First() : (object) Actions));
+            ClassicToolbarOrNull ?? (Actions.Count == 1 ? Actions.First() : (object) Actions));
 
         private bool UseV10 => ToolbarV10 != null;
 
@@ -120,10 +122,19 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         [JsonIgnore]
         public string Toolbar =>
-            $"<ul class=\"sc-menu\" {Build.Attribute("toolbar", UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : Build.Attribute("settings", SettingsJson))}></ul>";
+            $"<ul class=\"sc-menu\" {ContextAttribute()} {Build.Attribute("toolbar", UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : Build.Attribute("settings", SettingsJson))}></ul>";
 
-        public string ToolbarAttribute() => UseV10 ? ToolbarV10Json() : "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";
+        public string ToolbarAttributes() => UseV10 
+            ? ContextAttribute() + " " + ToolbarV10Json() 
+            : "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";
 
+        public string ContextAttribute()
+        {
+            var ctx = ToolbarBuilderOrNull?.Context();
+            return ctx == null 
+                ? null 
+                : Build.Attribute("sxc-context", JsonConvert.SerializeObject(ctx)).ToString();
+        }
 
         public string ObjectAsQueryString(object obj)
         {

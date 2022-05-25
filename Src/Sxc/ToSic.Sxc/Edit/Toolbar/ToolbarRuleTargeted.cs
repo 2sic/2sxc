@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Web;
-
-namespace ToSic.Sxc.Edit.Toolbar
+﻿namespace ToSic.Sxc.Edit.Toolbar
 {
     /// <summary>
     /// A toolbar rule for a specific target
@@ -13,23 +11,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             string ui = null, 
             string parameters = null, 
             char? operation = null,
-            string context = null
-        ) : base(command, ui, parameters, operation)
+            ToolbarContext context = null
+        ) : base(command, ui, parameters: parameters, operation: operation, context: context)
         {
             Target = target;
-            Context = context;
         }
 
         protected readonly object Target;
-        protected readonly string Context;
-
-        public override string GeneratedCommandParams() 
-            => UrlParts.ConnectParameters(GetContext(), base.GeneratedCommandParams());
-
-
-        protected string GetContext()
-        {
-            return Context;
-        }
     }
 }

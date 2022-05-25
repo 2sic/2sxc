@@ -5,20 +5,17 @@ using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-        private const string CtxZone = "context:zoneId";
-        private const string CtxApp = "context:appId";
         private const int NoAppId = -1;
-        public string GetContext(object target, string context)
+        public ToolbarContext GetContext(object target, string context)
         {
-            var callLog = Log.Fn<string>($"{nameof(context)}:{context}");
+            var callLog = Log.Fn<ToolbarContext>($"{nameof(context)}:{context}");
             // Check if context had already been prepared
-            if (context.ContainsInsensitive("context:")) return callLog.ReturnAndLog(context);
+            if (context.ContainsInsensitive("context:")) return callLog.ReturnAndLog(new ToolbarContext(context));
 
             if (target == null) return callLog.ReturnNull("no target");
             if (context.EqualsInsensitive(false.ToString())) return callLog.ReturnNull("context=false");
@@ -45,7 +42,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                         return callLog.ReturnNull($"same app and not Global, context not forced: {identity.Show()}");
                 }
 
-            var result = UrlParts.ConnectParameters($"{CtxZone}={identity.ZoneId}", $"{CtxApp}={identity.AppId}");
+            var result = new ToolbarContext(identity);
             return callLog.ReturnAndLog(result);
         }
 

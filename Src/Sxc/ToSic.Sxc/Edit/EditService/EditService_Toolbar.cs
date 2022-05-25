@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Edit.EditService
             }
 
             var result = inTag
-                ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())
+                ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttributes())
                 : new HybridHtmlString(itmToolbar.Toolbar);
             return wrapLog.Return(result,"ok");
         }

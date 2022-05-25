@@ -8,12 +8,13 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public abstract class ToolbarRule: ToolbarRuleBase
     {
-        protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null)
+        protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null, ToolbarContext context = null)
         {
             Command = command;
             Operation = operation;
             Parameters = parameters ?? "";
             Ui = ui ?? "";
+            Context = context;
         }
 
         public char? Operation { get; }
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public string Ui { get; }
 
-        public virtual string GeneratedCommandParams() => "";
+        public virtual string GeneratedCommandParams() => UrlParts.ConnectParameters(Context.ToRuleString());
 
         public virtual string GeneratedUiParams() => "";
 

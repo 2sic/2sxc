@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string contentTypes, 
             string ui = null, 
             string parameters = null,
-            string context = null
+            ToolbarContext context = null
         ) : base(target, "metadata", operation: '+', ui: ui, parameters: parameters, context: context)
         {
             _contentTypes = contentTypes;

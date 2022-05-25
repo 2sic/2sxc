@@ -8,5 +8,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected ToolbarRuleBase(string rule): base(rule) { }
 
+
+        public ToolbarContext Context { get; protected set; }
+
     }
 }

@@ -35,8 +35,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             _currentAppIdentity = currentApp;
             return this;
         }
-
         private IAppIdentity _currentAppIdentity;
+
+        public ToolbarContext Context()
+        {
+            // See if any rules have a context
+            var rulesWithContext = Rules.Where(r => r.Context != null).ToArray();
+            if (!rulesWithContext.Any()) return null;
+            return rulesWithContext.FirstOrDefault()?.Context;
+        }
 
         #endregion
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
