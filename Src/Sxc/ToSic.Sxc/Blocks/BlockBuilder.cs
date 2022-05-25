@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Documentation;
+﻿using System;
+using ToSic.Eav.Configuration.Licenses;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
@@ -24,18 +26,21 @@ namespace ToSic.Sxc.Blocks
                 EngineFactory engineFactory,
                 Generator<IEnvironmentInstaller> envInstGen, 
                 Generator<IRenderingHelper> renderHelpGen,
-                LazyInitLog<PageChangeSummary> pageChangeSummary)
+                LazyInitLog<PageChangeSummary> pageChangeSummary,
+                Lazy<ILicenseService> licenseService)
             {
                 EngineFactory = engineFactory;
                 EnvInstGen = envInstGen;
                 RenderHelpGen = renderHelpGen;
                 PageChangeSummary = pageChangeSummary;
+                LicenseService = licenseService;
             }
 
             public EngineFactory EngineFactory { get; }
             public Generator<IEnvironmentInstaller> EnvInstGen { get; }
             public Generator<IRenderingHelper> RenderHelpGen { get; }
             public LazyInitLog<PageChangeSummary> PageChangeSummary { get; }
+            public Lazy<ILicenseService> LicenseService { get; }
         }
 
         #region Constructor

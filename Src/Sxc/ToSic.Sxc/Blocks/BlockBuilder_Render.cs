@@ -140,6 +140,10 @@ namespace ToSic.Sxc.Blocks
                     }
                 #endregion
 
+
+                var licenseNotOk = GenerateWarningMsgIfLicenseNotOk();
+                if (licenseNotOk != null) body = licenseNotOk + body;
+
                 #region Wrap it all up into a nice wrapper tag
 
                 // Figure out some if we should add the edit context
@@ -190,6 +194,21 @@ namespace ToSic.Sxc.Blocks
             InstallationOk = true;
             Log.A("system is ready, no upgrade-message to show");
             return (null, false);
+        }
+
+        /// <summary>
+        /// license ok state
+        /// </summary>
+        protected bool LicenseOk => _licenseOk.Get(() => _deps.LicenseService.Value.HaveValidLicense);
+        private readonly ValueGetOnce<bool> _licenseOk = new ValueGetOnce<bool>();
+
+        private string GenerateWarningMsgIfLicenseNotOk()
+        {
+            if (LicenseOk) return null;
+            
+            Log.A("all licenses are invalid");
+            var result = RenderingHelper.DesignWarningMessage("All licenses are invalid.", false, encodeMessage: false); // don't encode, as it contains special links
+            return result;
         }
 
         /// <summary>

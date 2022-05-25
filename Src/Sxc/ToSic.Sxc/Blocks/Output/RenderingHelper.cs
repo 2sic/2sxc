@@ -102,6 +102,25 @@ namespace ToSic.Sxc.Blocks.Output
             return msg;
         }
 
+        public string DesignWarningMessage(string warning, bool addContextWrapper = false, bool encodeMessage = true)
+        {
+            if (!Context.User.IsSuperUser) return null;
+
+            var msg = $"Warning: {warning}";
+
+            if (encodeMessage)
+                msg = HttpUtility.HtmlEncode(msg);
+
+            // add dnn-error-div-wrapper
+            msg = "<div class='dnnFormMessage dnnFormWarning'>" + msg + "</div>";
+
+            // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
+            if (addContextWrapper)
+                msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id);
+
+            return msg;
+        }
+
         public string UiContextInfos() => JsonConvert.SerializeObject(_jsContextAllGen.New.Init(AppRootPath, Block, Log));
 
     }
