@@ -22,6 +22,6 @@ namespace ToSic.Sxc.Context
         public bool IsSiteDeveloper => _contents.IsDesigner;
 
         protected override IMetadataOf GetMetadataOf() 
-            => _appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")");
+            => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
     }
 }

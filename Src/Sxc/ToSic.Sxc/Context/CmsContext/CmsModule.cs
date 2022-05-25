@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Context
         private readonly IBlock _block;
 
         protected override IMetadataOf GetMetadataOf() 
-            => _block.Context.AppState.GetMetadataOf(TargetTypes.Module, Id, "Module " + Id);
+            => ExtendWithRecommendations(_block.Context.AppState.GetMetadataOf(TargetTypes.Module, Id, "Module " + Id));
 
     }
 }

@@ -34,6 +34,6 @@ namespace ToSic.Sxc.Context
         private readonly ValueGetOnce<IApp> _app = new ValueGetOnce<IApp>();
 
         protected override IMetadataOf GetMetadataOf() 
-            => _appState.GetMetadataOf(TargetTypes.Site, Id, Url);
+            => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.Site, Id, Url));
     }
 }

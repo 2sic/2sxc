@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Context
         public string Edition => _contents?.Edition;
 
         protected override IMetadataOf GetMetadataOf()
-            => _contents?.Metadata;
+            => ExtendWithRecommendations(_contents?.Metadata);
 
     }
 }

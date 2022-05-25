@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Context
         public IParameters Parameters => _contents?.Parameters;
         public string Url => _contents.Url ?? string.Empty;
 
-        protected override IMetadataOf GetMetadataOf() 
-            => _appState.GetMetadataOf(TargetTypes.Page, Id, Url);
+        protected override IMetadataOf GetMetadataOf()
+            => ExtendWithRecommendations( _appState.GetMetadataOf(TargetTypes.Page, Id, Url));
     }
 }

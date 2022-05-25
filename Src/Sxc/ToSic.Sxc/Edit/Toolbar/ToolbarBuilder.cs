@@ -12,7 +12,7 @@ using ToSic.Sxc.Web;
 namespace ToSic.Sxc.Edit.Toolbar
 {
     /// <inheritdoc />
-    public partial class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, IHasLog
+    public partial class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder
     {
 
         #region Constructors
@@ -82,7 +82,17 @@ namespace ToSic.Sxc.Edit.Toolbar
             string ui = null,
             string parameters = null,
             string context = null
-        ) => Add(new ToolbarRuleMetadata(target, contentTypes, ui, parameters, context: GetContext(target, context)));
+        )
+        {
+            var finalTypes = GetMetadataTypeNames(target, contentTypes);
+            var realContext = GetContext(target, context);
+            var result = this as IToolbarBuilder;
+            foreach (var type in finalTypes)
+                result = result.Add(new ToolbarRuleMetadata(target, type, ui, parameters, context: realContext));
+
+            return result;
+        }
+
 
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(
@@ -92,8 +102,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null
         ) => Add(new ToolbarRuleImage(target, ui, parameters));
 
-        public IToolbarBuilder Settings(string noParamOrder = Eav.Parameters.Protector, string show = null,
-            string hover = null, string follow = null, string classes = null, string autoAddMore = null, string ui = "", string parameters = "")
+        public IToolbarBuilder Settings(
+            string noParamOrder = Eav.Parameters.Protector, 
+            string show = null,
+            string hover = null, 
+            string follow = null, 
+            string classes = null, 
+            string autoAddMore = null, 
+            string ui = "",
+            string parameters = "")
             => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
                 ui: ui, parameters: parameters));
 
