@@ -11,6 +11,11 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     internal class ItemToolbar
     {
+        public const string ToolbarAttributeName = "sxc-toolbar";
+        public const string ContextAttributeName = "sxc-context";
+        public const string JsonToolbarNodeName = "toolbar";
+        public const string JsonSettingsNodeName = "settings";
+
         protected readonly List<ItemToolbarAction> Actions = new List<ItemToolbarAction>();
         protected readonly object ClassicToolbarOrNull;
         protected readonly List<string> ToolbarV10;
@@ -122,18 +127,18 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         [JsonIgnore]
         public string Toolbar =>
-            $"<ul class=\"sc-menu\" {ContextAttribute()} {Build.Attribute("toolbar", UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : Build.Attribute("settings", SettingsJson))}></ul>";
+            $"<ul class=\"sc-menu\" {ContextAttribute()} {Build.Attribute(JsonToolbarNodeName, UseV10 ? ToolbarV10Json() : ToolbarObjJson())} { (UseV10 ? null : Build.Attribute(JsonSettingsNodeName, SettingsJson))}></ul>";
 
         public string ToolbarAttributes() => UseV10 
-            ? ContextAttribute() + " " + ToolbarV10Json() 
-            : "{\"toolbar\":" + ToolbarObjJson() + ",\"settings\":"+ SettingsJson + "}";
+            ? ContextAttribute() + " " + Build.Attribute(ToolbarAttributeName, ToolbarV10Json()) 
+            : Build.Attribute(ToolbarAttributeName, "{\"" + JsonToolbarNodeName + "\":" + ToolbarObjJson() + ",\"" + JsonSettingsNodeName + "\":" + SettingsJson + "}").ToString();
 
         public string ContextAttribute()
         {
             var ctx = ToolbarBuilderOrNull?.Context();
             return ctx == null 
                 ? null 
-                : Build.Attribute("sxc-context", JsonConvert.SerializeObject(ctx)).ToString();
+                : Build.Attribute(ContextAttributeName, JsonConvert.SerializeObject(ctx)).ToString();
         }
 
         public string ObjectAsQueryString(object obj)
