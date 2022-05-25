@@ -129,7 +129,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 SystemManager.Purge(zoneId, appId);
 
                 // 3. possibly show messages / issues
-                return callLog.Return(new ImportResultDto(true), "ok");
+                return callLog.ReturnAsOk(new ImportResultDto(true));
             }
             catch (Exception ex)
             {

@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamContext;
             _adamPaths.Init(adamContext, Log);
-            return wrapLog.Return(this, "ok");
+            return wrapLog.ReturnAsOk(this);
         }
 
         protected AdamManager<int, int> AdamContext;
@@ -118,7 +118,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 ImageWidth = 0
             };
             var oqtFile = OqtFileRepository.AddFile(oqtFileData);
-            return callLog.Return(GetFile(oqtFile.FileId), "ok");
+            return callLog.ReturnAsOk(GetFile(oqtFile.FileId));
         }
 
         /// <summary>

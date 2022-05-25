@@ -118,11 +118,11 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 Attributes = asset.HtmlAttributes,
             }));
 
-            return wrapLog.Return(new AjaxRenderDto
+            return wrapLog.ReturnAsOk(new AjaxRenderDto
             {
                 Html = result.Html,
                 Resources = resources
-            }, "ok");
+            });
         }
 
         private IRenderResult RenderToResult(int templateId, string lang)
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             }
 
             var result = Block.BlockBuilder.Run(true);
-            return callLog.Return(result, "ok");
+            return callLog.ReturnAsOk(result);
         }
 
     }

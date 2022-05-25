@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Sys
             Log.A("install completed with success:" + success);
 
             return success 
-                ? wrapLog.Return(_responseMaker.Ok(),"ok") 
+                ? wrapLog.ReturnAsOk(_responseMaker.Ok()) 
                 : wrapLog.Return(_responseMaker.InternalServerError(MessageBuilder(messages)), "error");
         }
 

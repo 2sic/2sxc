@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             if (original == null || !original.HasKeys()) return wrapLog.Return(original, "none");
             var merged = MergedWithAll(original);
             var deduped = DeduplicateValues(merged);
-            return wrapLog.Return(deduped, "ok");
+            return wrapLog.ReturnAsOk(deduped);
         }
 
         public CspParameters MergedWithAll(CspParameters original)
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             foreach (var key in keys)
             foreach (var value in values)
                 copy.Add(key, value);
-            return wrapLog.Return(copy, "ok");
+            return wrapLog.ReturnAsOk(copy);
         }
 
         public CspParameters DeduplicateValues(CspParameters original)

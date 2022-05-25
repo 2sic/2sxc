@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
         {
             var callLog = Log.Fn<Folder<TFolderId, TFileId>>($"{nameof(Folder)}(\"{subFolder}\", {autoCreate})");
             var fld = Manager.Folder(GeneratePath(subFolder), autoCreate);
-            return callLog.Return(fld, "ok");
+            return callLog.ReturnAsOk(fld);
         }
 
 

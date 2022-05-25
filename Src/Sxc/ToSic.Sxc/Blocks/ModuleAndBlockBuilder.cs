@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Blocks
             var wrapLog = Log.Fn<IBlock>($"{pageId}, {moduleId}");
             var module = GetModuleImplementation(pageId, moduleId);
             var result = GetBlock(module);
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         public abstract IBlock GetBlock<TPlatformModule>(TPlatformModule module) where TPlatformModule : class;

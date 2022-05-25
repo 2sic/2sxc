@@ -55,7 +55,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             var callLog = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return callLog.Return(BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SaveTemplateId(templateId, forceCreateContentGroup), "ok");
+            return callLog.ReturnAsOk(BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SaveTemplateId(templateId, forceCreateContentGroup));
         }
 
         public bool Publish(int id)

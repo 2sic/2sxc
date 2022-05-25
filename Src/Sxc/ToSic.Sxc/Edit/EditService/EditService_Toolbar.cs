@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Edit.EditService
             var result = inTag
                 ? new HybridHtmlString(itmToolbar.ToolbarAttributes())
                 : new HybridHtmlString(itmToolbar.Toolbar);
-            return wrapLog.Return(result,"ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         private bool IsConditionOk(object condition)

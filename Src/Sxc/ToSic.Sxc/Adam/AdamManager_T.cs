@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Adam
                 }
             }
 
-            return callLog.Return(Folder(path), "ok");
+            return callLog.ReturnAsOk(Folder(path));
         }
 
         #region Type specific results which the base class already offers the interface to

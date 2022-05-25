@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Adam
             // now access the subfolder, creating it if missing (which is what we want
             AdamContext.AdamRoot.Folder(newFolderPath, true);
 
-            return logCall.Return(ItemsInField(parentSubfolder), "ok");
+            return logCall.ReturnAsOk(ItemsInField(parentSubfolder));
         }
     }
 }

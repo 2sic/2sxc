@@ -199,7 +199,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             if (!CspServices.Any()) return wrapLog.Return(new List<CspParameters>(), "no services to add");
             var result = CspServices.Select(c => c?.Policy).Where(c => c != null).ToList();
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
 
         }
         

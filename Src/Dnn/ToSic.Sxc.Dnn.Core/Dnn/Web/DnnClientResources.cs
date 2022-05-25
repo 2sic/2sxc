@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Dnn.Web
             Log.A($"{nameof(MustAddHeaders)}={MustAddHeaders}");
             if (MustAddHeaders) Header.AddHeaders();
 
-            return wrapLog.Return(features, "ok");
+            return wrapLog.ReturnAsOk(features);
         }
 
 

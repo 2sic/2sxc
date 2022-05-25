@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             var unfolded = GetWithDependents(FeatureKeys.ToList(), log); // _pfm.GetWithDependents(features);
             //log.Add($"Got unfolded features {unfolded.Count}");
             FeatureKeys.Clear();
-            return wrapLog.Return(unfolded, "ok");
+            return wrapLog.ReturnAsOk(unfolded);
         }
 
         /// <inheritdoc />
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             log.A($"Got {features.Count} items");
             var unfolded = _pfm.GetWithDependents(features);
             log.A($"Got unfolded features {unfolded.Count}");
-            return wrapLog.Return(unfolded, "ok");
+            return wrapLog.ReturnAsOk(unfolded);
         }
 
     }

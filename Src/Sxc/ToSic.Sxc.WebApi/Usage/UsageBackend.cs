@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi.Usage
 
             var result = finalBuilder(views, blocks);
 
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
     }
 }

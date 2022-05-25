@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Engines
             var wrapLog = Log.Fn<string>();
             var writer = new StringWriter();
             Render(writer);
-            return wrapLog.Return(writer.ToString(), "ok");
+            return wrapLog.ReturnAsOk(writer.ToString());
         }
 
         private object CreateWebPageInstance()
@@ -137,7 +137,7 @@ namespace ToSic.Sxc.Engines
                 object objectValue = null;
                 if (compiledType != null)
                     objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
-                return wrapLog.Return(objectValue, "ok");
+                return wrapLog.ReturnAsOk(objectValue);
             }
             catch (Exception ex)
             {

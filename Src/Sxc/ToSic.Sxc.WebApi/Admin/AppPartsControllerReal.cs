@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Admin
             var result = _importContent.New.Init(_user.Value, Log)
                 .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: _context.Ready.Site.DefaultCultureCode);
 
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         #endregion

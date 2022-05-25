@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Code
             var cmsBlock = ModuleAndBlockBuilder.Ready.GetBlock(pageId, moduleId);
             var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
 
-            return wrapLog.Return(codeRoot, "ok");
+            return wrapLog.ReturnAsOk(codeRoot);
         }
 
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Code
             var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(null, Log, Constants.CompatibilityLevel12);
             var app = App(zoneId: zoneId, appId: appId);
             codeRoot.AttachApp(app);
-            return wrapLog.Return(codeRoot, "ok");
+            return wrapLog.ReturnAsOk(codeRoot);
         }
     }
 }

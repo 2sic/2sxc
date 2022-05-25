@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
                 uiRoot: OqtConstants.UiRoot + "/",
                 rvtHeader: Oqtane.Shared.Constants.AntiForgeryTokenHeaderName,
                 rvt: AntiForgeryToken());
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         public string ContextMetaName => InpageCms.MetaName;

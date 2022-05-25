@@ -67,7 +67,7 @@ namespace ToSic.Sxc.DataSources
             else
                 Log.A("no template override");
 
-            return wrapLog.Return(viewDataSource, "ok");
+            return wrapLog.ReturnAsOk(viewDataSource);
         }
     }
 }

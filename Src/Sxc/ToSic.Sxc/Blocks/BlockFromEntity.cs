@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Blocks
             AppId = blockId.AppId;
 
             CompleteInit(parent.BlockBuilder, blockId, -blockEntity.EntityId);
-            return wrapLog.Return(this, "ok");
+            return wrapLog.ReturnAsOk(this);
         }
         #endregion
 

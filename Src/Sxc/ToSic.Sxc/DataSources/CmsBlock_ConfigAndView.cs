@@ -33,7 +33,7 @@ namespace ToSic.Sxc.DataSources
                 : _lazyCmsRuntime.Value.Init(this, userMayEdit, Log);
             var container = _moduleLazy.Value.Init(ModuleId.Value, Log);
             var blockId = container.BlockIdentifier;
-            return wrapLog.Return(cms.Blocks.GetOrGeneratePreviewConfig(blockId), "ok");
+            return wrapLog.ReturnAsOk(cms.Blocks.GetOrGeneratePreviewConfig(blockId));
         }
 
 

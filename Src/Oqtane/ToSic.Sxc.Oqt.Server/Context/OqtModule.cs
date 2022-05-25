@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
             _id = module.ModuleId;
 
-            return wrapLog.Return(this, "ok");
+            return wrapLog.ReturnAsOk(this);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
             var guid = _settings[Settings.ModuleSettingApp] ?? "";
             var appId = _appFinderLazy.Value.Init(Log).FindAppId(zoneId, guid);
-            return wrapLog.Return((appId, guid), "ok");
+            return wrapLog.ReturnAsOk((appId, guid));
 
         }
     }

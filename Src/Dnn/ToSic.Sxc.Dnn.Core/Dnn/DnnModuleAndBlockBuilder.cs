@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn
 
             var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule)

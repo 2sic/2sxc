@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Adam
             }
             var fileInfo = GetFile(filePath);
 
-            return callLog.Return(fileInfo, "ok");
+            return callLog.ReturnAsOk(fileInfo);
         }
 
 

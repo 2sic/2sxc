@@ -112,7 +112,7 @@ namespace ToSic.Sxc.WebApi.Admin
             
             var result = _importAppLazy.Ready.Import(stream, zoneId, renameApp);
 
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
     }
 }

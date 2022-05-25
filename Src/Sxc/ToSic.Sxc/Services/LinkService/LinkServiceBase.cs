@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Services
             var processed = ExpandUrlIfNecessary(type, url);
             Log.A($"expandUrl:{processed}, t:{type}");
 
-            return wrapLog.Return(Tags.SafeUrl(processed).ToString(), "ok");
+            return wrapLog.ReturnAsOk(Tags.SafeUrl(processed).ToString());
         }
 
         private string ExpandUrlIfNecessary(string type, string url)
