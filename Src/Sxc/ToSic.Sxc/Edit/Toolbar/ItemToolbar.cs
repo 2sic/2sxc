@@ -9,6 +9,9 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
+    // TODO: This should ideally be split into multiple objects with the same interface
+    // Which can create different generations of toolbars
+    // The current setup is quite complex as it handles many different scenarios and skips certain values in those scenarios
     internal class ItemToolbar
     {
         public const string ToolbarAttributeName = "sxc-toolbar";
