@@ -1,48 +1,77 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     /// <inheritdoc />
-    public class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder
+    public partial class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder
     {
-        #region Constructors
-        internal ToolbarBuilder() { }
 
-        /// <summary>
-        /// Create a ToolbarBuilder which clones a previous configuration
-        /// </summary>
-        /// <param name="original"></param>
-        internal ToolbarBuilder(ToolbarBuilder original): this()
+        #region Constructors
+
+        public class Dependencies
         {
-            Rules = original.Rules.Select(r => r).ToList();
+            public Dependencies(Lazy<AppStates> appStatesLazy)
+            {
+                AppStatesLazy = appStatesLazy;
+            }
+            internal readonly Lazy<AppStates> AppStatesLazy;
         }
+
+        public ToolbarBuilder(Dependencies deps) => _deps = deps;
+        private readonly Dependencies _deps;
+        public ILog Log { get; } = new Log(Constants.SxcLogName + ".TlbBld");
+
+        public IToolbarBuilder Init(IAppIdentity currentApp)
+        {
+            _currentAppIdentity = currentApp;
+            return this;
+        }
+        private IAppIdentity _currentAppIdentity;
+
+        public ToolbarContext Context()
+        {
+            // See if any rules have a context
+            var rulesWithContext = Rules.Where(r => r.Context != null).ToArray();
+            if (!rulesWithContext.Any()) return null;
+            return rulesWithContext.FirstOrDefault()?.Context;
+        }
+
         #endregion
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
         /// <inheritdoc />
         [PrivateApi]
-        public IToolbarBuilder Add(params string[] rules) => InnerAdd(rules);
+        public IToolbarBuilder Add(params string[] rules) => InnerAdd(rules?.Cast<object>());
 
         /// <inheritdoc />
         public IToolbarBuilder Add(params object[] rules) => InnerAdd(rules);
 
-        private IToolbarBuilder InnerAdd(params object[] rules)
+        private IToolbarBuilder InnerAdd(params object[] newRules)
         {
-            var clone = new ToolbarBuilder(this);
-            if (!rules.Any()) return clone;
-            foreach (var rule in rules)
+            // Create clone before starting to log so it's in there too
+            var clone = new ToolbarBuilder(_deps).Init(Log);
+            clone.Init(_currentAppIdentity);
+            
+            var callLog = Log.Fn<IToolbarBuilder>();
+            clone.Rules.AddRange(Rules);
+            if (!newRules.Any()) return callLog.Return(clone, "no new rules");
+            foreach (var rule in newRules)
             {
                 if (rule is ToolbarRuleBase realRule)
                     clone.Rules.Add(realRule);
                 else if (rule is string stringRule)
                     clone.Rules.Add(new ToolbarRuleGeneric(stringRule));
             }
-            return clone;
+            return callLog.Return(clone);
         }
 
         /// <inheritdoc />
@@ -51,8 +80,19 @@ namespace ToSic.Sxc.Edit.Toolbar
             string contentTypes,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
-            string parameters = null
-        ) => Add(new ToolbarRuleMetadata(target, contentTypes, ui, parameters));
+            string parameters = null,
+            string context = null
+        )
+        {
+            var finalTypes = GetMetadataTypeNames(target, contentTypes);
+            var realContext = GetContext(target, context);
+            var result = this as IToolbarBuilder;
+            foreach (var type in finalTypes)
+                result = result.Add(new ToolbarRuleMetadata(target, type, ui, parameters, context: realContext));
+
+            return result;
+        }
+
 
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(
@@ -62,8 +102,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null
         ) => Add(new ToolbarRuleImage(target, ui, parameters));
 
-        public IToolbarBuilder Settings(string noParamOrder = Eav.Parameters.Protector, string show = null,
-            string hover = null, string follow = null, string classes = null, string autoAddMore = null, string ui = "", string parameters = "")
+        public IToolbarBuilder Settings(
+            string noParamOrder = Eav.Parameters.Protector, 
+            string show = null,
+            string hover = null, 
+            string follow = null, 
+            string classes = null, 
+            string autoAddMore = null, 
+            string ui = "",
+            string parameters = "")
             => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
                 ui: ui, parameters: parameters));
 

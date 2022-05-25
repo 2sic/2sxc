@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Context
             if (AlreadyConfigured) throw new Exception($"{nameof(Configure)} can only be called once. Then you need a new service.");
             var configured = ConfigureImplementation(module);
             AlreadyConfigured = true;
-            return wrapLog.Return(configured, "ok");
+            return wrapLog.ReturnAsOk(configured);
         }
 
         protected abstract IContextOfBlock ConfigureImplementation(IModule module);

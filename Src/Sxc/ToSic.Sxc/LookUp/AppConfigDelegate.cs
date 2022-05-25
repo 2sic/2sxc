@@ -40,14 +40,14 @@ namespace ToSic.Sxc.LookUp
 
             var wrapLog = Log.Fn<Func<App, IAppDataConfiguration>>($"showDrafts: {showDrafts}");
 
-            return wrapLog.Return(appToUse =>
+            return wrapLog.ReturnAsOk(appToUse =>
             {
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var lookUpEngine = GetLookupEngineForContext(context, appToUse as IApp, block);
 
                 // return results
                 return new AppDataConfiguration(showDrafts, lookUpEngine);
-            },"ok");
+            });
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.LookUp
             var wrapLog = log.Fn<Func<App, IAppDataConfiguration>>();
             var showDrafts = block.Context.UserMayEdit;
             var existingLookups = block.Data.Configuration.LookUpEngine;
-            return wrapLog.Return(appToUse => new AppDataConfiguration(showDrafts, existingLookups), "ok");
+            return wrapLog.ReturnAsOk(appToUse => new AppDataConfiguration(showDrafts, existingLookups));
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.LookUp
                 var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockForLookup);
                 provider.Add(blockBuilderLookUp);
             }
-            return wrapLog.Return(provider, "ok");
+            return wrapLog.ReturnAsOk(provider);
         }
     }
 }

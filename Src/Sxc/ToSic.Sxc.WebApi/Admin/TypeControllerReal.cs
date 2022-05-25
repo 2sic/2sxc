@@ -120,7 +120,7 @@ namespace ToSic.Sxc.WebApi.Admin
             var result = _importContent.New.Init(_userLazy.Value, Log)
                 .ImportContentType(zoneId, appId, streams, _context.Ready.Site.DefaultCultureCode);
 
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
     }
 }

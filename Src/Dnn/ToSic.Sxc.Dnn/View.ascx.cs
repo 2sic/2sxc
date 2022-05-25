@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn
                 {
                     if (checkPortalIsReady)
                         DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, GetService<Lazy<AppFolderInitializer>>(), Log);
-                    DnnClientResources = GetService<DnnClientResources>().Init(Page, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
+                    DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                     var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                     if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
                     // #lightspeed
@@ -119,11 +119,9 @@ namespace ToSic.Sxc.Dnn
                         try
                         {
                             var pageChanges = GetService<DnnPageChanges>();
-                            pageChanges.Apply(Page, data); // note: if Assets == null, it will take the default
+                            pageChanges.Apply(Page, data);
                         }
                         catch{ /* ignore */ }
-
-                        // todo: #Lightspeed Page property changes!
 
                         // call this after rendering templates, because the template may change what resources are registered
                         DnnClientResources.AddEverything(data.Features);

@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                 }
             }
 
-            return wrapLog.Return(block, "ok");
+            return wrapLog.ReturnAsOk(block);
         }
 
         private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, string[] blockIds, ILog log)

@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public abstract class ToolbarRule: ToolbarRuleBase
     {
-        protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null)
+        protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null, ToolbarContext context = null)
         {
             Command = command;
             Operation = operation;
             Parameters = parameters ?? "";
             Ui = ui ?? "";
+            Context = context;
         }
 
         public char? Operation { get; }
@@ -25,7 +27,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public string Ui { get; }
 
-        public virtual string GeneratedCommandParams() => "";
+        public virtual string GeneratedCommandParams() => UrlParts.ConnectParameters(Context.ToRuleString());
 
         public virtual string GeneratedUiParams() => "";
 
@@ -44,10 +46,10 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Stop if nothing to add
             if (!hasGeneratedCmdParams && !hasCmdParams) return result;
             
-            result += "?";
-            if (hasGeneratedCmdParams) result += genCmdParams;
-            if (hasGeneratedCmdParams && hasCmdParams) result += "&";
-            if (hasCmdParams) result += Parameters;
+            result += "?" + UrlParts.ConnectParameters(genCmdParams, Parameters);
+            //if (hasGeneratedCmdParams) result += genCmdParams;
+            //if (hasGeneratedCmdParams && hasCmdParams) result += "&";
+            //if (hasCmdParams) result += Parameters;
             return result;
         }
 

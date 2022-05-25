@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Adam
             }
             var fileInfo = GetFile(filePath);
 
-            return callLog.Return(fileInfo, "ok");
+            return callLog.ReturnAsOk(fileInfo);
         }
 
 
@@ -61,16 +61,16 @@ namespace ToSic.Sxc.Adam
             var callLog = Log.Fn<bool>($"{newName}");
             
             if (!File.Exists(originalWithPath))
-                return callLog.Return(false, $"Can't rename because source file does not exist {originalWithPath}");
+                return callLog.ReturnFalse($"Can't rename because source file does not exist {originalWithPath}");
 
             AdamPathsBase.ThrowIfPathContainsDotDot(newName);
             var path = FindParentPath(originalWithPath);
             var newFilePath = Path.Combine(path, newName);
             if (File.Exists(newFilePath))
-                return callLog.Return(false, $"Can't rename because file with new name exists {newFilePath}");
+                return callLog.ReturnFalse($"Can't rename because file with new name exists {newFilePath}");
 
             File.Move(originalWithPath, newFilePath);
-            return callLog.Return(true, $"File renamed");
+            return callLog.ReturnTrue( $"File renamed");
         }
 
 

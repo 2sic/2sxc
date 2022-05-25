@@ -83,7 +83,7 @@ namespace ToSic.Sxc.WebApi.Admin
             }
             var result = _viewExportImport.Ready.ImportView(zoneId, appId, streams, _context.Ready.Site.DefaultCultureCode);
 
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         /// <inheritdoc />

@@ -91,9 +91,9 @@ namespace ToSic.Sxc.WebApi.Views
             serializer.Init(cms.AppState, Log);
             var serialized = serializer.Serialize(bundle, 0);
 
-            return logCall.Return(_responseMaker.File(serialized,
+            return logCall.ReturnAsOk(_responseMaker.File(serialized,
                 ("View" + "." + bundle.Entity.GetBestTitle() + ImpExpConstants.Extension(ImpExpConstants.Files.json))
-                .RemoveNonFilenameCharacters()), "ok");
+                .RemoveNonFilenameCharacters()));
         }
 
         private void TryAddAsset(BundleEntityWithAssets bundle, string webPath, string relativePath)
@@ -145,7 +145,7 @@ namespace ToSic.Sxc.WebApi.Views
                 foreach (var asset in assets) assetMan.Create(GetRealPath(app, asset), asset);
 
                 // 3. possibly show messages / issues
-                return callLog.Return(new ImportResultDto(true), "ok");
+                return callLog.ReturnAsOk(new ImportResultDto(true));
             }
             catch (Exception ex)
             {

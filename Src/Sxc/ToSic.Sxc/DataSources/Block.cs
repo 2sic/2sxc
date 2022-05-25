@@ -37,7 +37,7 @@ namespace ToSic.Sxc.DataSources
             get
             {
                 if (_cache != null) return _cache;
-                Obsolete.Warning13To15(nameof(Cache), "", "https://r.2sxc.org/brc-13-datasource-cache");
+                Obsolete.Warning13To15("Data.Cache", "", "https://r.2sxc.org/brc-13-datasource-cache");
                 return _cache = new CacheWithGetContentType(_appStates.Get(this));
             }
         }

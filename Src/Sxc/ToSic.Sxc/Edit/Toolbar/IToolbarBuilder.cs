@@ -1,4 +1,7 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Apps;
+using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
+using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
@@ -16,7 +19,7 @@ namespace ToSic.Sxc.Edit
     /// * Added in 2sxc 13
     /// </remarks>
     [PrivateApi("Still WIP, not sure if this will be published as this - but probably we will")]
-    public interface IToolbarBuilder: IHybridHtmlString
+    public interface IToolbarBuilder: IHybridHtmlString, IHasLog
     {
         /// <summary>
         /// Add one or more rules according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
@@ -46,7 +49,7 @@ namespace ToSic.Sxc.Edit
         /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 
         /// </summary>
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
-        /// <param name="contentTypes">Name of **one** content-type for which to generate the button. In future _may_ also allow more content-types</param>
+        /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <param name="parameters">Parameters for the metadata-command</param>
@@ -54,13 +57,17 @@ namespace ToSic.Sxc.Edit
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
+        /// * parameter context added in 2sxc 14 - still WIP
+        /// * contentTypes changed from one to many in v14
+        /// * contentTypes can also have `*` or `SomeType,*` in v14
         /// </remarks>
         IToolbarBuilder Metadata(
             object target,
             string contentTypes,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
-            string parameters = null
+            string parameters = null,
+            string context = null
         );
 
         [PrivateApi("WIP 13.11")]
@@ -104,5 +111,12 @@ namespace ToSic.Sxc.Edit
         /// </summary>
         /// <returns></returns>
         string ToString();
+
+
+        [PrivateApi]
+        IToolbarBuilder Init(IAppIdentity currentApp);
+
+        [PrivateApi]
+        ToolbarContext Context();
     }
 }

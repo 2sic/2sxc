@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Images
                 if (Width != null) _imgTag.Width(Width);
                 if (Height != null) _imgTag.Height(Height);
 
-                return wrapLog.Return(_imgTag, "ok");
+                return wrapLog.ReturnAsOk(_imgTag);
             }
         }
         private Img _imgTag;

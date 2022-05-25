@@ -36,12 +36,12 @@ namespace ToSic.Sxc.Services
             var wrapLog = Log.Fn<UserInformationDto>($"t:{identityToken}");
 
             var userId = UserId(identityToken);
-            if (userId == AnonymousUser.Id) return wrapLog.Return(AnonymousUser, "ok");
+            if (userId == AnonymousUser.Id) return wrapLog.ReturnAsOk(AnonymousUser);
             if (userId == UnknownUser.Id) return wrapLog.Return(UnknownUser, "err");
 
             var userDto = PlatformUserInformationDto(userId);
 
-            return userDto != null ? wrapLog.Return(userDto, "ok") : wrapLog.Return(UnknownUser, "err");
+            return userDto != null ? wrapLog.ReturnAsOk(userDto) : wrapLog.Return(UnknownUser, "err");
         }
 
         /// <summary>

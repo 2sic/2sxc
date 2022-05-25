@@ -71,7 +71,7 @@ namespace ToSic.Sxc.WebApi.Adam
             var results = _adamItems.Value
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .ItemsInField(subfolder);
-            return callLog.Return(results, "ok");
+            return callLog.ReturnAsOk(results);
         }
 
         public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)

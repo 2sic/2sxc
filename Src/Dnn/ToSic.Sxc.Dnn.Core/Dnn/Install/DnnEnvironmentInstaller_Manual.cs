@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Install
 
             // Restart application
             HttpRuntime.UnloadAppDomain();
-            return callLog.Return(true, "ok");
+            return callLog.ReturnTrue("ok");
         }
 
 

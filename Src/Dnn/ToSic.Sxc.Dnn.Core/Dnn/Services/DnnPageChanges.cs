@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Services
             return count;
         }
 
-        public int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
+        private int Apply(DnnHtmlPage dnnPage, IList<PagePropertyChange> props)
         {
             var wrapLog = Log.Fn<int>();
 
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.Dnn.Services
                 // Ideally combining the existing one with any additional ones added here
                 page.Response.Headers[httpHeader.Name] = httpHeader.Value;
             }
-            return wrapLog.Return(httpHeaders.Count, "ok");
+            return wrapLog.ReturnAsOk(httpHeaders.Count);
         }
 
         private CspOfPage PageCsp(bool enabled, bool enforced)

@@ -177,7 +177,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
             }
 
-            return wrapLog.Return(true, "ok");
+            return wrapLog.ReturnTrue("ok");
         }
     }
 }

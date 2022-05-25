@@ -208,7 +208,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 ImageWidth = 0
             };
             var oqtFile = _oqtFileRepository.AddFile(oqtFileData);
-            return callLog.Return(oqtFile, "ok");
+            return callLog.ReturnAsOk(oqtFile);
         }
 
         private bool FolderExists(string path) => GetOqtFolderByName(path) != null;
@@ -238,7 +238,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 // Create the new virtual folder
                 var newFolder = CreateVirtualFolder(parentFolder, path, subfolder);
-                return callLog.Return(newFolder, "ok");
+                return callLog.ReturnAsOk(newFolder);
             }
             catch (SqlException)
             {

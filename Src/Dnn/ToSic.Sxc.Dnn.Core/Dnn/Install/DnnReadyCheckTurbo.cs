@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.Install
             var timerWrap = Log.Fn<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", startTimer: true);
 
             if (CachedModuleResults.TryGetValue(_module.ModuleId, out var exists) && exists)
-                return timerWrap.Return(true, "Previous check completed, will skip");
+                return timerWrap.ReturnTrue("Previous check completed, will skip");
 
             // throw better error if SxcInstance isn't available
             // not sure if this doesn't have side-effects...
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Dnn.Install
 
             // check things if it's a module of this portal (ensure everything is ok, etc.)
             var isSharedModule = _module.ModuleConfiguration.PortalID != _module.ModuleConfiguration.OwnerPortalID;
-            if (isSharedModule) return timerWrap.Return(false, "skip, shared");
+            if (isSharedModule) return timerWrap.ReturnFalse("skip, shared");
 
             if (block.App != null)
             {
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.Install
             else
                 Log.A("skip, content-block not ready");
 
-            return timerWrap.Return(true, "ok");
+            return timerWrap.ReturnTrue("ok");
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Dnn.Install
                 tm.EnsureTemplateFolderExists(block.Context.AppState, false);
             }
 
-            return wrapLog.Return(true, $"Completed init for module {_module.ModuleId} showing {block.AppId}");
+            return wrapLog.ReturnTrue($"Completed init for module {_module.ModuleId} showing {block.AppId}");
         }
 
         internal static ConcurrentDictionary<int, bool> CachedModuleResults = new ConcurrentDictionary<int, bool>();

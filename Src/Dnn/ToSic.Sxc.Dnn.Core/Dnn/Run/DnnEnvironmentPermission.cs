@@ -43,13 +43,13 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var wrapLog = Log.Fn<bool>(condition);
             if (!condition.ToLowerInvariant().StartsWith(_salPrefix)) 
-                return wrapLog.Return(false, "unknown condition: false");
+                return wrapLog.ReturnFalse("unknown condition: false");
 
             var salWord = condition.Substring(_salPrefix.Length);
             var sal = (SecurityAccessLevel)Enum.Parse(typeof(SecurityAccessLevel), salWord);
             // check anonymous - this is always valid, even if not in a module context
             if (sal == SecurityAccessLevel.Anonymous)
-                return wrapLog.Return(true, "anonymous, always true");
+                return wrapLog.ReturnTrue("anonymous, always true");
 
             // check within module context
             if (Module != null)
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Dnn.Run
             }
 
             Log.A("trying to check permission " + _salPrefix + ", but don't have module in context");
-            return wrapLog.Return(false, "can't verify: false");
+            return wrapLog.ReturnFalse("can't verify: false");
         }
 
         private bool UserIsModuleAdmin() => Log.Return(() => Module != null && ModulePermissionController.CanAdminModule(Module));

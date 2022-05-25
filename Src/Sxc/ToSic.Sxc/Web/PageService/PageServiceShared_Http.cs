@@ -16,12 +16,10 @@ namespace ToSic.Sxc.Web.PageService
 
         [PrivateApi]
         internal void AddToHttp(string name, string value) =>
-            _httpHeaders.Add(new HttpHeader(name, value));
+            HttpHeaders.Add(new HttpHeader(name, value));
 
         [PrivateApi]
-        public List<HttpHeader> HttpHeaders => _httpHeaders; //.Concat(Csp.CspHeaders()).ToList();
-
-        private readonly List<HttpHeader> _httpHeaders = new List<HttpHeader>();
+        public List<HttpHeader> HttpHeaders { get; } = new List<HttpHeader>();
 
         #endregion
 

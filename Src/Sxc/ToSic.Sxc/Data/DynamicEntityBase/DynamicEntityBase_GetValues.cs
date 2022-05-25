@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Data
                 safeWrap.A("add to cache");
                 _ValueCache.Add(field, result);
             }
-            return safeWrap.Return(result, "ok");
+            return safeWrap.ReturnAsOk(result);
         }
 
 

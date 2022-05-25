@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="13.12.00">
+    <package name="2SexyContent" type="Module" version="14.00.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -15,7 +15,7 @@
       <azureCompatible>true</azureCompatible>
       <dependencies>
         <dependency type="type">System.Dynamic.ExpandoObject</dependency>
-        <dependency type="CoreVersion">07.04.02</dependency>
+        <dependency type="CoreVersion">09.06.01</dependency>
       </dependencies>
       <components>
         <component type="Script">
@@ -59,7 +59,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>13.12.00</version>
+              <version>14.00.00</version>
             </script>
           </scripts>
         </component>
@@ -67,7 +67,7 @@
           Always flush the dist folder before installing new stuff - must always run before the module is installed!
           That means the node has to be in the xml-file before the Module nodes
         -->
-        <component type="Cleanup" version="13.12.00" fileName="cleanup\flush.txt">
+        <component type="Cleanup" version="14.00.00" fileName="cleanup\flush.txt">
         </component>
         <component type="Module">
           <desktopModule>
@@ -110,7 +110,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,13.12.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -169,10 +169,10 @@
             <!-- ToSic.Eav.Core.dll PackageReference -->
             <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
             <!-- ToSic.Sxc.WebApi PackageReference -->
-            <assembly>
+            <!--<assembly>
               <name>Newtonsoft.Json.dll</name>
               <version>10.0.0.0</version>
-            </assembly>
+            </assembly>-->
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
             <!-- System.Memory transitive dependency -->
             <assembly>
@@ -183,18 +183,18 @@
             <!-- Libraries required for ASP.NET Web API. -->
             <!-- ToSic.Eav.WebApi PackageReference -->
             <!-- ToSic.Sxc.Dnn.WebApi PackageReference -->
-            <assembly>
+            <!--<assembly>
               <name>System.Net.Http.Formatting.dll</name>
               <version>5.2.3.0</version>
-            </assembly>
-            <assembly>
+            </assembly>-->
+            <!--<assembly>
               <name>System.Web.Http.dll</name>
               <version>5.2.3.0</version>
-            </assembly>
-            <assembly>
+            </assembly>-->
+            <!--<assembly>
               <name>System.Web.Http.WebHost.dll</name>
               <version>5.2.3.0</version>
-            </assembly>
+            </assembly>-->
 
 
             <!-- *** 2sxc netstandard2.0 / NETFramework4.7 assemblies *** -->
@@ -254,16 +254,16 @@
             <!-- ToSic.Sxc.Dnn.Main packages.config -->
             <!-- Microsoft.EntityFrameworkCore.DependencyInjection transitive dependency -->
             <!-- Microsoft.Extensions.Logging transitive dependency -->
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.Extensions.DependencyInjection.Abstractions.dll</name>
               <version>2.1.1.0</version>
-            </assembly>
+            </assembly>-->
              <!--ToSic.Eav.Core.dll PackageReference--> 
              <!--Microsoft.EntityFrameworkCore transitive dependency--> 
-            <assembly>
+            <!--<assembly>
               <name>Microsoft.Extensions.DependencyInjection.dll</name>
               <version>2.1.1.0</version>
-            </assembly>
+            </assembly>-->
             <!-- Microsoft.Extensions.Logging transitive dependency -->
             <assembly>
               <name>Microsoft.Extensions.Logging.Abstractions.dll</name>
@@ -576,7 +576,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="13.12.00">
+    <package name="2SexyContent-App" type="Module" version="14.00.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -686,7 +686,7 @@
 
     <!-- the Imageflow - should be identical to the one from https://github.com/2sic/dnn-imageflow -->
     <!-- note that the version number needs the last digits, because otherwise the user will always be informed that it's already installed -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.00.02.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.00.03.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
@@ -707,7 +707,7 @@
       <azureCompatible>True</azureCompatible>
 
       <dependencies>
-        <dependency type="CoreVersion">07.04.02</dependency>
+        <dependency type="CoreVersion">09.06.01</dependency>
       </dependencies>
 
       <components>
@@ -723,10 +723,10 @@
             <!-- *** DNN shared assemblies *** -->
 
             <!-- Imageflow.Net transitive dependency -->
-            <assembly>
+            <!--<assembly>
               <name>Newtonsoft.Json.dll</name>
               <version>10.0.0.0</version>
-            </assembly>
+            </assembly>-->
 
           </assemblies>
         </component>

@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Dnn
         {
             var wrapLog = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
             var builder = StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(pageId, modId).BlockBuilder;
-            return wrapLog.Return(builder , "ok");
+            return wrapLog.ReturnAsOk(builder);
         }
 
         /// <summary>

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -14,12 +12,6 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("not sure yet what to call this, or if it should be public")]
     public interface IBlockBuilder: IHasLog
     {
-        /// <summary>
-        /// Render this block. Internally will use the engine. 
-        /// </summary>
-        /// <returns></returns>
-        string Render();
-
         /// <summary>
         /// 
         /// </summary>
@@ -54,7 +46,5 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         /// <returns></returns>
         IEngine GetEngine();
-
-        List<IClientAsset> Assets { get; }
     }
 }

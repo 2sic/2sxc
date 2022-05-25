@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
             var results = _adamItems
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .ItemsInField(subfolder);
-            return callLog.Return(results, "ok");
+            return callLog.ReturnAsOk(results);
         }
 
         [HttpPost("folder")]

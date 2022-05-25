@@ -63,13 +63,15 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
+        /// * parameter context added in 2sxc 14
         /// </remarks>
         IToolbarBuilder Metadata(
             object target,
             string contentTypes,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
-            string parameters = null
+            string parameters = null,
+            string context = null
         );
     }
 }

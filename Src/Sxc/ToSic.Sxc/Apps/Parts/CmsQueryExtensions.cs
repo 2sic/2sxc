@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Apps
                 throw new Exception(
                     $"Query is used by Views and cant be deleted. Query ID: {id}. TemplateIds: {string.Join(", ", viewUsingQuery)}");
 
-            return wrapLog.Return(cms.Queries.Delete(id), "ok");
+            return wrapLog.ReturnAsOk(cms.Queries.Delete(id));
         }
 
     }

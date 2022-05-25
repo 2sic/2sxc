@@ -171,7 +171,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
             var descriptor = new HttpControllerDescriptor(_config, type.Name, type);
-            return wrapLog.Return(descriptor, "ok");
+            return wrapLog.ReturnAsOk(descriptor);
         }
 
         private static void AddToInsightsHistory(string url, ILog log)

@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Blocks
             var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
             var block = _builder.Ready.GetBlock(pageId, moduleId).BlockBuilder;
             var result = block.Run(true);
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         /// <summary>

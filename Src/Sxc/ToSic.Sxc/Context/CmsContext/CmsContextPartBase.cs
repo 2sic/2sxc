@@ -29,5 +29,11 @@ namespace ToSic.Sxc.Context
 
         protected abstract IMetadataOf GetMetadataOf();
 
+        protected IMetadataOf ExtendWithRecommendations(IMetadataOf md)
+        {
+            if (md == null) return null;
+            md.Target.Recommendations = new[] { Decorators.NoteDecoratorName };
+            return md;
+        }
     }
 }

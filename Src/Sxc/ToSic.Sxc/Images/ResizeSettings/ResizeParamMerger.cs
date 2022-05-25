@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Images
 
             resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
 
-            return wrapLog.Return(resizeParams, "ok");
+            return wrapLog.ReturnAsOk(resizeParams);
         }
 
         private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)

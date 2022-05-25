@@ -1,5 +1,8 @@
-﻿using DotNetNuke.Framework;
+﻿using System.Web;
+using DotNetNuke.Common.Extensions;
+using DotNetNuke.Framework;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -14,8 +17,16 @@ namespace ToSic.Sxc.Dnn
     {
         public static T GetService<T>(this UserControlBase skinOrModule)
         {
-            // var ServiceProvider = HttpContext.Current.GetScope().ServiceProvider;
-            return DnnStaticDi.StaticBuild<T>();
+            // Now DNN 9 only - this must work
+            return HttpContext.Current.GetScope().ServiceProvider.Build<T>();
+            //return DnnStaticDi.StaticBuild<T>();
+        }
+
+        public static T GetService<T>(this System.Web.UI.UserControl skinOrModule)
+        {
+            // Now DNN 9 only - this must work
+            return HttpContext.Current.GetScope().ServiceProvider.Build<T>();
+            //return DnnStaticDi.StaticBuild<T>();
         }
 
     }

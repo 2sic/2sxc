@@ -1,13 +1,11 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Configuration;
 using System.Net.Http;
 using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.LookUp;
@@ -44,7 +42,6 @@ using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
-using Type = System.Type;
 
 
 namespace ToSic.Sxc.Dnn.StartUp
@@ -209,6 +206,9 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v13.12
             services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd
+
+            // v14
+            services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
 
             return services;
         }

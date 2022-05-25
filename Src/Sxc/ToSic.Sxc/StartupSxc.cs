@@ -13,7 +13,9 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
+using ToSic.Sxc.Edit;
 using ToSic.Sxc.Edit.EditService;
+using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
@@ -53,6 +55,11 @@ namespace ToSic.Sxc
             services.TryAddTransient<BlockEditorForEntity>();
             services.TryAddTransient<BlockEditorForModule>();
             services.TryAddTransient<BlockEditorBaseDependencies>();
+
+            // Engine and Rendering
+            services.TryAddTransient<EngineFactory>();
+            services.TryAddTransient<BlockBuilder>();
+            services.TryAddTransient<BlockBuilder.Dependencies>();
 
             // Block functionality
             services.TryAddTransient<BlockDataSourceFactory>();
@@ -117,6 +124,7 @@ namespace ToSic.Sxc
             // So it actually looks like it's very module-scoped already, but had workarounds for it.
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
+            services.TryAddTransient<PageChangeSummary>();
             services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
             services.TryAddTransient<CspOfApp>();   // must be transient
             services.TryAddScoped<CspOfModule>();   // important: must be scoped!
@@ -147,6 +155,10 @@ namespace ToSic.Sxc
             services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
             services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
             services.TryAddTransient<IImageService, ImageService>();
+            
+            // v14
+            services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
+            services.TryAddTransient<ToolbarBuilder.Dependencies>();
 
             // 13 - cleaning up handling of app paths
             services.TryAddTransient<AppFolderInitializer>();

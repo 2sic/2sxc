@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Adam
             Log.LinkTo(parentLog);
             var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamManager;
-            return wrapLog.Return(this, "ok");
+            return wrapLog.ReturnAsOk(this);
         }
 
 
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Dnn.Adam
                 fileName = FindUniqueFileName(parent, fileName);
             var dnnFolder = _dnnFolders.GetFolder(parent.AsDnn().SysId);
             var dnnFile = _dnnFiles.AddFile(dnnFolder, Path.GetFileName(fileName), body);
-            return callLog.Return(GetFile(dnnFile.FileId), "ok");
+            return callLog.ReturnAsOk(GetFile(dnnFile.FileId));
         }
 
         /// <summary>

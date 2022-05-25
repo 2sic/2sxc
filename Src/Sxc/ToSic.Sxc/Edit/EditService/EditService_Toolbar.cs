@@ -80,9 +80,9 @@ namespace ToSic.Sxc.Edit.EditService
             }
 
             var result = inTag
-                ? Attribute("sxc-toolbar", itmToolbar.ToolbarAttribute())
+                ? new HybridHtmlString(itmToolbar.ToolbarAttributes())
                 : new HybridHtmlString(itmToolbar.Toolbar);
-            return wrapLog.Return(result,"ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         private bool IsConditionOk(object condition)
@@ -90,23 +90,23 @@ namespace ToSic.Sxc.Edit.EditService
             var wrapLog = Log.Fn<bool>();
 
             // Null = no condition and certainly not false, say ok
-            if (condition == null) return wrapLog.Return(true, "null,true");
+            if (condition == null) return wrapLog.ReturnTrue("null,true");
 
             // Bool (non-null) and nullable
-            if (condition is bool b && b == false) return wrapLog.Return(false, $"{false}");
-            if (condition as bool? == false) return wrapLog.Return(false, "null false");
+            if (condition is bool b && b == false) return wrapLog.ReturnFalse();
+            if (condition as bool? == false) return wrapLog.ReturnFalse("null false");
 
             // Int are only false if exactly 0
-            if (condition is int i && i == 0) return wrapLog.Return(false, "int 0");
-            if (condition as int? == 0) return wrapLog.Return(false, "int nullable 0");
+            if (condition is int i && i == 0) return wrapLog.ReturnFalse("int 0");
+            if (condition as int? == 0) return wrapLog.ReturnFalse("int nullable 0");
 
             // String
             if (condition is string s &&
                 string.Equals(s, false.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                return wrapLog.Return(false, "string false");
+                return wrapLog.ReturnFalse("string false");
 
             // Anything else: true
-            return wrapLog.Return(true, "default,true");
+            return wrapLog.ReturnTrue("default,true");
         }
 
     }

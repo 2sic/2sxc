@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Engines
             var renderedTemplate = RenderTemplate();
             var depMan = Helpers.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
-            return wrapLog.Return(result, "ok");
+            return wrapLog.ReturnAsOk(result);
         }
 
         private void CheckExpectedTemplateErrors()

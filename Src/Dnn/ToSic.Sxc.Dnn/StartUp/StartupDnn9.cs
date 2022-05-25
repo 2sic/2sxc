@@ -16,7 +16,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             //Eav.Factory.UseExistingServices(services);
 
             // Do standard registration of all services
-            // If Dnn < 9.4 is called, this will be called again from the Route-Registration code
             DnnDi.RegisterServices(services);
 
             // Give it the Dnn 9 Global Service Provider
@@ -25,6 +24,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Otherwise singletons won't be properly registered. 
             // https://github.com/dnnsoftware/Dnn.Platform/blob/9f83285a15d23203cbaad72d62add864ab5b8c7f/DNN%20Platform/DotNetNuke.Web/Common/LazyServiceProvider.cs#L28
             DnnDi.GetPreparedServiceProvider = () => typeof(DotNetNuke.Common.Globals).GetProperty("DependencyProvider", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)?.GetValue(null) as IServiceProvider;
+
+            // Now activate the Service Provider, because some Dnn code still needs the static implementation
+            DnnStaticDi.StaticDiReady(DnnDi.GetPreparedServiceProvider?.Invoke());
         }
     }
 }
