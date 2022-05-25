@@ -207,7 +207,7 @@ namespace ToSic.Sxc.Blocks
             if (LicenseOk) return null;
             
             Log.A("all licenses are invalid");
-            var result = RenderingHelper.DesignWarningMessage("All licenses are invalid.", false, encodeMessage: false); // don't encode, as it contains special links
+            var result = RenderingHelper.DesignWarningMessage("Registration is Invalid. Some features may be disabled because of this. Please reactivate the registration in Apps Management.", false, encodeMessage: false); // don't encode, as it contains special links
             return result;
         }
 
