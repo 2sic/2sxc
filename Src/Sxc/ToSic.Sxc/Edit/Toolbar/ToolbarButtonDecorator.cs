@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             }
         }
 
-        public string UiColor=> Get(FieldUiColor, "");
+        public string UiColor=> Get(FieldUiColor, "").Trim('#');
 
 
         public string AllRules()
