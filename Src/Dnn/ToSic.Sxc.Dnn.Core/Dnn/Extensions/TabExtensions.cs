@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using DotNetNuke.Common.Extensions;
 using DotNetNuke.Framework;
+using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 
