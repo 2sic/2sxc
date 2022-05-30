@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             if (moduleInfo == null)
                 return wrapLog.ReturnNull("request ModuleInfo not found");
 
-            var block = _moduleAndBlockBuilder.New.Init(log).GetBlock(moduleInfo);
+            var block = _moduleAndBlockBuilder.New.Init(log).GetBlock(moduleInfo, null);
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 

@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn
         /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
         /// which runs before page-load
         /// </summary>
-        private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration)));
+        private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration, null)));
         private readonly ValueGetOnce<IBlock> _blockGetOnce = new ValueGetOnce<IBlock>();
 
         private ILog Log { get; } = new Log("Sxc.View");

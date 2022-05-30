@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Search
             // In case it's not loaded yet
             _appsCache.Value.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            Block = _moduleAndBlockBuilder.Ready.GetBlock(DnnModule);
+            Block = _moduleAndBlockBuilder.Ready.GetBlock(DnnModule, null);
 
             if (Block.View == null) return wrapLog.ReturnAndLog("no view");
             if (Block.View.SearchIndexingDisabled) return wrapLog.ReturnAndLog("search disabled"); // new in 12.02

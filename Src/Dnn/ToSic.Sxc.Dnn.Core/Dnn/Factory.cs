@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Dnn
             Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             parentLog = parentLog ?? NewLog();
             var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
-            return StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(dnnModule).BlockBuilder;
+            return StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(dnnModule, null).BlockBuilder;
         }
 
         /// <summary>

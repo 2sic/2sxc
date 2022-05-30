@@ -10,26 +10,6 @@ namespace ToSic.Sxc.Blocks
         {
         }
 
-        // 2022-02-16 2dm - ATM not needed, maybe we'll reactivate if ever requested
-        //public IModule GetModule(int pageId, int moduleId)
-        //{
-        //    var wrapLog = Log.Call<IModule>($"{pageId}, {moduleId}");
-        //    return wrapLog("ok", GetModuleImplementation(pageId, moduleId));
-        //}
-        //public IBlock GetBlock(IModule module)
-        //{
-        //    var wrapLog = Log.Call<IBlock>($"module: {module?.Id}");
-        //    ThrowIfModuleIsNull(module);
-        //    return wrapLog("ok", GetBlockImplementation(module));
-        //}
-        //protected void ThrowIfModuleIsNull<TModule>(TModule moduleInfo)
-        //{
-        //    if (moduleInfo != null) return;
-        //    var msg = $"Module is Null. Can't continue.";
-        //    Log.A(msg);
-        //    throw new Exception(msg);
-        //}
-
         protected abstract IModule GetModuleImplementation(int pageId, int moduleId);
 
         protected void ThrowIfModuleIsNull<TModule>(int pageId, int moduleId, TModule moduleInfo)
@@ -44,12 +24,12 @@ namespace ToSic.Sxc.Blocks
         {
             var wrapLog = Log.Fn<IBlock>($"{pageId}, {moduleId}");
             var module = GetModuleImplementation(pageId, moduleId);
-            var result = GetBlock(module);
+            var result = GetBlock(module, pageId);
             return wrapLog.ReturnAsOk(result);
         }
 
-        public abstract IBlock GetBlock<TPlatformModule>(TPlatformModule module) where TPlatformModule : class;
+        public abstract IBlock GetBlock<TPlatformModule>(TPlatformModule module, int? pageId) where TPlatformModule : class;
 
-        protected abstract IBlock GetBlock(IModule module);
+        protected abstract IBlock GetBlock(IModule module, int? pageId);
     }
 }

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Blocks.Renderers
         static readonly Regex InlineCbDetector = new Regex("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
         static readonly Regex  GuidExtractor = new Regex("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
 
-        internal static string Render(DynamicEntity parent, string entityField, string textTemplate, IEditService edit, Generator<BlockFromEntity> blkFrmEntGen)
+        internal static string Render(DynamicEntity parent, string entityField, string textTemplate, IEditService edit, IGenerator<BlockFromEntity> blkFrmEntGen)
         {
             // do basic checking
             if (!InlineCbDetector.IsMatch(textTemplate))

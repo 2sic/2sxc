@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Blocks.Renderers
     {
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        internal static string Render(IBlock parentBlock, IEntity entity, Generator<BlockFromEntity> blkFrmEntGen)
+        internal static string Render(IBlock parentBlock, IEntity entity, IGenerator<BlockFromEntity> blkFrmEntGen)
         {
             var log = new Log("Htm.Render", parentBlock.Log, "simple");
 
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Blocks.Renderers
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
 
-        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid, IEditService edit, Generator<BlockFromEntity> blkFrmEntGen)
+        internal static string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName,  Guid? newGuid, IEditService edit, IGenerator<BlockFromEntity> blkFrmEntGen)
         {
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
             var inner = subItem == null ? "": Render(parent._Dependencies.BlockOrNull, subItem.Entity, blkFrmEntGen);
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             return string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner});
         }
 
-        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IEditService edit, Generator<BlockFromEntity> blkFrmEntGen)
+        internal static string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IEditService edit, IGenerator<BlockFromEntity> blkFrmEntGen)
         {
             var innerBuilder = new StringBuilder();
             var found = parent.TryGetMember(fieldName, out var objFound);

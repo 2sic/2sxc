@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Blocks
         }
 
         protected override IModule GetModuleImplementation(int pageId, int moduleId) => throw new NotSupportedException();
-        public override IBlock GetBlock<TPlatformModule>(TPlatformModule module) => throw new NotSupportedException();
+        public override IBlock GetBlock<TPlatformModule>(TPlatformModule module, int? pageId) => throw new NotSupportedException();
 
-        protected override IBlock GetBlock(IModule module) => throw new NotSupportedException();
+        protected override IBlock GetBlock(IModule module, int? pageId) => throw new NotSupportedException();
     }
 }

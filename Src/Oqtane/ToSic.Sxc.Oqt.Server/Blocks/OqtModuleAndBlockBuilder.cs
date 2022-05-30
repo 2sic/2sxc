@@ -49,9 +49,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             return module;
         }
 
-        protected override IBlock GetBlock(IModule module) => GetBlock((module as OqtModule)?.GetContents());
+        protected override IBlock GetBlock(IModule module, int? pageId) => GetBlock((module as OqtModule)?.GetContents(), pageId);
 
-        public override IBlock GetBlock<TPlatformModule>(TPlatformModule module)
+        public override IBlock GetBlock<TPlatformModule>(TPlatformModule module, int? pageId)
         {
             var wrapLog = Log.Fn<IBlock>();
             if (module == null) throw new ArgumentNullException(nameof(module));
@@ -64,12 +64,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             };
 
             Log.A($"Module: {oqtModule.ModuleId}");
-            var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule);
+            var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule, pageId);
             var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
             return wrapLog.ReturnAsOk(result);
         }
 
-        private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule)
+        private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
         {
             var wrapLog = Log.Fn<IContextOfBlock>();
             var context = _contextGenerator.New;
@@ -78,11 +78,13 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             //((OqtSite)context.Site).TrySwap(oqtModule, ParentLog);
             Log.A("Will init module");
             ((OqtModule) context.Module).Init(oqtModule, ParentLog);
-            return wrapLog.Return(InitPageOnly(context));
+            return wrapLog.Return(InitPageOnly(context, pageId));
         }
 
-        private IContextOfBlock InitPageOnly(IContextOfBlock context)
+        private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
         {
+            // TODO: try to use the pageId if given, would usually only be used in inner-content / IRenderService scenarios
+
             var wrapLog = Log.Fn<IContextOfBlock>();
             // Collect / assemble page information
             context.Page.Init(_requestHelper.TryGetPageId());
