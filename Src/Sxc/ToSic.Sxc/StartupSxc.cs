@@ -159,6 +159,7 @@ namespace ToSic.Sxc
             // v14
             services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
             services.TryAddTransient<ToolbarBuilder.Dependencies>();
+            services.TryAddTransient<ToolbarButtonDecoratorHelper>();
 
             // 13 - cleaning up handling of app paths
             services.TryAddTransient<AppFolderInitializer>();

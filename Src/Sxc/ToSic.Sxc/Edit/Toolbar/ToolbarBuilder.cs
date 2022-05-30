@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Eav.Apps;
+using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
@@ -19,14 +20,27 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public class Dependencies
         {
-            public Dependencies(Lazy<AppStates> appStatesLazy)
+
+            public Dependencies(Lazy<IAppStates> appStatesLazy, LazyInitLog<ToolbarButtonDecoratorHelper> toolbarButtonHelper)
             {
+                ToolbarButtonHelper = toolbarButtonHelper;
                 AppStatesLazy = appStatesLazy;
             }
-            internal readonly Lazy<AppStates> AppStatesLazy;
+            internal readonly Lazy<IAppStates> AppStatesLazy;
+            public LazyInitLog<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
+
+            internal Dependencies InitLogIfNotYet(ILog parentLog)
+            {
+                if (_alreadyInited) return this;
+                _alreadyInited = true;
+                ToolbarButtonHelper.SetLog(parentLog);
+                return this;
+            }
+
+            private bool _alreadyInited;
         }
 
-        public ToolbarBuilder(Dependencies deps) => _deps = deps;
+        public ToolbarBuilder(Dependencies deps) => _deps = deps.InitLogIfNotYet(Log);
         private readonly Dependencies _deps;
         public ILog Log { get; } = new Log(Constants.SxcLogName + ".TlbBld");
 
@@ -77,7 +91,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <inheritdoc />
         public IToolbarBuilder Metadata(
             object target,
-            string contentTypes,
+            string contentTypes = null,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
             string parameters = null,
@@ -88,7 +102,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var realContext = GetContext(target, context);
             var result = this as IToolbarBuilder;
             foreach (var type in finalTypes)
-                result = result.Add(new ToolbarRuleMetadata(target, type, ui, parameters, context: realContext));
+                result = result.Add(new ToolbarRuleMetadata(target, type, ui, parameters, context: realContext, helper: _deps.ToolbarButtonHelper.Ready));
 
             return result;
         }
@@ -100,7 +114,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
             string parameters = null
-        ) => Add(new ToolbarRuleImage(target, ui, parameters));
+        ) => Add(new ToolbarRuleImage(target, ui, parameters, context: GetContext(target, null), helper: _deps.ToolbarButtonHelper.Ready));
 
         public IToolbarBuilder Settings(
             string noParamOrder = Eav.Parameters.Protector, 

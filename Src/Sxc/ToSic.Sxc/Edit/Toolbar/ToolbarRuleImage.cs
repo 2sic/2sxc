@@ -6,7 +6,10 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         private const string ImageCommand = "image";
 
-        public ToolbarRuleImage(object target, string ui = null, string parameters = null) : base(target, ImageDecorator.NiceTypeName, ui, parameters)
+        internal ToolbarRuleImage(object target, string ui = null, string parameters = null,
+            ToolbarContext context = null,
+            ToolbarButtonDecoratorHelper helper = null
+        ) : base(target, ImageDecorator.NiceTypeName, ui, parameters, context: context, helper: helper)
         {
             Command = ImageCommand;
         }
