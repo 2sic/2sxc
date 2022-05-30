@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Plumbing.DI;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Web.PageService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -21,8 +22,8 @@ namespace ToSic.Sxc.Context
             //Lazy<IPagePublishingResolver> publishingResolver,
             LazyInitLog<ServiceSwitcher<IPagePublishingSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
-            ContextOfSiteDependencies contextOfSiteDependencies,
-            ContextOfAppDependencies appDependencies)
+            ContextOfSite.ContextOfSiteDependencies contextOfSiteDependencies,
+            ContextOfApp.ContextOfAppDependencies appDependencies)
             : base(contextOfSiteDependencies, appDependencies)
         {
             Page = page;
