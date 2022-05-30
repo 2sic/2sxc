@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Web.Api;
 using System.Linq;
 using System.Net.Http;
+using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;

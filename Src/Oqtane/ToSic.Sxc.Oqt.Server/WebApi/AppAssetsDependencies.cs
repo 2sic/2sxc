@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Oqtane.Shared;
-using ToSic.Eav.Plumbing;
+using ToSic.Eav.DI;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
