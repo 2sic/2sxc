@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Blocks
 
 
             var block = parent._Dependencies?.BlockOrNull;
-            Warning13To14(
+            Warning13To15(
                 "DeprecatedStaticRender",
                 $"View:{block?.View?.Id}",
                 "https://r.2sxc.org/brc-13-static-render",
