@@ -23,7 +23,7 @@ namespace ToSic.Eav.Conversion
         /// </remarks>
         public EntitiesToDictionary(): base(DnnStaticDi.StaticBuild<Dependencies>())
         {
-            Sxc.Compatibility.Obsolete.Warning13To14(nameof(EntitiesToDictionary), "", "https://r.2sxc.org/brc-13-conversion");
+            Sxc.Compatibility.Obsolete.Warning13To15(nameof(EntitiesToDictionary), "", "https://r.2sxc.org/brc-13-conversion");
         }
 
     }

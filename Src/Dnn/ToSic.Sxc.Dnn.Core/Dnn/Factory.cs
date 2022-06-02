@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Dnn
     /// <summary>
     /// This is a factory to create CmsBlocks, Apps etc. and related objects from DNN.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
-    [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v14. Use the IDynamicCodeService or the IRenderService instead.")]
+    [PublicApi]
+    [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
     public static class Factory
     {
         /// <summary>
@@ -46,6 +46,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="pageId">The DNN tab id (page id)</param>
         /// <param name="modId">The DNN Module id</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IBlockBuilder CmsBlock(int pageId, int modId) => CmsBlock(pageId, modId, NewLog());
 
         /// <summary>
@@ -55,8 +56,10 @@ namespace ToSic.Sxc.Dnn
         /// <param name="modId">The DNN Module id</param>
         /// <param name="parentLog">The parent log, optional</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog)
         {
+            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             var wrapLog = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
             var builder = StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(pageId, modId).BlockBuilder;
             return wrapLog.ReturnAsOk(builder);
@@ -67,6 +70,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="moduleInfo">A DNN ModuleInfo object</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IBlockBuilder CmsBlock(ModuleInfo moduleInfo)
             => CmsBlock(((DnnModule)StaticBuild<IModule>()).Init(moduleInfo, NewLog()));
 
@@ -76,12 +80,13 @@ namespace ToSic.Sxc.Dnn
         /// <param name="module"></param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized CMS Block, ready to use/render</returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
-            Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             parentLog = parentLog ?? NewLog();
             var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
-            return StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(dnnModule).BlockBuilder;
+            return StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(dnnModule, null).BlockBuilder;
         }
 
         /// <summary>
@@ -89,9 +94,10 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="blockBuilder">CMS Block for which the helper is targeted. </param>
         /// <returns>A Code Helper based on <see cref="IDnnDynamicCode"/></returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
         {
-            Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             return StaticBuild<DnnDynamicCodeRoot>().InitDynCodeRoot(blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as
                 DnnDynamicCodeRoot;
         }
@@ -107,6 +113,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IApp App(int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
             => App(AppConstants.AutoLookupZone, appId, null, showDrafts, parentLog ?? NewLog());
 
@@ -122,6 +129,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IApp App(int zoneId, int appId, bool unusedButKeepForApiStability = false, bool showDrafts = false, ILog parentLog = null)
             => App(zoneId, appId, null, showDrafts, parentLog ?? NewLog());
 
@@ -137,6 +145,7 @@ namespace ToSic.Sxc.Dnn
         /// <param name="showDrafts">Show draft items - usually false for visitors, true for editors/admins.</param>
         /// <param name="parentLog">optional logger to attach to</param>
         /// <returns>An initialized App object which you can use to access App.Data</returns>
+        [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IApp App(int appId,
             PortalSettings ownerPortalSettings,
             bool unusedButKeepForApiStability = false,
@@ -153,7 +162,7 @@ namespace ToSic.Sxc.Dnn
             bool showDrafts,
             ILog parentLog)
         {
-            Compatibility.Obsolete.Warning13To14($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             var log = new Log("Dnn.Factry", parentLog ?? NewLog());
             log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = StaticBuild<App>();

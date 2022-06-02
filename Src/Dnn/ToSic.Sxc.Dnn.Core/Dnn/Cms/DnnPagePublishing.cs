@@ -9,6 +9,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -92,7 +93,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 // publish all entities of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                var cb = _moduleAndBlockBuilder.Ready.GetBlock(dnnModule);
+                var cb = _moduleAndBlockBuilder.Ready.GetBlock(dnnModule, null);
 
                 Log.A($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)

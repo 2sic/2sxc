@@ -15,12 +15,12 @@ namespace ToSic.Sxc.Dnn.Context
     {
         public DnnPage(Lazy<IHttp> httpLazy) : base(httpLazy)
         {
-            InitPageIdAndUrl( PortalSettings.Current?.ActiveTab);
+            InitPageIdAndUrl(PortalSettings.Current?.ActiveTab, null);
         }
 
-        internal string InitPageIdAndUrl(TabInfo activeTab)
+        internal string InitPageIdAndUrl(TabInfo activeTab, int? pageId)
         {
-            Init(activeTab?.TabID ?? Eav.Constants.NullId);
+            Init(pageId ?? activeTab?.TabID ?? Eav.Constants.NullId);
 
             // the FullUrl will throw an error in DNN search scenarios
             try

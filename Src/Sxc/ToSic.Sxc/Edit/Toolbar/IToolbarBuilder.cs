@@ -49,21 +49,23 @@ namespace ToSic.Sxc.Edit
         /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 
         /// </summary>
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
-        /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate.</param>
+        /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate. If not specified, will try to lookup config (v14)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <param name="parameters">Parameters for the metadata-command</param>
+        /// <param name="context">EXPERIMENTAL - not final</param>
         /// <returns></returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
-        /// * parameter context added in 2sxc 14 - still WIP
         /// * contentTypes changed from one to many in v14
         /// * contentTypes can also have `*` or `SomeType,*` in v14
+        /// * contentTypes can also be optional, in which case it behaves as if it was `*` in v14 - if no config is found, it will not add a metadata-button
+        /// * parameter context added in 2sxc 14 - still WIP/experimental
         /// </remarks>
         IToolbarBuilder Metadata(
             object target,
-            string contentTypes,
+            string contentTypes = null,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
             string parameters = null,

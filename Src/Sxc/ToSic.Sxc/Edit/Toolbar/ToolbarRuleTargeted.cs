@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
+﻿using ToSic.Eav.Plumbing;
+
+namespace ToSic.Sxc.Edit.Toolbar
 {
     /// <summary>
     /// A toolbar rule for a specific target

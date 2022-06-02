@@ -32,12 +32,8 @@ namespace ToSic.Eav
         [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://r.2sxc.org/brc-13-eav-factory")]
         public static T Resolve<T>()
         {
-            Warning13To14("Factory.Resolve<T>", typeof(T).FullName, "https://r.2sxc.org/brc-13-eav-factory");
+            Warning13To15("Factory.Resolve<T>", typeof(T).FullName, "https://r.2sxc.org/brc-13-eav-factory");
             return DnnStaticDi.StaticBuild<T>();
-
-            // Don't throw error yet, would probably cause too much breaks in public code
-            // Activate ca. V14
-            // throw new NotSupportedException("The Eav.Factory is obsolete. See https://r.2sxc.org/brc-13-eav-factory");
         }
     }
 }

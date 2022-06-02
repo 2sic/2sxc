@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.DI;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Services
 
         public IToolbarBuilder Metadata(
             object target,
-            string contentTypes,
+            string contentTypes = null,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
             string parameters = null,
@@ -50,7 +51,7 @@ namespace ToSic.Sxc.Services
         {
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
-            var tlb = _toolbarGenerator.New.Init(_codeRoot?.App) // new ToolbarBuilder()
+            var tlb = _toolbarGenerator.New.Init(_codeRoot?.App)
                 .Add(new ToolbarRuleToolbar(toolbarTemplate, ui: ui));
             if (context.HasValue())
                 tlb = tlb.Add(new ToolbarRuleGeneric($"context?{context}"));

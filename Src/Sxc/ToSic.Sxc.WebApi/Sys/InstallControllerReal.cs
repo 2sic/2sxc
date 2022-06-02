@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ToSic.Eav;
 using ToSic.Eav.Context;
+using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;

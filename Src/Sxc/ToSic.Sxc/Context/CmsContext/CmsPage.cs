@@ -23,6 +23,11 @@ namespace ToSic.Sxc.Context
         public string Url => _contents.Url ?? string.Empty;
 
         protected override IMetadataOf GetMetadataOf()
-            => ExtendWithRecommendations( _appState.GetMetadataOf(TargetTypes.Page, Id, Url));
+        {
+            var md = _appState.GetMetadataOf(TargetTypes.Page, Id, Url);
+            if (md == null) return null;
+            md.Target.Recommendations = new[] { Decorators.NoteDecoratorName, Decorators.OpenGraphName };
+            return md;
+        }
     }
 }

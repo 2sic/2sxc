@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing.DI;
+﻿using ToSic.Eav.DI;
+using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Cms.Publishing
 {

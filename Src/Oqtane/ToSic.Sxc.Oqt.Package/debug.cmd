@@ -63,6 +63,7 @@ XCOPY "..\..\..\Dependencies\RazorBlade\Release\net5.0\ToSic.Razor.pdb" "%Oqtane
 robocopy /mir "..\..\Data\.data\ " "%BuildTarget%\.data\ "
 robocopy /mir "..\..\Data\.databeta\ " "%BuildTarget%\.databeta\ "
 robocopy /mir "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ "
+robocopy "..\..\Data\.data-custom\ " "%BuildTarget%\.data-custom\ " /MIR /XO /XF "%BuildTarget%\.data-custom\configurations\features.json" /XF "%BuildTarget%\.data-custom\configurations\default.license.json"
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 @Echo(

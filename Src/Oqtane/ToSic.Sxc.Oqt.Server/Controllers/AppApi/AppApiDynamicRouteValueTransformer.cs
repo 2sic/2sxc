@@ -7,6 +7,7 @@ using Oqtane.Repository;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;

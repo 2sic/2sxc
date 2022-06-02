@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -22,28 +23,47 @@ namespace ToSic.Sxc.Blocks
 #pragma warning restore CS0618
     {
 
+        #region Constructor & ConnectToRoot
 
         public RenderService(
             GeneratorLog<IEditService> editGenerator, 
             LazyInitLog<IModuleAndBlockBuilder> builder,
-            Generator<BlockFromEntity> blkFrmEntGen
-            ) : base("Sxc.RndSvc", initialMessage:"()")
+            GeneratorLog<BlockFromEntity> blkFrmEntGen,
+            Lazy<LogHistory> historyLazy
+        ) : base("Sxc.RndSvc")
         {
-            _blkFrmEntGen = blkFrmEntGen;
+            _historyLazy = historyLazy;
+            _blkFrmEntGen = blkFrmEntGen.SetLog(Log);
             _builder = builder.SetLog(Log);
             _editGenerator = editGenerator.SetLog(Log);
         }
-        private readonly Generator<BlockFromEntity> _blkFrmEntGen;
+        private readonly GeneratorLog<BlockFromEntity> _blkFrmEntGen;
         private readonly GeneratorLog<IEditService> _editGenerator;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
+        private readonly Lazy<LogHistory> _historyLazy;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _codeRoot = codeRoot;
             Log.LinkTo(codeRoot.Log);
+            _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
         }
 
         private IDynamicCodeRoot _codeRoot;
+        private bool _logInitDone;
+
+        #endregion
+
+        #region Ensure Logging in Insight
+
+        protected void MakeSureLogIsInHistory()
+        {
+            if (_logInitDone) return;
+            _logInitDone = true;
+            _historyLazy.Value.Add("render-service", base.Log);
+        }
+
+        #endregion
 
 
         /// <summary>
@@ -65,9 +85,10 @@ namespace ToSic.Sxc.Blocks
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             item = item ?? parent;
+            MakeSureLogIsInHistory();
             return new HybridHtmlString(field == null
-                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity, _blkFrmEntGen) // with edit-context
-                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), _blkFrmEntGen) + "<b>data-list-context</b>"); // data-list-context (no edit-context)
+                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity, _blkFrmEntGen) // without field edit-context
+                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), _blkFrmEntGen)); // with field-edit-context data-list-context
         }
 
         /// <summary>
@@ -90,6 +111,7 @@ namespace ToSic.Sxc.Blocks
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(All), $"{nameof(field)},{nameof(merge)}");
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
+            MakeSureLogIsInHistory();
             return new HybridHtmlString(merge == null
                     ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent), _blkFrmEntGen)
                     : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent), _blkFrmEntGen));
@@ -97,6 +119,7 @@ namespace ToSic.Sxc.Blocks
 
         public IRenderResult Module(int pageId, int moduleId)
         {
+            MakeSureLogIsInHistory();
             var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
             var block = _builder.Ready.GetBlock(pageId, moduleId).BlockBuilder;
             var result = block.Run(true);

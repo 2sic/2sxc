@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.DnnWebForms.Skins
 {
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Dnn.DnnWebForms.Skins
             _isEdit = DotNetNuke.Security.Permissions.TabPermissionController.HasTabPermission("EDIT");
             if (!_isEdit) return;
 
-            this.GetService<DnnClientResources>()
+            this.GetScopedService<DnnClientResources>()
                 .Init(Page, false, null, null)
                 .RegisterClientDependencies(Page, true, true, true);
         }
