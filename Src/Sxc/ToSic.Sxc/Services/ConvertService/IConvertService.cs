@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Web;
+using ToSic.Sxc.Code.Documentation;
 
 // ReSharper disable MethodOverloadWithOptionalParameter
 
@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Services
     /// New in v12.05
     /// </remarks>
     [PublicApi]
+    [Docs(AutoLink = true, Messages = new [] {"Helper to convert any object into another - like a string to int."} )]
     public interface IConvertService
     {
         // Important internal information
