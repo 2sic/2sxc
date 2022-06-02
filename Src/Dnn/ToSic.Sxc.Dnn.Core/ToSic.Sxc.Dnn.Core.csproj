@@ -130,6 +130,7 @@
     <Compile Include="Dnn920\SharpZipLibRedirect.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
+    <Compile Include="Dnn\Web\DnnJsApi.cs" />
     <Compile Include="ToSic.Sxc.Services\DnnExtensions.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_IsRunning.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Manual.cs" />

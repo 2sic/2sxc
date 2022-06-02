@@ -6,17 +6,14 @@ namespace ToSic.Sxc.Dnn.dist
 {
     public class CachedPageBase : System.Web.UI.Page
     {
-        protected void PageOutputCached(string virtualPath)
+        protected string PageOutputCached(string virtualPath)
         {
             var key = CacheKey(virtualPath);
-            var html = Cache.Get(key);
-            if (html == null)
-            {
-                var path = GetPath(virtualPath);
-                html = File.ReadAllText(path);
-                Cache.Insert(key, html, new CacheDependency(path));
-            }
-            Response.Write(html);
+            if (Cache.Get(key) is string html) return html;
+            var path = GetPath(virtualPath);
+            html = File.ReadAllText(path);
+            Cache.Insert(key, html, new CacheDependency(path));
+            return html;
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

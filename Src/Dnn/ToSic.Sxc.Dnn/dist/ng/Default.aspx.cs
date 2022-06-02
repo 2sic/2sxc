@@ -4,7 +4,9 @@ using System.IO;
 using System.Web;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.dist.ng
 {
@@ -19,7 +21,10 @@ namespace ToSic.Sxc.Dnn.dist.ng
             //var pageService = sp.GetRequiredService<IPageService>();
             //pageService.AddCsp("test-csp", "2sxc");
 
-            PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng/ui.html");
+            var html = PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng/ui.html");
+            var content = DnnJsApi.GetJsApiJson(-1);
+            html =JsApi.UpdateMetaTagJsApi(html, content);
+            Response.Write(html);
         }
     }
 }
