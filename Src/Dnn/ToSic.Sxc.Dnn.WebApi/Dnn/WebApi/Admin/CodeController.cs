@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http;
+using ToSic.Eav.WebApi.Admin;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Admin;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
