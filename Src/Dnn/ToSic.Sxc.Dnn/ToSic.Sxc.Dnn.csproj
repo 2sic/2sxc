@@ -142,15 +142,9 @@
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\ng-edit\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="dist\ng\Default.aspx.cs">
+    <Compile Include="dist\quickDialog\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\ng\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="DnnBusinessController.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
@@ -211,7 +205,7 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="dist\ng-edit\Default.aspx" />
-    <Content Include="dist\ng\Default.aspx" />
+    <Content Include="dist\quickDialog\Default.aspx" />
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />

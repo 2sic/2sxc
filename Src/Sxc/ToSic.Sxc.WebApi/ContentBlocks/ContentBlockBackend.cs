@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
@@ -83,7 +84,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
             Log.A("2.1. Build Resources");
             var resources = new List<AjaxResourceDtoWIP>();
-            var ver = Settings.Version.ToString();
+            var ver = EavSystemInfo.VersionWithStartUpBuild;// Settings.Version.ToString();
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
                 resources.Add(new AjaxResourceDtoWIP
                     { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + InpageCms.TurnOnJs, "v", ver) });

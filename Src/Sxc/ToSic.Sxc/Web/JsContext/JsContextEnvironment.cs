@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web.Parameters;
 
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Web.JsContext
             PageId = ctx.Page.Id;
             PageUrl = ctx.Page.Url;
             InstanceId = ctx.Module.Id;
-            SxcVersion = Settings.Version.ToString();
+            SxcVersion = EavSystemInfo.VersionWithStartUpBuild;
             SxcRootUrl = systemRootUrl;
             IsEditable = ctx.UserMayEdit;
             parameters = ctx.Page.Parameters?.Where(p => p.Key != OriginalParameters.NameInUrlForOriginalParameters);
