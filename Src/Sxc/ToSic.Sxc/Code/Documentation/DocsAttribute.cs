@@ -5,16 +5,13 @@ namespace ToSic.Sxc.Code.Documentation
 {
     public class DocsAttribute: Attribute
     {
-        public string[] Messages
-        {
-            set => _messages = value;
-        }
+        public string[] Messages { get; set; }
 
         private string[] GetMessages(string fullName)
         {
-            if (!AutoLink) return _messages;
+            if (!AutoLink) return Messages;
 
-            var newMessages = _messages.ToList();
+            var newMessages = Messages.ToList();
             var helpLink = $"[documentation](https://docs.2sxc.org/api/dot-net/{fullName}.html";
             newMessages.Add(helpLink);
             return newMessages.ToArray();
@@ -24,7 +21,6 @@ namespace ToSic.Sxc.Code.Documentation
         public bool AutoLink = true;
 
         public bool AllProperties = true;
-        private string[] _messages;
 
         public string HelpLink { get; set; }
     }
