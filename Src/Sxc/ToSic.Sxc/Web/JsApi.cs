@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Web
     [PrivateApi]
     public class JsApi
     {
-        private const string MetaTagJsApiTemp = "<meta name=\"_jsApi-temp\" content={0}>";
-        private const string MetaTagJsApi = "<meta name=\"_jsApi\" content={0}>";
+        private const string MetaTagJsApiTemp = "<meta name=\"_jsApi-temp\" content={0}";
+        private const string MetaTagJsApi = "<meta name=\"_jsApi\" content={0}";
         private const string CacheBreakPlaceholder = "@sxcver";
 
         public static string UpdateMetaTagJsApi(string html, string content)

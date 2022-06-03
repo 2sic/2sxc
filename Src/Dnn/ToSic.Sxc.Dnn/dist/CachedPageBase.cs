@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Web.Caching;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.dist
 {
@@ -9,11 +12,18 @@ namespace ToSic.Sxc.Dnn.dist
         protected string PageOutputCached(string virtualPath)
         {
             var key = CacheKey(virtualPath);
-            if (Cache.Get(key) is string html) return html;
-            var path = GetPath(virtualPath);
-            html = File.ReadAllText(path);
-            Cache.Insert(key, html, new CacheDependency(path));
-            return html;
+            if (!(Cache.Get(key) is string html))
+            {
+                var path = GetPath(virtualPath);
+                html = File.ReadAllText(path);
+                Cache.Insert(key, html, new CacheDependency(path));
+            }
+
+            var pageIdString = Request.QueryString["pageId"];
+            var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
+
+            var content = DnnJsApi.GetJsApiJson(pageId);
+            return JsApi.UpdateMetaTagJsApi(html, content);
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

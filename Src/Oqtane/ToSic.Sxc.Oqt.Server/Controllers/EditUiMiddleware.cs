@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -21,26 +22,31 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             context.Response.Headers.Add("test-dev", "2sxc");
 
             var key = CacheKey(virtualPath);
-            if (Cache.Get(key) is not byte[] html)
+            if (Cache.Get(key) is not byte[] bytes)
             {
                 var path = Path.Combine(env.WebRootPath, virtualPath);
                 if (!File.Exists(path)) throw new FileNotFoundException("File not found: " + path);
 
-                //html = File.ReadAllText(path);
-                html = File.ReadAllBytes(path);
-                Cache.Set(key, html, GetCacheItemPolicy(path));
+                bytes = File.ReadAllBytes(path);
+                Cache.Set(key, bytes, GetCacheItemPolicy(path));
             }
+            
+            var html = Encoding.Default.GetString(bytes);
 
             // inject JsApi to html content
-            //var siteStateInitializer = context.RequestServices.GetService<SiteStateInitializer>();
-            //var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
-            //var content = OqtJsApi.GetJsApi(-1, siteRoot, "");
-            //html = JsApi.UpdateMetaTagJsApi(html, content);
+            var pageIdString = context.Request.Query["pageId"];
+            var pageId = !string.IsNullOrEmpty(pageIdString) ? Convert.ToInt32(pageIdString) : -1;
+            var siteStateInitializer = context.RequestServices.GetService<SiteStateInitializer>();
+            var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
+            var content = OqtJsApi.GetJsApi(pageId, siteRoot, "");
+            html = JsApi.UpdateMetaTagJsApi(html, content);
+
+            bytes = Encoding.Default.GetBytes(html);
 
             // html response
             context.Response.ContentType = "text/html";
             //context.Response.Body.Write(Encoding.Unicode.GetBytes(html));
-            context.Response.Body.WriteAsync(html);
+            context.Response.Body.WriteAsync(bytes);
 
             return Task.CompletedTask;
         }
