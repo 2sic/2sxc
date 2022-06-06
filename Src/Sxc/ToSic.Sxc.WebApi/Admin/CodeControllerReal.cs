@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Documentation;
 
 namespace ToSic.Sxc.WebApi.Admin
@@ -26,17 +27,20 @@ namespace ToSic.Sxc.WebApi.Admin
 
         public IEnumerable<HelpItem> InlineHelp(string language)
         {
+            var wrapLog = Log.Fn<IEnumerable<HelpItem>>(startTimer: true);
+
+            if (_inlineHelp != null) return wrapLog.ReturnAsOk(_inlineHelp);
+
             // TODO: stv# how to use languages?
-            // - loging
-            // - caching
-            // - optimize for speed by limiting assemblies to ToSic only
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes().Where(t => t.IsDefined(typeof(DocsAttribute))))
+            _inlineHelp = AssemblyHandling.GetTypes(Log).Where(t => t.IsDefined(typeof(DocsAttribute)))
                 .Select(t => new HelpItem
                 {
                     Term = t.Name,
                     Help = t.GetCustomAttribute<DocsAttribute>().GetMessages(t.FullName)
                 });
+
+            return wrapLog.ReturnAsOk(_inlineHelp);
         }
+        private static IEnumerable<HelpItem> _inlineHelp;
     }
 }
