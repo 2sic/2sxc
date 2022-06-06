@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code.Documentation
     {
         public string[] Messages { get; set; }
 
-        private string[] GetMessages(string fullName)
+        internal string[] GetMessages(string fullName)
         {
             if (!AutoLink) return Messages;
 
