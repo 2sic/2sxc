@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Code.Documentation
     {
         public string[] Messages { get; set; }
 
-        internal string[] GetMessages(string fullName)
+        public string[] GetMessages(string fullName)
         {
             if (!AutoLink) return Messages;
 
             var newMessages = Messages.ToList();
-            var helpLink = $"[documentation](https://docs.2sxc.org/api/dot-net/{fullName}.html";
+            var helpLink = $"[documentation](https://docs.2sxc.org/api/dot-net/{fullName}.html)";
             newMessages.Add(helpLink);
             return newMessages.ToArray();
         }
