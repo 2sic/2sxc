@@ -18,7 +18,6 @@ namespace ToSic.Sxc.Edit
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
-    [PrivateApi("Still WIP, not sure if this will be published as this - but probably we will")]
     public interface IToolbarBuilder: IHybridHtmlString, IHasLog
     {
         /// <summary>
@@ -54,7 +53,7 @@ namespace ToSic.Sxc.Edit
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <param name="parameters">Parameters for the metadata-command</param>
         /// <param name="context">EXPERIMENTAL - not final</param>
-        /// <returns></returns>
+        /// <returns>A new toolbar builder which has been extended with this button</returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
@@ -72,13 +71,35 @@ namespace ToSic.Sxc.Edit
             string context = null
         );
 
-        [PrivateApi("WIP 13.11")]
+        [PrivateApi("WIP 13.11 - not sure if we actually make it public, as it's basically metadata with automatic content-type - not published yet")]
         IToolbarBuilder Image(
             object target,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
             string parameters = null
         );
+
+
+        /// <summary>
+        /// Create a toolbar rule to copy an item. It needs the item which it will copy as a parameter.
+        /// </summary>
+        /// <param name="target">The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/> </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="parameters">Parameters for the metadata-command</param>
+        /// <param name="context">EXPERIMENTAL - not final</param>
+        /// <returns>A new toolbar builder which has been extended with this button</returns>
+        /// <remarks>
+        /// Added in v14.02
+        /// </remarks>
+        IToolbarBuilder Copy(
+            object target,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null,
+            string context = null
+        );
+
 
 
         /// <summary>
@@ -92,7 +113,7 @@ namespace ToSic.Sxc.Edit
         /// <param name="autoAddMore"></param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <param name="parameters">Parameters for the command - doesn't really have an effect on Settings, but included for consistency</param>
-        /// <returns></returns>
+        /// <returns>A new toolbar builder which has been extended with this settings-rule</returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13

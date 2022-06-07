@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using ToSic.Eav.Metadata;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -16,24 +15,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(target, CommandName, operation: '+', ui: ui, parameters: parameters, context: context)
+        ) : base(target, CommandName, operation: '+', ui: ui, parameters: parameters, context: context, helper: helper)
         {
             _typeName = typeName;
-            _helper = helper;
         }
         private readonly string _typeName;
-        private readonly ToolbarButtonDecoratorHelper _helper;
 
-        protected ToolbarButtonDecorator Decorator => _decorator.Get(() => _helper?.GetDecorator(Context, _typeName, CommandName));
-        private readonly ValueGetOnce<ToolbarButtonDecorator> _decorator = new ValueGetOnce<ToolbarButtonDecorator>();
+        protected override string DecoratorTypeName => _typeName;
 
         public override string GeneratedCommandParams() 
             => UrlParts.ConnectParameters(MetadataCommandParams(), base.GeneratedCommandParams());
-
-        public override string GeneratedUiParams() 
-            => UrlParts.ConnectParameters(MetadataUiParams(), base.GeneratedUiParams());
-
-        private string MetadataUiParams() => Decorator?.AllRules();
 
         private string MetadataCommandParams()
         {

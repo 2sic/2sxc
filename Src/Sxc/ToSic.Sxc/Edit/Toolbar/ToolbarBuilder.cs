@@ -107,6 +107,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             return result;
         }
 
+        /// <inheritdoc />
+        public IToolbarBuilder Copy(
+            object target,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null,
+            string context = null
+        ) => Add(new ToolbarRuleCopy(target, ui, parameters, GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
+
 
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(
