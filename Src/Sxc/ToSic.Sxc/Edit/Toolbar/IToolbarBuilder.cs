@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Edit
     /// History
     /// * Added in 2sxc 13
     /// </remarks>
+    [PublicApi]
     public interface IToolbarBuilder: IHybridHtmlString, IHasLog
     {
         /// <summary>
