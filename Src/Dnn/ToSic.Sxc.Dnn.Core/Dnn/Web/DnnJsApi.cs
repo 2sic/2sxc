@@ -16,15 +16,12 @@ namespace ToSic.Sxc.Dnn.Web
     {
         public static string GetJsApiJson(int? pageId = null)
         {
-            var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
-            if (string.IsNullOrEmpty(siteRoot)) return null;
-
+            var siteRoot = GetSiteRoot(pageId);
             var apiRoots = GetApiRoots(siteRoot);
-            var portal = PortalSettings.Current;
 
             var json = InpageCms.JsApiJson(
                 platform: PlatformType.Dnn.ToString(),
-                pageId: pageId ?? portal.ActiveTab.TabID,
+                pageId: pageId ?? PortalSettings.Current.ActiveTab.TabID,
                 siteRoot: siteRoot,
                 apiRoot: apiRoots.Item1,
                 appApiRoot: apiRoots.Item2,
@@ -51,6 +48,44 @@ namespace ToSic.Sxc.Dnn.Web
             return new Tuple<string, string>(apiRoot, appApiRoot);
         }
 
+        internal static string GetSiteRoot(int? pageId)
+        {
+            // this one is wrong for child portals, because it returns parent portal settings (where that pageId is missing)
+            var portalSettings = PortalSettings.Current;
+            
+            // get correct PortalSettings based on pageId
+            if (pageId.HasValue)
+            {
+                var portalDic = PortalController.GetPortalDictionary();
+                if (portalDic != null && portalDic.ContainsKey(pageId.Value))
+                    portalSettings = new PortalSettings(portalDic[pageId.Value]);
+            }
+            
+            var defaultPortalAlias = portalSettings.DefaultPortalAlias;
+
+            // fallback when default portal alias is not defined
+            if (string.IsNullOrEmpty(defaultPortalAlias))
+            {
+                // getting siteRoot from request context in case of child portal sometimes return siteRoot for parent portal
+                var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
+                // fallback value when request context is missing
+                if (string.IsNullOrEmpty(siteRoot)) siteRoot = "/"; 
+                return siteRoot;
+            }
+
+            // clean leading domain part from portal alias
+            var index = defaultPortalAlias.IndexOf('/');
+            if (index > 0)
+            {
+                defaultPortalAlias = defaultPortalAlias.Substring(index);
+                if (!defaultPortalAlias.EndsWith("/")) defaultPortalAlias += "/";
+            }
+            else
+                defaultPortalAlias = "/";
+
+            return defaultPortalAlias;
+        }
+        
         private static string AntiForgeryToken()
         {
             var tag = AntiForgery.GetHtml().ToString();
