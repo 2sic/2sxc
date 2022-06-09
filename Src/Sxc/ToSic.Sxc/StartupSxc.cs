@@ -22,7 +22,6 @@ using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Kits;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -184,7 +183,7 @@ namespace ToSic.Sxc
 
             // v14 Kits
             services.TryAddTransient<KitNone>();
-            services.TryAddTransient<KitV14>();
+            services.TryAddTransient<Kit14>();
 
             // Sxc StartUp Routines
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();    // must be Add, not TryAdd

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
-using ToSic.Sxc.Services.Kits;
+using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -12,6 +12,7 @@ namespace Custom.Hybrid
     /// </summary>
     [PrivateApi("WIP v14.02")]
     public class Code14<TModel, TKit>: DynamicCode<TModel, TKit>, IDynamicCode14<TModel, TKit>
+        where TModel : class
         where TKit : KitBase
     {
         /// <inheritdoc />

@@ -5,7 +5,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.Services.Kits;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {

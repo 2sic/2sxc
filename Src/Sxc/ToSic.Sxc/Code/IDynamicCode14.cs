@@ -8,7 +8,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.Kits;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -28,6 +27,7 @@ namespace ToSic.Sxc.Code
     /// </summary>
     [PrivateApi("WIP v14.02")]
     public interface IDynamicCode14<out TModel, out TKit> : IDynamicCode<TModel, TKit>
+        where TModel : class
         where TKit : KitBase
     {
         #region IDynamicCode Repeats - keep this in sync

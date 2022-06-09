@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Services.Kits;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Code
 {

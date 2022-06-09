@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Services.Kits;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
 {
     public abstract class DynamicCode<TModel, TKit>: DynamicCode, IDynamicCode<TModel, TKit>
+        where TModel : class
         where TKit : KitBase
     {
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;

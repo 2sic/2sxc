@@ -1,6 +1,6 @@
 ﻿using ToSic.Sxc.Code;
 
-namespace ToSic.Sxc.Services.Kits
+namespace ToSic.Sxc.Services
 {
     public abstract class KitBase: INeedsDynamicCodeRoot, IHasDynamicCodeRoot
     {

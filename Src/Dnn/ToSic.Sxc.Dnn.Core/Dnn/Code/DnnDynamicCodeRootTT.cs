@@ -2,13 +2,14 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Run;
-using ToSic.Sxc.Services.Kits;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Code
 {
     [PrivateApi]
     public class DnnDynamicCodeRoot<TModel, TKit> : DynamicCodeRoot<TModel, TKit>, Sxc.Code.IDynamicCode, IDnnDynamicCode, IHasDynamicCodeRoot
-        where TKit: KitBase
+        where TModel : class
+        where TKit : KitBase
     {
         public DnnDynamicCodeRoot(Dependencies dependencies): base(dependencies, DnnConstants.LogName) { }
 

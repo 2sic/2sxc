@@ -1,9 +1,10 @@
-﻿using ToSic.Sxc.Services.Kits;
+﻿using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
 {
     public interface IDynamicCodeRoot<out TModel, out TKit>: IDynamicCodeRoot, IDynamicCode<TModel, TKit>
-        where TKit: KitBase
+        where TModel : class
+        where TKit : KitBase
     {
     }
 }

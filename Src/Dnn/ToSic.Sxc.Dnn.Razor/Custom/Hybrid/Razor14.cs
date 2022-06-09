@@ -1,11 +1,12 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Services.Kits;
+using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
     public abstract class Razor14<TModel, TKit>: Razor12, IRazor14<TModel, TKit>
+        where TModel : class
         where TKit : KitBase
     {
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;

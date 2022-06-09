@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Services.Kits;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
 {
     [PrivateApi("WIP v14.02")]
     public interface IDynamicCode<out TModel, out TKit>: IDynamicCode, IDynamicCodeKit<TKit>
+        where TModel : class
         where TKit: KitBase
     {
         [PrivateApi]
