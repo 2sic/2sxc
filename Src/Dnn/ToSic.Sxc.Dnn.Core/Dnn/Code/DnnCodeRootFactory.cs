@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Dnn.Code
         }
         private readonly IServiceProvider _serviceProvider;
 
-        public DynamicCodeRoot BuildDynamicCodeRoot(object webPage)
+        public DynamicCodeRoot BuildDynamicCodeRoot(object customCode)
         {
             // New v14 case - the Razor component implements IDynamicData<model, Kit>
             // Will return null if error or not such interface
-            var codeRoot = BuildGenericCodeRoot(webPage.GetType());
+            var codeRoot = BuildGenericCodeRoot(customCode.GetType());
 
             // Default case / old case - just a non-generic DnnDynamicCodeRoot
             return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>();
@@ -33,25 +33,25 @@ namespace ToSic.Sxc.Dnn.Code
         /// Special helper for new Kit-based Razor templates in v14
         /// </summary>
         /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
-        private DynamicCodeRoot BuildGenericCodeRoot(Type pageType)
+        private DynamicCodeRoot BuildGenericCodeRoot(Type customCode)
         {
             var wrapLog = Log.Fn<DynamicCodeRoot>();
             try
             {
-                var genericDynCode = typeof(IDynamicCode<,>);
+                var requiredDynCode = typeof(IDynamicCode<,>);
 
                 // 1. Detect if it's an IDynamicCode<TModel, TKit>
-                var genericType = pageType
+                var interfaceOnCode = customCode
                     .GetInterfaces()
-                    .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericDynCode);
+                    .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == requiredDynCode);
 
-                if (genericType == null) return null;
+                if (interfaceOnCode == null) return null;
 
-                var typesArgs = genericType.GetGenericArguments();
-                if (typesArgs.Length != genericDynCode.GetGenericArguments().Length) return null;
+                var typesArgs = interfaceOnCode.GetGenericArguments();
+                if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return null;
 
                 var kitType = typesArgs[1];
-                if (!kitType.IsSubclassOf(typeof(KitBase))) return null;
+                if (!kitType.IsSubclassOf(typeof(Kit))) return null;
 
                 // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TKit> using the same types
                 var genType = typeof(DnnDynamicCodeRoot<,>);

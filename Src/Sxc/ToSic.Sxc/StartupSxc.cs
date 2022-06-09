@@ -182,7 +182,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<ICmsSite, CmsSite>();
 
             // v14 Kits
-            services.TryAddTransient<KitNone>();
+            services.TryAddTransient<Kit>();
             services.TryAddTransient<Kit14>();
 
             // Sxc StartUp Routines

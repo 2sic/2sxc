@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Services
 {
-    public class Kit14: KitBase
+    public class Kit14: Kit
     {
         /// <summary>
         /// The Convert Service, used to convert any kind of data type to another data type

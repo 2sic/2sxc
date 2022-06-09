@@ -8,7 +8,7 @@ namespace Custom
 {
     public abstract class Razor14<TModel, TKit>: Razor12, IRazor14<TModel, TKit>
         where TModel : class
-        where TKit : KitBase
+        where TKit : Kit
     {
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;
 

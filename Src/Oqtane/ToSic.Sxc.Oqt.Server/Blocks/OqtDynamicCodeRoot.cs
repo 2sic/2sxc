@@ -10,7 +10,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     [PrivateApi]
-    public class OqtaneDynamicCodeRoot : DynamicCodeRoot<object, KitNone>
+    public class OqtaneDynamicCodeRoot : DynamicCodeRoot<object, Kit>
     {
         private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
         public OqtaneDynamicCodeRoot(Dependencies dependencies, Lazy<SiteStateInitializer> siteStateInitializerLazy) : base(dependencies, OqtConstants.OqtLogPrefix)

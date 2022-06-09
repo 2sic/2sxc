@@ -8,7 +8,7 @@ namespace Custom.Hybrid
     [PrivateApi("not sure yet if this will stay in Hybrid or go to Web.Razor or something, so keep it private for now")]
     public interface IRazor14<out TModel, out TKit>: IRazor, IDynamicCode14<TModel, TKit>
         where TModel : class
-        where TKit : KitBase
+        where TKit : Kit
     {
         [PrivateApi]
         dynamic DynamicModel { get; }
