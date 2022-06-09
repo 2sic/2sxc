@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
+using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Engines;
@@ -24,17 +25,19 @@ namespace ToSic.Sxc.Engines
     // ReSharper disable once UnusedMember.Global
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
-        private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
+
+        //private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
         //private RazorComponentBase _webpage;
         //private readonly object _initLock = new object();
         //private bool _webpageInitialized = false;
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers, Lazy<DnnDynamicCodeRoot> dnnDynCodeLazy) : base(helpers)
+        public RazorEngine(EngineBaseDependencies helpers, IServiceProvider serviceProvider) : base(helpers)
         {
-            _dnnDynCodeLazy = dnnDynCodeLazy;
+            _serviceProvider = serviceProvider;
         }
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion
 
@@ -186,7 +189,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             var wrapLog = Log.Fn();
-            var dynCode = _dnnDynCodeLazy.Value;
+            var dynCode = BuildDynamicCodeRoot(webPage);
             // only do this if not already initialized
             //if (dynCode.Block != null)
                 dynCode.InitDynCodeRoot(Block, Log, compatibility);
@@ -197,6 +200,32 @@ namespace ToSic.Sxc.Engines
             wrapLog.Done();
         }
 
+        private DnnDynamicCodeRoot BuildDynamicCodeRoot(RazorComponentBase webPage)
+        {
+            var codeRoot = BuildGenericCodeRoot(webPage);
+         
+            // Default case / old case - just a non-generic DnnDynamicCodeRoot
+            return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>(); // _dnnDynCodeLazy.Value;
+        }
 
+        private DnnDynamicCodeRoot BuildGenericCodeRoot(RazorComponentBase webPage)
+        {
+            var pageType = webPage.GetType();
+            if (!pageType.IsGenericType || pageType.GetGenericTypeDefinition() != typeof(IDynamicCode<,>)) 
+                return null;
+
+            var typesArgs = pageType.GetGenericArguments();
+            if (typesArgs.Length != 2) return null;
+
+            var genType = typeof(DnnDynamicCodeRoot<,>);
+            var finalType = genType.MakeGenericType(typesArgs);
+            var codeRoot = _serviceProvider.GetService(finalType) as DnnDynamicCodeRoot;
+            return codeRoot;
+            // TODO
+            // 1. Detect if it's an IDynamicCode<TModel, TKit>
+            // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TKit> using the same types
+            // 3. return that
+
+        }
     }
 }
