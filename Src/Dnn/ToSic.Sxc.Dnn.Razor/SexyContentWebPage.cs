@@ -58,7 +58,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         public IEditService Edit => _DynCodeRoot.Edit;
 
-        public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
 
 #pragma warning disable 612
         /// <inheritdoc />

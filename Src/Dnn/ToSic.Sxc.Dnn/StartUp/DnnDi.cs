@@ -127,6 +127,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<ILinkService, DnnLinkService>();
             services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
             services.TryAddTransient<DnnDynamicCodeRoot>();
+            // New v14
+            services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DnnDynamicCodeRoot<,>));
+            services.TryAddTransient(typeof(DnnDynamicCodeRoot<,>));
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
             services.TryAddTransient<DnnEnvironmentInstaller>(); // Dnn Only

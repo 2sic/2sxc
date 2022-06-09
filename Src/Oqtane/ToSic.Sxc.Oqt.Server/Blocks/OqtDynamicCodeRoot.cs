@@ -5,11 +5,12 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Services.Kits;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     [PrivateApi]
-    public class OqtaneDynamicCodeRoot : DynamicCodeRoot
+    public class OqtaneDynamicCodeRoot : DynamicCodeRoot<object, KitNone>
     {
         private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
         public OqtaneDynamicCodeRoot(Dependencies dependencies, Lazy<SiteStateInitializer> siteStateInitializerLazy) : base(dependencies, OqtConstants.OqtLogPrefix)

@@ -76,7 +76,7 @@ namespace ToSic.Sxc.WebApi
         public AdamCode _AdamCode { get; private set; }
 #pragma warning restore IDE1006 // Naming Styles
 
-        public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
 
         private void TryToAttachAppFromUrlParams()
         {

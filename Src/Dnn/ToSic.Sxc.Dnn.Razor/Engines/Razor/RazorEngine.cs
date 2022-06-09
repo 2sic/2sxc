@@ -192,7 +192,7 @@ namespace ToSic.Sxc.Engines
             var dynCode = BuildDynamicCodeRoot(webPage);
             // only do this if not already initialized
             //if (dynCode.Block != null)
-                dynCode.InitDynCodeRoot(Block, Log, compatibility);
+            dynCode.InitDynCodeRoot(Block, Log, compatibility);
             webPage.ConnectToRoot(dynCode);
 
             // New in 10.25 - ensure jquery is not included by default
@@ -203,7 +203,7 @@ namespace ToSic.Sxc.Engines
         private DnnDynamicCodeRoot BuildDynamicCodeRoot(RazorComponentBase webPage)
         {
             var codeRoot = BuildGenericCodeRoot(webPage);
-         
+
             // Default case / old case - just a non-generic DnnDynamicCodeRoot
             return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>(); // _dnnDynCodeLazy.Value;
         }
@@ -211,7 +211,7 @@ namespace ToSic.Sxc.Engines
         private DnnDynamicCodeRoot BuildGenericCodeRoot(RazorComponentBase webPage)
         {
             var pageType = webPage.GetType();
-            if (!pageType.IsGenericType || pageType.GetGenericTypeDefinition() != typeof(IDynamicCode<,>)) 
+            if (!pageType.IsGenericType || pageType.GetGenericTypeDefinition() != typeof(IDynamicCode<,>))
                 return null;
 
             var typesArgs = pageType.GetGenericArguments();
