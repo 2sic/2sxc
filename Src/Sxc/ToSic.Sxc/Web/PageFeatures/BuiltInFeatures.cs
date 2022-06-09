@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <summary>
         /// Internal feature, not published ATM
         /// </summary>
-        public static PageFeature PageContext = new PageFeature("2sxc.ContextPage", "the $2sxc headers in the page so everything works");
+        public static PageFeature ContextPage = new PageFeature("2sxc.ContextPage", "the $2sxc headers in the page so everything works");
 
         /// <summary>
         /// Internal feature, not published ATM
         /// </summary>
-        public static PageFeature ModuleContext = new PageFeature("2sxc.ContextModule", "the $2sxc headers in the module tag");
+        public static PageFeature ContextModule = new PageFeature("2sxc.ContextModule", "the $2sxc headers in the module tag");
 
         /// <summary>
         /// The core 2sxc JS libraries
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </remarks>
         public static PageFeature JsCore = new PageFeature("2sxc.JsCore", "2sxc core js APIs", needs: new[]
         {
-            PageContext.NameId
+            ContextPage.NameId
         });
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         public static PageFeature JsCms = new PageFeature("2sxc.JsCms", "2sxc inpage editing APIs", needs: new[]
             {
                 JsCore.NameId,
-                ModuleContext.NameId,
+                ContextModule.NameId,
             },
             reqConditions: new List<Condition> { PublicEditForm.Condition });
 
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             new PageFeature("2sxc.Toolbars", "2sxc InPage editing UIs / Toolbar", needs: new[]
             {
                 JsCms.NameId,
-                PageContext.NameId,
+                ContextPage.NameId,
             });
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// </summary>
         public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto", "Ensure that the toolbars automatically appear", needs: new[]
         {
-            PageContext.NameId,
+            ContextPage.NameId,
             Toolbars.NameId,
         });
 

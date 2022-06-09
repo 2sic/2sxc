@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Edit.EditService
 
             if (styles.HasValue) psf?.Activate(BuiltInFeatures.Toolbars.NameId);
 
-            if (context.HasValue) psf?.Activate(BuiltInFeatures.ModuleContext.NameId);
+            if (context.HasValue) psf?.Activate(BuiltInFeatures.ContextModule.NameId);
 
             if (autoToolbar.HasValue) psf?.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
 

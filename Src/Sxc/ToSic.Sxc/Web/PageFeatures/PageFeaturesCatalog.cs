@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Web.PageFeatures
         {
             Register(
                 BuiltInFeatures.JQuery,
-                BuiltInFeatures.PageContext,
-                BuiltInFeatures.ModuleContext,
+                BuiltInFeatures.ContextPage,
+                BuiltInFeatures.ContextModule,
                 BuiltInFeatures.JsCore,
                 BuiltInFeatures.JsCms,
                 BuiltInFeatures.Toolbars,
