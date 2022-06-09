@@ -4,7 +4,7 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom
 {
     /// <summary>
     /// New base class for v12 Dynamic Code

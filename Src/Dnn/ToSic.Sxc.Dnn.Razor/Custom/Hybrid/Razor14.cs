@@ -1,9 +1,10 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using Custom.Hybrid;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom
 {
     public abstract class Razor14<TModel, TKit>: Razor12, IRazor14<TModel, TKit>
         where TModel : class
