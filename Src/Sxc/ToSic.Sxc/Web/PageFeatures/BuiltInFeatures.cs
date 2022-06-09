@@ -36,14 +36,6 @@ namespace ToSic.Sxc.Web.PageFeatures
         });
 
         /// <summary>
-        /// WIP - this will probably be moved to local only in future, ATM it's global though
-        /// </summary>
-        public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto", "Ensure that the toolbars automatically appear", needs: new[]
-        {
-            PageContext.NameId
-        });
-
-        /// <summary>
         /// The 2sxc JS libraries for cms / edit actions
         /// </summary>
         /// <remarks>
@@ -65,10 +57,18 @@ namespace ToSic.Sxc.Web.PageFeatures
         public static PageFeature Toolbars =
             new PageFeature("2sxc.Toolbars", "2sxc InPage editing UIs / Toolbar", needs: new[]
             {
-                JsCore.NameId,
-                ToolbarsAuto.NameId,
-                JsCms.NameId
+                JsCms.NameId,
+                PageContext.NameId,
             });
+
+        /// <summary>
+        /// WIP - this will probably be moved to local only in future, ATM it's global though
+        /// </summary>
+        public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto", "Ensure that the toolbars automatically appear", needs: new[]
+        {
+            PageContext.NameId,
+            Toolbars.NameId,
+        });
 
         /// <summary>
         /// turnOn feature

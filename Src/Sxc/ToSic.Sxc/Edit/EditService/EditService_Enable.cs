@@ -1,6 +1,4 @@
-﻿using ToSic.Eav.Configuration;
-using ToSic.Eav.Documentation;
-using ToSic.Sxc.Web.PageFeatures;
+﻿using ToSic.Eav.Documentation;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 

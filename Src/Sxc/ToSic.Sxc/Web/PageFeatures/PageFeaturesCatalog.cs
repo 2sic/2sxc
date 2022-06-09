@@ -25,10 +25,9 @@ namespace ToSic.Sxc.Web.PageFeatures
                 BuiltInFeatures.JsCore,
                 BuiltInFeatures.JsCms,
                 BuiltInFeatures.Toolbars,
+                BuiltInFeatures.ToolbarsAuto,
                 BuiltInFeatures.TurnOn
             );
         }
-
-        //protected override string GetKey(IPageFeature item) => item.NameId;
     }
 }
