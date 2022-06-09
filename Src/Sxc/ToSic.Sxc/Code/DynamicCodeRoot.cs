@@ -3,14 +3,12 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.PageService;
 using IApp = ToSic.Sxc.Apps.IApp;
 // ReSharper disable InheritdocInvalidUsage
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -34,31 +32,26 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies
         {
-            public Dependencies(IServiceProvider serviceProvider, /*ICmsContext cmsContext,*/ Lazy<CodeCompiler> codeCompilerLazy, AppSettingsStack settingsStack)
+            public Dependencies(IServiceProvider serviceProvider, Lazy<CodeCompiler> codeCompilerLazy, AppSettingsStack settingsStack)
             {
                 ServiceProvider = serviceProvider;
-                //CmsContext = cmsContext;
                 CodeCompilerLazy = codeCompilerLazy;
                 SettingsStack = settingsStack;
             }
             internal IServiceProvider ServiceProvider { get; }
-            //public ICmsContext CmsContext { get; }
             public Lazy<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
 
         }
 
         [PrivateApi]
-        protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
+        protected internal DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
         {
             Deps = dependencies;
             _serviceProvider = dependencies.ServiceProvider;
-            //CmsContext = dependencies.CmsContext;
-            CmsContext = GetService<ICmsContext>();
 
-            // Load the shared page service and make sure it has this code root, so future uses know about the context
-            // We don't need the result, but this ensures that it's initialized correctly
-            //GetService<PageServiceShared>();
+            // Prepare services which need to be attached to this dynamic code root
+            CmsContext = GetService<ICmsContext>();
 
             // Make sure we get and initialize (auto-connect) the app-level CSP if that exists or is enabled
             GetService<CspOfApp>();
