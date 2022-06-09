@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Code;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Services.Kits;
 
 // ReSharper disable once CheckNamespace
@@ -9,7 +10,7 @@ namespace Custom.Hybrid
     {
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;
 
-        public TKit Kit => (_DynCodeRoot as IDynamicCode<TModel, TKit>)?.Kit;
-
+        public TKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TKit>());
+        private readonly ValueGetOnce<TKit> _kit = new ValueGetOnce<TKit>();
     }
 }

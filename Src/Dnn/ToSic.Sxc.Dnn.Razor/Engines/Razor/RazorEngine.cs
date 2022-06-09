@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
@@ -13,6 +14,7 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
+using ToSic.Sxc.Services.Kits;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -25,8 +27,6 @@ namespace ToSic.Sxc.Engines
     // ReSharper disable once UnusedMember.Global
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
-
-        //private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
         //private RazorComponentBase _webpage;
         //private readonly object _initLock = new object();
         //private bool _webpageInitialized = false;
@@ -200,27 +200,57 @@ namespace ToSic.Sxc.Engines
             wrapLog.Done();
         }
 
-        private DnnDynamicCodeRoot BuildDynamicCodeRoot(RazorComponentBase webPage)
+        private DynamicCodeRoot BuildDynamicCodeRoot(RazorComponentBase webPage)
         {
+            // New v14 case - the Razor component implements IDynamicData<model, Kit>
+            // Will return null if error or not such interface
             var codeRoot = BuildGenericCodeRoot(webPage);
 
             // Default case / old case - just a non-generic DnnDynamicCodeRoot
-            return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>(); // _dnnDynCodeLazy.Value;
+            return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>();
         }
 
-        private DnnDynamicCodeRoot BuildGenericCodeRoot(RazorComponentBase webPage)
+        /// <summary>
+        /// Special helper for new Kit-based Razor templates in v14
+        /// </summary>
+        /// <param name="webPage"></param>
+        /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
+        private DynamicCodeRoot BuildGenericCodeRoot(RazorComponentBase webPage)
         {
-            var pageType = webPage.GetType();
-            if (!pageType.IsGenericType || pageType.GetGenericTypeDefinition() != typeof(IDynamicCode<,>))
+            try
+            {
+                var pageType = webPage.GetType();
+                var genericDynCode = typeof(IDynamicCode<,>);
+
+                var genericType = pageType
+                    .GetInterfaces()
+                    .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericDynCode);
+
+                //if (!pageType.IsAssignableFrom(genericDynCode)) return null;
+
+                //var genericType = pageType.GetInterfaces().FirstOrDefault(i => i == genericDynCode);
+                if (genericType == null) return null;
+
+                var typesArgs = genericType.GetGenericArguments();
+                if (typesArgs.Length != 2) return null;
+
+                var kitType = typesArgs[1];
+                if (!kitType.IsSubclassOf(typeof(KitBase))) return null;
+
+                var genType = typeof(DnnDynamicCodeRoot<,>);
+                var finalType = genType.MakeGenericType(typesArgs);
+
+                //var compareType = typeof(DnnDynamicCodeRoot<dynamic, KitV14>);
+                //var codeRootShouldWork = _serviceProvider.GetService(compareType);
+
+                var codeRoot = _serviceProvider.GetService(finalType) as DynamicCodeRoot;
+                return codeRoot;
+            }
+            catch (Exception ex)
+            {
+                Log.Ex(ex);
                 return null;
-
-            var typesArgs = pageType.GetGenericArguments();
-            if (typesArgs.Length != 2) return null;
-
-            var genType = typeof(DnnDynamicCodeRoot<,>);
-            var finalType = genType.MakeGenericType(typesArgs);
-            var codeRoot = _serviceProvider.GetService(finalType) as DnnDynamicCodeRoot;
-            return codeRoot;
+            }
             // TODO
             // 1. Detect if it's an IDynamicCode<TModel, TKit>
             // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TKit> using the same types

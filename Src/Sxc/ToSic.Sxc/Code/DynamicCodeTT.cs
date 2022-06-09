@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Services.Kits;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Services.Kits;
 
 namespace ToSic.Sxc.Code
 {
@@ -7,6 +8,7 @@ namespace ToSic.Sxc.Code
     {
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;
 
-        public TKit Kit => (_DynCodeRoot as IDynamicCode<TModel, TKit>)?.Kit;
+        public TKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TKit>());
+        private readonly ValueGetOnce<TKit> _kit = new ValueGetOnce<TKit>();
     }
 }
