@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
-using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.SexyContent.Engines;
@@ -14,7 +12,6 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -33,11 +30,11 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers, IServiceProvider serviceProvider) : base(helpers)
+        public RazorEngine(EngineBaseDependencies helpers, DnnCodeRootFactory codeRootFactory) : base(helpers)
         {
-            _serviceProvider = serviceProvider;
+            _codeRootFactory = codeRootFactory;
         }
-        private readonly IServiceProvider _serviceProvider;
+        private readonly DnnCodeRootFactory _codeRootFactory;
 
         #endregion
 
@@ -189,7 +186,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             var wrapLog = Log.Fn();
-            var dynCode = BuildDynamicCodeRoot(webPage);
+            var dynCode = _codeRootFactory.Init(Log).BuildDynamicCodeRoot(webPage);
             // only do this if not already initialized
             //if (dynCode.Block != null)
             dynCode.InitDynCodeRoot(Block, Log, compatibility);
@@ -199,63 +196,6 @@ namespace ToSic.Sxc.Engines
             if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;
             wrapLog.Done();
         }
-
-        private DynamicCodeRoot BuildDynamicCodeRoot(RazorComponentBase webPage)
-        {
-            // New v14 case - the Razor component implements IDynamicData<model, Kit>
-            // Will return null if error or not such interface
-            var codeRoot = BuildGenericCodeRoot(webPage);
-
-            // Default case / old case - just a non-generic DnnDynamicCodeRoot
-            return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>();
-        }
-
-        /// <summary>
-        /// Special helper for new Kit-based Razor templates in v14
-        /// </summary>
-        /// <param name="webPage"></param>
-        /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
-        private DynamicCodeRoot BuildGenericCodeRoot(RazorComponentBase webPage)
-        {
-            try
-            {
-                var pageType = webPage.GetType();
-                var genericDynCode = typeof(IDynamicCode<,>);
-
-                var genericType = pageType
-                    .GetInterfaces()
-                    .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == genericDynCode);
-
-                //if (!pageType.IsAssignableFrom(genericDynCode)) return null;
-
-                //var genericType = pageType.GetInterfaces().FirstOrDefault(i => i == genericDynCode);
-                if (genericType == null) return null;
-
-                var typesArgs = genericType.GetGenericArguments();
-                if (typesArgs.Length != 2) return null;
-
-                var kitType = typesArgs[1];
-                if (!kitType.IsSubclassOf(typeof(KitBase))) return null;
-
-                var genType = typeof(DnnDynamicCodeRoot<,>);
-                var finalType = genType.MakeGenericType(typesArgs);
-
-                //var compareType = typeof(DnnDynamicCodeRoot<dynamic, KitV14>);
-                //var codeRootShouldWork = _serviceProvider.GetService(compareType);
-
-                var codeRoot = _serviceProvider.GetService(finalType) as DynamicCodeRoot;
-                return codeRoot;
-            }
-            catch (Exception ex)
-            {
-                Log.Ex(ex);
-                return null;
-            }
-            // TODO
-            // 1. Detect if it's an IDynamicCode<TModel, TKit>
-            // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TKit> using the same types
-            // 3. return that
-
-        }
+        
     }
 }

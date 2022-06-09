@@ -117,6 +117,7 @@
     <Compile Include="Dnn\Cms\DnnPagePublishingSettings.cs" />
     <Compile Include="Dnn\Code\DnnDynamicCodeRootTT.cs" />
     <Compile Include="Dnn\Code\DnnDynamicCodeService.cs" />
+    <Compile Include="Dnn\Code\DnnCodeRootFactory.cs" />
     <Compile Include="Dnn\Code\IDnnDynamicCodeAdditions.cs" />
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures.cs" />
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures_CorePlus.cs" />
