@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
@@ -39,8 +40,12 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
             // Make sure the default exists, as it must get all values from the all
             copy.Add(CspConstants.DefaultSrcName, null);
-            var keys = copy.AllKeys;
-            foreach (var key in keys)
+
+            // Get the keys which should receive the all-src params
+            // Note that most end with -src, but some have -src-elem or something, so we use .Contains
+            var existingSrcKeys = copy.AllKeys
+                .Where(s => s.HasValue() && s.Contains(CspConstants.SuffixSrc));   
+            foreach (var key in existingSrcKeys)
             foreach (var value in values)
                 copy.Add(key, value);
             return wrapLog.ReturnAsOk(copy);

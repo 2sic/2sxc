@@ -5,6 +5,7 @@
         public const string LogPrefix = "Csp";
         public const string AllSrcName = "all-src";
         public const string DefaultSrcName = "default-src";
+        public const string SuffixSrc = "-src";
 
         public const string CspHeaderNamePolicy = "Content-Security-Policy";
         public const string CspHeaderNameReport = "Content-Security-Policy-Report-Only";
