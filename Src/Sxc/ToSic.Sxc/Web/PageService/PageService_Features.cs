@@ -11,9 +11,9 @@ namespace ToSic.Sxc.Web.PageService
     public partial class PageService
     {
         /// <inheritdoc />
-        public void Activate(params string[] keys)
+        public string Activate(params string[] keys)
         {
-            var wrapLog = Log.Fn();
+            var wrapLog = Log.Fn<string>();
 
             // 1. Try to add manual resources from WebResources
             // This must happen in the IPageService which is per-module
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Web.PageService
                 CodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
             }
             
-            wrapLog.Done();
+            return wrapLog.Return("");
         }
 
         private string[] AddManualResources(string[] keys)

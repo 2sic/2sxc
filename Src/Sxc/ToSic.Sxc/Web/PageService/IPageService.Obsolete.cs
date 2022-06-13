@@ -31,22 +31,22 @@ namespace ToSic.Sxc.Web
         // So for now we just leave it in
 
 #pragma warning disable CS0108, CS0114
-        [PrivateApi] void SetBase(string url = null);
-        [PrivateApi] void SetTitle(string value, string placeholder = null);
-        [PrivateApi] void SetDescription(string value, string placeholder = null);
-        [PrivateApi] void SetKeywords(string value, string placeholder = null);
-        [PrivateApi] void SetHttpStatus(int statusCode, string message = null);
-        [PrivateApi] void AddToHead(string tag);
-        [PrivateApi] void AddToHead(TagBase tag);
-        [PrivateApi] void AddMeta(string name, string content);
-        [PrivateApi] void AddOpenGraph(string property, string content);
-        [PrivateApi] void AddJsonLd(string jsonString);
-        [PrivateApi] void AddJsonLd(object jsonObject);
-        [PrivateApi] void AddIcon(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector, 
+        [PrivateApi] string SetBase(string url = null);
+        [PrivateApi] string SetTitle(string value, string placeholder = null);
+        [PrivateApi] string SetDescription(string value, string placeholder = null);
+        [PrivateApi] string SetKeywords(string value, string placeholder = null);
+        [PrivateApi] string SetHttpStatus(int statusCode, string message = null);
+        [PrivateApi] string AddToHead(string tag);
+        [PrivateApi] string AddToHead(TagBase tag);
+        [PrivateApi] string AddMeta(string name, string content);
+        [PrivateApi] string AddOpenGraph(string property, string content);
+        [PrivateApi] string AddJsonLd(string jsonString);
+        [PrivateApi] string AddJsonLd(object jsonObject);
+        [PrivateApi] string AddIcon(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector, 
             string rel = "", int size = 0, string type = null);
-        [PrivateApi] void AddIconSet(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
+        [PrivateApi] string AddIconSet(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
             object favicon = null, IEnumerable<string> rels = null, IEnumerable<int> sizes = null);
-        [PrivateApi] void Activate(params string[] keys);
+        [PrivateApi] string Activate(params string[] keys);
 #pragma warning restore CS0108, CS0114
 
     }

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.PageService
         /// <summary>
         /// Add something to the queue for setting a page property
         /// </summary>
-        internal void Queue(PageProperties property, string value, PageChangeModes change, string token)
+        internal string Queue(PageProperties property, string value, PageChangeModes change, string token)
         {
             PropertyChanges.Add(new PagePropertyChange
             {
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Web.PageService
                 Value = value,
                 ReplacementIdentifier = token,
             });
-
+            return "";
         }
 
     }

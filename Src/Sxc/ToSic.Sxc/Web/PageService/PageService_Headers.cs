@@ -8,16 +8,21 @@ namespace ToSic.Sxc.Web.PageService
     {
 
         /// <inheritdoc />
-        public void AddToHead(TagBase tag) => PageServiceShared.Add(tag);
-
-        /// <inheritdoc />
-        public void AddToHead(string html)
+        public string AddToHead(TagBase tag)
         {
-            if (string.IsNullOrWhiteSpace(html)) return;
-            AddToHead(Tag.Custom(html));
+            PageServiceShared.Add(tag);
+            return "";
         }
 
         /// <inheritdoc />
-        public void AddMeta(string name, string content) => AddToHead(new Meta(name, content));
+        public string AddToHead(string html)
+        {
+            if (string.IsNullOrWhiteSpace(html)) return "";
+            AddToHead(Tag.Custom(html));
+            return "";
+        }
+
+        /// <inheritdoc />
+        public string AddMeta(string name, string content) => AddToHead(new Meta(name, content));
     }
 }

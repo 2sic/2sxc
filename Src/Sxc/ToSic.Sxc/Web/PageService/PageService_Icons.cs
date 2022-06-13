@@ -7,20 +7,25 @@ namespace ToSic.Sxc.Web.PageService
     public partial class PageService
     {
         /// <inheritdoc />
-        public void AddIcon(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector, string rel = "",
+        public string AddIcon(string path,
+            string doNotRelyOnParameterOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string rel = "",
             int size = 0, string type = null)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(doNotRelyOnParameterOrder, nameof(AddIcon), $"{nameof(path)}, {nameof(rel)}, {nameof(size)}, {nameof(type)}");
             AddToHead(new Icon(path, rel, size, type));
+            return "";
         }
 
         /// <inheritdoc />
-        public void AddIconSet(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
+        public string AddIconSet(string path,
+            string doNotRelyOnParameterOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
             object favicon = null, IEnumerable<string> rels = null, IEnumerable<int> sizes = null)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(doNotRelyOnParameterOrder, nameof(AddIcon), $"{nameof(path)}, {nameof(favicon)}, {nameof(rels)}, {nameof(sizes)}");
             foreach (var s in IconSet.GenerateIconSet(path, favicon, rels, sizes))
                 AddToHead(s);
+            return "";
         }
 
     }
