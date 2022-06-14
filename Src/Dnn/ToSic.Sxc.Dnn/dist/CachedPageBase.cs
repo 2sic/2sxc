@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Dnn.dist
                 Cache.Insert(key, html, new CacheDependency(path));
             }
 
-            var pageIdString = Request.QueryString["pageId"];
+            var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
             var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
 
             var content = DnnJsApi.GetJsApiJson(pageId);
-            return JsApi.UpdateMetaTagJsApi(html, content);
+            return HtmlDialog.UpdatePlaceholders(html, content, pageId);
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

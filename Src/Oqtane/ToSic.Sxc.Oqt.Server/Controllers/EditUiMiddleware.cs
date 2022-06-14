@@ -34,12 +34,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var html = Encoding.Default.GetString(bytes);
 
             // inject JsApi to html content
-            var pageIdString = context.Request.Query["pageId"];
+            var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
             var pageId = !string.IsNullOrEmpty(pageIdString) ? Convert.ToInt32(pageIdString) : -1;
             var siteStateInitializer = context.RequestServices.GetService<SiteStateInitializer>();
             var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
             var content = OqtJsApi.GetJsApi(pageId, siteRoot, "");
-            html = JsApi.UpdateMetaTagJsApi(html, content);
+            html = HtmlDialog.UpdatePlaceholders(html, content, pageId);
 
             bytes = Encoding.Default.GetBytes(html);
 
