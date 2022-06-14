@@ -6,11 +6,11 @@ namespace ToSic.Sxc.Cms.Publishing
     /// <summary>
     /// This is the fallback page publishing strategy, which basically says that page publishing isn't enabled
     /// </summary>
-    public class NoPagePublishingSettings : HasLog, IPagePublishingSettings
+    public class PagePublishingGetSettingsDisabled : HasLog, IPagePublishingGetSettings
     {
         #region Constructors
 
-        public NoPagePublishingSettings() : base("Cms.PubNone") { }
+        public PagePublishingGetSettingsDisabled() : base("Cms.PubNone") { }
 
         #endregion
 

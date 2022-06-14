@@ -9,11 +9,11 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public class DnnPagePublishingSettings : PagePublishingSettingsBase
+    public class DnnPagePublishingGetSettings : PagePublishingGetSettingsBase
     {
         #region DI Constructors and More
         
-        public DnnPagePublishingSettings(IFeaturesService featuresService) : base(DnnConstants.LogName)
+        public DnnPagePublishingGetSettings(IFeaturesService featuresService) : base(DnnConstants.LogName)
         {
             _featuresService = featuresService;
         }

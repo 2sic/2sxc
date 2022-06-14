@@ -166,7 +166,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
 
             // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
-            services.AddTransient<IPagePublishingSettings, Cms.DnnPagePublishingSettings>();
+            services.AddTransient<IPagePublishingGetSettings, Cms.DnnPagePublishingGetSettings>();
 
             // 2022-05-18: commented because it not in use anymore
             // new cache implements IAppsCacheSwitchable and it is registered with DNN DI.

@@ -4,9 +4,9 @@ using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
-    public abstract class PagePublishingSettingsBase: HasLog, IPagePublishingSettings
+    public abstract class PagePublishingGetSettingsBase: HasLog, IPagePublishingGetSettings
     {
-        protected PagePublishingSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }
+        protected PagePublishingGetSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }
 
         protected PublishingMode Requirements(int instanceId)
         {

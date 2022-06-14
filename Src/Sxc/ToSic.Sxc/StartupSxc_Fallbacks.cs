@@ -34,7 +34,7 @@ namespace ToSic.Sxc
             services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
 
             // This must never have a TRY! but only an AddTransient, as many can be registered by this type
-            services.AddTransient<IPagePublishingSettings, NoPagePublishingSettings>(); // new v13 BETA #SwitchServicePagePublishingResolver
+            services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsDisabled>(); // new v13 BETA #SwitchServicePagePublishingResolver
 
             // Code / Dynamic Code
             services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();

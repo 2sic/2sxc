@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Context
             IPage page, 
             IModule module, 
             //Lazy<IPagePublishingResolver> publishingResolver,
-            LazyInitLog<ServiceSwitcher<IPagePublishingSettings>> publishingResolver,
+            LazyInitLog<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
             ContextOfSite.ContextOfSiteDependencies contextOfSiteDependencies,
             ContextOfApp.ContextOfAppDependencies appDependencies)
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Context
                 _publishingResolver.SetLog(Log);
             Log.Rename("Sxc.CtxBlk");
         }
-        private readonly LazyInitLog<ServiceSwitcher<IPagePublishingSettings>> _publishingResolver;
+        private readonly LazyInitLog<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 
         #endregion
 
