@@ -7,6 +7,7 @@ using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
 using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
+using ToSic.Eav;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
@@ -104,7 +105,7 @@ namespace ToSic.Sxc.Dnn.Web
 
             var root = DnnConstants.SysFolderRootVirtual;
             root = page.ResolveUrl(root);
-            var ver = Settings.Version.ToString();
+            var ver = EavSystemInfo.VersionWithStartUpBuild;// Settings.Version.ToString();
             var priority = (int) FileOrder.Js.DefaultPriority - 2;
 
             // add edit-mode CSS

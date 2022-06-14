@@ -142,15 +142,9 @@
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="dist\ng-edit\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="dist\ng\Default.aspx.cs">
+    <Compile Include="dist\quickDialog\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\ng\Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="DnnBusinessController.cs" />
     <Compile Include="Polymorphism\Permissions.cs" />
@@ -211,7 +205,7 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="dist\ng-edit\Default.aspx" />
-    <Content Include="dist\ng\Default.aspx" />
+    <Content Include="dist\quickDialog\Default.aspx" />
     <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
     <Content Include="razorblade-old\bin\Connect.Razor.dll" />
     <Content Include="ClientScripts\ModuleEditor.js" />
@@ -409,10 +403,10 @@ robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
-robocopy "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ " /MIR /XF "%25BuildTarget%25\dist\ng\Default.aspx" /XF "%25BuildTarget%25\dist\ng-edit\Default.aspx"
+robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
 robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
-robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S /XC /XO /XN
+robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S
 robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
 robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
 robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "

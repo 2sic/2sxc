@@ -14,6 +14,6 @@ namespace Custom.Dnn
     public abstract class Code12 : ToSic.Sxc.Code.DynamicCode12, IDnnDynamicCodeAdditions
     {
         /// <inheritdoc />
-        public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
     }
 }

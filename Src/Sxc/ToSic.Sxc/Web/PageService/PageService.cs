@@ -1,10 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
-using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -46,6 +44,10 @@ namespace ToSic.Sxc.Web.PageService
 
         public bool CspIsEnforced => _cspServiceLazy.Value.IsEnforced;
 
-        public void AddCsp(string name, params string[] values) => _cspServiceLazy.Value.Add(name, values);
+        public string AddCsp(string name, params string[] values)
+        {
+            _cspServiceLazy.Value.Add(name, values);
+            return "";
+        }
     }
 }

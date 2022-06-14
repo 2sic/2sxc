@@ -153,7 +153,7 @@ namespace ToSic.Sxc.Blocks
                 if (!addEditCtx && Block.BlockFeatureKeys.Any())
                 {
                     var features = Block.Context.PageServiceShared.PageFeatures.GetWithDependents(Block.BlockFeatureKeys, Log);
-                    addEditCtx = features.Contains(BuiltInFeatures.ModuleContext);
+                    addEditCtx = features.Contains(BuiltInFeatures.ContextModule);
                 }
 
                 // Wrap

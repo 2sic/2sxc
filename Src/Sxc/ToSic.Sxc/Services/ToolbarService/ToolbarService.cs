@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DI;
+﻿using ToSic.Eav;
+using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -29,28 +30,36 @@ namespace ToSic.Sxc.Services
         #endregion
 
         public IToolbarBuilder Default(
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string ui = null
         ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null);
 
         public IToolbarBuilder Empty(
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string ui = null
         ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null);
 
         public IToolbarBuilder Metadata(
             object target,
             string contentTypes = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string ui = null,
             string parameters = null,
             string context = null
-        ) => Empty().Metadata(target, contentTypes, ui: ui, parameters: parameters, context: context);
+        ) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, context);
+
+        public IToolbarBuilder Copy(
+            object target,
+            string noParamOrder = Parameters.Protector,
+            string ui = null,
+            string parameters = null,
+            string context = null
+        ) => Empty().Copy(target, noParamOrder, ui, parameters, context);
 
         private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, string ui, string context)
         {
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
+            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
             var tlb = _toolbarGenerator.New.Init(_codeRoot?.App)
                 .Add(new ToolbarRuleToolbar(toolbarTemplate, ui: ui));
             if (context.HasValue())

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.WebApi.InPage
 
             // 0.1 Get Version etc.
             root = root.SuffixSlash(); // important because DNN historically has a slash in the constant, Oqtane does not
-            var ver = Settings.Version.ToString();
+            var ver = EavSystemInfo.VersionWithStartUpBuild; // Settings.Version.ToString();
             var addOn = "";
 
             // 1. Check if the features includes turnOn

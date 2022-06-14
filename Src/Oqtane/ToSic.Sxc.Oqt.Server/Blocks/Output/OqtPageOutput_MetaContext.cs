@@ -1,9 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
-using ToSic.Sxc.Oqt.Server.WebApi;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
@@ -22,24 +19,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
         public string ContextMetaContents()
         {
             var wrapLog = Log.Fn<string>();
-
             var pageId = Parent?.Page.PageId ?? -1;
             var siteRoot = GetSiteRoot(_siteState);
-            var apiRoot = siteRoot + WebApiConstants.ApiRootWithNoLang + "/";
-            var appApiRoot = siteRoot; // without "app/" because the UI will add that later on
-            var result = InpageCms.JsApiJson(
-                platform: PlatformType.Oqtane.ToString(),
-                pageId: pageId, 
-                siteRoot: siteRoot, 
-                apiRoot: apiRoot, 
-                appApiRoot: appApiRoot, 
-                uiRoot: OqtConstants.UiRoot + "/",
-                rvtHeader: Oqtane.Shared.Constants.AntiForgeryTokenHeaderName,
-                rvt: AntiForgeryToken());
+            var rvt = AntiForgeryToken();
+            var result = OqtJsApi.GetJsApi(pageId, siteRoot, rvt);
             return wrapLog.ReturnAsOk(result);
         }
-
-        public string ContextMetaName => InpageCms.MetaName;
 
         /// <summary>
         /// Empty / Fake Anti-Forgery Token 
@@ -51,5 +36,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
         /// </remarks>
         private string AntiForgeryToken() => "";
 
+        public string ContextMetaName => InpageCms.MetaName;
     }
 }

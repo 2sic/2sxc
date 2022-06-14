@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             
             // Page publishing - ATM neutral objects which don't do much
             services.TryAddTransient<IPagePublishing, OqtPagePublishing>();
-            services.AddTransient<IPagePublishingSettings, OqtPagePublishingSettings>(); // #SwitchServicePagePublishingResolver #2749
+            services.AddTransient<IPagePublishingGetSettings, OqtPagePublishingGetGetSettings>(); // #SwitchServicePagePublishingResolver #2749
 
             services.TryAddTransient<OqtModuleHelper>();
 

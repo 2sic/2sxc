@@ -50,7 +50,10 @@ namespace ToSic.Sxc.WebApi
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
             var compatibilityLevel = this is IDynamicCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
-            _DynCodeRoot = GetService<DnnDynamicCodeRoot>().InitDynCodeRoot(block, Log, compatibilityLevel);
+            _DynCodeRoot = GetService<DnnCodeRootFactory>()
+                .Init(Log)
+                .BuildDynamicCodeRoot(this)
+                .InitDynCodeRoot(block, Log, compatibilityLevel);
             _AdamCode = GetService<AdamCode>().Init(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
@@ -76,7 +79,7 @@ namespace ToSic.Sxc.WebApi
         public AdamCode _AdamCode { get; private set; }
 #pragma warning restore IDE1006 // Naming Styles
 
-        public IDnnContext Dnn => (_DynCodeRoot as DnnDynamicCodeRoot)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
 
         private void TryToAttachAppFromUrlParams()
         {

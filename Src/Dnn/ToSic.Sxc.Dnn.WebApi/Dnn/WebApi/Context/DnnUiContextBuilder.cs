@@ -1,12 +1,10 @@
-﻿using System.Web;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Run;
+using System.Web;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.Context;
@@ -65,7 +63,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
             try
             {
-                var roots = DnnJsApiHeader.GetApiRoots();
+                var roots = DnnJsApi.GetApiRoots();
                 appDto.Api = roots.Item2;
             } catch { /* ignore */ }
             return appDto;

@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Web.Client.ClientResourceManagement;
+﻿using System;
+using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,20 +10,23 @@ using ToSic.Eav.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
+using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Dnn.Services
 {
     [PrivateApi]
     public class DnnPageChanges : HasLog<DnnPageChanges>
     {
-
-        public DnnPageChanges(): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(Lazy<IFeaturesService> featuresService): base($"{DnnConstants.LogName}.PgeCng")
         {
+            _featuresService = featuresService;
         }
+        private readonly Lazy<IFeaturesService> _featuresService;
 
         public int Apply(Page page, IRenderResult renderResult)
         {
@@ -108,8 +112,9 @@ namespace ToSic.Sxc.Dnn.Services
             var httpHeaders = result.HttpHeaders;
 
             // Register CSP changes for applying once all modules have been prepared
-            if (result.CspEnabled) 
-                PageCsp(result.CspEnabled, result.CspEnforced).Add(result.CspParameters);
+            // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
+            if (result.CspEnabled && _featuresService.Value.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
+                PageCsp(result.CspEnforced).Add(result.CspParameters);
 
             if (page?.Response == null) return wrapLog.Return(0, "error, HttpResponse is null");
             if (page.Response.HeadersWritten) return wrapLog.Return(0, "error, to late for adding http headers");
@@ -127,9 +132,12 @@ namespace ToSic.Sxc.Dnn.Services
             return wrapLog.ReturnAsOk(httpHeaders.Count);
         }
 
-        private CspOfPage PageCsp(bool enabled, bool enforced)
+        private CspOfPage PageCsp(bool enforced)
         {
             var key = "2sxcPageLevelCsp";
+
+            // If it's already registered, then the add-on-sending has already been added too
+            // So we shouldn't repeat it, just return the cache which will be used later
             if (HttpContext.Current.Items.Contains(key))
                 return (CspOfPage)HttpContext.Current.Items[key];
 
@@ -138,17 +146,19 @@ namespace ToSic.Sxc.Dnn.Services
             HttpContext.Current.Items[key] = pageLevelCsp;
 
             // Register event to attach headers once the request is done and all Apps have registered their Csp
-            if (enabled)
-                HttpContext.Current.Response.AddOnSendingHeaders(context =>
+            HttpContext.Current.Response.AddOnSendingHeaders(context =>
+            {
+                try
                 {
-                    try
-                    {
-                        var headers = pageLevelCsp.CspHttpHeader();
-                        if (headers != null)
-                            context.Response.Headers[pageLevelCsp.HeaderName(enforced)] = headers;
-                    }
-                    catch { /* ignore */ }
-                });
+                    var headers = pageLevelCsp.CspHttpHeader();
+                    if (headers != null)
+                        context.Response.Headers[pageLevelCsp.HeaderName(enforced)] = headers;
+                }
+                catch
+                {
+                    /* ignore */
+                }
+            });
             return pageLevelCsp;
         }
 

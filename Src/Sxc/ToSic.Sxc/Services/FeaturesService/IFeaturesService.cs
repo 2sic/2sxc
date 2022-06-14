@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Code.Documentation;
 
 // Important
 // This is just the public API for this
@@ -18,6 +19,7 @@ namespace ToSic.Sxc.Services
     /// - Added this implementation in 13.01
     /// </remarks>
     [PublicApi]
+    [Docs(AutoLink = true, Messages = new[] { "Service to verify if a feature is enabled." })]
     public interface IFeaturesService: IHasLog, ICanDebug
     {
         /// <summary>

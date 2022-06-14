@@ -20,15 +20,14 @@ namespace ToSic.Sxc.Web.PageFeatures
         {
             Register(
                 BuiltInFeatures.JQuery,
-                BuiltInFeatures.PageContext,
-                BuiltInFeatures.ModuleContext,
+                BuiltInFeatures.ContextPage,
+                BuiltInFeatures.ContextModule,
                 BuiltInFeatures.JsCore,
                 BuiltInFeatures.JsCms,
                 BuiltInFeatures.Toolbars,
+                BuiltInFeatures.ToolbarsAuto,
                 BuiltInFeatures.TurnOn
             );
         }
-
-        //protected override string GetKey(IPageFeature item) => item.NameId;
     }
 }

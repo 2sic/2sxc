@@ -24,17 +24,17 @@ namespace ToSic.Sxc.Engines
     // ReSharper disable once UnusedMember.Global
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
-        private readonly Lazy<DnnDynamicCodeRoot> _dnnDynCodeLazy;
         //private RazorComponentBase _webpage;
         //private readonly object _initLock = new object();
         //private bool _webpageInitialized = false;
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers, Lazy<DnnDynamicCodeRoot> dnnDynCodeLazy) : base(helpers)
+        public RazorEngine(EngineBaseDependencies helpers, DnnCodeRootFactory codeRootFactory) : base(helpers)
         {
-            _dnnDynCodeLazy = dnnDynCodeLazy;
+            _codeRootFactory = codeRootFactory;
         }
+        private readonly DnnCodeRootFactory _codeRootFactory;
 
         #endregion
 
@@ -186,17 +186,16 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             var wrapLog = Log.Fn();
-            var dynCode = _dnnDynCodeLazy.Value;
+            var dynCode = _codeRootFactory.Init(Log).BuildDynamicCodeRoot(webPage);
             // only do this if not already initialized
             //if (dynCode.Block != null)
-                dynCode.InitDynCodeRoot(Block, Log, compatibility);
+            dynCode.InitDynCodeRoot(Block, Log, compatibility);
             webPage.ConnectToRoot(dynCode);
 
             // New in 10.25 - ensure jquery is not included by default
             if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;
             wrapLog.Done();
         }
-
-
+        
     }
 }

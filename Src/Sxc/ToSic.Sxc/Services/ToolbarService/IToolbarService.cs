@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Services
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <param name="parameters">Parameters for the metadata-command</param>
         /// <param name="context">EXPERIMENTAL - not final</param>
-        /// <returns></returns>
+        /// <returns>An toolbar builder with empty configuration and just this button on it</returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
@@ -72,6 +72,27 @@ namespace ToSic.Sxc.Services
         IToolbarBuilder Metadata(
             object target,
             string contentTypes = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null,
+            string context = null
+        );
+
+
+        /// <summary>
+        /// Create a toolbar with a button to copy an item. It needs the item which it will copy as a parameter.
+        /// </summary>
+        /// <param name="target">The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/> </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="parameters">Parameters for the metadata-command</param>
+        /// <param name="context">EXPERIMENTAL - not final</param>
+        /// <returns>An toolbar builder with empty configuration and just this button on it</returns>
+        /// <remarks>
+        /// Added in v14.02
+        /// </remarks>
+        IToolbarBuilder Copy(
+            object target,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
             string parameters = null,

@@ -3,8 +3,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Web.PageService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -18,25 +16,24 @@ namespace ToSic.Sxc.Context
 
         public ContextOfBlock(
             IPage page, 
-            IModule module, 
-            //Lazy<IPagePublishingResolver> publishingResolver,
-            LazyInitLog<ServiceSwitcher<IPagePublishingSettings>> publishingResolver,
+            IModule module,
+            LazyInitLog<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
-            ContextOfSite.ContextOfSiteDependencies contextOfSiteDependencies,
-            ContextOfApp.ContextOfAppDependencies appDependencies)
+            ContextOfSiteDependencies contextOfSiteDependencies,
+            ContextOfAppDependencies appDependencies)
             : base(contextOfSiteDependencies, appDependencies)
         {
             Page = page;
             Module = module;
             PageServiceShared = pageServiceShared;
-            //_publishingResolver = publishingResolver;
             _publishingResolver = publishingResolver;
+
             // special check to prevent duplicate SetLog, because it could be cloned and already initialized
-            if (!_publishingResolver.HasInit)
+            if (!_publishingResolver.HasInitCall)
                 _publishingResolver.SetLog(Log);
             Log.Rename("Sxc.CtxBlk");
         }
-        private readonly LazyInitLog<ServiceSwitcher<IPagePublishingSettings>> _publishingResolver;
+        private readonly LazyInitLog<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 
         #endregion
 
@@ -70,7 +67,7 @@ namespace ToSic.Sxc.Context
         private BlockPublishingSettings _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, /*_publishingResolver,*/ _publishingResolver, PageServiceShared, Dependencies, Deps)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, Dependencies, Deps)
             .Init(parentLog);
     }
 }

@@ -1,22 +1,29 @@
 ﻿using System;
 using System.IO;
 using System.Web.Caching;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.dist
 {
     public class CachedPageBase : System.Web.UI.Page
     {
-        protected void PageOutputCached(string virtualPath)
+        protected string PageOutputCached(string virtualPath)
         {
             var key = CacheKey(virtualPath);
-            var html = Cache.Get(key);
-            if (html == null)
+            if (!(Cache.Get(key) is string html))
             {
                 var path = GetPath(virtualPath);
                 html = File.ReadAllText(path);
                 Cache.Insert(key, html, new CacheDependency(path));
             }
-            Response.Write(html);
+
+            var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
+            var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
+
+            var content = DnnJsApi.GetJsApiJson(pageId);
+            return HtmlDialog.UpdatePlaceholders(html, content, pageId);
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

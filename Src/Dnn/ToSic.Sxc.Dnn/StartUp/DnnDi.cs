@@ -125,12 +125,20 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.TryAddTransient<IDnnContext, DnnContext>();
             services.TryAddTransient<ILinkService, DnnLinkService>();
-            services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
-            services.TryAddTransient<DnnDynamicCodeRoot>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
             services.TryAddTransient<DnnEnvironmentInstaller>(); // Dnn Only
             services.TryAddTransient<DnnInstallLogger>();
+
+
+            services.TryAddTransient<DynamicCodeRoot, DnnDynamicCodeRoot>();
+            services.TryAddTransient<DnnDynamicCodeRoot>();
+            // New v14
+            services.TryAddTransient(typeof(DynamicCodeRoot<,>), typeof(DnnDynamicCodeRoot<,>));
+            services.TryAddTransient(typeof(DnnDynamicCodeRoot<,>));
+            services.TryAddTransient<DnnCodeRootFactory>();
+
+
 
             // ADAM
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
@@ -158,7 +166,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IPagePublishing, Cms.DnnPagePublishing>();
 
             // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
-            services.AddTransient<IPagePublishingSettings, Cms.DnnPagePublishingSettings>();
+            services.AddTransient<IPagePublishingGetSettings, Cms.DnnPagePublishingGetSettings>();
 
             // 2022-05-18: commented because it not in use anymore
             // new cache implements IAppsCacheSwitchable and it is registered with DNN DI.

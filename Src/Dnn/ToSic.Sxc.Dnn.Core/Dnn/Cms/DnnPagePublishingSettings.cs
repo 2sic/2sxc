@@ -9,11 +9,11 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public class DnnPagePublishingSettings : PagePublishingSettingsBase
+    public class DnnPagePublishingGetSettings : PagePublishingGetSettingsBase
     {
         #region DI Constructors and More
         
-        public DnnPagePublishingSettings(IFeaturesService featuresService) : base(DnnConstants.LogName)
+        public DnnPagePublishingGetSettings(IFeaturesService featuresService) : base(DnnConstants.LogName)
         {
             _featuresService = featuresService;
         }
@@ -46,10 +46,10 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public override string NameId => DnnConstants.LogName + "PublishingSettings";
 
-        public override int Priority => 10;
+        public override int Priority => (int)PagePublishingPriorities.Platform;
 
         /// <summary>
-        /// It's viable if it has not been turned off
+        /// It's viable if it has not been turned off, which is the default
         /// </summary>
         /// <returns></returns>
         public override bool IsViable() => _featuresService.IsEnabled(Configuration.Features.BuiltInFeatures.DnnPageWorkflow.NameId);

@@ -64,10 +64,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         /// <inheritdoc />
         [PrivateApi]
-        public IToolbarBuilder Add(params string[] rules) => InnerAdd(rules?.Cast<object>());
+        public IToolbarBuilder Add(params string[] rules) 
+            => InnerAdd(rules?.Cast<object>().ToArray());   // Must re-to-array, so that it's not re-wrapped
 
         /// <inheritdoc />
-        public IToolbarBuilder Add(params object[] rules) => InnerAdd(rules);
+        public IToolbarBuilder Add(params object[] rules) 
+            => InnerAdd(rules?.ToArray());                  // Must re-to-array, so that it's not re-wrapped
 
         private IToolbarBuilder InnerAdd(params object[] newRules)
         {
@@ -77,7 +79,9 @@ namespace ToSic.Sxc.Edit.Toolbar
             
             var callLog = Log.Fn<IToolbarBuilder>();
             clone.Rules.AddRange(Rules);
-            if (!newRules.Any()) return callLog.Return(clone, "no new rules");
+            if (newRules == null || !newRules.Any())
+                return callLog.Return(clone, "no new rules");
+
             foreach (var rule in newRules)
             {
                 if (rule is ToolbarRuleBase realRule)
@@ -106,6 +110,15 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             return result;
         }
+
+        /// <inheritdoc />
+        public IToolbarBuilder Copy(
+            object target,
+            string noParamOrder = Eav.Parameters.Protector,
+            string ui = null,
+            string parameters = null,
+            string context = null
+        ) => Add(new ToolbarRuleCopy(target, ui, parameters, GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
 
 
         [PrivateApi("WIP 13.11")]

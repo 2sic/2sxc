@@ -7,6 +7,8 @@ namespace ToSic.Sxc.Cms.Publishing
     /// </summary>
     public class BlockPublishingSettings
     {
+        public bool AllowDraft = true;
+
         public bool ForceDraft = false;
 
         public PublishingMode Mode = PublishingMode.DraftOptional;

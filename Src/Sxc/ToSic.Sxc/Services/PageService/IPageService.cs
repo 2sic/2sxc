@@ -31,7 +31,10 @@ namespace ToSic.Sxc.Services
         /// Add a standard base header tag or replace it if one is already provided.
         /// </summary>
         /// <param name="url">the optional url for the base tag - if null, will try to default to the real url for the current page</param>
-        void SetBase(string url = null);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetBase(...)`
+        /// </remarks>
+        string SetBase(string url = null);
 
         /// <summary>
         /// Set the Page Title. Behavior:
@@ -40,7 +43,10 @@ namespace ToSic.Sxc.Services
         /// * You can also use the new `[original]` token like `SetTitle('[original] - My New Title')` = `Blog - 2sxc.org - My New Title`
         /// * You can add a placeholder to the page-title and tell SetTitle what it is. `SetTitle('My New Title', '2sxc.org') = `Blog - My New Title`
         /// </summary>
-        void SetTitle(string value, string placeholder = null);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetTitle(...)`
+        /// </remarks>
+        string SetTitle(string value, string placeholder = null);
 
         /// <summary>
         /// Set the Page Description.
@@ -49,7 +55,10 @@ namespace ToSic.Sxc.Services
         ///
         /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
         /// </summary>
-        void SetDescription(string value, string placeholder = null);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetDescription(...)`
+        /// </remarks>
+        string SetDescription(string value, string placeholder = null);
 
         /// <summary>
         /// Set the Page Keywords. 
@@ -58,14 +67,20 @@ namespace ToSic.Sxc.Services
         ///
         /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
         /// </summary>
-        void SetKeywords(string value, string placeholder = null);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetKeywords(...)`
+        /// </remarks>
+        string SetKeywords(string value, string placeholder = null);
 
         /// <summary>
         /// Set the page status code if possible (it will work in DNN, but probably not in Oqtane)
         /// </summary>
         /// <param name="statusCode">An HTTP status code like 404</param>
         /// <param name="message">Message / Description text (optional) which would be included in the header</param>
-        void SetHttpStatus(int statusCode, string message = null);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.Activate(...)`
+        /// </remarks>
+        string SetHttpStatus(int statusCode, string message = null);
 
 
         /// <summary>
@@ -73,14 +88,20 @@ namespace ToSic.Sxc.Services
         /// Will simply not do anything if an error occurs, like if the page object doesn't exist
         /// </summary>
         /// <param name="tag"></param>
-        void AddToHead(string tag);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddToHead(...)`
+        /// </remarks>
+        string AddToHead(string tag);
 
         /// <summary>
         /// Add a RazorBlade Tag to the headers of the page
         /// Will simply not do anything if an error occurs, like if the page object doesn't exist
         /// </summary>
         /// <param name="tag"></param>
-        void AddToHead(TagBase tag);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddToHead(...)`
+        /// </remarks>
+        string AddToHead(TagBase tag);
 
 
         /// <summary>
@@ -89,27 +110,39 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="name"></param>
         /// <param name="content"></param>
-        void AddMeta(string name, string content);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddMeta(...)`
+        /// </remarks>
+        string AddMeta(string name, string content);
 
         /// <summary>
         /// Add an open-graph header according to http://ogp.me/
         /// </summary>
         /// <param name="property">Open Graph property name, like title or image:width. 'og:' is automatically prefixed if not included</param>
         /// <param name="content">value of this property</param>
-        void AddOpenGraph(string property, string content);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddOpenGraph(...)`
+        /// </remarks>
+        string AddOpenGraph(string property, string content);
 
 
         /// <summary>
         /// Add a JSON-LD header according https://developers.google.com/search/docs/guides/intro-structured-data
         /// </summary>
         /// <param name="jsonString">A prepared JSON string</param>
-        void AddJsonLd(string jsonString);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddJsonLd(...)`
+        /// </remarks>
+        string AddJsonLd(string jsonString);
 
         /// <summary>
         /// Add a JSON-LD header according https://developers.google.com/search/docs/guides/intro-structured-data
         /// </summary>
         /// <param name="jsonObject">A object which will be converted to JSON. We recommend using dictionaries to build the object.</param>
-        void AddJsonLd(object jsonObject);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddJsonLd(...)`
+        /// </remarks>
+        string AddJsonLd(object jsonObject);
 
         #region Icon stuff
 
@@ -118,12 +151,15 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="path">Path to the image/icon file</param>
         /// <param name="doNotRelyOnParameterOrder">This is a dummy parameter to force the developer to name the remaining parameters - like size: 75 etc.
-        /// This allows us to add more parameters in future without worrying that existing code could break. 
+        ///     This allows us to add more parameters in future without worrying that existing code could break. 
         /// </param>
         /// <param name="rel">the rel-text, default is 'icon'. common terms are also 'shortcut icon' or 'apple-touch-icon'</param>
         /// <param name="size">Will be used in size='#x#' tag; only relevant if you want to provide multiple separate sizes</param>
         /// <param name="type">An optional type. If not provided, will be auto-detected from known types or remain empty</param>
-        void AddIcon(
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddIcon(...)`
+        /// </remarks>
+        string AddIcon(
             string path,
             string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
             string rel = "",
@@ -135,12 +171,15 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="path">Path to the image/icon file</param>
         /// <param name="doNotRelyOnParameterOrder">This is a dummy parameter to force the developer to name the remaining parameters - like size: 75 etc.
-        /// This allows us to add more parameters in future without worrying that existing code could break.
+        ///     This allows us to add more parameters in future without worrying that existing code could break.
         /// </param>
         /// <param name="favicon">path to favicon, default is '/favicon.ico' </param>
         /// <param name="rels"></param>
         /// <param name="sizes"></param>
-        void AddIconSet(
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddIconSet(...)`
+        /// </remarks>
+        string AddIconSet(
             string path,
             string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
             object favicon = null,
@@ -156,14 +195,18 @@ namespace ToSic.Sxc.Services
         /// Still WIP, at the moment the only relevant key can be `turnOn`
         /// </summary>
         /// <param name="keys"></param>
-        void Activate(params string[] keys);
+        /// <remarks>
+        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.Activate(...)`
+        /// </remarks>
+        string Activate(params string[] keys);
 
         #endregion
 
         #region Security
 
         /// <summary>
-        /// Add common html attributes to a `script` or `link` tag to enable optimizations and whitelist in CSP
+        /// Add common html attributes to a `script` or `link` tag to enable optimizations
+        /// and [automatically whitelist in the Content Security Policy](xref:Abyss.Security.Csp.Parts#auto-white-listing-explicit)
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="optimize">Activate optimize, default is true</param>
@@ -190,10 +233,9 @@ namespace ToSic.Sxc.Services
         /// <param name="name"></param>
         /// <param name="values"></param>
         /// <remarks>
-        /// History: Created in 2sxc 14
+        /// History: Created in 2sxc 14; will always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddCsp(...)`
         /// </remarks>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("Beta / WIP v14")]
-        void AddCsp(string name, params string[] values);
+        string AddCsp(string name, params string[] values);
 
         #endregion
     }

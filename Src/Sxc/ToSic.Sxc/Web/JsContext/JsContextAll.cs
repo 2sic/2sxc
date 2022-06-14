@@ -44,10 +44,13 @@ namespace ToSic.Sxc.Web.JsContext
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);
             var autoToolbar = ctx.UserMayEdit;
+
+            // If auto toolbar is false / not certain, and we have features activated...
+            // find out if the Toolbars-Auto is enabled, in which case we should activate them
             if (!autoToolbar && block.BlockFeatureKeys.Any())
             {
                 var features = block.Context.PageServiceShared.PageFeatures.GetWithDependents(block.BlockFeatureKeys, Log);
-                autoToolbar = features.Contains(BuiltInFeatures.ModuleContext);
+                autoToolbar = features.Contains(BuiltInFeatures.ToolbarsAuto);
             }
 
             Ui = new UiDto(autoToolbar);
