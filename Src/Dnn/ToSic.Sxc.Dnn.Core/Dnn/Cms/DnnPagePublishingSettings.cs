@@ -46,10 +46,10 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public override string NameId => DnnConstants.LogName + "PublishingSettings";
 
-        public override int Priority => 10;
+        public override int Priority => (int)PagePublishingPriorities.Platform;
 
         /// <summary>
-        /// It's viable if it has not been turned off
+        /// It's viable if it has not been turned off, which is the default
         /// </summary>
         /// <returns></returns>
         public override bool IsViable() => _featuresService.IsEnabled(Configuration.Features.BuiltInFeatures.DnnPageWorkflow.NameId);

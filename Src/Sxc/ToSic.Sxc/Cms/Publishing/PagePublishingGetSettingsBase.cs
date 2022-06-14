@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Cms.Publishing
     {
         protected PagePublishingGetSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }
 
-        protected PublishingMode Requirements(int instanceId)
+        private PublishingMode Requirements(int instanceId)
         {
             var wrapLog = Log.Fn<PublishingMode>($"{instanceId}");
             if (instanceId < 0) return wrapLog.Return(PublishingMode.DraftOptional, "no instance");
@@ -30,7 +30,12 @@ namespace ToSic.Sxc.Cms.Publishing
         public BlockPublishingSettings SettingsOfModule(int moduleId)
         {
             var mode = Requirements(moduleId);
-            return new BlockPublishingSettings { ForceDraft = mode == PublishingMode.DraftRequired, Mode = mode };
+            return new BlockPublishingSettings
+            {
+                AllowDraft = mode != PublishingMode.DraftForbidden,
+                ForceDraft = mode == PublishingMode.DraftRequired, 
+                Mode = mode
+            };
         }
 
         #region SwitchableService
@@ -40,7 +45,7 @@ namespace ToSic.Sxc.Cms.Publishing
 
         public virtual bool IsViable() => true;
 
-        public virtual int Priority => 1;
+        public virtual int Priority => (int)PagePublishingPriorities.Default;
 
         #endregion
     }
