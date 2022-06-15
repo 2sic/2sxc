@@ -9,6 +9,9 @@ namespace ToSic.Sxc.Services
     /// They are
     /// * _lazy_ so they are only created if ever needed
     /// * _created and preserved_ so multiple access to the service won't cause any overhead
+    /// * _versioned_ so that we can continue to enhance the APIs without breaking existing Razor
+    ///
+    /// As of v14.03+ you should use the <see cref="ServiceKit14"/>
     /// </summary>
     /// <remarks>
     /// * History: Added v14.03 WIP
