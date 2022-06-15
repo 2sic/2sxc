@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Dnn.dist
             {
                 var path = GetPath(virtualPath);
                 html = File.ReadAllText(path);
+                html = HtmlDialog.CleanImport(html);
                 Cache.Insert(key, html, new CacheDependency(path));
             }
 
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Dnn.dist
             var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
 
             var content = DnnJsApi.GetJsApiJson(pageId);
-            return HtmlDialog.UpdatePlaceholders(html, content, pageId);
+            return HtmlDialog.UpdatePlaceholders(html, content, pageId, "", "");
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

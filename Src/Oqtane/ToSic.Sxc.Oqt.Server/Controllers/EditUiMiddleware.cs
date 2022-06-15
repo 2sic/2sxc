@@ -22,16 +22,18 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             context.Response.Headers.Add("test-dev", "2sxc");
 
             var key = CacheKey(virtualPath);
-            if (Cache.Get(key) is not byte[] bytes)
+            if (Cache.Get(key) is not string html)
             {
                 var path = Path.Combine(env.WebRootPath, virtualPath);
                 if (!File.Exists(path)) throw new FileNotFoundException("File not found: " + path);
 
-                bytes = File.ReadAllBytes(path);
-                Cache.Set(key, bytes, GetCacheItemPolicy(path));
+                var bytesInFile = File.ReadAllBytes(path);
+                html = Encoding.Default.GetString(bytesInFile);
+                html = HtmlDialog.CleanImport(html);
+                Cache.Set(key, html, GetCacheItemPolicy(path));
             }
             
-            var html = Encoding.Default.GetString(bytes);
+            //var html = Encoding.Default.GetString(bytes);
 
             // inject JsApi to html content
             var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
@@ -39,9 +41,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var siteStateInitializer = context.RequestServices.GetService<SiteStateInitializer>();
             var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
             var content = OqtJsApi.GetJsApi(pageId, siteRoot, "");
-            html = HtmlDialog.UpdatePlaceholders(html, content, pageId);
+            html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", "<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"TODO\" >");
 
-            bytes = Encoding.Default.GetBytes(html);
+            var bytes = Encoding.Default.GetBytes(html);
 
             // html response
             context.Response.ContentType = "text/html";
