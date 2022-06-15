@@ -9,12 +9,9 @@ namespace ToSic.Sxc.Web
     {
         public const string PageIdInUrl = "pageId";
 
-        private const string MetaTagJsApiTemp = "<meta name=\"_jsApi-temp\" content={0}";
-        private const string MetaTagJsApi = "<meta name=\"_jsApi\" content={0}";
-        private const string CacheBreakPlaceholder = "@sxcver";
-
-        private const string OriginalBase = "<base href=\"./\">";
-        private const string NewBase = "<base href=\"{0}\">";
+        public const string CacheBreakPlaceholder = "@sxcver";
+        public const string BasePlaceholder = "@base";
+        public const string JsApiPlaceholder = "@jsapi";
 
         public static string UpdatePlaceholders(string html, string content, int pageId)
         {
@@ -22,13 +19,15 @@ namespace ToSic.Sxc.Web
 
             // Add context variables
             var result = html
-                .Replace(string.Format(MetaTagJsApi, "\"\""), string.Format(MetaTagJsApi, $"'{content}'"))
-                .Replace(string.Format(MetaTagJsApiTemp, "\"\""), string.Format(MetaTagJsApiTemp, $"'{content}'"));
+                // First correct quotes, as the index-raw will always have double quotes (angular-compiler replaces single quotes)
+                .Replace($"\"{JsApiPlaceholder}\"", $"'{JsApiPlaceholder}'")
+                .Replace(JsApiPlaceholder, content);
 
             // Add version cachebreak
             result = result.Replace(CacheBreakPlaceholder, EavSystemInfo.VersionWithStartUpBuild);
 
-            result = result.Replace(OriginalBase, string.Format(NewBase, $"./?{PageIdInUrl}={pageId}"));
+            // Replace base url
+            result = result.Replace(BasePlaceholder, $"./?{PageIdInUrl}={pageId}");
 
             return result;
         }
