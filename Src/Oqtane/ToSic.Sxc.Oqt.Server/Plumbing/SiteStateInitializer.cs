@@ -22,12 +22,12 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             HttpContextAccessor = httpContextAccessor;
             AliasRepositoryLazy = aliasRepositoryLazy;
         }
-        
+
         /// <summary>
         /// Use this from inner code, which must always have an initialized state.
         /// Usually this has been ensured at the very top - when razor starts or when WebApi start
         /// </summary>
-        public SiteState InitializedState 
+        public SiteState InitializedState
         {
             get
             {
@@ -52,8 +52,9 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             // This would indicate it was called improperly, because we need the shared SiteState variable to work properly
             if (siteState2 == null) throw new ArgumentNullException(nameof(siteState2));
 
-            // Check if alias already set, in which case we skip this
-            if (siteState.Alias != null && siteState2.Alias != null) return true;
+            // Check if alias already set and if is for provided siteId (if provided), in which case we skip this
+            if (siteState.Alias != null && siteState2.Alias != null
+                && (!siteId.HasValue || siteId.Value == siteState?.Alias?.SiteId || siteId.Value == siteState2?.Alias?.SiteId)) return true;
 
             // For anything else we need the httpContext, otherwise skip
             var request = HttpContextAccessor?.HttpContext?.Request;
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             }
 
             // Try get alias with info for HttpRequest and eventual SiteId.
-            if (request.Path.HasValue && request.Path.Value != null && request.Path.Value.Contains("/_blazor"))
+            if (siteId.HasValue || (request.Path.HasValue && request.Path.Value != null && request.Path.Value.Contains("/_blazor")))
             {
                 var url = $"{request.Host}";
 
@@ -84,7 +85,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
 
                 if (siteId.HasValue) // acceptable solution
                     siteState.Alias = aliases.OrderByDescending(a => /*a.IsDefault*/  a.Name.Length) // TODO: a.IsDefault DESC after upgrade to Oqt v3.0.3+
-                        //.ThenByDescending(a => a.Name.Length)
+                                                                                                     //.ThenByDescending(a => a.Name.Length)
                         .ThenBy(a => a.Name)
                         .FirstOrDefault(a => a.SiteId == siteId.Value && a.Name.StartsWith(url, StringComparison.InvariantCultureIgnoreCase));
                 else // fallback solution, wrong site is possible

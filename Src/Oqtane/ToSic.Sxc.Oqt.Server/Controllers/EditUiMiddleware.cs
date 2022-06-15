@@ -8,6 +8,7 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Antiforgery;
+using Oqtane.Repository;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Web;
@@ -33,17 +34,29 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                 html = HtmlDialog.CleanImport(html);
                 Cache.Set(key, html, GetCacheItemPolicy(path));
             }
-            
+
             //var html = Encoding.Default.GetString(bytes);
 
             // inject JsApi to html content
             var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
             var pageId = !string.IsNullOrEmpty(pageIdString) ? Convert.ToInt32(pageIdString) : -1;
+
             var siteStateInitializer = context.RequestServices.GetService<SiteStateInitializer>();
+            
+            // find siteId from pageId (if provided)
+            if (pageId != -1)
+            {
+                // siteState need to be initialized for DB connection to get siteId from pageId
+                var _ = siteStateInitializer?.InitializedState;
+                var pages = context.RequestServices.GetRequiredService<IPageRepository>();
+                var page = pages.GetPage(pageId, false);
+                siteStateInitializer?.InitIfEmpty(page?.SiteId);
+            }
+
             var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
             var antiForgery = context.RequestServices.GetRequiredService<IAntiforgery>();
             var tokenSet = antiForgery.GetAndStoreTokens(context);
-            var rsvt = tokenSet.RequestToken!;
+            var rsvt = tokenSet.RequestToken;
             var content = OqtJsApi.GetJsApi(pageId, siteRoot, rsvt);
             html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rsvt}\" >");
 
