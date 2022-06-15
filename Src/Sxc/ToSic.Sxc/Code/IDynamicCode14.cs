@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Code
     [PrivateApi("WIP v14.02")]
     public interface IDynamicCode14<out TModel, out TKit> : IDynamicCode<TModel, TKit>
         where TModel : class
-        where TKit : Kit
+        where TKit : ServiceKit
     {
         #region IDynamicCode Repeats - keep this in sync
         // **************************************************

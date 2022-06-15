@@ -13,7 +13,7 @@ namespace Custom
     [PrivateApi("WIP v14.02")]
     public class Code14<TModel, TKit>: DynamicCode<TModel, TKit>, IDynamicCode14<TModel, TKit>
         where TModel : class
-        where TKit : Kit
+        where TKit : ServiceKit
     {
         /// <inheritdoc />
         public dynamic Resources => _DynCodeRoot?.Resources;

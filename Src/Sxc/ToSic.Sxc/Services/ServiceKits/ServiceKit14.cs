@@ -2,7 +2,14 @@
 
 namespace ToSic.Sxc.Services
 {
-    public class Kit14: Kit
+    /// <summary>
+    /// Default ServiceKit for 2sxc v14.03+.
+    /// To learn more about ServiceKits, see <see cref="ServiceKit"/>.
+    /// </summary>
+    /// <remarks>
+    /// * History: Added v14.03 WIP
+    /// </remarks>
+    public class ServiceKit14: ServiceKit
     {
         /// <summary>
         /// The Convert Service, used to convert any kind of data type to another data type

@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Code
 {
     public abstract class DynamicCodeRoot<TModel, TKit>: DynamicCodeRoot, IDynamicCodeRoot<TModel, TKit>
         where TModel : class
-        where TKit : Kit
+        where TKit : ServiceKit
     {
         protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(dependencies, logPrefix)
         {

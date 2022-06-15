@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn.Code
                 if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return null;
 
                 var kitType = typesArgs[1];
-                if (!kitType.IsSubclassOf(typeof(Kit))) return null;
+                if (!kitType.IsSubclassOf(typeof(ServiceKit))) return null;
 
                 // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TKit> using the same types
                 var genType = typeof(DnnDynamicCodeRoot<,>);

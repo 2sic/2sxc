@@ -8,7 +8,7 @@ namespace Custom
 {
     public abstract class Api14<TModel, TKit>: Api12, IDynamicCode<TModel, TKit>
         where TModel : class
-        where TKit : Kit
+        where TKit : ServiceKit
     {
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;
 

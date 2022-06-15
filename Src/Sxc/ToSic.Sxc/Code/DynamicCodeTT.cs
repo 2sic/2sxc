@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Code
 {
     public abstract class DynamicCode<TModel, TKit>: DynamicCode, IDynamicCode<TModel, TKit>
         where TModel : class
-        where TKit : Kit
+        where TKit : ServiceKit
     {
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;
 
