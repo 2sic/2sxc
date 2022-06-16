@@ -257,7 +257,7 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        #region Resources and Settings WIP 12.02
+        #region Resources and Settings
 
         /// <summary>
         /// Resources for this Scenario. This is a dynamic object based on the <see cref="IDynamicStack"/>.
