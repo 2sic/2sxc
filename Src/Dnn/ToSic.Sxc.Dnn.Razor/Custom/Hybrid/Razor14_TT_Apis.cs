@@ -8,7 +8,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -22,22 +21,8 @@ namespace Custom.Hybrid
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi]
-    public abstract partial class Razor12 : RazorComponentBase, IRazor12
+    public abstract partial class Razor14<TModel, TServiceKit>
     {
-        [PrivateApi] internal const string ErrCreateInstanceCshtml =
-            "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead.";
-
-        [PrivateApi] internal const string ErrRenderPage =
-            "RenderPage(...) is not supported in Hybrid Razor. Use Html.Partial(...) instead.";
-
-        [PrivateApi("Hide this, no need to publish; would only confuse users")]
-        protected Razor12()
-        {
-            // Set the error message to ensure that this will not work in Hybrid razor
-            _ErrorWhenUsingCreateInstanceCshtml = ErrCreateInstanceCshtml;
-            _ErrorWhenUsingRenderPage = ErrRenderPage;
-        }
-
 
         #region Link, Edit, Dnn, App, Data
 
@@ -89,10 +74,7 @@ namespace Custom.Hybrid
 
         #endregion
 
-        #region Convert-Service
-
-        /// <inheritdoc />
-        public IConvertService Convert => _DynCodeRoot.Convert;
+        #region Convert-Service - Removed it V14!
 
         #endregion
 
