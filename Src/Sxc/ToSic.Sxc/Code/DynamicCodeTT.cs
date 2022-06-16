@@ -3,13 +3,13 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class DynamicCode<TModel, TKit>: DynamicCode, IDynamicCode<TModel, TKit>
+    public abstract class DynamicCode<TModel, TServiceKit>: DynamicCode, IDynamicCode<TModel, TServiceKit>
         where TModel : class
-        where TKit : ServiceKit
+        where TServiceKit : ServiceKit
     {
-        public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TKit> root) ? default : root.Model;
+        public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TServiceKit> root) ? default : root.Model;
 
-        public TKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TKit>());
-        private readonly ValueGetOnce<TKit> _kit = new ValueGetOnce<TKit>();
+        public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
+        private readonly ValueGetOnce<TServiceKit> _kit = new ValueGetOnce<TServiceKit>();
     }
 }

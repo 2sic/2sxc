@@ -4,16 +4,16 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom
+namespace Custom.Hybrid
 {
     /// <summary>
     /// New base class for v12 Dynamic Code
     /// Adds new properties and methods, and doesn't keep old / legacy APIs
     /// </summary>
     [PrivateApi("WIP v14.02")]
-    public class Code14<TModel, TKit>: DynamicCode<TModel, TKit>, IDynamicCode14<TModel, TKit>
+    public class Code14<TModel, TServiceKit>: DynamicCode<TModel, TServiceKit>, IDynamicCode14<TModel, TServiceKit>
         where TModel : class
-        where TKit : ServiceKit
+        where TServiceKit : ServiceKit
     {
         /// <inheritdoc />
         public dynamic Resources => _DynCodeRoot?.Resources;

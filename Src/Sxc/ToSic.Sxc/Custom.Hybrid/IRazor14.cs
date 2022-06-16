@@ -6,9 +6,9 @@ using ToSic.Sxc.Services;
 namespace Custom.Hybrid
 {
     [PrivateApi("not sure yet if this will stay in Hybrid or go to Web.Razor or something, so keep it private for now")]
-    public interface IRazor14<out TModel, out TKit>: IRazor, IDynamicCode14<TModel, TKit>
+    public interface IRazor14<out TModel, out TServiceKit>: IRazor, IDynamicCode14<TModel, TServiceKit>
         where TModel : class
-        where TKit : ServiceKit
+        where TServiceKit : ServiceKit
     {
         [PrivateApi]
         dynamic DynamicModel { get; }

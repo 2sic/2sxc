@@ -3,9 +3,9 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
 {
-    public abstract class DynamicCodeRoot<TModel, TKit>: DynamicCodeRoot, IDynamicCodeRoot<TModel, TKit>
+    public abstract class DynamicCodeRoot<TModel, TServiceKit>: DynamicCodeRoot, IDynamicCodeRoot<TModel, TServiceKit>
         where TModel : class
-        where TKit : ServiceKit
+        where TServiceKit : ServiceKit
     {
         protected DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(dependencies, logPrefix)
         {
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code
         public TModel Model => default; // _mOnce.Get(GetService<TModel>);
         //private readonly ValueGetOnce<TModel> _mOnce = new ValueGetOnce<TModel>();
 
-        public TKit Kit => _kit.Get(GetService<TKit>);
-        private readonly ValueGetOnce<TKit> _kit = new ValueGetOnce<TKit>();
+        public TServiceKit Kit => _kit.Get(GetService<TServiceKit>);
+        private readonly ValueGetOnce<TServiceKit> _kit = new ValueGetOnce<TServiceKit>();
     }
 }

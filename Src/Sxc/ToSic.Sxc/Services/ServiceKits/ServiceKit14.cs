@@ -1,14 +1,18 @@
-﻿using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Services
 {
     /// <summary>
+    /// **_BETA_**
+    /// 
     /// Default ServiceKit for 2sxc v14.03+.
     /// To learn more about ServiceKits, see <see cref="ServiceKit"/>.
     /// </summary>
     /// <remarks>
     /// * History: Added v14.03 WIP
     /// </remarks>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("BETA / WIP v14.05")]
     public class ServiceKit14: ServiceKit
     {
         /// <summary>
