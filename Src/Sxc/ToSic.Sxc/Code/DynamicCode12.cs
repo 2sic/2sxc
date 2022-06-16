@@ -25,6 +25,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic Settings => _DynCodeRoot?.Settings;
 
+        [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
     }
 }

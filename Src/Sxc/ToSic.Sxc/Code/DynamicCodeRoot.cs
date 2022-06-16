@@ -125,6 +125,7 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
+        [PrivateApi("Not yet ready")]
         public IDevTools DevTools => throw new NotImplementedException("This is a future feature, we're just reserving the object name");
     }
 }
