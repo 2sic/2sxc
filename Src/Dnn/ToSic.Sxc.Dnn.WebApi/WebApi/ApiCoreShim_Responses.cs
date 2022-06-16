@@ -5,10 +5,9 @@ using System.Web.Http;
 
 // The commands here should help Dnn WebAPIs 
 
-// ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace ToSic.Sxc.WebApi
 {
-    public abstract partial class Api12
+    public abstract partial class ApiCoreShim
     {
 
         /// <summary>

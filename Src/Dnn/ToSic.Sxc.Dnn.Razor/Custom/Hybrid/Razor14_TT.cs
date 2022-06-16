@@ -14,7 +14,7 @@ namespace Custom.Hybrid
     /// Will provide the ServiceKit specified by the type `TServiceKit` on property `Kit`.
     /// </summary>
     /// <remarks>
-    /// Just fyi: the property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
+    /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
     /// </remarks>
     /// <typeparam name="TModel">_not yet used_ - pls always use `dynamic`</typeparam>
     /// <typeparam name="TServiceKit">The ServiceKit provided on `Kit` - for now, use <see cref="ServiceKit14"/></typeparam>

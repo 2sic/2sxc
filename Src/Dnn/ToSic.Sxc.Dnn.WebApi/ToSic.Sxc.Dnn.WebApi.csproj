@@ -107,10 +107,13 @@
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
     <Compile Include="Custom\Dnn\Api12.cs" />
+    <Compile Include="WebApi\ApiCoreShim.cs" />
+    <Compile Include="Custom\Hybrid\Api12_Api.cs" />
+    <Compile Include="Custom\Hybrid\Api14_TT_Api.cs" />
     <Compile Include="Custom\Hybrid\Api12.cs" />
-    <Compile Include="Custom\Hybrid\Api12_DynamicWebApi.cs" />
-    <Compile Include="Custom\Hybrid\Api12_Obsolete.cs" />
-    <Compile Include="Custom\Hybrid\Api12_Responses.cs" />
+    <Compile Include="WebApi\ApiCoreShim_DynamicWebApi.cs" />
+    <Compile Include="WebApi\ApiCoreShim_Obsolete.cs" />
+    <Compile Include="WebApi\ApiCoreShim_Responses.cs" />
     <Compile Include="Custom\Hybrid\Api14_TT.cs" />
     <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
     <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />

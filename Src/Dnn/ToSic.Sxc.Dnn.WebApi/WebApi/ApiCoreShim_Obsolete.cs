@@ -7,10 +7,9 @@ using ToSic.Eav.LookUp;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Custom.Hybrid;
 
-// ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace ToSic.Sxc.WebApi
 {
-    public partial class Api12: IDynamicCodeBeforeV10
+    public partial class ApiCoreShim: IDynamicCodeBeforeV10
     {
         // Obsolete stuff - not supported any more in after V10 - show helpful error messages
 
