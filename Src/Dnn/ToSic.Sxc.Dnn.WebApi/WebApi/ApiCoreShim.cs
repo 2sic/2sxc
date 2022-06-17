@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("This is the .net core Shim class for v12+")]
     [DnnLogExceptions]
-    public abstract partial class ApiCoreShim: DynamicApiController, /*IDynamicCode12,*/ IDynamicWebApi, IHasDynamicCodeRoot
+    public abstract partial class ApiCoreShim: DynamicApiController, IDynamicWebApi, IHasDynamicCodeRoot
     {
         protected internal ApiCoreShim(string logSuffix) : base(logSuffix) { }
 

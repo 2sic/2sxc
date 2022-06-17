@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             var entity = Entity;
             if (entity == null) return null;
-            var newRule = $"entityId={entity.EntityId}&contentTypeName={entity.Type?.Name}";
+            var typeName = entity.Type?.Name ?? "error-no-type-found";
+            var newRule = $"entityId={entity.EntityId}&contentType={typeName}";
             return newRule;
         }
     }
