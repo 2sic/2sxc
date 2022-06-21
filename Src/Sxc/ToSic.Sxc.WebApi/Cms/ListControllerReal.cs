@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Sxc.Apps;
@@ -10,20 +11,35 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class ListControllerReal: BlockWebApiBackendBase<ListControllerReal>, IHasLog<ListControllerReal>, IListController
+    public partial class ListControllerReal: BlockWebApiBackendBase<ListControllerReal>, IHasLog<ListControllerReal>, IListController
     {
         public const string LogSuffix = "Lst";
 
-        private readonly IPagePublishing _publishing;
 
         #region constructor / DI
 
-        public ListControllerReal(IServiceProvider sp, IPagePublishing publishing, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver) : base(sp, cmsManagerLazy, ctxResolver, "Api.LstRl") 
-            => _publishing = publishing.Init(Log);
+        public ListControllerReal(
+            IServiceProvider sp,
+            IPagePublishing publishing,
+            Lazy<CmsManager> cmsManagerLazy,
+            IContextResolver ctxResolver,
+            GeneratorLog<IPagePublishing> versioning
+        ) : base(sp, cmsManagerLazy, ctxResolver, "Api.LstRl")
+        {
+            _publishing = publishing.Init(Log);
+            _versioning = versioning.SetLog(Log);
+        }
+
+        private readonly GeneratorLog<IPagePublishing> _versioning;
+        private readonly IPagePublishing _publishing;
+
+        private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());
+        private IContextOfBlock _context;
+
 
         #endregion
 
-        
+
         public void Move(Guid? parent, string fields, int index, int toIndex)
         {
             var wrapLog = Log.Fn($"change order sort:{index}, dest:{toIndex}");
@@ -42,6 +58,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 (entity, fieldList, versioning) => entMan.FieldListRemove(entity, fieldList, index, versioning));
             wrapLog.Done();
         }
+
+
 
 
         private void ModifyList(IEntity target, string fields, Action<IEntity, string[], bool> action)

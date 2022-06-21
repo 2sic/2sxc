@@ -53,6 +53,11 @@ namespace ToSic.Sxc.Apps
         public IImmutableList<IEntity> ContentGroups() => _contentGroups ?? (_contentGroups = Parent.Entities.Get(BlockTypeName).ToImmutableArray());
         private IImmutableList<IEntity> _contentGroups;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="contentGroupGuid"></param>
+        /// <returns>Will always return an object, even if the group doesn't exist yet. The .Entity would be null then</returns>
         public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
         {
             var wrapLog = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
