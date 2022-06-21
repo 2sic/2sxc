@@ -2,21 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     /// <inheritdoc />
-    public partial class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder
+    public partial class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
     {
 
-        #region Constructors
+        #region Constructors and Init
 
         public class Dependencies
         {
@@ -42,92 +42,53 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public ToolbarBuilder(Dependencies deps) => _deps = deps.InitLogIfNotYet(Log);
         private readonly Dependencies _deps;
+
+        /// <summary>
+        /// Clone-constructor
+        /// </summary>
+        private ToolbarBuilder(ToolbarBuilder parent): this(parent._deps)
+        {
+            this.Init(parent.Log);
+            _currentAppIdentity = parent._currentAppIdentity;
+            _codeRoot = parent._codeRoot;
+            _params = parent._params;
+            Rules.AddRange(parent.Rules);
+        }
+
         public ILog Log { get; } = new Log(Constants.SxcLogName + ".TlbBld");
 
-        public IToolbarBuilder Init(IAppIdentity currentApp)
-        {
-            _currentAppIdentity = currentApp;
-            return this;
-        }
         private IAppIdentity _currentAppIdentity;
 
-        public ToolbarContext Context()
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            // See if any rules have a context
-            var rulesWithContext = Rules.Where(r => r.Context != null).ToArray();
-            if (!rulesWithContext.Any()) return null;
-            return rulesWithContext.FirstOrDefault()?.Context;
+            if (codeRoot == null) return;
+            _codeRoot = codeRoot;
+            _currentAppIdentity = codeRoot.App;
         }
+        private IDynamicCodeRoot _codeRoot;
 
         #endregion
-        public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
-        /// <inheritdoc />
-        [PrivateApi]
-        public IToolbarBuilder Add(params string[] rules) 
-            => InnerAdd(rules?.Cast<object>().ToArray());   // Must re-to-array, so that it's not re-wrapped
+        private ToolbarBuilderParams _params;
 
-        /// <inheritdoc />
-        public IToolbarBuilder Add(params object[] rules) 
-            => InnerAdd(rules?.ToArray());                  // Must re-to-array, so that it's not re-wrapped
-
-        private IToolbarBuilder InnerAdd(params object[] newRules)
-        {
-            // Create clone before starting to log so it's in there too
-            var clone = new ToolbarBuilder(_deps).Init(Log);
-            clone.Init(_currentAppIdentity);
-            
-            var callLog = Log.Fn<IToolbarBuilder>();
-            clone.Rules.AddRange(Rules);
-            if (newRules == null || !newRules.Any())
-                return callLog.Return(clone, "no new rules");
-
-            foreach (var rule in newRules)
-            {
-                if (rule is ToolbarRuleBase realRule)
-                    clone.Rules.Add(realRule);
-                else if (rule is string stringRule)
-                    clone.Rules.Add(new ToolbarRuleGeneric(stringRule));
-            }
-            return callLog.Return(clone);
-        }
-
-        /// <inheritdoc />
-        public IToolbarBuilder Metadata(
-            object target,
-            string contentTypes = null,
+        public IToolbarBuilder With(
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null,
-            string context = null
+            string mode = null,
+            object target = null
         )
         {
-            var finalTypes = GetMetadataTypeNames(target, contentTypes);
-            var realContext = GetContext(target, context);
-            var result = this as IToolbarBuilder;
-            foreach (var type in finalTypes)
-                result = result.Add(new ToolbarRuleMetadata(target, type, ui, parameters, context: realContext, helper: _deps.ToolbarButtonHelper.Ready));
-
-            return result;
+            // Create clone before starting to log so it's in there too
+            var clone = new ToolbarBuilder(this);
+            var p = clone._params = new ToolbarBuilderParams(_params);
+            if (mode != null) p.Mode = mode;
+            if (target != null) p.Target = target;
+            return clone;
         }
 
-        /// <inheritdoc />
-        public IToolbarBuilder Copy(
-            object target,
-            string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null,
-            string context = null
-        ) => Add(new ToolbarRuleCopy(target, ui, parameters, GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
+        public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
 
-        [PrivateApi("WIP 13.11")]
-        public IToolbarBuilder Image(
-            object target,
-            string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null
-        ) => Add(new ToolbarRuleImage(target, ui, parameters, context: GetContext(target, null), helper: _deps.ToolbarButtonHelper.Ready));
+
 
         public IToolbarBuilder Settings(
             string noParamOrder = Eav.Parameters.Protector, 
@@ -141,11 +102,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
                 ui: ui, parameters: parameters));
 
-        public override string ToString()
-        {
-            var rules = Rules.Select(r => r.ToString()).ToArray();
-            return JsonConvert.SerializeObject(rules);
-        }
+
 
         #region Enumerators
 
