@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Data;
+﻿using ToSic.Sxc.Data;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -12,10 +11,7 @@ namespace Custom.Hybrid
         /// <remarks>
         /// New in v12
         /// </remarks>
-        [PublicApi]
-        public dynamic DynamicModel =>
-            _dynamicModel ?? (_dynamicModel = new DynamicReadDictionary<object, dynamic>(PageData));
-
+        public dynamic DynamicModel => _dynamicModel ?? (_dynamicModel = new DynamicReadDictionary<object, dynamic>(PageData));
         private dynamic _dynamicModel;
     }
 }

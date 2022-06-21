@@ -29,16 +29,23 @@ namespace ToSic.Sxc.Services
 
         #endregion
 
+        /// <inheritdoc />
         public IToolbarBuilder Default(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             string ui = null
-        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null);
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null, target: target);
 
+
+        /// <inheritdoc />
         public IToolbarBuilder Empty(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             string ui = null
-        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null);
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null, target: target);
 
+
+        /// <inheritdoc />
         public IToolbarBuilder Metadata(
             object target,
             string contentTypes = null,
@@ -48,6 +55,8 @@ namespace ToSic.Sxc.Services
             string context = null
         ) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, context);
 
+
+        /// <inheritdoc />
         public IToolbarBuilder Copy(
             object target,
             string noParamOrder = Parameters.Protector,
@@ -56,12 +65,16 @@ namespace ToSic.Sxc.Services
             string context = null
         ) => Empty().Copy(target, noParamOrder, ui, parameters, context);
 
-        private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, string ui, string context)
+
+        private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, string ui, string context, object target = null)
         {
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
-            var tlb = _toolbarGenerator.New.Init(_codeRoot?.App)
-                .Add(new ToolbarRuleToolbar(toolbarTemplate, ui: ui));
+            // The following lines must be just as this, because it's a functional object, where each call may return a new copy
+            var tlb = _toolbarGenerator.New;
+            tlb.ConnectToRoot(_codeRoot);
+            if (target != null) tlb = tlb.With(target: target);
+            tlb = tlb.Add(new ToolbarRuleToolbar(toolbarTemplate, ui: ui));
             if (context.HasValue())
                 tlb = tlb.Add(new ToolbarRuleGeneric($"context?{context}"));
             return callLog.Return(tlb);

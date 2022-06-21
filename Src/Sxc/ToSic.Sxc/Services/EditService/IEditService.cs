@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Services
         /// See also @HowTo.Razor.Edit.Toolbar
         /// </summary>
         /// <param name="target">
-        /// The content-item this toolbar is for, can be null. <br/>
+        /// The optional content-item this toolbar is for. Can be null. <br/>
         /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
         ///
         /// If the first parameter is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then all other parameters will be ignored. 

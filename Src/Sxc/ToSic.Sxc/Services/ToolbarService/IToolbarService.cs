@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Services
     /// <remarks>
     /// History
     /// * Added in 2sxc 13
+    /// * parameter `target` added to `Default()` and `Empty()` in v14.03
     /// </remarks>
     [PublicApi]
     public interface IToolbarService
@@ -20,6 +21,12 @@ namespace ToSic.Sxc.Services
         /// It's a fluid API, so the returned object can be extended with further `Add(...)` or special helpers to quickly create complex configurations.
         /// For guidance what to give it, also check out the [toolbar docs](xref:JsCode.Toolbars.Simple).
         /// </summary>
+        /// <param name="target">
+        /// The optional content-item this toolbar is for. Can be null. <br/>
+        /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+        /// 
+        /// _Added in v14.03_
+        /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <returns></returns>
@@ -28,6 +35,7 @@ namespace ToSic.Sxc.Services
         /// * Added in 2sxc 13
         /// </remarks>
         IToolbarBuilder Default(
+            object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null
         );
@@ -37,6 +45,12 @@ namespace ToSic.Sxc.Services
         /// It's a fluid API, so the returned object can be extended with further `Add(...)` or special helpers to quickly create complex configurations.
         /// For guidance what to give it, also check out the [toolbar docs](xref:JsCode.Toolbars.Simple).
         /// </summary>
+        /// <param name="target">
+        /// The optional content-item this toolbar is for. Can be null. <br/>
+        /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+        /// 
+        /// _Added in v14.03_
+        /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
         /// <returns></returns>
@@ -45,6 +59,7 @@ namespace ToSic.Sxc.Services
         /// * Added in 2sxc 13
         /// </remarks>
         IToolbarBuilder Empty(
+            object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string ui = null
         );

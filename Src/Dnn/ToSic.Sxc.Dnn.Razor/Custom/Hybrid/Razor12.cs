@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
@@ -25,13 +24,20 @@ namespace Custom.Hybrid
     [PublicApi]
     public abstract partial class Razor12 : RazorComponentBase, IRazor12
     {
+        [PrivateApi] internal const string ErrCreateInstanceCshtml =
+            "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead.";
+
+        [PrivateApi] internal const string ErrRenderPage =
+            "RenderPage(...) is not supported in Hybrid Razor. Use Html.Partial(...) instead.";
+
         [PrivateApi("Hide this, no need to publish; would only confuse users")]
         protected Razor12()
         {
             // Set the error message to ensure that this will not work in Hybrid razor
-            _ErrorWhenUsingCreateInstanceCshtml = "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead.";
-            _ErrorWhenUsingRenderPage = "RenderPage(...) is not supported in Hybrid Razor. Use Html.Partial(...) instead.";
+            _ErrorWhenUsingCreateInstanceCshtml = ErrCreateInstanceCshtml;
+            _ErrorWhenUsingRenderPage = ErrRenderPage;
         }
+
 
         #region Link, Edit, Dnn, App, Data
 
@@ -144,6 +150,7 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public dynamic Settings => _DynCodeRoot.Settings;
 
+        [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         /// <inheritdoc />

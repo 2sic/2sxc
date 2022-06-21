@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn
@@ -47,12 +48,14 @@ namespace ToSic.Sxc.Dnn
                 // Edit item
                 if (!block.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
-                        "javascript:$2sxcActionMenuMapper(" + ModuleId + ").edit();", "test", true,
+                        JsAction("edit", "{ useModuleList: true, sortOrder: 0 }"),
+                        "test", true,
                         SecurityAccessLevel.Edit, true, false);
 
                 // Change layout button
                 actions.Add(GetNextActionID(), LocalizeString("ActionChangeLayoutOrContent.Text"), "", "", "action_settings.gif",
-                    "javascript:$2sxcActionMenuMapper(" + ModuleId + ").changeLayoutOrContent();", false,
+                    JsAction("layout"),
+                    false,
                     SecurityAccessLevel.Edit, true, false);
             }
 
@@ -61,23 +64,34 @@ namespace ToSic.Sxc.Dnn
             // Edit Template Button
             if (user.IsDesigner && appIsKnown && block.View != null)
                 actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
-                    "templatehelp", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").develop();", "test",
+                    "templatehelp", "edit.gif",
+                    JsAction("template-develop"),
+                    "test",
                     true,
                     SecurityAccessLevel.Edit, true, false);
 
             // App management
             if (user.IsAdmin && appIsKnown)
                 actions.Add(GetNextActionID(), "Admin" + (block.IsContentApp ? "" : " " + block.App?.Name), "",
-                    "", "edit.gif", "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminApp();", "", true,
+                    "", "edit.gif",
+                    JsAction("app"),
+                    "", true,
                     SecurityAccessLevel.Admin, true, false);
 
             // Zone management (app list)
             if (user.IsAdmin)
                 actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
-                    "javascript:$2sxcActionMenuMapper(" + ModuleId + ").adminZone();", "", true,
+                    JsAction("zone"),
+                    "", true,
                     SecurityAccessLevel.Admin, true, false);
             
             return actions;
+        }
+
+        private string JsAction(string action, string commandParams = null)
+        {
+            var useParams = commandParams.HasValue() ? ", params: " + commandParams : "";
+            return "javascript:$2sxc(" + ModuleId + ").cms.run({ action: '" + action + "' " + useParams + " });";
         }
 
         #endregion

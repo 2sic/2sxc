@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Code
     /// The basic DnnDynamicCode without explicitly typed model / kit
     /// </summary>
     [PrivateApi]
-    public class DnnDynamicCodeRoot : DnnDynamicCodeRoot<object, Kit>
+    public class DnnDynamicCodeRoot : DnnDynamicCodeRoot<object, ServiceKit>
     {
         public DnnDynamicCodeRoot(Dependencies dependencies): base(dependencies) { }
     }

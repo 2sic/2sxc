@@ -5,11 +5,11 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
-using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Web.LightSpeed
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web.LightSpeed
     public class LightSpeed : HasLog, IOutputCache
     {
 
-        public LightSpeed(IFeaturesService features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IFeaturesInternal features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats) : base(Constants.SxcLogName + ".Lights")
         {
             LightSpeedStats = lightSpeedStats;
             _features = features;
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             _appPathsLazy = appPathsLazy;
         }
         public LightSpeedStats LightSpeedStats { get; }
-        private readonly IFeaturesService _features;
+        private readonly IFeaturesInternal _features;
         private readonly Lazy<IAppStates> _appStatesLazy;
         private readonly Lazy<AppPaths> _appPathsLazy;
 
@@ -59,6 +59,10 @@ namespace ToSic.Sxc.Web.LightSpeed
             // when dependent apps have disabled caching, parent app should not cache also 
             if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog.ReturnFalse("disabled in dependent app");
 
+            // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
+            if (AppState?.ZoneId != null)
+                dependentAppsStates.Add(AppStates.Get(AppStates.IdentityOfPrimary(AppState.ZoneId)));
+
             Log.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
             var duration = Duration;
@@ -69,7 +73,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
                 ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
                 : null;
-            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, dependentAppsStates, appPathsToMonitor,
+            var cacheKey = Ocm.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
                 (x) => LightSpeedStats.Remove(AppState.AppId, data.Size));
             Log.A($"LightSpeed Cache Key: {cacheKey}");
             if (cacheKey != "error") 

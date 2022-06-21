@@ -2,9 +2,9 @@
 
 namespace ToSic.Sxc.Code
 {
-    public interface IDynamicCodeRoot<out TModel, out TKit>: IDynamicCodeRoot, IDynamicCode<TModel, TKit>
+    public interface IDynamicCodeRoot<out TModel, out TServiceKit>: IDynamicCodeRoot, IDynamicCode<TModel, TServiceKit>
         where TModel : class
-        where TKit : Kit
+        where TServiceKit : ServiceKit
     {
     }
 }

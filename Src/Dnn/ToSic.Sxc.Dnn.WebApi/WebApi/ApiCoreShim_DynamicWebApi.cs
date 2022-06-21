@@ -5,12 +5,10 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.WebApi;
 
-// ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace ToSic.Sxc.WebApi
 {
-    public abstract partial class Api12 : IDynamicWebApi
+    public abstract partial class ApiCoreShim : IDynamicWebApi
     {
         /// <inheritdoc />
         public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,

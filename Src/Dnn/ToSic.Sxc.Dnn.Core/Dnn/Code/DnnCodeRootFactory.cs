@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Code
             {
                 var requiredDynCode = typeof(IDynamicCode<,>);
 
-                // 1. Detect if it's an IDynamicCode<TModel, TKit>
+                // 1. Detect if it's an IDynamicCode<TModel, TServiceKit>
                 var interfaceOnCode = customCode
                     .GetInterfaces()
                     .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == requiredDynCode);
@@ -51,9 +51,9 @@ namespace ToSic.Sxc.Dnn.Code
                 if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return null;
 
                 var kitType = typesArgs[1];
-                if (!kitType.IsSubclassOf(typeof(Kit))) return null;
+                if (!kitType.IsSubclassOf(typeof(ServiceKit))) return null;
 
-                // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TKit> using the same types
+                // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TServiceKit> using the same types
                 var genType = typeof(DnnDynamicCodeRoot<,>);
                 var finalType = genType.MakeGenericType(typesArgs);
 

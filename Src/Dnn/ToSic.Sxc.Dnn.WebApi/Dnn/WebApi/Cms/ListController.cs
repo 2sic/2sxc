@@ -14,24 +14,19 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         public ListController() : base(ListControllerReal.LogSuffix) { }
 
+        /// <inheritdoc />
         /// <summary>
         /// used to be GET Module/ChangeOrder
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="fields"></param>
-        /// <param name="index"></param>
-        /// <param name="toIndex"></param>
         [HttpPost]
         public void Move(Guid? parent, string fields, int index, int toIndex)
             => Real.Move(parent, fields, index, toIndex);
 
 
+        /// <inheritdoc />
         /// <summary>
         /// Used to be Get Module/RemoveFromList
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="fields"></param>
-        /// <param name="index"></param>
         [HttpDelete]
         public void Delete(Guid? parent, string fields, int index)
             => Real.Delete(parent, fields, index);

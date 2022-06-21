@@ -4,13 +4,13 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Code
 {
     [PrivateApi("WIP v14.02")]
-    public interface IDynamicCode<out TModel, out TKit>: IDynamicCode, IDynamicCodeKit<TKit>
+    public interface IDynamicCode<out TModel, out TServiceKit>: IDynamicCode, IDynamicCodeKit<TServiceKit>
         where TModel : class
-        where TKit: Kit
+        where TServiceKit: ServiceKit
     {
         [PrivateApi]
         TModel Model { get; }
 
-        TKit Kit { get; }
+        TServiceKit Kit { get; }
     }
 }

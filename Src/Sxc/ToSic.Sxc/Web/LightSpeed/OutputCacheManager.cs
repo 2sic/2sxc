@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Web.LightSpeed
@@ -21,7 +22,8 @@ namespace ToSic.Sxc.Web.LightSpeed
             return id;
         }
 
-        public string Add(string cacheKey, OutputCacheItem data, int duration, List<AppState> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
+        public string Add(string cacheKey, OutputCacheItem data, int duration, IFeaturesInternal features,
+            List<AppState> appStates, IList<string> appPaths = null, CacheEntryUpdateCallback updateCallback = null)
         {
             try
             {
@@ -29,6 +31,10 @@ namespace ToSic.Sxc.Web.LightSpeed
                 if (duration == 0) duration = 1;
                 var expiration = new TimeSpan(0, 0, duration);
                 var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+
+                // flush cache when any feature is changed
+                policy.ChangeMonitors.Add(new FeaturesResetMonitor(features));
+
                 // get new instance of ChangeMonitor and insert it to the cache item
                 if (appStates.Any())
                     foreach(var appState in appStates)

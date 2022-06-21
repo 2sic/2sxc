@@ -9,26 +9,52 @@ namespace ToSic.Sxc.Web
     {
         public const string PageIdInUrl = "pageId";
 
-        private const string MetaTagJsApiTemp = "<meta name=\"_jsApi-temp\" content={0}";
-        private const string MetaTagJsApi = "<meta name=\"_jsApi\" content={0}";
-        private const string CacheBreakPlaceholder = "@sxcver";
+        public const string BasePlaceholder = "@base";
+        public const string CustomBodyPlaceholder = "@custombody";
+        public const string CacheBreakPlaceholder = "@sxcver";
+        public const string CustomHeadersPlaceholder = "@customheaders";
+        public const string JsApiPlaceholder = "@jsapi";
 
-        private const string OriginalBase = "<base href=\"./\">";
-        private const string NewBase = "<base href=\"{0}\">";
+        public static string[] Placeholders = {
+            BasePlaceholder,
+            CacheBreakPlaceholder,
+            CustomBodyPlaceholder,
+            CustomHeadersPlaceholder,
+            JsApiPlaceholder,
+        };
 
-        public static string UpdatePlaceholders(string html, string content, int pageId)
+        public static string CleanImport(string html)
         {
-            if (!html.HasValue()) return "";
+            if (!html.HasValue()) return html;
+
+            // Placeholders may be wrapped in <!-- --> because of angular compiler - we should first strip these
+            foreach (var ph in Placeholders)
+                html = html.Replace($"<!--{ph}-->", ph);
+
+            // Correct quotes, as the index-raw will always have double quotes (angular-compiler replaces single quotes)
+            html = html.Replace($"\"{JsApiPlaceholder}\"", $"'{JsApiPlaceholder}'");
+
+            return html;
+        }
+
+        public static string UpdatePlaceholders(string html, string content, int pageId, string customHeaders, string customBody)
+        {
+            if (!html.HasValue()) return html;
+
+            var result = html;
 
             // Add context variables
-            var result = html
-                .Replace(string.Format(MetaTagJsApi, "\"\""), string.Format(MetaTagJsApi, $"'{content}'"))
-                .Replace(string.Format(MetaTagJsApiTemp, "\"\""), string.Format(MetaTagJsApiTemp, $"'{content}'"));
+            result = result.Replace(JsApiPlaceholder, content);
 
             // Add version cachebreak
             result = result.Replace(CacheBreakPlaceholder, EavSystemInfo.VersionWithStartUpBuild);
 
-            result = result.Replace(OriginalBase, string.Format(NewBase, $"./?{PageIdInUrl}={pageId}"));
+            // Replace base url
+            result = result.Replace(BasePlaceholder, $"./?{PageIdInUrl}={pageId}");
+
+            // Add any custom headers / body - like for the Oqtane Request Verification Token
+            result = result.Replace(CustomHeadersPlaceholder, customHeaders);
+            result = result.Replace(CustomBodyPlaceholder, customBody);
 
             return result;
         }

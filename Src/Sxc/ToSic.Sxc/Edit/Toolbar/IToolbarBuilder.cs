@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Edit
     /// * Added in 2sxc 13
     /// </remarks>
     [PublicApi]
-    public interface IToolbarBuilder: IHybridHtmlString, IHasLog
+    public interface IToolbarBuilder: IHybridHtmlString, IHasLog, INeedsDynamicCodeRoot
     {
         /// <summary>
         /// Add one or more rules according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
@@ -138,9 +139,13 @@ namespace ToSic.Sxc.Edit
 
 
         [PrivateApi]
-        IToolbarBuilder Init(IAppIdentity currentApp);
+        ToolbarContext Context();
 
         [PrivateApi]
-        ToolbarContext Context();
+        IToolbarBuilder With(
+            string noParamOrder = Eav.Parameters.Protector,
+            string mode = null,
+            object target = null
+        );
     }
 }

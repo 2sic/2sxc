@@ -11,7 +11,17 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
         private const int NoAppId = -1;
-        public ToolbarContext GetContext(object target, string context)
+
+        public ToolbarContext Context()
+        {
+            // See if any rules have a context
+            var rulesWithContext = Rules.Where(r => r.Context != null).ToArray();
+            if (!rulesWithContext.Any()) return null;
+            return rulesWithContext.FirstOrDefault()?.Context;
+        }
+
+
+        private ToolbarContext GetContext(object target, string context)
         {
             var callLog = Log.Fn<ToolbarContext>($"{nameof(context)}:{context}");
             // Check if context had already been prepared

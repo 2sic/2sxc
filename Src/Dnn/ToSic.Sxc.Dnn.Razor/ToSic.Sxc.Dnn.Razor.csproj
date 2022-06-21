@@ -131,8 +131,11 @@
     <Compile Include="Compatibility\Dnn8Bugs.cs" />
     <Compile Include="Custom\Dnn\Razor12.cs" />
     <Compile Include="Custom\Dnn\Razor12Code.cs" />
+    <Compile Include="Custom\Hybrid\Razor14_TT_Obsolete.cs" />
+    <Compile Include="Custom\Hybrid\Razor14_TT_DynamicModel.cs" />
+    <Compile Include="Custom\Hybrid\Razor14_TT_Apis.cs" />
     <Compile Include="Custom\Hybrid\Razor12_DynamicModel.cs" />
-    <Compile Include="Custom\Hybrid\Razor14.cs" />
+    <Compile Include="Custom\Hybrid\Razor14_TT.cs" />
     <Compile Include="Dnn\IDnnRazor.cs" />
     <Compile Include="Dnn\IDnnRazor11.cs" />
     <Compile Include="Dnn\RazorCodeManager.cs" />

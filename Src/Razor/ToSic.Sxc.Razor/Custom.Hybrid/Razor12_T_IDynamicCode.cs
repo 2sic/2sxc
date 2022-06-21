@@ -10,7 +10,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -105,13 +104,12 @@ namespace Custom.Hybrid
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Resources => _DynCodeRoot.Resources;
 
         /// <inheritdoc />
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic Settings => _DynCodeRoot.Settings;
 
+        [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         #endregion
