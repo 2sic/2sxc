@@ -59,6 +59,10 @@ namespace ToSic.Sxc.Web.LightSpeed
             // when dependent apps have disabled caching, parent app should not cache also 
             if (!IsEnabledOnDependentApps(dependentAppsStates)) return wrapLog.ReturnFalse("disabled in dependent app");
 
+            // respect primary app (of site) as dependent app to ensure cache invalidation when primary app is changed
+            if (AppState?.ZoneId != null)
+                dependentAppsStates.Add(AppStates.Get(AppStates.IdentityOfPrimary(AppState.ZoneId)));
+
             Log.A($"Found {data.DependentApps.Count} apps: " + string.Join(",", data.DependentApps.Select(da => da.AppId)));
             Fresh.Data = data;
             var duration = Duration;
