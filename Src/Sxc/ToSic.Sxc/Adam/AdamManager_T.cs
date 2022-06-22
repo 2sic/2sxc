@@ -81,7 +81,13 @@ namespace ToSic.Sxc.Adam
         public override IFolder Folder(Guid entityGuid, string fieldName) 
             => new FolderOfField<TFolderId, TFileId>(this, entityGuid, fieldName);
         
-        public override IFolder Folder(IEntity entity, string fieldName) => Folder( entity.EntityGuid, fieldName);
+        public override IFolder Folder(IEntity entity, string fieldName) => Folder(entity.EntityGuid, fieldName);
+
+        // Note: Signature isn't great yet, as it's int, but theoretically it could be another type.
+        public override IFile File(int id) =>
+            id is TFileId fileId 
+                ? AdamFs.GetFile(fileId) 
+                : null;
 
         #endregion
     }

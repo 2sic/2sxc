@@ -184,6 +184,9 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ServiceKit>();
             services.TryAddTransient<ServiceKit14>();
 
+            // WIP v14
+            services.TryAddTransient<IAdamService, AdamService>();
+
             // Sxc StartUp Routines
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();    // must be Add, not TryAdd
 

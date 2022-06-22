@@ -18,6 +18,12 @@ namespace ToSic.Sxc.Services
     public class ServiceKit14: ServiceKit
     {
         /// <summary>
+        /// The ADAM Service, used to retrieve files and maybe more. 
+        /// </summary>
+        public IAdamService Adam => _adam.Get(GetService<IAdamService>);
+        private readonly ValueGetOnce<IAdamService> _adam = new ValueGetOnce<IAdamService>();
+
+        /// <summary>
         /// The Convert Service, used to convert any kind of data type to another data type
         /// </summary>
         public IConvertService Convert => _convert.Get(GetService<IConvertService>);
