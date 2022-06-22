@@ -53,8 +53,8 @@ namespace ToSic.Sxc.Engines
 
             var appPathRootInInstallation = Block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
-            var polymorphInfo = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
-            var templatePath = polymorphInfo ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
+            var polymorphPathOrNull = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
+            var templatePath = polymorphPathOrNull ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Helpers.ServerPaths.FullAppPath(templatePath)))

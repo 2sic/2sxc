@@ -45,19 +45,18 @@ namespace ToSic.Sxc.Context
         string Edition { get; }
 
         /// <summary>
-        /// Get the views Metadata
+        /// Metadata of the current view
         /// </summary>
         /// <remarks>
-        /// Added in v12.10; changed from IMetadataOf to IDynamicMetadata in 13.12 - WIP, must check no errors
+        /// Added in v13.12
         /// </remarks>
-        //#pragma warning disable CS0108, CS0114
-        //        IMetadataOf Metadata { get; }
-        //#pragma warning restore CS0108, CS0114
-        [PrivateApi("WIP")]
+        // actually Added in v12.10; changed from IMetadataOf to IDynamicMetadata in 13.12
 #pragma warning disable CS0108, CS0114
         IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
 
-
+        // 2022-06-22 this was a idea, but not enabled yet, as not really clear if this is useful
+        //[PrivateApi("WIP")]
+        //string Path { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Blocks;
 
@@ -9,7 +10,12 @@ namespace ToSic.Sxc.Context
     [PrivateApi("Hide implementation")]
     public class CmsView: CmsContextPartBase<IView>, ICmsView
     {
-        public CmsView(CmsContext parent, IBlock block): base(parent, block?.View) { }
+        public CmsView(CmsContext parent, IBlock block) : base(parent, block?.View)
+        {
+            _block = block;
+        }
+
+        private IBlock _block;
 
         /// <inheritdoc />
         public int Id => _contents?.Id ?? 0;
@@ -26,5 +32,7 @@ namespace ToSic.Sxc.Context
         protected override IMetadataOf GetMetadataOf()
             => ExtendWithRecommendations(_contents?.Metadata);
 
+        // 2022-06-22 this was a idea, but not enabled yet, as not really clear if this is useful
+        //public string Path => $"{_block?.App.Path}{_contents.EditionPath}".ForwardSlash();
     }
 }
