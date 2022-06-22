@@ -11,9 +11,9 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc.Startup
 {
-    public static partial class StartupSxc
+    public static partial class RegisterSxcServices
     {
 
         /// <summary>

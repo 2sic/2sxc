@@ -22,7 +22,6 @@ using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.JsContext;
@@ -30,9 +29,9 @@ using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
 
-namespace ToSic.Sxc
+namespace ToSic.Sxc.Startup
 {
-    public static partial class StartupSxc
+    public static partial class RegisterSxcServices
     {
         public static IServiceCollection AddSxcCore(this IServiceCollection services)
         {
