@@ -2,11 +2,9 @@
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
@@ -68,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 
                 // now try to find the item
                 // we already know that the link was able to match, so we'll just use this to get the id
-                var parts = new ValueConverterBase.LinkParts(hyperlink);
+                var parts = new LinkParts(hyperlink);
                 // Note: kind of temporary solution, will fail if TFileId isn't int!
                 var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
                 var dtoMaker = AdamContext.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(AdamContext);
