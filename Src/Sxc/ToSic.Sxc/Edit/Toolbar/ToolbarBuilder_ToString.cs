@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Newtonsoft.Json;
 using ToSic.Razor.Markup;
+using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -20,13 +21,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             switch (mode)
             {
                 case ToolbarHtmlModes.OnTag:
+                    // ReSharper disable once AssignNullToNotNullAttribute - the edit.TagToolbar can return a null
                     return edit == null
-                        ? new Attribute(ItemToolbar.ToolbarAttributeName, ErrRenderMessage).ToString()
-                        : edit.TagToolbar(target, toolbar: this).ToString();
+                        ? new Attribute(ToolbarAttributeName, ErrRenderMessage).ToString()
+                        : edit.TagToolbar(target, toolbar: this)?.ToString();
                 case ToolbarHtmlModes.Standalone:
+                    // ReSharper disable once AssignNullToNotNullAttribute - the edit.Toolbar can return a null
                     return edit == null
                         ? $"<!-- {ErrRenderMessage} -->"
-                        : edit.Toolbar(target, toolbar: this).ToString();
+                        : edit.Toolbar(target, toolbar: this)?.ToString();
                 case ToolbarHtmlModes.Json:
                     var rules = Rules.Select(r => r.ToString()).ToArray();
                     return JsonConvert.SerializeObject(rules);

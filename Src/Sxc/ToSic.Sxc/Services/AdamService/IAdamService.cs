@@ -29,6 +29,13 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="field"></param>
         /// <returns>The file object or null if not found or something else went wrong.</returns>
-        IFile File(DynamicField field);
+        IFile File(IDynamicField field);
+
+        /// <summary>
+        /// Provides an Adam instance for this item and field
+        /// </summary>
+        /// <param name="field">The Field information object for which to get the folder</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        IFolder Folder(IDynamicField field);
     }
 }
