@@ -38,6 +38,13 @@ namespace ToSic.Sxc.Services
         public IFile File(IDynamicField field) => File(field?.Raw as string);
 
         /// <inheritdoc />
+        public IFolder Folder(int id)
+        {
+            var admManager = (_codeRoot as DynamicCodeRoot)?.AdamManager;
+            return admManager?.Folder(id);
+        }
+
+        /// <inheritdoc />
         public IFolder Folder(IDynamicField field) => _codeRoot?.AsAdam(field.Parent, field.Name);
     }
 }

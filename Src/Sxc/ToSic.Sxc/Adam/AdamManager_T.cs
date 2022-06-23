@@ -5,7 +5,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Adam
 {
@@ -87,6 +86,12 @@ namespace ToSic.Sxc.Adam
         public override IFile File(int id) =>
             id is TFileId fileId 
                 ? AdamFs.GetFile(fileId) 
+                : null;
+
+        // Note: Signature isn't great yet, as it's int, but theoretically it could be another type.
+        public override IFolder Folder(int id) =>
+            id is TFolderId fileId 
+                ? AdamFs.GetFolder(fileId) 
                 : null;
 
         #endregion

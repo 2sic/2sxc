@@ -13,14 +13,14 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// Retrieve a file by int-id (usually the ID managed by the platform)
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">File ID</param>
         /// <returns>The file object or null if not found or something else went wrong.</returns>
         IFile File(int id);
 
         /// <summary>
         /// Retrieve a file using the string-key such as "file:72"
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">File ID String</param>
         /// <returns>The file object or null if not found or something else went wrong.</returns>
         IFile File(string id);
 
@@ -31,8 +31,16 @@ namespace ToSic.Sxc.Services
         /// <returns>The file object or null if not found or something else went wrong.</returns>
         IFile File(IDynamicField field);
 
+
         /// <summary>
-        /// Provides an Adam instance for this item and field
+        /// Provides an Adam Folder for the ID
+        /// </summary>
+        /// <param name="id">Folder ID</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        IFolder Folder(int id);
+
+        /// <summary>
+        /// Provides an Adam Folder for this item and field
         /// </summary>
         /// <param name="field">The Field information object for which to get the folder</param>
         /// <returns>An Adam object for navigating the assets</returns>
