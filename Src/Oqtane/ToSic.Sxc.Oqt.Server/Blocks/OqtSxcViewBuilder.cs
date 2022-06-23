@@ -1,4 +1,5 @@
-﻿using Oqtane.Models;
+﻿using System;
+using Oqtane.Models;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -63,9 +64,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
             if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
 
-            // Check if there is less than 50 global types and warn user to restart application
-            if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
-
             OqtViewResultsDto ret = null;
             var finalMessage = "";
             LogTimer.DoInTimer(() =>
@@ -92,6 +90,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 callLog.Done();
             });
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
+
+            // Check if there is less than 50 global types and warn user to restart application
+            // HACK: in v14.03 this check was moved bellow LogTimer.DoInTimer because we got exception (probably timing issue)
+            // "Object reference not set to an instance of an object. at ToSic.Eav.Apps.AppStates.Get(IAppIdentity app)"
+            // TODO: STV find correct fix
+            if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
 
             return ret;
         }
