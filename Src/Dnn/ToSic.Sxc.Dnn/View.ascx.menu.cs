@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn
                 // Edit item
                 if (!block.View?.UseForList ?? false)
                     actions.Add(GetNextActionID(), LocalizeString("ActionEdit.Text"), "", "", "edit.gif",
-                        JsAction("edit", "{ useModuleList: true, sortOrder: 0 }"),
+                        JsAction("edit", "{ useModuleList: true, index: 0 }"),
                         "test", true,
                         SecurityAccessLevel.Edit, true, false);
 

@@ -68,15 +68,15 @@ namespace ToSic.Sxc.Blocks.Edit
             return result;
         }
 
-        public bool Publish(string part, int sortOrder)
+        public bool Publish(string part, int index)
         {
-            Log.A($"publish part{part}, order:{sortOrder}");
+            Log.A($"publish part{part}, order:{index}");
             var contentGroup = BlockConfiguration;
-            var contEntity = contentGroup[part][sortOrder];
+            var contEntity = contentGroup[part][index];
             var presKey = part.ToLowerInvariant() == ViewParts.ContentLower 
                 ? ViewParts.PresentationLower 
                 : ViewParts.ListPresentationLower;
-            var presEntity = contentGroup[presKey][sortOrder];
+            var presEntity = contentGroup[presKey][index];
 
             var hasPresentation = presEntity != null;
 

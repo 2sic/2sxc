@@ -47,9 +47,9 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         #endregion
 
 
-        public IRenderResult NewBlockAndRender(int parentId, string field, int sortOrder, string app = "", Guid? guid = null) 
+        public IRenderResult NewBlockAndRender(int parentId, string field, int index, string app = "", Guid? guid = null) 
         {
-            var entityId = NewBlock(parentId, field, sortOrder, app, guid);
+            var entityId = NewBlock(parentId, field, index, app, guid);
 
             // now return a rendered instance
             var newContentBlock = GetService<BlockFromEntity>().Init(Block, entityId, Log);
