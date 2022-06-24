@@ -1,9 +1,14 @@
-﻿using Oqtane.Shared;
+﻿using Microsoft.AspNetCore.Http;
+using Oqtane.Shared;
 using Oqtane.UI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Services;
+using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.Url;
+using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Oqt.Client
 {
@@ -118,6 +123,77 @@ namespace ToSic.Sxc.Oqt.Client
                 OqtPagePropertyOperation.ReplaceOrSkip => original,
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        public static int ApplyHttpHeaders(OqtViewResultsDto result, Lazy<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor)
+        {
+            // Register CSP changes for applying once all modules have been prepared
+            // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
+            if (result.CspEnabled && featuresService.Value.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
+                PageCsp(result.CspEnforced, httpContextAccessor).Add(result.CspParameters
+                    .Select(p => new CspParameters(UrlHelpers.ParseQueryString(p))).ToList());
+
+            var httpHeaders = result.HttpHeaders;
+
+            if (httpContextAccessor.HttpContext?.Response == null) return 0; // error, HttpResponse is null
+            if (httpContextAccessor.HttpContext.Response.HasStarted) return 0; // error, to late for adding http headers
+
+            if (httpHeaders?.Any() != true) return 0; // "ok, no headers to add
+
+            // Register event to attach headers
+            httpContextAccessor.HttpContext.Response.OnStarting(() =>
+            {
+                try
+                {
+                    foreach (var httpHeader in httpHeaders)
+                    {
+                        if (string.IsNullOrWhiteSpace(httpHeader.Name)) continue;
+
+                        // TODO: The CSP header can only exist once
+                        // So to do this well, we'll need to merge them in future, 
+                        // Ideally combining the existing one with any additional ones added here
+                        httpContextAccessor.HttpContext.Response.Headers[httpHeader.Name] = httpHeader.Value;
+                    }
+                }
+                catch
+                {
+                    /* ignore */
+                }
+                return Task.CompletedTask;
+            });
+
+            return httpHeaders.Count;
+        }
+
+        private static CspOfPage PageCsp(bool enforced, IHttpContextAccessor httpContextAccessor)
+        {
+            var key = "2sxcPageLevelCsp";
+
+            // If it's already registered, then the add-on-sending has already been added too
+            // So we shouldn't repeat it, just return the cache which will be used later
+            if (httpContextAccessor.HttpContext.Items.ContainsKey(key))
+                return (CspOfPage)httpContextAccessor.HttpContext.Items[key];
+
+            // Not yet registered. Create, and register for on-end of request
+            var pageLevelCsp = new CspOfPage();
+            httpContextAccessor.HttpContext.Items[key] = pageLevelCsp;
+
+            // Register event to attach headers once the request is done and all Apps have registered their Csp
+            if (!httpContextAccessor.HttpContext.Response.HasStarted)
+                httpContextAccessor.HttpContext.Response.OnStarting(() =>
+                {
+                    try
+                    {
+                        var headers = pageLevelCsp.CspHttpHeader();
+                        if (headers != null) httpContextAccessor.HttpContext.Response.Headers[pageLevelCsp.HeaderName(enforced)] = headers;
+                    }
+                    catch
+                    {
+                        /* ignore */
+                    }
+                    return Task.CompletedTask;
+                });
+            return pageLevelCsp;
         }
     }
 }

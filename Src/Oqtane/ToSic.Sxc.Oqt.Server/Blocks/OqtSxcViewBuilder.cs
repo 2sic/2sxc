@@ -1,5 +1,4 @@
-﻿using System;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -11,6 +10,7 @@ using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web.LightSpeed;
+using ToSic.Sxc.Web.Url;
 using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
@@ -85,7 +85,11 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     SxcContextMetaContents = PageOutput.AddContextMeta ? PageOutput.ContextMetaContents() : null,
                     SxcScripts = PageOutput.Scripts().ToList(),
                     SxcStyles = PageOutput.Styles().ToList(),
-                    PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
+                    PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges),
+                    HttpHeaders = renderResult.HttpHeaders,
+                    CspEnabled = renderResult.CspEnabled,
+                    CspEnforced = renderResult.CspEnforced,
+                    CspParameters = renderResult.CspParameters.Select(c => c.NvcToString()).ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
                 };
                 callLog.Done();
             });
@@ -99,7 +103,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             return ret;
         }
-
 
         internal Alias Alias;
         internal Site Site;

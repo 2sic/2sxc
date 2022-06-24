@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using Oqtane.Models;
 using Oqtane.Modules;
 using Oqtane.Shared;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
+using ToSic.Sxc.Services;
 using Interop = ToSic.Sxc.Oqt.Client.Interop;
 
 // ReSharper disable once CheckNamespace
@@ -26,6 +28,12 @@ namespace ToSic.Sxc.Oqt.App
 
         [Inject]
         public IOqtPrerenderService OqtPrerenderService { get; set; }
+
+        [Inject]
+        public Lazy<IFeaturesService> FeaturesService { get; set; }
+
+        [Inject]
+        public IHttpContextAccessor HttpContextAccessor { get; set; }
 
         private string RenderedUri { get; set; }
         private string RenderedPage { get; set; }
@@ -53,6 +61,7 @@ namespace ToSic.Sxc.Oqt.App
                 await Initialize2sxcContentBlock();
                 NewDataArrived = true;
                 ViewResults.SystemHtml = OqtPrerenderService.Init(PageState, logger).GetSystemHtml();
+                Csp();
             }
 
             await base.OnParametersSetAsync();
@@ -76,50 +85,58 @@ namespace ToSic.Sxc.Oqt.App
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage)) AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
         }
 
+        public bool PrerenderingEnabled() => PageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
+        public bool Prerender = true;
+        private void Csp()
+        {
+            if (PrerenderingEnabled() && Prerender // executed only in prerender
+                && (HttpContextAccessor?.HttpContext?.Request?.Path.HasValue == true) 
+                && !HttpContextAccessor.HttpContext.Request.Path.Value.Contains("/_blazor"))
+                if (ViewResults?.CspParameters?.Any() ?? false)
+                    PageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor);
 
+            Prerender = false; // flag to ensure that code is executed only first time in prerender
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            //if (firstRender)
+            await base.OnAfterRenderAsync(firstRender);
+
+            // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
+            if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && ViewResults != null)
             {
-                await base.OnAfterRenderAsync(firstRender);
+                NewDataArrived = false;
 
-                // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-                if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && ViewResults != null)
-                {
-                    NewDataArrived = false;
+                var interop = new Interop(JSRuntime);
 
-                    var interop = new Interop(JSRuntime);
+                #region 2sxc Standard Assets and Header
 
-                    #region 2sxc Standard Assets and Header
+                // Add Context-Meta first, because it should be available when $2sxc loads
+                if (ViewResults.SxcContextMetaName != null)
+                    await interop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents, "id");
 
-                    // Add Context-Meta first, because it should be available when $2sxc loads
-                    if (ViewResults.SxcContextMetaName != null)
-                        await interop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents, "id");
+                // Lets load all 2sxc js dependencies (js / styles)
+                // Not done the official Oqtane way, because that asks for the scripts before
+                // the razor component reported what it needs
+                if (ViewResults.SxcScripts != null)
+                    foreach (var resource in ViewResults.SxcScripts)
+                        await interop.IncludeScript("", resource, "", "", "", "head");
 
-                    // Lets load all 2sxc js dependencies (js / styles)
-                    // Not done the official Oqtane way, because that asks for the scripts before
-                    // the razor component reported what it needs
-                    if (ViewResults.SxcScripts != null)
-                        foreach (var resource in ViewResults.SxcScripts)
-                            await interop.IncludeScript("", resource, "", "", "", "head");
+                if (ViewResults.SxcStyles != null)
+                    foreach (var style in ViewResults.SxcStyles)
+                        await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
 
-                    if (ViewResults.SxcStyles != null)
-                        foreach (var style in ViewResults.SxcStyles)
-                            await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
+                #endregion
 
-                    #endregion
+                #region External resources requested by the razor template
 
-                    #region External resources requested by the razor template
+                if (ViewResults.TemplateResources != null)
+                    await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, interop);
 
-                    if (ViewResults.TemplateResources != null)
-                        await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, interop);
+                if (ViewResults.PageProperties?.Any() ?? false)
+                    await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, interop);
 
-                    if (ViewResults.PageProperties?.Any() ?? false)
-                        await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, interop);
-
-                    #endregion
-                }
+                #endregion
             }
         }
     }

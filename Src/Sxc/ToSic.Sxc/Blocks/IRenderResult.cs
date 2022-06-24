@@ -89,7 +89,6 @@ namespace ToSic.Sxc.Blocks
         bool CspEnabled { get; }
         bool CspEnforced { get; }
         IList<CspParameters> CspParameters { get; }
-
     }
 
     public interface IDependentApp //: ITimestamped
