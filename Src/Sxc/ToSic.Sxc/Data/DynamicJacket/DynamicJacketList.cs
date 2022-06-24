@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public override bool IsList => true;
 
-        /// <inheritdoc />
+        [PrivateApi]
         public override IEnumerator<object> GetEnumerator() 
             => _contents.Select(DynamicJacket.WrapIfJObjectUnwrapIfJValue).GetEnumerator();
 
