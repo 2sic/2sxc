@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.Toolbar;
@@ -52,8 +51,14 @@ namespace ToSic.Sxc.Edit
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
         /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate. If not specified, will try to lookup config (v14)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
-        /// <param name="parameters">Parameters for the metadata-command</param>
+        /// <param name="ui">
+        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
+        /// <param name="parameters">
+        /// Parameters for the command.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
         /// <param name="context">EXPERIMENTAL - not final</param>
         /// <returns>A new toolbar builder which has been extended with this button</returns>
         /// <remarks>
@@ -63,13 +68,14 @@ namespace ToSic.Sxc.Edit
         /// * contentTypes can also have `*` or `SomeType,*` in v14
         /// * contentTypes can also be optional, in which case it behaves as if it was `*` in v14 - if no config is found, it will not add a metadata-button
         /// * parameter context added in 2sxc 14 - still WIP/experimental
+        /// * changed ui and parameters to support object in v14.04
         /// </remarks>
         IToolbarBuilder Metadata(
             object target,
             string contentTypes = null,
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null,
+            object ui = null,
+            object parameters = null,
             string context = null
         );
 
@@ -87,8 +93,14 @@ namespace ToSic.Sxc.Edit
         /// </summary>
         /// <param name="target">The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/> </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
-        /// <param name="parameters">Parameters for the metadata-command</param>
+        /// <param name="ui">
+        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
+        /// <param name="parameters">
+        /// Parameters for the command.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
         /// <param name="context">EXPERIMENTAL - not final</param>
         /// <returns>A new toolbar builder which has been extended with this button</returns>
         /// <remarks>
@@ -97,11 +109,10 @@ namespace ToSic.Sxc.Edit
         IToolbarBuilder Copy(
             object target,
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null,
+            object ui = null,
+            object parameters = null,
             string context = null
         );
-
 
 
         /// <summary>
@@ -113,7 +124,10 @@ namespace ToSic.Sxc.Edit
         /// <param name="follow"></param>
         /// <param name="classes"></param>
         /// <param name="autoAddMore"></param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="ui">
+        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
         /// <param name="parameters">Parameters for the command - doesn't really have an effect on Settings, but included for consistency</param>
         /// <returns>A new toolbar builder which has been extended with this settings-rule</returns>
         /// <remarks>
@@ -127,8 +141,8 @@ namespace ToSic.Sxc.Edit
             string follow = null,
             string classes = null,
             string autoAddMore = null,
-            string ui = null,
-            string parameters = null
+            object ui = null,
+            object parameters = null
         );
 
         /// <summary>
@@ -147,5 +161,12 @@ namespace ToSic.Sxc.Edit
             string mode = null,
             object target = null
         );
+
+        /// <summary>
+        /// Set the main target of this toolbar.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        IToolbarBuilder Target(object target);
     }
 }

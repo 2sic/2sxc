@@ -85,22 +85,24 @@ namespace ToSic.Sxc.Edit.Toolbar
             return clone;
         }
 
+        public IToolbarBuilder Target(object target) => With(target: target);
+
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
 
 
 
         public IToolbarBuilder Settings(
-            string noParamOrder = Eav.Parameters.Protector, 
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
             string show = null,
-            string hover = null, 
-            string follow = null, 
-            string classes = null, 
-            string autoAddMore = null, 
-            string ui = "",
-            string parameters = "")
+            string hover = null,
+            string follow = null,
+            string classes = null,
+            string autoAddMore = null,
+            object ui = null,
+            object parameters = null)
             => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
-                ui: ui, parameters: parameters));
+                ui: ObjToString(ui), parameters: ObjToString(parameters)));
 
 
 
