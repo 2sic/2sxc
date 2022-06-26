@@ -1,6 +1,5 @@
-﻿using ToSic.Eav.Data;
+﻿using System.Linq;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -19,21 +18,23 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
         }
 
-        protected override string DecoratorTypeName => Entity?.Type?.Name;
+        protected override string DecoratorTypeName => TargetEntity?.Type?.Name;
 
         public override string GeneratedCommandParams() 
             => UrlParts.ConnectParameters(CopyCommandParams(), base.GeneratedCommandParams());
 
-        private IEntity Entity => _entity.Get(() => Target as IEntity ?? (Target as IDynamicEntity)?.Entity);
-        private readonly ValueGetOnce<IEntity> _entity = new ValueGetOnce<IEntity>();
+        //protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as IDynamicEntity)?.Entity);
+        //private readonly ValueGetOnce<IEntity> _entity = new ValueGetOnce<IEntity>();
+
+        //protected string TargetParamId() => TargetEntity?.EntityId == null ? null : $"entityId={TargetEntity?.EntityId}";
+
+        //protected string TargetParamType() => $"contentType={TargetEntity?.Type?.Name ?? "error-no-type-found"}";
 
         private string CopyCommandParams()
         {
-            var entity = Entity;
-            if (entity == null) return null;
-            var typeName = entity.Type?.Name ?? "error-no-type-found";
-            var newRule = $"entityId={entity.EntityId}&contentType={typeName}";
-            return newRule;
+            return TargetEntity == null 
+                ? null 
+                : string.Join("&", new[] { TargetParamId(), TargetParamType() }.Where(v => v.HasValue()));
         }
     }
 }

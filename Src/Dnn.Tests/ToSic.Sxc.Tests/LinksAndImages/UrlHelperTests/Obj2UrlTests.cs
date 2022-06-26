@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
@@ -15,26 +14,40 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
 
 
         [TestMethod]
+        public void WithArray()
+        {
+            var obj = new
+            {
+                array = new int[] { 32, 16, 8 }
+            };
+            Assert.AreEqual("array=32,16,8", new ObjectToUrl().Serialize(obj));
+        }
+
+        [TestMethod]
+        public void WithSubArray()
+        {
+            var obj = new
+            {
+                prefill = new
+                {
+                    array = new int[] { 32, 16, 8 }
+                }
+            };
+            Assert.AreEqual("prefill:array=32,16,8", new ObjectToUrl().Serialize(obj));
+        }
+
+
+        [TestMethod]
         public void Basic()
         {
-            //var obj = new
-            //{
-            //    test = 7,
-            //    name = "daniel"
-            //};
-            Assert.AreEqual("test=7&name=daniel", new ObjectToUrl().Obj2Url(TestCase1));
+            Assert.AreEqual("test=7&name=daniel", new ObjectToUrl().Serialize(TestCase1));
         }
 
         [TestMethod]
         public void BasicWithPrefix()
         {
-            var prefix = "prefill:";
-            //var obj = new
-            //{
-            //    test = 7,
-            //    name = "daniel"
-            //};
-            Assert.AreEqual("prefill:test=7&prefill:name=daniel", new ObjectToUrl(prefix: prefix).Obj2Url(TestCase1));
+            var prefix = "prefix:";
+            Assert.AreEqual($"{prefix}test=7&{prefix}name=daniel", new ObjectToUrl(prefix: prefix).Serialize(TestCase1));
         }
 
         [TestMethod]
@@ -49,7 +62,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
                     title = "new title"
                 }
             };
-            Assert.AreEqual("test=7&name=daniel&prefill:title=new%20title", new ObjectToUrl().Obj2Url(obj));
+            Assert.AreEqual("test=7&name=daniel&prefill:title=new%20title", new ObjectToUrl().Serialize(obj));
         }
 
         [TestMethod]
@@ -67,7 +80,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
                     }
                 }
             };
-            Assert.AreEqual("prefill:title=new%20title&prefill:entities:name=daniel&prefill:entities:and=ok", new ObjectToUrl().Obj2Url(obj));
+            Assert.AreEqual("prefill:title=new%20title&prefill:entities:name=daniel&prefill:entities:and=ok", new ObjectToUrl().Serialize(obj));
         }
     }
 }
