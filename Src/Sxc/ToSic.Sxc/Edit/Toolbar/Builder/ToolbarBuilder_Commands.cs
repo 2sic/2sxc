@@ -39,16 +39,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var editCommand = new ToolbarRuleForEntity("edit", target, 
                 ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
                 parameters: ObjToString(parameters), 
-                propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished})
-            {
-                //PropSerializeDefault = true,
-                //PropSerializeMap =
-                //{
-                //    [KeyEntityGuid] = false,
-                //    [KeyPublished] = false,
-                //    [KeyTitle] = false
-                //}
-            };
+                propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
             return AddInternal(editCommand);
         }
 
@@ -61,17 +52,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var editCommand = new ToolbarRuleForEntity("publish", target,
                 show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove,
                 ui: ObjToString(ui), parameters: ObjToString(parameters),
-                propsToSerialize: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule })
-            {
-                //PropSerializeDefault = false,
-                //PropSerializeMap =
-                //{
-                //    [KeyEntityId] = true,   // for ID mode
-                //    [KeyPublished] = true,  // info if published
-                //    [KeyIndex] = true,      // for list mode
-                //    [KeyUseModule] = true,
-                //}
-            };
+                propsToSerialize: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule });
             return AddInternal(editCommand);
         }
        
@@ -80,7 +61,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <inheritdoc />
         public IToolbarBuilder Metadata(object target,
             string contentTypes = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string context = null)
@@ -95,17 +76,19 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         /// <inheritdoc />
-        public IToolbarBuilder Copy(object target,
-            string noParamOrder = Eav.Parameters.Protector,
+        public IToolbarBuilder Copy(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            string contentType = null,
             object ui = null,
             object parameters = null,
-            string context = null) => AddInternal(new ToolbarRuleCopy(target, ObjToString(ui), ObjToString(parameters), GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
+            string context = null) => AddInternal(new ToolbarRuleCopy(target, contentType, ObjToString(ui), ObjToString(parameters), GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
 
 
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(
             object target,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string ui = null,
             string parameters = null
         ) => AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GetContext(target, null), helper: _deps.ToolbarButtonHelper.Ready));

@@ -7,17 +7,15 @@ namespace ToSic.Sxc.Edit.Toolbar
         internal const string CommandName = "copy";
 
         internal ToolbarRuleCopy(
-            object target, 
+            object target = null,
+            string contentType = null,
             string ui = null, 
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(CommandName, target, (char)ToolbarRuleOperations.BtnAdd, ui: ui, parameters: parameters, context: context, helper: helper,
+        ) : base(CommandName, target, (char)ToolbarRuleOperations.BtnAdd, contentType: contentType, ui: ui, parameters: parameters, context: context, helper: helper,
             propsToSerialize: new []{ KeyEntityId, KeyContentType})
         {
-            //PropSerializeSetAll(false);
-            //PropSerializeMap[KeyEntityId] = true;
-            //PropSerializeMap[KeyContentType] = true;
         }
 
     }

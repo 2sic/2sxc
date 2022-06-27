@@ -194,15 +194,21 @@ namespace ToSic.Sxc.Edit
         /// <summary>
         /// Create a toolbar rule to copy an item. It needs the item which it will copy as a parameter.
         /// </summary>
-        /// <param name="target">The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/> </param>
+        /// <param name="target">
+        ///     The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/>.
+        ///     Can also be a int (number) entityId.
+        ///     If you only supply the entity ID, you must also supply the `contentType`.
+        ///     If it's `null` it will only work if the toolbar context already determines the primary item. 
+        /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="contentType"></param>
         /// <param name="ui">
-        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
-        /// Can be a string, and can also be an object since v14.04
+        ///     Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        ///     Can be a string, and can also be an object since v14.04
         /// </param>
         /// <param name="parameters">
-        /// Parameters for the command.
-        /// Can be a string, and can also be an object since v14.04
+        ///     Parameters for the command.
+        ///     Can be a string, and can also be an object since v14.04
         /// </param>
         /// <param name="context">EXPERIMENTAL - not final</param>
         /// <returns>A new toolbar builder which has been extended with this button</returns>
@@ -210,8 +216,9 @@ namespace ToSic.Sxc.Edit
         /// Added in v14.02
         /// </remarks>
         IToolbarBuilder Copy(
-            object target,
+            object target = null,
             string noParamOrder = Parameters.Protector,
+            string contentType = null,
             object ui = null,
             object parameters = null,
             string context = null
