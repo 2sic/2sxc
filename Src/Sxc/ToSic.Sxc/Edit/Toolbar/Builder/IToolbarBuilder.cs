@@ -17,21 +17,12 @@ namespace ToSic.Sxc.Edit
     /// To get a `ToolbarBuilder`, use the <see cref="Services.IToolbarService"/>.
     ///
     /// History
-    /// * Added in 2sxc 13
+    /// * Added in 2sxc 13, just minimal API
+    /// * massively enhanced in v14.04
     /// </remarks>
     [PublicApi]
     public interface IToolbarBuilder: IHybridHtmlString, IHasLog, INeedsDynamicCodeRoot
     {
-        /// <summary>
-        /// Add one or more rules according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
-        /// </summary>
-        /// <param name="rules"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// History
-        /// * Added in 2sxc 13
-        /// </remarks>
-        IToolbarBuilder Add(params string[] rules);
 
 
         /// <summary>
@@ -44,7 +35,20 @@ namespace ToSic.Sxc.Edit
         /// * Added in 2sxc 13
         /// </remarks>
         [PrivateApi("Would confuse people, since they cannot create ToolbarRule objects")]
-        IToolbarBuilder Add(params object[] rules);
+        IToolbarBuilder AddInternal(params object[] rules);
+
+        #region Button Commands
+
+        /// <summary>
+        /// Add one or more rules according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
+        /// </summary>
+        /// <param name="rules"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// History
+        /// - new in 14.04 WIP
+        /// </remarks>
+        IToolbarBuilder ButtonAdd(params string[] rules);
 
         /// <summary>
         /// 
@@ -67,7 +71,7 @@ namespace ToSic.Sxc.Edit
         /// - new in 14.04 WIP
         /// </remarks>
         [WorkInProgressApi("still WIP")]
-        IToolbarBuilder Modify(
+        IToolbarBuilder ButtonModify(
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             //object target = null,
@@ -83,8 +87,11 @@ namespace ToSic.Sxc.Edit
         /// See [](xref:Api.Js.SxcJs.CommandNames)
         /// </param>
         /// <returns></returns>
+        /// <remarks>
+        /// - new in 14.04 WIP
+        /// </remarks>
         [WorkInProgressApi("still WIP")]
-        IToolbarBuilder Remove(params string[] names);
+        IToolbarBuilder ButtonRemove(params string[] names);
 
         /// <summary>
         /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 
@@ -119,6 +126,9 @@ namespace ToSic.Sxc.Edit
             object parameters = null,
             string context = null
         );
+
+        #endregion
+
 
         [PrivateApi("WIP 13.11 - not sure if we actually make it public, as it's basically metadata with automatic content-type - not published yet")]
         IToolbarBuilder Image(

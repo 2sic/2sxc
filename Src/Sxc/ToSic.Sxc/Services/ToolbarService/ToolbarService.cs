@@ -66,9 +66,9 @@ namespace ToSic.Sxc.Services
             var tlb = _toolbarGenerator.New;
             tlb.ConnectToRoot(_codeRoot);
             if (target != null) tlb = tlb.With(target: target);
-            tlb = tlb.Add(new ToolbarRuleToolbar(toolbarTemplate, ui: tlb.ObjToString(ui)));
+            tlb = tlb.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: tlb.ObjToString(ui)));
             if (context.HasValue())
-                tlb = tlb.Add(new ToolbarRuleGeneric($"context?{context}"));
+                tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
             return callLog.Return(tlb);
         }
 

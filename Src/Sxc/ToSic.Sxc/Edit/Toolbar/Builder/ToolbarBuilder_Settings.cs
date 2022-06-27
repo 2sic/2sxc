@@ -11,7 +11,7 @@
             string autoAddMore = null,
             object ui = null,
             object parameters = null)
-            => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
+            => AddInternal(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
                 ui: ObjToString(ui), parameters: ObjToString(parameters)));
 
     }

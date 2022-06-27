@@ -9,14 +9,11 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         /// <inheritdoc />
         [PrivateApi]
-        public IToolbarBuilder Add(params string[] rules)
-            => InnerAdd(rules?.Cast<object>().ToArray());   // Must re-to-array, so that it's not re-wrapped
+        public IToolbarBuilder ButtonAdd(params string[] rules)
+            => AddInternal(rules?.Cast<object>().ToArray());   // Must re-to-array, so that it's not re-wrapped
 
-        /// <inheritdoc />
-        public IToolbarBuilder Add(params object[] rules)
-            => InnerAdd(rules?.ToArray());                  // Must re-to-array, so that it's not re-wrapped
 
-        public IToolbarBuilder Modify(
+        public IToolbarBuilder ButtonModify(
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             //object target = null,
@@ -28,20 +25,23 @@ namespace ToSic.Sxc.Edit.Toolbar
             name = name.TrimStart((char)ToolbarRuleOperations.Modify);
 
             var rule = new ToolbarRuleCustom(/*target*/null, name, ObjToString(ui), ObjToString(parameters), (char)ToolbarRuleOperations.Modify);
-            return InnerAdd(rule);
+            return AddInternal(rule);
         }
 
-        public IToolbarBuilder Remove(params string[] names)
+        public IToolbarBuilder ButtonRemove(params string[] names)
         {
             if (names == null || !names.Any()) return this;
-            var realNames = names.Select(n => n.Trim()).Where(n => n.HasValue()).ToList();
+            var realNames = names
+                .Select(n => n.Trim().Trim((char)ToolbarRuleOperations.Remove))
+                .Where(n => n.HasValue()).ToList();
             if (!realNames.Any()) return this;
 
-            var rules = realNames.Select(n => (char)ToolbarRuleOperations.Remove + n).Cast<object>().ToArray();
-            return InnerAdd(rules);
+            var rules = realNames.Select(n => (char)ToolbarRuleOperations.Remove + n);
+            return AddInternal(rules.Cast<object>().ToArray());
         }
 
-        private IToolbarBuilder InnerAdd(params object[] newRules)
+        /// <inheritdoc />
+        public IToolbarBuilder AddInternal(params object[] newRules)
         {
             // Create clone before starting to log so it's in there too
             var clone = new ToolbarBuilder(this);
