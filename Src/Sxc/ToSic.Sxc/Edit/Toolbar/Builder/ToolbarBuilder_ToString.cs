@@ -18,6 +18,18 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             var edit = _codeRoot?.Edit;
 
+            // TODO:
+            // - force
+            // - condition - test
+            // - conditionfunc - test
+
+            // Only test conditions if the toolbar would show - otherwise ignore
+            if (edit?.Enabled == true)
+            {
+                if (_params?.Condition == false) return null;
+                if (_params?.ConditionFunc != null && _params.ConditionFunc() == false) return null;
+            }
+
             switch (mode)
             {
                 case ToolbarHtmlModes.OnTag:

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <inheritdoc />
         public IToolbarBuilder Metadata(object target,
             string contentTypes = null,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string context = null)
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         /// <inheritdoc />
         public IToolbarBuilder Copy(object target,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string context = null) => Add(new ToolbarRuleCopy(target, ObjToString(ui), ObjToString(parameters), GetContext(target, context), _deps.ToolbarButtonHelper.Ready));

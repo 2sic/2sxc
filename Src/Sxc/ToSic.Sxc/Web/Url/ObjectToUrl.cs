@@ -33,7 +33,9 @@ namespace ToSic.Sxc.Web.Url
                 var valueElemType = valueType.IsGenericType
                     ? valueType.GetGenericArguments()[0]
                     : valueType.GetElementType();
-                if (valueElemType != null && valueElemType.IsPrimitive || valueElemType == typeof(string))
+
+                if (valueElemType == null) throw new ArgumentNullException("The type to add to url seems to have a confusing setup");
+                if (valueElemType.IsPrimitive || valueElemType == typeof(string))
                     return new ValuePair(propName, string.Join(ArraySeparator, enumerable.Cast<object>()));
 
                 return new ValuePair(propName, "array-like-but-unclear-what");

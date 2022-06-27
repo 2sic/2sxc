@@ -30,43 +30,35 @@ namespace ToSic.Sxc.Services
         #endregion
 
         /// <inheritdoc />
-        public IToolbarBuilder Default(
-            object target = null,
-            string noParamOrder = Parameters.Protector,
-            string ui = null
-        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null, target: target);
+        public IToolbarBuilder Default(object target = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object ui = null) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null, target: target);
 
 
         /// <inheritdoc />
-        public IToolbarBuilder Empty(
-            object target = null,
-            string noParamOrder = Parameters.Protector,
-            string ui = null
-        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null, target: target);
+        public IToolbarBuilder Empty(object target = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object ui = null) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null, target: target);
 
 
         /// <inheritdoc />
-        public IToolbarBuilder Metadata(
-            object target,
+        public IToolbarBuilder Metadata(object target,
             string contentTypes = null,
-            string noParamOrder = Parameters.Protector,
-            string ui = null,
-            string parameters = null,
-            string context = null
-        ) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, context);
+            string noParamOrder = Eav.Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string context = null) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, context);
 
 
-        /// <inheritdoc />
-        public IToolbarBuilder Copy(
-            object target,
-            string noParamOrder = Parameters.Protector,
-            string ui = null,
-            string parameters = null,
-            string context = null
-        ) => Empty().Copy(target, noParamOrder, ui, parameters, context);
+        ///// <inheritdoc />
+        //public IToolbarBuilder Copy(object target,
+        //    string noParamOrder = Eav.Parameters.Protector,
+        //    object ui = null,
+        //    object parameters = null,
+        //    string context = null) => Empty().Copy(target, noParamOrder, ui, parameters, context);
 
 
-        private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, string ui, string context, object target = null)
+        private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, object ui, string context, object target = null)
         {
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
@@ -74,7 +66,7 @@ namespace ToSic.Sxc.Services
             var tlb = _toolbarGenerator.New;
             tlb.ConnectToRoot(_codeRoot);
             if (target != null) tlb = tlb.With(target: target);
-            tlb = tlb.Add(new ToolbarRuleToolbar(toolbarTemplate, ui: ui));
+            tlb = tlb.Add(new ToolbarRuleToolbar(toolbarTemplate, ui: tlb.ObjToString(ui)));
             if (context.HasValue())
                 tlb = tlb.Add(new ToolbarRuleGeneric($"context?{context}"));
             return callLog.Return(tlb);

@@ -71,38 +71,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         private ToolbarBuilderParams _params;
 
-        public IToolbarBuilder With(
-            string noParamOrder = Eav.Parameters.Protector,
-            string mode = null,
-            object target = null
-        )
-        {
-            // Create clone before starting to log so it's in there too
-            var clone = new ToolbarBuilder(this);
-            var p = clone._params = new ToolbarBuilderParams(_params);
-            if (mode != null) p.Mode = mode;
-            if (target != null) p.Target = target;
-            return clone;
-        }
-
-        public IToolbarBuilder Target(object target) => With(target: target);
-
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
-
-
-
-        public IToolbarBuilder Settings(
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
-            string show = null,
-            string hover = null,
-            string follow = null,
-            string classes = null,
-            string autoAddMore = null,
-            object ui = null,
-            object parameters = null)
-            => Add(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
-                ui: ObjToString(ui), parameters: ObjToString(parameters)));
 
 
 

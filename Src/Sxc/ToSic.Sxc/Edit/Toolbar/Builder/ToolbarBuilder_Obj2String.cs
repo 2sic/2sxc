@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         /// <inheritdoc />
         [PrivateApi]
-        private string ObjToString(object uiOrParams)
+        public string ObjToString(object uiOrParams)
         {
             if (uiOrParams == null) return null;
             if (uiOrParams is string str) return str;

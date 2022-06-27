@@ -22,13 +22,16 @@ namespace ToSic.Sxc.Services
         /// For guidance what to give it, also check out the [toolbar docs](xref:JsCode.Toolbars.Simple).
         /// </summary>
         /// <param name="target">
-        /// The optional content-item this toolbar is for. Can be null. <br/>
-        /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+        ///     The optional content-item this toolbar is for. Can be null. <br/>
+        ///     Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
         /// 
-        /// _Added in v14.03_
+        ///     _Added in v14.03_
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="ui">
+        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
         /// <returns></returns>
         /// <remarks>
         /// History
@@ -37,7 +40,7 @@ namespace ToSic.Sxc.Services
         IToolbarBuilder Default(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = null
+            object ui = null
         );
 
         /// <summary>
@@ -46,13 +49,16 @@ namespace ToSic.Sxc.Services
         /// For guidance what to give it, also check out the [toolbar docs](xref:JsCode.Toolbars.Simple).
         /// </summary>
         /// <param name="target">
-        /// The optional content-item this toolbar is for. Can be null. <br/>
-        /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
+        ///     The optional content-item this toolbar is for. Can be null. <br/>
+        ///     Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
         /// 
-        /// _Added in v14.03_
+        ///     _Added in v14.03_
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
+        /// <param name="ui">
+        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
         /// <returns></returns>
         /// <remarks>
         /// History
@@ -61,7 +67,7 @@ namespace ToSic.Sxc.Services
         IToolbarBuilder Empty(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = null
+            object ui = null
         );
 
         /// <summary>
@@ -72,8 +78,14 @@ namespace ToSic.Sxc.Services
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
         /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate. If not specified, will try to lookup config (v14)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
-        /// <param name="parameters">Parameters for the metadata-command</param>
+        /// <param name="ui">
+        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
+        /// <param name="parameters">
+        /// Parameters for the command.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
         /// <param name="context">EXPERIMENTAL - not final</param>
         /// <returns>An toolbar builder with empty configuration and just this button on it</returns>
         /// <remarks>
@@ -88,30 +100,37 @@ namespace ToSic.Sxc.Services
             object target,
             string contentTypes = null,
             string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null,
+            object ui = null,
+            object parameters = null,
             string context = null
         );
 
+        // 2022-06-27 rarely a standalone button, so doesn't need to be available on the main service
 
-        /// <summary>
-        /// Create a toolbar with a button to copy an item. It needs the item which it will copy as a parameter.
-        /// </summary>
-        /// <param name="target">The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/> </param>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui">Parameters for the UI, like color=red - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options</param>
-        /// <param name="parameters">Parameters for the metadata-command</param>
-        /// <param name="context">EXPERIMENTAL - not final</param>
-        /// <returns>An toolbar builder with empty configuration and just this button on it</returns>
-        /// <remarks>
-        /// Added in v14.02
-        /// </remarks>
-        IToolbarBuilder Copy(
-            object target,
-            string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null,
-            string context = null
-        );
+        ///// <summary>
+        ///// Create a toolbar with a button to copy an item. It needs the item which it will copy as a parameter.
+        ///// </summary>
+        ///// <param name="target">The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/> </param>
+        ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        ///// <param name="ui">
+        ///// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        ///// Can be a string, and can also be an object since v14.04
+        ///// </param>
+        ///// <param name="parameters">
+        ///// Parameters for the command.
+        ///// Can be a string, and can also be an object since v14.04
+        ///// </param>
+        ///// <param name="context">EXPERIMENTAL - not final</param>
+        ///// <returns>An toolbar builder with empty configuration and just this button on it</returns>
+        ///// <remarks>
+        ///// Added in v14.02
+        ///// </remarks>
+        //IToolbarBuilder Copy(
+        //    object target,
+        //    string noParamOrder = Eav.Parameters.Protector,
+        //    object ui = null,
+        //    object parameters = null,
+        //    string context = null
+        //);
     }
 }
