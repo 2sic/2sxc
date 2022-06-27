@@ -24,6 +24,23 @@ namespace ToSic.Sxc.Edit
     public interface IToolbarBuilder: IHybridHtmlString, IHasLog, INeedsDynamicCodeRoot
     {
 
+        IToolbarBuilder Add(
+            object target = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            string contentType = null,
+            object ui = null,
+            object parameters = null
+        );
+
+        IToolbarBuilder Edit(
+            object target = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            int? entityId = null,
+            //string contentType = null,
+            object ui = null,
+            object parameters = null, 
+            object prefill = null
+        );
 
         /// <summary>
         /// Add one or more rules (as strings or ToolbarRule objects) according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
@@ -251,6 +268,6 @@ namespace ToSic.Sxc.Edit
         IToolbarBuilder Condition(Func<bool> condition);
 
         [PrivateApi("Internal use only, can change at any time")]
-        string ObjToString(object uiOrParams);
+        string ObjToString(object uiOrParams, string prefix = null);
     }
 }

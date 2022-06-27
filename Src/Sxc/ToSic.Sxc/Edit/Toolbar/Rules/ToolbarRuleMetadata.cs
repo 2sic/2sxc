@@ -40,15 +40,15 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             // 2. build target string
             var mdFor = "for=" + targetId.TargetType + "," +
-                        (targetId.KeyGuid != null ? "guid," + targetId.KeyGuid
-                            : targetId.KeyString != null ? "string," + targetId.KeyString
-                            : "number," + targetId.KeyNumber);
+                        (targetId.KeyGuid != null ? $"guid,{targetId.KeyGuid}"
+                            : targetId.KeyString != null ? $"string,{targetId.KeyString}"
+                            : $"number,{targetId.KeyNumber}");
 
             // 4. add / update rule
-            var newRule = "entityId=" + (existing?.EntityId ?? 0)
-                                      + (existing == null
-                                          ? "&contentType=" + _typeName + "&" + mdFor
-                                          : "");
+            var newRule = $"{KeyEntityId}={existing?.EntityId ?? 0}"
+                          + (existing == null
+                              ? $"&{KeyContentType}={_typeName}&{mdFor}"
+                              : "");
             return newRule;
         }
     }

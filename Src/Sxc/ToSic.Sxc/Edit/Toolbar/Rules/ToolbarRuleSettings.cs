@@ -2,6 +2,8 @@
 {
     public class ToolbarRuleSettings: ToolbarRule
     {
+        private const string CommandName = "settings";
+
         public ToolbarRuleSettings(
             string noParamOrder = Eav.Parameters.Protector,
             string show = null,
@@ -11,7 +13,7 @@
             string autoAddMore = null,
             string ui = "",
             string parameters = "")
-            : base("settings", ui: ui, parameters: parameters)
+            : base(CommandName, ui: ui, parameters: parameters)
             => _uiParams = new[]
             {
                 ("show", show),

@@ -7,12 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         /// <inheritdoc />
         [PrivateApi]
-        public string ObjToString(object uiOrParams)
-        {
-            if (uiOrParams == null) return null;
-            if (uiOrParams is string str) return str;
-
-            return new ObjectToUrl().Serialize(uiOrParams);
-        }
+        public string ObjToString(object uiOrParams, string prefix = null) 
+            => new ObjectToUrl().SerializeIfNotString(uiOrParams, prefix);
     }
 }

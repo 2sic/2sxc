@@ -104,6 +104,7 @@
     <Compile Include="LinksAndImages\SrcSetParsePart.cs" />
     <Compile Include="LinksAndImages\LinkImageTests\ResizeParamMergeTests.cs" />
     <Compile Include="LinksAndImages\UrlHelperTests\Obj2UrlTests.cs" />
+    <Compile Include="LinksAndImages\UrlHelperTests\Obj2UrlMerge.cs" />
     <Compile Include="PageFeatures\SimpleFeatureManagement.cs" />
     <Compile Include="PageProperty\UpdatePropertyTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

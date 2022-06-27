@@ -22,6 +22,35 @@ namespace ToSic.Sxc.Web.Url
 
         public string Serialize(object data) => Serialize(data, Prefix);
 
+
+        public string SerializeIfNotString(object data, string prefix = null)
+        {
+            if (data == null) return null;
+            if (data is string str) return str;
+            return Serialize(data, prefix);
+        }
+
+
+        public string SerializeWithChild(object main, object child, string childPrefix)
+        {
+            var uiString = SerializeIfNotString(main);
+            if (child == null) return uiString;
+            var prefillAddOn = "";
+            if (child is string strPrefill)
+            {
+                var parts = strPrefill.Split(UrlParts.ValuePairSeparator)
+                    .Where(p => p.HasValue())
+                    .Select(p => p.StartsWith(childPrefix) ? p : childPrefix + p);
+                prefillAddOn = string.Join(UrlParts.ValuePairSeparator.ToString(), parts);
+            }
+            else
+                prefillAddOn = SerializeIfNotString(child, childPrefix);
+
+            return UrlParts.ConnectParameters(uiString, prefillAddOn);
+        }
+
+
+
         private ValuePair ValueSerialize(object value, string propName)
         {
             if (value == null) return new ValuePair(propName, null);
