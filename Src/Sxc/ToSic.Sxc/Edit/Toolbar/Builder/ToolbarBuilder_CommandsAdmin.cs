@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? show = null,
             object ui = null,
             object parameters = null
-        ) => AddAdminAction(nameof(System), "zone", noParamOrder, show, ui, parameters);
+        ) => AddAdminAction(nameof(System), "system", noParamOrder, show, ui, parameters);
 
 
         public IToolbarBuilder Insights(
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? show = null,
             object ui = null,
             object parameters = null
-        ) => AddAdminAction(nameof(Insights), "insights-server", noParamOrder, show, ui, parameters);
+        ) => AddAdminAction(nameof(Insights), "insights", noParamOrder, show, ui, parameters);
 
         
 

@@ -76,6 +76,28 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
 
+
+
+        public IToolbarBuilder Data(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            //string contentType = null,
+            object filter = null,
+            object ui = null,
+            object parameters = null
+        )
+        {
+            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Edit), "See docs");
+            var editCommand = new ToolbarRuleForEntity("data", target, 
+                ui: ObjToString(ui),
+                parameters: new ObjectToUrl().SerializeWithChild(parameters, filter, PrefixFilters),
+                contentType: /*contentType ??*/ target as string,
+                propsToSerialize: new[] { KeyContentType });
+            return AddInternal(editCommand);
+        }
+
+
+
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(
             object target,

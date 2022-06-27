@@ -1,8 +1,4 @@
 ﻿using ToSic.Eav;
-using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -18,7 +14,25 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null, 
             object prefill = null
         );
-        
+
+        /// <summary>
+        /// Button to show a admin dialog with all the data-items / entities of a specific content type.
+        /// </summary>
+        /// <param name="target">An entity which will determine the type automatically, or a string containing the type name. </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="filter">object or string with the filters for the data vew</param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        IToolbarBuilder Data(
+            object target = null, // entity-like or content-type name
+            string noParamOrder = Parameters.Protector,
+            // string contentType = null,
+            object filter = null,
+            object ui = null,
+            object parameters = null
+        );
+
 
         /// <summary>
         /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 

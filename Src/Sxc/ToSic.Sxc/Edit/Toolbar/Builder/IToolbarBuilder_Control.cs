@@ -1,5 +1,4 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Documentation;
+﻿using ToSic.Eav.Documentation;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -47,16 +46,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Converts the configuration to a json-string according to the JS-Toolbar specs.
         /// </summary>
         /// <returns></returns>
+        [PrivateApi]
         string ToString();
 
-
-        [PrivateApi]
-        IToolbarBuilder With(
-            string noParamOrder = Parameters.Protector,
-            string mode = null,
-            object target = null
-        );
-        
 
         [PrivateApi("Internal use only, can change at any time")]
         string ObjToString(object uiOrParams, string prefix = null);
