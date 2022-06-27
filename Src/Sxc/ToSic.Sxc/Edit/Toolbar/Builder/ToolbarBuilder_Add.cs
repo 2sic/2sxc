@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {

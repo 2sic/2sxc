@@ -33,13 +33,13 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Publish), "See docs");
             var editCommand = new ToolbarRuleForEntity("publish", target,
-                show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove,
+                operation: OperationShow(show),
                 ui: ObjToString(ui), parameters: ObjToString(parameters),
                 propsToSerialize: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule });
             return AddInternal(editCommand);
         }
-       
 
+        private char OperationShow(bool? show) => show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove;
 
         /// <inheritdoc />
         public IToolbarBuilder Metadata(

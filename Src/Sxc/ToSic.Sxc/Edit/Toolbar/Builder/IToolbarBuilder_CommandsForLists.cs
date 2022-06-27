@@ -49,6 +49,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null
         );
-        
+
+        IToolbarBuilder Replace(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null
+        );
     }
 }

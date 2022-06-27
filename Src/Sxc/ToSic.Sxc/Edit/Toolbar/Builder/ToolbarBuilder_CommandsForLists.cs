@@ -81,5 +81,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null
         ) => AddListAction(nameof(Remove), "remove", target, noParamOrder, null, ui, parameters);
 
+        public IToolbarBuilder Replace(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null
+        ) => AddListAction(nameof(Replace), "replace", target, noParamOrder, null, ui, parameters);
     }
 }

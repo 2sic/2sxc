@@ -15,7 +15,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder ButtonModify(
             string name,
             string noParamOrder = Eav.Parameters.Protector,
-            //object target = null,
             object ui = null, 
             object parameters = null)
         {
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             name = name.TrimStart((char)ToolbarRuleOperations.BtnModify);
 
-            var rule = new ToolbarRuleCustom(/*target*/null, name, ObjToString(ui), ObjToString(parameters), (char)ToolbarRuleOperations.BtnModify);
+            var rule = new ToolbarRuleCustom(name, ui: ObjToString(ui), parameters: ObjToString(parameters), (char)ToolbarRuleOperations.BtnModify);
             return AddInternal(rule);
         }
 
