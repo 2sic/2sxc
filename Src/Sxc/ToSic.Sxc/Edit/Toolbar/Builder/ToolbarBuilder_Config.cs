@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -26,7 +27,21 @@ namespace ToSic.Sxc.Edit.Toolbar
             var clone = new ToolbarBuilder(this);
             var p = clone._params = new ToolbarBuilderParams(_params);
             if (mode != null) p.Mode = mode;
-            if (target != null) p.Target = target;
+            if (target != null)
+            {
+                p.Target = target;
+                // see if we already have a params rule
+                var existingParamsRule = clone.Rules.FirstOrDefault(r => r is ToolbarRuleForParams) as ToolbarRuleForParams;
+                if (existingParamsRule != null)
+                {
+                    clone.Rules.Remove(existingParamsRule);
+                }
+                // Must create a new one, to not change the original which is still in the original object
+                var newParamsRule = new ToolbarRuleForParams(target, existingParamsRule?.Ui,
+                    existingParamsRule?.Parameters, existingParamsRule?.Context);
+
+                clone.Rules.Add(newParamsRule);
+            }
             if (condition != null) p.Condition = condition;
             if (conditionFunc != null) p.ConditionFunc = conditionFunc;
             if (force != null) p.Force = force;

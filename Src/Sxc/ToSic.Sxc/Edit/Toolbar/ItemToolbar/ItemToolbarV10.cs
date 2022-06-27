@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Web.Url;
 using static System.String;
 using Build = ToSic.Sxc.Web.Build;
 
@@ -15,12 +14,12 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Settings = settings;
             Rules = ItemToolbarPicker.ToolbarV10OrNull(toolbar) ?? new List<string>();
-            TargetAction = new ItemToolbarAction(entity) { contentType = newType, prefill = prefill };
+            TargetAction = new EntityEditInfo(entity) { contentType = newType, prefill = prefill };
         }
 
         protected readonly string Settings;
         protected readonly List<string> Rules;
-        protected readonly ItemToolbarAction TargetAction;
+        protected readonly EntityEditInfo TargetAction;
 
         public override string ToolbarAsTag 
             => ToolbarTagTemplate.Replace(ToolbarTagPlaceholder, ToolbarAttributes(JsonToolbarNodeName));
@@ -37,7 +36,10 @@ namespace ToSic.Sxc.Edit.Toolbar
             // add params if we have any
             if (TargetAction != null)
             {
-                var asUrl = ObjectAsQueryString(TargetAction);
+                //var asUrl = ObjectAsQueryString(TargetAction);
+                //if (!IsNullOrWhiteSpace(asUrl)) Rules.Add("params?" + asUrl);
+
+                var asUrl = new ObjectToUrl().SerializeIfNotString(TargetAction);
                 if (!IsNullOrWhiteSpace(asUrl)) Rules.Add("params?" + asUrl);
             }
 
@@ -48,15 +50,17 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
 
-        public string ObjectAsQueryString(object obj)
-        {
-            var properties = obj.GetType().GetProperties()
-                .Where(p => p.GetValue(obj, null) != null)
-                .Where(p => !p.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any())
-                .Select(p => p.Name + "=" + Uri.EscapeUriString(p.GetValue(obj, null).ToString()));
+        //public string ObjectAsQueryString(object obj)
+        //{
+        //    var newSerialize = new ObjectToUrl().SerializeIfNotString(obj);
 
-            return Join("&", properties.ToArray());
-        }
+        //    var properties = obj.GetType().GetProperties()
+        //        .Where(p => p.GetValue(obj, null) != null)
+        //        .Where(p => !p.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any())
+        //        .Select(p => p.Name + "=" + Uri.EscapeUriString(p.GetValue(obj, null).ToString()));
+
+        //    return Join("&", properties.ToArray());
+        //}
 
     }
 }

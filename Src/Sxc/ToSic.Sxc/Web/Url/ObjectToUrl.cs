@@ -7,10 +7,14 @@ namespace ToSic.Sxc.Web.Url
 {
     public class ObjectToUrl
     {
-        public ObjectToUrl(string prefix = null)
+        public delegate (bool Keep, object Value) ValueHandler(string name, object value);
+
+        public ObjectToUrl(string prefix = null, ValueHandler customHandler = null)
         {
+            _customHandler = customHandler;
             Prefix = prefix;
         }
+        private readonly ValueHandler _customHandler;
 
         public string Prefix { get; }
         public string ArraySeparator { get; set; } = ",";
@@ -49,12 +53,17 @@ namespace ToSic.Sxc.Web.Url
             return UrlParts.ConnectParameters(uiString, prefillAddOn);
         }
 
-
-
-        private ValuePair ValueSerialize(object value, string propName)
+        private ValuePair ValueSerialize(string name, object value)
         {
-            if (value == null) return new ValuePair(propName, null);
-            if (value is string strValue) return new ValuePair(propName, strValue);
+            if (_customHandler != null)
+            {
+                var (keep, newValue) = _customHandler(name, value);
+                if (!keep) return new ValuePair(name, null);
+                value = newValue;
+            }
+
+            if (value == null) return new ValuePair(name, null);
+            if (value is string strValue) return new ValuePair(name, strValue);
 
             var valueType = value.GetType();
 
@@ -67,14 +76,14 @@ namespace ToSic.Sxc.Web.Url
 
                 if (valueElemType == null) throw new ArgumentNullException("The type to add to url seems to have a confusing setup");
                 if (valueElemType.IsPrimitive || valueElemType == typeof(string))
-                    return new ValuePair(propName, string.Join(ArraySeparator, enumerable.Cast<object>()));
+                    return new ValuePair(name, string.Join(ArraySeparator, enumerable.Cast<object>()));
 
-                return new ValuePair(propName, "array-like-but-unclear-what");
+                return new ValuePair(name, "array-like-but-unclear-what");
             }
 
             return valueType.IsSimpleType() 
-                ? new ValuePair(propName, value.ToString()) 
-                : new ValuePair(null, Serialize(value, propName + DepthSeparator), true);
+                ? new ValuePair(name, value is bool ? value.ToString().ToLowerInvariant() : value.ToString()) 
+                : new ValuePair(null, Serialize(value, name + DepthSeparator), true);
         }
 
         // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
@@ -87,7 +96,7 @@ namespace ToSic.Sxc.Web.Url
             // Get all properties on the object
             var properties = objToConvert.GetType().GetProperties()
                 .Where(x => x.CanRead)
-                .Select(x => ValueSerialize(x.GetValue(objToConvert, null), prefix + x.Name))
+                .Select(x => ValueSerialize(prefix + x.Name, x.GetValue(objToConvert, null)))
                 .Where(x => x.Value != null)
                 .ToList();
 

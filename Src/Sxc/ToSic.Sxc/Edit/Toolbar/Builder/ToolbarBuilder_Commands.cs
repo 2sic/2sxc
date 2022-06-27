@@ -2,7 +2,9 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
+using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -20,32 +22,56 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (target is string strTarget && strTarget.HasValue() && strTarget.Length > 3)
                 return AddInternal(strTarget);
 
-            var addCommand =
-                new ToolbarRuleForEntity(target, "add", contentType: contentType, ui: ObjToString(ui), parameters: ObjToString(parameters))
-                {
-                    ParamEntityIdUsed = false,
-                    ParamContentTypeUsed = false
-                };
-
+            var addCommand = new ToolbarRuleForEntity("add", target, contentType: contentType,
+                ui: ObjToString(ui), parameters: ObjToString(parameters))
+            {
+                PropSerializeDefault = false
+            };
             return AddInternal(addCommand);
         }
 
-        public IToolbarBuilder Edit(
-            object target = null, 
-            string noParamOrder = Parameters.Protector, 
-            int? entityId = null,
-            object ui = null, 
+        public IToolbarBuilder Edit(object target = null,
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            object ui = null,
             object parameters = null,
             object prefill = null)
         {
-            var editCommand =
-                new ToolbarRuleForEntity(target, "edit", entityId: entityId, ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill), parameters: ObjToString(parameters))
+            var editCommand = new ToolbarRuleForEntity("edit", target, /*entityId: entityId,*/
+                ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
+                parameters: ObjToString(parameters))
+            {
+                PropSerializeDefault = true,
+                PropSerializeMap =
                 {
-                    ParamEntityIdUsed = true,
-                    ParamContentTypeUsed = false
-                };
+                    [KeyEntityGuid] = false,
+                    [KeyPublished] = false,
+                    [KeyTitle] = false
+                }
+            };
             return AddInternal(editCommand);
         }
+
+        public IToolbarBuilder Publish(object target = null,
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            bool? show = null,
+            object ui = null,
+            object parameters = null)
+        {
+            var editCommand = new ToolbarRuleForEntity("publish", target, 
+                show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove, 
+                /*entityId: entityId,*/ ui: ObjToString(ui), parameters: ObjToString(parameters))
+            {
+                PropSerializeDefault = false,
+                PropSerializeMap =
+                {
+                    [KeyEntityId] = true,
+                    [KeyPublished] = true,
+                    [KeyIndex] = true
+                }
+            };
+            return AddInternal(editCommand);
+        }
+       
 
 
         /// <inheritdoc />

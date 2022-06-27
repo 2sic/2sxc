@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
+﻿using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
+
+namespace ToSic.Sxc.Edit.Toolbar
 {
     public class ToolbarRuleCopy: ToolbarRuleForEntity
     {
@@ -10,10 +12,11 @@
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(target, CommandName, (char)ToolbarRuleOperations.Add, ui: ui, parameters: parameters, context: context, helper: helper)
+        ) : base(CommandName, target, (char)ToolbarRuleOperations.BtnAdd, ui: ui, parameters: parameters, context: context, helper: helper)
         {
-            ParamEntityIdUsed = true;
-            ParamContentTypeUsed = true;
+            PropSerializeSetAll(false);
+            PropSerializeMap[KeyEntityId] = true;
+            PropSerializeMap[KeyContentType] = true;
         }
 
     }

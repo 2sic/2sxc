@@ -21,9 +21,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             if (!name.HasValue()) return this;
 
-            name = name.TrimStart((char)ToolbarRuleOperations.Modify);
+            name = name.TrimStart((char)ToolbarRuleOperations.BtnModify);
 
-            var rule = new ToolbarRuleCustom(/*target*/null, name, ObjToString(ui), ObjToString(parameters), (char)ToolbarRuleOperations.Modify);
+            var rule = new ToolbarRuleCustom(/*target*/null, name, ObjToString(ui), ObjToString(parameters), (char)ToolbarRuleOperations.BtnModify);
             return AddInternal(rule);
         }
 
@@ -31,11 +31,11 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             if (names == null || !names.Any()) return this;
             var realNames = names
-                .Select(n => n.Trim().Trim((char)ToolbarRuleOperations.Remove))
+                .Select(n => n.Trim().Trim((char)ToolbarRuleOperations.BtnRemove))
                 .Where(n => n.HasValue()).ToList();
             if (!realNames.Any()) return this;
 
-            var rules = realNames.Select(n => (char)ToolbarRuleOperations.Remove + n);
+            var rules = realNames.Select(n => (char)ToolbarRuleOperations.BtnRemove + n);
             return AddInternal(rules.Cast<object>().ToArray());
         }
         

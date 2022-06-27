@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         #region Key Constants
 
-        protected const string KeyEntityId = "entityId";
-        protected const string KeyContentType = "contentType";
+        //protected const string KeyEntityId = "entityId";
+        //protected const string KeyContentType = "contentType";
 
         #endregion
 

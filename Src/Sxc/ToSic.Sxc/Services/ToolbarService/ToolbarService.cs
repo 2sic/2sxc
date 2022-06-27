@@ -31,31 +31,23 @@ namespace ToSic.Sxc.Services
 
         /// <inheritdoc />
         public IToolbarBuilder Default(object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object ui = null) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null, target: target);
 
 
         /// <inheritdoc />
         public IToolbarBuilder Empty(object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object ui = null) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null, target: target);
 
 
         /// <inheritdoc />
         public IToolbarBuilder Metadata(object target,
             string contentTypes = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string context = null) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, context);
-
-
-        ///// <inheritdoc />
-        //public IToolbarBuilder Copy(object target,
-        //    string noParamOrder = Eav.Parameters.Protector,
-        //    object ui = null,
-        //    object parameters = null,
-        //    string context = null) => Empty().Copy(target, noParamOrder, ui, parameters, context);
 
 
         private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, object ui, string context, object target = null)
@@ -65,10 +57,9 @@ namespace ToSic.Sxc.Services
             // The following lines must be just as this, because it's a functional object, where each call may return a new copy
             var tlb = _toolbarGenerator.New;
             tlb.ConnectToRoot(_codeRoot);
-            if (target != null) tlb = tlb.With(target: target);
             tlb = tlb.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: tlb.ObjToString(ui)));
-            if (context.HasValue())
-                tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
+            if (context.HasValue()) tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
+            if (target != null) tlb = tlb.With(target: target);
             return callLog.Return(tlb);
         }
 

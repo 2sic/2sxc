@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Code;
@@ -23,10 +24,32 @@ namespace ToSic.Sxc.Edit
     [PublicApi]
     public interface IToolbarBuilder: IHybridHtmlString, IHasLog, INeedsDynamicCodeRoot
     {
+        /// <summary>
+        /// Get a toolbar builder which would render to HTML as a standalone tag.
+        /// </summary>
+        /// <returns></returns>
+        [WorkInProgressApi("wip")]
+        IToolbarBuilder AsTag();
+
+        /// <summary>
+        /// Get a toolbar builder which would render to HTML as attributes on an existing tag.
+        /// Note that this is the default, so you will usually not need this. 
+        /// </summary>
+        /// <returns></returns>
+        [WorkInProgressApi("wip")]
+        IToolbarBuilder AsAttributes();
+
+        /// <summary>
+        /// Test code
+        /// </summary>
+        /// <returns></returns>
+        [PrivateApi("wip")]
+        IToolbarBuilder AsJson();
+
 
         IToolbarBuilder Add(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string contentType = null,
             object ui = null,
             object parameters = null
@@ -34,8 +57,7 @@ namespace ToSic.Sxc.Edit
 
         IToolbarBuilder Edit(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
-            int? entityId = null,
+            string noParamOrder = Parameters.Protector,
             //string contentType = null,
             object ui = null,
             object parameters = null, 
@@ -57,7 +79,9 @@ namespace ToSic.Sxc.Edit
         #region Button Commands
 
         /// <summary>
-        /// Add one or more rules according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
+        /// Add one or more rules according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple).
+        ///
+        /// Note that you can actually add many buttons but the name is still Button not Buttons, for API consistency.
         /// </summary>
         /// <param name="rules"></param>
         /// <returns></returns>
@@ -90,7 +114,7 @@ namespace ToSic.Sxc.Edit
         [WorkInProgressApi("still WIP")]
         IToolbarBuilder ButtonModify(
             string name,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             //object target = null,
             object ui = null,
             object parameters = null);
@@ -98,6 +122,8 @@ namespace ToSic.Sxc.Edit
         /// <summary>
         /// Remove buttons from the toolbar.
         /// Usually in combination with the `Default` toolbar which already has many buttons, for eg to remove the `layout` button.
+        ///
+        /// Note that you can actually remove many buttons but the name is still Button not Buttons, for API consistency.
         /// </summary>
         /// <param name="names">
         /// One or more command names.
@@ -138,10 +164,19 @@ namespace ToSic.Sxc.Edit
         IToolbarBuilder Metadata(
             object target,
             string contentTypes = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string context = null
+        );
+
+
+        IToolbarBuilder Publish(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            bool? show = null,
+            object ui = null,
+            object parameters = null
         );
 
         #endregion
@@ -150,7 +185,7 @@ namespace ToSic.Sxc.Edit
         [PrivateApi("WIP 13.11 - not sure if we actually make it public, as it's basically metadata with automatic content-type - not published yet")]
         IToolbarBuilder Image(
             object target,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string ui = null,
             string parameters = null
         );
@@ -176,7 +211,7 @@ namespace ToSic.Sxc.Edit
         /// </remarks>
         IToolbarBuilder Copy(
             object target,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string context = null
@@ -203,7 +238,7 @@ namespace ToSic.Sxc.Edit
         /// * Added in 2sxc 13
         /// </remarks>
         IToolbarBuilder Settings(
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string show = null,
             string hover = null,
             string follow = null,
@@ -225,7 +260,7 @@ namespace ToSic.Sxc.Edit
 
         [PrivateApi]
         IToolbarBuilder With(
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string mode = null,
             object target = null
         );

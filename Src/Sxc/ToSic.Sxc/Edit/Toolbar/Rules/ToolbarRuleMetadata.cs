@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Eav.Metadata;
 using ToSic.Sxc.Web;
+using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(target, CommandName, operation: (char)ToolbarRuleOperations.Add, ui: ui, parameters: parameters, context: context, helper: helper)
+        ) : base(target, CommandName, operation: (char)ToolbarRuleOperations.BtnAdd, ui: ui, parameters: parameters, context: context, helper: helper)
         {
             _typeName = typeName;
         }

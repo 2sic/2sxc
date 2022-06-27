@@ -104,33 +104,6 @@ namespace ToSic.Sxc.Services
             object parameters = null,
             string context = null
         );
-
-        // 2022-06-27 rarely a standalone button, so doesn't need to be available on the main service
-
-        ///// <summary>
-        ///// Create a toolbar with a button to copy an item. It needs the item which it will copy as a parameter.
-        ///// </summary>
-        ///// <param name="target">The target object which is either an <see cref="Eav.Data.IEntity"/> or an <see cref="Sxc.Data.IDynamicEntity"/> </param>
-        ///// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        ///// <param name="ui">
-        ///// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
-        ///// Can be a string, and can also be an object since v14.04
-        ///// </param>
-        ///// <param name="parameters">
-        ///// Parameters for the command.
-        ///// Can be a string, and can also be an object since v14.04
-        ///// </param>
-        ///// <param name="context">EXPERIMENTAL - not final</param>
-        ///// <returns>An toolbar builder with empty configuration and just this button on it</returns>
-        ///// <remarks>
-        ///// Added in v14.02
-        ///// </remarks>
-        //IToolbarBuilder Copy(
-        //    object target,
-        //    string noParamOrder = Eav.Parameters.Protector,
-        //    object ui = null,
-        //    object parameters = null,
-        //    string context = null
-        //);
+        
     }
 }

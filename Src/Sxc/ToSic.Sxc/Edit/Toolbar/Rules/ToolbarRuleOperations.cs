@@ -2,8 +2,9 @@
 {
     internal enum ToolbarRuleOperations
     {
-        Add = '+',
-        Modify = '%',
-        Remove = '-',
+        BtnAdd = '+',
+        BtnAddAuto = '±',
+        BtnModify = '%',
+        BtnRemove = '-',
     }
 }

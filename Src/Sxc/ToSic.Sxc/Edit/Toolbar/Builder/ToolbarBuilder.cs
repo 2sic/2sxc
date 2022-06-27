@@ -20,7 +20,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public class Dependencies
         {
-
             public Dependencies(Lazy<IAppStates> appStatesLazy, LazyInitLog<ToolbarButtonDecoratorHelper> toolbarButtonHelper)
             {
                 ToolbarButtonHelper = toolbarButtonHelper;

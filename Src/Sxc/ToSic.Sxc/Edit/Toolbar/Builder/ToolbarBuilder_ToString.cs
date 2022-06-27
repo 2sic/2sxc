@@ -9,6 +9,12 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         private const string ErrRenderMessage = "error: can't render toolbar to html, missing context";
 
+        public IToolbarBuilder AsTag() => With(mode: ToolbarHtmlModes.Standalone);
+
+        public IToolbarBuilder AsAttributes() => With(mode: ToolbarHtmlModes.OnTag);
+
+        public IToolbarBuilder AsJson() => With(mode: ToolbarHtmlModes.Json);
+
         public override string ToString()
         {
             var mode = _params?.Mode;
@@ -20,28 +26,28 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             // TODO:
             // - force
-            // - condition - test
-            // - conditionfunc - test
 
             // Only test conditions if the toolbar would show - otherwise ignore
             if (edit?.Enabled == true)
             {
+                // ReSharper disable AssignNullToNotNullAttribute
                 if (_params?.Condition == false) return null;
                 if (_params?.ConditionFunc != null && _params.ConditionFunc() == false) return null;
+                // ReSharper restore AssignNullToNotNullAttribute
             }
 
             switch (mode)
             {
+                // ReSharper disable AssignNullToNotNullAttribute
                 case ToolbarHtmlModes.OnTag:
-                    // ReSharper disable once AssignNullToNotNullAttribute - the edit.TagToolbar can return a null
                     return edit == null
                         ? new Attribute(ToolbarAttributeName, ErrRenderMessage).ToString()
                         : edit.TagToolbar(target, toolbar: this)?.ToString();
                 case ToolbarHtmlModes.Standalone:
-                    // ReSharper disable once AssignNullToNotNullAttribute - the edit.Toolbar can return a null
                     return edit == null
                         ? $"<!-- {ErrRenderMessage} -->"
                         : edit.Toolbar(target, toolbar: this)?.ToString();
+                // ReSharper restore AssignNullToNotNullAttribute
                 case ToolbarHtmlModes.Json:
                     var rules = Rules.Select(r => r.ToString()).ToArray();
                     return JsonConvert.SerializeObject(rules);

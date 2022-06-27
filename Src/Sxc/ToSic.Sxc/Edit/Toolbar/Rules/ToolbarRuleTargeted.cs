@@ -22,7 +22,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             _helper = helper;
         }
 
-        protected readonly object Target;
+        internal object Target { get; set; }
+
         private readonly ToolbarButtonDecoratorHelper _helper;
 
         public override string GeneratedUiParams()
