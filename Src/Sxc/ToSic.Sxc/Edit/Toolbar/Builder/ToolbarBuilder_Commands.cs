@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
         public IToolbarBuilder Add(object target,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = Parameters.Protector,
             string contentType = null,
             object ui = null,
             object parameters = null)
@@ -31,43 +31,46 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         public IToolbarBuilder Edit(object target = null,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             object prefill = null)
         {
-            var editCommand = new ToolbarRuleForEntity("edit", target, /*entityId: entityId,*/
+            var editCommand = new ToolbarRuleForEntity("edit", target, 
                 ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
-                parameters: ObjToString(parameters))
+                parameters: ObjToString(parameters), 
+                propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished})
             {
-                PropSerializeDefault = true,
-                PropSerializeMap =
-                {
-                    [KeyEntityGuid] = false,
-                    [KeyPublished] = false,
-                    [KeyTitle] = false
-                }
+                //PropSerializeDefault = true,
+                //PropSerializeMap =
+                //{
+                //    [KeyEntityGuid] = false,
+                //    [KeyPublished] = false,
+                //    [KeyTitle] = false
+                //}
             };
             return AddInternal(editCommand);
         }
 
         public IToolbarBuilder Publish(object target = null,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = Parameters.Protector,
             bool? show = null,
             object ui = null,
             object parameters = null)
         {
-            var editCommand = new ToolbarRuleForEntity("publish", target, 
-                show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove, 
-                /*entityId: entityId,*/ ui: ObjToString(ui), parameters: ObjToString(parameters))
+            var editCommand = new ToolbarRuleForEntity("publish", target,
+                show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove,
+                ui: ObjToString(ui), parameters: ObjToString(parameters),
+                propsToSerialize: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule })
             {
-                PropSerializeDefault = false,
-                PropSerializeMap =
-                {
-                    [KeyEntityId] = true,
-                    [KeyPublished] = true,
-                    [KeyIndex] = true
-                }
+                //PropSerializeDefault = false,
+                //PropSerializeMap =
+                //{
+                //    [KeyEntityId] = true,   // for ID mode
+                //    [KeyPublished] = true,  // info if published
+                //    [KeyIndex] = true,      // for list mode
+                //    [KeyUseModule] = true,
+                //}
             };
             return AddInternal(editCommand);
         }

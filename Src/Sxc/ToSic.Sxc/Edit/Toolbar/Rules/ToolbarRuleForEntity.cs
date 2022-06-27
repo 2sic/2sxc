@@ -16,29 +16,33 @@ namespace ToSic.Sxc.Edit.Toolbar
             string commandName,
             object target = null,   // IEntity, DynEntity or int
             char? operation = null,
-            int? entityId = null,
             string contentType = null,
             string ui = null, 
             string parameters = null,
             ToolbarContext context = null,
-            ToolbarButtonDecoratorHelper helper = null
+            ToolbarButtonDecoratorHelper helper = null,
+            string[] propsToNotSerialize = null,
+            string[] propsToSerialize = null
         ) : base(target, commandName, operation: operation, ui: ui, parameters: parameters, context: context, helper: helper)
         {
             if (target is int intTarget) EditInfo.entityId = intTarget;
-            if (entityId != null) EditInfo.entityId = entityId;
             if (contentType != null) EditInfo.contentType = contentType;
+
+            if (propsToNotSerialize != null) SetPropsToSerialize(true, propsToNotSerialize);
+            if (propsToSerialize != null) SetPropsToSerialize(false, propsToSerialize);
+        }
+
+        private void SetPropsToSerialize(bool defaultSerialize, string[] opposite)
+        {
+            PropSerializeDefault = defaultSerialize;
+            foreach (var sProp in opposite)
+                PropSerializeMap[sProp] = !PropSerializeDefault;
         }
 
         #region Configuration of params to generate
 
         internal bool PropSerializeDefault = true;
         internal Dictionary<string, bool> PropSerializeMap = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
-
-        internal void PropSerializeSetAll(bool setAll)
-        {
-            PropSerializeDefault = setAll;
-            PropSerializeMap = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
-        }
 
         #endregion
         

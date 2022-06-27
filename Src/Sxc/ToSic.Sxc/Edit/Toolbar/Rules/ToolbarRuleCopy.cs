@@ -12,11 +12,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(CommandName, target, (char)ToolbarRuleOperations.BtnAdd, ui: ui, parameters: parameters, context: context, helper: helper)
+        ) : base(CommandName, target, (char)ToolbarRuleOperations.BtnAdd, ui: ui, parameters: parameters, context: context, helper: helper,
+            propsToSerialize: new []{ KeyEntityId, KeyContentType})
         {
-            PropSerializeSetAll(false);
-            PropSerializeMap[KeyEntityId] = true;
-            PropSerializeMap[KeyContentType] = true;
+            //PropSerializeSetAll(false);
+            //PropSerializeMap[KeyEntityId] = true;
+            //PropSerializeMap[KeyContentType] = true;
         }
 
     }
