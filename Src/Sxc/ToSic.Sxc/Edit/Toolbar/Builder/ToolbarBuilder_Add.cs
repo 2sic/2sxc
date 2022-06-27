@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -14,6 +15,31 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <inheritdoc />
         public IToolbarBuilder Add(params object[] rules)
             => InnerAdd(rules?.ToArray());                  // Must re-to-array, so that it's not re-wrapped
+
+        public IToolbarBuilder Modify(
+            string name,
+            string noParamOrder = Eav.Parameters.Protector,
+            //object target = null,
+            object ui = null, 
+            object parameters = null)
+        {
+            if (!name.HasValue()) return this;
+
+            name = name.TrimStart((char)ToolbarRuleOperations.Modify);
+
+            var rule = new ToolbarRuleCustom(/*target*/null, name, ObjToString(ui), ObjToString(parameters), (char)ToolbarRuleOperations.Modify);
+            return InnerAdd(rule);
+        }
+
+        public IToolbarBuilder Remove(params string[] names)
+        {
+            if (names == null || !names.Any()) return this;
+            var realNames = names.Select(n => n.Trim()).Where(n => n.HasValue()).ToList();
+            if (!realNames.Any()) return this;
+
+            var rules = realNames.Select(n => (char)ToolbarRuleOperations.Remove + n).Cast<object>().ToArray();
+            return InnerAdd(rules);
+        }
 
         private IToolbarBuilder InnerAdd(params object[] newRules)
         {

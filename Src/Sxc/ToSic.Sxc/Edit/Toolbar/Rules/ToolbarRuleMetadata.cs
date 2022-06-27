@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(target, CommandName, operation: '+', ui: ui, parameters: parameters, context: context, helper: helper)
+        ) : base(target, CommandName, operation: (char)ToolbarRuleOperations.Add, ui: ui, parameters: parameters, context: context, helper: helper)
         {
             _typeName = typeName;
         }

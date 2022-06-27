@@ -7,12 +7,14 @@ namespace ToSic.Sxc.Web.Url
 {
     public class ObjectToUrl
     {
-        public ObjectToUrl(string prefix = null) => Prefix = prefix;
+        public ObjectToUrl(string prefix = null)
+        {
+            Prefix = prefix;
+        }
+
         public string Prefix { get; }
         public string ArraySeparator { get; set; } = ",";
-
         public string DepthSeparator { get; set; } = ":";
-
         public string PairSeparator { get; set; } = UrlParts.ValuePairSeparator.ToString();
 
         public string KeyValueSeparator { get; set; } = "=";

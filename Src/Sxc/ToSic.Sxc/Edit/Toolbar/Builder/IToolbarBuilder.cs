@@ -47,6 +47,46 @@ namespace ToSic.Sxc.Edit
         IToolbarBuilder Add(params object[] rules);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">
+        /// The command name.
+        /// See [](xref:Api.Js.SxcJs.CommandNames)
+        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui">
+        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
+        /// <param name="parameters">
+        /// Parameters for the command.
+        /// Can be a string, and can also be an object since v14.04
+        /// </param>
+        /// <returns></returns>
+        /// <remarks>
+        /// - new in 14.04 WIP
+        /// </remarks>
+        [WorkInProgressApi("still WIP")]
+        IToolbarBuilder Modify(
+            string name,
+            string noParamOrder = Eav.Parameters.Protector,
+            //object target = null,
+            object ui = null,
+            object parameters = null);
+
+        /// <summary>
+        /// Remove buttons from the toolbar.
+        /// Usually in combination with the `Default` toolbar which already has many buttons, for eg to remove the `layout` button.
+        /// </summary>
+        /// <param name="names">
+        /// One or more command names.
+        /// See [](xref:Api.Js.SxcJs.CommandNames)
+        /// </param>
+        /// <returns></returns>
+        [WorkInProgressApi("still WIP")]
+        IToolbarBuilder Remove(params string[] names);
+
+        /// <summary>
         /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 
         /// </summary>
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
