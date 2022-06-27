@@ -4,6 +4,7 @@ using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Web;
 // ReSharper disable RedundantExtendsListEntry
 #pragma warning disable CS0108, CS0114
@@ -49,7 +50,7 @@ namespace ToSic.Sxc.Services
         /// The content-item this toolbar is for, can be null. <br/>
         /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
         ///
-        /// If the first parameter is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then all other parameters will be ignored. 
+        /// If the first parameter is a <see cref="IToolbarBuilder"/> then all other parameters will be ignored. 
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
@@ -68,7 +69,7 @@ namespace ToSic.Sxc.Services
         /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
         /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
         ///
-        /// If the the `toolbar` is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then other parameters except for the `target` will be ignored. 
+        /// If the the `toolbar` is a <see cref="IToolbarBuilder"/> then other parameters except for the `target` will be ignored. 
         /// </param>
         /// <param name="settings">
         ///     Toolbar settings controlling hover etc. <br/>
@@ -102,7 +103,7 @@ namespace ToSic.Sxc.Services
         /// The optional content-item this toolbar is for. Can be null. <br/>
         /// Usually a [](xref:NetCode.DynamicData.DynamicEntity) or a [](xref:NetCode.DynamicData.Entity)
         ///
-        /// If the first parameter is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then all other parameters will be ignored. 
+        /// If the first parameter is a <see cref="IToolbarBuilder"/> then all other parameters will be ignored. 
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="actions">
@@ -121,7 +122,7 @@ namespace ToSic.Sxc.Services
         /// Full manual toolbar configuration. Setting this will cause `actions` to be ignored. <br/>
         /// See [](xref:Basics.Browser.EditUx.Toolbars.Index)
         ///
-        /// If the the `toolbar` is a <see cref="ToSic.Sxc.Edit.IToolbarBuilder"/> then other parameters except for the `target` will be ignored. 
+        /// If the the `toolbar` is a <see cref="IToolbarBuilder"/> then other parameters except for the `target` will be ignored. 
         /// </param>
         /// <param name="settings">
         ///     Toolbar settings controlling hover etc. <br/>

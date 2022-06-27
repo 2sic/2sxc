@@ -42,11 +42,11 @@ namespace ToSic.Sxc.Edit.Toolbar
                 case ToolbarHtmlModes.OnTag:
                     return edit == null
                         ? new Attribute(ToolbarAttributeName, ErrRenderMessage).ToString()
-                        : edit.TagToolbar(target, toolbar: this)?.ToString();
+                        : edit.TagToolbar(this)?.ToString();
                 case ToolbarHtmlModes.Standalone:
                     return edit == null
                         ? $"<!-- {ErrRenderMessage} -->"
-                        : edit.Toolbar(target, toolbar: this)?.ToString();
+                        : edit.Toolbar(this)?.ToString();
                 // ReSharper restore AssignNullToNotNullAttribute
                 case ToolbarHtmlModes.Json:
                     var rules = Rules.Select(r => r.ToString()).ToArray();
