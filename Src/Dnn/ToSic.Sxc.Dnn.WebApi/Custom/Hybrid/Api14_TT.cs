@@ -18,7 +18,7 @@ namespace Custom.Hybrid
     /// </remarks>
     /// <typeparam name="TModel">_not yet used_ - pls always use `dynamic`</typeparam>
     /// <typeparam name="TServiceKit">The ServiceKit provided on `Kit` - for now, use <see cref="ServiceKit14"/></typeparam>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v14.05")]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v14.07")]
     public abstract partial class Api14<TModel, TServiceKit>: ApiCoreShim, IDynamicCode<TModel, TServiceKit>
         where TModel : class
         where TServiceKit : ServiceKit

@@ -4,15 +4,15 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Oqtane
+namespace Custom.Hybrid
 {
     /// <summary>
     /// Oqtane specific Api base class.
     ///
     /// As of 2sxc v12 it's identical to [](xref:Custom.Hybrid.Api12) but this may be enhanced in future. 
     /// </summary>
-    [PublicApi]
-    public abstract class Api14<TModel, TServiceKit> : Hybrid.Api12, IDynamicCode<TModel, TServiceKit>
+    [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+    public abstract class Api14<TModel, TServiceKit> : Api12, IDynamicCode<TModel, TServiceKit>
         where TModel : class
         where TServiceKit : ServiceKit
     {

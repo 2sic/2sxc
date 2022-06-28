@@ -107,6 +107,7 @@
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
     <Compile Include="Custom\Dnn\Api12.cs" />
+    <Compile Include="Custom\Hybrid\Api14.cs" />
     <Compile Include="WebApi\ApiCoreShim.cs" />
     <Compile Include="Custom\Hybrid\Api12_Api.cs" />
     <Compile Include="Custom\Hybrid\Api14_TT_Api.cs" />
