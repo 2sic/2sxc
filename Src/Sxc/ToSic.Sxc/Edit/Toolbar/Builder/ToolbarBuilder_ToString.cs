@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         private const string ErrRenderMessage = "error: can't render toolbar to html, missing context";
 
-        public IToolbarBuilder AsTag() => With(mode: ToolbarHtmlModes.Standalone);
+        public IToolbarBuilder AsTag() => WithInternal(mode: ToolbarHtmlModes.Standalone);
 
-        public IToolbarBuilder AsAttributes() => With(mode: ToolbarHtmlModes.OnTag);
+        public IToolbarBuilder AsAttributes() => WithInternal(mode: ToolbarHtmlModes.OnTag);
 
-        public IToolbarBuilder AsJson() => With(mode: ToolbarHtmlModes.Json);
+        public IToolbarBuilder AsJson() => WithInternal(mode: ToolbarHtmlModes.Json);
 
         public override string ToString()
         {

@@ -14,20 +14,20 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// 
         /// For the `empty` toolbar it will just add the button in the normal way.
         ///
-        /// To change this automatic behavior, use a `flags` = `modify` or `add`
+        /// To change this automatic behavior, use a `operation` = `modify` or `add`
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder"></param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
-        /// <param name="flags"></param>
+        /// <param name="operation"></param>
         /// <returns></returns>
         IToolbarBuilder Delete(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
-            string flags = null
+            string operation = null
         );
 
         IToolbarBuilder Edit(

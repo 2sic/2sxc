@@ -1,18 +1,12 @@
 ﻿using System;
+using ToSic.Eav;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-
-        public IToolbarBuilder With(
-            string noParamOrder = Eav.Parameters.Protector,
-            string mode = null,
-            object target = null
-        ) => WithInternal(noParamOrder, mode, target);
-
         private IToolbarBuilder WithInternal(
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Parameters.Protector,
             string mode = null,
             object target = null,
             bool? condition = null, 
@@ -20,7 +14,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? force = null
         )
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
+            Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
             // Create clone before starting to log so it's in there too
             var clone = new ToolbarBuilder(this);
             var p = clone._params = new ToolbarBuilderParams(_params);
@@ -44,7 +38,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             return clone;
         }
 
-        public IToolbarBuilder Target(object target) => With(target: target);
+        public IToolbarBuilder More(
+            string noParamOrder = Parameters.Protector,
+            object ui = null
+        )
+        {
+            Parameters.Protect(noParamOrder, nameof(ui));
+            return AddInternal(new ToolbarRuleCustom("more", ui: ObjToString(ui)));
+        }
+
+        public IToolbarBuilder Target(object target) => WithInternal(target: target);
 
         public IToolbarBuilder Condition(bool condition) => WithInternal(condition: condition);
 

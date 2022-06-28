@@ -35,16 +35,17 @@ namespace ToSic.Sxc.Edit.Toolbar
             var parts = flags.Split(',');
             foreach (var f in parts)
             {
-                var maybeOp = FindOperation(f.Trim(), BtnUnknown);
+                var maybeOp = Pick(f, BtnUnknown);
                 if (maybeOp != (char)BtnUnknown) return maybeOp;
             }
 
             return (char)defOp;
         }
 
-        private static char FindOperation(string op, ToolbarRuleOperations defOp)
+        internal static char Pick(string op, ToolbarRuleOperations defOp)
         {
             if (!op.HasValue()) return (char)defOp;
+            op = op.Trim();
 
             if (op.Length == 1 && Enum.TryParse(op, true, out ToolbarRuleOperations foundOp))
                 return (char)foundOp;

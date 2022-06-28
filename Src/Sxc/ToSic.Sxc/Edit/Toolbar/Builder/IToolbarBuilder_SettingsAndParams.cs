@@ -5,6 +5,10 @@ namespace ToSic.Sxc.Edit.Toolbar
 
     public partial interface IToolbarBuilder
     {
+        IToolbarBuilder More(
+            string noParamOrder = Parameters.Protector,
+            object ui = null
+        );
 
         /// <summary>
         /// Add a `settings` rule to configure what the toolbar should look like. See [](xref:JsCode.Toolbars.Settings)

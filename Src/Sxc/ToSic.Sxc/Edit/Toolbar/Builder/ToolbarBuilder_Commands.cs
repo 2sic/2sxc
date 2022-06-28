@@ -15,16 +15,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
-            string flags = null)
+            string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
 
             // Set default operation based on what toolbar is used
             var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
-            var op = isDefToolbar ? BtnModify : BtnAdd;
+            var defOp = isDefToolbar ? BtnModify : BtnAdd;
 
             var editCommand = new ToolbarRuleForEntity("delete", target,
-                operation: ToolbarRuleOps.FindInFlags(flags, op),
+                operation: ToolbarRuleOps.Pick(operation, defOp),
                 ui: new ObjectToUrl().SerializeWithChild(ui, "show=true", ""),
                 parameters: ObjToString(parameters),
                 propsToSerialize: new[] { KeyTitle, KeyEntityId, KeyEntityGuid });
