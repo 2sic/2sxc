@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public abstract class ToolbarRule: ToolbarRuleBase
     {
-        protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null, ToolbarContext context = null)
+        protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null, string operationCode = null, ToolbarContext context = null)
         {
             Command = command;
             Operation = operation;
             Parameters = parameters ?? "";
             Ui = ui ?? "";
             Context = context;
+
+            if (!operationCode.HasValue()) return;
+            var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, BtnUnknown);
+            if (targetCouldBeOperation != (char)BtnUnknown) 
+                Operation = targetCouldBeOperation;
         }
 
         public char? Operation { get; protected set; }
@@ -47,9 +53,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (!hasGeneratedCmdParams && !hasCmdParams) return result;
             
             result += "?" + UrlParts.ConnectParameters(genCmdParams, Parameters);
-            //if (hasGeneratedCmdParams) result += genCmdParams;
-            //if (hasGeneratedCmdParams && hasCmdParams) result += "&";
-            //if (hasCmdParams) result += Parameters;
             return result;
         }
 

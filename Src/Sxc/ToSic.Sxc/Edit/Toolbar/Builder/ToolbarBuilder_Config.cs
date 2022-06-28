@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-        private IToolbarBuilder WithInternal(
+        private IToolbarBuilder With(
             string noParamOrder = Parameters.Protector,
             string mode = null,
             object target = null,
@@ -47,10 +47,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             return AddInternal(new ToolbarRuleCustom("more", ui: ObjToString(ui)));
         }
 
-        public IToolbarBuilder Target(object target) => WithInternal(target: target);
+        public IToolbarBuilder For(object target) => With(target: target);
 
-        public IToolbarBuilder Condition(bool condition) => WithInternal(condition: condition);
+        public IToolbarBuilder Target(object target) => With(target: target);
 
-        public IToolbarBuilder Condition(Func<bool> condition) => WithInternal(conditionFunc: condition);
+        public IToolbarBuilder Condition(bool condition) => With(condition: condition);
+
+        public IToolbarBuilder Condition(Func<bool> condition) => With(conditionFunc: condition);
     }
 }

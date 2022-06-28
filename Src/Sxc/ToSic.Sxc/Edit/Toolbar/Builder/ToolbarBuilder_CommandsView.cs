@@ -8,26 +8,37 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         // TODO: GENERIC METHOD TO PRESERVE TEMPLATE INFOS
         public IToolbarBuilder Layout(
+            object target,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
         ) => AddAdminAction("layout", noParamOrder, ui, parameters, operation);
 
+
         public IToolbarBuilder Code(
-            string target,
+            object target,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
         )
         {
-            var paramsWithCode = new ObjectToUrl().SerializeWithChild(parameters, target.HasValue() ? "call=" + target : "", "");
-            return AddAdminAction("code", noParamOrder, ui, paramsWithCode, operation);
+            var paramsWithCode = new ObjectToUrl().SerializeWithChild(parameters, (target as string).HasValue() ? "call=" + target : "", "");
+            return AddAdminAction("code", noParamOrder, ui, paramsWithCode, operation ?? target as string);
         }
 
+        public IToolbarBuilder ContentType(
+            object target,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction("contenttype", noParamOrder, ui, parameters, operation);
+        
+        
         // TODO
-        // - contenttype
+        // - contenttype - make work with entity inside...
         // - 
 
         public IToolbarBuilder TemplateEdit(
@@ -36,7 +47,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("template-develop", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("template-develop", noParamOrder, ui, parameters, operation ?? target as string);
 
         public IToolbarBuilder QueryEdit(
             object target = null,
@@ -44,7 +55,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("template-query", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("template-query", noParamOrder, ui, parameters, operation ?? target as string);
 
         public IToolbarBuilder ViewEdit(
             object target = null,
@@ -52,7 +63,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("template-settings", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("template-settings", noParamOrder, ui, parameters, operation ?? target as string);
 
     }
 }

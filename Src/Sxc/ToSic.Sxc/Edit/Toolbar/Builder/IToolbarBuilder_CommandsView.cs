@@ -5,6 +5,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial interface IToolbarBuilder
     {
         IToolbarBuilder Layout(
+            object target,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -21,7 +22,15 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation"></param>
         /// <returns></returns>
         IToolbarBuilder Code(
-            string target,
+            object target,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string operation = null
+        );
+
+        IToolbarBuilder ContentType(
+            object target,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,

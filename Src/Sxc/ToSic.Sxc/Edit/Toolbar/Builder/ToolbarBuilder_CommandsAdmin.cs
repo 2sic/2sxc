@@ -15,10 +15,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             )
         {
             Parameters.Protect(noParamOrder, "See docs", methodName);
-            var command = new ToolbarRuleCustom(commandName, 
+            return AddInternal(new ToolbarRuleCustom(
+                commandName,
                 operation: ToolbarRuleOps.Pick(operation, ToolbarRuleOperations.BtnAddAuto),
-                ui: ObjToString(ui), parameters: ObjToString(parameters));
-            return AddInternal(command);
+                ui: ObjToString(ui),
+                parameters: ObjToString(parameters),
+                operationCode: operation));
         }
         
         

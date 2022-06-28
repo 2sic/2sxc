@@ -19,7 +19,20 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <remarks>
         /// New in v14.04
         /// </remarks>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP - still choosing name for/target")]
         IToolbarBuilder Target(object target);
+
+
+        /// <summary>
+        /// Set the main target of this toolbar.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// New in v14.04
+        /// </remarks>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP - still choosing name for/target")]
+        IToolbarBuilder For(object target);
 
         /// <summary>
         /// Condition to apply if the toolbar would show, but maybe shouldn't.

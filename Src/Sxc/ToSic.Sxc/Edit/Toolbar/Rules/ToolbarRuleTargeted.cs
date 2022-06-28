@@ -17,15 +17,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             char? operation = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(command, ui, parameters: parameters, operation: operation, context: context)
+        ) : base(command, ui, parameters: parameters, operation: operation, operationCode: target as string, context: context)
         {
             Target = target;
             _helper = helper;
 
+            var operationCode = target as string;
             // Special case, if target is "-" or "remove" etc.
-            if (target is string strTarget)
+            if (operationCode.HasValue())
             {
-                var targetCouldBeOperation = ToolbarRuleOps.Pick(strTarget, BtnUnknown);
+                var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, BtnUnknown);
                 if (targetCouldBeOperation != (char)BtnUnknown)
                 {
                     Target = null;
