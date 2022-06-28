@@ -1,7 +1,7 @@
 ﻿using ToSic.Sxc.Data;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom.Hybrid.Advanced
 {
     public abstract partial class Razor14<TModel, TServiceKit>
     {

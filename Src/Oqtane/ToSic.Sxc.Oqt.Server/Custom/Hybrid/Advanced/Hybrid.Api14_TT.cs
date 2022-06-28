@@ -4,7 +4,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom.Hybrid.Advanced
 {
     /// <summary>
     /// Oqtane specific Api base class.

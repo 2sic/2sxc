@@ -7,7 +7,7 @@ using ToSic.Eav.LookUp;
  using ToSic.Sxc.Custom.Hybrid;
 
  // ReSharper disable once CheckNamespace
- namespace Custom.Hybrid
+ namespace Custom.Hybrid.Advanced
 {
     // Important Note
     // The new hybrid implementation doesn't actually need this

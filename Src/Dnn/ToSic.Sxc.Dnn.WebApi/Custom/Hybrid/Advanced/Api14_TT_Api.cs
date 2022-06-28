@@ -15,7 +15,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom.Hybrid.Advanced
 {
 
     public abstract partial class Api14<TModel, TServiceKit>

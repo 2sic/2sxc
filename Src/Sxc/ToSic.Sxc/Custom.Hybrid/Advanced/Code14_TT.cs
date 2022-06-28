@@ -5,7 +5,7 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace Custom.Hybrid.Advanced
 {
     /// <summary>
     /// **_BETA_**
