@@ -5,10 +5,32 @@ using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
 
+
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
+        public IToolbarBuilder Delete(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string flags = null)
+        {
+            Parameters.Protect(noParamOrder, "See docs");
+
+            // Set default operation based on what toolbar is used
+            var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
+            var op = isDefToolbar ? BtnModify : BtnAdd;
+
+            var editCommand = new ToolbarRuleForEntity("delete", target,
+                operation: ToolbarRuleOps.FindInFlags(flags, op),
+                ui: new ObjectToUrl().SerializeWithChild(ui, "show=true", ""),
+                parameters: ObjToString(parameters),
+                propsToSerialize: new[] { KeyTitle, KeyEntityId, KeyEntityGuid });
+            return AddInternal(editCommand);
+        }
+
         public IToolbarBuilder Edit(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -16,7 +38,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null,
             object prefill = null)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Edit), "See docs");
+            Parameters.Protect(noParamOrder, "See docs");
             var editCommand = new ToolbarRuleForEntity("edit", target, 
                 ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
                 parameters: ObjToString(parameters), 
@@ -39,7 +61,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             return AddInternal(editCommand);
         }
 
-        private char OperationShow(bool? show) => show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove;
 
         /// <inheritdoc />
         public IToolbarBuilder Metadata(

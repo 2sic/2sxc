@@ -73,6 +73,19 @@ namespace ToSic.Sxc.Edit.Toolbar
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
 
+        public IToolbarBuilder Toolbar(
+            string toolbarTemplate,
+            object target = null,
+            object ui = null
+        )
+        {
+            var updated = AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: ObjToString(ui)));
+            if (target != null) updated = updated.Target(target);
+            return updated;
+        }
+
+
+        public T FindRule<T>() where T : class => Rules.FirstOrDefault(r => r is T) as T;
 
 
         #region Enumerators

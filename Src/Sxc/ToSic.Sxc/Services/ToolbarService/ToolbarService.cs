@@ -4,7 +4,6 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Edit;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services
@@ -30,15 +29,19 @@ namespace ToSic.Sxc.Services
         #endregion
 
         /// <inheritdoc />
-        public IToolbarBuilder Default(object target = null,
+        public IToolbarBuilder Default(
+            object target = null,
             string noParamOrder = Parameters.Protector,
-            object ui = null) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null, target: target);
+            object ui = null
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, null, target: target);
 
 
         /// <inheritdoc />
-        public IToolbarBuilder Empty(object target = null,
+        public IToolbarBuilder Empty(
+            object target = null,
             string noParamOrder = Parameters.Protector,
-            object ui = null) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null, target: target);
+            object ui = null
+        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, null, target: target);
 
 
         /// <inheritdoc />
@@ -57,9 +60,10 @@ namespace ToSic.Sxc.Services
             // The following lines must be just as this, because it's a functional object, where each call may return a new copy
             var tlb = _toolbarGenerator.New;
             tlb.ConnectToRoot(_codeRoot);
-            tlb = tlb.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: tlb.ObjToString(ui)));
+            tlb = tlb.Toolbar(toolbarTemplate, target, ui);
+            //tlb = tlb.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: new ObjectToUrl().SerializeIfNotString(ui)));
             if (context.HasValue()) tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
-            if (target != null) tlb = tlb.Target(target);
+            //if (target != null) tlb = tlb.Target(target);
             return callLog.Return(tlb);
         }
 

@@ -21,7 +21,12 @@ namespace ToSic.Sxc.Edit.Toolbar
     [PublicApi]
     public partial interface IToolbarBuilder: IHybridHtmlString, IHasLog, INeedsDynamicCodeRoot
     {
-        
+        [PrivateApi("internal use only")]
+        IToolbarBuilder Toolbar(
+            string toolbarTemplate,
+            object target = null,
+            object ui = null
+        );
 
 
         [PrivateApi("WIP 13.11 - not sure if we actually make it public, as it's basically metadata with automatic content-type - not published yet")]

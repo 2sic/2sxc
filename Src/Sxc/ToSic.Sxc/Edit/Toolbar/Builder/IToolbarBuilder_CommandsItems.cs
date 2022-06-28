@@ -4,7 +4,31 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {
-
+        /// <summary>
+        /// Add / change the delete button on a toolbar.
+        /// 
+        /// This has a special behavior.
+        /// The `default` toolbar already includes a delete-button in the third group.
+        /// So if the toolbar is is a `default` this will just modify it to force-show.
+        /// But it will still be in the third group of buttons.
+        /// 
+        /// For the `empty` toolbar it will just add the button in the normal way.
+        ///
+        /// To change this automatic behavior, use a `flags` = `modify` or `add`
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
+        IToolbarBuilder Delete(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string flags = null
+        );
 
         IToolbarBuilder Edit(
             object target = null,

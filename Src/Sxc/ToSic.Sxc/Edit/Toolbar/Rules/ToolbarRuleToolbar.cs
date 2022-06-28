@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
+﻿using ToSic.Eav.Plumbing;
+
+namespace ToSic.Sxc.Edit.Toolbar
 {
     internal class ToolbarRuleToolbar: ToolbarRule
     {
@@ -9,5 +11,9 @@
         {
             CommandValue = template;
         }
+
+        public bool IsDefault => TemplateName == Default;
+
+        public string TemplateName => CommandValue.HasValue() ? CommandValue : Default;
     }
 }

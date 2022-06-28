@@ -31,11 +31,9 @@ namespace ToSic.Sxc.Edit.Toolbar
             {
                 p.Target = target;
                 // see if we already have a params rule
-                var existingParamsRule = clone.Rules.FirstOrDefault(r => r is ToolbarRuleForParams) as ToolbarRuleForParams;
-                if (existingParamsRule != null)
-                {
+                var existingParamsRule = clone.FindRule<ToolbarRuleForParams>();// clone.Rules.FirstOrDefault(r => r is ToolbarRuleForParams) as ToolbarRuleForParams;
+                if (existingParamsRule != null) 
                     clone.Rules.Remove(existingParamsRule);
-                }
                 // Must create a new one, to not change the original which is still in the original object
                 var newParamsRule = new ToolbarRuleForParams(target, existingParamsRule?.Ui,
                     existingParamsRule?.Parameters, existingParamsRule?.Context);

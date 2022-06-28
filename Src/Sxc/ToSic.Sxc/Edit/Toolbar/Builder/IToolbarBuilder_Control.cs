@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         string ToString();
 
 
-        [PrivateApi("Internal use only, can change at any time")]
-        string ObjToString(object uiOrParams, string prefix = null);
+        //[PrivateApi("Internal use only, can change at any time")]
+        //string ObjToString(object uiOrParams, string prefix = null);
     }
 }

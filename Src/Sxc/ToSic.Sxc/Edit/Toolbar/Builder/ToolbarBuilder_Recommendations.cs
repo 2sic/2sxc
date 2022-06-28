@@ -12,16 +12,16 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             var types = contentTypes?.Split(',').Select(s => s.Trim()).ToArray() ?? Array.Empty<string>();
             if (!types.Any())
-                types = TryToFindRecommendations(target);
+                types = FindMetadataRecommendations(target);
 
             var finalTypes = new List<string>();
             foreach (var type in types)
-                if (type == "*") finalTypes.AddRange(TryToFindRecommendations(target));
+                if (type == "*") finalTypes.AddRange(FindMetadataRecommendations(target));
                 else finalTypes.Add(type);
             return finalTypes;
         }
 
-        private string[] TryToFindRecommendations(object target)
+        private string[] FindMetadataRecommendations(object target)
         {
             var l = Log.Fn<string[]>();
             // ReSharper disable once ConvertIfStatementToSwitchStatement
