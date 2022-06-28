@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
-        /// <param name="operation"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <param name="context"></param>
         /// <returns></returns>
         IToolbarBuilder Button(

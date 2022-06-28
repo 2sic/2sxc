@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             Parameters.Protect(noParamOrder, "See docs", methodName);
             return AddInternal(new ToolbarRuleCustom(
                 commandName,
-                operation: ToolbarRuleOps.Pick(operation, ToolbarRuleOperations.OprAuto),
+                operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),
                 ui: ObjToString(ui),
                 parameters: ObjToString(parameters),
                 operationCode: operation.HasValue() ? null : target as string));

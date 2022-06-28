@@ -2,7 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             Context = context;
 
             if (!operationCode.HasValue()) return;
-            var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, OprUnknown);
+            var targetCouldBeOperation = ToolbarRuleOperation.Pick(operationCode, OprUnknown);
             if (targetCouldBeOperation != (char)OprUnknown) 
                 Operation = targetCouldBeOperation;
         }

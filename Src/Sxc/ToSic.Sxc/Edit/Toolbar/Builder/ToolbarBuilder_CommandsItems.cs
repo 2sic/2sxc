@@ -3,7 +3,7 @@ using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         private (char Operation, string Ui, string Parameters) PrecleanParams(
             string operation, 
-            ToolbarRuleOperations defOp, 
+            ToolbarRuleOps defOp, 
             object ui, 
             object uiMerge, 
             string uiMergePrefix, 
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             var o2u = O2U;
             return (
-                ToolbarRuleOps.Pick(operation, defOp),
+                ToolbarRuleOperation.Pick(operation, defOp),
                 Ui: o2u.SerializeWithChild(ui, uiMerge, uiMergePrefix),
                 Parameters: o2u.SerializeWithChild(
                     o2u.SerializeWithChild(parameters, prefill, PrefixPrefill),

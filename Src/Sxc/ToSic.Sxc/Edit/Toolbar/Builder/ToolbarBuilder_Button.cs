@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {

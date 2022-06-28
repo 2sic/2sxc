@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="noParamOrder"></param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
-        /// <param name="operation"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <returns></returns>
         IToolbarBuilder Delete(
             object target = null,
@@ -30,6 +30,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
+        /// <summary>
+        /// Button to edit an item. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="prefill"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <returns></returns>
         IToolbarBuilder Edit(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -52,7 +62,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
         /// <param name="prefill"></param>
-        /// <param name="operation"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <returns></returns>
         IToolbarBuilder New(
             object target = null,
@@ -76,6 +86,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="filter">object or string with the filters for the data vew</param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <returns></returns>
         IToolbarBuilder Data(
             object target = null, // entity-like or content-type name
@@ -102,7 +113,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Parameters for the command.
         /// Can be a string, and can also be an object since v14.04
         /// </param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <param name="context">EXPERIMENTAL - not final</param>
+        /// <param name="prefill"></param>
         /// <returns>A new toolbar builder which has been extended with this button</returns>
         /// <remarks>
         /// History
@@ -124,7 +137,17 @@ namespace ToSic.Sxc.Edit.Toolbar
             string context = null
         );
 
-
+        /// <summary>
+        /// Button to publish the current item.
+        /// By default it will only appear if the current item is draft/unpublished.
+        /// You can change this (but probably shouldn't) by setting an `operation`. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <returns></returns>
         IToolbarBuilder Publish(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -133,7 +156,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
-        
+
         /// <summary>
         /// Create a toolbar rule to copy an item. It needs the item which it will copy as a parameter.
         /// </summary>
@@ -153,7 +176,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         ///     Parameters for the command.
         ///     Can be a string, and can also be an object since v14.04
         /// </param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <param name="context">EXPERIMENTAL - not final</param>
+        /// <param name="prefill"></param>
         /// <returns>A new toolbar builder which has been extended with this button</returns>
         /// <remarks>
         /// Added in v14.02

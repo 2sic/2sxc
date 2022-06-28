@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Special case, if target is "-" or "remove" etc.
             if (operationCode.HasValue())
             {
-                var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, OprUnknown);
+                var targetCouldBeOperation = ToolbarRuleOperation.Pick(operationCode, OprUnknown);
                 if (targetCouldBeOperation != (char)OprUnknown)
                 {
                     Target = null;

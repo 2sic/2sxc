@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation">
         /// By default, the button will show based on conditions like permissions.
         /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
+        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -30,6 +31,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation">
         /// By default, the button will show based on conditions like permissions.
         /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
+        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -49,6 +51,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation">
         /// By default, the button will show based on conditions like permissions.
         /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
+        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -68,6 +71,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation">
         /// By default, the button will show based on conditions like permissions.
         /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
+        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -87,6 +91,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation">
         /// By default, the button will show based on conditions like permissions.
         /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
+        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -106,6 +111,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation">
         /// By default, the button will show based on conditions like permissions.
         /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
+        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -125,6 +131,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="operation">
         /// By default, the button will show based on conditions like permissions.
         /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
+        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>

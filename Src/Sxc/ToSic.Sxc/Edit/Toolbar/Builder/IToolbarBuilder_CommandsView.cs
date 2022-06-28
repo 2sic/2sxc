@@ -4,6 +4,15 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {
+        /// <summary>
+        /// Button to change the view/layout of the data shown on the page. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <returns></returns>
         IToolbarBuilder Layout(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -19,7 +28,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="noParamOrder"></param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
-        /// <param name="operation"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <returns></returns>
         IToolbarBuilder Code(
             object target,
@@ -29,6 +38,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
+        /// <summary>
+        /// Button to open a dialog to manage the fields/attributes of the content type. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <returns></returns>
         IToolbarBuilder Fields(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -37,6 +55,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
+        /// <summary>
+        /// Button to open the edit-template (source-code) dialog. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <returns></returns>
         IToolbarBuilder Template(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -45,6 +72,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
+        /// <summary>
+        /// Button to open the design/edit query dialog. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <returns></returns>
         IToolbarBuilder Query(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -53,6 +89,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
+        /// <summary>
+        /// Button to open the edit view settings dialog. 
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <returns></returns>
         IToolbarBuilder View(
             object target = null,
             string noParamOrder = Parameters.Protector,

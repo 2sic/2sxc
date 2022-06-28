@@ -2,7 +2,7 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
