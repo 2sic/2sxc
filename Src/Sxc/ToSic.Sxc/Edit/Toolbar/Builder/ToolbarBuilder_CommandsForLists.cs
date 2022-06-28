@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Parameters.Protect(noParamOrder, "See docs", methodName);
             var command = new ToolbarRuleForEntity(commandName, target, contentType: contentType,
-                ui: ObjToString(ui), parameters: ObjToString(parameters), propsToSerialize: KeysOfLists);
+                ui: ObjToString(ui), parameters: ObjToString(parameters), propsKeep: KeysOfLists);
             return AddInternal(command);
 
         }
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             //string contentType = null,
             object ui = null,
             object parameters = null
-        ) => AddListAction(nameof(List), "instance-list", target, noParamOrder, /*contentType*/null, ui, parameters);
+        ) => AddListAction(nameof(List), "list", target, noParamOrder, /*contentType*/null, ui, parameters);
 
 
         public IToolbarBuilder MoveDown(

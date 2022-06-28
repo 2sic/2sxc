@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial interface IToolbarBuilder
     {
         IToolbarBuilder Layout(
-            object target,
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -29,15 +29,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
-        IToolbarBuilder ContentType(
-            object target,
-            string noParamOrder = Parameters.Protector,
-            object ui = null,
-            object parameters = null,
-            string operation = null
-        );
-
-        IToolbarBuilder TemplateEdit(
+        IToolbarBuilder Fields(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
@@ -45,7 +37,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
-        IToolbarBuilder QueryEdit(
+        IToolbarBuilder Template(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
@@ -53,7 +45,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         );
 
-        IToolbarBuilder ViewEdit(
+        IToolbarBuilder Query(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string operation = null
+        );
+
+        IToolbarBuilder View(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,

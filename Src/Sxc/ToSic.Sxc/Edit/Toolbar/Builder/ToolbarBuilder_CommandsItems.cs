@@ -1,6 +1,6 @@
-﻿using ToSic.Eav;
+﻿using System.Linq;
+using ToSic.Eav;
 using ToSic.Eav.Documentation;
-using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
@@ -10,6 +10,46 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
+
+        private (char Operation, string Ui, string Parameters) PrecleanParams(
+            string operation, 
+            ToolbarRuleOperations defOp, 
+            object ui, 
+            object uiMerge, 
+            string uiMergePrefix, 
+            object parameters, 
+            object prefill,
+            object filter = null)
+        {
+            var o2u = O2U;
+            return (
+                ToolbarRuleOps.Pick(operation, defOp),
+                Ui: o2u.SerializeWithChild(ui, uiMerge, uiMergePrefix),
+                Parameters: o2u.SerializeWithChild(
+                    o2u.SerializeWithChild(parameters, prefill, PrefixPrefill),
+                    filter, PrefixFilters)
+            );
+
+        }
+
+        private (ToolbarRuleForEntity Rule, IToolbarBuilder Builder) EntityRule(
+            string verb, 
+            object target,
+            (char Operation, string Ui, string Parameters) pars,
+            string [] propsSkip = null,
+            string[] propsKeep = null,
+            string contentType = null
+            )
+        {
+            var command = new ToolbarRuleForEntity(verb, target, pars.Operation,
+                ui: pars.Ui, parameters: pars.Parameters,
+                contentType: contentType,
+                propsKeep: propsKeep, propsSkip: propsSkip,
+                helper: _deps.ToolbarButtonHelper.Ready);
+            var builder = AddInternal(command);
+            return (command, builder);
+        }
+
         public IToolbarBuilder Delete(
             object target = null,
             string noParamOrder = Parameters.Protector,
@@ -23,12 +63,17 @@ namespace ToSic.Sxc.Edit.Toolbar
             var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
             var defOp = isDefToolbar ? BtnModify : BtnAdd;
 
-            var editCommand = new ToolbarRuleForEntity("delete", target,
-                operation: ToolbarRuleOps.Pick(operation, defOp),
-                ui: new ObjectToUrl().SerializeWithChild(ui, "show=true", ""),
-                parameters: ObjToString(parameters),
-                propsToSerialize: new[] { KeyTitle, KeyEntityId, KeyEntityGuid });
-            return AddInternal(editCommand);
+            var pars = PrecleanParams(operation, defOp, ui, "show=true", "", parameters, null);
+
+            return EntityRule("delete", target, pars, 
+                propsKeep: new[] { KeyTitle, KeyEntityId, KeyEntityGuid }).Builder;
+
+            //var editCommand = new ToolbarRuleForEntity("delete", target,
+            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, defOp),
+            //    ui: pars.Ui,// new ObjectToUrl().SerializeWithChild(ui, "show=true", ""),
+            //    parameters: pars.Parameters,// ObjToString(parameters),
+            //    propsToSerialize: new[] { KeyTitle, KeyEntityId, KeyEntityGuid });
+            //return AddInternal(editCommand);
         }
 
         public IToolbarBuilder Edit(
@@ -40,12 +85,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var editCommand = new ToolbarRuleForEntity("edit", target, 
-                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-                ui: ObjToString(ui),
-                parameters: new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
-                propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
-            return AddInternal(editCommand);
+            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
+
+            return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
+
+            //var editCommand = new ToolbarRuleForEntity("edit", target, 
+            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAdd),
+            //    ui: pars.Ui,// ObjToString(ui),
+            //    parameters: pars.Parameters,// new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
+            //    propsSkip: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
+            //return AddInternal(editCommand);
         }
 
         public IToolbarBuilder New(
@@ -57,21 +106,28 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var editCommand = new ToolbarRuleForEntity("new", target,
-                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-                ui: ObjToString(ui),
-                parameters: new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
-                contentType: target as string,
-                propsToNotSerialize: new []{ KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished })
-            {
-                //EditInfo =
-                //{
-                //    // Must set entityId to 0 ?
-                //    entityId = 0
-                //}
-            };
+            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
 
-            return AddInternal(editCommand);
+            return EntityRule("new", target, pars,
+                propsSkip: new[] { KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished },
+                contentType: target as string).Builder;
+
+            //var editCommand = new ToolbarRuleForEntity("new", target,
+            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAdd),
+            //    ui: pars.Ui,// ObjToString(ui),
+            //    parameters: pars.Parameters,// new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
+            //    contentType: target as string,
+            //    propsSkip: new []{ KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished })
+            //{
+            //    //EditInfo =
+            //    //{
+            //    //    // Must set entityId to 0 ?
+            //    //    entityId = 0
+            //    //}
+            //};
+            //// TODO: TEST ENTITY ID
+
+            //return AddInternal(editCommand);
         }
 
         public IToolbarBuilder Publish(
@@ -82,11 +138,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var editCommand = new ToolbarRuleForEntity("publish", target,
-                operation: ToolbarRuleOps.Pick(operation, BtnAddAuto),
-                ui: ObjToString(ui), parameters: ObjToString(parameters),
-                propsToSerialize: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule });
-            return AddInternal(editCommand);
+            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, null);
+
+            return EntityRule("publish", target, pars,
+                propsKeep: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule }).Builder;
+            //var editCommand = new ToolbarRuleForEntity("publish", target,
+            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAddAuto),
+            //    ui: pars.Ui /*ObjToString(ui)*/, parameters: pars.Parameters, // ObjToString(parameters),
+            //    propsKeep: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule });
+            //return AddInternal(editCommand);
         }
 
 
@@ -97,22 +157,38 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
+            object prefill = null,
             string operation = null,
             string context = null)
+        // TODO: PREFILL
         {
             Parameters.Protect(noParamOrder, "See docs");
             var finalTypes = GetMetadataTypeNames(target, contentTypes);
             var realContext = GetContext(target, context);
             var builder = this as IToolbarBuilder;
-            foreach (var type in finalTypes)
-                builder = builder.AddInternal(new ToolbarRuleMetadata(target, type,
-                    operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-                    ObjToString(ui),
-                    ObjToString(parameters),
-                    context: realContext, 
+
+            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
+
+
+            var mdsToAdd = finalTypes
+                .Select(type => new ToolbarRuleMetadata(target, type,
+                    operation: pars.Operation, // ToolbarRuleOps.Pick(operation, BtnAdd),
+                    ui: pars.Ui, //ObjToString(ui),
+                    parameters: pars.Parameters, //ObjToString(parameters),
+                    context: realContext,
                     helper: _deps.ToolbarButtonHelper.Ready));
 
-            return builder;
+            return builder.AddInternal(mdsToAdd.Cast<object>().ToArray());
+
+            //foreach (var type in finalTypes)
+            //    builder = builder.AddInternal(new ToolbarRuleMetadata(target, type,
+            //        operation: ToolbarRuleOps.Pick(operation, BtnAdd),
+            //        ObjToString(ui),
+            //        ObjToString(parameters),
+            //        context: realContext,
+            //        helper: _deps.ToolbarButtonHelper.Ready));
+
+            //return builder;
         }
 
         /// <inheritdoc />
@@ -122,15 +198,23 @@ namespace ToSic.Sxc.Edit.Toolbar
             string contentType = null,
             object ui = null,
             object parameters = null,
+            object prefill = null,
             string operation = null,
             string context = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
 
-            return AddInternal(new ToolbarRuleCopy(target, contentType, 
-                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-                ObjToString(ui), ObjToString(parameters),
-                GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
+            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
+
+            return EntityRule("copy", target, pars, propsKeep: new[] { KeyEntityId, KeyContentType },
+                contentType: contentType).Builder;
+
+            //return AddInternal(new ToolbarRuleCopy(target, contentType, 
+            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAdd),
+            //    pars.Ui, // ObjToString(ui), 
+            //    pars.Parameters,// ObjToString(parameters),
+            //    GetContext(target, context), 
+            //    _deps.ToolbarButtonHelper.Ready));
         }
 
 
@@ -146,16 +230,22 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var editCommand = new ToolbarRuleForEntity("data", target,
-                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-                ui: ObjToString(ui),
-                parameters: new ObjectToUrl().SerializeWithChild(parameters, filter, PrefixFilters),
-                contentType: target as string,
-                propsToSerialize: new[] { KeyContentType });
-            return AddInternal(editCommand);
+
+            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, null, filter);
+
+            return EntityRule("data", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string)
+                .Builder;
+
+            //var editCommand = new ToolbarRuleForEntity("data", target,
+            //    operation: ToolbarRuleOps.Pick(operation, BtnAdd),
+            //    ui: ObjToString(ui),
+            //    parameters: new ObjectToUrl().SerializeWithChild(parameters, filter, PrefixFilters),
+            //    contentType: target as string,
+            //    propsKeep: new[] { KeyContentType });
+            //return AddInternal(editCommand);
         }
 
-
+        // TODO: drop image
 
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(

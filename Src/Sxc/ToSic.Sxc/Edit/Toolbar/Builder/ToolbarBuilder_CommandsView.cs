@@ -1,19 +1,20 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
+using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-        // TODO: GENERIC METHOD TO PRESERVE TEMPLATE INFOS
         public IToolbarBuilder Layout(
-            object target,
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("layout", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("layout", noParamOrder, ui, parameters, operation, target);
 
 
         public IToolbarBuilder Code(
@@ -25,45 +26,48 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             var paramsWithCode = new ObjectToUrl().SerializeWithChild(parameters, (target as string).HasValue() ? "call=" + target : "", "");
-            return AddAdminAction("code", noParamOrder, ui, paramsWithCode, operation ?? target as string);
+            return AddAdminAction("code", noParamOrder, ui, paramsWithCode, operation, target);
         }
 
-        public IToolbarBuilder ContentType(
-            object target,
+        public IToolbarBuilder Fields(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("contenttype", noParamOrder, ui, parameters, operation);
-        
-        
+        )
+        {
+            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, null);
+            return EntityRule("fields", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string).Builder;
+        }
+
+
         // TODO
-        // - contenttype - make work with entity inside...
-        // - 
+        // - custom!
 
-        public IToolbarBuilder TemplateEdit(
+        public IToolbarBuilder Template(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("template-develop", noParamOrder, ui, parameters, operation ?? target as string);
+        ) => AddAdminAction("template", noParamOrder, ui, parameters, operation, target);
 
-        public IToolbarBuilder QueryEdit(
+        public IToolbarBuilder Query(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("template-query", noParamOrder, ui, parameters, operation ?? target as string);
+        ) => AddAdminAction("query", noParamOrder, ui, parameters, operation, target);
 
-        public IToolbarBuilder ViewEdit(
+        public IToolbarBuilder View(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("template-settings", noParamOrder, ui, parameters, operation ?? target as string);
+        ) => AddAdminAction("view", noParamOrder, ui, parameters, operation, target);
 
     }
 }

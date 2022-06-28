@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using ToSic.Eav;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -11,6 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui,
             object parameters,
             string operation,
+            object target,
             [CallerMemberName] string methodName = null
             )
         {
@@ -20,59 +22,66 @@ namespace ToSic.Sxc.Edit.Toolbar
                 operation: ToolbarRuleOps.Pick(operation, ToolbarRuleOperations.BtnAddAuto),
                 ui: ObjToString(ui),
                 parameters: ObjToString(parameters),
-                operationCode: operation));
+                operationCode: operation.HasValue() ? null : target as string));
         }
         
         
         public IToolbarBuilder App(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("app", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("app", noParamOrder, ui, parameters, operation, target);
 
         public IToolbarBuilder AppImport(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("app-import", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("app-import", noParamOrder, ui, parameters, operation, target);
         
         public IToolbarBuilder AppResources(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("app-resources", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("app-resources", noParamOrder, ui, parameters, operation, target);
 
         public IToolbarBuilder AppSettings(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("app-settings", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("app-settings", noParamOrder, ui, parameters, operation, target);
 
         public IToolbarBuilder Apps(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("apps", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("apps", noParamOrder, ui, parameters, operation, target);
 
         public IToolbarBuilder System(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("system", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("system", noParamOrder, ui, parameters, operation, target);
 
 
         public IToolbarBuilder Insights(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction("insights", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("insights", noParamOrder, ui, parameters, operation, target);
 
         
 

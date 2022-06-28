@@ -47,8 +47,9 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (!op.HasValue()) return (char)defOp;
             op = op.Trim();
 
-            if (op.Length == 1 && Enum.TryParse(op, true, out ToolbarRuleOperations foundOp))
-                return (char)foundOp;
+            if (op.Length == 1 && Enum.IsDefined(typeof(ToolbarRuleOperations), (int)op[0]))
+                return op[0];
+
 
             if (ToolbarRuleOpSynonyms.TryGetValue(op, out var foundSyn))
                 return (char)foundSyn;

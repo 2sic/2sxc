@@ -50,7 +50,9 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
-            string context = null) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, context);
+            object prefill = null,
+            string context = null
+        ) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, prefill, context: context);
 
 
         private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, object ui, string context, object target = null)

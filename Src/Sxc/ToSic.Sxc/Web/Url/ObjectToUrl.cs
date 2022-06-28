@@ -39,6 +39,7 @@ namespace ToSic.Sxc.Web.Url
         {
             var uiString = SerializeIfNotString(main);
             if (child == null) return uiString;
+            childPrefix = childPrefix ?? ""; // null catch
             var prefillAddOn = "";
             if (child is string strPrefill)
             {

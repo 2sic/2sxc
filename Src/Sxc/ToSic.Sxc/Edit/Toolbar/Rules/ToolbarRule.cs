@@ -9,6 +9,15 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public abstract class ToolbarRule: ToolbarRuleBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation"></param>
+        /// <param name="operationCode">This is a string from the original command, which could affect the operator. It's only used to override the operator if there is a relevant match. </param>
+        /// <param name="context"></param>
         protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null, string operationCode = null, ToolbarContext context = null)
         {
             Command = command;

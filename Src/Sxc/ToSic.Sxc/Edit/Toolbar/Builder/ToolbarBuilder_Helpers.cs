@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
 
@@ -12,6 +13,10 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         [PrivateApi]
         private string ObjToString(object uiOrParams/*, string prefix = null*/) 
-            => new ObjectToUrl().SerializeIfNotString(uiOrParams/*, prefix*/);
+            => O2U.SerializeIfNotString(uiOrParams/*, prefix*/);
+
+
+        private ObjectToUrl O2U => _o2u.Get(() => new ObjectToUrl());
+        private readonly ValueGetOnce<ObjectToUrl> _o2u = new ValueGetOnce<ObjectToUrl>();
     }
 }

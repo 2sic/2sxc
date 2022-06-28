@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="parameters"></param>
         /// <returns></returns>
         IToolbarBuilder App(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -34,6 +35,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="parameters"></param>
         /// <returns></returns>
         IToolbarBuilder AppImport(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -52,6 +54,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="parameters"></param>
         /// <returns></returns>
         IToolbarBuilder AppResources(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -70,6 +73,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="parameters"></param>
         /// <returns></returns>
         IToolbarBuilder AppSettings(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -88,6 +92,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="parameters"></param>
         /// <returns></returns>
         IToolbarBuilder Apps(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -106,6 +111,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="parameters"></param>
         /// <returns></returns>
         IToolbarBuilder System(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
@@ -124,6 +130,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="parameters"></param>
         /// <returns></returns>
         IToolbarBuilder Insights(
+            object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,

@@ -22,15 +22,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null,
-            string[] propsToNotSerialize = null,
-            string[] propsToSerialize = null
+            string[] propsSkip = null,
+            string[] propsKeep = null
         ) : base(target, commandName, operation: operation, ui: ui, parameters: parameters, context: context, helper: helper)
         {
             if (target is int intTarget) EditInfo.entityId = intTarget;
             if (contentType != null) EditInfo.contentType = contentType;
 
-            if (propsToNotSerialize != null) SetPropsToSerialize(true, propsToNotSerialize);
-            if (propsToSerialize != null) SetPropsToSerialize(false, propsToSerialize);
+            if (propsSkip != null) SetPropsToSerialize(true, propsSkip);
+            if (propsKeep != null) SetPropsToSerialize(false, propsKeep);
         }
 
         private void SetPropsToSerialize(bool defaultSerialize, string[] opposite)

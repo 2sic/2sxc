@@ -119,6 +119,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
+            object prefill = null,
             string operation = null,
             string context = null
         );
@@ -163,6 +164,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string contentType = null,
             object ui = null,
             object parameters = null,
+            object prefill = null,
             string operation = null,
             string context = null
         );
