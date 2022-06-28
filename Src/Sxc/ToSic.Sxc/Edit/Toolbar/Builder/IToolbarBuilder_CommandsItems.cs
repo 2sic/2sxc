@@ -96,9 +96,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         IToolbarBuilder Publish(
             object target = null,
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
+            object parameters = null,
+            string operation = null
         );
 
         

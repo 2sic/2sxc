@@ -8,12 +8,13 @@ namespace ToSic.Sxc.Edit.Toolbar
             string methodName, 
             string commandName,
             string noParamOrder,
-            bool? show,
             object ui,
-            object parameters)
+            object parameters,
+            string operation)
         {
             Parameters.Protect(noParamOrder, "See docs", methodName);
-            var command = new ToolbarRuleCustom(commandName, operation: OperationShow(show),
+            var command = new ToolbarRuleCustom(commandName, 
+                operation: ToolbarRuleOps.Pick(operation, ToolbarRuleOperations.BtnAddAuto),
                 ui: ObjToString(ui), parameters: ObjToString(parameters));
             return AddInternal(command);
 
@@ -22,53 +23,53 @@ namespace ToSic.Sxc.Edit.Toolbar
         
         public IToolbarBuilder App(
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(App), "app", noParamOrder, show, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(App), "app", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder AppImport(
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(AppImport), "app-import", noParamOrder, show, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(AppImport), "app-import", noParamOrder, ui, parameters, operation);
         
         public IToolbarBuilder AppResources(
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(AppResources), "app-resources", noParamOrder, show, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(AppResources), "app-resources", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder AppSettings(
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(AppSettings), "app-settings", noParamOrder, show, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(AppSettings), "app-settings", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder Apps(
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(Apps), "apps", noParamOrder, show, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(Apps), "apps", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder System(
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(System), "system", noParamOrder, show, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(System), "system", noParamOrder, ui, parameters, operation);
 
 
         public IToolbarBuilder Insights(
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(Insights), "insights", noParamOrder, show, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(Insights), "insights", noParamOrder, ui, parameters, operation);
 
         
 

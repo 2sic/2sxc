@@ -9,21 +9,24 @@ namespace ToSic.Sxc.Edit.Toolbar
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
-            object parameters = null
+            object parameters = null,
+            string operation = null
         );
 
         IToolbarBuilder QueryEdit(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
-            object parameters = null
+            object parameters = null,
+            string operation = null
         );
 
         IToolbarBuilder ViewEdit(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
-            object parameters = null
+            object parameters = null,
+            string operation = null
         );
 
 

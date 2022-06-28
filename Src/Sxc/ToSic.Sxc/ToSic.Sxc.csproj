@@ -67,6 +67,7 @@
 
   <ItemGroup>
     <Folder Include="Beta\" />
+    <Folder Include="Custom.Hybrid\Advanced\" />
   </ItemGroup>
 
 </Project>

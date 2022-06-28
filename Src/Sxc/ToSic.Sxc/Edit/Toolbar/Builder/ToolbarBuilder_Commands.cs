@@ -49,13 +49,13 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Publish(
             object target = null,
             string noParamOrder = Parameters.Protector,
-            bool? show = null,
             object ui = null,
-            object parameters = null)
+            object parameters = null,
+            string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
             var editCommand = new ToolbarRuleForEntity("publish", target,
-                operation: OperationShow(show),
+                operation: ToolbarRuleOps.Pick(operation, BtnAddAuto),
                 ui: ObjToString(ui), parameters: ObjToString(parameters),
                 propsToSerialize: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule });
             return AddInternal(editCommand);

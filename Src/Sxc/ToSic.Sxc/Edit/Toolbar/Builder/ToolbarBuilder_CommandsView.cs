@@ -10,22 +10,25 @@ namespace ToSic.Sxc.Edit.Toolbar
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(TemplateEdit), "template-develop", noParamOrder, null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(TemplateEdit), "template-develop", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder QueryEdit(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(QueryEdit), "template-query", noParamOrder, null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(QueryEdit), "template-query", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder ViewEdit(
             object target = null,
             string noParamOrder = Parameters.Protector,
             object ui = null,
-            object parameters = null
-        ) => AddAdminAction(nameof(ViewEdit), "template-settings", noParamOrder, null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction(nameof(ViewEdit), "template-settings", noParamOrder, ui, parameters, operation);
 
     }
 }
