@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         )
         {
-            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, null);
+            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, null);
             return EntityRule("fields", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string).Builder;
         }
 

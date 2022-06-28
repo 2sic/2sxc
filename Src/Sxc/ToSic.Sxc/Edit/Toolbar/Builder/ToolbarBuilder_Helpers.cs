@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
 
-        private char OperationShow(bool? show) => show == null ? (char)BtnAddAuto : show.Value ? (char)BtnAdd : (char)BtnRemove;
+        private char OperationShow(bool? show) => show == null ? (char)OprAuto : show.Value ? (char)OprAdd : (char)OprRemove;
 
 
         [PrivateApi]

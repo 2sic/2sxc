@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
@@ -21,14 +20,14 @@ namespace ToSic.Sxc.Edit.Toolbar
         protected ToolbarRule(string command, string ui = null, string parameters = null, char? operation = null, string operationCode = null, ToolbarContext context = null)
         {
             Command = command;
-            Operation = operation;
+            Operation = operation == (char)OprNone ? null : operation; // reset operation if it's none
             Parameters = parameters ?? "";
             Ui = ui ?? "";
             Context = context;
 
             if (!operationCode.HasValue()) return;
-            var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, BtnUnknown);
-            if (targetCouldBeOperation != (char)BtnUnknown) 
+            var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, OprUnknown);
+            if (targetCouldBeOperation != (char)OprUnknown) 
                 Operation = targetCouldBeOperation;
         }
 

@@ -26,8 +26,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Special case, if target is "-" or "remove" etc.
             if (operationCode.HasValue())
             {
-                var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, BtnUnknown);
-                if (targetCouldBeOperation != (char)BtnUnknown)
+                var targetCouldBeOperation = ToolbarRuleOps.Pick(operationCode, OprUnknown);
+                if (targetCouldBeOperation != (char)OprUnknown)
                 {
                     Target = null;
                     Operation = targetCouldBeOperation;

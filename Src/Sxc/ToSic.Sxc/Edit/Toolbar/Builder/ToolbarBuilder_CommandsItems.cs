@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             // Set default operation based on what toolbar is used
             var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
-            var defOp = isDefToolbar ? BtnModify : BtnAdd;
+            var defOp = isDefToolbar ? OprModify : OprAdd;
 
             var pars = PrecleanParams(operation, defOp, ui, "show=true", "", parameters, null);
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
+            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
 
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
+            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
             return EntityRule("new", target, pars,
                 propsSkip: new[] { KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished },
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, null);
+            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, null);
 
             return EntityRule("publish", target, pars,
                 propsKeep: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule }).Builder;
@@ -167,7 +167,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var realContext = GetContext(target, context);
             var builder = this as IToolbarBuilder;
 
-            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
+            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
 
             var mdsToAdd = finalTypes
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Parameters.Protect(noParamOrder, "See docs");
 
-            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, prefill);
+            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
             return EntityRule("copy", target, pars, propsKeep: new[] { KeyEntityId, KeyContentType },
                 contentType: contentType).Builder;
@@ -231,7 +231,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Parameters.Protect(noParamOrder, "See docs");
 
-            var pars = PrecleanParams(operation, BtnAdd, ui, null, null, parameters, null, filter);
+            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, null, filter);
 
             return EntityRule("data", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string)
                 .Builder;

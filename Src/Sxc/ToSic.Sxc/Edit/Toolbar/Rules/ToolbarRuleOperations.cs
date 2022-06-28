@@ -7,11 +7,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     internal enum ToolbarRuleOperations
     {
-        BtnAdd = '+',
-        BtnAddAuto = '±',
-        BtnModify = '%',
-        BtnRemove = '-',
-        BtnUnknown = '¿',
+        OprAdd = '+',
+        OprAuto = '±',
+        OprModify = '%',
+        OprRemove = '-',
+        OprUnknown = '¿',
+        OprNone = ' ',
     }
 
     internal class ToolbarRuleOps
@@ -20,27 +21,25 @@ namespace ToSic.Sxc.Edit.Toolbar
         internal static Dictionary<string, ToolbarRuleOperations> ToolbarRuleOpSynonyms =
             new Dictionary<string, ToolbarRuleOperations>(StringComparer.InvariantCultureIgnoreCase)
             {
-                { "mod", BtnModify },
-                { "modify", BtnModify },
-                { "add", BtnAdd },
-                { "addauto", BtnAddAuto },
-                { "rem", BtnRemove},
-                { "remove", BtnRemove },
+                { "modify", OprModify },
+                { "add", OprAdd },
+                { "auto", OprAuto },
+                { "remove", OprRemove },
             };
 
-        internal static char FindInFlags(string flags, ToolbarRuleOperations defOp)
-        {
-            if (!flags.HasValue()) return (char)defOp;
+        //internal static char FindInFlags(string flags, ToolbarRuleOperations defOp)
+        //{
+        //    if (!flags.HasValue()) return (char)defOp;
 
-            var parts = flags.Split(',');
-            foreach (var f in parts)
-            {
-                var maybeOp = Pick(f, BtnUnknown);
-                if (maybeOp != (char)BtnUnknown) return maybeOp;
-            }
+        //    var parts = flags.Split(',');
+        //    foreach (var f in parts)
+        //    {
+        //        var maybeOp = Pick(f, OprUnknown);
+        //        if (maybeOp != (char)OprUnknown) return maybeOp;
+        //    }
 
-            return (char)defOp;
-        }
+        //    return (char)defOp;
+        //}
 
         internal static char Pick(string op, ToolbarRuleOperations defOp)
         {
