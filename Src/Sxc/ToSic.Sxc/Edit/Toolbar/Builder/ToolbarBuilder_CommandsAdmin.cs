@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui,
             object parameters)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, methodName, "See docs");
+            Parameters.Protect(noParamOrder, "See docs", methodName);
             var command = new ToolbarRuleCustom(commandName, operation: OperationShow(show),
                 ui: ObjToString(ui), parameters: ObjToString(parameters));
             return AddInternal(command);

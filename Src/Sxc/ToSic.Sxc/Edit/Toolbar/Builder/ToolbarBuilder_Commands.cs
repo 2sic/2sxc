@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Publish), "See docs");
+            Parameters.Protect(noParamOrder, "See docs");
             var editCommand = new ToolbarRuleForEntity("publish", target,
                 operation: OperationShow(show),
                 ui: ObjToString(ui), parameters: ObjToString(parameters),
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null,
             string context = null)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Metadata), "See docs");
+            Parameters.Protect(noParamOrder, "See docs");
             var finalTypes = GetMetadataTypeNames(target, contentTypes);
             var realContext = GetContext(target, context);
             var builder = this as IToolbarBuilder;
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null,
             string context = null)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Copy), "See docs");
+            Parameters.Protect(noParamOrder, "See docs");
 
             return AddInternal(new ToolbarRuleCopy(target, contentType, ObjToString(ui), ObjToString(parameters),
                 GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
@@ -102,17 +102,16 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Data(
             object target = null,
             string noParamOrder = Parameters.Protector,
-            //string contentType = null,
             object filter = null,
             object ui = null,
             object parameters = null
         )
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Edit), "See docs");
+            Parameters.Protect(noParamOrder, "See docs");
             var editCommand = new ToolbarRuleForEntity("data", target, 
                 ui: ObjToString(ui),
                 parameters: new ObjectToUrl().SerializeWithChild(parameters, filter, PrefixFilters),
-                contentType: /*contentType ??*/ target as string,
+                contentType: target as string,
                 propsToSerialize: new[] { KeyContentType });
             return AddInternal(editCommand);
         }
@@ -127,7 +126,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null
         )
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Image), "See docs");
+            Parameters.Protect(noParamOrder, "See docs");
 
             return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GetContext(target, null),
                 helper: _deps.ToolbarButtonHelper.Ready));

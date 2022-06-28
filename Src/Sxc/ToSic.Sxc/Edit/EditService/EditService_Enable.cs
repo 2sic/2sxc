@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.EditService
         public string Enable(string noParamOrder = Eav.Parameters.Protector, bool? js = null, bool? api = null,
             bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Enable", $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
             // check if feature enabled - if more than the api is needed
             // extend this list if new parameters are added

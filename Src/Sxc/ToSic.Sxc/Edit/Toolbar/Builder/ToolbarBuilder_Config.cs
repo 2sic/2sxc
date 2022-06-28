@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -21,8 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? force = null
         )
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(WithInternal), 
-                $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
             // Create clone before starting to log so it's in there too
             var clone = new ToolbarBuilder(this);
             var p = clone._params = new ToolbarBuilderParams(_params);
@@ -31,7 +29,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             {
                 p.Target = target;
                 // see if we already have a params rule
-                var existingParamsRule = clone.FindRule<ToolbarRuleForParams>();// clone.Rules.FirstOrDefault(r => r is ToolbarRuleForParams) as ToolbarRuleForParams;
+                var existingParamsRule = clone.FindRule<ToolbarRuleForParams>();
                 if (existingParamsRule != null) 
                     clone.Rules.Remove(existingParamsRule);
                 // Must create a new one, to not change the original which is still in the original object

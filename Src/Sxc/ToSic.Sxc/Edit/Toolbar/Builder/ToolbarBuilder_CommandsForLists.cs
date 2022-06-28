@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui,
             object parameters)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, methodName, "See docs");
+            Parameters.Protect(noParamOrder, "See docs", methodName);
             var command = new ToolbarRuleForEntity(commandName, target, contentType: contentType,
                 ui: ObjToString(ui), parameters: ObjToString(parameters), propsToSerialize: KeysOfLists);
             return AddInternal(command);
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(Add), "See docs");
+            Parameters.Protect(noParamOrder, "See docs");
             // Special case: Add could be called to "add a button"
             // There is an edge case in the Events app where this was published
             // Must decide if we should keep this or not
