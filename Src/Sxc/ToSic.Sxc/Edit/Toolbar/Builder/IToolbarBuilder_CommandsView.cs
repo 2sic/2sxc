@@ -4,7 +4,13 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {
-
+        IToolbarBuilder Layout(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string operation = null
+        );
         IToolbarBuilder TemplateEdit(
             object target = null,
             string noParamOrder = Parameters.Protector,

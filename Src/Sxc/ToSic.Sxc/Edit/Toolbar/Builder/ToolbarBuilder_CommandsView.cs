@@ -5,6 +5,13 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
         // TODO: GENERIC METHOD TO PRESERVE TEMPLATE INFOS
+        public IToolbarBuilder Layout(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string operation = null
+        ) => AddAdminAction("layout", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder TemplateEdit(
             object target = null,
@@ -12,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction(nameof(TemplateEdit), "template-develop", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("template-develop", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder QueryEdit(
             object target = null,
@@ -20,7 +27,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction(nameof(QueryEdit), "template-query", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("template-query", noParamOrder, ui, parameters, operation);
 
         public IToolbarBuilder ViewEdit(
             object target = null,
@@ -28,7 +35,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddAdminAction(nameof(ViewEdit), "template-settings", noParamOrder, ui, parameters, operation);
+        ) => AddAdminAction("template-settings", noParamOrder, ui, parameters, operation);
 
     }
 }

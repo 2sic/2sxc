@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOperations;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -20,6 +21,17 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Target = target;
             _helper = helper;
+
+            // Special case, if target is "-" or "remove" etc.
+            if (target is string strTarget)
+            {
+                var targetCouldBeOperation = ToolbarRuleOps.Pick(strTarget, BtnUnknown);
+                if (targetCouldBeOperation != (char)BtnUnknown)
+                {
+                    Target = null;
+                    Operation = targetCouldBeOperation;
+                }
+            }
         }
 
         internal object Target { get; set; }
