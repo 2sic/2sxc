@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         internal ToolbarRuleImage(object target, string ui = null, string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(target, ImageDecorator.NiceTypeName, ui, parameters, context: context, helper: helper)
+        ) : base(target, ImageDecorator.NiceTypeName, (char)ToolbarRuleOperations.BtnAdd, ui, parameters, context: context, helper: helper)
         {
             Command = ImageCommand;
         }

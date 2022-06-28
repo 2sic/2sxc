@@ -9,11 +9,12 @@ namespace ToSic.Sxc.Edit.Toolbar
         internal ToolbarRuleCopy(
             object target = null,
             string contentType = null,
+            char operation = '?',
             string ui = null, 
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(CommandName, target, (char)ToolbarRuleOperations.BtnAdd, contentType: contentType, ui: ui, parameters: parameters, context: context, helper: helper,
+        ) : base(CommandName, target, operation, contentType: contentType, ui: ui, parameters: parameters, context: context, helper: helper,
             propsToSerialize: new []{ KeyEntityId, KeyContentType})
         {
         }

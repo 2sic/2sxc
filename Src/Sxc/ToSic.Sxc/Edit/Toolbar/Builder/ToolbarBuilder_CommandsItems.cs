@@ -36,10 +36,29 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
-            object prefill = null)
+            object prefill = null,
+            string operation = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
             var editCommand = new ToolbarRuleForEntity("edit", target, 
+                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
+                ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
+                parameters: ObjToString(parameters), 
+                propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
+            return AddInternal(editCommand);
+        }
+
+        public IToolbarBuilder New(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            object prefill = null,
+            string operation = null)
+        {
+            Parameters.Protect(noParamOrder, "See docs");
+            var editCommand = new ToolbarRuleForEntity("new", target,
+                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
                 ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
                 parameters: ObjToString(parameters), 
                 propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
@@ -69,6 +88,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
+            string operation = null,
             string context = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
@@ -76,7 +96,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             var realContext = GetContext(target, context);
             var builder = this as IToolbarBuilder;
             foreach (var type in finalTypes)
-                builder = builder.AddInternal(new ToolbarRuleMetadata(target, type, ObjToString(ui), ObjToString(parameters), context: realContext, helper: _deps.ToolbarButtonHelper.Ready));
+                builder = builder.AddInternal(new ToolbarRuleMetadata(target, type,
+                    operation: ToolbarRuleOps.Pick(operation, BtnAdd),
+                    ObjToString(ui),
+                    ObjToString(parameters),
+                    context: realContext, 
+                    helper: _deps.ToolbarButtonHelper.Ready));
 
             return builder;
         }
@@ -88,11 +113,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             string contentType = null,
             object ui = null,
             object parameters = null,
+            string operation = null,
             string context = null)
         {
             Parameters.Protect(noParamOrder, "See docs");
 
-            return AddInternal(new ToolbarRuleCopy(target, contentType, ObjToString(ui), ObjToString(parameters),
+            return AddInternal(new ToolbarRuleCopy(target, contentType, 
+                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
+                ObjToString(ui), ObjToString(parameters),
                 GetContext(target, context), _deps.ToolbarButtonHelper.Ready));
         }
 
@@ -104,11 +132,13 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Parameters.Protector,
             object filter = null,
             object ui = null,
-            object parameters = null
+            object parameters = null,
+            string operation = null
         )
         {
             Parameters.Protect(noParamOrder, "See docs");
-            var editCommand = new ToolbarRuleForEntity("data", target, 
+            var editCommand = new ToolbarRuleForEntity("data", target,
+                operation: ToolbarRuleOps.Pick(operation, BtnAdd),
                 ui: ObjToString(ui),
                 parameters: new ObjectToUrl().SerializeWithChild(parameters, filter, PrefixFilters),
                 contentType: target as string,

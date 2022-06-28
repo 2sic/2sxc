@@ -36,13 +36,19 @@ namespace ToSic.Sxc.Edit.Toolbar
             //string contentType = null,
             object ui = null,
             object parameters = null, 
-            object prefill = null
+            object prefill = null,
+            string operation = null
         );
 
         /// <summary>
         /// Button to show a admin dialog with all the data-items / entities of a specific content type.
         /// </summary>
-        /// <param name="target">An entity which will determine the type automatically, or a string containing the type name. </param>
+        /// <param name="target">
+        /// 3 Options: 
+        /// * An entity which will determine the type automatically
+        /// * a `string` containing the type name
+        /// * a modifier keyword such as `remove` or `-` to remove the button
+        /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="filter">object or string with the filters for the data vew</param>
         /// <param name="ui"></param>
@@ -54,7 +60,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             // string contentType = null,
             object filter = null,
             object ui = null,
-            object parameters = null
+            object parameters = null,
+            string operation = null
         );
 
 
@@ -89,6 +96,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Parameters.Protector,
             object ui = null,
             object parameters = null,
+            string operation = null,
             string context = null
         );
 
@@ -132,6 +140,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string contentType = null,
             object ui = null,
             object parameters = null,
+            string operation = null,
             string context = null
         );
 

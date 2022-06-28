@@ -12,11 +12,12 @@ namespace ToSic.Sxc.Edit.Toolbar
         internal ToolbarRuleMetadata(
             object target, 
             string typeName, 
+            char operation,
             string ui = null, 
             string parameters = null,
             ToolbarContext context = null,
             ToolbarButtonDecoratorHelper helper = null
-        ) : base(target, CommandName, operation: (char)ToolbarRuleOperations.BtnAdd, ui: ui, parameters: parameters, context: context, helper: helper)
+        ) : base(target, CommandName, operation: operation, ui: ui, parameters: parameters, context: context, helper: helper)
         {
             _typeName = typeName;
         }
