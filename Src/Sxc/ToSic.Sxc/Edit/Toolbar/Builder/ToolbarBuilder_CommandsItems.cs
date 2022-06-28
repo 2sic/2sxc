@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             Parameters.Protect(noParamOrder, "See docs");
             var editCommand = new ToolbarRuleForEntity("edit", target, 
                 operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-                ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
-                parameters: ObjToString(parameters), 
+                ui: ObjToString(ui),
+                parameters: new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
                 propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
             return AddInternal(editCommand);
         }
@@ -59,9 +59,18 @@ namespace ToSic.Sxc.Edit.Toolbar
             Parameters.Protect(noParamOrder, "See docs");
             var editCommand = new ToolbarRuleForEntity("new", target,
                 operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-                ui: new ObjectToUrl().SerializeWithChild(ui, prefill, PrefixPrefill),
-                parameters: ObjToString(parameters), 
-                propsToNotSerialize: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
+                ui: ObjToString(ui),
+                parameters: new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
+                contentType: target as string,
+                propsToNotSerialize: new []{ KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished })
+            {
+                //EditInfo =
+                //{
+                //    // Must set entityId to 0 ?
+                //    entityId = 0
+                //}
+            };
+
             return AddInternal(editCommand);
         }
 

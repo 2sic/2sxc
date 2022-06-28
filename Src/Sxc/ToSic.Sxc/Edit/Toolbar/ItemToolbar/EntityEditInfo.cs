@@ -74,6 +74,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         internal const string KeyFields = "fields";
         [JsonProperty(NullValueHandling = Ignore)] public string fields { get; set; }
 
-        internal static string[] KeysOfLists = new[] { KeyIndex, KeyUseModule, KeyParent, KeyFields };
+        internal static string[] KeysOfLists = { KeyIndex, KeyUseModule, KeyParent, KeyFields };
     }
 }

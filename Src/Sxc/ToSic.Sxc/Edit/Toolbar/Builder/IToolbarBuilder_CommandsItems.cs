@@ -41,6 +41,29 @@ namespace ToSic.Sxc.Edit.Toolbar
         );
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="target">
+        /// X Options
+        /// * A entity, in which case it uses it to detect content type etc.
+        /// * a string with the content-type name
+        /// </param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="prefill"></param>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        IToolbarBuilder New(
+            object target = null,
+            string noParamOrder = Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            object prefill = null,
+            string operation = null
+        );
+
+        /// <summary>
         /// Button to show a admin dialog with all the data-items / entities of a specific content type.
         /// </summary>
         /// <param name="target">
