@@ -16,11 +16,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null, 
             char? operation = null,
             ToolbarContext context = null,
-            ToolbarButtonDecoratorHelper helper = null
+            ToolbarButtonDecoratorHelper decoHelper = null
         ) : base(command, ui, parameters: parameters, operation: operation, operationCode: target as string, context: context)
         {
             Target = target;
-            _helper = helper;
+            DecoHelper = decoHelper;
 
             var operationCode = target as string;
             // Special case, if target is "-" or "remove" etc.
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         internal object Target { get; set; }
 
-        private readonly ToolbarButtonDecoratorHelper _helper;
+        protected readonly ToolbarButtonDecoratorHelper DecoHelper;
 
         public override string GeneratedUiParams()
             => UrlParts.ConnectParameters(UiParams(), base.GeneratedUiParams());
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         protected ToolbarButtonDecorator Decorator => _decorator.Get(() =>
         {
             var decoTypeName = DecoratorTypeName;
-            return decoTypeName.HasValue() ? _helper?.GetDecorator(Context, decoTypeName ?? "", Command) : null;
+            return decoTypeName.HasValue() ? DecoHelper?.GetDecorator(Context, decoTypeName ?? "", Command) : null;
         });
         private readonly ValueGetOnce<ToolbarButtonDecorator> _decorator = new ValueGetOnce<ToolbarButtonDecorator>();
         private string UiParams() => Decorator?.AllRules();

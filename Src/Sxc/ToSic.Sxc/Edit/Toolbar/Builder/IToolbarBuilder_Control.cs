@@ -52,12 +52,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         
 
-        /// <summary>
-        /// Converts the configuration to a json-string according to the JS-Toolbar specs.
-        /// </summary>
-        /// <returns></returns>
-        [PrivateApi]
-        string ToString();
+        ///// <summary>
+        ///// Converts the configuration to a json-string according to the JS-Toolbar specs.
+        ///// </summary>
+        ///// <returns></returns>
+        //[PrivateApi]
+        //string ToString();
 
 
         //[PrivateApi("Internal use only, can change at any time")]

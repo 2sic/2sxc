@@ -2,14 +2,14 @@
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    internal class ToolbarBuilderParams
+    internal class ToolbarBuilderConfiguration
     {
-        internal ToolbarBuilderParams(ToolbarBuilderParams original)
+        internal ToolbarBuilderConfiguration(ToolbarBuilderConfiguration original)
         {
             if (original == null) return;
             
             Mode = original.Mode;
-            Target = original.Target;
+            //Target = original.Target;
             Condition = original.Condition;
             ConditionFunc = original.ConditionFunc;
             Force = original.Force;
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public string Mode = null;
 
-        public object Target = null;
+        //public object Target = null;
 
         public bool? Condition = null;
 

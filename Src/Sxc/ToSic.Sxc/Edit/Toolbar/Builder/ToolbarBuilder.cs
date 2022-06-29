@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             this.Init(parent.Log);
             _currentAppIdentity = parent._currentAppIdentity;
             _codeRoot = parent._codeRoot;
-            _params = parent._params;
+            _configuration = parent._configuration;
             Rules.AddRange(parent.Rules);
         }
 
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         #endregion
 
-        private ToolbarBuilderParams _params;
+        private ToolbarBuilderConfiguration _configuration;
 
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             var updated = AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: ObjToString(ui)));
-            if (target != null) updated = updated.Target(target);
+            if (target != null) updated = updated.For(target);
             return updated;
         }
 

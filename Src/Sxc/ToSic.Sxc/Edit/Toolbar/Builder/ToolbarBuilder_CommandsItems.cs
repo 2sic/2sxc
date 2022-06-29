@@ -45,19 +45,19 @@ namespace ToSic.Sxc.Edit.Toolbar
                 ui: pars.Ui, parameters: pars.Parameters,
                 contentType: contentType,
                 propsKeep: propsKeep, propsSkip: propsSkip,
-                helper: _deps.ToolbarButtonHelper.Ready);
+                decoHelper: _deps.ToolbarButtonHelper.Ready);
             var builder = AddInternal(command);
             return (command, builder);
         }
 
         public IToolbarBuilder Delete(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null)
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
 
             // Set default operation based on what toolbar is used
             var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
@@ -78,13 +78,13 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Edit(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null)
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
             var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
@@ -99,13 +99,13 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder New(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null)
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
             var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
             return EntityRule("new", target, pars,
@@ -132,12 +132,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Publish(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null)
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
             var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, null);
 
             return EntityRule("publish", target, pars,
@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Metadata(
             object target,
             string contentTypes = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             object prefill = null,
@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string context = null)
         // TODO: PREFILL
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
             var finalTypes = GetMetadataTypeNames(target, contentTypes);
             var realContext = GetContext(target, context);
             var builder = this as IToolbarBuilder;
@@ -176,7 +176,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                     ui: pars.Ui, //ObjToString(ui),
                     parameters: pars.Parameters, //ObjToString(parameters),
                     context: realContext,
-                    helper: _deps.ToolbarButtonHelper.Ready));
+                    decoHelper: _deps.ToolbarButtonHelper.Ready));
 
             return builder.AddInternal(mdsToAdd.Cast<object>().ToArray());
 
@@ -194,7 +194,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <inheritdoc />
         public IToolbarBuilder Copy(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string contentType = null,
             object ui = null,
             object parameters = null,
@@ -202,7 +202,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null,
             string context = null)
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
 
             var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
@@ -222,14 +222,14 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Data(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object filter = null,
             object ui = null,
             object parameters = null,
             string operation = null
         )
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
 
             var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, null, filter);
 
@@ -250,15 +250,15 @@ namespace ToSic.Sxc.Edit.Toolbar
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(
             object target,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string ui = null,
             string parameters = null
         )
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
 
             return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GetContext(target, null),
-                helper: _deps.ToolbarButtonHelper.Ready));
+                decoHelper: _deps.ToolbarButtonHelper.Ready));
         }
     }
 }

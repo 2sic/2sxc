@@ -21,10 +21,10 @@ namespace ToSic.Sxc.Edit.Toolbar
             string ui = null, 
             string parameters = null,
             ToolbarContext context = null,
-            ToolbarButtonDecoratorHelper helper = null,
+            ToolbarButtonDecoratorHelper decoHelper = null,
             string[] propsSkip = null,
             string[] propsKeep = null
-        ) : base(target, commandName, operation: operation, ui: ui, parameters: parameters, context: context, helper: helper)
+        ) : base(target, commandName, operation: operation, ui: ui, parameters: parameters, context: context, decoHelper: decoHelper)
         {
             if (target is int intTarget) EditInfo.entityId = intTarget;
             if (contentType != null) EditInfo.contentType = contentType;
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         #endregion
         
 
-        protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as IDynamicEntity)?.Entity);
+        protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as IEntityWrapper)?.Entity);
         private readonly ValueGetOnce<IEntity> _entity = new ValueGetOnce<IEntity>();
 
         internal EntityEditInfo EditInfo => _editInfo.Get(() => new EntityEditInfo(TargetEntity));

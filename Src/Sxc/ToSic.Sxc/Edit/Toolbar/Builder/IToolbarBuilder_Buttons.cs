@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         IToolbarBuilder Button(
             string name,
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null,

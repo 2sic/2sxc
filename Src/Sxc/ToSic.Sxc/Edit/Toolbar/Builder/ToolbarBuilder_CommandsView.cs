@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         public IToolbarBuilder Layout(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Code(
             object target,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Fields(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Template(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Query(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder View(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
         private IToolbarBuilder With(
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string mode = null,
             object target = null,
             bool? condition = null, 
@@ -14,24 +14,29 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? force = null
         )
         {
-            Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
             // Create clone before starting to log so it's in there too
-            var clone = new ToolbarBuilder(this);
-            var p = clone._params = new ToolbarBuilderParams(_params);
-            if (mode != null) p.Mode = mode;
-            if (target != null)
-            {
-                p.Target = target;
-                // see if we already have a params rule
-                var existingParamsRule = clone.FindRule<ToolbarRuleForParams>();
-                if (existingParamsRule != null) 
-                    clone.Rules.Remove(existingParamsRule);
-                // Must create a new one, to not change the original which is still in the original object
-                var newParamsRule = new ToolbarRuleForParams(target, existingParamsRule?.Ui,
-                    existingParamsRule?.Parameters, existingParamsRule?.Context);
+            var clone = target == null 
+                ? new ToolbarBuilder(this)
+                : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
 
-                clone.Rules.Add(newParamsRule);
-            }
+            //if (target != null)
+            //{
+            //    p.Target = target;
+            //    // see if we already have a params rule
+            //    var existingParamsRule = clone.FindRule<ToolbarRuleForParams>();
+            //    if (existingParamsRule != null) 
+            //        clone.Rules.Remove(existingParamsRule);
+            //    // Must create a new one, to not change the original which is still in the original object
+            //    var newParamsRule = new ToolbarRuleForParams(existingParamsRule, target);
+
+            //    clone.Rules.Add(newParamsRule);
+            //}
+            // Copy/clone configuration because we plan to change it
+            var p = clone._configuration = new ToolbarBuilderConfiguration(_configuration);
+            if (mode != null) p.Mode = mode;
+
+
             if (condition != null) p.Condition = condition;
             if (conditionFunc != null) p.ConditionFunc = conditionFunc;
             if (force != null) p.Force = force;
@@ -39,11 +44,11 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         public IToolbarBuilder More(
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null
         )
         {
-            Parameters.Protect(noParamOrder, nameof(ui));
+            Eav.Parameters.Protect(noParamOrder, nameof(ui));
             return AddInternal(new ToolbarRuleCustom("more", ui: ObjToString(ui)));
         }
 

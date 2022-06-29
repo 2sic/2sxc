@@ -1,6 +1,4 @@
-﻿using ToSic.Eav;
-
-namespace ToSic.Sxc.Edit.Toolbar
+﻿namespace ToSic.Sxc.Edit.Toolbar
 {
 
     public partial interface IToolbarBuilder
@@ -12,7 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="ui"></param>
         /// <returns></returns>
         IToolbarBuilder More(
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null
         );
 
@@ -36,7 +34,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// * Added in 2sxc 13
         /// </remarks>
         IToolbarBuilder Settings(
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string show = null,
             string hover = null,
             string follow = null,
@@ -45,9 +43,29 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null
         );
-        
-        
-        // TODO: Params
 
+        /// <summary>
+        /// Adds / updates the `params` rule on the toolbar which contains information for all the buttons
+        /// </summary>
+        /// <param name="target">
+        /// Many options
+        /// 1. An Entity-like thing which would be used to prepare default params like `entityId`
+        /// 1. A string, which would be the same as using the term on the `parameters`
+        /// 1. A object - especially an anonymous object like `new { id = 7, show = true }`
+        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        IToolbarBuilder Parameters(
+            object target = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            object ui = null,
+            object parameters = null,
+            string context = null
+        );
+
+        
     }
 }

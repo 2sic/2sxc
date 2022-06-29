@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             [CallerMemberName] string methodName = null
             )
         {
-            Parameters.Protect(noParamOrder, "See docs", methodName);
+            Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
             return AddInternal(new ToolbarRuleCustom(
                 commandName,
                 operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         
         public IToolbarBuilder App(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder AppImport(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         
         public IToolbarBuilder AppResources(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder AppSettings(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Apps(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder System(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Insights(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
             string operation = null

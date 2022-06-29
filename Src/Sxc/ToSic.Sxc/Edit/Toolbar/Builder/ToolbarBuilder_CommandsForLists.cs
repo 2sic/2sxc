@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui,
             object parameters)
         {
-            Parameters.Protect(noParamOrder, "See docs", methodName);
+            Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
             var command = new ToolbarRuleForEntity(commandName, target, contentType: contentType,
                 ui: ObjToString(ui), parameters: ObjToString(parameters), propsKeep: KeysOfLists);
             return AddInternal(command);
@@ -24,12 +24,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Add(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string contentType = null,
             object ui = null,
             object parameters = null)
         {
-            Parameters.Protect(noParamOrder, "See docs");
+            Eav.Parameters.Protect(noParamOrder, "See docs");
             // Special case: Add could be called to "add a button"
             // There is an edge case in the Events app where this was published
             // Must decide if we should keep this or not
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder AddExisting(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string contentType = null,
             object ui = null,
             object parameters = null
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder List(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             //string contentType = null,
             object ui = null,
             object parameters = null
@@ -62,28 +62,28 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder MoveDown(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null
         ) => AddListAction(nameof(MoveDown), "movedown", target, noParamOrder, null, ui, parameters);
 
         public IToolbarBuilder MoveUp(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null
         ) => AddListAction(nameof(MoveUp), "moveup", target, noParamOrder, null, ui, parameters);
 
         public IToolbarBuilder Remove(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null
         ) => AddListAction(nameof(Remove), "remove", target, noParamOrder, null, ui, parameters);
 
         public IToolbarBuilder Replace(
             object target = null,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null
         ) => AddListAction(nameof(Replace), "replace", target, noParamOrder, null, ui, parameters);

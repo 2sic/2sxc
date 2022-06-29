@@ -17,10 +17,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public override string ToString()
         {
-            var mode = _params?.Mode;
+            var mode = _configuration?.Mode;
             mode = (mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
-
-            var target = _params?.Target;
 
             var edit = _codeRoot?.Edit;
 
@@ -31,8 +29,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (edit?.Enabled == true)
             {
                 // ReSharper disable AssignNullToNotNullAttribute
-                if (_params?.Condition == false) return null;
-                if (_params?.ConditionFunc != null && _params.ConditionFunc() == false) return null;
+                if (_configuration?.Condition == false) return null;
+                if (_configuration?.ConditionFunc != null && _configuration.ConditionFunc() == false) return null;
                 // ReSharper restore AssignNullToNotNullAttribute
             }
 

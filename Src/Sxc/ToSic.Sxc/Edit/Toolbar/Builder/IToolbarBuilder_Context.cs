@@ -11,16 +11,16 @@ namespace ToSic.Sxc.Edit.Toolbar
         ToolbarContext Context();
         
 
-        /// <summary>
-        /// Set the main target of this toolbar.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// New in v14.04
-        /// </remarks>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP - still choosing name for/target")]
-        IToolbarBuilder Target(object target);
+        ///// <summary>
+        ///// Set the main target of this toolbar.
+        ///// </summary>
+        ///// <param name="target"></param>
+        ///// <returns></returns>
+        ///// <remarks>
+        ///// New in v14.04
+        ///// </remarks>
+        //[InternalApi_DoNotUse_MayChangeWithoutNotice("WIP - still choosing name for/target")]
+        //IToolbarBuilder Target(object target);
 
 
         /// <summary>
