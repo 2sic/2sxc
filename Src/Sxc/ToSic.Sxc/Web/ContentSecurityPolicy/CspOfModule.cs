@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         #region Url Parameters to Detect Dev / True
 
         public bool UrlIsDevMode => _urlDevMode.Get(() => CspUrlParam.EqualsInsensitive(CspConstants.CspUrlDev));
-        private readonly ValueGetOnce<bool> _urlDevMode = new ValueGetOnce<bool>();
+        private readonly GetOnce<bool> _urlDevMode = new GetOnce<bool>();
 
         private string CspUrlParam => _cspUrlParam.Get(() =>
         {
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
             return cspParam;
         }, Log, nameof(CspUrlParam));
-        private readonly ValueGetOnce<string> _cspUrlParam = new ValueGetOnce<string>();
+        private readonly GetOnce<string> _cspUrlParam = new GetOnce<string>();
 
         #endregion
 
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             var pageSettings = CodeRootSettings()?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem);
             return new CspSettingsReader(pageSettings, _user, UrlIsDevMode, Log);
         }, Log, nameof(SiteCspSettings));
-        private readonly ValueGetOnce<CspSettingsReader> _siteCspSettings = new ValueGetOnce<CspSettingsReader>();
+        private readonly GetOnce<CspSettingsReader> _siteCspSettings = new GetOnce<CspSettingsReader>();
 
         #endregion
 
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// Enforce?
         /// </summary>
         internal bool IsEnforced => _cspReportOnly.Get(() => SiteCspSettings.IsEnforced, Log, nameof(IsEnforced));
-        private readonly ValueGetOnce<bool> _cspReportOnly = new ValueGetOnce<bool>();
+        private readonly GetOnce<bool> _cspReportOnly = new GetOnce<bool>();
 
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             // Check URL Parameters - they are null if the feature is not enabled
             return CspUrlParam.EqualsInsensitive(CspConstants.CspUrlTrue) || UrlIsDevMode;
         }, Log, nameof(IsEnabled));
-        private readonly ValueGetOnce<bool> _enabled = new ValueGetOnce<bool>();
+        private readonly GetOnce<bool> _enabled = new GetOnce<bool>();
 
 
         #endregion
@@ -150,7 +150,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             Log.A($"Merged: {merged}");
             return new CspPolicyTextProcessor(Log).Parse(merged);
         }, Log, nameof(Policies));
-        private readonly ValueGetOnce<List<KeyValuePair<string, string>>> _policies = new ValueGetOnce<List<KeyValuePair<string, string>>>();
+        private readonly GetOnce<List<KeyValuePair<string, string>>> _policies = new GetOnce<List<KeyValuePair<string, string>>>();
 
         private string GetAppPolicies()
         {

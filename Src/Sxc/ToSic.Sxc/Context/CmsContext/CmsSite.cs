@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Context
         public string UrlRoot => _contents.UrlRoot ?? string.Empty;
 
         public IApp App => _app.Get(() => _siteAppLazy.Value.Init(_appState, null, null));
-        private readonly ValueGetOnce<IApp> _app = new ValueGetOnce<IApp>();
+        private readonly GetOnce<IApp> _app = new GetOnce<IApp>();
 
         protected override IMetadataOf GetMetadataOf() 
             => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.Site, Id, Url));

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Context
         private readonly Lazy<IPage> _pageLazy;
 
         internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? _initialContext);
-        private readonly ValueGetOnce<IContextOfSite> _ctxSite = new ValueGetOnce<IContextOfSite>();
+        private readonly GetOnce<IContextOfSite> _ctxSite = new GetOnce<IContextOfSite>();
 
         private readonly IAppStates _appStates;
         private readonly Lazy<ICmsSite> _cmsSiteLazy;
@@ -57,21 +57,21 @@ namespace ToSic.Sxc.Context
         internal DynamicEntityDependencies DEDeps => (CodeRoot as DynamicCodeRoot)?.DynamicEntityDependencies;
 
         private AppState SiteAppState => _siteAppState.Get(() => _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log));
-        private readonly ValueGetOnce<AppState> _siteAppState = new ValueGetOnce<AppState>();
+        private readonly GetOnce<AppState> _siteAppState = new GetOnce<AppState>();
 
 
         private IBlock RealBlockOrNull => _realBlock.Get(() => CodeRoot?.Block);
-        private readonly ValueGetOnce<IBlock> _realBlock = new ValueGetOnce<IBlock>();
+        private readonly GetOnce<IBlock> _realBlock = new GetOnce<IBlock>();
 
         internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => CodeRoot?.Block?.Context);
-        private readonly ValueGetOnce<IContextOfBlock> _ctxBlock = new ValueGetOnce<IContextOfBlock>();
+        private readonly GetOnce<IContextOfBlock> _ctxBlock = new GetOnce<IContextOfBlock>();
 
         #endregion
 
         public ICmsPlatform Platform { get; }
 
         public ICmsSite Site => _site.Get(() => _cmsSiteLazy.Value.Init(this, SiteAppState));
-        private readonly ValueGetOnce<ICmsSite> _site = new ValueGetOnce<ICmsSite>();
+        private readonly GetOnce<ICmsSite> _site = new GetOnce<ICmsSite>();
 
         public ICmsPage Page => _page ?? (_page = new CmsPage(this, SiteAppState, _pageLazy));
         private ICmsPage _page;

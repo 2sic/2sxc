@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi]
         public IRenderingHelper RenderingHelper => _rendHelp.Get(() => _deps.RenderHelpGen.New.Init(Block, Log));
-        private readonly ValueGetOnce<IRenderingHelper> _rendHelp = new ValueGetOnce<IRenderingHelper>();
+        private readonly GetOnce<IRenderingHelper> _rendHelp = new GetOnce<IRenderingHelper>();
 
         public IRenderResult Run(bool topLevel)
         {
@@ -200,7 +200,7 @@ namespace ToSic.Sxc.Blocks
         /// license ok state
         /// </summary>
         protected bool LicenseOk => _licenseOk.Get(() => _deps.LicenseService.Value.HaveValidLicense);
-        private readonly ValueGetOnce<bool> _licenseOk = new ValueGetOnce<bool>();
+        private readonly GetOnce<bool> _licenseOk = new GetOnce<bool>();
 
         private string GenerateWarningMsgIfLicenseNotOk()
         {

@@ -15,6 +15,6 @@ namespace ToSic.Sxc.Code
         //private readonly ValueGetOnce<TModel> _mOnce = new ValueGetOnce<TModel>();
 
         public TServiceKit Kit => _kit.Get(GetService<TServiceKit>);
-        private readonly ValueGetOnce<TServiceKit> _kit = new ValueGetOnce<TServiceKit>();
+        private readonly GetOnce<TServiceKit> _kit = new GetOnce<TServiceKit>();
     }
 }

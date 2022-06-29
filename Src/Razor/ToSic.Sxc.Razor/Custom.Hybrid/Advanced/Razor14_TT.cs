@@ -12,6 +12,6 @@ namespace Custom.Hybrid.Advanced
         where TServiceKit : ServiceKit
     {
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
-        private readonly ValueGetOnce<TServiceKit> _kit = new();
+        private readonly GetOnce<TServiceKit> _kit = new();
     }
 }

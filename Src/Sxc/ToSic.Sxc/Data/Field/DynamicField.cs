@@ -21,19 +21,19 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public dynamic Raw => _raw.Get(() => Parent.Get(Name, convertLinks: false));
-        private readonly ValueGetOnce<dynamic> _raw = new ValueGetOnce<dynamic>();
+        private readonly GetOnce<dynamic> _raw = new GetOnce<dynamic>();
 
 
         /// <inheritdoc />
         public dynamic Value => _value.Get(() => Parent.Get(Name, convertLinks: true));
-        private readonly ValueGetOnce<dynamic> _value = new ValueGetOnce<dynamic>();
+        private readonly GetOnce<dynamic> _value = new GetOnce<dynamic>();
 
         /// <inheritdoc />
         public string Url => Value as string;
 
 
         public IDynamicMetadata Metadata => _dynMeta.Get(() => new DynamicMetadata(MetadataOfItem, Parent.Entity, Parent._Dependencies));
-        private readonly ValueGetOnce<IDynamicMetadata> _dynMeta = new ValueGetOnce<IDynamicMetadata>();
+        private readonly GetOnce<IDynamicMetadata> _dynMeta = new GetOnce<IDynamicMetadata>();
 
 
         /// <inheritdoc />
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Data
                 var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
                 return app?.GetMetadataOf(TargetTypes.CmsItem, valString, "");
             });
-        private readonly ValueGetOnce<IMetadataOf> _itemMd = new ValueGetOnce<IMetadataOf>();
+        private readonly GetOnce<IMetadataOf> _itemMd = new GetOnce<IMetadataOf>();
 
 
 
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Data
             var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeName);
             return decItem != null ? new ImageDecorator(decItem) : null;
         });
-        private readonly ValueGetOnce<ImageDecorator> _imgDec2 = new ValueGetOnce<ImageDecorator>();
+        private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();
         
         IMetadataOf IHasMetadata.Metadata => MetadataOfItem;
     }

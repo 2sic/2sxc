@@ -19,7 +19,7 @@ namespace Custom.Hybrid.Advanced
         public TModel Model => _DynCodeRoot is not IDynamicCode<TModel, TServiceKit> root ? default : root.Model;
 
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
-        private readonly ValueGetOnce<TServiceKit> _kit = new();
+        private readonly GetOnce<TServiceKit> _kit = new();
 
     }
 }

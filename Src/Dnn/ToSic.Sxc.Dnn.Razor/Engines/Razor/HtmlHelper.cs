@@ -105,6 +105,6 @@ namespace ToSic.Sxc.Engines.Razor
 
         private bool ThrowPartialError => _throwPartialError.Get(() =>
             _features.IsEnabled(RazorThrowPartial.NameId) || _isSystemAdmin && _features.IsEnabled(RenderThrowPartialSystemAdmin.NameId));
-        private readonly ValueGetOnce<bool> _throwPartialError = new ValueGetOnce<bool>();
+        private readonly GetOnce<bool> _throwPartialError = new GetOnce<bool>();
     }
 }
