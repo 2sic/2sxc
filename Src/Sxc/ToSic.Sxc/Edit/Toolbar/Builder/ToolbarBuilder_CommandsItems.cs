@@ -124,9 +124,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             object prefill = null,
             string operation = null,
             string context = null)
-        // TODO: PREFILL
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
+            
+            // Note: DO NOT check the target, as here an IAsset is absolutely valid
+            // TargetCheck(target);
+
             var finalTypes = GetMetadataTypeNames(target, contentTypes);
             var realContext = GetContext(target, context);
             var builder = this as IToolbarBuilder;
@@ -136,7 +139,9 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             var mdsToAdd = finalTypes
                 .Select(type => new ToolbarRuleMetadata(target, type,
-                    operation: pars.Operation, ui: pars.Ui, parameters: pars.Parameters, 
+                    operation: pars.Operation,
+                    ui: pars.Ui,
+                    parameters: pars.Parameters, 
                     context: realContext,
                     decoHelper: _deps.ToolbarButtonHelper.Ready));
 
