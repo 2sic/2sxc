@@ -10,6 +10,7 @@ using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Web.LightSpeed;
+using ToSic.Sxc.Web.Url;
 using Page = Oqtane.Models.Page;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
@@ -63,9 +64,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             // Check for installation errors before even trying to build a view, and otherwise return this object if Refs are missing.
             if (RefsInstalledCheck.WarnIfRefsAreNotInstalled(out var oqtViewResultsDtoWarning)) return oqtViewResultsDtoWarning;
 
-            // Check if there is less than 50 global types and warn user to restart application
-            if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
-
             OqtViewResultsDto ret = null;
             var finalMessage = "";
             LogTimer.DoInTimer(() =>
@@ -87,15 +85,24 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     SxcContextMetaContents = PageOutput.AddContextMeta ? PageOutput.ContextMetaContents() : null,
                     SxcScripts = PageOutput.Scripts().ToList(),
                     SxcStyles = PageOutput.Styles().ToList(),
-                    PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges)
+                    PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges),
+                    HttpHeaders = renderResult.HttpHeaders,
+                    CspEnabled = renderResult.CspEnabled,
+                    CspEnforced = renderResult.CspEnforced,
+                    CspParameters = renderResult.CspParameters.Select(c => c.NvcToString()).ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
                 };
                 callLog.Done();
             });
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 
+            // Check if there is less than 50 global types and warn user to restart application
+            // HACK: in v14.03 this check was moved bellow LogTimer.DoInTimer because we got exception (probably timing issue)
+            // "Object reference not set to an instance of an object. at ToSic.Eav.Apps.AppStates.Get(IAppIdentity app)"
+            // TODO: STV find correct fix
+            if (_globalTypesCheck.WarnIfGlobalTypesAreNotLoaded(out var oqtViewResultsDtoWarning2)) return oqtViewResultsDtoWarning2;
+
             return ret;
         }
-
 
         internal Alias Alias;
         internal Site Site;

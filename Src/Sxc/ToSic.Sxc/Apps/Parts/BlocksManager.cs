@@ -40,15 +40,15 @@ namespace ToSic.Sxc.Apps
 		    }
 		}
 
-        public void AddEmptyItem(BlockConfiguration block, int? sortOrder, bool forceDraft) =>
+        public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft) =>
             Parent.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
-                lists => lists.Add(sortOrder, new int?[] { null, null }));
+                lists => lists.Add(index, new int?[] { null, null }));
 
 
 
-        public int NewBlockReference(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
+        public int NewBlockReference(int parentId, string field, int index, string app = "", Guid? guid = null)
         {
-            Log.A($"get CB parent:{parentId}, field:{field}, order:{sortOrder}, app:{app}, guid:{guid}");
+            Log.A($"get CB parent:{parentId}, field:{field}, order:{index}, app:{app}, guid:{guid}");
             var contentTypeName = AppConstants.ContentGroupRefTypeName;
             var values = new Dictionary<string, object>
             {
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Apps
                 {BlockFromEntity.CbPropertyApp, app},
             };
             var newGuid = guid ?? Guid.NewGuid();
-            var entityId = CreateItemAndAddToList(parentId, field, sortOrder, contentTypeName, values, newGuid);
+            var entityId = CreateItemAndAddToList(parentId, field, index, contentTypeName, values, newGuid);
 
             return entityId;
         }

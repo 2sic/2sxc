@@ -54,11 +54,11 @@ namespace ToSic.Sxc.Edit.EditService
                 $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
 
             // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
-            ItemToolbar itmToolbar;
+            ItemToolbarBase itmToolbar;
             if (target is IToolbarBuilder)
             {
                 Log.A("Using new modern Item-Toolbar, will ignore all other parameters.");
-                itmToolbar = new ItemToolbar(null, toolbar: target);
+                itmToolbar = new ItemToolbarV10(null, toolbar: target);
             }
             else
             {
@@ -69,19 +69,19 @@ namespace ToSic.Sxc.Edit.EditService
                 if (toolbar is IToolbarBuilder)
                 {
                     Log.A("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
-                    itmToolbar = new ItemToolbar(eTarget, toolbar: toolbar);
+                    itmToolbar = new ItemToolbarV10(eTarget, toolbar: toolbar);
                 }
                 else
                 {
                     Log.A("Using classic mode, with all parameters.");
-                    itmToolbar = new ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings,
+                    itmToolbar = ItemToolbarPicker.ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings,
                         toolbar: toolbar);
                 }
             }
 
             var result = inTag
-                ? new HybridHtmlString(itmToolbar.ToolbarAttributes())
-                : new HybridHtmlString(itmToolbar.Toolbar);
+                ? new HybridHtmlString(itmToolbar.ToolbarAsAttributes())
+                : new HybridHtmlString(itmToolbar.ToolbarAsTag);
             return wrapLog.ReturnAsOk(result);
         }
 

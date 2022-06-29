@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.")]
     public abstract class ApiController : DynamicApiController, IDnnDynamicWebApi, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot
     {
-
+        [PrivateApi]
         public const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.";
 
         /// <remarks>

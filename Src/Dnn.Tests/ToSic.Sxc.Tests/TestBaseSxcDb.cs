@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ToSic.Sxc.Startup;
 using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests

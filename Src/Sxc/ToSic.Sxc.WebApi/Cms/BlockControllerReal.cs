@@ -42,8 +42,8 @@ namespace ToSic.Sxc.WebApi.Cms
         private ContentBlockBackend _backend;
 
         /// <inheritdoc />
-        public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-            => Backend.NewBlockAndRender(parentId, field, sortOrder, app, guid).Html;
+        public string Block(int parentId, string field, int index, string app = "", Guid? guid = null)
+            => Backend.NewBlockAndRender(parentId, field, index, app, guid).Html;
         #endregion
 
         #region BlockItems

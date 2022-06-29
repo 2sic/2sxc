@@ -13,8 +13,7 @@
             bool convertLinks = true,
             bool? debug = null)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Get",
-                $"{nameof(language)}, {nameof(convertLinks)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(language)}, {nameof(convertLinks)}");
 
             var debugBefore = Debug;
             if (debug != null) Debug = debug.Value;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Oqt.Shared.Models
 {
@@ -56,6 +57,16 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         /// System generated HTML
         /// </summary>
         public string SystemHtml { get; set; }
+
+        /// <summary>
+        /// List of HttpHeaders to add to the response in format "key:value"
+        /// </summary>
+        //IList<string> HttpHeaders { get; }
+        public IList<HttpHeader> HttpHeaders { get; set; }
+
+        public bool CspEnabled { get; set; }
+        public bool CspEnforced { get; set; }
+        public IList<string> CspParameters { get; set; }
     }
 
 }

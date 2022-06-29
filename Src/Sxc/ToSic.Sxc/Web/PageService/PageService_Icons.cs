@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Web.PageService
     {
         /// <inheritdoc />
         public string AddIcon(string path,
-            string doNotRelyOnParameterOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
             string rel = "",
             int size = 0, string type = null)
         {
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Web.PageService
 
         /// <inheritdoc />
         public string AddIconSet(string path,
-            string doNotRelyOnParameterOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
             object favicon = null, IEnumerable<string> rels = null, IEnumerable<int> sizes = null)
         {
             Eav.Parameters.ProtectAgainstMissingParameterNames(doNotRelyOnParameterOrder, nameof(AddIcon), $"{nameof(path)}, {nameof(favicon)}, {nameof(rels)}, {nameof(sizes)}");

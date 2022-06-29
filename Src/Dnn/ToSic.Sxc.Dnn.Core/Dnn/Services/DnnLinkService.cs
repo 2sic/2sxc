@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Dnn.Services
 
         private string Api(string noParamOrder = Eav.Parameters.Protector, string path = null)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Api", $"{nameof(path)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(path)}");
 
             if (string.IsNullOrEmpty(path)) return string.Empty;
 

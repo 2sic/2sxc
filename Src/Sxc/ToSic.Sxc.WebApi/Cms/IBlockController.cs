@@ -10,7 +10,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <summary>
         /// used to be GET Module/GenerateContentBlock
         /// </summary>
-        string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null);
+        string Block(int parentId, string field, int index, string app = "", Guid? guid = null);
 
         /// <summary>
         /// used to be GET Module/AddItem

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Edit.EditService
         {
             Log.A("ctx attribs - enabled:{Enabled}");
             if (!Enabled) return null;
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(ContextAttributes), $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
+            Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(contentType)},{nameof(newGuid)}");
 
             if (field == null) throw new Exception("need parameter 'field'");
 
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Edit.EditService
             int contentBlockId = 0
         )
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(WrapInContext), $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
+            Parameters.Protect(noParamOrder, $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
             var renderingHelper = _renderHelper.Ready;
 

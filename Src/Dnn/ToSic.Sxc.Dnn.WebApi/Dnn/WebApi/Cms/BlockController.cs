@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public string Block(int parentId, string field, int sortOrder, string app = "", Guid? guid = null)
-            => Real.Block(parentId, field, sortOrder, app, guid);
+        public string Block(int parentId, string field, int index, string app = "", Guid? guid = null)
+            => Real.Block(parentId, field, index, app, guid);
 
 
         /// <inheritdoc />

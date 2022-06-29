@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.Web.Url
 {
-    public static class UrlHelpers
+    public static partial class UrlHelpers
     {
         /// <summary>
         /// Safer replacement to the HttpUtility.ParseQueryString because that changes umlauts etc. to %u0043 characters which is not very common

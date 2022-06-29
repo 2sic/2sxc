@@ -7,9 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.LookUp;
@@ -112,7 +110,6 @@ namespace ToSic.Sxc.Engines
         }
 
 
-        /// <inheritdoc />
         protected override string RenderTemplate()
         {
             var templateSource = File.ReadAllText(Helpers.ServerPaths.FullAppPath(TemplatePath));

@@ -75,7 +75,11 @@ namespace ToSic.Sxc.Adam
         public abstract IFolder Folder(Guid entityGuid, string fieldName);
 
         public abstract IFolder Folder(IEntity entity, string fieldName);
-        
+
+
+        public abstract IFile File(int id);
+
+        public abstract IFolder Folder(int id);
         #endregion
     }
 }

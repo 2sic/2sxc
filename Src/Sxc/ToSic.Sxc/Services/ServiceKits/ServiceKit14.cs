@@ -1,4 +1,5 @@
 ﻿using Connect.Koi;
+using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
@@ -6,17 +7,21 @@ using ToSic.Razor.Blade;
 namespace ToSic.Sxc.Services
 {
     /// <summary>
-    /// **_BETA_**
-    /// 
-    /// Default ServiceKit for 2sxc v14.03+.
+    /// Default ServiceKit for 2sxc v14
     /// To learn more about ServiceKits, see <see cref="ServiceKit"/>.
     /// </summary>
     /// <remarks>
-    /// * History: Added v14.03 WIP
+    /// * History: Added v14.03
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("BETA / WIP v14.05")]
     public class ServiceKit14: ServiceKit
     {
+        /// <summary>
+        /// The ADAM Service, used to retrieve files and maybe more. 
+        /// </summary>
+        public IAdamService Adam => _adam.Get(GetService<IAdamService>);
+        private readonly ValueGetOnce<IAdamService> _adam = new ValueGetOnce<IAdamService>();
+
         /// <summary>
         /// The Convert Service, used to convert any kind of data type to another data type
         /// </summary>
@@ -30,6 +35,14 @@ namespace ToSic.Sxc.Services
         public ICss Css => _css.Get(GetService<ICss>);
         private readonly ValueGetOnce<ICss> _css = new ValueGetOnce<ICss>();
 
+
+        // Wait till we have a signature without the IEntity, but more an IHasEntity or something
+        ///// <summary>
+        ///// The TODO Service, used to detect the current CSS framework and other features.
+        ///// See [ICss](xref:Connect.Koi.ICss)
+        ///// </summary>
+        //public IConvertToEavLight Todo => _convEavLight.Get(GetService<IConvertToEavLight>);
+        //private readonly ValueGetOnce<IConvertToEavLight> _convEavLight = new ValueGetOnce<IConvertToEavLight>();
 
         /// <summary>
         /// The Edit service, same as the main Edit service
@@ -65,6 +78,12 @@ namespace ToSic.Sxc.Services
         public ILinkService Link => _link.Get(GetService<ILinkService>);
         private readonly ValueGetOnce<ILinkService> _link = new ValueGetOnce<ILinkService>();
 
+        /// <summary>
+        /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
+        /// </summary>
+        public ILogService Log => _sysLog.Get(GetService<ILogService>);
+        private readonly ValueGetOnce<ILogService> _sysLog = new ValueGetOnce<ILogService>();
+
 
         /// <summary>
         /// The Mail service, used to send mails
@@ -86,6 +105,11 @@ namespace ToSic.Sxc.Services
         public IRenderService Render => _render.Get(GetService<IRenderService>);
         private readonly ValueGetOnce<IRenderService> _render = new ValueGetOnce<IRenderService>();
 
+        /// <summary>
+        /// The Secure Data Service - mainly for reading / decrypting secrets. 
+        /// </summary>
+        public ISecureDataService SecureData => _secureData.Get(GetService<ISecureDataService>);
+        private readonly ValueGetOnce<ISecureDataService> _secureData = new ValueGetOnce<ISecureDataService>();
 
         /// <summary>
         /// The Razor-Blade Scrub service, used to clean up HTML.

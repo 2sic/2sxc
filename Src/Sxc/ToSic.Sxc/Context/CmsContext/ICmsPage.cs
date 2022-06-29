@@ -40,8 +40,13 @@ namespace ToSic.Sxc.Context
         /// </summary>
         [PrivateApi("Not yet official property, must decide if we'll put in on the ICmsPage or maybe on an ICmsUrl or something")]
         string Url { get; }
-        
-        [PrivateApi("WIP")] 
+
+        /// <summary>
+        /// Metadata of the current page
+        /// </summary>
+        /// <remarks>
+        /// Added in v13.12
+        /// </remarks>
 #pragma warning disable CS0108, CS0114
         IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114

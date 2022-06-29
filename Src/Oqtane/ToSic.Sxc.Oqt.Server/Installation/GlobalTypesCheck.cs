@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Sxc.Oqt.Shared.Models;
 
@@ -11,12 +12,12 @@ namespace ToSic.Sxc.Oqt.Server.Installation
     public class GlobalTypesCheck
     {
 
-        public GlobalTypesCheck(IAppStates appStates)
+        public GlobalTypesCheck(Lazy<IAppStates> appStates)
         {
             _appStates = appStates;
         }
 
-        private readonly IAppStates _appStates;
+        private readonly Lazy<IAppStates> _appStates;
 
         private static bool? _globalTypesCheckedAndError;
 
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             var errorMessage = string.Empty;
 
             // Check if there is less than 50 global types and warn user to restart application.
-            _globalTypesCheckedAndError = _appStates.GetPresetApp().ContentTypes.Count() < 50;
+            _globalTypesCheckedAndError = _appStates.Value.GetPresetApp().ContentTypes.Count() < 50;
             if (_globalTypesCheckedAndError.Value)
             {
                 errorMessage = "<strong>Warning:</strong> The \"global types\" are not loaded. Please <a href=\"/admin/system\">Restart Application</a>.";
@@ -49,7 +50,5 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             
             return !string.IsNullOrEmpty(errorMessage);
         }
-
-
     }
 }

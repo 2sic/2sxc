@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Engines
 
         }
 
-        /// <inheritdoc/>
+        [PrivateApi]
         protected override string RenderTemplate()
         {
             var wrapLog = Log.Fn<string>();
