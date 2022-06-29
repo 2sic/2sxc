@@ -12,8 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
 
         [PrivateApi]
-        private string ObjToString(object uiOrParams/*, string prefix = null*/) 
-            => O2U.SerializeIfNotString(uiOrParams/*, prefix*/);
+        private string ObjToString(object uiOrParams) => O2U.SerializeIfNotString(uiOrParams);
 
 
         private ObjectToUrl O2U => _o2u.Get(() => new ObjectToUrl());

@@ -1,4 +1,6 @@
-﻿using ToSic.Eav.Data;
+﻿using System;
+using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.Data;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -27,6 +29,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string context = null
         )
         {
+            TargetCheck(target);
             var clone = new ToolbarBuilder(this);
 
             // see if we already have a params rule, if yes remove to then later clone and add again
@@ -51,6 +54,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             clone.Rules.Add(newParamsRule);
 
             return clone;
+        }
+
+        private void TargetCheck(object target)
+        {
+            if (target is IAsset)
+                throw new Exception("Got a target parameter which seems to be an adam-file. " +
+                                    "This is not allowed. " +
+                                    "Were you trying to target the .Metadata of this file?");
+
         }
 
         private (object target, object parameters) FixTargetIsParameters(object target, object parameters)

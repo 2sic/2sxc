@@ -36,7 +36,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             var appId = FindContextAppId(target);
 
             // If nothing found
-            if (appId == 0 || appId == NoAppId) return callLog.ReturnNull("no app identified");
+            if (appId == 0 
+                || appId == NoAppId 
+                || appId == Eav.Constants.TransientAppId
+                || appId < 1
+                ) return callLog.ReturnNull("no app identified");
 
             var identity = appStates.IdentityOfApp(appId);
             if (identity == null) return callLog.ReturnNull("app not found");

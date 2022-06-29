@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             )
         {
             Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
+            TargetCheck(target);
             return AddInternal(new ToolbarRuleCustom(
                 commandName,
                 operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),

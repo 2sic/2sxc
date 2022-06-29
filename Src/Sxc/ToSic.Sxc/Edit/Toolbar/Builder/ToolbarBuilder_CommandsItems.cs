@@ -40,6 +40,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string contentType = null
             )
         {
+            TargetCheck(target);
             var command = new ToolbarRuleForEntity(verb, target, pars.Operation,
                 ui: pars.Ui, parameters: pars.Parameters,
                 contentType: contentType,
@@ -66,13 +67,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             return EntityRule("delete", target, pars, 
                 propsKeep: new[] { KeyTitle, KeyEntityId, KeyEntityGuid }).Builder;
-
-            //var editCommand = new ToolbarRuleForEntity("delete", target,
-            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, defOp),
-            //    ui: pars.Ui,// new ObjectToUrl().SerializeWithChild(ui, "show=true", ""),
-            //    parameters: pars.Parameters,// ObjToString(parameters),
-            //    propsToSerialize: new[] { KeyTitle, KeyEntityId, KeyEntityGuid });
-            //return AddInternal(editCommand);
         }
 
         public IToolbarBuilder Edit(
@@ -87,13 +81,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
 
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
-
-            //var editCommand = new ToolbarRuleForEntity("edit", target, 
-            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAdd),
-            //    ui: pars.Ui,// ObjToString(ui),
-            //    parameters: pars.Parameters,// new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
-            //    propsSkip: new []{ KeyEntityGuid, KeyTitle, KeyPublished});
-            //return AddInternal(editCommand);
         }
 
         public IToolbarBuilder New(
@@ -110,23 +97,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             return EntityRule("new", target, pars,
                 propsSkip: new[] { KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished },
                 contentType: target as string).Builder;
-
-            //var editCommand = new ToolbarRuleForEntity("new", target,
-            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAdd),
-            //    ui: pars.Ui,// ObjToString(ui),
-            //    parameters: pars.Parameters,// new ObjectToUrl().SerializeWithChild(parameters, prefill, PrefixPrefill),
-            //    contentType: target as string,
-            //    propsSkip: new []{ KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished })
-            //{
-            //    //EditInfo =
-            //    //{
-            //    //    // Must set entityId to 0 ?
-            //    //    entityId = 0
-            //    //}
-            //};
-            //// TODO: TEST ENTITY ID
-
-            //return AddInternal(editCommand);
         }
 
         public IToolbarBuilder Publish(
@@ -141,11 +111,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             return EntityRule("publish", target, pars,
                 propsKeep: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule }).Builder;
-            //var editCommand = new ToolbarRuleForEntity("publish", target,
-            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAddAuto),
-            //    ui: pars.Ui /*ObjToString(ui)*/, parameters: pars.Parameters, // ObjToString(parameters),
-            //    propsKeep: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule });
-            //return AddInternal(editCommand);
         }
 
 
@@ -171,23 +136,11 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             var mdsToAdd = finalTypes
                 .Select(type => new ToolbarRuleMetadata(target, type,
-                    operation: pars.Operation, // ToolbarRuleOps.Pick(operation, BtnAdd),
-                    ui: pars.Ui, //ObjToString(ui),
-                    parameters: pars.Parameters, //ObjToString(parameters),
+                    operation: pars.Operation, ui: pars.Ui, parameters: pars.Parameters, 
                     context: realContext,
                     decoHelper: _deps.ToolbarButtonHelper.Ready));
 
             return builder.AddInternal(mdsToAdd.Cast<object>().ToArray());
-
-            //foreach (var type in finalTypes)
-            //    builder = builder.AddInternal(new ToolbarRuleMetadata(target, type,
-            //        operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-            //        ObjToString(ui),
-            //        ObjToString(parameters),
-            //        context: realContext,
-            //        helper: _deps.ToolbarButtonHelper.Ready));
-
-            //return builder;
         }
 
         /// <inheritdoc />
@@ -207,13 +160,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             return EntityRule("copy", target, pars, propsKeep: new[] { KeyEntityId, KeyContentType },
                 contentType: contentType).Builder;
-
-            //return AddInternal(new ToolbarRuleCopy(target, contentType, 
-            //    operation: pars.Operation,// ToolbarRuleOps.Pick(operation, BtnAdd),
-            //    pars.Ui, // ObjToString(ui), 
-            //    pars.Parameters,// ObjToString(parameters),
-            //    GetContext(target, context), 
-            //    _deps.ToolbarButtonHelper.Ready));
         }
 
 
@@ -234,14 +180,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             return EntityRule("data", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string)
                 .Builder;
-
-            //var editCommand = new ToolbarRuleForEntity("data", target,
-            //    operation: ToolbarRuleOps.Pick(operation, BtnAdd),
-            //    ui: ObjToString(ui),
-            //    parameters: new ObjectToUrl().SerializeWithChild(parameters, filter, PrefixFilters),
-            //    contentType: target as string,
-            //    propsKeep: new[] { KeyContentType });
-            //return AddInternal(editCommand);
         }
 
         // TODO: drop image

@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters)
         {
             Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
+            TargetCheck(target);
             var command = new ToolbarRuleForEntity(commandName, target, contentType: contentType,
                 ui: ObjToString(ui), parameters: ObjToString(parameters), propsKeep: KeysOfLists);
             return AddInternal(command);
@@ -30,17 +31,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null)
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
-            // Special case: Add could be called to "add a button"
-            // There is an edge case in the Events app where this was published
-            // Must decide if we should keep this or not
-            if (target is string strTarget && strTarget.HasValue() && strTarget.Length > 3)
-                return AddInternal(strTarget);
+
+            // TODO: INFORM ROMAN, CLEAN UP
+            //// Special case: Add could be called to "add a button"
+            //// There is an edge case in the Events app where this was published
+            //// Must decide if we should keep this or not
+            //if (target is string strTarget && strTarget.HasValue() && strTarget.Length > 3)
+            //    return AddInternal(strTarget);
 
             return AddListAction(nameof(Add), "add", target, noParamOrder, contentType, ui, parameters);
-
-            //var addCommand = new ToolbarRuleForEntity("add", target, contentType: contentType,
-            //    ui: ObjToString(ui), parameters: ObjToString(parameters), propsToSerialize: KeysOfLists);
-            //return AddInternal(addCommand);
         }
 
         public IToolbarBuilder AddExisting(

@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -20,23 +19,8 @@ namespace ToSic.Sxc.Edit.Toolbar
                 ? new ToolbarBuilder(this)
                 : (ToolbarBuilder)Parameters(target);   // Params will already copy/clone it
 
-            //if (target != null)
-            //{
-            //    p.Target = target;
-            //    // see if we already have a params rule
-            //    var existingParamsRule = clone.FindRule<ToolbarRuleForParams>();
-            //    if (existingParamsRule != null) 
-            //        clone.Rules.Remove(existingParamsRule);
-            //    // Must create a new one, to not change the original which is still in the original object
-            //    var newParamsRule = new ToolbarRuleForParams(existingParamsRule, target);
-
-            //    clone.Rules.Add(newParamsRule);
-            //}
-            // Copy/clone configuration because we plan to change it
             var p = clone._configuration = new ToolbarBuilderConfiguration(_configuration);
             if (mode != null) p.Mode = mode;
-
-
             if (condition != null) p.Condition = condition;
             if (conditionFunc != null) p.ConditionFunc = conditionFunc;
             if (force != null) p.Force = force;
