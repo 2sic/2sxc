@@ -25,7 +25,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         IToolbarBuilder Toolbar(
             string toolbarTemplate,
             object target = null,
-            object ui = null
+            object ui = null,
+            object parameters = null,
+            object prefill = null
         );
 
 

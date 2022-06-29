@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -22,6 +23,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
             object parameters = null,
+            object prefill = null,
             string context = null
         )
         {
@@ -41,7 +43,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Must create a new one, to not change the original which is still in the original object
             var newParamsRule = new ToolbarRuleForParams(target, 
                 O2U.SerializeWithChild(previous?.Ui, ui, ""),
-                O2U.SerializeWithChild(previous?.Parameters, parameters, ""),
+                O2U.SerializeWithChild(O2U.SerializeWithChild(previous?.Parameters, parameters, ""),
+                    prefill, PrefixPrefill),
                 GetContext(target, context) ?? previous?.Context,
                 _deps.ToolbarButtonHelper.Ready);
 

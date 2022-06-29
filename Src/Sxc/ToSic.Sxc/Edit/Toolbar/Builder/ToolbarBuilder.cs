@@ -76,11 +76,14 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Toolbar(
             string toolbarTemplate,
             object target = null,
-            object ui = null
+            object ui = null,
+            object parameters = null,
+            object prefill = null
         )
         {
             var updated = AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: ObjToString(ui)));
-            if (target != null) updated = updated.For(target);
+            if (target != null || parameters != null || prefill != null) 
+                updated = updated.Parameters(target, parameters: parameters, prefill: prefill);
             return updated;
         }
 

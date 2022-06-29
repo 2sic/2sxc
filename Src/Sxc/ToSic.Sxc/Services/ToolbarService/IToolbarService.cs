@@ -41,7 +41,9 @@ namespace ToSic.Sxc.Services
         IToolbarBuilder Default(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            object ui = null
+            object ui = null,
+            object parameters = null,
+            object prefill = null
         );
 
         /// <summary>
@@ -68,7 +70,9 @@ namespace ToSic.Sxc.Services
         IToolbarBuilder Empty(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            object ui = null
+            object ui = null,
+            object parameters = null,
+            object prefill = null
         );
 
         /// <summary>

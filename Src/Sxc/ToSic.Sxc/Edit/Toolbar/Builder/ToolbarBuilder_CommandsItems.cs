@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Documentation;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
