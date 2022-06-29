@@ -78,6 +78,12 @@ namespace ToSic.Sxc.Services
         public ILinkService Link => _link.Get(GetService<ILinkService>);
         private readonly ValueGetOnce<ILinkService> _link = new ValueGetOnce<ILinkService>();
 
+        /// <summary>
+        /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
+        /// </summary>
+        public ILogService Log => _sysLog.Get(GetService<ILogService>);
+        private readonly ValueGetOnce<ILogService> _sysLog = new ValueGetOnce<ILogService>();
+
 
         /// <summary>
         /// The Mail service, used to send mails

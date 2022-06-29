@@ -71,11 +71,14 @@ namespace ToSic.Sxc.Web.Url
             // Check array - not sure yet if we care
             if (value is IEnumerable enumerable)
             {
-                var valueElemType = valueType.IsGenericType
+                var isGeneric = valueType.IsGenericType;
+                var valueElemType = isGeneric
                     ? valueType.GetGenericArguments()[0]
                     : valueType.GetElementType();
 
-                if (valueElemType == null) throw new ArgumentNullException("The type to add to url seems to have a confusing setup");
+                if (valueElemType == null) throw new ArgumentNullException(
+                    $"The field '{name}', isGeneric {isGeneric} with base type {value.GetType()} to add to url seems to have a confusing setup");
+
                 if (valueElemType.IsPrimitive || valueElemType == typeof(string))
                     return new ValuePair(name, string.Join(ArraySeparator, enumerable.Cast<object>()));
 
