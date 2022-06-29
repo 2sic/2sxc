@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Blocks
         public string Html { get; set; }
 
         public int Size => _size.Get(() => Html?.Length ?? 0);
-        private readonly ValueGetOnce<int> _size = new ValueGetOnce<int>();
+        private readonly GetOnce<int> _size = new GetOnce<int>();
 
         /// <inheritdoc />
         public bool CanCache { get; set; }

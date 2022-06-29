@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Images
 
 
         public Picture Picture => _picTag.Get(() => Razor.Blade.Tag.Picture(Sources, Img));
-        private readonly ValueGetOnce<Picture> _picTag = new ValueGetOnce<Picture>();
+        private readonly GetOnce<Picture> _picTag = new GetOnce<Picture>();
 
         protected override ITag GetOutermostTag() => Picture;
 
         public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Call.Link.Url, Settings));
-        private readonly ValueGetOnce<TagList> _sourceTags = new ValueGetOnce<TagList>();
+        private readonly GetOnce<TagList> _sourceTags = new GetOnce<TagList>();
 
         private TagList SourceTagsInternal(string url, IResizeSettings resizeSettings)
         {

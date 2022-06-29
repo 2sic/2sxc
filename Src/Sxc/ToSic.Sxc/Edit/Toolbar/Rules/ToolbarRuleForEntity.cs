@@ -49,10 +49,10 @@ namespace ToSic.Sxc.Edit.Toolbar
         
 
         protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as IEntityWrapper)?.Entity);
-        private readonly ValueGetOnce<IEntity> _entity = new ValueGetOnce<IEntity>();
+        private readonly GetOnce<IEntity> _entity = new GetOnce<IEntity>();
 
         internal EntityEditInfo EditInfo => _editInfo.Get(() => new EntityEditInfo(TargetEntity));
-        private readonly ValueGetOnce<EntityEditInfo> _editInfo = new ValueGetOnce<EntityEditInfo>();
+        private readonly GetOnce<EntityEditInfo> _editInfo = new GetOnce<EntityEditInfo>();
 
         protected override string DecoratorTypeName => TargetEntity?.Type?.Name;
 

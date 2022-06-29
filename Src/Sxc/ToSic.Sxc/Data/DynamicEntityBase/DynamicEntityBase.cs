@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Data
         #endregion
 
         protected ILog LogOrNull => _logOrNull.Get(() => _Dependencies.LogOrNull?.SubLogOrNull("DynEnt", Debug));
-        private readonly ValueGetOnce<ILog> _logOrNull = new ValueGetOnce<ILog>();
+        private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
 
     }
 }

@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Web.PageService
         }
 
         private DynamicEntity WebResources => _webResources.Get(() => (CodeRoot?.Settings as DynamicStack)?.Get(WebResourcesNode) as DynamicEntity);
-        private readonly ValueGetOnce<DynamicEntity> _webResources = new ValueGetOnce<DynamicEntity>();
+        private readonly GetOnce<DynamicEntity> _webResources = new GetOnce<DynamicEntity>();
         
     }
 }

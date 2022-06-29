@@ -119,14 +119,14 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             _contextResolverForLookUps.AttachRealBlock(() => block);
             return block;
         }));
-        private readonly ValueGetOnce<IBlock> _blockGetOnce = new();
+        private readonly GetOnce<IBlock> _blockGetOnce = new();
 
         protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
-        private readonly ValueGetOnce<LogCall> _logTimer = new();
+        private readonly GetOnce<LogCall> _logTimer = new();
 
 
         protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Log).Init(Module.ModuleId, Page?.PageId ?? 0, Block));
-        private readonly ValueGetOnce<IOutputCache> _oc = new();
+        private readonly GetOnce<IOutputCache> _oc = new();
 
         #endregion
     }

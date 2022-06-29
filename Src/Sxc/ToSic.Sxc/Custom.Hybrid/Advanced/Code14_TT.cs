@@ -28,7 +28,7 @@ namespace Custom.Hybrid.Advanced
         public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TServiceKit> root) ? default : root.Model;
 
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
-        private readonly ValueGetOnce<TServiceKit> _kit = new ValueGetOnce<TServiceKit>();
+        private readonly GetOnce<TServiceKit> _kit = new GetOnce<TServiceKit>();
 
         /// <inheritdoc />
         public dynamic Resources => _DynCodeRoot?.Resources;

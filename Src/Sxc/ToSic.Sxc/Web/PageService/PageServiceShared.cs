@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Web.PageService
         public CspOfModule Csp { get; }
 
         public string CspEphemeralMarker => _cspEphemeralMarker.Get(() => new Random().Next(100000000, 999999999).ToString());
-        private readonly ValueGetOnce<string> _cspEphemeralMarker = new ValueGetOnce<string>();
+        private readonly GetOnce<string> _cspEphemeralMarker = new GetOnce<string>();
 
 
         /// <summary>

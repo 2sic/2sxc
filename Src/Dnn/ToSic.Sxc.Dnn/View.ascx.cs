@@ -29,12 +29,12 @@ namespace ToSic.Sxc.Dnn
         /// which runs before page-load
         /// </summary>
         private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration, null)));
-        private readonly ValueGetOnce<IBlock> _blockGetOnce = new ValueGetOnce<IBlock>();
+        private readonly GetOnce<IBlock> _blockGetOnce = new GetOnce<IBlock>();
 
         private ILog Log { get; } = new Log("Sxc.View");
 
         protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
-        private readonly ValueGetOnce<LogCall> _logTimer = new ValueGetOnce<LogCall>();
+        private readonly GetOnce<LogCall> _logTimer = new GetOnce<LogCall>();
 
         /// <summary>
         /// Page Load event
@@ -163,6 +163,6 @@ namespace ToSic.Sxc.Dnn
 
 
         protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(Log).Init(ModuleId, TabId, Block));
-        private readonly ValueGetOnce<IOutputCache> _oc = new ValueGetOnce<IOutputCache>();
+        private readonly GetOnce<IOutputCache> _oc = new GetOnce<IOutputCache>();
     }
 }

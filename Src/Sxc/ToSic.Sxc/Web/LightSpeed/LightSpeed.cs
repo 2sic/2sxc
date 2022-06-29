@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 
             return paths;
         }
-        private readonly ValueGetOnce<IList<string>> _appPaths = new ValueGetOnce<IList<string>>();
+        private readonly GetOnce<IList<string>> _appPaths = new GetOnce<IList<string>>();
 
         private int Duration => _duration.Get(() =>
         {
@@ -129,10 +129,10 @@ namespace ToSic.Sxc.Web.LightSpeed
             if (!user.IsAnonymous) return AppConfig.DurationUser;
             return AppConfig.Duration;
         });
-        private readonly ValueGetOnce<int> _duration = new ValueGetOnce<int>();
+        private readonly GetOnce<int> _duration = new GetOnce<int>();
 
         private string Suffix => _suffix.Get(GetSuffix);
-        private readonly ValueGetOnce<string> _suffix = new ValueGetOnce<string>();
+        private readonly GetOnce<string> _suffix = new GetOnce<string>();
 
         private string GetSuffix()
         {
@@ -144,16 +144,16 @@ namespace ToSic.Sxc.Web.LightSpeed
         }
 
         private string CacheKey => _key.Get(() => Log.Return(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix)));
-        private readonly ValueGetOnce<string> _key = new ValueGetOnce<string>();
+        private readonly GetOnce<string> _key = new GetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
-        private readonly ValueGetOnce<int?> _userId = new ValueGetOnce<int?>();
+        private readonly GetOnce<int?> _userId = new GetOnce<int?>();
 
         private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplateId.HasValue == true ? $"{_block.Configuration.AppId}:{_block.Configuration.View.Id}" : null);
-        private readonly ValueGetOnce<string> _viewKey = new ValueGetOnce<string>();
+        private readonly GetOnce<string> _viewKey = new GetOnce<string>();
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);
-        private readonly ValueGetOnce<OutputCacheItem> _existing = new ValueGetOnce<OutputCacheItem>();
+        private readonly GetOnce<OutputCacheItem> _existing = new GetOnce<OutputCacheItem>();
 
         private OutputCacheItem ExistingGenerator()
         {
@@ -175,7 +175,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 
 
         public bool IsEnabled => _enabled.Get(IsEnabledGenerator);
-        private readonly ValueGetOnce<bool> _enabled = new ValueGetOnce<bool>();
+        private readonly GetOnce<bool> _enabled = new GetOnce<bool>();
 
         private bool IsEnabledGenerator()
         {
@@ -187,7 +187,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         }
 
         public LightSpeedDecorator AppConfig => _lsd.Get(() => LightSpeedDecoratorGenerator(AppState));
-        private readonly ValueGetOnce<LightSpeedDecorator> _lsd = new ValueGetOnce<LightSpeedDecorator>();
+        private readonly GetOnce<LightSpeedDecorator> _lsd = new GetOnce<LightSpeedDecorator>();
 
         private LightSpeedDecorator LightSpeedDecoratorGenerator(AppState appState)
         {

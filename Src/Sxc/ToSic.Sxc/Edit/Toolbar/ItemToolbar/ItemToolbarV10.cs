@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             => ToolbarTagTemplate.Replace(ToolbarTagPlaceholder, ToolbarAttributes(JsonToolbarNodeName));
 
         protected override string ToolbarJson => _toolbarJson.Get(ToolbarV10Json);
-        private readonly ValueGetOnce<string> _toolbarJson = new ValueGetOnce<string>();
+        private readonly GetOnce<string> _toolbarJson = new GetOnce<string>();
 
         public override string ToolbarAsAttributes() => ToolbarAttributes(ToolbarAttributeName);
 

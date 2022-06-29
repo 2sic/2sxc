@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi
         protected IContextResolver SharedContextResolver;
 
         [PrivateApi] protected IBlock GetBlock() => _blockOfRequest.Get(() => GetService<DnnGetBlock>().GetCmsBlock(Request, Log));
-        private readonly ValueGetOnce<IBlock> _blockOfRequest = new ValueGetOnce<IBlock>();
+        private readonly GetOnce<IBlock> _blockOfRequest = new GetOnce<IBlock>();
 
     }
 }

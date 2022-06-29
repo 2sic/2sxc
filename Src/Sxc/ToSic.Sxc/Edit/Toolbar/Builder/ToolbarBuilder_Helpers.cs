@@ -16,6 +16,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
 
         private ObjectToUrl O2U => _o2u.Get(() => new ObjectToUrl());
-        private readonly ValueGetOnce<ObjectToUrl> _o2u = new ValueGetOnce<ObjectToUrl>();
+        private readonly GetOnce<ObjectToUrl> _o2u = new GetOnce<ObjectToUrl>();
     }
 }

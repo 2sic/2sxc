@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Images
             if (!string.IsNullOrEmpty(Sizes)) img.Sizes(Sizes);
             return img;
         });
-        private readonly ValueGetOnce<Img> _img2 = new ValueGetOnce<Img>();
+        private readonly GetOnce<Img> _img2 = new GetOnce<Img>();
 
     }
 }

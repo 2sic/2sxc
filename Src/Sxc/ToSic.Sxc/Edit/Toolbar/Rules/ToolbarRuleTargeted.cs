@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var decoTypeName = DecoratorTypeName;
             return decoTypeName.HasValue() ? DecoHelper?.GetDecorator(Context, decoTypeName ?? "", Command) : null;
         });
-        private readonly ValueGetOnce<ToolbarButtonDecorator> _decorator = new ValueGetOnce<ToolbarButtonDecorator>();
+        private readonly GetOnce<ToolbarButtonDecorator> _decorator = new GetOnce<ToolbarButtonDecorator>();
         private string UiParams() => Decorator?.AllRules();
 
         #endregion
