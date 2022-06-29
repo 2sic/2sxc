@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Button to add an entity to a list of entities
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="contentType"></param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Button to add an existing entity to the list. 
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="contentType"></param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Button to manage the list of entities shown here. 
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Button to move an item down in a list
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Button to move an item up in a list. 
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// This will not delete the item, just remove. 
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Button to replace the current item in the list with another existing item. 
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>

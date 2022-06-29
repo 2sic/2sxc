@@ -5,6 +5,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 
     public partial interface IToolbarBuilder
     {
+        /// <summary>
+        /// Add a `more` button. Not really useful to do, but included for completeness
+        /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="ui"></param>
+        /// <returns></returns>
         IToolbarBuilder More(
             string noParamOrder = Parameters.Protector,
             object ui = null
