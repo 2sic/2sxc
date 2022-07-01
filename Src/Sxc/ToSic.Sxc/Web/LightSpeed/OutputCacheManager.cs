@@ -13,12 +13,13 @@ namespace ToSic.Sxc.Web.LightSpeed
     {
         internal const string GlobalCacheRoot = "2sxc.Lightspeed.Module.";
 
-        internal string Id(int moduleId, int pageId, int? userId, string view, string suffix)
+        internal string Id(int moduleId, int pageId, int? userId, string view, string suffix, string currentCulture)
         {
             var id = $"{GlobalCacheRoot}p:{pageId}-m:{moduleId}";   
             if (userId.HasValue) id += $"-u:{userId.Value}";
             if (view != null) id += $"-v:{view}";
             if (suffix != null) id += $"-s:{suffix}";
+            if (currentCulture != null) id += $"-c:{currentCulture}";
             return id;
         }
 

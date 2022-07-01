@@ -9,6 +9,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -17,17 +18,19 @@ namespace ToSic.Sxc.Web.LightSpeed
     public class LightSpeed : HasLog, IOutputCache
     {
 
-        public LightSpeed(IFeaturesInternal features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IFeaturesInternal features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, Lazy<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
         {
             LightSpeedStats = lightSpeedStats;
             _features = features;
             _appStatesLazy = appStatesLazy;
             _appPathsLazy = appPathsLazy;
+            _cmsContext = cmsContext;
         }
         public LightSpeedStats LightSpeedStats { get; }
         private readonly IFeaturesInternal _features;
         private readonly Lazy<IAppStates> _appStatesLazy;
         private readonly Lazy<AppPaths> _appPathsLazy;
+        private readonly Lazy<ICmsContext> _cmsContext;
 
         public IOutputCache Init(int moduleId, int pageId, IBlock block)
         {
@@ -134,6 +137,9 @@ namespace ToSic.Sxc.Web.LightSpeed
         private string Suffix => _suffix.Get(GetSuffix);
         private readonly GetOnce<string> _suffix = new GetOnce<string>();
 
+        private string CurrentCulture => _currentCulture.Get(() => _cmsContext.Value.Culture.CurrentCode);
+        private readonly GetOnce<string> _currentCulture = new GetOnce<string>();
+
         private string GetSuffix()
         {
             if (!AppConfig.ByUrlParam) return null;
@@ -143,7 +149,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return urlParams;
         }
 
-        private string CacheKey => _key.Get(() => Log.Return(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix)));
+        private string CacheKey => _key.Get(() => Log.Return(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
         private readonly GetOnce<string> _key = new GetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
