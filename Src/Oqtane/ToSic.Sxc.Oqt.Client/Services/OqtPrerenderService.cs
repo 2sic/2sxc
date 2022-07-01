@@ -54,9 +54,14 @@ namespace ToSic.Sxc.Oqt.Client.Services
 
         private bool Executed // for execution once per request
         {
-            get => (_httpContextAccessor.HttpContext.Items[ExecutedKey] as bool?) ?? false;
-            set => _httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
+            get => (_httpContextAccessor?.HttpContext?.Items[ExecutedKey] as bool?) ?? false;
+            set
+            {
+                if (_httpContextAccessor?.HttpContext != null) 
+                    _httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
+            }
         }
+
         private const string ExecutedKey = "PrerenderServiceExecuted";
 
         public bool PrerenderingEnabled() => _pageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
