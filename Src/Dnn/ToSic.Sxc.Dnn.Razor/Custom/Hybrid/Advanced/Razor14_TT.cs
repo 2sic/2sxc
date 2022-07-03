@@ -8,8 +8,6 @@ using ToSic.Sxc.Web;
 namespace Custom.Hybrid.Advanced
 {
     /// <summary>
-    /// **_BETA_**
-    /// 
     /// Base class for v14 Dynamic Razor files.
     /// Will provide the ServiceKit specified by the type `TServiceKit` on property `Kit`.
     /// </summary>

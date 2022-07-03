@@ -6,8 +6,6 @@ using ToSic.Sxc.Services;
 namespace Custom.Hybrid
 {
     /// <summary>
-    /// **_BETA_**
-    /// 
     /// Base class for v14 Dynamic Code files.
     /// 
     /// Will provide the <see cref="ServiceKit14"/> on property `Kit`.

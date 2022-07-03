@@ -4,8 +4,6 @@ using ToSic.Sxc.Code;
 namespace ToSic.Sxc.Services
 {
     /// <summary>
-    /// **_BETA_**
-    /// 
     /// Root / base class for **ServiceKits**.
     /// ServiceKits are a bundle of services which are quickly available when you need them.
     /// To use them in Razor, you'll do things like:

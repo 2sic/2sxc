@@ -6,8 +6,6 @@ using ToSic.Sxc.Services;
 namespace Custom.Hybrid
 {
     /// <summary>
-    /// **_BETA_**
-    /// 
     /// Base class for v14 Dynamic Razor files.
     /// Will provide the <see cref="ServiceKit14"/> on property `Kit`.
     /// This contains all the popular services used in v14, so that your code can be lighter. 
