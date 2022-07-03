@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public List<ISiteLanguageState> GetSupportedCultures(int siteId, List<Eav.Data.DimensionDefinition>  availableEavLanguages)
         {
             var cultures = new List<string>(new[] { DefaultCultureCode });
-            cultures.AddRange(_languageRepository.Value.GetLanguages(siteId).Select(language => language.Code));
+            cultures.AddRange(_languageRepository.Value.GetLanguages(siteId).Select(language => MapTwoLetterCulture(language.Code)));
 
             // List of localizations enabled in Oqtane site.
             var siteCultures = cultures

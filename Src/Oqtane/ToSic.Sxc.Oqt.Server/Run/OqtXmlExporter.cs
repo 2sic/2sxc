@@ -89,8 +89,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 // also try to remember the folder
                 try
                 {
-                    var file = _fileRepositoryLazy.Value.GetFile(fileNum);
-                    ReferencedFolderIds.Add(file.FolderId);
+                    var file = _fileRepositoryLazy.Value.GetFile(fileNum, false);
+                    if (file != null) ReferencedFolderIds.Add(file.FolderId);
                 }
                 catch
                 {
@@ -114,7 +114,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var fileController = _fileRepositoryLazy.Value;
             var file = fileController.GetFile(fileId);
-            var relativePath = Path.Combine(file?.Folder.Path.Backslash(), file.Name);
+            if (file == null) return new TenantFileItem
+            {
+                Id = fileId,
+                RelativePath = null,
+                Path = null
+            };
+
+            var relativePath = Path.Combine(file?.Folder.Path.Backslash(), file?.Name);
             var alias = _oqtTenantResolverLazy.Value.GetAlias();
             var path = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, relativePath);
 

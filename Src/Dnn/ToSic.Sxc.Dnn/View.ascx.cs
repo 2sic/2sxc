@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn
 
                 try
                 {
-                    if (OutputCache.Existing != null)
+                    if (OutputCache?.Existing != null)
                     {
                         checkPortalIsReady = false;
                         requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
@@ -81,7 +81,8 @@ namespace ToSic.Sxc.Dnn
                     var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                     if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
                     // #lightspeed
-                    OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
+                    if (OutputCache?.Existing != null)
+                        OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
                 }, callLog);
             });
         }
