@@ -16,7 +16,7 @@ namespace Custom.Hybrid
     /// <remarks>
     /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v14.07")]
+    [PublicApi]
     [DnnLogExceptions]
     public abstract class Api14: Api14<dynamic, ServiceKit14>, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
     {
