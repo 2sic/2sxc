@@ -8,9 +8,8 @@
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="operation">
+        /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
-        /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
-        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -29,9 +28,8 @@
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="operation">
+        /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
-        /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
-        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -50,9 +48,8 @@
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="operation">
+        /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
-        /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
-        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -71,9 +68,8 @@
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="operation">
+        /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
-        /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
-        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -92,9 +88,8 @@
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="operation">
+        /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
-        /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
-        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -113,9 +108,8 @@
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="operation">
+        /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
-        /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
-        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -134,9 +128,8 @@
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="operation">
+        /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
-        /// If you set `operation`, to `add` you force it to appear, with `remove` you force it to go away.
-        /// See <see cref="ToolbarRuleOperation"/>
         /// </param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
