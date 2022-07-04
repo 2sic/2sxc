@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
+using ToSic.Eav.StartUp;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.WebApi;
 
