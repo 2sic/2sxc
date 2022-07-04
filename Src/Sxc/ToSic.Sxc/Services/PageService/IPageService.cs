@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Services
     /// * Introduced in v12.02 but on another namespace which still works for compatibility
     /// * Moved to ToSic.Sxc.Services in v13
     /// * Added ability to use placeholder `[original]` in v13.11
+    /// * Most commands were updated to return an empty string in v14.02 so that they could be used as inline razor (previously `void`)
     /// </remarks>
     [PublicApi]
     public interface IPageService
@@ -31,9 +32,7 @@ namespace ToSic.Sxc.Services
         /// Add a standard base header tag or replace it if one is already provided.
         /// </summary>
         /// <param name="url">the optional url for the base tag - if null, will try to default to the real url for the current page</param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetBase(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetBase(...)`</returns>
         string SetBase(string url = null);
 
         /// <summary>
@@ -43,9 +42,7 @@ namespace ToSic.Sxc.Services
         /// * You can also use the new `[original]` token like `SetTitle('[original] - My New Title')` = `Blog - 2sxc.org - My New Title`
         /// * You can add a placeholder to the page-title and tell SetTitle what it is. `SetTitle('My New Title', '2sxc.org') = `Blog - My New Title`
         /// </summary>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetTitle(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetTitle(...)`</returns>
         string SetTitle(string value, string placeholder = null);
 
         /// <summary>
@@ -55,9 +52,7 @@ namespace ToSic.Sxc.Services
         ///
         /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
         /// </summary>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetDescription(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetDescription(...)`</returns>
         string SetDescription(string value, string placeholder = null);
 
         /// <summary>
@@ -67,9 +62,7 @@ namespace ToSic.Sxc.Services
         ///
         /// See also the details with placeholder or `[original]` as explained on <see cref="SetTitle"/>
         /// </summary>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.SetKeywords(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetKeywords(...)`</returns>
         string SetKeywords(string value, string placeholder = null);
 
         /// <summary>
@@ -77,9 +70,7 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="statusCode">An HTTP status code like 404</param>
         /// <param name="message">Message / Description text (optional) which would be included in the header</param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.Activate(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.SetHttpStatus(...)`</returns>
         string SetHttpStatus(int statusCode, string message = null);
 
 
@@ -88,9 +79,7 @@ namespace ToSic.Sxc.Services
         /// Will simply not do anything if an error occurs, like if the page object doesn't exist
         /// </summary>
         /// <param name="tag"></param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddToHead(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddToHead(...)`</returns>
         string AddToHead(string tag);
 
         /// <summary>
@@ -98,9 +87,7 @@ namespace ToSic.Sxc.Services
         /// Will simply not do anything if an error occurs, like if the page object doesn't exist
         /// </summary>
         /// <param name="tag"></param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddToHead(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddToHead(...)`</returns>
         string AddToHead(TagBase tag);
 
 
@@ -110,9 +97,7 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="name"></param>
         /// <param name="content"></param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddMeta(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddMeta(...)`</returns>
         string AddMeta(string name, string content);
 
         /// <summary>
@@ -120,9 +105,7 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="property">Open Graph property name, like title or image:width. 'og:' is automatically prefixed if not included</param>
         /// <param name="content">value of this property</param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddOpenGraph(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddOpenGraph(...)`</returns>
         string AddOpenGraph(string property, string content);
 
 
@@ -130,18 +113,14 @@ namespace ToSic.Sxc.Services
         /// Add a JSON-LD header according https://developers.google.com/search/docs/guides/intro-structured-data
         /// </summary>
         /// <param name="jsonString">A prepared JSON string</param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddJsonLd(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddJsonLd(...)`</returns>
         string AddJsonLd(string jsonString);
 
         /// <summary>
         /// Add a JSON-LD header according https://developers.google.com/search/docs/guides/intro-structured-data
         /// </summary>
         /// <param name="jsonObject">A object which will be converted to JSON. We recommend using dictionaries to build the object.</param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddJsonLd(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddJsonLd(...)`</returns>
         string AddJsonLd(object jsonObject);
 
         #region Icon stuff
@@ -156,9 +135,7 @@ namespace ToSic.Sxc.Services
         /// <param name="rel">the rel-text, default is 'icon'. common terms are also 'shortcut icon' or 'apple-touch-icon'</param>
         /// <param name="size">Will be used in size='#x#' tag; only relevant if you want to provide multiple separate sizes</param>
         /// <param name="type">An optional type. If not provided, will be auto-detected from known types or remain empty</param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddIcon(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIcon(...)`</returns>
         string AddIcon(
             string path,
             string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
@@ -176,9 +153,7 @@ namespace ToSic.Sxc.Services
         /// <param name="favicon">path to favicon, default is '/favicon.ico' </param>
         /// <param name="rels"></param>
         /// <param name="sizes"></param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddIconSet(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIconSet(...)`</returns>
         string AddIconSet(
             string path,
             string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
@@ -191,13 +166,11 @@ namespace ToSic.Sxc.Services
         #region Features
 
         /// <summary>
-        /// Activate a feature on this page.
-        /// Still WIP, at the moment the only relevant key can be `turnOn`
+        /// Activate a feature on this page, such as `turnOn`, `2sxc.JsCore` etc.
+        /// For list of features, see [](xref:NetCode.Razor.Services.IPageServiceActivate).
         /// </summary>
         /// <param name="keys"></param>
-        /// <remarks>
-        /// History: Updated in v14.02 to always return an empty string (previously `void`) to allow direct use with `@Kit.Page.Activate(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.Activate(...)`</returns>
         string Activate(params string[] keys);
 
         #endregion
@@ -213,7 +186,7 @@ namespace ToSic.Sxc.Services
         /// <param name="priority">Optional priority of optimization. Must be more than 100 to have an effect.</param>
         /// <param name="position">Optional position of the resource (`head`, `body`, `bottom`)</param>
         /// <param name="whitelist">Automatically add to CSP-whitelist. This uses a random key to protect against XSS.</param>
-        /// <returns></returns>
+        /// <returns>The asset attributes in a format which will be preserved in HTML</returns>
         /// <remarks>
         /// History: Created in 2sxc 13.10
         /// </remarks>
@@ -226,15 +199,13 @@ namespace ToSic.Sxc.Services
 
         /// <summary>
         /// Add a CSP rule where you also specify the name.
+        /// Best check the [CSP Guide](xref:Abyss.Security.Csp.Index).
         ///
-        /// Example: `cspService.Add("default-src", "'self'")`
-        ///
+        /// For an example, see [Coded CSP](xref:Abyss.Security.Csp.CodedRules)
         /// </summary>
         /// <param name="name"></param>
         /// <param name="values"></param>
-        /// <remarks>
-        /// History: Created in 2sxc 14; will always return an empty string (previously `void`) to allow direct use with `@Kit.Page.AddCsp(...)`
-        /// </remarks>
+        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddCsp(...)`</returns>
         string AddCsp(string name, params string[] values);
 
         #endregion
