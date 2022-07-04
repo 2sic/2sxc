@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Web.PageFeatures
 
             // Mark the new ones as processed now, so they won't be processed in future
             newFeatures.ForEach(f => f.AlreadyProcessed = true);
-            var asIPageFeature = newFeatures;//.Cast<IPageFeature>().ToList();
+            var asIPageFeature = newFeatures;
             return wrapLog.Return(asIPageFeature, $"{asIPageFeature.Count}");
         }
 
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             log.A("Try to get new specs from IPageService");
             //var features = FeatureKeys.ToList();
             //log.Add($"Got {features.Count} items");
-            var unfolded = GetWithDependents(FeatureKeys.ToList(), log); // _pfm.GetWithDependents(features);
+            var unfolded = GetWithDependents(FeatureKeys.ToList(), log);
             //log.Add($"Got unfolded features {unfolded.Count}");
             FeatureKeys.Clear();
             return wrapLog.ReturnAsOk(unfolded);
