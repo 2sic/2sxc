@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// _WARNING_ Do not reference this object, it can change at any time.
     /// It's only here for documentation. 
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("This is just for documentation")]
+    [PrivateApi("hide, documented in a better way")]
     public class ToolbarRuleOperation
     {
         /// <summary>

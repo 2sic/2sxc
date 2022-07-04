@@ -4,6 +4,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {
+        // TODO: FORGOT OPERATION ON THESE COMMANDS
+
         /// <summary>
         /// Button to add an entity to a list of entities
         /// </summary>

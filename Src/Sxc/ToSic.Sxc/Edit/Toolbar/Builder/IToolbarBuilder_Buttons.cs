@@ -1,6 +1,4 @@
-﻿using ToSic.Eav;
-
-namespace ToSic.Sxc.Edit.Toolbar
+﻿namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {
@@ -18,7 +16,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
-        /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
+        /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
         /// <param name="context"></param>
         /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         IToolbarBuilder Button(
