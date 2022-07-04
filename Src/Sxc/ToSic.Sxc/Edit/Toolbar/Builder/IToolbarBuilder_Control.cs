@@ -9,7 +9,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
         /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
-        [WorkInProgressApi("wip")]
         IToolbarBuilder AsTag(
             object target = null
         );
@@ -20,7 +19,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
         /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
-        [WorkInProgressApi("wip")]
         IToolbarBuilder AsAttributes(
             object target = null
         );
@@ -50,17 +48,5 @@ namespace ToSic.Sxc.Edit.Toolbar
         [PrivateApi("Would confuse people, since they cannot create ToolbarRule objects")]
         IToolbarBuilder AddInternal(params object[] rules);
 
-        
-
-        ///// <summary>
-        ///// Converts the configuration to a json-string according to the JS-Toolbar specs.
-        ///// </summary>
-        ///// <returns></returns>
-        //[PrivateApi]
-        //string ToString();
-
-
-        //[PrivateApi("Internal use only, can change at any time")]
-        //string ObjToString(object uiOrParams, string prefix = null);
     }
 }

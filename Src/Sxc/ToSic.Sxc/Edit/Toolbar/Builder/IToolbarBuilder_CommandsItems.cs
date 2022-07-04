@@ -1,6 +1,4 @@
-﻿using ToSic.Eav;
-
-namespace ToSic.Sxc.Edit.Toolbar
+﻿namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {

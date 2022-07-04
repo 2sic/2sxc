@@ -12,7 +12,6 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    /// <inheritdoc />
     public partial class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
     {
 
