@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         [PrivateApi]
         ToolbarContext Context();
-        
+
 
         ///// <summary>
         ///// Set the main target of this toolbar.
@@ -26,8 +26,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// Set the main target of this toolbar.
         /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
+        /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
+        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         /// <remarks>
         /// New in v14.04
         /// </remarks>
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// For expensive conditions, use the overload which accepts a function. 
         /// </summary>
         /// <param name="condition">true/false</param>
-        /// <returns></returns>
+        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         /// <remarks>
         /// New in v14.04
         /// </remarks>
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// It will only run if the toolbar would already show. 
         /// </summary>
         /// <param name="condition">function such as `() => true`</param>
-        /// <returns></returns>
+        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         /// <remarks>
         /// New in v14.04
         /// </remarks>

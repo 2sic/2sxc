@@ -7,8 +7,8 @@
         /// Add a `more` button. Not really useful to do, but included for completeness
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui"></param>
-        /// <returns></returns>
+        /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
+        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         IToolbarBuilder More(
             string noParamOrder = Eav.Parameters.Protector,
             object ui = null
@@ -23,12 +23,9 @@
         /// <param name="follow"></param>
         /// <param name="classes"></param>
         /// <param name="autoAddMore"></param>
-        /// <param name="ui">
-        /// Parameters for the UI, like `color=red` - see [toolbar docs](xref:JsCode.Toolbars.Simple) for all possible options.
-        /// Can be a string, and can also be an object since v14.04
-        /// </param>
+        /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">Parameters for the command - doesn't really have an effect on Settings, but included for consistency</param>
-        /// <returns>A new toolbar builder which has been extended with this settings-rule</returns>
+        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
@@ -54,10 +51,11 @@
         /// 1. A object - especially an anonymous object like `new { id = 7, show = true }`
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui"></param>
-        /// <param name="parameters"></param>
+        /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
+        /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
+        /// <param name="prefill">_optional_ prefill for the edit-UI, see [prefill guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Prefill)</param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         IToolbarBuilder Parameters(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,

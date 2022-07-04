@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// 2. Can also be a full rule-string containing parameters and more
         /// according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
         /// </param>
-        /// <param name="target">Optional entity-like target. If provided, will include the specs of that entity in the parameters. </param>
+        /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="ui"></param>
-        /// <param name="parameters"></param>
+        /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
+        /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="operation">see <see cref="ToolbarRuleOperation"/></param>
         /// <param name="context"></param>
-        /// <returns></returns>
+        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         IToolbarBuilder Button(
             string name,
             object target = null,
