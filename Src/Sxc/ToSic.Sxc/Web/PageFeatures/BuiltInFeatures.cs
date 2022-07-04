@@ -36,17 +36,27 @@ namespace ToSic.Sxc.Web.PageFeatures
         });
 
         /// <summary>
+        /// The INTERNAL USE 2sxc JS libraries for cms / edit actions.
+        /// This one doesn't check requirements, and is the one which is added automatically. 
+        /// </summary>
+        public static PageFeature JsCmsInternal = new PageFeature("Internal.JsCms", "2sxc inpage editing APIs - internal version without checks", needs: new[]
+            {
+                JsCore.NameId,
+                ContextModule.NameId,
+            });
+
+        private static readonly List<Condition> RequiresPublicEditForm = new List<Condition> { PublicEditForm.Condition };
+
+        /// <summary>
         /// The 2sxc JS libraries for cms / edit actions
         /// </summary>
         /// <remarks>
         /// Published the key '2sxc.JsCms' in v13.00, do not change
         /// </remarks>
-        public static PageFeature JsCms = new PageFeature("2sxc.JsCms", "2sxc inpage editing APIs", needs: new[]
-            {
-                JsCore.NameId,
-                ContextModule.NameId,
-            },
-            reqConditions: new List<Condition> { PublicEditForm.Condition });
+        public static PageFeature JsCms = new PageFeature("2sxc.JsCms", 
+            "2sxc inpage editing APIs", 
+            needs: new[] { JsCmsInternal.NameId },
+            requirements: RequiresPublicEditForm);
 
         /// <summary>
         /// The 2sxc JS libraries for cms / edit actions
@@ -54,21 +64,42 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <remarks>
         /// Published the key '2sxc.Toolbars' in v13.00, do not change
         /// </remarks>
-        public static PageFeature Toolbars =
-            new PageFeature("2sxc.Toolbars", "2sxc InPage editing UIs / Toolbar", needs: new[]
+        public static PageFeature ToolbarsInternal = new PageFeature("Internal.Toolbars",
+            "2sxc InPage editing UIs / Toolbar",
+            needs: new[]
             {
-                JsCms.NameId,
+                JsCmsInternal.NameId,
                 ContextPage.NameId,
+            });
+
+        /// <summary>
+        /// The 2sxc JS libraries for cms / edit actions
+        /// </summary>
+        /// <remarks>
+        /// Published the key '2sxc.Toolbars' in v13.00, do not change
+        /// </remarks>
+        public static PageFeature Toolbars = new PageFeature("2sxc.Toolbars",
+            "2sxc InPage editing UIs / Toolbar",
+            needs: new[] { ToolbarsInternal.NameId },
+            requirements: RequiresPublicEditForm);
+
+        /// <summary>
+        /// WIP - this will probably be moved to local only in future, ATM it's global though
+        /// </summary>
+        public static PageFeature ToolbarsAutoInternal = new PageFeature("Internal.ToolbarsAuto",
+            "Ensure that the toolbars automatically appear", needs: new[]
+            {
+                ContextPage.NameId,
+                ToolbarsInternal.NameId,
             });
 
         /// <summary>
         /// WIP - this will probably be moved to local only in future, ATM it's global though
         /// </summary>
-        public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto", "Ensure that the toolbars automatically appear", needs: new[]
-        {
-            ContextPage.NameId,
-            Toolbars.NameId,
-        });
+        public static PageFeature ToolbarsAuto = new PageFeature("2sxc.ToolbarsAuto",
+            "Ensure that the toolbars automatically appear",
+            needs: new[] { ToolbarsAutoInternal.NameId },
+            requirements: RequiresPublicEditForm);
 
         /// <summary>
         /// turnOn feature

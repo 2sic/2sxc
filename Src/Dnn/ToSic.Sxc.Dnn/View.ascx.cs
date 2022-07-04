@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DI;
@@ -155,6 +156,15 @@ namespace ToSic.Sxc.Dnn
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
                 result = Block.BlockBuilder.Run(true) as RenderResult;
+
+                if (result.Errors?.Any() ?? false)
+                {
+                    var warnings = result.Errors.Select(e =>
+                        Block.BlockBuilder.RenderingHelper.DesignError(e));
+
+                    result.Html = string.Join("", warnings) + result.Html;
+                }
+
                 result.Html += GetOptionalDetailedLogToAttach();
             }, callLog);
 

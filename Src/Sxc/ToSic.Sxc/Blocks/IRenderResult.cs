@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -89,9 +88,14 @@ namespace ToSic.Sxc.Blocks
         bool CspEnabled { get; }
         bool CspEnforced { get; }
         IList<CspParameters> CspParameters { get; }
+
+        /// <summary>
+        /// Errors such as not-activated features
+        /// </summary>
+        List<string> Errors { get; set; }
     }
 
-    public interface IDependentApp //: ITimestamped
+    public interface IDependentApp
     {
         int AppId { get; }
     }

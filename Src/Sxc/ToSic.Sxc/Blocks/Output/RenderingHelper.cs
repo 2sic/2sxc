@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -90,11 +89,25 @@ namespace ToSic.Sxc.Blocks.Output
             if (!Context.User.IsSuperUser)
                 msg = visitorAlternateError ?? DefaultVisitorError;
 
+            return DesignMessage(msg, addContextWrapper, encodeMessage);
+        }
+        public string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false, bool encodeMessage = true)
+        {
+            msgSuperUser = "Error: " + msgSuperUser;
+
+            if (!Context.User.IsSuperUser)
+                msgSuperUser = msgVisitors ?? DefaultVisitorError;
+
+            return DesignMessage(msgSuperUser, addContextWrapper, encodeMessage);
+        }
+
+        private string DesignMessage(string msg, bool addContextWrapper, bool encodeMessage)
+        {
             if (encodeMessage)
                 msg = HttpUtility.HtmlEncode(msg);
 
             // add dnn-error-div-wrapper
-            msg = "<div class='dnnFormMessage dnnFormWarning'>" + msg + "</div>";
+            msg = $"<div class='dnnFormMessage dnnFormWarning'>{msg}</div>";
 
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
             if (addContextWrapper)
@@ -103,23 +116,10 @@ namespace ToSic.Sxc.Blocks.Output
             return msg;
         }
 
-        public string DesignWarningMessage(string warning, bool addContextWrapper = false, bool encodeMessage = true)
+        public string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true)
         {
             if (!Context.User.IsSuperUser) return null;
-
-            var msg = $"Warning: {warning}";
-
-            if (encodeMessage)
-                msg = HttpUtility.HtmlEncode(msg);
-
-            // add dnn-error-div-wrapper
-            msg = "<div class='dnnFormMessage dnnFormWarning'>" + msg + "</div>";
-
-            // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
-            if (addContextWrapper)
-                msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id);
-
-            return msg;
+            return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage);
         }
 
         public string UiContextInfos() => JsonConvert.SerializeObject(_jsContextAllGen.New.Init(AppRootPath, Block, Log));

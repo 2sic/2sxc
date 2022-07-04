@@ -15,13 +15,15 @@ namespace ToSic.Sxc.Blocks.Output
             int contentBlockId = 0, 
             bool editContext = false, 
             string tag = "div",
-            // 2021-09-01 not used bool autoToolbar = false,
             bool addLineBreaks = true);
 
         string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);
 
         string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null, string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true);
 
-        string DesignWarningMessage(string warning, bool addContextWrapper = false, bool encodeMessage = true);
+        string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false,
+            bool encodeMessage = true);
+
+        string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true);
     }
 }

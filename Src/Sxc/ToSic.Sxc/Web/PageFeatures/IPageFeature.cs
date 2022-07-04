@@ -6,7 +6,7 @@ using ToSic.Eav.Documentation;
 namespace ToSic.Sxc.Web.PageFeatures
 {
     [PrivateApi("Internal / not final - neither name, namespace or anything")]
-    public interface IPageFeature : IHasIdentityNameId
+    public interface IPageFeature : IHasIdentityNameId, IHasRequirements
     {
         /// <summary>
         /// Primary identifier to activate the feature
@@ -33,6 +33,6 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <summary>
         /// Optional requirements which are necessary for this feature to be used
         /// </summary>
-        List<Condition> RequirementsOrNull { get; }
+        List<Condition> Requirements { get; }
     }
 }

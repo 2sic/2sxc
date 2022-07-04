@@ -58,12 +58,12 @@ namespace ToSic.Sxc.Blocks
         public bool CspEnabled { get; set; } = false;
         public bool CspEnforced { get; set; } = false;
         public IList<CspParameters> CspParameters { get; set; }
+
+        public List<string> Errors { get; set; }
     }
 
     public class DependentApp : IDependentApp
     {
         public int AppId { get; set; }
-
-        //public long CacheTimestamp { get; set; }
     }
 }
