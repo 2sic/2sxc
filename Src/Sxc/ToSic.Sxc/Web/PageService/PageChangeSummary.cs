@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Web.PageService
             assets.AddRange(newAssets);
             assets = assets.OrderBy(a => a.PosInPage).ToList();
 
-            // TODO: Collect Warnings
+            // Collect Warnings of page features which may require other features enabled
             var features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
 
             var errors = _requirements.Ready
