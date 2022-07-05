@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web.JsContext
             if (!autoToolbar && block.BlockFeatureKeys.Any())
             {
                 var features = block.Context.PageServiceShared.PageFeatures.GetWithDependents(block.BlockFeatureKeys, Log);
-                autoToolbar = features.Contains(BuiltInFeatures.ToolbarsAuto);
+                autoToolbar = features.Contains(BuiltInFeatures.ToolbarsAutoInternal);
             }
 
             Ui = new UiDto(autoToolbar);

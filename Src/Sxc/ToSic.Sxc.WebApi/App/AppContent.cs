@@ -180,7 +180,7 @@ namespace ToSic.Sxc.WebApi.App
             var field = (string)parentRelationship[SaveApiAttributes.ParentRelField];
             var fields = new[] { field };
 
-            AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false);
+            AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
             //return wrapLog.ReturnTrue($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}");
             return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");

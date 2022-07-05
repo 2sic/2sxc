@@ -5,9 +5,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-
-
-
         /// <inheritdoc />
         public IToolbarBuilder AddInternal(params object[] newRules)
         {

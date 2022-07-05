@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Configuration;
 using ToSic.Eav.Logging;
+using static ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {
@@ -19,14 +20,17 @@ namespace ToSic.Sxc.Web.PageFeatures
         public PageFeaturesCatalog(LogHistory logHistory): base(logHistory, Constants.SxcLogName + ".PftCat", new CodeRef())
         {
             Register(
-                BuiltInFeatures.JQuery,
-                BuiltInFeatures.ContextPage,
-                BuiltInFeatures.ContextModule,
-                BuiltInFeatures.JsCore,
-                BuiltInFeatures.JsCms,
-                BuiltInFeatures.Toolbars,
-                BuiltInFeatures.ToolbarsAuto,
-                BuiltInFeatures.TurnOn
+                JQuery,
+                ContextPage,
+                ContextModule,
+                JsCore,
+                JsCms,
+                JsCmsInternal,
+                Toolbars,
+                ToolbarsInternal,
+                ToolbarsAuto,
+                ToolbarsAutoInternal,
+                TurnOn
             );
         }
     }

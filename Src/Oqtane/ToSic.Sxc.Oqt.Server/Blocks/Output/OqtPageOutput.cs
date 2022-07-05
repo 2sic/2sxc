@@ -39,8 +39,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 
 
         private bool AddJsCore => Features.Contains(BuiltInFeatures.JsCore);
-        private bool AddJsEdit => Features.Contains(BuiltInFeatures.JsCms);
-        private bool AddCssEdit => Features.Contains(BuiltInFeatures.Toolbars);
+        private bool AddJsEdit => Features.Contains(BuiltInFeatures.JsCmsInternal);
+        private bool AddCssEdit => Features.Contains(BuiltInFeatures.ToolbarsInternal);
 
 
         /// <summary>

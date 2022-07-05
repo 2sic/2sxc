@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             string description = null,
             string[] needs = null,
             string html = null,
-            List<Condition> reqConditions = null)
+            List<Condition> requirements = null)
         {
             NameId = key ?? throw new Exception("key is required");
             Name = name ?? throw new Exception("name is required");
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             Description = description ?? "";
             Needs = needs ?? Array.Empty<string>();
             Condition = new Condition(ConditionIsPageFeature, key);
-            RequirementsOrNull = reqConditions ?? new List<Condition>();
+            Requirements = requirements ?? new List<Condition>();
         }
 
         #endregion
@@ -59,6 +59,6 @@ namespace ToSic.Sxc.Web.PageFeatures
 
         public Condition Condition { get; }
 
-        public List<Condition> RequirementsOrNull { get; }
+        public List<Condition> Requirements { get; }
     }
 }

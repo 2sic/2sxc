@@ -1,6 +1,5 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Plumbing;
-using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
+﻿using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -13,12 +12,18 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder,
             string contentType,
             object ui,
-            object parameters)
+            object parameters,
+            string operation)
         {
             Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
             TargetCheck(target);
-            var command = new ToolbarRuleForEntity(commandName, target, contentType: contentType,
-                ui: ObjToString(ui), parameters: ObjToString(parameters), propsKeep: KeysOfLists);
+            var pars = PrecleanParams(operation, OprAuto, ui, null, null, parameters, null);
+            var command = new ToolbarRuleForEntity(commandName, target, 
+                contentType: contentType,
+                ui: pars.Ui,
+                parameters: pars.Parameters,
+                propsKeep: KeysOfLists, 
+                operation: pars.Operation);
             return AddInternal(command);
 
         }
@@ -28,63 +33,58 @@ namespace ToSic.Sxc.Edit.Toolbar
             string noParamOrder = Eav.Parameters.Protector,
             string contentType = null,
             object ui = null,
-            object parameters = null)
-        {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-
-            // TODO: INFORM ROMAN, CLEAN UP
-            //// Special case: Add could be called to "add a button"
-            //// There is an edge case in the Events app where this was published
-            //// Must decide if we should keep this or not
-            //if (target is string strTarget && strTarget.HasValue() && strTarget.Length > 3)
-            //    return AddInternal(strTarget);
-
-            return AddListAction(nameof(Add), "add", target, noParamOrder, contentType, ui, parameters);
-        }
+            object parameters = null,
+            string operation = null
+        ) => AddListAction(nameof(Add), "add", target, noParamOrder, contentType, ui, parameters, operation);
 
         public IToolbarBuilder AddExisting(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string contentType = null,
             object ui = null,
-            object parameters = null
-        ) => AddListAction(nameof(AddExisting), "add-existing", target, noParamOrder, contentType, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddListAction(nameof(AddExisting), "add-existing", target, noParamOrder, contentType, ui, parameters, operation);
 
         public IToolbarBuilder List(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            //string contentType = null,
             object ui = null,
-            object parameters = null
-        ) => AddListAction(nameof(List), "list", target, noParamOrder, /*contentType*/null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddListAction(nameof(List), "list", target, noParamOrder, null, ui, parameters, operation);
 
 
         public IToolbarBuilder MoveDown(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
-            object parameters = null
-        ) => AddListAction(nameof(MoveDown), "movedown", target, noParamOrder, null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddListAction(nameof(MoveDown), "movedown", target, noParamOrder, null, ui, parameters, operation);
 
         public IToolbarBuilder MoveUp(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
-            object parameters = null
-        ) => AddListAction(nameof(MoveUp), "moveup", target, noParamOrder, null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddListAction(nameof(MoveUp), "moveup", target, noParamOrder, null, ui, parameters, operation);
 
         public IToolbarBuilder Remove(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
-            object parameters = null
-        ) => AddListAction(nameof(Remove), "remove", target, noParamOrder, null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddListAction(nameof(Remove), "remove", target, noParamOrder, null, ui, parameters, operation);
 
         public IToolbarBuilder Replace(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             object ui = null,
-            object parameters = null
-        ) => AddListAction(nameof(Replace), "replace", target, noParamOrder, null, ui, parameters);
+            object parameters = null,
+            string operation = null
+        ) => AddListAction(nameof(Replace), "replace", target, noParamOrder, null, ui, parameters, operation);
     }
 }

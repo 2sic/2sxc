@@ -7,13 +7,12 @@ using ToSic.Razor.Blade;
 namespace ToSic.Sxc.Services
 {
     /// <summary>
-    /// Default ServiceKit for 2sxc v14
-    /// To learn more about ServiceKits, see <see cref="ServiceKit"/>.
+    /// Default ServiceKit for 2sxc v14.
     /// </summary>
     /// <remarks>
-    /// * History: Added v14.03
+    /// * History: Added v14.04
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("BETA / WIP v14.05")]
+    [PublicApi]
     public class ServiceKit14: ServiceKit
     {
         /// <summary>

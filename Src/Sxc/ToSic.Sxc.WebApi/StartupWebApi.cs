@@ -57,13 +57,9 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<AppViewPickerBackend>();
             services.TryAddTransient<ContentBlockBackend>();
-            //services.TryAddTransient<FeaturesBackend>();
-            //services.TryAddTransient<LicenseBackend>();
             services.TryAddTransient<UsageBackend>();
-            //services.TryAddTransient<LanguagesBackend>();
 
             // Internal API helpers
-            //services.TryAddTransient<Insights>();
             services.TryAddTransient<AppContent>();
             services.TryAddTransient<SxcPagePublishing>();
             services.TryAddTransient<ExportApp>();
@@ -76,7 +72,8 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient(typeof(ViewsExportImport<>));
 
             // Small WebApi Helpers
-            services.TryAddTransient<IdentifierHelper>();
+            // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
+            // services.TryAddTransient<IdentifierHelper>();
             services.TryAddTransient<ContentGroupList>();
 
             // js context / UI
@@ -88,9 +85,6 @@ namespace ToSic.Sxc.WebApi
 
             // Adam shared code across the APIs
             services.TryAddTransient<AdamCode>();
-
-            // new v13
-            //services.TryAddTransient<ZoneBackend>();
 
             // New v13 - try to reduce Dnn/Oqtane code to the max, by creating ControllerReal objects which do everything
             services.TryAddTransient(typeof(AdamControllerReal<>));

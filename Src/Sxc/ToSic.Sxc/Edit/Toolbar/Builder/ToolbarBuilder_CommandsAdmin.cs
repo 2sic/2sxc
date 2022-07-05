@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using ToSic.Eav;
 using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -83,8 +82,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null,
             string operation = null
         ) => AddAdminAction("insights", noParamOrder, ui, parameters, operation, target);
-
-        
 
     }
 }

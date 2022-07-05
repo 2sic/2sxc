@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
                 var forceDraft = Context.Publishing.ForceDraft;
                 if (add)
-                    CmsManagerOfBlock.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, forceDraft);
+                    CmsManagerOfBlock.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, forceDraft, false);
                 else
                     CmsManagerOfBlock.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
                         forceDraft);

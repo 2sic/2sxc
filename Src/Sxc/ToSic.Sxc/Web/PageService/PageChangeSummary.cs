@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
@@ -7,6 +8,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
+using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -17,9 +19,17 @@ namespace ToSic.Sxc.Web.PageService
     public class PageChangeSummary: HasLog
     {
 
-        public PageChangeSummary(LazyInitLog<IBlockResourceExtractor> resourceExtractor) : base(Constants.SxcLogName + "PgChSm") 
-            => _resourceExtractor = resourceExtractor.SetLog(Log);
+        public PageChangeSummary(
+            LazyInitLog<IBlockResourceExtractor> resourceExtractor,
+            LazyInitLog<RequirementsService> requirements
+        ) : base(Constants.SxcLogName + "PgChSm")
+        {
+            _requirements = requirements.SetLog(Log);
+            _resourceExtractor = resourceExtractor.SetLog(Log);
+        }
+
         private readonly LazyInitLog<IBlockResourceExtractor> _resourceExtractor;
+        private readonly LazyInitLog<RequirementsService> _requirements;
 
         public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
         {
@@ -27,8 +37,8 @@ namespace ToSic.Sxc.Web.PageService
 
             if (enableEdit)
             {
-                pss.Activate(BuiltInFeatures.Toolbars.NameId);
-                pss.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
+                pss.Activate(BuiltInFeatures.ToolbarsInternal.NameId);
+                pss.Activate(BuiltInFeatures.ToolbarsAutoInternal.NameId);
             }
 
             var assets = pss.Assets;
@@ -37,11 +47,19 @@ namespace ToSic.Sxc.Web.PageService
             assets.AddRange(newAssets);
             assets = assets.OrderBy(a => a.PosInPage).ToList();
 
+            // Collect Warnings of page features which may require other features enabled
+            var features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
+
+            var errors = _requirements.Ready
+                .Check(features)
+                .Select(f => f.Message)
+                .ToList();
+
             var result = new RenderResult
             {
                 Assets = assets,
                 FeaturesFromSettings = rest,
-                Features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log),
+                Features = features,
                 HeadChanges = pss.GetHeadChangesAndFlush(Log),
                 PageChanges = pss.GetPropertyChangesAndFlush(Log),
                 HttpStatusCode = pss.HttpStatusCode,
@@ -52,6 +70,7 @@ namespace ToSic.Sxc.Web.PageService
                 CspEnabled = pss.Csp.IsEnabled,
                 CspEnforced = pss.Csp.IsEnforced,
                 CspParameters = pss.Csp.CspParameters(),
+                Errors = errors,
             };
 
             // Whitelist any assets which were officially ok, or which were from the settings
@@ -60,7 +79,6 @@ namespace ToSic.Sxc.Web.PageService
 
             return callLog.Return(result);
         }
-
 
 
         private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)

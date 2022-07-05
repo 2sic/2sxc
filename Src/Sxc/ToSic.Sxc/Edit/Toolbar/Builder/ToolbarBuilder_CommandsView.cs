@@ -1,5 +1,4 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
@@ -41,9 +40,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             return EntityRule("fields", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string).Builder;
         }
 
-
-        // TODO
-        // - custom!
 
         public IToolbarBuilder Template(
             object target = null,

@@ -62,6 +62,7 @@ namespace ToSic.Sxc.Blocks
                     result.CspEnabled = allChanges.CspEnabled;
                     result.CspEnforced = allChanges.CspEnforced;
                     result.CspParameters = allChanges.CspParameters;
+                    result.Errors = allChanges.Errors;
                 }
 
                 _result = result;
@@ -127,8 +128,7 @@ namespace ToSic.Sxc.Blocks
                                 Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.NameId);
                             }
 
-                            // TODO: this should use the same pattern as features, waiting to be picked up
-                            //TransferCurrentAssetsToRoot(renderEngineResult);
+                            // Put all assets into the global page service for final processing later on
                             Block.Context.PageServiceShared.AddAssets(renderEngineResult);
                         }
                         else body = "";
@@ -206,8 +206,8 @@ namespace ToSic.Sxc.Blocks
         {
             if (LicenseOk) return null;
             
-            Log.A("all licenses are invalid");
-            var result = RenderingHelper.DesignWarningMessage("Registration is Invalid. Some features may be disabled because of this. Please reactivate the registration in Apps Management.", false, encodeMessage: false); // don't encode, as it contains special links
+            Log.A("none of the licenses are valid");
+            var result = RenderingHelper.DesignWarningForSuperUserOnly("Registration is Invalid. Some features may be disabled because of this. Please reactivate the registration in Apps Management.", false, encodeMessage: false); // don't encode, as it contains special links
             return result;
         }
 

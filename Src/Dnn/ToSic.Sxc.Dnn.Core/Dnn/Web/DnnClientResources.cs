@@ -51,9 +51,9 @@ namespace ToSic.Sxc.Dnn.Web
             features = features ?? Features;
 
             // normal scripts
-            var editJs = features.Contains(BuiltInFeatures.JsCms);
+            var editJs = features.Contains(BuiltInFeatures.JsCmsInternal);
             var readJs = features.Contains(BuiltInFeatures.JsCore);
-            var editCss = features.Contains(BuiltInFeatures.Toolbars);
+            var editCss = features.Contains(BuiltInFeatures.ToolbarsInternal);
 
             if (!readJs && !editJs && !editCss && !features.Any())
                 return wrapLog.Return(features, "nothing to add");
