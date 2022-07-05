@@ -5,6 +5,9 @@ using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
+    /// <summary>
+    /// Special helper, ATM only used in the HistoryController
+    /// </summary>
     public class IdentifierHelper: HasLog<IdentifierHelper>
     {
         public IdentifierHelper(CmsRuntime cmsRuntime, IAppStates appStates) : base("Bck.IdHlpr")
@@ -23,7 +26,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var contentGroup = cms.Blocks.GetBlockConfig(item.Group.Guid);
             var part = contentGroup[item.Group.Part];
-            item.EntityId = part[item.ListIndex()].EntityId;
+            var max = part.Count > 0 ? part.Count -1 : 0;
+            var idx = item.ListIndex(max);
+            item.EntityId = part[idx].EntityId;
             return item;
         }
 

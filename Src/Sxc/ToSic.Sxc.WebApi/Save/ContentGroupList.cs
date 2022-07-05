@@ -5,7 +5,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
@@ -51,7 +50,8 @@ namespace ToSic.Sxc.WebApi.Save
         internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
         {
             var wrapLog = Log.Fn<bool>();
-            var groupItems = items.Where(i => i.Header.ListHas())
+            var groupItems = items
+                .Where(i => i.Header.ListHas())
                 .GroupBy(i => i.Header.ListParent().ToString() + i.Header.ListIndex() + i.Header.ListAdd())
                 .ToList();
 
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.WebApi.Save
                     : new[] {primaryId as int?};
 
                 var index = primaryItem.Header.ListIndex();
-
+                var indexNullAddToEnd = primaryItem.Header.Index == null;
                 var willAdd = primaryItem.Header.ListAdd();
 
                 Log.A($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.WebApi.Save
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
+                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd);
                 else
                     CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
 
@@ -192,8 +192,8 @@ namespace ToSic.Sxc.WebApi.Save
             var part = blockConfiguration[identifier.Group.Part];
             if (!identifier.ListAdd()) // not in add-mode
             {
-                var idx = identifier.ListIndex();
-                if(part.Count > idx && // has as many items as desired
+                var idx = identifier.ListIndex(part.Count - 1);
+                if(idx >= 0 && part.Count > idx && // has as many items as desired
                    part[idx] != null) // and the slot has something
                     identifier.EntityId = part[idx].EntityId;
             }
