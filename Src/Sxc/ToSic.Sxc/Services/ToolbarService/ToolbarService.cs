@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Services
             object ui = null,
             object parameters = null,
             object prefill = null
-        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, parameters, prefill, null, target: target);
+        ) => ToolbarBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, parameters, prefill, null, target: target);
 
 
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Services
             object ui = null,
             object parameters = null,
             object prefill = null
-        ) => NewBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, parameters, prefill, null, target: target);
+        ) => ToolbarBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, parameters, prefill, null, target: target);
 
 
         /// <inheritdoc />
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Services
         ) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, prefill, context: context);
 
 
-        private IToolbarBuilder NewBuilder(string noParamOrder, string toolbarTemplate, object ui, object parameters, object prefill, string context, object target = null)
+        private IToolbarBuilder ToolbarBuilder(string noParamOrder, string toolbarTemplate, object ui, object parameters, object prefill, string context, object target = null)
         {
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
@@ -68,9 +68,7 @@ namespace ToSic.Sxc.Services
             tlb.ConnectToRoot(_codeRoot);
             tlb = tlb.Toolbar(toolbarTemplate, target, ui, parameters, prefill);
 
-            //tlb = tlb.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: new ObjectToUrl().SerializeIfNotString(ui)));
             if (context.HasValue()) tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
-            //if (target != null) tlb = tlb.Target(target);
             return callLog.Return(tlb);
         }
 

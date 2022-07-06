@@ -8,7 +8,13 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
 
         [PrivateApi]
-        ToolbarContext Context();
+        ToolbarContext GetContext();
+
+        [PrivateApi("WIP 14.07.04")]
+        IToolbarBuilder Context(
+            object target
+        );
+
 
         /// <summary>
         /// Set the main target of this toolbar.

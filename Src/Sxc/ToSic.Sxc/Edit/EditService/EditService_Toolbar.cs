@@ -55,10 +55,10 @@ namespace ToSic.Sxc.Edit.EditService
 
             // New in v13: The first parameter can also be a ToolbarBuilder, in which case all other params are ignored
             ItemToolbarBase itmToolbar;
-            if (target is IToolbarBuilder)
+            if (target is IToolbarBuilder tlbBuilder)
             {
                 Log.A("Using new modern Item-Toolbar, will ignore all other parameters.");
-                itmToolbar = new ItemToolbarV10(null, toolbar: target);
+                itmToolbar = new ItemToolbarV14(null, tlbBuilder);
             }
             else
             {
@@ -66,10 +66,10 @@ namespace ToSic.Sxc.Edit.EditService
                 var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
                 if (target != null && eTarget == null)
                     Log.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
-                if (toolbar is IToolbarBuilder)
+                if (toolbar is IToolbarBuilder tlbBuilder2)
                 {
                     Log.A("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
-                    itmToolbar = new ItemToolbarV10(eTarget, toolbar: toolbar);
+                    itmToolbar = new ItemToolbarV14(eTarget, tlbBuilder2);
                 }
                 else
                 {

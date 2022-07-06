@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
@@ -126,16 +127,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             string context = null)
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
-            
+
+            var callLog = Log.Fn<IToolbarBuilder>();
             // Note: DO NOT check the target, as here an IAsset is absolutely valid
             // TargetCheck(target);
 
             var finalTypes = GetMetadataTypeNames(target, contentTypes);
-            var realContext = GetContext(target, context);
+            var realContext = GenerateContext(target, context);
             var builder = this as IToolbarBuilder;
 
             var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
-
 
             var mdsToAdd = finalTypes
                 .Select(type => new ToolbarRuleMetadata(target, type,
@@ -145,7 +146,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                     context: realContext,
                     decoHelper: _deps.ToolbarButtonHelper.Ready));
 
-            return builder.AddInternal(mdsToAdd.Cast<object>().ToArray());
+            return callLog.Return(builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
         }
 
         /// <inheritdoc />
@@ -199,7 +200,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
 
-            return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GetContext(target, null),
+            return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GenerateContext(target, null),
                 decoHelper: _deps.ToolbarButtonHelper.Ready));
         }
     }
