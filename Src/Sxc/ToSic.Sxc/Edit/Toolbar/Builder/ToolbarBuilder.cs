@@ -38,6 +38,10 @@ namespace ToSic.Sxc.Edit.Toolbar
             private bool _alreadyInited;
         }
 
+        /// <summary>
+        /// Public constructor for DI
+        /// </summary>
+        /// <param name="deps"></param>
         public ToolbarBuilder(Dependencies deps) => _deps = deps.InitLogIfNotYet(Log);
         private readonly Dependencies _deps;
 

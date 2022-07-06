@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 O2U.SerializeWithChild(previous?.Ui, ui, ""),
                 O2U.SerializeWithChild(O2U.SerializeWithChild(previous?.Parameters, parameters, ""),
                     prefill, PrefixPrefill),
-                GetContext(target, context) ?? previous?.Context,
+                GenerateContext(target, context) ?? previous?.Context,
                 _deps.ToolbarButtonHelper.Ready);
 
             clone.Rules.Add(newParamsRule);

@@ -6,7 +6,9 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     internal class ItemToolbarV14: ItemToolbarV10
     {
-        public ItemToolbarV14(IEntity entity, IToolbarBuilder toolbar = null) : base(entity, null, null, null, toolbar, "TlbV13")
+        public const string ContextAttributeName = "sxc-context";
+
+        public ItemToolbarV14(IEntity entity, IToolbarBuilder toolbar) : base(entity, null, null, null, toolbar, "TlbV13")
         {
             ToolbarBuilder = toolbar;
         }
@@ -18,7 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected string ContextAttribute()
         {
-            var ctx = ToolbarBuilder?.Context();
+            var ctx = ToolbarBuilder?.GetContext();
             return ctx == null
                 ? null
                 : Build.Attribute(ContextAttributeName, JsonConvert.SerializeObject(ctx)).ToString();

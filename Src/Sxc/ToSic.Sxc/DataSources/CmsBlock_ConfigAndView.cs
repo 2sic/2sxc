@@ -16,7 +16,7 @@ namespace ToSic.Sxc.DataSources
         {
             var wrapLog = Log.Fn<BlockConfiguration>();
             if (UseSxcInstanceContentGroup)
-                return wrapLog.Return(Block.Configuration, "need content-group, will use from sxc-context");
+                return wrapLog.Return(Block.Configuration, "need content-group, will use from Sxc Instance ContentGroup");
 
             // If we don't have a context, then look it up based on the InstanceId
             Log.A("need content-group, will construct as cannot use context");
