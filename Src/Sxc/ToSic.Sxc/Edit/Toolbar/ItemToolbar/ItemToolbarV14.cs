@@ -6,6 +6,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     internal class ItemToolbarV14: ItemToolbarV10
     {
+        public const string ContextAttributeName = "sxc-context";
+
         public ItemToolbarV14(IEntity entity, IToolbarBuilder toolbar = null) : base(entity, null, null, null, toolbar, "TlbV13")
         {
             ToolbarBuilder = toolbar;

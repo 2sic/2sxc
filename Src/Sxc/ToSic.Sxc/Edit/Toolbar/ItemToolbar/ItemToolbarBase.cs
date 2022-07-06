@@ -5,7 +5,6 @@ namespace ToSic.Sxc.Edit.Toolbar
     internal abstract class ItemToolbarBase: HasLog
     {
         public const string ToolbarAttributeName = "sxc-toolbar";
-        public const string ContextAttributeName = "sxc-context";
         public const string JsonToolbarNodeName = "toolbar";
         public const string JsonSettingsNodeName = "settings";
 
