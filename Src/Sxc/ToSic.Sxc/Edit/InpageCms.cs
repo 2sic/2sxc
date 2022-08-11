@@ -13,8 +13,16 @@
         // WIP
         public const string TurnOnJs = "dist/turnOn/turn-on.js";
 
-        public static string JsApiJson(string platform, int pageId, string siteRoot, string apiRoot, string appApiRoot,
-            string uiRoot, string rvtHeader, string rvt)
+        public static string JsApiJson(string platform,
+            int pageId, 
+            string siteRoot, 
+            string apiRoot, 
+            string appApiRoot,
+            string uiRoot, 
+            string rvtHeader, 
+            string rvt,
+            string dialogQuery = null // these are any platform specific url query params to the dialog; can be null
+        )
         {
             var json = "{"
                        + $"\"platform\": \"{platform.ToLowerInvariant()}\","
@@ -24,7 +32,8 @@
                        + $"\"appApi\": \"{appApiRoot}\", "
                        + $"\"uiRoot\": \"{uiRoot}\", "
                        + $"\"rvtHeader\": \"{rvtHeader}\", "
-                       + $"\"rvt\": \"{rvt}\""
+                       + $"\"rvt\": \"{rvt}\","
+                       + $"\"dialogQuery\": \"{dialogQuery}\""
                        + "}";
             return json;
         }

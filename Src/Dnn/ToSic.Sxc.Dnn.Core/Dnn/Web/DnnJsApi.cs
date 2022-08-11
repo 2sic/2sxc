@@ -27,7 +27,9 @@ namespace ToSic.Sxc.Dnn.Web
                 appApiRoot: apiRoots.Item2,
                 uiRoot: VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
                 rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
-                rvt: AntiForgeryToken());
+                rvt: AntiForgeryToken(),
+                dialogQuery: $"portalId={PortalSettings.Current.PortalId}"
+                );
 
             return json;
         }
