@@ -2,7 +2,7 @@
 @set BuildTarget=%OqtaneRoot%\wwwroot\Modules\ToSic.Sxc
 
 @REM Copy the data folders
-robocopy /mir "..\..\Data\.data\ " "%OqtaneRoot%\2sxc\.data\ "
+robocopy /mir "..\..\Data\.data\ " "%OqtaneRoot%\Content\2sxc\system\.data\ "
 rmdir /Q /S "%BuildTarget%\.databeta"
 rmdir /Q /S "%BuildTarget%\.data-custom"
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
@@ -13,7 +13,7 @@ robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
 robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 
 @REM Copy ImportExpor assets
-robocopy /mir "..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\ " "%BuildTarget%\system\ImportExport\ "
+robocopy /mir "..\..\Dnn\ToSic.Sxc.Dnn\ImportExport\ " "%OqtaneRoot%\Content\2sxc\system\ImportExport\ "
 
 
 .nuget\nuget.exe pack ToSic.Sxc.nuspec
