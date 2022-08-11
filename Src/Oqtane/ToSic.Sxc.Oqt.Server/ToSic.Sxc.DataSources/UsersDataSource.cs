@@ -16,7 +16,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of users from the current platform (Dnn or Oqtane)
     /// </summary>
-    [PublicApi]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still BETA, many changes expected")]
     [VisualQuery(
         NiceName = VqNiceName,
         Icon = VqIcon,
@@ -24,7 +24,8 @@ namespace ToSic.Sxc.DataSources
         HelpLink = VqHelpLink,
         GlobalName = VqGlobalName,
         Type = VqType,
-        ExpectsDataOfType = VqExpectsDataOfType
+        ExpectsDataOfType = VqExpectsDataOfType,
+        Difficulty = DifficultyBeta.Admin
     )]
     public class UsersDataSource : CmsBases.UsersDataSourceBase
     {

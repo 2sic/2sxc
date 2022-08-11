@@ -17,7 +17,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
     {
         #region Public Consts for inheriting implementations
 
-        public const string VqNiceName = "Roles";
+        public const string VqNiceName = "Roles - BETA - DO NOT USE YET";
         public const string VqIcon = "date_range";
         public const string VqUiHint = "Roles in the CMS";
         public const string VqGlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45"; // random & unique Guid
