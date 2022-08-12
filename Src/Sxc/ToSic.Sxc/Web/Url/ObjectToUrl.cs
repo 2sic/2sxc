@@ -9,14 +9,16 @@ namespace ToSic.Sxc.Web.Url
     {
         public delegate (bool Keep, object Value) ValueHandler(string name, object value);
 
-        public ObjectToUrl(string prefix = null, ValueHandler customHandler = null)
+        public ObjectToUrl() { }
+
+        public ObjectToUrl(string prefix = null, ValueHandler customHandler = null): this()
         {
             _customHandler = customHandler;
             Prefix = prefix;
         }
         private readonly ValueHandler _customHandler;
 
-        public string Prefix { get; }
+        private string Prefix { get; }
         public string ArraySeparator { get; set; } = ",";
         public string DepthSeparator { get; set; } = ":";
         public string PairSeparator { get; set; } = UrlParts.ValuePairSeparator.ToString();
@@ -54,17 +56,17 @@ namespace ToSic.Sxc.Web.Url
             return UrlParts.ConnectParameters(uiString, prefillAddOn);
         }
 
-        private ValuePair ValueSerialize(string name, object value)
+        private UrlValuePair ValueSerialize(string name, object value)
         {
             if (_customHandler != null)
             {
                 var (keep, newValue) = _customHandler(name, value);
-                if (!keep) return new ValuePair(name, null);
+                if (!keep) return new UrlValuePair(name, null);
                 value = newValue;
             }
 
-            if (value == null) return new ValuePair(name, null);
-            if (value is string strValue) return new ValuePair(name, strValue);
+            if (value == null) return new UrlValuePair(name, null);
+            if (value is string strValue) return new UrlValuePair(name, strValue);
 
             var valueType = value.GetType();
 
@@ -80,14 +82,14 @@ namespace ToSic.Sxc.Web.Url
                     $"The field: '{name}', isGeneric: {isGeneric} with base type {value.GetType()} to add to url seems to have a confusing setup");
 
                 if (valueElemType.IsPrimitive || valueElemType == typeof(string))
-                    return new ValuePair(name, string.Join(ArraySeparator, enumerable.Cast<object>()));
+                    return new UrlValuePair(name, string.Join(ArraySeparator, enumerable.Cast<object>()));
 
-                return new ValuePair(name, "array-like-but-unclear-what");
+                return new UrlValuePair(name, "array-like-but-unclear-what");
             }
 
             return valueType.IsSimpleType() 
-                ? new ValuePair(name, value is bool ? value.ToString().ToLowerInvariant() : value.ToString()) 
-                : new ValuePair(null, Serialize(value, name + DepthSeparator), true);
+                ? new UrlValuePair(name, value is bool ? value.ToString().ToLowerInvariant() : value.ToString()) 
+                : new UrlValuePair(null, Serialize(value, name + DepthSeparator), true);
         }
 
         // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
@@ -109,24 +111,5 @@ namespace ToSic.Sxc.Web.Url
 
         }
 
-        private class ValuePair
-        {
-            public ValuePair(string name, string value, bool isEncoded = false)
-            {
-                Name = name;
-                Value = value;
-                IsEncoded = isEncoded;
-            }
-            public string Name { get; }
-            public string Value { get; }
-            public bool IsEncoded { get; }
-
-            public override string ToString()
-            {
-                var start = Name != null ? Name + "=" : null;
-                var val = IsEncoded ? Value : Uri.EscapeUriString(Value);
-                return $"{start}{val}";
-            }
-        }
     }
 }

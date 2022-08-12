@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Url;
 
@@ -29,24 +27,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (target is int intTarget) EditInfo.entityId = intTarget;
             if (contentType != null) EditInfo.contentType = contentType;
 
-            if (propsSkip != null) SetPropsToSerialize(true, propsSkip);
-            if (propsKeep != null) SetPropsToSerialize(false, propsKeep);
+            if (propsSkip != null) _urlValueFilter = new UrlValueFilter(true, propsSkip);
+            else if (propsKeep != null) _urlValueFilter = new UrlValueFilter(false, propsKeep);
         }
 
-        private void SetPropsToSerialize(bool defaultSerialize, string[] opposite)
-        {
-            PropSerializeDefault = defaultSerialize;
-            foreach (var sProp in opposite)
-                PropSerializeMap[sProp] = !PropSerializeDefault;
-        }
+        /// <summary>
+        /// The filter for what entity properties to keep in the params. By default, keep all.
+        /// </summary>
+        private readonly UrlValueFilter _urlValueFilter = new UrlValueFilter(true, Array.Empty<string>());
 
-        #region Configuration of params to generate
-
-        internal bool PropSerializeDefault = true;
-        internal Dictionary<string, bool> PropSerializeMap = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
-
-        #endregion
-        
 
         protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as IEntityWrapper)?.Entity);
         private readonly GetOnce<IEntity> _entity = new GetOnce<IEntity>();
@@ -61,11 +50,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected string EntityParamsList()
         {
-            var obj2Url = new ObjectToUrl(null, (name, value)
-                => PropSerializeMap.TryGetValue(name, out var reallyUse2)
-                    ? (reallyUse2, value)
-                    : (PropSerializeDefault, value));
-
+            var obj2Url = new ObjectToUrl(null, (n, v) => _urlValueFilter.FilterValues(n, v));
             return obj2Url.Serialize(EditInfo);
         }
     }
