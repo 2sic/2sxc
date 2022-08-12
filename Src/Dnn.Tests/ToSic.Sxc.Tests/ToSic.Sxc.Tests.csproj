@@ -156,6 +156,7 @@
     <Compile Include="LinksAndImages\UrlParts\UrlPartsProtocolAndDomain.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTrivial.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTestBase.cs" />
+    <Compile Include="WebUrlTests\UrlValueFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">

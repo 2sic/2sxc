@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.Url
 {
     public class ObjectToUrl
     {
-        public delegate (bool Keep, object Value) ValueHandler(string name, object value);
+        public delegate (bool Keep, string name, object Value) ValueHandler(string name, object value);
 
         public ObjectToUrl() { }
 
@@ -60,8 +60,9 @@ namespace ToSic.Sxc.Web.Url
         {
             if (_customHandler != null)
             {
-                var (keep, newValue) = _customHandler(name, value);
+                var (keep, newName, newValue) = _customHandler(name, value);
                 if (!keep) return new UrlValuePair(name, null);
+                name = newName;
                 value = newValue;
             }
 

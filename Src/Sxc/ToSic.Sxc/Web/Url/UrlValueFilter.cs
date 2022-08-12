@@ -4,9 +4,10 @@ using System.Collections.Generic;
 namespace ToSic.Sxc.Web.Url
 {
     /// <summary>
-    /// Helper to process url values - and keep or skip certain properties
+    /// Helper to process url values - and keep or skip certain properties.
+    /// Note that it is case-insensitive
     /// </summary>
-    internal class UrlValueFilter
+    public class UrlValueFilter
     {
         /// <summary>
         /// Determine names of properties to preserve in the final parameters
@@ -27,11 +28,11 @@ namespace ToSic.Sxc.Web.Url
         internal Dictionary<string, bool> PropSerializeMap = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
 
 
-        public (bool Keep, object Value) FilterValues(string name, object value)
+        public (bool Keep, string name, object Value) FilterValues(string name, object value)
         {
             return PropSerializeMap.TryGetValue(name, out var reallyUse)
-                ? (reallyUse, value)
-                : (PropSerializeDefault, value);
+                ? (reallyUse, name, value)
+                : (PropSerializeDefault, name, value);
         }
     }
 }
