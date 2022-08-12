@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Web.Caching;
+using DotNetNuke.Framework;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.dist
 {
-    public class CachedPageBase : System.Web.UI.Page
+    public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to preserve correct language cookie
     {
         protected string PageOutputCached(string virtualPath)
         {
