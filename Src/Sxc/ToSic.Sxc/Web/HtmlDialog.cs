@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Web
             return html;
         }
 
-        public static string UpdatePlaceholders(string html, string content, int pageId, string customHeaders, string customBody)
+        public static string UpdatePlaceholders(string html, string content, int pageId, string customBaseParams, string customHeaders, string customBody)
         {
             if (!html.HasValue()) return html;
 
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web
             result = result.Replace(CacheBreakPlaceholder, EavSystemInfo.VersionWithStartUpBuild);
 
             // Replace base url
-            result = result.Replace(BasePlaceholder, $"./?{PageIdInUrl}={pageId}");
+            result = result.Replace(BasePlaceholder, $"./?{PageIdInUrl}={pageId}{customBaseParams}");
 
             // Add any custom headers / body - like for the Oqtane Request Verification Token
             result = result.Replace(CustomHeadersPlaceholder, customHeaders);

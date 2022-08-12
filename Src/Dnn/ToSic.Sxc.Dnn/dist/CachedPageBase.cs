@@ -22,9 +22,11 @@ namespace ToSic.Sxc.Dnn.dist
 
             var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
             var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
+            var portalId = Request.QueryString[DnnJsApi.PortalIdParamName];
+            var addOn = $"&{DnnJsApi.PortalIdParamName}={portalId}";
 
             var content = DnnJsApi.GetJsApiJson(pageId);
-            return HtmlDialog.UpdatePlaceholders(html, content, pageId, "", "");
+            return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, "", "");
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

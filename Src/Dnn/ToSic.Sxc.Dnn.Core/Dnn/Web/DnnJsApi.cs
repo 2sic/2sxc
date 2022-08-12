@@ -14,6 +14,8 @@ namespace ToSic.Sxc.Dnn.Web
     [PrivateApi]
     public class DnnJsApi
     {
+        public const string PortalIdParamName = "portalId";
+
         public static string GetJsApiJson(int? pageId = null)
         {
             var siteRoot = GetSiteRoot(pageId);
@@ -28,7 +30,7 @@ namespace ToSic.Sxc.Dnn.Web
                 uiRoot: VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
                 rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
                 rvt: AntiForgeryToken(),
-                dialogQuery: $"portalId={PortalSettings.Current.PortalId}"
+                dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
                 );
 
             return json;
