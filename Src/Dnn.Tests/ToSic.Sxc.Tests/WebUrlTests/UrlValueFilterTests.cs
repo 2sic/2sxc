@@ -8,42 +8,45 @@ namespace ToSic.Sxc.Tests.WebUrlTests
     [TestClass]
     public class UrlValueFilterTests
     {
+        private UrlValueFilter TestFilter(bool defaultSerialize, IEnumerable<string> opposite)
+            => new UrlValueFilter(defaultSerialize, opposite);
+
         [TestMethod]
         public void NoFilterKeepAll()
         {
-            var filter = new UrlValueFilter(true, new List<string>());
-            var result = filter.FilterValues("something", "value");
+            var filter = TestFilter(true, new List<string>());
+            var result = filter.FilterValues(new NameObjectSet("something", "value"));
             IsTrue(result.Keep);
         }
 
         [TestMethod]
         public void NoFilterKeepNone()
         {
-            var filter = new UrlValueFilter(false, new List<string>());
-            var result = filter.FilterValues("something", "value");
+            var filter = TestFilter(false, new List<string>());
+            var result = filter.FilterValues(new NameObjectSet("something", "value"));
             IsFalse(result.Keep);
         }
 
         [TestMethod]
         public void FilterSomeKeepRest()
         {
-            var filter = new UrlValueFilter(true, new string[] { "drop" });
-            IsTrue(filter.FilterValues("something", "value").Keep);
-            IsTrue(filter.FilterValues("something2", "value").Keep);
-            IsTrue(filter.FilterValues("drop2", "value").Keep);
-            IsFalse(filter.FilterValues("drop", "value").Keep, "this is the only one it should drop");
-            IsFalse(filter.FilterValues("Drop", "value").Keep, "this should also fail, case insensitive");
+            var filter = TestFilter(true, new[] { "drop" });
+            IsTrue(filter.FilterValues(new NameObjectSet("something", "value")).Keep);
+            IsTrue(filter.FilterValues(new NameObjectSet("something2", "value")).Keep);
+            IsTrue(filter.FilterValues(new NameObjectSet("drop2", "value")).Keep);
+            IsFalse(filter.FilterValues(new NameObjectSet("drop", "value")).Keep, "this is the only one it should drop");
+            IsFalse(filter.FilterValues(new NameObjectSet("Drop", "value")).Keep, "this should also fail, case insensitive");
         }
 
         [TestMethod]
         public void FilterSomeDropRest()
         {
-            var filter = new UrlValueFilter(false, new string[] { "keep" });
-            IsFalse(filter.FilterValues("something", "value").Keep);
-            IsFalse(filter.FilterValues("something2", "value").Keep);
-            IsFalse(filter.FilterValues("Drop", "value").Keep);
-            IsFalse(filter.FilterValues("drop2", "value").Keep);
-            IsTrue(filter.FilterValues("keep", "value").Keep, "this is th only one it should keep");
+            var filter = TestFilter(false, new[] { "keep" });
+            IsFalse(filter.FilterValues(new NameObjectSet("something", "value")).Keep);
+            IsFalse(filter.FilterValues(new NameObjectSet("something2", "value")).Keep);
+            IsFalse(filter.FilterValues(new NameObjectSet("Drop", "value")).Keep);
+            IsFalse(filter.FilterValues(new NameObjectSet("drop2", "value")).Keep);
+            IsTrue(filter.FilterValues(new NameObjectSet("keep", "value")).Keep, "this is th only one it should keep");
         }
     }
 }

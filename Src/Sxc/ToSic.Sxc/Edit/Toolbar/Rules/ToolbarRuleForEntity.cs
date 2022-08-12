@@ -50,7 +50,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected string EntityParamsList()
         {
-            var obj2Url = new ObjectToUrl(null, (n, v) => _urlValueFilter.FilterValues(n, v));
+            var obj2Url = new ObjectToUrl(null, (set) => _urlValueFilter.FilterValues(set));
+            //var obj2Url = new ObjectToUrl(null, (n, v) => _urlValueFilter.FilterValues(n, v));
             return obj2Url.Serialize(EditInfo);
         }
     }

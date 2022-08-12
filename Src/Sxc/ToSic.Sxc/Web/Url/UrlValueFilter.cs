@@ -28,11 +28,11 @@ namespace ToSic.Sxc.Web.Url
         internal Dictionary<string, bool> PropSerializeMap = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
 
 
-        public (bool Keep, string name, object Value) FilterValues(string name, object value)
+        public NameObjectSet FilterValues(NameObjectSet set)
         {
-            return PropSerializeMap.TryGetValue(name, out var reallyUse)
-                ? (reallyUse, name, value)
-                : (PropSerializeDefault, name, value);
+            return PropSerializeMap.TryGetValue(set.Name, out var reallyUse)
+                ? new NameObjectSet(set, keep: reallyUse) 
+                : new NameObjectSet(set, keep: PropSerializeDefault); 
         }
     }
 }

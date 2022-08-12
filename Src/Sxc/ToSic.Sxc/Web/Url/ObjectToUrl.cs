@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.Url
 {
     public class ObjectToUrl
     {
-        public delegate (bool Keep, string name, object Value) ValueHandler(string name, object value);
+        public delegate NameObjectSet ValueHandler(NameObjectSet set);
 
         public ObjectToUrl() { }
 
@@ -56,23 +56,21 @@ namespace ToSic.Sxc.Web.Url
             return UrlParts.ConnectParameters(uiString, prefillAddOn);
         }
 
-        private UrlValuePair ValueSerialize(string name, object value)
+        private UrlValuePair ValueSerialize(NameObjectSet set)
         {
             if (_customHandler != null)
             {
-                var (keep, newName, newValue) = _customHandler(name, value);
-                if (!keep) return new UrlValuePair(name, null);
-                name = newName;
-                value = newValue;
+                set = _customHandler(set);
+                if (!set.Keep) return null; // new UrlValuePair(set.FullName, null);
             }
 
-            if (value == null) return new UrlValuePair(name, null);
-            if (value is string strValue) return new UrlValuePair(name, strValue);
+            if (set.Value == null) return null; // new UrlValuePair(set.FullName, null);
+            if (set.Value is string strValue) return new UrlValuePair(set.FullName, strValue);
 
-            var valueType = value.GetType();
+            var valueType = set.Value.GetType();
 
             // Check array - not sure yet if we care
-            if (value is IEnumerable enumerable)
+            if (set.Value is IEnumerable enumerable)
             {
                 var isGeneric = valueType.IsGenericType;
                 var valueElemType = isGeneric
@@ -80,17 +78,20 @@ namespace ToSic.Sxc.Web.Url
                     : valueType.GetElementType();
 
                 if (valueElemType == null) throw new ArgumentNullException(
-                    $"The field: '{name}', isGeneric: {isGeneric} with base type {value.GetType()} to add to url seems to have a confusing setup");
+                    $"The field: '{set.FullName}', isGeneric: {isGeneric} with base type {valueType} to add to url seems to have a confusing setup");
 
                 if (valueElemType.IsPrimitive || valueElemType == typeof(string))
-                    return new UrlValuePair(name, string.Join(ArraySeparator, enumerable.Cast<object>()));
+                    return new UrlValuePair(set.FullName, string.Join(ArraySeparator, enumerable.Cast<object>()));
 
-                return new UrlValuePair(name, "array-like-but-unclear-what");
+                return new UrlValuePair(set.FullName, "array-like-but-unclear-what");
             }
 
-            return valueType.IsSimpleType() 
-                ? new UrlValuePair(name, value is bool ? value.ToString().ToLowerInvariant() : value.ToString()) 
-                : new UrlValuePair(null, Serialize(value, name + DepthSeparator), true);
+            return valueType.IsSimpleType()
+                // Simple type - just serialize, except for bool, which should be lower-cased
+                ? new UrlValuePair(set.FullName,
+                    set.Value is bool ? set.Value.ToString().ToLowerInvariant() : set.Value.ToString())
+                // Complex object, recursive serialize with current name as prefix
+                : new UrlValuePair(null, Serialize(set.Value, set.FullName + DepthSeparator), true);
         }
 
         // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
@@ -103,8 +104,8 @@ namespace ToSic.Sxc.Web.Url
             // Get all properties on the object
             var properties = objToConvert.GetType().GetProperties()
                 .Where(x => x.CanRead)
-                .Select(x => ValueSerialize(prefix + x.Name, x.GetValue(objToConvert, null)))
-                .Where(x => x.Value != null)
+                .Select(x => ValueSerialize(new NameObjectSet(x.Name, x.GetValue(objToConvert, null), prefix)))
+                .Where(x => x?.Value != null)
                 .ToList();
 
             // Concat all key/value pairs into a string separated by ampersand

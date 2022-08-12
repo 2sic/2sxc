@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web.Url
     /// Helper class to prepare data for use in a url parameter.
     /// Especially useful to ensure that the value part is encoded, but not re-encoded.
     /// </summary>
-    internal class UrlValuePair
+    public class UrlValuePair
     {
         public UrlValuePair(string name, string value, bool isEncoded = false)
         {
