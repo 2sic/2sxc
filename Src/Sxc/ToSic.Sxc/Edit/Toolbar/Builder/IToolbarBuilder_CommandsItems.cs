@@ -3,7 +3,7 @@
     public partial interface IToolbarBuilder
     {
         /// <summary>
-        /// Add / change the delete button on a toolbar.
+        /// Create (or reconfigure) the button to **delete an item**.
         /// 
         /// This has a special behavior.
         /// The `default` toolbar already includes a delete-button in the third group.
@@ -29,7 +29,8 @@
         );
 
         /// <summary>
-        /// Button to edit an item. 
+        /// Create button to **edit an item**.
+        /// Can also be used to remove the same button on a toolbar which would have it by default. 
         /// </summary>
         /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -41,7 +42,6 @@
         IToolbarBuilder Edit(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            //string contentType = null,
             object ui = null,
             object parameters = null, 
             object prefill = null,
@@ -49,7 +49,8 @@
         );
 
         /// <summary>
-        /// 
+        /// Create button to **create a new item**.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// X Options
@@ -72,7 +73,8 @@
         );
 
         /// <summary>
-        /// Button to show a admin dialog with all the data-items / entities of a specific content type.
+        /// Create button to **show a data-admin dialog** with all the data-items / entities of a specific content type.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// 3 Options: 
@@ -89,7 +91,6 @@
         IToolbarBuilder Data(
             object target = null, // entity-like or content-type name
             string noParamOrder = Eav.Parameters.Protector,
-            // string contentType = null,
             object filter = null,
             object ui = null,
             object parameters = null,
@@ -98,7 +99,8 @@
 
 
         /// <summary>
-        /// Create an add `metadata` rule to add or edit metadata to the specified object and using the content-type specified here. 
+        /// Create button to **add or edit metadata** to the specified object and using the content-type specified here.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// The target object which should receive metadata.
@@ -135,7 +137,8 @@
         );
 
         /// <summary>
-        /// Button to publish the current item.
+        /// Create button to publish the current item.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// By default it will only appear if the current item is draft/unpublished.
         /// You can change this (but probably shouldn't) by setting an `operation`. 
         /// </summary>
@@ -155,7 +158,9 @@
 
 
         /// <summary>
-        /// Create a toolbar rule to copy an item. It needs the item which it will copy as a parameter.
+        /// Create button to **copy an item**.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
+        /// It needs the item which it will copy as a parameter.
         /// </summary>
         /// <param name="target">
         /// * an entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)

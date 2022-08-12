@@ -3,7 +3,8 @@
     public partial interface IToolbarBuilder
     {
         /// <summary>
-        /// Button to admin the app. 
+        /// Create button to **admin the app**.
+        /// Can also be used to remove the same button on a toolbar which would have it by default. 
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -23,7 +24,8 @@
         );
 
         /// <summary>
-        /// Button to open the import-app dialog
+        /// Create button to open the **import-app** dialog.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -43,7 +45,8 @@
         );
 
         /// <summary>
-        /// Button to edit the app resources, if there are any. 
+        /// Create button to **edit the app resources** if there are any.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -63,7 +66,8 @@
         );
 
         /// <summary>
-        /// Button to edit the custom app settings, if there are any. 
+        /// Create button to **edit the custom app settings** if there are any.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -83,7 +87,8 @@
         );
 
         /// <summary>
-        /// Button to open the apps management of the current site. 
+        /// Create button to open the **apps management** of the current site.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -103,7 +108,8 @@
         );
 
         /// <summary>
-        /// Button to open the system admin dialog.
+        /// Create button to open the **system admin** dialog.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -123,7 +129,8 @@
         );
 
         /// <summary>
-        /// Button to open the insights for debugging.
+        /// Create button to open the **insights** for debugging.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>

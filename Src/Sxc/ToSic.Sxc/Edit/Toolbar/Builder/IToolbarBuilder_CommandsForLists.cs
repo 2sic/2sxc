@@ -3,7 +3,8 @@
     public partial interface IToolbarBuilder
     {
         /// <summary>
-        /// Button to add an entity to a list of entities
+        /// Create button to **add a new entity** to a list of entities.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// _optional_ entity-like target which is in a list of items in on a content-block,
@@ -25,7 +26,8 @@
         );
 
         /// <summary>
-        /// Button to add an existing entity to the list. 
+        /// Create button to **add an existing** entity to the list.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// _optional_ entity-like target which is in a list of items in on a content-block,
@@ -47,7 +49,8 @@
         );
 
         /// <summary>
-        /// Button to manage the list of entities shown here. 
+        /// Create button to **manage the list** of entities shown here.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// _optional_ entity-like target which is in a list of items in on a content-block,
@@ -67,7 +70,8 @@
         );
 
         /// <summary>
-        /// Button to move an item down in a list
+        /// Create button to **move an item down** in a list.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// _optional_ entity-like target which is in a list of items in on a content-block,
@@ -87,7 +91,8 @@
         );
 
         /// <summary>
-        /// Button to move an item up in a list. 
+        /// Create button to **move an item up** in a list.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// _optional_ entity-like target which is in a list of items in on a content-block,
@@ -107,7 +112,8 @@
         );
 
         /// <summary>
-        /// Button to remove an item from a list.
+        /// Create button to **remove an item** from a list.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// This will not delete the item, just remove. 
         /// </summary>
         /// <param name="target">
@@ -128,7 +134,8 @@
         );
 
         /// <summary>
-        /// Button to replace the current item in the list with another existing item. 
+        /// Create button to **replace the current item** in the list with another existing item.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">
         /// _optional_ entity-like target which is in a list of items in on a content-block,
