@@ -7,14 +7,14 @@ namespace ToSic.Sxc.Web.Url
     /// Helper to process url values - and keep or skip certain properties.
     /// Note that it is case-insensitive
     /// </summary>
-    public class UrlValueFilter
+    public class UrlValueFilterNames: UrlValueProcess
     {
         /// <summary>
         /// Determine names of properties to preserve in the final parameters
         /// </summary>
         /// <param name="defaultSerialize"></param>
         /// <param name="opposite"></param>
-        public UrlValueFilter(bool defaultSerialize, IEnumerable<string> opposite)
+        public UrlValueFilterNames(bool defaultSerialize, IEnumerable<string> opposite)
         {
             PropSerializeDefault = defaultSerialize;
             foreach (var sProp in opposite)
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Web.Url
         internal Dictionary<string, bool> PropSerializeMap = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
 
 
-        public NameObjectSet FilterValues(NameObjectSet set)
+        public override NameObjectSet Process(NameObjectSet set)
         {
             return PropSerializeMap.TryGetValue(set.Name, out var reallyUse)
                 ? new NameObjectSet(set, keep: reallyUse) 

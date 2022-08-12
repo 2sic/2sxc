@@ -10,7 +10,10 @@ namespace ToSic.Sxc.Edit.Toolbar
         private string ObjToString(object uiOrParams) => O2U.SerializeIfNotString(uiOrParams);
 
 
-        private ObjectToUrl O2U => _o2u.Get(() => new ObjectToUrl());
-        private readonly GetOnce<ObjectToUrl> _o2u = new GetOnce<ObjectToUrl>();
+        private ObjectToUrl O2U => _o2U.Get(() => new ObjectToUrl());
+        private readonly GetOnce<ObjectToUrl> _o2U = new GetOnce<ObjectToUrl>();
+
+        private ObjectToUrl Ui2Url => _ui2Url.Get(() => new ObjectToUrl(null, new[] { new UrlValueCamelCase() }));
+        private readonly GetOnce<ObjectToUrl> _ui2Url = new GetOnce<ObjectToUrl>();
     }
 }

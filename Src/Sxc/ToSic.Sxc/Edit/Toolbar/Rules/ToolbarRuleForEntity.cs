@@ -27,14 +27,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (target is int intTarget) EditInfo.entityId = intTarget;
             if (contentType != null) EditInfo.contentType = contentType;
 
-            if (propsSkip != null) _urlValueFilter = new UrlValueFilter(true, propsSkip);
-            else if (propsKeep != null) _urlValueFilter = new UrlValueFilter(false, propsKeep);
+            if (propsSkip != null) _urlValueFilterNames = new UrlValueFilterNames(true, propsSkip);
+            else if (propsKeep != null) _urlValueFilterNames = new UrlValueFilterNames(false, propsKeep);
         }
 
         /// <summary>
         /// The filter for what entity properties to keep in the params. By default, keep all.
         /// </summary>
-        private readonly UrlValueFilter _urlValueFilter = new UrlValueFilter(true, Array.Empty<string>());
+        private readonly UrlValueFilterNames _urlValueFilterNames = new UrlValueFilterNames(true, Array.Empty<string>());
 
 
         protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as IEntityWrapper)?.Entity);
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected string EntityParamsList()
         {
-            var obj2Url = new ObjectToUrl(null, (set) => _urlValueFilter.FilterValues(set));
+            var obj2Url = new ObjectToUrl(null, new[] { _urlValueFilterNames });
             //var obj2Url = new ObjectToUrl(null, (n, v) => _urlValueFilter.FilterValues(n, v));
             return obj2Url.Serialize(EditInfo);
         }

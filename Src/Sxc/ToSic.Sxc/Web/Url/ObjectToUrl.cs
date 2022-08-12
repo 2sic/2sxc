@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Plumbing;
 
@@ -7,16 +8,15 @@ namespace ToSic.Sxc.Web.Url
 {
     public class ObjectToUrl
     {
-        public delegate NameObjectSet ValueHandler(NameObjectSet set);
-
         public ObjectToUrl() { }
 
-        public ObjectToUrl(string prefix = null, ValueHandler customHandler = null): this()
+        public ObjectToUrl(string prefix = null, IEnumerable<UrlValueProcess> preProcessors = null): this()
         {
-            _customHandler = customHandler;
             Prefix = prefix;
+            _preProcessors = preProcessors;
         }
-        private readonly ValueHandler _customHandler;
+
+        private readonly IEnumerable<UrlValueProcess> _preProcessors;
 
         private string Prefix { get; }
         public string ArraySeparator { get; set; } = ",";
@@ -58,13 +58,16 @@ namespace ToSic.Sxc.Web.Url
 
         private UrlValuePair ValueSerialize(NameObjectSet set)
         {
-            if (_customHandler != null)
+            if (_preProcessors?.Any() == true)
             {
-                set = _customHandler(set);
-                if (!set.Keep) return null; // new UrlValuePair(set.FullName, null);
+                foreach (var pP in _preProcessors)
+                {
+                    set = pP.Process(set);
+                    if (!set.Keep) return null;
+                }
             }
 
-            if (set.Value == null) return null; // new UrlValuePair(set.FullName, null);
+            if (set.Value == null) return null;
             if (set.Value is string strValue) return new UrlValuePair(set.FullName, strValue);
 
             var valueType = set.Value.GetType();

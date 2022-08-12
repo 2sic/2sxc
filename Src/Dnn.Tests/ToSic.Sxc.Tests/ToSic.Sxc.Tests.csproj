@@ -156,6 +156,7 @@
     <Compile Include="LinksAndImages\UrlParts\UrlPartsProtocolAndDomain.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTrivial.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTestBase.cs" />
+    <Compile Include="WebUrlTests\UrlValueCamelCaseTest.cs" />
     <Compile Include="WebUrlTests\UrlValueFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
