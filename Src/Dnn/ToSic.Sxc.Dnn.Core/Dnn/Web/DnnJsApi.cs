@@ -1,10 +1,12 @@
 ﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
+using System.Web.Http.Results;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
@@ -57,59 +59,22 @@ namespace ToSic.Sxc.Dnn.Web
             // it should be null when called from razor or api
             if (!pageId.HasValue) return ServicesFramework.GetServiceFrameworkRoot();
 
-            // this one is wrong for child portals, because it returns parent portal settings (where that pageId is missing)
-            var portalSettings = PortalSettings.Current;
-
-            var portalDic = PortalController.GetPortalDictionary();
-            if (portalDic == null
-                || !portalDic.ContainsKey(pageId.Value)
-                || portalDic[pageId.Value] == portalSettings.PortalId)
-                return ServicesFramework.GetServiceFrameworkRoot();
-            
-
-            var portalId = portalDic[pageId.Value];
+            // this code should be executed only if is called from Default.aspx on DesktopModules/ToSIC_SexyContent/dist/.. 
             var cultureCode = System.Threading.Thread.CurrentThread.CurrentCulture.ToString();
-            var portalAliases = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId).ToList();
-            var portalAlias = portalAliases.Where(a => (string.Compare(a.CultureCode, cultureCode, StringComparison.OrdinalIgnoreCase) == 0 || string.IsNullOrEmpty(a.CultureCode))
-                                                       && a.PortalID == portalId)
-                .OrderByDescending(a => a.IsPrimary)
-                .ThenByDescending(a => a.CultureCode)
-                .ThenByDescending(a => a.BrowserType)
-                .FirstOrDefault();
+            var portalId = PortalController.GetPortalDictionary()[pageId.Value]; // also portalID should be provided in query string because od DNN special handling of aspx pages in DesktopModules
+            var primaryPortalAlias = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
+                .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new FriendlyUrlSettings(portalId));
+            var siteRoot = primaryPortalAlias != null ? CleanLeadingPartSiteRoot(primaryPortalAlias.HTTPAlias) : ServicesFramework.GetServiceFrameworkRoot();
+            if (string.IsNullOrEmpty(siteRoot)) siteRoot = "/";
+            return siteRoot;
+        }
 
-            string path;
-            if (portalAlias != null)
-            {
-                path = portalAlias.HTTPAlias;
-            }
-            else
-            {
-                // fallback #1
-                // get correct PortalSettings based on pageId
-                portalSettings = new PortalSettings(portalDic[pageId.Value]);
-                path = portalSettings.PortalAlias.HTTPAlias;
-
-                // fallback #2 when default portal alias is not defined
-                if (string.IsNullOrEmpty(path))
-                {
-                    // getting siteRoot from request context in case of child portal sometimes return siteRoot for parent portal
-                    var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
-                    // fallback value when request context is missing
-                    if (string.IsNullOrEmpty(siteRoot)) siteRoot = "/";
-                    return siteRoot;
-                }
-            }
-
-            // clean leading domain part from portal alias
+        private static string CleanLeadingPartSiteRoot(string path)
+        {
             var index = path.IndexOf('/');
-            if (index > 0)
-            {
-                path = path.Substring(index);
-                if (!path.EndsWith("/")) path += "/";
-            }
-            else
-                path = "/";
-
+            if (index <= 0) return "/";
+            path = path.Substring(index);
+            if (!path.EndsWith("/")) path += "/";
             return path;
         }
 
