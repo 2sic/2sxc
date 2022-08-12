@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Web.Url
         }
 
 
-        public string SerializeWithChild(object main, object child, string childPrefix)
+        public string SerializeWithChild(object main, object child, string childPrefix = null)
         {
             var asString = SerializeIfNotString(main);
             if (child == null) return asString;

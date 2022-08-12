@@ -15,14 +15,14 @@
             Prefix = original?.Prefix;
             Name = name ?? original?.Name;
             Value = value ?? original?.Value;
-            Keep = keep ?? original?.Keep ?? true;
+            Keep = keep ?? original?.Keep ?? Keep;
         }
 
         public string Prefix { get; }
 
         public string Name { get; }
         public object Value { get; }
-        public bool Keep { get; }
+        public bool Keep { get; } = true;
 
         public string FullName => Prefix + Name;
 

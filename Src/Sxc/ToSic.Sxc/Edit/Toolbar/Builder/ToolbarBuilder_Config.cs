@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Eav.Parameters.Protect(noParamOrder, nameof(ui));
-            return AddInternal(new ToolbarRuleCustom("more", ui: ObjToString(ui)));
+            return AddInternal(new ToolbarRuleCustom("more", ui: UiToString(ui)));
         }
 
         public IToolbarBuilder For(object target) => With(target: target);

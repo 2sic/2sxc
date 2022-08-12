@@ -6,14 +6,22 @@ namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-        [PrivateApi]
-        private string ObjToString(object uiOrParams) => O2U.SerializeIfNotString(uiOrParams);
+        private string ParToString(object uiOrParams) => Par2Url.SerializeIfNotString(uiOrParams);
 
 
-        private ObjectToUrl O2U => _o2U.Get(() => new ObjectToUrl());
+        private ObjectToUrl Par2Url => _o2U.Get(() => new ObjectToUrl(null, new[] { new UrlValueCamelCase() }));
         private readonly GetOnce<ObjectToUrl> _o2U = new GetOnce<ObjectToUrl>();
 
-        private ObjectToUrl Ui2Url => _ui2Url.Get(() => new ObjectToUrl(null, new[] { new UrlValueCamelCase() }));
+
+        private string UiToString(object uiOrParams) => Ui2Url.SerializeIfNotString(uiOrParams);
+        private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);
         private readonly GetOnce<ObjectToUrl> _ui2Url = new GetOnce<ObjectToUrl>();
+
+        [PrivateApi]
+        internal static ObjectToUrl GetUi2Url() => new ObjectToUrl(null, new UrlValueProcess[]
+        {
+            new UrlValueCamelCase(),
+            new UiValueProcessor()
+        });
     }
 }
