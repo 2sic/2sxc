@@ -12,6 +12,8 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
             name = "daniel"
         };
 
+        private string O2uSerialize(object data) => new ObjectToUrl().Serialize(data);
+
 
         [TestMethod]
         public void WithArray()
@@ -20,7 +22,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
             {
                 array = new int[] { 32, 16, 8 }
             };
-            Assert.AreEqual("array=32,16,8", new ObjectToUrl().Serialize(obj));
+            Assert.AreEqual("array=32,16,8", O2uSerialize(obj));
         }
 
         [TestMethod]
@@ -33,14 +35,14 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
                     array = new int[] { 32, 16, 8 }
                 }
             };
-            Assert.AreEqual("prefill:array=32,16,8", new ObjectToUrl().Serialize(obj));
+            Assert.AreEqual("prefill:array=32,16,8", O2uSerialize(obj));
         }
 
 
         [TestMethod]
         public void Basic()
         {
-            Assert.AreEqual("test=7&name=daniel", new ObjectToUrl().Serialize(TestCase1));
+            Assert.AreEqual("test=7&name=daniel", O2uSerialize(TestCase1));
         }
 
         [TestMethod]
@@ -62,7 +64,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
                     title = "new title"
                 }
             };
-            Assert.AreEqual("test=7&name=daniel&prefill:title=new%20title", new ObjectToUrl().Serialize(obj));
+            Assert.AreEqual("test=7&name=daniel&prefill:title=new%20title", O2uSerialize(obj));
         }
 
         [TestMethod]
@@ -80,7 +82,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
                     }
                 }
             };
-            Assert.AreEqual("prefill:title=new%20title&prefill:entities:name=daniel&prefill:entities:and=ok", new ObjectToUrl().Serialize(obj));
+            Assert.AreEqual("prefill:title=new%20title&prefill:entities:name=daniel&prefill:entities:and=ok", O2uSerialize(obj));
         }
     }
 }

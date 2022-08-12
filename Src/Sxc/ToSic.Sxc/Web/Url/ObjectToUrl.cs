@@ -26,21 +26,21 @@ namespace ToSic.Sxc.Web.Url
         public string KeyValueSeparator { get; set; } = "=";
 
 
-        public string Serialize(object data) => Serialize(data, Prefix);
+        public string Serialize(object data) => SerializeInternal(data, Prefix);
 
 
         public string SerializeIfNotString(object data, string prefix = null)
         {
             if (data == null) return null;
             if (data is string str) return str;
-            return Serialize(data, prefix);
+            return SerializeInternal(data, prefix);
         }
 
 
         public string SerializeWithChild(object main, object child, string childPrefix)
         {
-            var uiString = SerializeIfNotString(main);
-            if (child == null) return uiString;
+            var asString = SerializeIfNotString(main);
+            if (child == null) return asString;
             childPrefix = childPrefix ?? ""; // null catch
             var prefillAddOn = "";
             if (child is string strPrefill)
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Web.Url
             else
                 prefillAddOn = SerializeIfNotString(child, childPrefix);
 
-            return UrlParts.ConnectParameters(uiString, prefillAddOn);
+            return UrlParts.ConnectParameters(asString, prefillAddOn);
         }
 
         private UrlValuePair ValueSerialize(NameObjectSet set)
@@ -94,20 +94,22 @@ namespace ToSic.Sxc.Web.Url
                 ? new UrlValuePair(set.FullName,
                     set.Value is bool ? set.Value.ToString().ToLowerInvariant() : set.Value.ToString())
                 // Complex object, recursive serialize with current name as prefix
-                : new UrlValuePair(null, Serialize(set.Value, set.FullName + DepthSeparator), true);
+                : new UrlValuePair(null, SerializeInternal(set.Value, set.FullName + DepthSeparator), true);
         }
 
         // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
         // https://stackoverflow.com/questions/6848296/how-do-i-serialize-an-object-into-query-string-format
-        public string Serialize(object objToConvert, string prefix)
+        private string SerializeInternal(object data, string prefix)
         {
-            if (objToConvert == null)
-                throw new ArgumentNullException(nameof(objToConvert));
+            if (data == null) return null;
+            if (data is string str) return str;
+            //if (data == null)
+            //    throw new ArgumentNullException(nameof(data));
 
             // Get all properties on the object
-            var properties = objToConvert.GetType().GetProperties()
+            var properties = data.GetType().GetProperties()
                 .Where(x => x.CanRead)
-                .Select(x => ValueSerialize(new NameObjectSet(x.Name, x.GetValue(objToConvert, null), prefix)))
+                .Select(x => ValueSerialize(new NameObjectSet(x.Name, x.GetValue(data, null), prefix)))
                 .Where(x => x?.Value != null)
                 .ToList();
 
