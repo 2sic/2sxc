@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui = null,
             object parameters = null)
             => AddInternal(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
-                ui: UiToString(ui), parameters: ParToString(parameters)));
+                ui: PrepareUi(ui), parameters: ParToString(parameters)));
 
 
         public IToolbarBuilder Parameters(
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             // Must create a new one, to not change the original which is still in the original object
             var newParamsRule = new ToolbarRuleForParams(target,
-                Ui2Url.SerializeWithChild(previous?.Ui, ui),
+                PrepareUi(previous?.Ui, ui),
                 Par2Url.SerializeWithChild(Par2Url.SerializeWithChild(previous?.Parameters, parameters),
                     prefill, PrefixPrefill),
                 GenerateContext(target, context) ?? previous?.Context,

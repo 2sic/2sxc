@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             return AddInternal(new ToolbarRuleCustom(
                 commandName,
                 operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),
-                ui: UiToString(ui),
+                ui: PrepareUi(ui),
                 parameters: ParToString(parameters),
                 operationCode: operation.HasValue() ? null : target as string));
         }

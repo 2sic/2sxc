@@ -24,7 +24,10 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public static string KeyColor = "color";
         public static string KeyIcon = "icon";
-        public static string KeyIconSvgPrefix = "svg:";
+        public static string KeyData = "data";
+        //public static string KeyIconSvgPrefix = "svg:";
+        // todo: move elsewhere
+        public static string Base64Prefix = "base64:";
 
 
         public ToolbarButtonDecorator(IEntity entity) : base(entity)

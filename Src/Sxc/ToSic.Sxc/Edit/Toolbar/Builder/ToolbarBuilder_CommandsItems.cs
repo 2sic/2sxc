@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             return (
                 ToolbarRuleOperation.Pick(operation, defOp),
-                Ui: Ui2Url.SerializeWithChild(ui, uiMerge, uiMergePrefix),
+                Ui: PrepareUi(ui, uiMerge, uiMergePrefix),
                 Parameters: Par2Url.SerializeWithChild(
                     Par2Url.SerializeWithChild(parameters, prefill, PrefixPrefill),
                     filter, PrefixFilters)

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             {
                 if (!(set.Value is string icon) || !icon.HasValue()) return set;
                 if (icon.StartsWith(SvgTag) || (icon.StartsWith(XmlTag) && icon.Contains(SvgTag)))
-                    return new NameObjectSet(set, value: $"{KeyIconSvgPrefix}{Base64.Encode(icon)}");
+                    return new NameObjectSet(set, value: $"{Base64Prefix}{Base64.Encode(icon)}");
                 return set;
             }
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (set.Name == KeyColor)
             {
                 if (!(set.Value is string color) || !color.HasValue()) return set;
-                return new NameObjectSet(set, color.Replace("#", ""));
+                return new NameObjectSet(set, value: color.Replace("#", ""));
             }
 
             // All others unmodified

@@ -29,17 +29,17 @@ namespace ToSic.Sxc.Web.Url
         public string Serialize(object data) => SerializeInternal(data, Prefix);
 
 
-        public string SerializeIfNotString(object data, string prefix = null)
-        {
-            if (data == null) return null;
-            if (data is string str) return str;
-            return SerializeInternal(data, prefix);
-        }
+        //public string SerializeIfNotString(object data, string prefix = null)
+        //{
+        //    //if (data == null) return null;
+        //    //if (data is string str) return str;
+        //    return SerializeInternal(data, prefix);
+        //}
 
 
         public string SerializeWithChild(object main, object child, string childPrefix = null)
         {
-            var asString = SerializeIfNotString(main);
+            var asString = Serialize(main);
             if (child == null) return asString;
             childPrefix = childPrefix ?? ""; // null catch
             var prefillAddOn = "";
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Web.Url
                 prefillAddOn = string.Join(UrlParts.ValuePairSeparator.ToString(), parts);
             }
             else
-                prefillAddOn = SerializeIfNotString(child, childPrefix);
+                prefillAddOn = SerializeInternal(child, childPrefix);
 
             return UrlParts.ConnectParameters(asString, prefillAddOn);
         }
@@ -97,15 +97,45 @@ namespace ToSic.Sxc.Web.Url
                 : new UrlValuePair(null, SerializeInternal(set.Value, set.FullName + DepthSeparator), true);
         }
 
-        // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
-        // https://stackoverflow.com/questions/6848296/how-do-i-serialize-an-object-into-query-string-format
         private string SerializeInternal(object data, string prefix)
         {
+            // Case #1: Null, return that
             if (data == null) return null;
-            if (data is string str) return str;
-            //if (data == null)
-            //    throw new ArgumentNullException(nameof(data));
 
+            // Case #2: Already a string, return that
+            if (data is string str) return str;
+
+            // Case #3: It's an object or an array of objects (but not a string)
+            IEnumerable objectList = data is IEnumerable dataAsEnum
+                ? dataAsEnum
+                : new[] { data };
+
+            // Get all properties on the object
+            var properties = objectList
+                .Cast<object>()
+                .SelectMany(d => PropsOfOne(d, prefix))
+                .Where(d => d != null)
+                .ToList();
+
+            // Concat all key/value pairs into a string separated by ampersand
+            return string.Join(PairSeparator, properties.Select(p => p.ToString()));
+
+        }
+
+        // https://ole.michelsen.dk/blog/serialize-object-into-a-query-string-with-reflection/
+        // https://stackoverflow.com/questions/6848296/how-do-i-serialize-an-object-into-query-string-format
+        private List<UrlValuePair> PropsOfOne(object data, string prefix)
+        {
+            // Case #1: Null, return that
+            if (data == null) return null;
+
+            // Case #2: Already a string, return that
+            if (data is string str)
+                return str.HasValue()
+                    ? new List<UrlValuePair> { new UrlValuePair(null, str, true) }
+                    : null;
+
+            // Case #3: It's an object or an array of objects (but not a string)
             // Get all properties on the object
             var properties = data.GetType().GetProperties()
                 .Where(x => x.CanRead)
@@ -114,9 +144,8 @@ namespace ToSic.Sxc.Web.Url
                 .ToList();
 
             // Concat all key/value pairs into a string separated by ampersand
-            return string.Join(PairSeparator, properties.Select(p => p.ToString()));
+            return properties;
 
         }
-
     }
 }

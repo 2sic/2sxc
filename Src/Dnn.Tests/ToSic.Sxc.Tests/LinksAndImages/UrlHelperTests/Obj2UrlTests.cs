@@ -6,11 +6,19 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
     [TestClass]
     public class Obj2UrlTests
     {
-        private static object TestCase1 = new
+        private static readonly object TestCase1 = new
         {
             test = 7,
             name = "daniel"
         };
+        private static readonly string TestCase1Str = "test=7&name=daniel";
+
+        private static readonly object TestCase2 = new
+        {
+            lastName = "mettler"
+        };
+
+        private static readonly string TestCase2Str = "lastName=mettler";
 
         private string O2uSerialize(object data) => new ObjectToUrl().Serialize(data);
 
@@ -26,6 +34,20 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
         }
 
         [TestMethod]
+        public void StringOnly() => Assert.AreEqual(TestCase1Str, O2uSerialize(TestCase1Str));
+
+        [TestMethod]
+        public void StringsInArray() => Assert.AreEqual(TestCase1Str, O2uSerialize( new object[] { TestCase1Str }));
+
+        [TestMethod]
+        public void StringsInArray2() => Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize( new object[] { TestCase1Str, TestCase2Str }));
+
+        [TestMethod]
+        public void BasicObj()
+        {
+            Assert.AreEqual(TestCase1Str, O2uSerialize(TestCase1));
+        }
+        [TestMethod]
         public void WithSubArray()
         {
             var obj = new
@@ -39,10 +61,23 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
         }
 
 
+
         [TestMethod]
-        public void Basic()
+        public void MergeObject1And2()
         {
-            Assert.AreEqual("test=7&name=daniel", O2uSerialize(TestCase1));
+            Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1, TestCase2 }));
+        }
+
+        [TestMethod]
+        public void MergeObject1AndString2()
+        {
+            Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1, TestCase2Str }));
+        }
+
+        [TestMethod]
+        public void MergeString1AndObject2()
+        {
+            Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize(new object[] { TestCase1Str, TestCase2 }));
         }
 
         [TestMethod]

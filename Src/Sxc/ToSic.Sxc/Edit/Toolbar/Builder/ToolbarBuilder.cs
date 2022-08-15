@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object prefill = null
         )
         {
-            var updated = AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: UiToString(ui)));
+            var updated = AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
             if (target != null || parameters != null || prefill != null) 
                 updated = updated.Parameters(target, parameters: parameters, prefill: prefill);
             return updated;
