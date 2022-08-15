@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Web.Url
             // Get all properties on the object
             var properties = objectList
                 .Cast<object>()
-                .SelectMany(d => PropsOfOne(d, prefix))
+                .SelectMany(d => PropsOfOne(d, prefix) ?? new List<UrlValuePair>())
                 .Where(d => d != null)
                 .ToList();
 

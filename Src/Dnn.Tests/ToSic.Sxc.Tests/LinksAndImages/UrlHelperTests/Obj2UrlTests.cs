@@ -37,7 +37,20 @@ namespace ToSic.Sxc.Tests.LinksAndImages.UrlHelperTests
         public void StringOnly() => Assert.AreEqual(TestCase1Str, O2uSerialize(TestCase1Str));
 
         [TestMethod]
+        public void StringNull() => Assert.AreEqual(null as string, O2uSerialize(null));
+        [TestMethod]
+        public void StringEmpty() => Assert.AreEqual("", O2uSerialize(""));
+
+        [TestMethod]
         public void StringsInArray() => Assert.AreEqual(TestCase1Str, O2uSerialize( new object[] { TestCase1Str }));
+
+        [TestMethod]
+        public void StringsInArrayNullOnly() => Assert.AreEqual("", O2uSerialize( new object[] { null }));
+        [TestMethod]
+        public void StringsInArrayEmptyOnly() => Assert.AreEqual("", O2uSerialize( new object[] { "" }));
+
+        [TestMethod]
+        public void StringsInArrayWithNull() => Assert.AreEqual(TestCase1Str, O2uSerialize( new object[] { TestCase1Str, null }));
 
         [TestMethod]
         public void StringsInArray2() => Assert.AreEqual($"{TestCase1Str}&{TestCase2Str}", O2uSerialize( new object[] { TestCase1Str, TestCase2Str }));
