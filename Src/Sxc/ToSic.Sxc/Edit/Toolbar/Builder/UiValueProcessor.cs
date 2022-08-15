@@ -15,6 +15,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         // Base64 marker for rule encoding
         public static string Base64Prefix = "base64:";
+        public static string Json64Prefix = "json64:";
 
         public override NameObjectSet Process(NameObjectSet set)
         {
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             {
                 if (set.Value == null) return set;
                 var json = JsonConvert.SerializeObject(set.Value);
-                return new NameObjectSet(set, value: $"{Base64Prefix}{Base64.Encode(json)}");
+                return new NameObjectSet(set, value: $"{Json64Prefix}{Base64.Encode(json)}");
             }
 
             // All others unmodified
