@@ -1,14 +1,10 @@
 ﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
-using System.Web.Http.Results;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 
@@ -19,9 +15,12 @@ namespace ToSic.Sxc.Dnn.Web
     {
         public const string PortalIdParamName = "portalId";
 
-        public static string GetJsApiJson(int? pageId = null)
+        public static string GetJsApiJson(int? pageId = null, string siteRoot = null)
         {
-            var siteRoot = GetSiteRoot(pageId);
+            // pageId and siteRoot are normally null when called from razor, api, custom cs
+            // pageId and siteRoot are provided only in very special case for EditUI in /DesktopModules/.../...aspx
+
+            siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
             var apiRoots = GetApiRoots(siteRoot);
 
             var json = InpageCms.JsApiJson(
@@ -50,30 +49,6 @@ namespace ToSic.Sxc.Dnn.Web
             appApiRoot = appApiRoot.Replace(InpageCms.ExtensionPlaceholder, "2sxc");
 
             return new Tuple<string, string>(apiRoot, appApiRoot);
-        }
-
-
-        // commented out because it is not handling correctly portal alias with localization
-        internal static string GetSiteRoot(int? pageId)
-        {
-            // pageId should be provided only in very special case for EditUI
-            // it should be null when called from razor or api
-            if (!pageId.HasValue) return ServicesFramework.GetServiceFrameworkRoot();
-
-            // this code should be executed only if is called from Default.aspx on DesktopModules/ToSIC_SexyContent/dist/.. 
-            var cultureCode = System.Threading.Thread.CurrentThread.CurrentCulture.ToString();
-            var portalId = PortalController.GetPortalDictionary()[pageId.Value]; // also portalID should be provided in query string because od DNN special handling of aspx pages in DesktopModules
-            var primaryPortalAlias = PortalAliasController.Instance.GetPortalAliasesByPortalId(portalId)
-                .GetAliasByPortalIdAndSettings(portalId, result: null, cultureCode, settings: new FriendlyUrlSettings(portalId));
-            var siteRoot = primaryPortalAlias != null ? CleanLeadingPartSiteRoot(primaryPortalAlias.HTTPAlias) : ServicesFramework.GetServiceFrameworkRoot();
-            if (string.IsNullOrEmpty(siteRoot)) siteRoot = "/";
-            return siteRoot;
-        }
-
-        private static string CleanLeadingPartSiteRoot(string path)
-        {
-            var index = path.IndexOf('/');
-            return index <= 0 ? "/" : path.Substring(index).SuffixSlash();
         }
 
         private static string AntiForgeryToken()
