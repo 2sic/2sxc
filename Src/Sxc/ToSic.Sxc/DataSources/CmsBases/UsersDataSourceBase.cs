@@ -28,27 +28,50 @@ namespace ToSic.Sxc.DataSources.CmsBases
         #endregion
 
         #region Configuration-properties
-        private const string RolesFilterKey = "RolesFilter";
-        private const string UsersFilterKey = "UsersFilter";
+
+        private const string IncludeUsersFilterKey = "IncludeUsersFilter";
+        private const string ExcludeUsersFilterKey = "ExcludeUsersFilter";
+        private const string IncludeRolesFilterKey = "IncludeRolesFilter";
+        private const string ExcludeRolesFilterKey = "ExcludeRolesFilter";
 
         /// <summary>
-        /// Optional RolesFilter (comma-separated integers) filter,
-        /// exclude users that have any of roles from filter
+        /// Optional Users (comma-separated guids) filter,
+        /// include users based on guid or id
         /// </summary>
-        public string RolesFilter
+        public string IncludeUsersFilter
         {
-            get => Configuration[RolesFilterKey];
-            set => Configuration[RolesFilterKey] = value;
+            get => Configuration[IncludeUsersFilterKey];
+            set => Configuration[IncludeUsersFilterKey] = value;
         }
 
         /// <summary>
         /// Optional exclude Users (comma-separated guids) filter,
-        /// exclude users based on guid
+        /// exclude users based on guid or id
         /// </summary>
-        public string UsersFilter
+        public string ExcludeUsersFilter
         {
-            get => Configuration[UsersFilterKey];
-            set => Configuration[UsersFilterKey] = value;
+            get => Configuration[ExcludeUsersFilterKey];
+            set => Configuration[ExcludeUsersFilterKey] = value;
+        }
+        
+        /// <summary>
+        /// Optional IncludeRolesFilter (comma-separated integers) filter,
+        /// include users that have any of roles from filter
+        /// </summary>
+        public string IncludeRolesFilter
+        {
+            get => Configuration[IncludeRolesFilterKey];
+            set => Configuration[IncludeRolesFilterKey] = value;
+        }
+
+        /// <summary>
+        /// Optional ExcludeRolesFilter (comma-separated integers) filter,
+        /// exclude users that have any of roles from filter
+        /// </summary>
+        public string ExcludeRolesFilter
+        {
+            get => Configuration[ExcludeRolesFilterKey];
+            set => Configuration[ExcludeRolesFilterKey] = value;
         }
 
         #endregion
@@ -63,18 +86,19 @@ namespace ToSic.Sxc.DataSources.CmsBases
         {
             Provide(GetList); // default out, if accessed, will deliver GetList
 
-            ConfigMask(RolesFilterKey, "[Settings:RolesFilter]");
-
-            ConfigMask(UsersFilterKey, "[Settings:UsersFilter]");
+            ConfigMask(IncludeUsersFilterKey, "[Settings:IncludeUsersFilter]");
+            ConfigMask(ExcludeUsersFilterKey, "[Settings:ExcludeUsersFilter]");
+            ConfigMask(IncludeRolesFilterKey, "[Settings:IncludeRolesFilter]");
+            ConfigMask(ExcludeRolesFilterKey, "[Settings:ExcludeRolesFilter]");
 
             // TEST cases
-            //Configuration[UsersFilterKey] = "d65e097e-afde-4a46-a8ab-9d3ed277b4a9,989358ab-86ad-44a7-8b35-412e076e469a";
-            //Configuration[UsersFilterKey] = "d65e097e-afde-4a46-a8ab-9d3ed277b4a9";
-            //Configuration[UsersFilterKey] = "not-a-guid";
-            //Configuration[RolesFilterKey] = "1096,1097,1101,1102,1103";
-            //Configuration[RolesFilterKey] = "1102,1103";
-            //Configuration[RolesFilterKey] = "1101";
-            //Configuration[RolesFilterKey] = "not-a-integer,-1";
+            //Configuration[ExcludeUsersFilterKey] = "d65e097e-afde-4a46-a8ab-9d3ed277b4a9,989358ab-86ad-44a7-8b35-412e076e469a";
+            //Configuration[ExcludeUsersFilterKey] = "d65e097e-afde-4a46-a8ab-9d3ed277b4a9";
+            //Configuration[ExcludeUsersFilterKey] = "not-a-guid";
+            //Configuration[ExcludeRolesFilterKey] = "1096,1097,1101,1102,1103";
+            //Configuration[ExcludeRolesFilterKey] = "1102,1103";
+            //Configuration[ExcludeRolesFilterKey] = "1101";
+            //Configuration[ExcludeRolesFilterKey] = "not-a-integer,-1";
         }
 
         #endregion
@@ -89,23 +113,17 @@ namespace ToSic.Sxc.DataSources.CmsBases
             // This will resolve the tokens before starting
             Configuration.Parse();
 
-            if (!string.IsNullOrEmpty(RolesFilter))
-            {
-                var rolesFilter = RolesFilter.Split(',')
-                    .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
-                    .Where(r => r != -1).ToList();
-                if (rolesFilter.Any())
-                    users = users.Where(u => !u.Roles.Any(r => rolesFilter.Contains(r))).ToList();
-            }
+            var includeUsersPredicate = IncludeUsersPredicate();
+            if (includeUsersPredicate != null) users = users.Where(includeUsersPredicate).ToList();
 
-            if (!string.IsNullOrEmpty(UsersFilter))
-            {
-                var usersFilter = UsersFilter.Split(',')
-                    .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
-                    .Where(u => u != Guid.Empty).ToList();
-                if (usersFilter.Any())
-                    users = users.Where(u => u.Guid.HasValue && !usersFilter.Contains(u.Guid.Value)).ToList();
-            }
+            var excludeUsersPredicate = ExcludeUsersPredicate();
+            if (excludeUsersPredicate != null) users = users.Where(excludeUsersPredicate).ToList();
+            
+            var includeRolesPredicate = IncludeRolesPredicate();
+            if (includeRolesPredicate != null) users = users.Where(includeRolesPredicate).ToList();
+            
+            var excludeRolesPredicate = ExcludeRolesPredicate();
+            if (excludeRolesPredicate != null) users = users.Where(excludeRolesPredicate).ToList();
 
             var result = users
                 .Select(u =>
@@ -129,6 +147,84 @@ namespace ToSic.Sxc.DataSources.CmsBases
                 .ToImmutableList();
 
             return wrapLog.Return(result, "found");
+        }
+
+        private Func<UserDataSourceInfo, bool> IncludeUsersPredicate()
+        {
+            if (string.IsNullOrEmpty(IncludeUsersFilter)) return null;
+            var includeUserGuids = IncludeUserGuids();
+            var includeUserIds = IncludeUserIds();
+            return u => (includeUserGuids != null && includeUserGuids(u)) || (includeUserIds != null && includeUserIds(u));
+        }
+
+        private Func<UserDataSourceInfo, bool> IncludeUserGuids()
+        {
+            var userGuidFilter = IncludeUsersFilter.Split(',')
+                .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
+                .Where(u => u != Guid.Empty).ToList();
+            return userGuidFilter.Any()
+                ? (Func<UserDataSourceInfo, bool>)(u => u.Guid.HasValue && userGuidFilter.Contains(u.Guid.Value))
+                : null;
+        }
+
+        private Func<UserDataSourceInfo, bool> IncludeUserIds()
+        {
+            var userIdFilter = IncludeUsersFilter.Split(',')
+                .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
+                .Where(u => u != -1).ToList();
+            return userIdFilter.Any() 
+                ? (Func<UserDataSourceInfo, bool>) (u => userIdFilter.Contains(u.Id)) 
+                : null;
+        }
+
+        private Func<UserDataSourceInfo, bool> ExcludeUsersPredicate()
+        {
+            if (string.IsNullOrEmpty(ExcludeUsersFilter)) return null;
+            var excludeUserGuids = ExcludeUserGuids();
+            var excludeUserIds = ExcludeUserIds();
+            return u => (excludeUserGuids != null && excludeUserGuids(u)) || (excludeUserIds != null && excludeUserIds(u));
+        }
+
+        private Func<UserDataSourceInfo, bool> ExcludeUserGuids()
+        {
+            var excludeUserGuidsFilter = ExcludeUsersFilter.Split(',')
+                .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
+                .Where(u => u != Guid.Empty).ToList();
+            return excludeUserGuidsFilter.Any()
+                ? (Func<UserDataSourceInfo, bool>)(u => u.Guid.HasValue && !excludeUserGuidsFilter.Contains(u.Guid.Value))
+                : null;
+        }
+
+        private Func<UserDataSourceInfo, bool> ExcludeUserIds()
+        {
+            var excludeUserIdsFilter = ExcludeUsersFilter.Split(',')
+                .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
+                .Where(u => u != -1).ToList();
+            return excludeUserIdsFilter.Any()
+                ? (Func<UserDataSourceInfo, bool>)(u => excludeUserIdsFilter.Contains(u.Id))
+                : null;
+        }
+
+        private Func<UserDataSourceInfo, bool> IncludeRolesPredicate()
+        {
+            if (string.IsNullOrEmpty(IncludeRolesFilter)) return null;
+            var rolesFilter = IncludeRolesFilter.Split(',')
+                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
+                .Where(r => r != -1).ToList();
+            return rolesFilter.Any()
+                ? (Func<UserDataSourceInfo, bool>) (u => u.Roles.Any(r => rolesFilter.Contains(r)))
+                : null;
+        }
+
+        private Func<UserDataSourceInfo, bool> ExcludeRolesPredicate()
+        {
+            if (string.IsNullOrEmpty(ExcludeRolesFilter)) return null;
+            var excludeRolesFilter = ExcludeRolesFilter.Split(',')
+                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
+                .Where(r => r != -1).ToList();
+            return excludeRolesFilter.Any()
+                ? (Func<UserDataSourceInfo, bool>) (u => !u.Roles.Any(r => excludeRolesFilter.Contains(r)))
+                : null;
         }
 
         #region Inner Class Just For Processing

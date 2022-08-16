@@ -28,16 +28,27 @@ namespace ToSic.Sxc.DataSources.CmsBases
         #endregion
 
         #region Configuration-properties
-        private const string RolesFilterKey = "RolesFilter";
+        private const string IncludeRolesFilterKey = "IncludeRolesFilter";
+        private const string ExcludeRolesFilterKey = "ExcludeRolesFilter";
 
         /// <summary>
-        /// Optional RolesFilter (comma-separated integers) filter,
+        /// Optional IncludeRolesFilter (comma-separated integers) filter,
+        /// include roles based on roleId
+        /// </summary>
+        public string IncludeRolesFilter
+        {
+            get => Configuration[IncludeRolesFilterKey];
+            set => Configuration[IncludeRolesFilterKey] = value;
+        }
+
+        /// <summary>
+        /// Optional IncludeRolesFilter (comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
-        public string RolesFilter
+        public string ExcludeRolesFilter
         {
-            get => Configuration[RolesFilterKey];
-            set => Configuration[RolesFilterKey] = value;
+            get => Configuration[ExcludeRolesFilterKey];
+            set => Configuration[ExcludeRolesFilterKey] = value;
         }
 
         #endregion
@@ -52,13 +63,14 @@ namespace ToSic.Sxc.DataSources.CmsBases
         {
             Provide(GetList); // default out, if accessed, will deliver GetList
 
-            ConfigMask(RolesFilterKey, "[Settings:RolesFilter]");
+            ConfigMask(IncludeRolesFilterKey, "[Settings:IncludeRolesFilter]");
+            ConfigMask(ExcludeRolesFilterKey, "[Settings:ExcludeRolesFilter]");
 
             // TEST cases
-            //Configuration[RolesFilterKey] = "1096,1097,1101,1102,1103";
-            //Configuration[RolesFilterKey] = "1102,1103";
-            //Configuration[RolesFilterKey] = "1101";
-            //Configuration[RolesFilterKey] = "not-a-integer,-1";
+            //Configuration[ExcludeRolesFilterKey] = "1096,1097,1101,1102,1103";
+            //Configuration[ExcludeRolesFilterKey] = "1102,1103";
+            //Configuration[ExcludeRolesFilterKey] = "1101";
+            //Configuration[ExcludeRolesFilterKey] = "not-a-integer,-1";
         }
 
         #endregion
@@ -67,20 +79,17 @@ namespace ToSic.Sxc.DataSources.CmsBases
         {
             var wrapLog = Log.Fn<IImmutableList<IEntity>>();
             var roles = GetRolesInternal()?.ToList();
-
+            
             if (roles == null || !roles.Any()) return wrapLog.Return(new ImmutableArray<IEntity>(), "null/empty");
 
             // This will resolve the tokens before starting
             Configuration.Parse();
 
-            if (!string.IsNullOrEmpty(RolesFilter))
-            {
-                var filter = RolesFilter.Split(',')
-                    .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
-                    .Where(r => r != -1).ToList();
-                if (filter.Any())
-                    roles = roles.Where(r => !filter.Contains(r.Id)).ToList();
-            }
+            var includeRolesPredicate = IncludeRolesPredicate();
+            if (includeRolesPredicate != null) roles = roles.Where(includeRolesPredicate).ToList();
+
+            var excludeRolesPredicate = ExcludeRolesPredicate();
+            if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
             var result = roles
                 .Select(r =>
@@ -95,6 +104,28 @@ namespace ToSic.Sxc.DataSources.CmsBases
                 .ToImmutableList();
 
             return wrapLog.Return(result, "found");
+        }
+
+        private Func<RoleDataSourceInfo, bool> IncludeRolesPredicate()
+        {
+            if (string.IsNullOrEmpty(IncludeRolesFilter)) return null;
+            var includeRolesFilter = IncludeRolesFilter.Split(',')
+                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
+                .Where(r => r != -1).ToList();
+            return includeRolesFilter.Any() 
+                ? (Func<RoleDataSourceInfo, bool>) (r => !includeRolesFilter.Contains(r.Id)) 
+                : null;
+        }
+
+        private Func<RoleDataSourceInfo, bool> ExcludeRolesPredicate()
+        {
+            if (string.IsNullOrEmpty(ExcludeRolesFilter)) return null;
+            var excludeRolesFilter = ExcludeRolesFilter.Split(',')
+                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
+                .Where(r => r != -1).ToList();
+            return excludeRolesFilter.Any()
+                ? (Func<RoleDataSourceInfo, bool>)(r => excludeRolesFilter.Contains(r.Id))
+                : null;
         }
 
         #region Inner Class Just For Processing
