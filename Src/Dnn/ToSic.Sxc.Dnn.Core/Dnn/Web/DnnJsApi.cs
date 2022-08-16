@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Http.Results;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 
@@ -72,10 +73,7 @@ namespace ToSic.Sxc.Dnn.Web
         private static string CleanLeadingPartSiteRoot(string path)
         {
             var index = path.IndexOf('/');
-            if (index <= 0) return "/";
-            path = path.Substring(index);
-            if (!path.EndsWith("/")) path += "/";
-            return path;
+            return index <= 0 ? "/" : path.Substring(index).SuffixSlash();
         }
 
         private static string AntiForgeryToken()
