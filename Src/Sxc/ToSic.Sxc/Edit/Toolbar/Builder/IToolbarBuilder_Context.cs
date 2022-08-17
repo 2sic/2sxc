@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="name">_optional_ - name of new group or `-name` to remove an existing group.</param>
         /// <returns></returns>
         /// <remarks>
-        /// WIP v14.07.05
+        /// New in v14.07.05
         /// </remarks>
         IToolbarBuilder Group(string name = null);
 
