@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
         }
 
         /// <summary>
-        /// Optional IncludeRolesFilter (comma-separated integers) filter,
+        /// Optional ExcludeRolesFilter (comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
         public string ExcludeRolesFilter
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
                 .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
                 .Where(r => r != -1).ToList();
             return includeRolesFilter.Any() 
-                ? (Func<RoleDataSourceInfo, bool>) (r => !includeRolesFilter.Contains(r.Id)) 
+                ? (Func<RoleDataSourceInfo, bool>) (r => includeRolesFilter.Contains(r.Id)) 
                 : null;
         }
 
@@ -124,7 +124,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
                 .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
                 .Where(r => r != -1).ToList();
             return excludeRolesFilter.Any()
-                ? (Func<RoleDataSourceInfo, bool>)(r => excludeRolesFilter.Contains(r.Id))
+                ? (Func<RoleDataSourceInfo, bool>)(r => !excludeRolesFilter.Contains(r.Id))
                 : null;
         }
 

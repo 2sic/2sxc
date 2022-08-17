@@ -74,6 +74,8 @@ namespace ToSic.Sxc.DataSources.CmsBases
             set => Configuration[ExcludeRolesFilterKey] = value;
         }
 
+        // TODO: stv# filter super users
+
         #endregion
 
 
