@@ -33,9 +33,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Eav.Apps.Tests", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Dnn.Core", "Dnn\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj", "{A94DE6D7-D1E6-4BE2-B5B5-DC4A6A61CD80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Tests", "Dnn.Tests\ToSic.Sxc.Tests\ToSic.Sxc.Tests.csproj", "{0EA1085A-D15F-4254-8A79-DE811C47EBF4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Tests", "Sxc.Tests\ToSic.Sxc.Tests\ToSic.Sxc.Tests.csproj", "{0EA1085A-D15F-4254-8A79-DE811C47EBF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.WebApi.Tests", "Dnn.Tests\ToSic.Sxc.WebApi.Tests\ToSic.Sxc.WebApi.Tests.csproj", "{000D1ACB-7247-42CF-A86F-987A0AF68BA1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.WebApi.Tests", "Sxc.Tests\ToSic.Sxc.WebApi.Tests\ToSic.Sxc.WebApi.Tests.csproj", "{000D1ACB-7247-42CF-A86F-987A0AF68BA1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Eav.DataSources", "..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj", "{93149D23-E6CC-43AF-97D0-32D89D29D714}"
 EndProject
