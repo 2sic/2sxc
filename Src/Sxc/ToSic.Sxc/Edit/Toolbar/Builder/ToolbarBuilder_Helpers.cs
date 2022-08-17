@@ -13,9 +13,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         private readonly GetOnce<ObjectToUrl> _o2U = new GetOnce<ObjectToUrl>();
 
 
-        //private string UiToString(object uiOrParams) => Ui2Url.SerializeIfNotString(uiOrParams);
-        private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);
-        private readonly GetOnce<ObjectToUrl> _ui2Url = new GetOnce<ObjectToUrl>();
 
         [PrivateApi]
         internal static ObjectToUrl GetUi2Url() => new ObjectToUrl(null, new UrlValueProcess[]
@@ -31,7 +28,13 @@ namespace ToSic.Sxc.Edit.Toolbar
             string uiMergePrefix = null
         )
         {
-            return Ui2Url.SerializeWithChild(ui, uiMerge, uiMergePrefix);
+            var uiString = Ui2Url.SerializeWithChild(ui, uiMerge, uiMergePrefix);
+            var group = _configuration?.Group;
+            if (group.HasValue()) uiString = Ui2Url.SerializeWithChild(uiString, $"group={group}");
+            return uiString;
         }
+        private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);
+        private readonly GetOnce<ObjectToUrl> _ui2Url = new GetOnce<ObjectToUrl>();
+
     }
 }
