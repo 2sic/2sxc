@@ -92,15 +92,6 @@ namespace ToSic.Sxc.DataSources.CmsBases
             ConfigMask(ExcludeUsersFilterKey, "[Settings:ExcludeUsersFilter]");
             ConfigMask(IncludeRolesFilterKey, "[Settings:IncludeRolesFilter]");
             ConfigMask(ExcludeRolesFilterKey, "[Settings:ExcludeRolesFilter]");
-
-            // TEST cases
-            //Configuration[ExcludeUsersFilterKey] = "d65e097e-afde-4a46-a8ab-9d3ed277b4a9,989358ab-86ad-44a7-8b35-412e076e469a";
-            //Configuration[ExcludeUsersFilterKey] = "d65e097e-afde-4a46-a8ab-9d3ed277b4a9";
-            //Configuration[ExcludeUsersFilterKey] = "not-a-guid";
-            //Configuration[ExcludeRolesFilterKey] = "1096,1097,1101,1102,1103";
-            //Configuration[ExcludeRolesFilterKey] = "1102,1103";
-            //Configuration[ExcludeRolesFilterKey] = "1101";
-            //Configuration[ExcludeRolesFilterKey] = "not-a-integer,-1";
         }
 
         #endregion
@@ -156,6 +147,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
             if (string.IsNullOrEmpty(IncludeUsersFilter)) return null;
             var includeUserGuids = IncludeUserGuids();
             var includeUserIds = IncludeUserIds();
+            if (includeUserGuids == null && includeUserIds == null) return null;
             return u => (includeUserGuids != null && includeUserGuids(u)) || (includeUserIds != null && includeUserIds(u));
         }
 
@@ -184,7 +176,8 @@ namespace ToSic.Sxc.DataSources.CmsBases
             if (string.IsNullOrEmpty(ExcludeUsersFilter)) return null;
             var excludeUserGuids = ExcludeUserGuids();
             var excludeUserIds = ExcludeUserIds();
-            return u => (excludeUserGuids != null && excludeUserGuids(u)) || (excludeUserIds != null && excludeUserIds(u));
+            if (excludeUserGuids == null && excludeUserIds == null) return null;
+            return u => (excludeUserGuids == null || excludeUserGuids(u)) && (excludeUserIds == null || excludeUserIds(u));
         }
 
         private Func<UserDataSourceInfo, bool> ExcludeUserGuids()
@@ -203,7 +196,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
                 .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
                 .Where(u => u != -1).ToList();
             return excludeUserIdsFilter.Any()
-                ? (Func<UserDataSourceInfo, bool>)(u => excludeUserIdsFilter.Contains(u.Id))
+                ? (Func<UserDataSourceInfo, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
                 : null;
         }
 

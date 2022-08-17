@@ -15,27 +15,20 @@ namespace ToSic.Sxc.Tests.DataSources
             var wrapLog = Log.Fn<List<RoleDataSourceInfo>>();
             const int siteId = 0;
             Log.A($"Mock Portal Id {siteId}");
-            try
-            {
-                var result = new List<RoleDataSourceInfo>();
-                for (var i = 0; i < 10; i++)
-                {
-                    result.Add(new RoleDataSourceInfo
-                    {
-                        Id = i,
-                        Name = $"[role_name_{i}]",
-                        Created = DateTime.Today,
-                        Modified = DateTime.Now,
-                    });
-                }
 
-                return wrapLog.Return(result, "found");
-            }
-            catch (Exception ex)
+            var result = new List<RoleDataSourceInfo>();
+            for (var i = 0; i < 10; i++)
             {
-                Log.Ex(ex);
-                return wrapLog.Return(new List<RoleDataSourceInfo>(), "error");
+                result.Add(new RoleDataSourceInfo
+                {
+                    Id = i,
+                    Name = $"[role_name_{i}]",
+                    Created = DateTime.Today,
+                    Modified = DateTime.Now,
+                });
             }
+
+            return wrapLog.Return(result, "found");
         }
     }
 }

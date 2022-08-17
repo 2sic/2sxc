@@ -56,9 +56,7 @@ namespace ToSic.Sxc.Tests.DataSources
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 
-        private MockRolesDataSource GenerateRolesDataSourceDataSource()
-        {
-            return this.GetTestDataSource<MockRolesDataSource>(LookUpTestData.AppSetAndRes());
-        }
+        private MockRolesDataSource GenerateRolesDataSourceDataSource() 
+            => this.GetTestDataSource<MockRolesDataSource>(LookUpTestData.AppSetAndRes());
     }
 }

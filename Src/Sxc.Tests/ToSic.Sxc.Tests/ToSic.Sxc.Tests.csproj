@@ -96,6 +96,8 @@
     <Compile Include="ContextTests\ParametersTests.cs" />
     <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
     <Compile Include="DataSources\MockRolesDataSource.cs" />
+    <Compile Include="DataSources\MockUsersDataSource.cs" />
+    <Compile Include="DataSources\UsersDataSourceTests.cs" />
     <Compile Include="DataSources\RolesDataSourceTests.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="DynamicData\SimpleObject.cs" />
