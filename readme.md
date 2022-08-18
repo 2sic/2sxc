@@ -31,3 +31,13 @@ This is just one repo of 2sxc - the full software also has another ca. 3 for
 1. [EAV-server](https://github.com/2sic/eav-server) the dynamic data layer
 1. [EAV-UI](https://github.com/2sic/eav-ui) Angular 12 UI layer for EAV data
 1. [2sxc-UI](https://github.com/2sic/2sxc-ui) In-page editing system and JS APIs
+
+# System Requirements for 2sxc
+
+1. DNN 9.4.1+ with .net Framework 4.8
+1. Oqtane 3.1+ with .net 6
+
+Older Versions
+
+* 2sxc 8 to 13 all work on DNN 7.4.2 - 9.10 or even later
+* Older versions of Oqtane - see [compatibility list](https://docs.2sxc.org/abyss/platforms/oqtane/install.html)
