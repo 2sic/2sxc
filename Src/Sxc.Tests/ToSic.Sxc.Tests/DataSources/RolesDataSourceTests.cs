@@ -46,7 +46,6 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("", "", 10)]
         [DataRow("not-a-integer,-1", "not-a-integer,-1", 10)]
-        [DataRow("1,2,3", "1,2", 1)]
         [DataRow("3,4,5", "1,2,3", 2)]
         public void RolesWithIncludeExcludeFilter(string includeRolesFilter, string excludeRolesFilter, int expected)
         {

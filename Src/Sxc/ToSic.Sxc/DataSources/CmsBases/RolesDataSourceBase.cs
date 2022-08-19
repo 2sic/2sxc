@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
         private const string ExcludeRolesFilterKey = "ExcludeRolesFilter";
 
         /// <summary>
-        /// Optional IncludeRolesFilter (comma-separated integers) filter,
+        /// Optional IncludeRolesFilter (single value or comma-separated integers) filter,
         /// include roles based on roleId
         /// </summary>
         public string IncludeRolesFilter
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
         }
 
         /// <summary>
-        /// Optional ExcludeRolesFilter (comma-separated integers) filter,
+        /// Optional ExcludeRolesFilter (single value or comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
         public string ExcludeRolesFilter

@@ -33,9 +33,10 @@ namespace ToSic.Sxc.DataSources.CmsBases
         private const string ExcludeUsersFilterKey = "ExcludeUsersFilter";
         private const string IncludeRolesFilterKey = "IncludeRolesFilter";
         private const string ExcludeRolesFilterKey = "ExcludeRolesFilter";
+        private const string SuperUserFilterKey = "SuperUserFilter";
 
         /// <summary>
-        /// Optional Users (comma-separated guids) filter,
+        /// Optional Users (single value or comma-separated guids or integers) filter,
         /// include users based on guid or id
         /// </summary>
         public string IncludeUsersFilter
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
         }
 
         /// <summary>
-        /// Optional exclude Users (comma-separated guids) filter,
+        /// Optional exclude Users (single value or comma-separated guids or integers) filter,
         /// exclude users based on guid or id
         /// </summary>
         public string ExcludeUsersFilter
@@ -53,9 +54,9 @@ namespace ToSic.Sxc.DataSources.CmsBases
             get => Configuration[ExcludeUsersFilterKey];
             set => Configuration[ExcludeUsersFilterKey] = value;
         }
-        
+
         /// <summary>
-        /// Optional IncludeRolesFilter (comma-separated integers) filter,
+        /// Optional IncludeRolesFilter (single value or comma-separated integers) filter,
         /// include users that have any of roles from filter
         /// </summary>
         public string IncludeRolesFilter
@@ -65,7 +66,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
         }
 
         /// <summary>
-        /// Optional ExcludeRolesFilter (comma-separated integers) filter,
+        /// Optional ExcludeRolesFilter (single value or comma-separated integers) filter,
         /// exclude users that have any of roles from filter
         /// </summary>
         public string ExcludeRolesFilter
@@ -74,7 +75,16 @@ namespace ToSic.Sxc.DataSources.CmsBases
             set => Configuration[ExcludeRolesFilterKey] = value;
         }
 
-        // TODO: stv# filter super users
+        /// <summary>
+        /// Optional SuperUserFilter (boolean) filter,
+        /// true - only SuperUsers
+        /// false - without SuperUsers
+        /// </summary>
+        public string SuperUserFilter
+        {
+            get => Configuration[SuperUserFilterKey];
+            set => Configuration[SuperUserFilterKey] = value;
+        }
 
         #endregion
 
@@ -92,6 +102,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
             ConfigMask(ExcludeUsersFilterKey, "[Settings:ExcludeUsersFilter]");
             ConfigMask(IncludeRolesFilterKey, "[Settings:IncludeRolesFilter]");
             ConfigMask(ExcludeRolesFilterKey, "[Settings:ExcludeRolesFilter]");
+            ConfigMask(SuperUserFilterKey, "[Settings:SuperUserFilter]");
         }
 
         #endregion
@@ -117,6 +128,9 @@ namespace ToSic.Sxc.DataSources.CmsBases
             
             var excludeRolesPredicate = ExcludeRolesPredicate();
             if (excludeRolesPredicate != null) users = users.Where(excludeRolesPredicate).ToList();
+            
+            var superUserPredicate = SuperUserPredicate();
+            if (superUserPredicate != null) users = users.Where(superUserPredicate).ToList();
 
             var result = users
                 .Select(u =>
@@ -221,6 +235,11 @@ namespace ToSic.Sxc.DataSources.CmsBases
                 ? (Func<UserDataSourceInfo, bool>) (u => !u.Roles.Any(r => excludeRolesFilter.Contains(r)))
                 : null;
         }
+
+        private Func<UserDataSourceInfo, bool> SuperUserPredicate() =>
+            bool.TryParse(SuperUserFilter, out var superUserFilter)
+                ? (Func<UserDataSourceInfo, bool>)(u => u.IsSuperUser == superUserFilter)
+                : null;
 
         #region Inner Class Just For Processing
 
