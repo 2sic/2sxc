@@ -14,12 +14,13 @@ using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
+using static System.StringComparison;
 using Interop = ToSic.Sxc.Oqt.Client.Interop;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
-    public partial class Index
+    public partial class Index: ModuleBase
     {
         #region Injected Services
 
@@ -75,11 +76,11 @@ namespace ToSic.Sxc.Oqt.App
             NavigationManager.TryGetQueryString("debug", out Debug);
             await Log($"1: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
             // Call 2sxc engine only when is necessary to render control.
-            if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, StringComparison.InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, StringComparison.InvariantCultureIgnoreCase)))
+            if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
             {
                 RenderedUri = NavigationManager.Uri;
                 await Log($"1.1: RenderUri:{RenderedUri}");
-                var indexOfQuestion = NavigationManager.Uri.IndexOf("?", StringComparison.Ordinal);
+                var indexOfQuestion = NavigationManager.Uri.IndexOf("?", Ordinal);
                 RenderedPage = indexOfQuestion > -1
                     ? NavigationManager.Uri.Substring(0, indexOfQuestion)
                     : NavigationManager.Uri;
@@ -117,7 +118,7 @@ namespace ToSic.Sxc.Oqt.App
                 AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
             }
 
-            await Log($"1.2.1: Html:{ViewResults?.Html.Length}");
+            await Log($"1.2.1: Html:{ViewResults?.Html.Length}", ViewResults);
         }
 
         #region CSP
@@ -207,26 +208,32 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task Log(object message)
+        public async Task Log(params object[] message)
         {
             // If the url has a debug=true and we are the super-user
-            if (!Debug || !IsSuperUser) return;
+            if (message == null || !message.Any() || !Debug || !IsSuperUser) return;
             
-            _logPrefix ??= $"2sxc:pid({PageState?.Page?.PageId}):mid({ModuleState?.ModuleId}):";
+            _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
             try
             {
                 // log on web server
-                Console.WriteLine($"{_logPrefix}{message}");
+                Console.WriteLine($"{_logPrefix} {message.FirstOrDefault()}");
                 // log to browser console
                 if (_isSafeToRunJs)
-                    await JSRuntime.InvokeVoidAsync("console.log", _logPrefix, message);
+                {
+                    var data = new List<object> { _logPrefix }.Concat(message);
+                    await JSRuntime.InvokeVoidAsync(ConsoleLogJs, data.ToArray());
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"fail:{_logPrefix}:{ex.Message}");
+                Console.WriteLine($"Error:{_logPrefix}:{ex.Message}");
+                if (_isSafeToRunJs)
+                    await JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, ex.Message);
             }
         }
         private string _logPrefix;
+        private const string ConsoleLogJs = "console.log";
 
         #endregion
     }
