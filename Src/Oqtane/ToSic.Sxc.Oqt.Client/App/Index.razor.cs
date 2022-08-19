@@ -5,7 +5,6 @@ using Oqtane.Models;
 using Oqtane.Modules;
 using Oqtane.Security;
 using Oqtane.Shared;
-using Oqtane.UI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -22,46 +21,58 @@ namespace ToSic.Sxc.Oqt.App
 {
     public partial class Index
     {
-        [Inject]
-        public IOqtSxcRenderService OqtSxcRenderService { get; set; }
+        #region Injected Services
 
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
+        
+        [Inject] public NavigationManager NavigationManager { get; set; }
 
-        [Inject]
-        public IOqtPrerenderService OqtPrerenderService { get; set; }
+        [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
 
-        [Inject]
-        public Lazy<IFeaturesService> FeaturesService { get; set; }
+        [Inject] public Lazy<IFeaturesService> FeaturesService { get; set; }
 
-        [Inject]
-        public IHttpContextAccessor HttpContextAccessor { get; set; }
+        [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
 
-        public bool Debug = false;
+        #endregion
+
+        #region Shared Variables
+
+        public bool Debug;
         public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Host);
         private bool? _isSuperUser;
-        private bool _isSafeToRunJs = false;
+        private bool _isSafeToRunJs;
 
         private string RenderedUri { get; set; }
         private string RenderedPage { get; set; }
         private bool NewDataArrived { get; set; }
+        public OqtViewResultsDto ViewResults { get; set; }
+
+        /// <summary>
+        /// JS Interop, will be initialized in OnInitializedAsync
+        /// </summary>
+        public Interop Interop;
+
+        #endregion
+
+        #region Oqtane Properties
 
         public override List<Resource> Resources => new()
         {
             new Resource { ResourceType = ResourceType.Script, Url = "Modules/ToSic.Sxc/Module.js" }
         };
 
-        public OqtViewResultsDto ViewResults { get; set; }
-        
+        #endregion
+
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             Interop ??= new Interop(JSRuntime);
         }
-        
+
+
         protected override async Task OnParametersSetAsync()
         {
-            NavigationManager.TryGetQueryString<bool>("debug", out Debug);
+            NavigationManager.TryGetQueryString("debug", out Debug);
             await Log($"1: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
             // Call 2sxc engine only when is necessary to render control.
             if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, StringComparison.InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, StringComparison.InvariantCultureIgnoreCase)))
@@ -104,25 +115,28 @@ namespace ToSic.Sxc.Oqt.App
             {
                 await Log($"1.2.: ErrorMessage:{ViewResults.ErrorMessage}");
                 AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
-            };
+            }
 
             await Log($"1.2.1: Html:{ViewResults?.Html.Length}");
         }
 
+        #region CSP
+
         public bool PrerenderingEnabled() => PageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
-        public bool Prerender = true;
-        public Interop Interop;
+        public bool ApplyCsp = true;
 
         private void Csp()
         {
-            if (PrerenderingEnabled() && Prerender // executed only in prerender
+            if (PrerenderingEnabled() && ApplyCsp // executed only in prerender
                 && (HttpContextAccessor?.HttpContext?.Request?.Path.HasValue == true)
                 && !HttpContextAccessor.HttpContext.Request.Path.Value.Contains("/_blazor"))
                 if (ViewResults?.CspParameters?.Any() ?? false)
                     PageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor);
 
-            Prerender = false; // flag to ensure that code is executed only first time in prerender
+            ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
         }
+
+        #endregion
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -132,7 +146,7 @@ namespace ToSic.Sxc.Oqt.App
             await base.OnAfterRenderAsync(firstRender);
 
             // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-            if (NewDataArrived && PageState.Runtime == Oqtane.Shared.Runtime.Server && ViewResults != null)
+            if (NewDataArrived && PageState.Runtime == Runtime.Server && ViewResults != null)
             {
                 await Log($"2.1: NewDataArrived");
                 NewDataArrived = false;
@@ -186,31 +200,34 @@ namespace ToSic.Sxc.Oqt.App
             await Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
         }
 
+        #region Log Helpers
+
         /// <summary>
         /// console.log
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="isOnAfterRenderAsync"></param>
         /// <returns></returns>
         public async Task Log(object message)
         {
             // If the url has a debug=true and we are the super-user
             if (!Debug || !IsSuperUser) return;
             
-            _prefix ??= $"2sxc:pid({PageState?.Page?.PageId}):mid({ModuleState?.ModuleId}):";
+            _logPrefix ??= $"2sxc:pid({PageState?.Page?.PageId}):mid({ModuleState?.ModuleId}):";
             try
             {
                 // log on web server
-                Console.WriteLine($"{_prefix}{message}");
+                Console.WriteLine($"{_logPrefix}{message}");
                 // log to browser console
                 if (_isSafeToRunJs)
-                    await JSRuntime.InvokeVoidAsync("console.log", _prefix, (object)message);
+                    await JSRuntime.InvokeVoidAsync("console.log", _logPrefix, message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"fail:{_prefix}:{ex.Message}");
+                Console.WriteLine($"fail:{_logPrefix}:{ex.Message}");
             }
         }
-        private string _prefix;
+        private string _logPrefix;
+
+        #endregion
     }
 }
