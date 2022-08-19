@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var tokenSet = antiForgery.GetAndStoreTokens(context);
             var rsvt = tokenSet.RequestToken;
             var content = OqtJsApi.GetJsApi(pageId, siteRoot, rsvt);
-            html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rsvt}\" >");
+            html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", "", $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rsvt}\" >");
 
             var bytes = Encoding.Default.GetBytes(html);
 

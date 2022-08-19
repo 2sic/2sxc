@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 //var asUrl = ObjectAsQueryString(TargetAction);
                 //if (!IsNullOrWhiteSpace(asUrl)) Rules.Add("params?" + asUrl);
 
-                var asUrl = new ObjectToUrl().SerializeIfNotString(TargetAction);
+                var asUrl = new ObjectToUrl().Serialize(TargetAction);
                 if (!IsNullOrWhiteSpace(asUrl)) Rules.Add("params?" + asUrl);
             }
 

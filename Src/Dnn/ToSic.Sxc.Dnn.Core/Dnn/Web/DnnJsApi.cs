@@ -1,5 +1,4 @@
-﻿using DotNetNuke.Application;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
 using System;
 using System.Text.RegularExpressions;
@@ -14,9 +13,14 @@ namespace ToSic.Sxc.Dnn.Web
     [PrivateApi]
     public class DnnJsApi
     {
-        public static string GetJsApiJson(int? pageId = null)
+        public const string PortalIdParamName = "portalId";
+
+        public static string GetJsApiJson(int? pageId = null, string siteRoot = null)
         {
-            var siteRoot = GetSiteRoot(pageId);
+            // pageId and siteRoot are normally null when called from razor, api, custom cs
+            // pageId and siteRoot are provided only in very special case for EditUI in /DesktopModules/.../...aspx
+
+            siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
             var apiRoots = GetApiRoots(siteRoot);
 
             var json = InpageCms.JsApiJson(
@@ -27,7 +31,9 @@ namespace ToSic.Sxc.Dnn.Web
                 appApiRoot: apiRoots.Item2,
                 uiRoot: VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
                 rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
-                rvt: AntiForgeryToken());
+                rvt: AntiForgeryToken(),
+                dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
+                );
 
             return json;
         }
@@ -35,11 +41,8 @@ namespace ToSic.Sxc.Dnn.Web
         internal static Tuple<string, string> GetApiRoots(string siteRoot = null)
         {
             siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
-            var dnnVersion = DotNetNukeContext.Current.Application.Version.Major;
-            var apiRoot = siteRoot + (dnnVersion < 9
-                ? $"desktopmodules/{InpageCms.ExtensionPlaceholder}/api/"
-                : $"api/{InpageCms.ExtensionPlaceholder}/");
-
+            var apiRoot = siteRoot + $"api/{InpageCms.ExtensionPlaceholder}/";
+            
             // appApiRoot is the same as apiRoot - the UI will add "app" to it later on 
             // but app-api root shouldn't contain generic modules-name, as it's always 2sxc
             var appApiRoot = apiRoot;
@@ -48,44 +51,6 @@ namespace ToSic.Sxc.Dnn.Web
             return new Tuple<string, string>(apiRoot, appApiRoot);
         }
 
-        internal static string GetSiteRoot(int? pageId)
-        {
-            // this one is wrong for child portals, because it returns parent portal settings (where that pageId is missing)
-            var portalSettings = PortalSettings.Current;
-            
-            // get correct PortalSettings based on pageId
-            if (pageId.HasValue)
-            {
-                var portalDic = PortalController.GetPortalDictionary();
-                if (portalDic != null && portalDic.ContainsKey(pageId.Value))
-                    portalSettings = new PortalSettings(portalDic[pageId.Value]);
-            }
-            
-            var defaultPortalAlias = portalSettings.DefaultPortalAlias;
-
-            // fallback when default portal alias is not defined
-            if (string.IsNullOrEmpty(defaultPortalAlias))
-            {
-                // getting siteRoot from request context in case of child portal sometimes return siteRoot for parent portal
-                var siteRoot = ServicesFramework.GetServiceFrameworkRoot();
-                // fallback value when request context is missing
-                if (string.IsNullOrEmpty(siteRoot)) siteRoot = "/"; 
-                return siteRoot;
-            }
-
-            // clean leading domain part from portal alias
-            var index = defaultPortalAlias.IndexOf('/');
-            if (index > 0)
-            {
-                defaultPortalAlias = defaultPortalAlias.Substring(index);
-                if (!defaultPortalAlias.EndsWith("/")) defaultPortalAlias += "/";
-            }
-            else
-                defaultPortalAlias = "/";
-
-            return defaultPortalAlias;
-        }
-        
         private static string AntiForgeryToken()
         {
             var tag = AntiForgery.GetHtml().ToString();

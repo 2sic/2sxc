@@ -153,27 +153,6 @@
     <Compile Include="StartUp\DnnStartUpRegistrations.cs" />
     <Compile Include="StartUp\StartupDnn9.cs" />
     <Compile Include="StartUp\StartupDnn.cs" />
-    <Compile Include="DnnWebForms\PagePicker.ascx.cs">
-      <DependentUpon>PagePicker.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="DnnWebForms\PagePicker.ascx.designer.cs">
-      <DependentUpon>PagePicker.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="DnnWebForms\WebFormsBridge.ascx.cs">
-      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="DnnWebForms\WebFormsBridge.ascx.designer.cs">
-      <DependentUpon>WebFormsBridge.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="DnnWebForms\Wysiwyg.ascx.cs">
-      <DependentUpon>Wysiwyg.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="DnnWebForms\Wysiwyg.ascx.designer.cs">
-      <DependentUpon>Wysiwyg.ascx</DependentUpon>
-    </Compile>
     <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.cs">
       <DependentUpon>QuickEdit.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -211,9 +190,6 @@
     <Content Include="ClientScripts\ModuleEditor.js" />
     <Content Include="DnnPackageBuilder\license.txt" />
     <Content Include="DnnPackageBuilder\ReleaseNotes.txt" />
-    <Content Include="DnnWebForms\PagePicker.ascx" />
-    <Content Include="DnnWebForms\WebFormsBridge.ascx" />
-    <Content Include="DnnWebForms\Wysiwyg.ascx" />
     <Content Include="Extensions\404.png" />
     <Content Include="Extensions\ImageResizer\ImageResizer.txt" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />

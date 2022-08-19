@@ -79,16 +79,18 @@ namespace ToSic.Sxc.WebApi.Adam
 
             #endregion
 
-            var maxSizeKb = fs.MaxUploadKb();
-            if (stream.Length > 1024 * maxSizeKb)
-                throw new Exception($"file too large - more than {maxSizeKb}Kb");
+            var maxSize = (long)fs.MaxUploadKb() * 1024; // convert to bytes (without overflow that happens with int)
+            var fileSize = stream.Length;
+            Log.A($"file size: {fileSize} (max size is {maxSize})");
+            if (fileSize > maxSize)
+                throw new Exception($"file too large, {fileSize} is more than {maxSize}");
 
             // remove forbidden / troubling file name characters
             fileName = fileName
                 .Replace("+", "plus")
                 .Replace("%", "per")
                 .Replace("#", "hash");
-
+            
             if (fileName != originalFileName)
                 Log.A($"cleaned file name from'{originalFileName}' to '{fileName}'");
 

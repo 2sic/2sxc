@@ -155,7 +155,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
         private readonly GetOnce<int?> _userId = new GetOnce<int?>();
 
-        private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplateId.HasValue == true ? $"{_block.Configuration.AppId}:{_block.Configuration.View.Id}" : null);
+        private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplateId.HasValue == true ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}" : null);
         private readonly GetOnce<string> _viewKey = new GetOnce<string>();
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);

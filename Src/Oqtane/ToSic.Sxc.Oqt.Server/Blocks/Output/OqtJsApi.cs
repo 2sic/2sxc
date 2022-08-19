@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
                 appApiRoot: siteRoot, // without "app/" because the UI will add that later on,
                 uiRoot: OqtConstants.UiRoot + "/",
                 rvtHeader: Oqtane.Shared.Constants.AntiForgeryTokenHeaderName,
-                rvt: rvt);
+                rvt: rvt, 
+                dialogQuery: null);
     }
 }

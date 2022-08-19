@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Documentation;
@@ -23,6 +25,13 @@ namespace ToSic.Sxc.WebApi.Admin
             public string Term { get; set; }
             // message from the attribute
             public string[] Help { get; set; }
+            // ignore some of serialization exceptions
+            // https://www.newtonsoft.com/json/help/html/serializationerrorhandling.htm
+            [OnError]
+            internal void OnError(StreamingContext context, ErrorContext errorContext)
+            {
+                errorContext.Handled = true;
+            }
         }
 
         public IEnumerable<HelpItem> InlineHelp(string language)
@@ -32,12 +41,22 @@ namespace ToSic.Sxc.WebApi.Admin
             if (_inlineHelp != null) return wrapLog.ReturnAsOk(_inlineHelp);
 
             // TODO: stv# how to use languages?
-            _inlineHelp = AssemblyHandling.GetTypes(Log).Where(t => t.IsDefined(typeof(DocsAttribute)))
-                .Select(t => new HelpItem
-                {
-                    Term = t.Name,
-                    Help = t.GetCustomAttribute<DocsAttribute>().GetMessages(t.FullName)
-                });
+
+            try
+            {
+                _inlineHelp = AssemblyHandling.GetTypes(Log)
+                    .Where(t => t?.IsDefined(typeof(DocsAttribute)) ?? false)
+                    .Select(t => new HelpItem
+                    {
+                        Term = t?.Name,
+                        Help = t?.GetCustomAttribute<DocsAttribute>()?.GetMessages(t?.FullName)
+                    }).ToArray();
+            }
+            catch (Exception e)
+            {
+                Log.A("Exception in inline help.");
+                Log.Ex(e);
+            }
 
             return wrapLog.ReturnAsOk(_inlineHelp);
         }

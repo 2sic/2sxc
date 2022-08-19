@@ -9,9 +9,11 @@ bin/
 Src/Integration/SxcEdit01/wwwroot/adam/*
 
 # 2sxc assets
-/Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/.data
-/Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/.data-custom
-/Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/.databeta
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/2sxc
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/Content/2sxc/system/.data
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/Content/2sxc/system/.data-custom
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/Content/2sxc/system/.databeta
+/Src/Oqtane/ToSic.Sxc.Oqt.Server/Content/2sxc/system/ImportExport
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/assets
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/dist
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/js

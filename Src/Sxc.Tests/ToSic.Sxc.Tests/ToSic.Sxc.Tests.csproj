@@ -95,6 +95,10 @@
     <Compile Include="ContentSecurityPolicyTests\CspPolicyTextProcessorTests.cs" />
     <Compile Include="ContextTests\ParametersTests.cs" />
     <Compile Include="DataForImageTests\ResizeRecipesData.cs" />
+    <Compile Include="DataSources\MockRolesDataSource.cs" />
+    <Compile Include="DataSources\MockUsersDataSource.cs" />
+    <Compile Include="DataSources\UsersDataSourceTests.cs" />
+    <Compile Include="DataSources\RolesDataSourceTests.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
@@ -156,15 +160,41 @@
     <Compile Include="LinksAndImages\UrlParts\UrlPartsProtocolAndDomain.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTrivial.cs" />
     <Compile Include="LinksAndImages\UrlParts\UrlPartsTestBase.cs" />
+    <Compile Include="WebUrlTests\UrlValueCamelCaseTest.cs" />
+    <Compile Include="WebUrlTests\UrlValueFilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core.Tests\ToSic.Eav.Core.Tests.csproj">
+      <Project>{afed35b5-8e43-4f46-8e4d-fc3f07244d8b}</Project>
+      <Name>ToSic.Eav.Core.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj">
       <Project>{82f94588-269b-4cdd-98d1-d5cb14c39090}</Project>
       <Name>ToSic.Eav.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources.Tests\ToSic.Eav.DataSources.Tests.csproj">
+      <Project>{c212a78c-25bb-4a77-afbb-b5939352ce36}</Project>
+      <Name>ToSic.Eav.DataSources.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.DataSources\ToSic.Eav.DataSources.csproj">
+      <Project>{93149d23-e6cc-43af-97d0-32d89d29d714}</Project>
+      <Name>ToSic.Eav.DataSources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport.Tests\ToSic.Eav.ImportExport.Tests.csproj">
+      <Project>{00c8672b-e79e-42d4-a512-6c0abccaf046}</Project>
+      <Name>ToSic.Eav.ImportExport.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj">
       <Project>{5a75cd35-99f4-4cf0-944a-dc0f5d68b430}</Project>
       <Name>ToSic.Eav.ImportExport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.TokenEngine.Tests\ToSic.Eav.TokenEngine.Tests.csproj">
+      <Project>{ef7808df-f67f-4e0a-a851-21358773dd25}</Project>
+      <Name>ToSic.Eav.TokenEngine.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav\ToSic.Eav.csproj">
+      <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
+      <Name>ToSic.Eav</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Testing.Shared\ToSic.Testing.Shared.csproj">
       <Project>{41243C6D-2D10-4285-8AF2-719497AE00DB}</Project>

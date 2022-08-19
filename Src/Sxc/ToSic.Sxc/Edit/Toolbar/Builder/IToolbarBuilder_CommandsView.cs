@@ -3,7 +3,8 @@
     public partial interface IToolbarBuilder
     {
         /// <summary>
-        /// Button to change the view/layout of the data shown on the page. 
+        /// Create Button to **change the view/layout** of the data shown on the page.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -20,7 +21,8 @@
         );
 
         /// <summary>
-        /// Button to run JS code. 
+        /// Create Button to **run JS code**.
+        /// Can also be used to remove the same button on a toolbar which would have it by default. 
         /// </summary>
         /// <param name="target">Name of the function to call, without parameters. </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -37,7 +39,8 @@
         );
 
         /// <summary>
-        /// Button to open a dialog to manage the fields/attributes of the content type. 
+        /// Create Button to open a dialog to **manage the fields/attributes** of the content type.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -54,7 +57,8 @@
         );
 
         /// <summary>
-        /// Button to open the edit-template (source-code) dialog. 
+        /// Create Button to **open the edit-template** (source-code) dialog.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -71,7 +75,8 @@
         );
 
         /// <summary>
-        /// Button to open the design/edit query dialog. 
+        /// Create Button to **open the design/edit query** dialog.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -88,7 +93,8 @@
         );
 
         /// <summary>
-        /// Button to open the edit view settings dialog. 
+        /// Create Button to open the **edit view settings** dialog.
+        /// Can also be used to remove the same button on a toolbar which would have it by default.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>

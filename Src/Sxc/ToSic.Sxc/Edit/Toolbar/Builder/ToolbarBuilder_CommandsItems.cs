@@ -21,12 +21,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             object prefill,
             object filter = null)
         {
-            var o2u = O2U;
             return (
                 ToolbarRuleOperation.Pick(operation, defOp),
-                Ui: o2u.SerializeWithChild(ui, uiMerge, uiMergePrefix),
-                Parameters: o2u.SerializeWithChild(
-                    o2u.SerializeWithChild(parameters, prefill, PrefixPrefill),
+                Ui: PrepareUi(ui, uiMerge, uiMergePrefix),
+                Parameters: Par2Url.SerializeWithChild(
+                    Par2Url.SerializeWithChild(parameters, prefill, PrefixPrefill),
                     filter, PrefixFilters)
             );
 

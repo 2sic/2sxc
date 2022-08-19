@@ -1,4 +1,8 @@
-﻿using DotNetNuke.Entities.Portals;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Security;
+using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
 
@@ -18,25 +22,27 @@ namespace ToSic.Sxc.Dnn.Run
         public static bool PortalHasGroup(int portalId, string groupName)
             => new RoleController().GetRoleByName(portalId, groupName) != null;
 
+        public static bool IsAnonymous(this UserInfo user) =>
+            user == null || user.UserID == -1;
 
         public static bool UserMayAdminThis(this UserInfo user)
         {
             // Null-Check
-            if (user == null) return false;
+            if (user.IsAnonymous()) return false;
 
             // Super always AppAdmin
             if (user.IsSuperUser) return true;
 
             var portal = PortalSettings.Current;
 
-            // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
-            if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return false;
-
             // Skip the remaining tests if the portal isn't known
             if (portal == null) return false;
 
+            // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
+            if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return false;
+
             var hasSpecialGroup = PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcDesigners);
-            if (hasSpecialGroup && user.IsInRole(Settings.DnnGroupSxcDesigners)) return true;
+            if (hasSpecialGroup && IsDesigner(user)) return true;
 
             hasSpecialGroup = hasSpecialGroup || PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcAdmins);
             if (hasSpecialGroup && user.IsInRole(Settings.DnnGroupSxcAdmins)) return true;
@@ -44,5 +50,21 @@ namespace ToSic.Sxc.Dnn.Run
             // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
             return !hasSpecialGroup;
         }
+
+        public static bool IsDesigner(this UserInfo user) =>
+            !user.IsAnonymous() && user.IsInRole(Settings.DnnGroupSxcDesigners);
+
+        public static List<int> RoleList(this UserInfo user, int? portalId = null) =>
+            user.IsAnonymous() ? new List<int>() : user.Roles
+                .Select(r => RoleController.Instance.GetRoleByName(portalId ?? user.PortalID, r))
+                .Where(r => r != null)
+                .Select(r => r.RoleID)
+                .ToList();
+
+        public static Guid? UserGuid(this UserInfo user) => 
+            Membership.GetUser(user.Username)?.ProviderUserKey as Guid?;
+
+        public static string UserIdentityToken(this UserInfo user) => 
+            user.IsAnonymous() ? Constants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
     }
 }

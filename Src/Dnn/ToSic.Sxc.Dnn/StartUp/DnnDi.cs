@@ -81,8 +81,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             return services;
         }
 
-        public static Func<IServiceProvider> GetPreparedServiceProvider = null;
-
         public static IServiceCollection OriginalServiceCollection;
 
         // 2022-05-18: commented because it not in use anymore

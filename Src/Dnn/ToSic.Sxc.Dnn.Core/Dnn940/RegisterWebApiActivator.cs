@@ -11,13 +11,12 @@ namespace ToSic.Sxc.Dnn940
     // ReSharper disable once UnusedMember.Global
     public class RegisterWebApiActivator : IServiceRouteMapper
     {
+        /// <summary>
+        /// Put our class activator in front of the standard DNN activator
+        /// </summary>
+        /// <param name="mapRouteManager"></param>
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
-            // commented out since 2022-05-25 because in 2sxc v14 minimal version of dnn is 9.6.1
-            //var dnnVersion = DotNetNukeContext.Current.Application.Version;
-
-            //if (dnnVersion.CompareTo(new Version(9, 4)) < 0) return;
-
             var config = GlobalConfiguration.Configuration;
 
             // only override the existing one, if a special one was registered

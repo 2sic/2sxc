@@ -3,7 +3,8 @@
     public partial interface IToolbarBuilder
     {
         /// <summary>
-        /// Add a custom button / command. 
+        /// Add a custom button / command.
+        /// Can also be used to do advanced remove operations or modify a button on a toolbar which would have it by default. 
         /// </summary>
         /// <param name="name">
         /// 1. The _required_ name of the command.

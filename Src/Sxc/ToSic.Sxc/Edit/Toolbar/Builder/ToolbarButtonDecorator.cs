@@ -24,7 +24,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public static string KeyColor = "color";
         public static string KeyIcon = "icon";
-        public static string KeyIconSvgPrefix = "svg:";
+        public static string KeyData = "data";
+        //public static string KeyIconSvgPrefix = "svg:";
 
 
         public ToolbarButtonDecorator(IEntity entity) : base(entity)
@@ -39,27 +40,17 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public string UiIcon => Get(FieldUiIcon, "");
 
-        public string UiIconSvg
-        {
-            get
-            {
-                var icon = UiIcon;
-                if (!icon.HasValue()) return icon;
-                return $"{KeyIcon}={KeyIconSvgPrefix}{Base64.Encode(icon)}";
-            }
-        }
-
         public string UiColor=> Get(FieldUiColor, "").Trim('#');
-
 
         public string AllRules()
         {
-            var rules = Ui;
-            var svg = UiIconSvg;
-            if (svg.HasValue()) rules = UrlParts.ConnectParameters(rules, svg);
-            var color = UiColor;
-            if (color.HasValue()) rules = UrlParts.ConnectParameters(rules, $"{KeyColor}={color}");
-            return rules;
+            var addOns = new
+            {
+                icon = UiIcon,
+                color = UiColor
+            };
+
+            return ToolbarBuilder.GetUi2Url().SerializeWithChild(Ui, addOns);
         }
 
     }

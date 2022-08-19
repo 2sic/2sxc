@@ -54,5 +54,19 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </remarks>
         IToolbarBuilder Condition(Func<bool> condition);
 
+        /// <summary>
+        /// Adds a button group to the toolbar.
+        /// All following buttons will be in this group automatically.
+        ///
+        /// Can also be used to remove a group of buttons on the `default` toolbar, such as the group `view`.
+        /// See [list of groups on default](xref:Basics.Browser.EditUx.Toolbars.ButtonGroups)
+        /// </summary>
+        /// <param name="name">_optional_ - name of new group or `-name` to remove an existing group.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// New in v14.07.05
+        /// </remarks>
+        IToolbarBuilder Group(string name = null);
+
     }
 }

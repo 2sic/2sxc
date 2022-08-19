@@ -3,7 +3,6 @@ using System;
 using System.Web;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn
@@ -14,10 +13,14 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     public static class DnnStaticDi
     {
+        private static Func<IServiceProvider> GetGlobalDnnServiceProvider = null;
+
         //public static IServiceCollection StaticServiceCollection = null;
         //public static IServiceProvider GlobalServiceProvider = null;
-        public static void StaticDiReady(IServiceProvider sp = null) 
-            => _sp = sp ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
+        //public static void StaticDiReady(IServiceProvider sp = null) 
+        //    => _sp = sp ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
+        public static void StaticDiReady(Func<IServiceProvider> spFunc = null) 
+            => GetGlobalDnnServiceProvider = spFunc ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
         //public static void StaticDiReady(IServiceProvider sp = null) 
         //    => _sp = sp ?? StaticServiceCollection?.BuildServiceProvider()
@@ -42,10 +45,10 @@ namespace ToSic.Sxc.Dnn
         /// </remarks>
         private static readonly Type ServiceScopeKey = typeof(IServiceScope);
 
-        private static IServiceProvider _sp;
 
         [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
-        public static IServiceProvider GetGlobalServiceProvider() => _sp;
+        public static IServiceProvider GetGlobalServiceProvider() => _sp ?? (_sp = GetGlobalDnnServiceProvider?.Invoke() ?? throw new Exception("can't access global DNN service provider"));
+        private static IServiceProvider _sp;
 
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
         public static IServiceProvider GetPageScopedServiceProvider() => GetPageServiceProvider();
@@ -59,12 +62,12 @@ namespace ToSic.Sxc.Dnn
             // Work-around for issue https://github.com/2sic/2sxc/issues/1200
             // Scope service-provider based on request
             var httpCtx = HttpContext.Current;
-            if (httpCtx == null) return _sp.CreateScope().ServiceProvider;
+            if (httpCtx == null) return GetGlobalServiceProvider().CreateScope().ServiceProvider;
 
             // This only runs in Dnn 7.4.2 - Dnn 9.3, because Dnn 9.4 provides this in the http context
             if (!httpCtx.Items.Contains(ServiceScopeKey))
             {
-                httpCtx.Items[ServiceScopeKey] = _sp.CreateScope();
+                httpCtx.Items[ServiceScopeKey] = GetGlobalServiceProvider().CreateScope();
 
                 // Make sure service provider is disposed after request finishes
                 httpCtx.AddOnRequestCompleted(context => ((IDisposable)context.Items[ServiceScopeKey])?.Dispose());
