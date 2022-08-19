@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
-using Microsoft.JSInterop;
 using Oqtane.Models;
 using Oqtane.Modules;
-using Oqtane.Security;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
@@ -15,43 +12,27 @@ using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
 using static System.StringComparison;
-using Interop = ToSic.Sxc.Oqt.Client.Interop;
+using Runtime = Oqtane.Shared.Runtime;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
-    public partial class Index: ModuleBase
+    public partial class Index : ModuleProBase
     {
         #region Injected Services
 
         [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
-        
-        [Inject] public NavigationManager NavigationManager { get; set; }
-
         [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
-
         [Inject] public Lazy<IFeaturesService> FeaturesService { get; set; }
-
-        [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
 
         #endregion
 
         #region Shared Variables
 
-        public bool Debug;
-        public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Host);
-        private bool? _isSuperUser;
-        private bool _isSafeToRunJs;
-
         private string RenderedUri { get; set; }
         private string RenderedPage { get; set; }
         private bool NewDataArrived { get; set; }
         public OqtViewResultsDto ViewResults { get; set; }
-
-        /// <summary>
-        /// JS Interop, will be initialized in OnInitializedAsync
-        /// </summary>
-        public Interop Interop;
 
         #endregion
 
@@ -64,17 +45,12 @@ namespace ToSic.Sxc.Oqt.App
 
         #endregion
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            Interop ??= new Interop(JSRuntime);
-        }
-
-
         protected override async Task OnParametersSetAsync()
         {
-            NavigationManager.TryGetQueryString("debug", out Debug);
+            await base.OnParametersSetAsync();
+            
             await Log($"1: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            
             // Call 2sxc engine only when is necessary to render control.
             if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
             {
@@ -91,9 +67,7 @@ namespace ToSic.Sxc.Oqt.App
                 Csp();
                 await Log($"1.3: Csp");
             }
-
-            await base.OnParametersSetAsync();
-
+            
             await Log($"1 end: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
         }
 
@@ -114,11 +88,11 @@ namespace ToSic.Sxc.Oqt.App
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
             {
-                await Log($"1.2.: ErrorMessage:{ViewResults.ErrorMessage}");
+                await Log($"1.2.1: ErrorMessage:{ViewResults.ErrorMessage}");
                 AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
             }
 
-            await Log($"1.2.1: Html:{ViewResults?.Html.Length}", ViewResults);
+            await Log($"1.2.2: Html:{ViewResults?.Html.Length}", ViewResults);
         }
 
         #region CSP
@@ -141,10 +115,9 @@ namespace ToSic.Sxc.Oqt.App
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender) _isSafeToRunJs = true; // now we are safe to have Interop and run js
-
-            await Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
             await base.OnAfterRenderAsync(firstRender);
+            
+            await Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
 
             // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
             if (NewDataArrived && PageState.Runtime == Runtime.Server && ViewResults != null)
@@ -198,43 +171,8 @@ namespace ToSic.Sxc.Oqt.App
 
                 #endregion
             }
+            
             await Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
         }
-
-        #region Log Helpers
-
-        /// <summary>
-        /// console.log
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public async Task Log(params object[] message)
-        {
-            // If the url has a debug=true and we are the super-user
-            if (message == null || !message.Any() || !Debug || !IsSuperUser) return;
-            
-            _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
-            try
-            {
-                // log on web server
-                Console.WriteLine($"{_logPrefix} {message.FirstOrDefault()}");
-                // log to browser console
-                if (_isSafeToRunJs)
-                {
-                    var data = new List<object> { _logPrefix }.Concat(message);
-                    await JSRuntime.InvokeVoidAsync(ConsoleLogJs, data.ToArray());
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error:{_logPrefix}:{ex.Message}");
-                if (_isSafeToRunJs)
-                    await JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, ex.Message);
-            }
-        }
-        private string _logPrefix;
-        private const string ConsoleLogJs = "console.log";
-
-        #endregion
     }
 }
