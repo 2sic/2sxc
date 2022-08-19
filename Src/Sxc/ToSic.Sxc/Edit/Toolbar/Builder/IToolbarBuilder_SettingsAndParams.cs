@@ -18,17 +18,18 @@
         /// Add a `settings` rule to configure what the toolbar should look like. See [](xref:JsCode.Toolbars.Settings)
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="show">`hover`, `always`</param>
-        /// <param name="hover">`right`, `left`</param>
+        /// <param name="show">`hover` (default), `always`</param>
+        /// <param name="hover">`right` (default), `left`</param>
         /// <param name="follow"></param>
         /// <param name="classes">css class names to add to the entire toolbar</param>
-        /// <param name="autoAddMore">placement of the _more_ ellipsis button, `right`, `left`</param>
+        /// <param name="autoAddMore">placement of the _more_ ellipsis button, `auto` (default), `end`, `start`, `never`</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">Parameters for the command - doesn't really have an effect on Settings, but included for consistency</param>
         /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
+        /// * options `auto` and `never` on autoAddMore added in 14.07.05
         /// </remarks>
         IToolbarBuilder Settings(
             string noParamOrder = Eav.Parameters.Protector,

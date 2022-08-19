@@ -36,9 +36,6 @@ namespace ToSic.Sxc.Edit.Toolbar
             // add params if we have any
             if (TargetAction != null)
             {
-                //var asUrl = ObjectAsQueryString(TargetAction);
-                //if (!IsNullOrWhiteSpace(asUrl)) Rules.Add("params?" + asUrl);
-
                 var asUrl = new ObjectToUrl().Serialize(TargetAction);
                 if (!IsNullOrWhiteSpace(asUrl)) Rules.Add("params?" + asUrl);
             }
@@ -48,19 +45,6 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             return JsonConvert.SerializeObject(Rules);
         }
-
-
-        //public string ObjectAsQueryString(object obj)
-        //{
-        //    var newSerialize = new ObjectToUrl().SerializeIfNotString(obj);
-
-        //    var properties = obj.GetType().GetProperties()
-        //        .Where(p => p.GetValue(obj, null) != null)
-        //        .Where(p => !p.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any())
-        //        .Select(p => p.Name + "=" + Uri.EscapeUriString(p.GetValue(obj, null).ToString()));
-
-        //    return Join("&", properties.ToArray());
-        //}
 
     }
 }

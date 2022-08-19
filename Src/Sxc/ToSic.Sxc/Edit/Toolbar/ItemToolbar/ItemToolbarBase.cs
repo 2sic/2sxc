@@ -21,7 +21,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <returns></returns>
         public abstract string ToolbarAsAttributes();
 
-        //protected abstract IHybridHtmlString AttributeSettings();
         protected ItemToolbarBase(string logName) : base($"{Constants.SxcLogName}.{logName}")
         {
         }
