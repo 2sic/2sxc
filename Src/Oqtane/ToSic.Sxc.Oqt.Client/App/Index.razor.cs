@@ -158,13 +158,13 @@ namespace ToSic.Sxc.Oqt.App
                 if (ViewResults.TemplateResources != null)
                 {
                     await Log($"2.5: AttachScriptsAndStyles");
-                    await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, Interop);
+                    await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, Interop, this);
                 }
 
                 if (ViewResults.PageProperties?.Any() ?? false)
                 {
                     await Log($"2.6: UpdatePageProperties");
-                    await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, Interop);
+                    await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, Interop /*, this TODO: @stv */);
                 }
 
                 StateHasChanged();

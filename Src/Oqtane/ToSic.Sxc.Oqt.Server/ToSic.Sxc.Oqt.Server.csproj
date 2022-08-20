@@ -68,6 +68,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\Modules\ToSic.Sxc\Module.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- stv - SQL scripts have to be included as embedded resources -->
 	  <!-- to be executed as part of oqtane installation or upgrade procedure -->
     <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
@@ -114,7 +118,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Modules\" />
+    <None Include="wwwroot\Modules\ToSic.Sxc\Module.js" />
   </ItemGroup>
 
 </Project>

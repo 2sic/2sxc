@@ -4,6 +4,7 @@ using Oqtane.UI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Sxc.Oqt.App;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -14,17 +15,21 @@ namespace ToSic.Sxc.Oqt.Client
 {
     internal class PageChangesHelper
     {
-        internal static async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, Interop interop)
+        internal static async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, Interop interop, ModuleProBase page)
         {
+            var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
+
             // External resources = independent files (so not inline JS in the template)
             var externalResources = viewResults.TemplateResources.Where(r => r.IsExternal).ToArray();
 
             // 1. Style Sheets, ideally before JS
-            await interop.IncludeLinks(externalResources
+            var css = externalResources
                 .Where(r => r.ResourceType == ResourceType.Stylesheet)
                 .Select(a => new
                 {
-                    id = string.IsNullOrWhiteSpace(a.UniqueId) ? "" : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                    id = string.IsNullOrWhiteSpace(a.UniqueId)
+                        ? ""
+                        : a.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     rel = "stylesheet",
                     href = a.Url,
                     type = "text/css",
@@ -33,13 +38,17 @@ namespace ToSic.Sxc.Oqt.Client
                     insertbefore = "" // bug in Oqtane, needs to be an empty string instead of null or undefined
                 })
                 .Cast<object>()
-                .ToArray());
+                .ToArray();
+            
+            // Log CSS and then add to page
+            await Log(page, $"{logPrefix}CSS: {css.Length}", css);
+            await interop.IncludeLinks(css);
 
             // 2. Scripts - usually libraries etc.
             // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
             // it uses LoadJS and bundles
             var bundleId = "module-bundle-" + pageState.ModuleId;
-            var includeScripts = externalResources
+            var scripts = externalResources
                 .Where(r => r.ResourceType == ResourceType.Script)
                 .Select(a => new
                 {
@@ -53,10 +62,16 @@ namespace ToSic.Sxc.Oqt.Client
                 })
                 .Cast<object>()
                 .ToArray();
-            if (includeScripts.Any()) await interop.IncludeScriptsWithAttributes(includeScripts);
+
+            // Log scripts and then add to page
+            await Log(page, $"{logPrefix}Scripts: {scripts.Length}", scripts);
+            if (scripts.Any())
+                await interop.IncludeScriptsWithAttributes(scripts);
 
             // 3. Inline JS code which was extracted from the template
             var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
+            // Log inline
+            await Log(page, $"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
             foreach (var inline in inlineResources)
                 await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     "",
@@ -66,6 +81,18 @@ namespace ToSic.Sxc.Oqt.Client
                     "body");
         }
 
+        /// <summary>
+        /// Log something to the page
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="data"></param>
+        private static async Task Log(ModuleProBase page, params object[] data)
+        {
+            if (page != null)
+                await page.Log(data);
+        }
+
+        // TODO: @STV also add logging
         public static async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, Interop interop)
         {
             // Go through Page Properties
@@ -96,6 +123,7 @@ namespace ToSic.Sxc.Oqt.Client
             }
         }
 
+        // TODO: @STV also add logging
         public static string UpdateProperty(string original, OqtPagePropertyChanges change)
         {
             if (string.IsNullOrEmpty(original)) return change.Value ?? original;

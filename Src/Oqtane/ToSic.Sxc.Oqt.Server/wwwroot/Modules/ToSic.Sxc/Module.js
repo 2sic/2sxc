@@ -20,6 +20,10 @@ ToSic.Sxc = {
    * @param {any} scripts
    */
   includeScriptsWithAttributes: async function (scripts) {
+    // 2022-08-20 2dm debug some more
+    const debug = window?.$2sxc?.urlParams?.isDebug() ?? false;
+    if (debug) console.log('includeScriptsWithAttributes', scripts);
+
     const bundles = [];
     for (let s = 0; s < scripts.length; s++) {
       if (scripts[s].bundle === '') {
