@@ -9,7 +9,8 @@
 
         public static string TypeName(string ext)
         {
-            switch (ext.ToLowerInvariant())
+            // Make sure it's lower and doesn't have a leading .
+            switch (ext.ToLowerInvariant().Trim('.'))
             {
                 case "png":
                 case "jpg":
@@ -30,5 +31,7 @@
                     return File;
             }
         }
+
+        public static bool IsImage(string ext) => TypeName(ext) == Image;
     }
 }

@@ -66,6 +66,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (codeRoot == null) return;
             _codeRoot = codeRoot;
             _currentAppIdentity = codeRoot.App;
+            _deps.ToolbarButtonHelper.Ready.MainAppIdentity = _currentAppIdentity;
         }
         private IDynamicCodeRoot _codeRoot;
 

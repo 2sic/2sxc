@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.DI;
 using ToSic.Eav.Metadata;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
@@ -17,8 +14,14 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class AdamMetadataMaker
     {
-        public AdamMetadataMaker(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
-        private readonly IServiceProvider _serviceProvider;
+        public AdamMetadataMaker(/*IServiceProvider serviceProvider,*/ Generator<DynamicEntityDependencies> deGenerator)
+        {
+            //_serviceProvider = serviceProvider;
+            _deGenerator = deGenerator;
+        }
+
+        //private readonly IServiceProvider _serviceProvider;
+        private readonly Generator<DynamicEntityDependencies> _deGenerator;
 
         /// <summary>
         /// Find the first metadata entity for this file/folder
@@ -32,17 +35,18 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal IDynamicMetadata GetMetadata(AdamManager manager, string key, string title)
+        internal IDynamicMetadata GetMetadata(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
         {
             var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, manager.AppRuntime.AppState, title);
+            mdInit?.Invoke(mdOf);
             return new DynamicMetadata(mdOf, null, DynamicEntityDependencies(manager));
         }
 
         private DynamicEntityDependencies DynamicEntityDependencies(AdamManager manager) =>
-            _dynamicEntityDependencies
-            ?? (_dynamicEntityDependencies = _serviceProvider.Build<DynamicEntityDependencies>()
+            _dynamicEntityDeps
+            ?? (_dynamicEntityDeps = _deGenerator.New // _serviceProvider.Build<DynamicEntityDependencies>()
                 .Init(null, (manager.AppContext?.Site).SafeLanguagePriorityCodes(), null, manager.CompatibilityLevel));
-        private DynamicEntityDependencies _dynamicEntityDependencies;
+        private DynamicEntityDependencies _dynamicEntityDeps;
 
 
     }

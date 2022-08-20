@@ -187,8 +187,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 .Builder;
         }
 
-        // TODO: drop image
-
+        // 2022-08-20 #cleanUpImageToolbar
         [PrivateApi("WIP 13.11")]
         public IToolbarBuilder Image(
             object target,

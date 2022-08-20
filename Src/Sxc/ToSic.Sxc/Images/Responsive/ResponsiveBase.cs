@@ -94,7 +94,10 @@ namespace ToSic.Sxc.Images
                 var isInSameEntity = Adam.Security.PathIsInItemAdam(Call.Field.Parent.EntityGuid, "", Src);
                 if (!isInSameEntity) return tag;
 
-                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Image(Call.Field);
+                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field)
+                // 2022-08-20 #cleanUpImageToolbar
+                 .Image(Call.Field)
+                ;
                 var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
                 tag.TagAttributes.Add(toolbar);
             }

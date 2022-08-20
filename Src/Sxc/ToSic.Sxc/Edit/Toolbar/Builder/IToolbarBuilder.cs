@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object prefill = null
         );
 
-
+        // 2022-08-20 #cleanUpImageToolbar
         [PrivateApi("WIP 13.11 - not sure if we actually make it public, as it's basically metadata with automatic content-type - not published yet")]
         IToolbarBuilder Image(
             object target,
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string parameters = null
         );
 
-        
+
 
     }
 }
