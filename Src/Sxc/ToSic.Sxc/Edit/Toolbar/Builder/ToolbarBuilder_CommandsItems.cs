@@ -188,18 +188,18 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         // 2022-08-20 #cleanUpImageToolbar
-        [PrivateApi("WIP 13.11")]
-        public IToolbarBuilder Image(
-            object target,
-            string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null
-        )
-        {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
+        //[PrivateApi("WIP 13.11")]
+        //public IToolbarBuilder Image(
+        //    object target,
+        //    string noParamOrder = Eav.Parameters.Protector,
+        //    string ui = null,
+        //    string parameters = null
+        //)
+        //{
+        //    Eav.Parameters.Protect(noParamOrder, "See docs");
 
-            return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GenerateContext(target, null),
-                decoHelper: _deps.ToolbarButtonHelper.Ready));
-        }
+        //    return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GenerateContext(target, null),
+        //        decoHelper: _deps.ToolbarButtonHelper.Ready));
+        //}
     }
 }

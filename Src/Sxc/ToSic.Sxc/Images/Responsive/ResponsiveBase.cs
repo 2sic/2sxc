@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Images
 
                 var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field)
                 // 2022-08-20 #cleanUpImageToolbar
-                 .Image(Call.Field)
+                 //.Image(Call.Field)
                 ;
                 var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
                 tag.TagAttributes.Add(toolbar);

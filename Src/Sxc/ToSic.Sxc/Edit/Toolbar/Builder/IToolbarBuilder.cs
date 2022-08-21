@@ -30,13 +30,13 @@ namespace ToSic.Sxc.Edit.Toolbar
         );
 
         // 2022-08-20 #cleanUpImageToolbar
-        [PrivateApi("WIP 13.11 - not sure if we actually make it public, as it's basically metadata with automatic content-type - not published yet")]
-        IToolbarBuilder Image(
-            object target,
-            string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null
-        );
+        //[PrivateApi("WIP 13.11 - not sure if we actually make it public, as it's basically metadata with automatic content-type - not published yet")]
+        //IToolbarBuilder Image(
+        //    object target,
+        //    string noParamOrder = Eav.Parameters.Protector,
+        //    string ui = null,
+        //    string parameters = null
+        //);
 
 
 
