@@ -90,9 +90,12 @@ namespace ToSic.Sxc.Images
                 if (ImgService.EditOrNull?.Enabled != true) return tag;
                 if (Call.Field?.Parent == null) return tag;
 
-                // TODO: Determine if this is an "own" adam file
+                // Determine if this is an "own" adam file, because only field-owned files should allow config
                 var isInSameEntity = Adam.Security.PathIsInItemAdam(Call.Field.Parent.EntityGuid, "", Src);
                 if (!isInSameEntity) return tag;
+
+                // Check if it's not a demo-entity, in which case editing settings shouldn't happen
+                if (Call.Field.Parent.IsDemoItem) return tag;
 
                 var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field)
                 // 2022-08-20 #cleanUpImageToolbar
