@@ -42,25 +42,20 @@ namespace ToSic.Sxc.Oqt.App
         public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Host);
         private bool? _isSuperUser;
 
-        /// <summary>
-        /// JS Interop, will be initialized in OnInitializedAsync
-        /// </summary>
-        public Interop Interop;
-        private bool _isSafeToRunJs;
+        public bool IsSafeToRunJs;
 
         #endregion
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            Interop ??= new Interop(JSRuntime);
-        }
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    await base.OnInitializedAsync();
+        //}
 
 
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            
+
             if (NavigationManager.TryGetQueryString<bool>("debug", out var debugInQueryString))
                 Debug = debugInQueryString;
             
@@ -71,7 +66,7 @@ namespace ToSic.Sxc.Oqt.App
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-            if (firstRender) _isSafeToRunJs = true; // now we are safe to have Interop and run js
+            if (firstRender) IsSafeToRunJs = true; // now we are safe to have Interop and run js
         }
 
         #region Log Helpers
@@ -94,7 +89,7 @@ namespace ToSic.Sxc.Oqt.App
                     Console.WriteLine($"{_logPrefix} {item}");
 
                 // log to browser console
-                if (_isSafeToRunJs)
+                if (IsSafeToRunJs)
                 {
                     // first log messages from queue
                     var timeOut = 0;
@@ -121,7 +116,7 @@ namespace ToSic.Sxc.Oqt.App
             catch (Exception ex)
             {
                 Console.WriteLine($"Error:{_logPrefix}:{ex.Message}");
-                if (_isSafeToRunJs)
+                if (IsSafeToRunJs)
                     await JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, ex.Message);
                 else
                     _logMessageQueue.Enqueue(new List<object> { "Error:", _logPrefix, ex.Message }.ToArray());

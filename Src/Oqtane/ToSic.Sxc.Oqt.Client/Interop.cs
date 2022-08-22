@@ -48,16 +48,19 @@ namespace ToSic.Sxc.Oqt.Client
         /// <returns></returns>
         public async Task IncludeScriptsWithAttributes(object[] scripts)
         {
-            try
-            {
-                await _jsRuntime.InvokeVoidAsync(
-                    "ToSic.Sxc.includeScriptsWithAttributes",
-                    (object)scripts);
-            }
-            catch
-            {
-                // ignore exception
-            }
+            await _jsRuntime.InvokeVoidAsync(
+                "ToSic.Sxc.includeScriptsWithAttributes",
+                (object)scripts);
+            //try
+            //{
+            //    await _jsRuntime.InvokeVoidAsync(
+            //        "ToSic.Sxc.includeScriptsWithAttributes",
+            //        (object)scripts);
+            //}
+            //catch
+            //{
+            //    // ignore exception
+            //}
         }
     }
 }
