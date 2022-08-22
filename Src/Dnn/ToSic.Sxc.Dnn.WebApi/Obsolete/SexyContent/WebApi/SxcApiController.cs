@@ -36,7 +36,7 @@ namespace ToSic.SexyContent.WebApi
     /// safer because it can't accidentally mix the App with a different appId in the params
     /// </summary>
     [DnnLogExceptions]
-    [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.")]
+    [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
     [PrivateApi("This was the official base class a long time ago, Name & APIs must remain stable")]
     public abstract partial class SxcApiController : 
         DynamicApiController, 
