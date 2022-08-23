@@ -2,6 +2,7 @@
 using Oqtane.Shared;
 using Oqtane.UI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.App;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Client
 {
     internal class PageChangesHelper
     {
-        internal static async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, Interop interop, ModuleProBase page)
+        internal static async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
         {
             var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
 
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Client
 
             // Log CSS and then add to page
             await Log(page, $"{logPrefix}CSS: {css.Length}", css);
-            await interop.IncludeLinks(css);
+            await sxcInterop.IncludeLinks(css);
 
             // 2. Scripts - usually libraries etc.
             // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
@@ -66,14 +67,14 @@ namespace ToSic.Sxc.Oqt.Client
             // Log scripts and then add to page
             await Log(page, $"{logPrefix}Scripts: {scripts.Length}", scripts);
             if (scripts.Any())
-                await interop.IncludeScriptsWithAttributes(scripts);
+                await sxcInterop.IncludeScriptsWithAttributes(scripts);
 
             // 3. Inline JS code which was extracted from the template
             var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
             // Log inline
             await Log(page, $"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
             foreach (var inline in inlineResources)
-                await interop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
+                await sxcInterop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     "",
                     "",
                     "",
@@ -89,11 +90,16 @@ namespace ToSic.Sxc.Oqt.Client
         private static async Task Log(ModuleProBase page, params object[] data)
         {
             if (page != null)
-                await page.Log(data);
+            {
+                var x = new List<object> { }.Concat(data).ToArray();
+                await page.Log(x);
+            }
+            //else
+            //    throw new Exception("stv log page is missing");
         }
 
 
-        public static async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, Interop interop, ModuleProBase page)
+        public static async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
         {
             var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
 
@@ -103,20 +109,20 @@ namespace ToSic.Sxc.Oqt.Client
                 switch (p.Property)
                 {
                     case OqtPageProperties.Title:
-                        var title = await interop.GetTitleValue();
+                        var title = await sxcInterop.GetTitleValue();
                         await Log(page, $"{logPrefix}UpdateTitle:", title);
-                        await interop.UpdateTitle(await UpdateProperty(title, p.InjectOriginalInValue(title), page));
+                        await sxcInterop.UpdateTitle(await UpdateProperty(title, p.InjectOriginalInValue(title), page));
                         break;
                     case OqtPageProperties.Keywords:
-                        var keywords = await interop.GetMetaTagContentByName("KEYWORDS");
+                        var keywords = await sxcInterop.GetMetaTagContentByName("KEYWORDS");
                         await Log(page, $"{logPrefix}Keywords:", keywords);
-                        await interop.IncludeMeta("MetaKeywords", "name", "KEYWORDS",
+                        await sxcInterop.IncludeMeta("MetaKeywords", "name", "KEYWORDS",
                             await UpdateProperty(keywords, p.InjectOriginalInValue(keywords), page), "id");
                         break;
                     case OqtPageProperties.Description:
-                        var description = await interop.GetMetaTagContentByName("DESCRIPTION");
+                        var description = await sxcInterop.GetMetaTagContentByName("DESCRIPTION");
                         await Log(page, $"{logPrefix}Description:", description);
-                        await interop.IncludeMeta("MetaDescription", "name", "DESCRIPTION",
+                        await sxcInterop.IncludeMeta("MetaDescription", "name", "DESCRIPTION",
                             await UpdateProperty(description, p.InjectOriginalInValue(description), page), "id");
                         break;
                     case OqtPageProperties.Base:

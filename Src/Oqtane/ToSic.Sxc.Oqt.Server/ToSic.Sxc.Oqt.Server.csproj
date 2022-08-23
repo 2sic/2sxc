@@ -118,6 +118,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\Modules\ToSic.Sxc\Module2.js" />
     <None Include="wwwroot\Modules\ToSic.Sxc\Module.js" />
   </ItemGroup>
 

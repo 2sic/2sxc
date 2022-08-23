@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Oqt.Client
 {
-    public class Interop : Oqtane.UI.Interop
+    public class SxcInterop : Oqtane.UI.Interop
     {
         private readonly IJSRuntime _jsRuntime;
 
-        public Interop(IJSRuntime jsRuntime) : base(jsRuntime)
+        public SxcInterop(IJSRuntime jsRuntime) : base(jsRuntime)
         {
             _jsRuntime = jsRuntime;
+
         }
         public ValueTask<string> GetTitleValue()
         {
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Client
 
         /// <summary>
         /// IncludeScriptsWithAttributes is fork of
-        /// Oqtane.Interop.IncludeScripts from Oqtane v3.1.0
+        /// Oqtane.SxcInterop.IncludeScripts from Oqtane v3.1.0
         /// with addition of httpAttributes support
         /// </summary>
         /// <param name="scripts"> scripts (object[]),
@@ -48,9 +49,9 @@ namespace ToSic.Sxc.Oqt.Client
         /// <returns></returns>
         public async Task IncludeScriptsWithAttributes(object[] scripts)
         {
-            await _jsRuntime.InvokeVoidAsync(
-                "ToSic.Sxc.includeScriptsWithAttributes",
-                (object)scripts);
+            var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/Modules/ToSic.Sxc/Module2.js ");
+            await module.InvokeVoidAsync("includeScriptsWithAttributes", (object)scripts);
+            //await _jsRuntime.InvokeVoidAsync("ToSic.Sxc.includeScriptsWithAttributes", (object)scripts);
             //try
             //{
             //    await _jsRuntime.InvokeVoidAsync(

@@ -125,7 +125,6 @@ namespace ToSic.Sxc.Oqt.App
                 await Log($"2.1: NewDataArrived");
                 NewDataArrived = false;
 
-                var interop = new Interop(JSRuntime);
 
                 #region 2sxc Standard Assets and Header
 
@@ -133,7 +132,7 @@ namespace ToSic.Sxc.Oqt.App
                 if (ViewResults.SxcContextMetaName != null)
                 {
                     await Log($"2.2: RenderUri:{RenderedUri}");
-                    await interop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents, "id");
+                    await SxcInterop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents, "id");
                 }
 
                 // Lets load all 2sxc js dependencies (js / styles)
@@ -143,14 +142,14 @@ namespace ToSic.Sxc.Oqt.App
                     foreach (var resource in ViewResults.SxcScripts)
                     {
                         await Log($"2.3: IncludeScript:{resource}");
-                        await interop.IncludeScript("", resource, "", "", "", "head");
+                        await SxcInterop.IncludeScript("", resource, "", "", "", "head");
                     }
 
                 if (ViewResults.SxcStyles != null)
                     foreach (var style in ViewResults.SxcStyles)
                     {
                         await Log($"2.4: IncludeCss:{style}");
-                        await interop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
+                        await SxcInterop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
                     }
 
                 #endregion
@@ -160,13 +159,13 @@ namespace ToSic.Sxc.Oqt.App
                 if (ViewResults.TemplateResources != null)
                 {
                     await Log($"2.5: AttachScriptsAndStyles");
-                    await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, interop, this);
+                    await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
                 }
 
                 if (ViewResults.PageProperties?.Any() ?? false)
                 {
                     await Log($"2.6: UpdatePageProperties");
-                    await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, interop, this);
+                    await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
                 }
 
                 StateHasChanged();

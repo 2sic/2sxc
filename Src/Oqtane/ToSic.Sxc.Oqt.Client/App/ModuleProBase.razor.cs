@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client;
-using Interop = ToSic.Sxc.Oqt.Client.Interop;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
@@ -42,6 +41,7 @@ namespace ToSic.Sxc.Oqt.App
         public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Host);
         private bool? _isSuperUser;
 
+        public SxcInterop SxcInterop;
         public bool IsSafeToRunJs;
 
         #endregion
@@ -66,7 +66,12 @@ namespace ToSic.Sxc.Oqt.App
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-            if (firstRender) IsSafeToRunJs = true; // now we are safe to have Interop and run js
+            if (firstRender)
+            {
+                SxcInterop = new SxcInterop(JSRuntime);
+                // now we are safe to have SxcInterop and run js
+                IsSafeToRunJs = true;
+            } 
         }
 
         #region Log Helpers
