@@ -1,4 +1,4 @@
-/* Module Script */
+/* native JavaScript module */
 
 /**
  * copy of Oqtane.Interop.includeScripts from Oqtane v3.1.0

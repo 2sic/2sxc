@@ -49,9 +49,14 @@ namespace ToSic.Sxc.Oqt.Client
         /// <returns></returns>
         public async Task IncludeScriptsWithAttributes(object[] scripts)
         {
-            var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/Modules/ToSic.Sxc/Module2.js ");
+            // fix for https://github.com/2sic/2sxc/issues/2844
+            // we use solution with javascript native module import "./Modules/ToSic.Sxc/NativeModule.js"
+            // instead of default oqtane Module.js pattern (that is commented bellow)
+            // because our PageChangesHelper.AttachScriptsAndStyles in OnAfterRenderAsync in index.razor.cs
+            // is sometimes executing interop call to 'ToSic.Sxc.includeScriptsWithAttributes'
+            // earlier than "Modules/ToSic.Sxc/Module.js" is loaded in browser by oqtane ModuleBase.cs
+            var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Modules/ToSic.Sxc/NativeModule.js");
             await module.InvokeVoidAsync("includeScriptsWithAttributes", (object)scripts);
-            //await _jsRuntime.InvokeVoidAsync("ToSic.Sxc.includeScriptsWithAttributes", (object)scripts);
             //try
             //{
             //    await _jsRuntime.InvokeVoidAsync(
