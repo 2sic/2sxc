@@ -15,7 +15,11 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// The filter2Url - should not change the case of the properties!
         /// </summary>
-        private ObjectToUrl Filter2Url => _f2U.Get(() => new ObjectToUrl());
+        private ObjectToUrl Filter2Url => _f2U.Get(() => new ObjectToUrl(null, new[] { new FilterValueProcessor() })
+        {
+            ArrayBoxStart = "[",
+            ArrayBoxEnd = "]"
+        });
         private readonly GetOnce<ObjectToUrl> _f2U = new GetOnce<ObjectToUrl>();
 
 
