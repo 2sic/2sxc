@@ -7,6 +7,7 @@ using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
@@ -54,6 +55,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             _currentAppIdentity = parent._currentAppIdentity;
             _codeRoot = parent._codeRoot;
             _configuration = parent._configuration;
+            _utils = parent._utils;
             Rules.AddRange(parent.Rules);
         }
 
@@ -73,6 +75,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         #endregion
 
         private ToolbarBuilderConfiguration _configuration;
+
+        private ToolbarBuilderUtilities Utils => _utils ?? (_utils = new ToolbarBuilderUtilities());
+        private ToolbarBuilderUtilities _utils;
 
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 commandName,
                 operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),
                 ui: PrepareUi(ui),
-                parameters: Par2Url.Serialize(parameters),
+                parameters: Utils.Par2Url.Serialize(parameters),
                 operationCode: operation.HasValue() ? null : target as string));
         }
         

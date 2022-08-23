@@ -20,12 +20,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             object prefill,
             object filter = null)
         {
-            var paramsString = Par2Url.Serialize(parameters);
-            var parsWithPrefill = Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
+            var paramsString = Utils.Par2Url.Serialize(parameters);
+            var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
             return (
                 ToolbarRuleOperation.Pick(operation, defOp),
                 Ui: PrepareUi(ui, uiMerge, uiMergePrefix),
-                Parameters: Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
+                Parameters: Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
             );
 
         }
