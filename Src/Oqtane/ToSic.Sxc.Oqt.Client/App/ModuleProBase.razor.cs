@@ -43,6 +43,7 @@ namespace ToSic.Sxc.Oqt.App
 
         public SxcInterop SxcInterop;
         public bool IsSafeToRunJs;
+        public readonly ConcurrentQueue<object[]> LogMessageQueue = new();
 
         #endregion
 
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Oqt.App
             if (NavigationManager.TryGetQueryString<bool>("debug", out var debugInQueryString))
                 Debug = debugInQueryString;
             
-            await Log($"2sxc Blazor Logging Enabled");  // will only show if it's enabled
+            Log($"2sxc Blazor Logging Enabled");  // will only show if it's enabled
         }
         
 
@@ -81,7 +82,7 @@ namespace ToSic.Sxc.Oqt.App
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task Log(params object[] message)
+        public void Log(params object[] message)
         {
             // If the url has a debug=true and we are the super-user
             if (message == null || !message.Any() || !Debug || !IsSuperUser) return;
@@ -98,11 +99,11 @@ namespace ToSic.Sxc.Oqt.App
                 {
                     // first log messages from queue
                     var timeOut = 0;
-                    while (!_logMessageQueue.IsEmpty && timeOut < 100)
+                    while (!LogMessageQueue.IsEmpty && timeOut < 100)
                     {
-                        if (_logMessageQueue.TryDequeue(out var messageToLog))
+                        if (LogMessageQueue.TryDequeue(out var messageToLog))
                         {
-                            await ConsoleLog(new List<object> { $"dequeue({_logMessageQueue.Count}):" }.Concat(messageToLog).ToArray());
+                            ConsoleLog(new List<object> { $"dequeue({LogMessageQueue.Count}):" }.Concat(messageToLog).ToArray());
                             timeOut = 0;
                         }
                         else
@@ -110,32 +111,31 @@ namespace ToSic.Sxc.Oqt.App
                     };
                     
                     // than log current message
-                    await ConsoleLog(message);
+                    ConsoleLog(message);
                 }
                 else
                 {
                     // browser is not ready, so store messages in queue
-                    _logMessageQueue.Enqueue(message);
+                    LogMessageQueue.Enqueue(message.ToArray());
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error:{_logPrefix}:{ex.Message}");
                 if (IsSafeToRunJs)
-                    await JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, ex.Message);
+                    JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, ex.Message);
                 else
-                    _logMessageQueue.Enqueue(new List<object> { "Error:", _logPrefix, ex.Message }.ToArray());
+                    LogMessageQueue.Enqueue(new List<object> { "Error:", _logPrefix, ex.Message }.ToArray());
             }
         }
 
-        private async Task ConsoleLog(object[] message)
+        private void ConsoleLog(object[] message)
         {
             var data = new List<object> { _logPrefix }.Concat(message);
-            await JSRuntime.InvokeVoidAsync(ConsoleLogJs, data.ToArray());
+            JSRuntime.InvokeVoidAsync(ConsoleLogJs, data.ToArray());
         }
         private string _logPrefix;
         private const string ConsoleLogJs = "console.log";
-        private readonly ConcurrentQueue<object[]> _logMessageQueue = new();
 
         #endregion
     }

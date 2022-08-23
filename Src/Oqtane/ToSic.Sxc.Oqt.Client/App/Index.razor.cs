@@ -49,26 +49,26 @@ namespace ToSic.Sxc.Oqt.App
         {
             await base.OnParametersSetAsync();
 
-            await Log($"1: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            Log($"1: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
             
             // Call 2sxc engine only when is necessary to render control.
             if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
             {
                 RenderedUri = NavigationManager.Uri;
-                await Log($"1.1: RenderUri:{RenderedUri}");
+                Log($"1.1: RenderUri:{RenderedUri}");
                 var indexOfQuestion = NavigationManager.Uri.IndexOf("?", Ordinal);
                 RenderedPage = indexOfQuestion > -1
                     ? NavigationManager.Uri.Substring(0, indexOfQuestion)
                     : NavigationManager.Uri;
-                await Log($"1.2: Initialize2sxcContentBlock");
+                Log($"1.2: Initialize2sxcContentBlock");
                 await Initialize2SxcContentBlock();
                 NewDataArrived = true;
                 ViewResults.SystemHtml = OqtPrerenderService.Init(PageState, logger).GetSystemHtml();
-                await Csp();
-                await Log($"1.3: Csp");
+                Csp();
+                Log($"1.3: Csp");
             }
             
-            await Log($"1 end: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            Log($"1 end: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
         }
 
         /// <summary>
@@ -89,24 +89,24 @@ namespace ToSic.Sxc.Oqt.App
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
             {
-                await Log($"1.2.1: ErrorMessage:{ViewResults.ErrorMessage}");
+                Log($"1.2.1: ErrorMessage:{ViewResults.ErrorMessage}");
                 AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
             }
 
-            await Log($"1.2.2: Html:{ViewResults?.Html.Length}", ViewResults);
+            Log($"1.2.2: Html:{ViewResults?.Html.Length}", ViewResults);
         }
 
         #region CSP
 
         public bool ApplyCsp = true;
 
-        private async Task Csp()
+        private void Csp()
         {
             if (IsPreRendering() && ApplyCsp // executed only in prerender
                 && (HttpContextAccessor?.HttpContext?.Request?.Path.HasValue == true)
                 && !HttpContextAccessor.HttpContext.Request.Path.Value.Contains("/_blazor"))
                 if (ViewResults?.CspParameters?.Any() ?? false)
-                    await PageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor, this);
+                    PageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor, this);
 
             ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
         }
@@ -117,12 +117,12 @@ namespace ToSic.Sxc.Oqt.App
         {
             await base.OnAfterRenderAsync(firstRender);
             
-            await Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
+            Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
 
             // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
             if (IsSafeToRunJs && NewDataArrived && PageState.Runtime == Runtime.Server && ViewResults != null)
             {
-                await Log($"2.1: NewDataArrived");
+                Log($"2.1: NewDataArrived");
                 NewDataArrived = false;
 
 
@@ -131,7 +131,7 @@ namespace ToSic.Sxc.Oqt.App
                 // Add Context-Meta first, because it should be available when $2sxc loads
                 if (ViewResults.SxcContextMetaName != null)
                 {
-                    await Log($"2.2: RenderUri:{RenderedUri}");
+                    Log($"2.2: RenderUri:{RenderedUri}");
                     await SxcInterop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents, "id");
                 }
 
@@ -141,14 +141,14 @@ namespace ToSic.Sxc.Oqt.App
                 if (ViewResults.SxcScripts != null)
                     foreach (var resource in ViewResults.SxcScripts)
                     {
-                        await Log($"2.3: IncludeScript:{resource}");
+                        Log($"2.3: IncludeScript:{resource}");
                         await SxcInterop.IncludeScript("", resource, "", "", "", "head");
                     }
 
                 if (ViewResults.SxcStyles != null)
                     foreach (var style in ViewResults.SxcStyles)
                     {
-                        await Log($"2.4: IncludeCss:{style}");
+                        Log($"2.4: IncludeCss:{style}");
                         await SxcInterop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
                     }
 
@@ -158,13 +158,13 @@ namespace ToSic.Sxc.Oqt.App
 
                 if (ViewResults.TemplateResources != null)
                 {
-                    await Log($"2.5: AttachScriptsAndStyles");
+                    Log($"2.5: AttachScriptsAndStyles");
                     await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
                 }
 
                 if (ViewResults.PageProperties?.Any() ?? false)
                 {
-                    await Log($"2.6: UpdatePageProperties");
+                    Log($"2.6: UpdatePageProperties");
                     await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
                 }
 
@@ -173,7 +173,7 @@ namespace ToSic.Sxc.Oqt.App
                 #endregion
             }
             
-            await Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
+            Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
         }
     }
 }

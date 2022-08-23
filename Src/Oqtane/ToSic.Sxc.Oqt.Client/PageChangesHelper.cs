@@ -2,7 +2,6 @@
 using Oqtane.Shared;
 using Oqtane.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.App;
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Client
                 .ToArray();
 
             // Log CSS and then add to page
-            await Log(page, $"{logPrefix}CSS: {css.Length}", css);
+            page?.Log($"{logPrefix}CSS: {css.Length}", css);
             await sxcInterop.IncludeLinks(css);
 
             // 2. Scripts - usually libraries etc.
@@ -65,14 +64,14 @@ namespace ToSic.Sxc.Oqt.Client
                 .ToArray();
 
             // Log scripts and then add to page
-            await Log(page, $"{logPrefix}Scripts: {scripts.Length}", scripts);
+            page?.Log($"{logPrefix}Scripts: {scripts.Length}", scripts);
             if (scripts.Any())
                 await sxcInterop.IncludeScriptsWithAttributes(scripts);
 
             // 3. Inline JS code which was extracted from the template
             var inlineResources = viewResults.TemplateResources.Where(r => !r.IsExternal).ToArray();
             // Log inline
-            await Log(page, $"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
+            page?.Log($"{logPrefix}Inline: {inlineResources.Length}", inlineResources);
             foreach (var inline in inlineResources)
                 await sxcInterop.IncludeScript(string.IsNullOrWhiteSpace(inline.UniqueId) ? "" : inline.UniqueId, // bug in Oqtane, needs to be an empty string instead of null or undefined
                     "",
@@ -80,22 +79,6 @@ namespace ToSic.Sxc.Oqt.Client
                     "",
                     inline.Content,
                     "body");
-        }
-
-        /// <summary>
-        /// Log something to the page
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="data"></param>
-        private static async Task Log(ModuleProBase page, params object[] data)
-        {
-            if (page != null)
-            {
-                var x = new List<object> { }.Concat(data).ToArray();
-                await page.Log(x);
-            }
-            //else
-            //    throw new Exception("stv log page is missing");
         }
 
 
@@ -110,40 +93,40 @@ namespace ToSic.Sxc.Oqt.Client
                 {
                     case OqtPageProperties.Title:
                         var title = await sxcInterop.GetTitleValue();
-                        await Log(page, $"{logPrefix}UpdateTitle:", title);
-                        await sxcInterop.UpdateTitle(await UpdateProperty(title, p.InjectOriginalInValue(title), page));
+                        page?.Log($"{logPrefix}UpdateTitle:", title);
+                        await sxcInterop.UpdateTitle(UpdateProperty(title, p.InjectOriginalInValue(title), page));
                         break;
                     case OqtPageProperties.Keywords:
                         var keywords = await sxcInterop.GetMetaTagContentByName("KEYWORDS");
-                        await Log(page, $"{logPrefix}Keywords:", keywords);
+                        page?.Log($"{logPrefix}Keywords:", keywords);
                         await sxcInterop.IncludeMeta("MetaKeywords", "name", "KEYWORDS",
-                            await UpdateProperty(keywords, p.InjectOriginalInValue(keywords), page), "id");
+                            UpdateProperty(keywords, p.InjectOriginalInValue(keywords), page), "id");
                         break;
                     case OqtPageProperties.Description:
                         var description = await sxcInterop.GetMetaTagContentByName("DESCRIPTION");
-                        await Log(page, $"{logPrefix}Description:", description);
+                        page?.Log($"{logPrefix}Description:", description);
                         await sxcInterop.IncludeMeta("MetaDescription", "name", "DESCRIPTION",
-                            await UpdateProperty(description, p.InjectOriginalInValue(description), page), "id");
+                            UpdateProperty(description, p.InjectOriginalInValue(description), page), "id");
                         break;
                     case OqtPageProperties.Base:
                         // For base - ignore for now as we don't know what side-effects this could have
-                        await Log(page, $"{logPrefix}Base ignore for now");
+                        page?.Log($"{logPrefix}Base ignore for now");
                         break;
                     default:
-                        await Log(page, $"{logPrefix} ArgumentOutOfRangeException");
+                        page?.Log($"{logPrefix} ArgumentOutOfRangeException");
                         throw new ArgumentOutOfRangeException();
                 }
             }
         }
 
-        public static async Task<string> UpdateProperty(string original, OqtPagePropertyChanges change, ModuleProBase page)
+        public static string UpdateProperty(string original, OqtPagePropertyChanges change, ModuleProBase page)
         {
             var logPrefix = $"{nameof(UpdateProperty)}(original:{original}) - ";
 
             if (string.IsNullOrEmpty(original))
             {
                 var result = change.Value ?? original;
-                await Log(page, $"{logPrefix}is empty, UpdateTitle:{result}");
+                page?.Log($"{logPrefix}is empty, UpdateTitle:{result}");
                 return result;
             };
 
@@ -156,11 +139,11 @@ namespace ToSic.Sxc.Oqt.Client
                     var suffixPos = pos + change.Placeholder.Length;
                     var suffix = (suffixPos < original.Length ? original.Substring(suffixPos) : "");
                     var result2 = original.Substring(0, pos) + change.Value + suffix;
-                    await Log(page, $"{logPrefix}token replaced, UpdateTitle:{result2}");
+                    page?.Log($"{logPrefix}token replaced, UpdateTitle:{result2}");
                     return result2;
                 }
 
-                await Log(page, $"{logPrefix}replace token not found, UpdateTitle:{original}");
+                page?.Log($"{logPrefix}replace token not found, UpdateTitle:{original}");
                 if (change.Change == OqtPagePropertyOperation.ReplaceOrSkip) return original;
             }
 
@@ -173,19 +156,20 @@ namespace ToSic.Sxc.Oqt.Client
                 OqtPagePropertyOperation.ReplaceOrSkip => original,
                 _ => throw new ArgumentOutOfRangeException()
             };
-            await Log(page, $"{logPrefix}{change.Change}, UpdateTitle:{result3}");
+            page?.Log($"{logPrefix}{change.Change}, UpdateTitle:{result3}");
             return result3;
         }
 
-        public static async Task<int> ApplyHttpHeaders(OqtViewResultsDto result, Lazy<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
+        public static int ApplyHttpHeaders(OqtViewResultsDto result, Lazy<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
         {
             var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
 
+            page?.Log($"{logPrefix}stv#1 poc");
             // Register CSP changes for applying once all modules have been prepared
             // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
             if (result.CspEnabled && featuresService.Value.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
             {
-                await Log(page, $"{logPrefix}Register CSP changes");
+                page?.Log($"{logPrefix}Register CSP changes");
                 PageCsp(result.CspEnforced, httpContextAccessor, page).Add(result.CspParameters.Select(p => new CspParameters(UrlHelpers.ParseQueryString(p))).ToList());
             }
 
@@ -193,19 +177,19 @@ namespace ToSic.Sxc.Oqt.Client
 
             if (httpContextAccessor.HttpContext?.Response == null)
             {
-                await Log(page, $"{logPrefix}error, HttpResponse is null");
+                page?.Log($"{logPrefix}error, HttpResponse is null");
                 return 0;
             }
 
             if (httpContextAccessor.HttpContext.Response.HasStarted)
             {
-                await Log(page, $"{logPrefix}error, to late for adding http headers");
+                page?.Log($"{logPrefix}error, to late for adding http headers");
                 return 0;
             }
 
             if (httpHeaders?.Any() != true)
             {
-                await Log(page, $"{logPrefix}ok, no headers to add");
+                page?.Log($"{logPrefix}ok, no headers to add");
                 return 0;
             }
 
@@ -222,21 +206,21 @@ namespace ToSic.Sxc.Oqt.Client
                         // So to do this well, we'll need to merge them in future, 
                         // Ideally combining the existing one with any additional ones added here
                         httpContextAccessor.HttpContext.Response.Headers[httpHeader.Name] = httpHeader.Value;
-                        await Log(page, $"{logPrefix}{httpHeader.Name}={httpHeader.Value}");
+                        page?.Log($"{logPrefix}{httpHeader.Name}={httpHeader.Value}");
                     }
                 }
                 catch (Exception e)
                 {
-                    await Log(page, $"{logPrefix}Exception: {e.Message}");
+                    page?.Log($"{logPrefix}Exception: {e.Message}");
                 }
             });
-            await Log(page, $"{logPrefix}httpHeaders.Count: {httpHeaders.Count}");
+            page?.Log($"{logPrefix}httpHeaders.Count: {httpHeaders.Count}");
             return httpHeaders.Count;
         }
 
         private static CspOfPage PageCsp(bool enforced, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
         {
-            //var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
+            var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
 
             var key = "2sxcPageLevelCsp";
 
@@ -245,7 +229,7 @@ namespace ToSic.Sxc.Oqt.Client
             if (httpContextAccessor.HttpContext.Items.ContainsKey(key))
             {
                 var result = (CspOfPage)httpContextAccessor.HttpContext.Items[key];
-                //Log(page, $"already registered {logPrefix}{key}={result}").ConfigureAwait(false);
+                page?.Log($"already registered {logPrefix}{key}={result}");
                 return result;
             }
 
@@ -264,18 +248,18 @@ namespace ToSic.Sxc.Oqt.Client
                         {
                             var key = pageLevelCsp.HeaderName(enforced);
                             httpContextAccessor.HttpContext.Response.Headers[key] = headers;
-                            //Log(page, $"{logPrefix}have headers {key}={headers}").ConfigureAwait(false);
+                            page?.Log($"{logPrefix}have headers {key}={headers}");
                         }
 
                     }
                     catch (Exception e)
                     {
-                        //Log(page, $"{logPrefix}Exception: {e.Message}").ConfigureAwait(false);
+                        page?.Log($"{logPrefix}Exception: {e.Message}");
                     }
 
                     return Task.CompletedTask;
                 });
-            //Log(page, $"not yet registered {logPrefix}{key}={pageLevelCsp}").ConfigureAwait(false);
+            page?.Log($"not yet registered {logPrefix}{key}={pageLevelCsp}");
             return pageLevelCsp;
         }
     }
