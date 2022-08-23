@@ -12,6 +12,11 @@ namespace ToSic.Sxc.Edit.Toolbar
         private ObjectToUrl Par2Url => _o2U.Get(() => new ObjectToUrl(null, new[] { new UrlValueCamelCase() }));
         private readonly GetOnce<ObjectToUrl> _o2U = new GetOnce<ObjectToUrl>();
 
+        /// <summary>
+        /// The filter2Url - should not change the case of the properties!
+        /// </summary>
+        private ObjectToUrl Filter2Url => _f2U.Get(() => new ObjectToUrl());
+        private readonly GetOnce<ObjectToUrl> _f2U = new GetOnce<ObjectToUrl>();
 
 
         [PrivateApi]

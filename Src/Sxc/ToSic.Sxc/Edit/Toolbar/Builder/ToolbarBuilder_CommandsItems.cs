@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
@@ -24,7 +23,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             return (
                 ToolbarRuleOperation.Pick(operation, defOp),
                 Ui: PrepareUi(ui, uiMerge, uiMergePrefix),
-                Parameters: Par2Url.SerializeWithChild(
+                Parameters: Filter2Url.SerializeWithChild(
                     Par2Url.SerializeWithChild(parameters, prefill, PrefixPrefill),
                     filter, PrefixFilters)
             );
