@@ -84,7 +84,8 @@ namespace ToSic.Sxc.Oqt.App
                 PageState.Page.PageId,
                 ModuleState.ModuleId,
                 culture,
-                urlQuery);
+                urlQuery,
+                IsPreRendering());
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
             {
@@ -97,12 +98,11 @@ namespace ToSic.Sxc.Oqt.App
 
         #region CSP
 
-        public bool PrerenderingEnabled() => PageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
         public bool ApplyCsp = true;
 
         private async Task Csp()
         {
-            if (PrerenderingEnabled() && ApplyCsp // executed only in prerender
+            if (IsPreRendering() && ApplyCsp // executed only in prerender
                 && (HttpContextAccessor?.HttpContext?.Request?.Path.HasValue == true)
                 && !HttpContextAccessor.HttpContext.Request.Path.Value.Contains("/_blazor"))
                 if (ViewResults?.CspParameters?.Any() ?? false)

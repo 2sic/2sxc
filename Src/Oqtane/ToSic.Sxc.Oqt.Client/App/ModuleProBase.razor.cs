@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Oqt.App
         //{
         //    await base.OnInitializedAsync();
         //}
-
+        public bool IsPreRendering() => PageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
 
         protected override async Task OnParametersSetAsync()
         {
