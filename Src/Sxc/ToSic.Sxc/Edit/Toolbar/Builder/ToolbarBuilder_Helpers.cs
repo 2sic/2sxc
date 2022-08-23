@@ -1,19 +1,18 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-        private string ParToString(object uiOrParams) => Par2Url.Serialize(uiOrParams);
-
-
+        /// <summary>
+        /// Helper to process 'parameters' to url, ensuring lower-case etc. 
+        /// </summary>
         private ObjectToUrl Par2Url => _o2U.Get(() => new ObjectToUrl(null, new[] { new UrlValueCamelCase() }));
         private readonly GetOnce<ObjectToUrl> _o2U = new GetOnce<ObjectToUrl>();
 
         /// <summary>
-        /// The filter2Url - should not change the case of the properties!
+        /// Helper to process 'filter' to url - should not change the case of the properties and auto-fix some special scenarios
         /// </summary>
         private ObjectToUrl Filter2Url => _f2U.Get(() => new ObjectToUrl(null, new[] { new FilterValueProcessor() })
         {
@@ -22,15 +21,12 @@ namespace ToSic.Sxc.Edit.Toolbar
         });
         private readonly GetOnce<ObjectToUrl> _f2U = new GetOnce<ObjectToUrl>();
 
+        /// <summary>
+        /// Helper to process 'prefill' - should not change the case of the properties
+        /// </summary>
+        private ObjectToUrl Prefill2Url => _p2U.Get(() => new ObjectToUrl());
+        private readonly GetOnce<ObjectToUrl> _p2U = new GetOnce<ObjectToUrl>();
 
-        [PrivateApi]
-        internal static ObjectToUrl GetUi2Url() => new ObjectToUrl(null, new UrlValueProcess[]
-        {
-            new UrlValueCamelCase(),
-            new UiValueProcessor()
-        });
-
-        [PrivateApi]
         private string PrepareUi(
             object ui,
             object uiMerge = null,
@@ -44,6 +40,12 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
         private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);
         private readonly GetOnce<ObjectToUrl> _ui2Url = new GetOnce<ObjectToUrl>();
+
+        internal static ObjectToUrl GetUi2Url() => new ObjectToUrl(null, new UrlValueProcess[]
+        {
+            new UrlValueCamelCase(),
+            new UiValueProcessor()
+        });
 
     }
 }

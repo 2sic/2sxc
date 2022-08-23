@@ -20,7 +20,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             object prefill,
             object filter = null)
         {
-            var parsWithPrefill = Par2Url.SerializeWithChild(parameters, prefill, PrefixPrefill);
+            var paramsString = Par2Url.Serialize(parameters);
+            var parsWithPrefill = Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
             return (
                 ToolbarRuleOperation.Pick(operation, defOp),
                 Ui: PrepareUi(ui, uiMerge, uiMergePrefix),
