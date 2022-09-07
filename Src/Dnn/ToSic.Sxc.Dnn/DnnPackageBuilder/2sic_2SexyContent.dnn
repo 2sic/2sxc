@@ -684,9 +684,9 @@
       </components>
     </package>
 
-    <!-- the Imageflow - should be identical to the one from https://github.com/2sic/dnn-imageflow -->
+    <!-- the Imageflow - should be based on the one from https://github.com/2sic/dnn-imageflow -->
     <!-- note that the version number needs the last digits, because otherwise the user will always be informed that it's already installed -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.00.04.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.00.06.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
@@ -714,13 +714,14 @@
 
         <!-- "Assembly" component should be in front of "Config", or new/updated auto-generated assembly binding redirects in web.config are lost. -->
         <component type="Assembly">
+
           <assemblies>
             <basePath>bin</basePath>
             <assembly>
               <name>ToSic.Imageflow.Dnn.dll</name>
             </assembly>
 
-            <!-- *** DNN shared assemblies *** -->
+            <!-- *** DNN shared assemblies -->
 
             <!-- Imageflow.Net transitive dependency -->
             <!--<assembly>
@@ -729,6 +730,7 @@
             </assembly>-->
 
           </assemblies>
+
         </component>
 
         <component type="Config">
@@ -1843,7 +1845,7 @@
           <resourceFiles>
             <basePath></basePath>
             <resourceFile>
-              <name>Extensions/Imageflow/Resources.zip</name>
+              <name>Extensions/Imageflow/ToSic.Imageflow.Dnn.zip</name>
             </resourceFile>
           </resourceFiles>
         </component>
@@ -1884,6 +1886,15 @@
             </file>
             <file>
               <name>ReleaseNotes.txt</name>
+            </file>
+          </files>
+        </component>
+
+        <component type="Cleanup" version="01.00.06.01">
+          <files>
+            <file>
+              <path></path>
+              <name>Resources.zip.manifest</name>
             </file>
           </files>
         </component>
