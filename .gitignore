@@ -18,3 +18,4 @@ Src/Integration/SxcEdit01/wwwroot/adam/*
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/dist
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/js
 /Src/Oqtane/ToSic.Sxc.Oqt.Server/wwwroot/Modules/ToSic.Sxc/system
+*.lutconfig
