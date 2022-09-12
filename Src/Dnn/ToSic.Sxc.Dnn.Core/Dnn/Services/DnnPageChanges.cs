@@ -88,9 +88,8 @@ namespace ToSic.Sxc.Dnn.Services
         private int ManualFeatures(DnnHtmlPage dnnPage, IList<IPageFeature> feats)
         {
             // New in 12.04 - Add features which have HTML only
-            // In the page the code would be like this:
-            // var pageService = GetService<ToSic.Sxc.Web.IPageService>();
-            // pageService.Activate("fancybox4");
+            // In the page the code would be like this (v14):
+            // Kit.Page.Activate("fancybox4");
             // This will add a header for the sources of these features
             foreach (var f in feats) dnnPage.AddToHead(Tag.Custom(f.Html));
             return feats.Count;
