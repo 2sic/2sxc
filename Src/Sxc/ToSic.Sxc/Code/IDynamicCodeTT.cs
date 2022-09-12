@@ -11,6 +11,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         TModel Model { get; }
 
-        TServiceKit Kit { get; }
+        // 2022-09-12 2dm disabled this, already in the base interface
+        //TServiceKit Kit { get; }
     }
 }

@@ -11,7 +11,9 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <summary>
         /// Primary identifier to activate the feature
         /// </summary>
+#pragma warning disable CS0108, CS0114
         string NameId { get; }
+#pragma warning restore CS0108, CS0114
 
         /// <summary>
         /// Name of this feature. 
@@ -29,10 +31,5 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// List of other features required to run this feature.
         /// </summary>
         IEnumerable<string> Needs { get; }
-
-        /// <summary>
-        /// Optional requirements which are necessary for this feature to be used
-        /// </summary>
-        List<Condition> Requirements { get; }
     }
 }

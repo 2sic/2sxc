@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web.Url
         {
             public string Key;
             public string Value;
-            public string[] AllValues;
+            //public string[] AllValues;
         }
 
         internal static string NvcToString(NameValueCollection nvc, string keyValueSeparator, string pairSeparator,

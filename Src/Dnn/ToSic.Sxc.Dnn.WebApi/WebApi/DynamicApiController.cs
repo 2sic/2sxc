@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi
             Log.A($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            var compatibilityLevel = this is IDynamicCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
+            var compatibilityLevel = this is ICompatibleToCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
             _DynCodeRoot = GetService<DnnCodeRootFactory>()
                 .Init(Log)
                 .BuildDynamicCodeRoot(this)
