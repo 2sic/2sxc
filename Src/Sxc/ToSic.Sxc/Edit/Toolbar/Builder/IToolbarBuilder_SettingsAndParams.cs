@@ -29,7 +29,7 @@
         /// <remarks>
         /// History
         /// * Added in 2sxc 13
-        /// * options `auto` and `never` on autoAddMore added in 14.07.05
+        /// * options `auto` and `never` on autoAddMore added in 14.08
         /// </remarks>
         IToolbarBuilder Settings(
             string noParamOrder = Eav.Parameters.Protector,

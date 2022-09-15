@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Demo
     public static class ToolbarServiceExtensions
     {
         /// <summary>
-        /// Created for 14.07.05, used in the tutorial starting 2022-08-23
+        /// Created for 14.08, used in the tutorial starting 2022-08-23
         /// </summary>
         /// <param name="toolbarService"></param>
         /// <param name="noParamOrder"></param>
