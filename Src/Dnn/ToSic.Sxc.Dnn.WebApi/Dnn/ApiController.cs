@@ -26,11 +26,11 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     [PublicApi("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Dnn.Api12")]
     [DnnLogExceptions]
-    [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.")]
+    [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
     public abstract class ApiController : DynamicApiController, IDnnDynamicWebApi, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot
     {
         [PrivateApi]
-        public const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api12 or Custom.Dnn.Api12 instead.";
+        public const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
 
         /// <remarks>
         /// Probably obsolete, but a bit risky to just remove

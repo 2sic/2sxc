@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 color = UiColor
             };
 
-            return ToolbarBuilder.GetUi2Url().SerializeWithChild(Ui, addOns);
+            return ToolbarBuilderUtilities.GetUi2Url().SerializeWithChild(Ui, addOns);
         }
 
     }

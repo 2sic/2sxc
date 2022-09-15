@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         public const string ContextAttributeName = "sxc-context";
 
-        public ItemToolbarV14(IEntity entity, IToolbarBuilder toolbar) : base(entity, null, null, null, toolbar, "TlbV13")
+        public ItemToolbarV14(IEntity entity, IToolbarBuilder toolbar) : base(entity, null, null, null, toolbar, "TlbV14")
         {
             ToolbarBuilder = toolbar;
         }

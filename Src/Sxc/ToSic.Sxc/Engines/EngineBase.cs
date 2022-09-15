@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public RenderEngineResult Render()
         {
-            var wrapLog = Log.Fn<RenderEngineResult>();
+            var wrapLog = Log.Fn<RenderEngineResult>(startTimer: true);
             // call engine internal feature to optionally change what data is actually used or prepared for search...
 #if NETFRAMEWORK
 #pragma warning disable CS0618

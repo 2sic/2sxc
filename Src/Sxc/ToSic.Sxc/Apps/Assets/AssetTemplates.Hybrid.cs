@@ -6,7 +6,7 @@
         // Place the keys, etc. here and use these objects for the constant (don't create separate template-key object etc).
         public static readonly TemplateInfo RazorHybrid = new TemplateInfo("cshtml-hybrid", "Razor Hybrid", ".cshtml", "DetailsTemplate", ForTemplate, TypeRazor)
         {
-            Body = @"@inherits Custom.Hybrid.Razor12
+            Body = @"@inherits Custom.Hybrid.Razor14
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
 @using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
@@ -22,12 +22,12 @@
             {
                 Body = @"// Important notes:
 // - This class should have the same name as the file it's in
-// - This inherits from Custom.Hybrid.Code12
+// - This inherits from Custom.Hybrid.Code14
 //   which will automatically provide the common objects like App, CmsContext, Data etc.
 //   from the current context to use in your code
 using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
 
-public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12 {
+public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code14 {
   public string SayHello() {
     return ""Hello from shared functions!"";
   }
@@ -51,9 +51,9 @@ using DotNetNuke.Web.Api;
 using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
 
 [AllowAnonymous]      // define that all commands can be accessed without a login
-// Inherit from Custom.Hybrid.Api12 to get features like App, CmsContext, Data etc.
+// Inherit from Custom.Hybrid.Api14 to get features like App, CmsContext, Data etc.
 // see https://docs.2sxc.org/web-api/custom/index.html
-public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api12
+public class " + CsApiTemplateControllerName + @" : Custom.Hybrid.Api14
 {
     [HttpGet]        // [HttpGet] says we're listening to GET requests
     public string Hello()

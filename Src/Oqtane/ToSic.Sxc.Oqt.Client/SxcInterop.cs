@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Oqt.Client
 {
-    public class Interop : Oqtane.UI.Interop
+    public class SxcInterop : Oqtane.UI.Interop
     {
         private readonly IJSRuntime _jsRuntime;
 
-        public Interop(IJSRuntime jsRuntime) : base(jsRuntime)
+        public SxcInterop(IJSRuntime jsRuntime) : base(jsRuntime)
         {
             _jsRuntime = jsRuntime;
+
         }
         public ValueTask<string> GetTitleValue()
         {
@@ -39,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Client
 
         /// <summary>
         /// IncludeScriptsWithAttributes is fork of
-        /// Oqtane.Interop.IncludeScripts from Oqtane v3.1.0
+        /// Oqtane.SxcInterop.IncludeScripts from Oqtane v3.1.0
         /// with addition of httpAttributes support
         /// </summary>
         /// <param name="scripts"> scripts (object[]),
@@ -48,16 +49,24 @@ namespace ToSic.Sxc.Oqt.Client
         /// <returns></returns>
         public async Task IncludeScriptsWithAttributes(object[] scripts)
         {
-            try
-            {
-                await _jsRuntime.InvokeVoidAsync(
-                    "ToSic.Sxc.includeScriptsWithAttributes",
-                    (object)scripts);
-            }
-            catch
-            {
-                // ignore exception
-            }
+            // fix for https://github.com/2sic/2sxc/issues/2844
+            // we use solution with javascript native module import "./Modules/ToSic.Sxc/NativeModule.js"
+            // instead of default oqtane Module.js pattern (that is commented bellow)
+            // because our PageChangesHelper.AttachScriptsAndStyles in OnAfterRenderAsync in index.razor.cs
+            // is sometimes executing interop call to 'ToSic.Sxc.includeScriptsWithAttributes'
+            // earlier than "Modules/ToSic.Sxc/Module.js" is loaded in browser by oqtane ModuleBase.cs
+            var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Modules/ToSic.Sxc/NativeModule.js");
+            await module.InvokeVoidAsync("includeScriptsWithAttributes", (object)scripts);
+            //try
+            //{
+            //    await _jsRuntime.InvokeVoidAsync(
+            //        "ToSic.Sxc.includeScriptsWithAttributes",
+            //        (object)scripts);
+            //}
+            //catch
+            //{
+            //    // ignore exception
+            //}
         }
     }
 }

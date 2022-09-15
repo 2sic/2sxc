@@ -39,12 +39,12 @@ namespace ToSic.Sxc.Edit.Toolbar
                 // ReSharper disable AssignNullToNotNullAttribute
                 case ToolbarHtmlModes.OnTag:
                     return edit == null
-                        ? new Attribute(ToolbarAttributeName, ErrRenderMessage).ToString()
+                        ? new Attribute(ToolbarAttributeName, ErrRenderMessage).ToString() // add error
                         : edit.TagToolbar(this)?.ToString();
                 case ToolbarHtmlModes.Standalone:
                     return edit == null
-                        ? $"<!-- {ErrRenderMessage} -->"
-                        : edit.Toolbar(this)?.ToString();
+                        ? $"<!-- {ErrRenderMessage} -->"              // add error
+                        : edit.Toolbar(this)?.ToString();       // Show toolbar
                 // ReSharper restore AssignNullToNotNullAttribute
                 case ToolbarHtmlModes.Json:
                     var rules = Rules.Select(r => r.ToString()).ToArray();

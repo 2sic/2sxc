@@ -5,7 +5,6 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -19,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         protected DnnApiControllerWithFixes(string logSuffix) 
 	    {
-            Log = new Log("Api." + logSuffix, null, $"Path: {HttpContext.Current?.Request?.Url?.AbsoluteUri}");
+            Log = new Log("Api." + logSuffix, null, $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}");
             TimerWrapLog = Log.Fn(message: "timer", startTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
@@ -60,7 +59,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
         /// <inheritdoc />
-        public TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider())).Build<TService>();
+        public virtual TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider())).Build<TService>();
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
         private IServiceProvider _serviceProvider;
 

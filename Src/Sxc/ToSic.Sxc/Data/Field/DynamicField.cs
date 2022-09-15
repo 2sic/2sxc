@@ -1,7 +1,10 @@
-﻿using ToSic.Eav.Apps.Decorators;
+﻿using System.IO;
+using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Adam;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Data
 {
@@ -39,9 +42,19 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
-                if (!(Raw is string valString) || string.IsNullOrWhiteSpace(valString)) return null;
+                if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
                 var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
-                return app?.GetMetadataOf(TargetTypes.CmsItem, valString, "");
+                var md = app?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
+
+                // Optionally add image-metadata recommendations
+                if (md?.Target != null && Value is string valString && valString.HasValue())
+                {
+                    var ext = Path.GetExtension(valString);
+                    if (ext.HasValue() && Classification.IsImage(ext))
+                        md.Target.Recommendations = new[] { ImageDecorator.TypeNameId };
+                }
+
+                return md;
             });
         private readonly GetOnce<IMetadataOf> _itemMd = new GetOnce<IMetadataOf>();
 
@@ -49,7 +62,7 @@ namespace ToSic.Sxc.Data
 
         public ImageDecorator ImageDecoratorOrNull => _imgDec2.Get(() =>
         {
-            var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeName);
+            var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeNameId);
             return decItem != null ? new ImageDecorator(decItem) : null;
         });
         private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();

@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Apps.Decorators;
+using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {

@@ -17,6 +17,14 @@ namespace ToSic.Sxc.Context
         int Id { get; }
 
         /// <summary>
+        /// Information if the user is anonymous (not logged in)
+        /// </summary>
+        /// <remarks>
+        /// This was added fairly late in v14.08
+        /// </remarks>
+        bool IsAnonymous { get; }
+
+        /// <summary>
         /// Information if the current user is Site Administrator.
         /// Basically this means a user has very high permissions - incl. the ability
         /// to create users in a site etc.

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
 using Newtonsoft.Json;
+using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
 using ToSic.SexyContent.Adam;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Images;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -22,8 +25,20 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FilePrefix + SysId, FileName));
+        public IDynamicMetadata Metadata => _metadata 
+            ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
         private IDynamicMetadata _metadata;
+
+        /// <summary>
+        /// Attach metadata recommendations
+        /// </summary>
+        /// <param name="mdOf"></param>
+        private void AttachMdRecommendations(IMetadataOf mdOf)
+        {
+            if (mdOf?.Target == null) return;
+            if (Type == Classification.Image)
+                mdOf.Target.Recommendations = new[] { ImageDecorator.TypeNameId };
+        }
 
         /// <inheritdoc />
         [JsonIgnore]

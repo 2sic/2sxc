@@ -19,6 +19,9 @@ namespace ToSic.Sxc.Web.Url
         private readonly IEnumerable<UrlValueProcess> _preProcessors;
 
         private string Prefix { get; }
+
+        public string ArrayBoxStart { get; set; } = "";
+        public string ArrayBoxEnd { get; set; } = "";
         public string ArraySeparator { get; set; } = ",";
         public string DepthSeparator { get; set; } = ":";
         public string PairSeparator { get; set; } = UrlParts.ValuePairSeparator.ToString();
@@ -27,15 +30,6 @@ namespace ToSic.Sxc.Web.Url
 
 
         public string Serialize(object data) => SerializeInternal(data, Prefix);
-
-
-        //public string SerializeIfNotString(object data, string prefix = null)
-        //{
-        //    //if (data == null) return null;
-        //    //if (data is string str) return str;
-        //    return SerializeInternal(data, prefix);
-        //}
-
 
         public string SerializeWithChild(object main, object child, string childPrefix = null)
         {
@@ -84,7 +78,8 @@ namespace ToSic.Sxc.Web.Url
                     $"The field: '{set.FullName}', isGeneric: {isGeneric} with base type {valueType} to add to url seems to have a confusing setup");
 
                 if (valueElemType.IsPrimitive || valueElemType == typeof(string))
-                    return new UrlValuePair(set.FullName, string.Join(ArraySeparator, enumerable.Cast<object>()));
+                    return new UrlValuePair(set.FullName,
+                        $"{ArrayBoxStart}{string.Join(ArraySeparator, enumerable.Cast<object>())}{ArrayBoxEnd}");
 
                 return new UrlValuePair(set.FullName, "array-like-but-unclear-what");
             }

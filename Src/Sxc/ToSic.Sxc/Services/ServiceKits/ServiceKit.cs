@@ -26,9 +26,9 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// All the services provided by this kit must come from the code root so they are properly initialized. 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TService"></typeparam>
         /// <returns></returns>
         [PrivateApi]
-        protected T GetService<T>() => _DynCodeRoot.GetService<T>();
+        protected TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
     }
 }

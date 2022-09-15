@@ -24,7 +24,6 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\Microsoft.Extensions.Dep
 @Echo(
 @Echo 2sxc Oqtane - 3rd party deps
 XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\CsvHelper.dll" "%OqtaneBin%" /Y
-XCOPY "..\ToSic.Sxc.Oqt.Server\bin\%BuildFolder%\net6.0\ICSharpCode.SharpZipLib.dll" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo 2sxc Oqtane - Shared

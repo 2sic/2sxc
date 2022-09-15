@@ -21,6 +21,8 @@ namespace ToSic.Sxc.Context
 
         public bool IsSiteDeveloper => _contents.IsDesigner;
 
+        public bool IsAnonymous => _contents.IsAnonymous;
+
         protected override IMetadataOf GetMetadataOf() 
             => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
     }

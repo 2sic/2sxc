@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi
             Log.A($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
-            var compatibilityLevel = this is IDynamicCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
+            var compatibilityLevel = this is ICompatibleToCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
             _DynCodeRoot = GetService<DnnCodeRootFactory>()
                 .Init(Log)
                 .BuildDynamicCodeRoot(this)
@@ -69,6 +69,19 @@ namespace ToSic.Sxc.WebApi
             if(controllerContext.Request.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
                 CreateInstancePath = value as string;
         }
+
+        /// <summary>
+        /// Get a service of a specified type. 
+        /// </summary>
+        /// <typeparam name="TService"></typeparam>
+        /// <returns></returns>
+        /// <remarks>
+        /// This will override the base functionality to ensure that any services created will be able to get the CodeContext.
+        /// </remarks>
+        public override TService GetService<TService>() => _DynCodeRoot != null 
+                ? _DynCodeRoot.GetService<TService>()
+                : base.GetService<TService>();          // If the CodeRoot isn't ready, use standard functionality
+
 
         [PrivateApi]
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }

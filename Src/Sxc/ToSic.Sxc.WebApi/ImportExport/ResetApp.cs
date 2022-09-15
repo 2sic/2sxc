@@ -50,16 +50,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            // 1. Verify the file exists before we flush
-            var path = currentApp.PhysicalPath + "\\" + Eav.Constants.FolderData;
-            if (!Directory.Exists(path))
-            {
-                result.Success = false;
-                result.Messages.Add(new Message("Error: Path to app.xml not found on hard disk", Message.MessageTypes.Error));
-                return result;
-            }
+            // migrate old .data/app.xml to App_Data
+            ZipImport.MigrateOldAppDataFile(currentApp.PhysicalPath);
 
-            var filePath = Path.Combine(path, Eav.Constants.AppDataFile);
+            //// 1. Verify the file exists before we flush
+            //var path = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
+            //if (!Directory.Exists(path))
+            //{
+            //    result.Success = false;
+            //    result.Messages.Add(new Message($"Error: Path to {Eav.Constants.AppDataFile} not found on hard disk", Message.MessageTypes.Error));
+            //    return result;
+            //}
+
+            var filePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.AppDataFile);
             if (!File.Exists(filePath))
             {
                 result.Success = false;

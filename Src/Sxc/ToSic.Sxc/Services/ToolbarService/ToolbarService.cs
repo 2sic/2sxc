@@ -68,9 +68,19 @@ namespace ToSic.Sxc.Services
             tlb.ConnectToRoot(_codeRoot);
             tlb = tlb.Toolbar(toolbarTemplate, target, ui, parameters, prefill);
 
+            if (_defaultUi.HasValue())
+                tlb = tlb.Settings(ui: _defaultUi);
+
             if (context.HasValue()) tlb = tlb.AddInternal(new ToolbarRuleGeneric($"context?{context}"));
             return callLog.Return(tlb);
         }
 
+
+        internal void _setDemoDefaults(string defaultUi)
+        {
+            _defaultUi = defaultUi;
+        }
+
+        private string _defaultUi;
     }
 }

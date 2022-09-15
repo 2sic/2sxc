@@ -5,6 +5,6 @@ namespace ToSic.Sxc.Oqt.Client.Services
 {
     public interface IOqtSxcRenderService
     {
-        Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture, string originalParameters);
+        Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture, string originalParameters, bool preRender);
     }
 }

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ToSic.Sxc</id>
-    <version>14.07.05</version>
+    <version>14.08.00</version>
     <authors>2sic internet solutions GmbH, Switzerland</authors>
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
@@ -37,8 +37,6 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Connect.Koi.dll" target="lib\net6.0" />
     <!-- ToSic.Eav.DataSources PackageReference -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\CsvHelper.dll" target="lib\net6.0" />
-    <!-- ToSic.Eav.ImportExport PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\ICSharpCode.SharpZipLib.dll" target="lib\net6.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll" target="lib\net6.0" />
     <!-- ToSic.Sxc.Razor PackageReference -->

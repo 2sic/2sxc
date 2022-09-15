@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
@@ -21,12 +20,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             object prefill,
             object filter = null)
         {
+            var paramsString = Utils.Par2Url.Serialize(parameters);
+            var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
             return (
                 ToolbarRuleOperation.Pick(operation, defOp),
                 Ui: PrepareUi(ui, uiMerge, uiMergePrefix),
-                Parameters: Par2Url.SerializeWithChild(
-                    Par2Url.SerializeWithChild(parameters, prefill, PrefixPrefill),
-                    filter, PrefixFilters)
+                Parameters: Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
             );
 
         }
@@ -187,20 +186,19 @@ namespace ToSic.Sxc.Edit.Toolbar
                 .Builder;
         }
 
-        // TODO: drop image
+        // 2022-08-20 #cleanUpImageToolbar
+        //[PrivateApi("WIP 13.11")]
+        //public IToolbarBuilder Image(
+        //    object target,
+        //    string noParamOrder = Eav.Parameters.Protector,
+        //    string ui = null,
+        //    string parameters = null
+        //)
+        //{
+        //    Eav.Parameters.Protect(noParamOrder, "See docs");
 
-        [PrivateApi("WIP 13.11")]
-        public IToolbarBuilder Image(
-            object target,
-            string noParamOrder = Eav.Parameters.Protector,
-            string ui = null,
-            string parameters = null
-        )
-        {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-
-            return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GenerateContext(target, null),
-                decoHelper: _deps.ToolbarButtonHelper.Ready));
-        }
+        //    return AddInternal(new ToolbarRuleImage(target, ui, parameters, context: GenerateContext(target, null),
+        //        decoHelper: _deps.ToolbarButtonHelper.Ready));
+        //}
     }
 }
