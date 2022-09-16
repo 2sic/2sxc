@@ -57,6 +57,14 @@ namespace ToSic.Sxc.Apps.Paths
 
             var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, appState.Folder));
             contentFolder.Create();
+
+            var appDataProtectedFolder = new DirectoryInfo(Path.Combine(contentFolder.FullName, Eav.Constants.AppDataProtectedFolder));
+            appDataProtectedFolder.Create();
+
+            var appJsonTemplateFilePath = Path.Combine(_globalConfiguration.AppDataTemplateFolder, Eav.Constants.AppJson);
+            if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(Eav.Constants.AppJson).Any())
+                File.Copy(appJsonTemplateFilePath, Path.Combine(appDataProtectedFolder.FullName, Eav.Constants.AppJson));
+
             wrapLog.Done("ok");
         }
         

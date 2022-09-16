@@ -70,6 +70,7 @@
       <!-- all global types and queries -->
       <InstallInclude Include="..\..\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\..\Data\**\assets\**\*.*" />
+      <InstallInclude Include="..\..\Data\**\App_Data\**\*.*" />
       <InstallInclude Include="..\..\Data-Dnn\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
 
       <InstallInclude Include="**\*.txt" Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />

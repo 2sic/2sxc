@@ -1,0 +1,23 @@
+{
+  "export": {
+    // comment
+    "exclude": [
+      ".git/",
+      ".github/",
+      //".sarif/",
+      ".temp_cache/",
+      //"TestResults/",
+      // ".vs",
+      "# .vscode",
+      "node_modules",
+      "#.csproj",
+      ".gitignore",
+      // "sln",
+      // "package.json",
+      // "package-lock.json",
+      // "nuget.config",
+      "# tsconfig.json",
+      "# webpack.config.js"
+    ]
+  }
+}
