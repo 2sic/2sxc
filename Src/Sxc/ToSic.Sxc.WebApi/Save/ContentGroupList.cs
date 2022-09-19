@@ -86,7 +86,9 @@ namespace ToSic.Sxc.WebApi.Save
                     : new[] {primaryId as int?};
 
                 var index = primaryItem.Header.ListIndex();
-                var indexNullAddToEnd = primaryItem.Header.Index == null;
+                // fix https://github.com/2sic/2sxc/issues/2846 - Bug: Adding an item to a list doesn't seem to respect the position
+                // TODO: 2DM - Header.Group should be obsolete and not in use, but it was used on new content item (+)
+                var indexNullAddToEnd = (primaryItem.Header.Group?.Index ?? primaryItem.Header.Index) == null;
                 var willAdd = primaryItem.Header.ListAdd();
 
                 Log.A($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
