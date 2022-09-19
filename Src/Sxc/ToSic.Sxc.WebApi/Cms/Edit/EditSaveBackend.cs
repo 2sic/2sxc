@@ -146,8 +146,9 @@ namespace ToSic.Sxc.WebApi.Cms
             // only save entities that are
             // a) not in a group
             // b) in a group where the slot isn't marked as empty
+            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
             var entitiesToSave = items
-                .Where(e => e.Header.Group == null || !e.Header.Group.SlotIsEmpty)
+                .Where(e => e.Header.Group == null || !e.Header.IsEmpty /*.Group.SlotIsEmpty*/)
                 .ToList();
 
             var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);

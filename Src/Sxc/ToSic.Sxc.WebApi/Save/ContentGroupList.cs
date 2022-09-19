@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Save
                 var index = primaryItem.Header.ListIndex();
                 // fix https://github.com/2sic/2sxc/issues/2846 - Bug: Adding an item to a list doesn't seem to respect the position
                 // TODO: 2DM - Header.Group should be obsolete and not in use, but it was used on new content item (+)
-                var indexNullAddToEnd = (primaryItem.Header.Group?.Index ?? primaryItem.Header.Index) == null;
+                var indexNullAddToEnd = (/*primaryItem.Header.Group?.Index ?? */ primaryItem.Header.Index) == null;
                 var willAdd = primaryItem.Header.ListAdd();
 
                 Log.A($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
@@ -142,7 +142,8 @@ namespace ToSic.Sxc.WebApi.Save
             if (postSaveIds.ContainsKey(presItem.Entity.EntityGuid))
                 presentationId = postSaveIds[presItem.Entity.EntityGuid];
 
-            presentationId = presItem.Header.Group.SlotIsEmpty ? null : presentationId;
+            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
+            presentationId = presItem.Header.IsEmpty /*.Group.SlotIsEmpty*/ ? null : presentationId;
             // use null if it shouldn't have one
 
             return presentationId;
@@ -205,12 +206,16 @@ namespace ToSic.Sxc.WebApi.Save
                 return;
 
             // the following steps are only for presentation items
-            identifier.Group.SlotCanBeEmpty = true; // all presentations can always be locked
+            //identifier.Group.SlotCanBeEmpty = true; // all presentations can always be locked
+            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
+            identifier.IsEmptyAllowed = true;
 
             if (identifier.EntityId != 0)
                 return;
 
-            identifier.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
+            //identifier.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
+            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
+            identifier.IsEmpty = true;
 
             identifier.DuplicateEntity =
                 identifier.Group.Part.ToLowerInvariant() == ViewParts.PresentationLower

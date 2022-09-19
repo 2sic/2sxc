@@ -68,7 +68,8 @@ namespace ToSic.Sxc.WebApi.Save
                 {
                     if(item.Header.Group == null)
                         Add($"item {list.IndexOf(item)} has guid mismatch on header/entity, and doesn't have a group");
-                    else if (!item.Header.Group.SlotIsEmpty)
+                    // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
+                    else if (!item.Header.IsEmpty /*.Group.SlotIsEmpty*/)
                         Add($"item {list.IndexOf(item)} header / entity guid miss match");
                     // otherwise we're fine
                 }
