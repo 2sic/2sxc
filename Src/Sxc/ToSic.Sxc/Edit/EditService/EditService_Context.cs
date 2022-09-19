@@ -1,9 +1,10 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Edit.EditService
 
             if (field == null) throw new Exception("need parameter 'field'");
 
-            var serialized = JsonConvert.SerializeObject(new
+            var serialized = JsonSerializer.Serialize(new
             {
                 apps,
                 field,
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Edit.EditService
                 parent = target.EntityId,
                 parentGuid = target.EntityGuid,
                 type = contentType ?? AppConstants.ContentGroupRefTypeName,
-            });
+            }, JsonOptions.SafeJsonForHtmlAttributes);
 
             return new HybridHtmlString(innerContentAttribute + "='" + serialized + "'");
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Tests.DataForImageTests
@@ -42,7 +43,9 @@ namespace ToSic.Sxc.Tests.DataForImageTests
 
         public static AdvancedSettings TestRecipeSetFromJson => AdvancedSettings.FromJson(JsonRecipe());
 
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private static object JsonAttributes75MixIn = new { loading = "lazy", toReset = "parent" };
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private static object JsonAttributes75 = new { @class = "img-fluid", test = "value", toReset = (string)null };
 
         private static string JsonRecipe()
@@ -69,8 +72,7 @@ namespace ToSic.Sxc.Tests.DataForImageTests
                 }
             };
 
-            return JsonConvert.SerializeObject(adv, Formatting.Indented);
+            return JsonSerializer.Serialize(adv, JsonOptions.UnsafeJsonWithoutEncodingHtml);
         }
-
     }
 }

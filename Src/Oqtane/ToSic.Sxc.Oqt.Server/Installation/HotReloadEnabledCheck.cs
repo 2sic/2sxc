@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using ToSic.Eav.Serialization;
 
 namespace ToSic.Sxc.Oqt.Server.Installation
 {
@@ -41,17 +43,20 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             {
                 var launchSettingsJson = File.ReadAllText(launchSettingsFile);
 
-                var launchSettings = JObject.Parse(launchSettingsJson);
-                var profiles = (JObject)launchSettings["profiles"];
-                var IISExpress = (JObject)profiles["IIS Express"];
+                var launchSettings = JsonNode.Parse(launchSettingsJson, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions);
+                var profiles = launchSettings?["profiles"]?.AsObject();
+                var iisExpress = profiles?["IIS Express"]?.AsObject();
+
+                // json configuration is wrong
+                if (iisExpress is null) return false;
 
                 // if hotReloadEnabled property exists do nothing
-                if (IISExpress.ContainsKey("hotReloadEnabled")) return false;
+                if (iisExpress?["hotReloadEnabled"]?.AsValue() is not null) return false;
 
                 // add hotReloadEnabled: true
-                IISExpress.Property("environmentVariables").AddAfterSelf(new JProperty("hotReloadEnabled", true));
+                iisExpress?.Add("hotReloadEnabled", true);
 
-                File.WriteAllText(launchSettingsFile, launchSettings.ToString());
+                File.WriteAllText(launchSettingsFile, launchSettings?.ToJsonString(JsonOptions.UnsafeJsonWithoutEncodingHtml));
 
                 return true;
             }

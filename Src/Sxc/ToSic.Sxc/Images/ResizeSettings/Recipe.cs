@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Plumbing;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -31,6 +31,7 @@ namespace ToSic.Sxc.Images
         [PrivateApi] public const string SpecialPropertyClass = "class";
         [PrivateApi] public static string[] SpecialProperties = { SpecialPropertySizes, SpecialPropertyMedia, SpecialPropertyClass };
 
+
         /// <summary>
         /// **Important**
         ///
@@ -38,42 +39,73 @@ namespace ToSic.Sxc.Images
         /// </summary>
         /// <param name="original">An original recipe to copy if we want to get a modified recipe based on one which already existed.</param>
         /// <param name="name">An optional name </param>
-        /// <param name="width">Initial width to use when resizing</param>
-        /// <param name="variants">Special string containing variants to generate</param>
-        /// <param name="attributes">List of attributes to set on the `img` tag</param>
-        /// <param name="recipes">List of additional recipes which will all inherit values from this master after creation</param>
-        /// <param name="setWidth">Set the `width` attribute if the img width is known</param>
-        /// <param name="setHeight">Set the `height` attribute if the img-height is known</param>
         /// <param name="forTag">Restricts the rule to only apply to specific tags - ATM `img` and `source`</param>
         /// <param name="forFactor">Restricts the rule to only apply to resizes for a specified factor</param>
         /// <param name="forCss">Restricts the rule to only apply to pages which have the specified CSS Framework</param>
-        [JsonConstructor]   // This is important for deserialization from json
+        /// <param name="width">Initial width to use when resizing</param>
+        /// <param name="setWidth">Set the `width` attribute if the img width is known</param>
+        /// <param name="setHeight">Set the `height` attribute if the img-height is known</param>
+        /// <param name="variants">Special string containing variants to generate</param>
+        /// <param name="attributes">List of attributes to set on the `img` tag</param>
+        /// <param name="recipes">List of additional recipes which will all inherit values from this master after creation</param>
         public Recipe(
-            Recipe original = null,
+            Recipe original,
             // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
             string name = default,
+            string forTag = default,
+            string forFactor = default,
+            string forCss = default,
             int width = default,
-            string variants = default,
-            Dictionary<string, object> attributes = default,
-            IEnumerable<Recipe> recipes = default,
             bool? setWidth = default,
             bool? setHeight = default,
-            string forTag = default, 
-            string forFactor = default,
-            string forCss = default
+            string variants = default,
+            IDictionary<string, object> attributes = null,
+            IEnumerable<Recipe> recipes = default
         )
         {
             Name = name;
             ForTag = forTag ?? original?.ForFactor ?? RuleForDefault;
             ForFactor = forFactor ?? original?.ForFactor;
+            ForCss = forCss;
             Width = width != 0 ? width : original?.Width ?? 0;
-            Variants = variants ?? original?.Variants;
-            Recipes = recipes != null ? Array.AsReadOnly(recipes.ToArray()) : original?.Recipes ?? Array.AsReadOnly(Array.Empty<Recipe>());
-            Attributes = RecipeHelpers.MergeDics(original?.Attributes, RecipeHelpers.ToStringDicOrNull(attributes));
             SetWidth = setWidth ?? original?.SetWidth;
             SetHeight = setHeight ?? original?.SetHeight;
-            ForCss = forCss;
+            Variants = variants ?? original?.Variants;
+            Recipes = recipes != null ? Array.AsReadOnly(recipes.ToArray()) : original?.Recipes ?? Array.AsReadOnly(Array.Empty<Recipe>());
+            Attributes = RecipeHelpers.MergeDics(original?.Attributes, attributes);
         }
+
+        /// <summary>
+        /// Lighter constructor for json, without parameter Recipe.
+        /// 
+        /// **Important**
+        /// If you call this from your code, always use named parameters, as the parameter order can change in future.
+        /// </summary>
+        /// <param name="name">An optional name </param>
+        /// <param name="forTag">Restricts the rule to only apply to specific tags - ATM `img` and `source`</param>
+        /// <param name="forFactor">Restricts the rule to only apply to resizes for a specified factor</param>
+        /// <param name="forCss">Restricts the rule to only apply to pages which have the specified CSS Framework</param>
+        /// <param name="width">Initial width to use when resizing</param>
+        /// <param name="setWidth">Set the `width` attribute if the img width is known</param>
+        /// <param name="setHeight">Set the `height` attribute if the img-height is known</param>
+        /// <param name="variants">Special string containing variants to generate</param>
+        /// <param name="attributes">List of attributes to set on the `img` tag</param>
+        /// <param name="recipes">List of additional recipes which will all inherit values from this master after creation</param>
+        [JsonConstructor]   // This is important for deserialization from json
+        public Recipe(
+            // IMPORTANT: the names of these parameters may never change, as they match the names in the JSON
+            string name = default,
+            string forTag = default,
+            string forFactor = default,
+            string forCss = default,
+            int width = default,
+            bool? setWidth = default,
+            bool? setHeight = default,
+            string variants = default,
+            IDictionary<string, object> attributes = null,
+            IEnumerable<Recipe> recipes = default
+        ) : this(original: null, name: name, forTag: forTag, forFactor: forFactor, forCss: forCss, width: width, setWidth: setWidth, setHeight: setHeight, variants: variants, attributes: attributes, recipes: recipes)
+        { }
 
 
         /// <summary>
@@ -137,21 +169,25 @@ namespace ToSic.Sxc.Images
         public string Variants { get; private set; }
 
         [PrivateApi]
-        public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes : null;
+        public string Sizes => Attributes?.TryGetValue(SpecialPropertySizes, out var strSizes) == true ? strSizes.ToString() : null;
 
 
         /// <summary>
         /// Attributes to add to the img tag 
         /// </summary>
-        public ReadOnlyDictionary<string, string> Attributes { get; private set; }
-
+        /// <remarks>
+        /// System.Text.Json requires that the case-insensitive property name and type match the parameter in the constructor.
+        /// We are using string/object because a value could also be { "name": true, "other-name": 5 } in the json configuration
+        /// </remarks>
+        public IDictionary<string, object> Attributes { get; private set; }
 
         /// <summary>
         /// wip TODO: DOC
         /// </summary>
-        public ReadOnlyCollection<Recipe> Recipes { get; }
-        
-
+        /// <remarks>
+        /// System.Text.Json requires that the case-insensitive property name and type match the parameter in the constructor.
+        /// </remarks>
+        public IEnumerable<Recipe> Recipes { get; } 
 
 
         [PrivateApi("Important for using these settings, but not relevant outside of this")]

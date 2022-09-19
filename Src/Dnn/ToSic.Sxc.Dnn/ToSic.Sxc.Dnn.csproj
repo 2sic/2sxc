@@ -99,6 +99,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
@@ -297,7 +298,6 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
-    <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <ItemGroup>

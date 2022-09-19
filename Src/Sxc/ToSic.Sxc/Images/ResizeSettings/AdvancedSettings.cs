@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Serialization;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Images
 {
-    public class AdvancedSettings: IHasPiggyBack
+    public class AdvancedSettings : IHasPiggyBack
     {
         [JsonConstructor]
         public AdvancedSettings(Recipe recipe = default)
@@ -25,8 +27,10 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// Default Resize rules for everything which isn't specified more closely in the factors
         /// </summary>
-        [JsonIgnore]
-        internal Recipe Recipe { get; }
+        /// <remarks>
+        /// System.Text.Json requires that the case-insensitive property name and type match the parameter in the constructor.
+        /// </remarks>
+        public Recipe Recipe { get; }
 
         [PrivateApi]
         public static AdvancedSettings Parse(object value) => InnerParse(value);
@@ -56,7 +60,7 @@ namespace ToSic.Sxc.Images
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog.Return(JsonConvert.DeserializeObject<AdvancedSettings>(advString), "create");
+                    return wrapLog.Return(JsonSerializer.Deserialize<AdvancedSettings>(advString, JsonOptions.UnsafeJsonWithoutEncodingHtml), "create");
             }
             catch (Exception ex)
             {
@@ -71,7 +75,7 @@ namespace ToSic.Sxc.Images
             => _recipesFlat ?? (_recipesFlat = GetAllRecipesRecursive(Recipe?.Recipes).AsReadOnly());
         private ReadOnlyCollection<Recipe> _recipesFlat;
 
-        private static List<Recipe> GetAllRecipesRecursive(ReadOnlyCollection<Recipe> recipes)
+        private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe> recipes)
         {
             var list = new List<Recipe>();
             if (recipes?.Any() != true) return list;
@@ -93,6 +97,5 @@ namespace ToSic.Sxc.Images
         [JsonIgnore]
         public PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
         private PiggyBack _piggyBack;
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Images
 {
@@ -37,7 +36,7 @@ namespace ToSic.Sxc.Images
             string name = default,
             int width = default,
             string variants = default,
-            Dictionary<string, object> attributes = default,
+            IDictionary<string, object> attributes = default,
             IEnumerable<Recipe> recipes = default,
             bool? setWidth = default,
             bool? setHeight = default,

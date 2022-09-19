@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web;
@@ -22,10 +22,10 @@ namespace ToSic.Sxc.Edit.Toolbar
         public ToolbarContext(string custom) => Custom = custom;
 
 
-        [JsonProperty("zoneId")] public int ZoneId { get; } = NotInitialized;
-        [JsonProperty("appId")] public int AppId { get; } = NotInitialized;
+        [JsonPropertyName("zoneId")] public int ZoneId { get; } = NotInitialized;
+        [JsonPropertyName("appId")] public int AppId { get; } = NotInitialized;
 
-        [JsonProperty("custom", NullValueHandling = NullValueHandling.Ignore)] public string Custom { get; } = null;
+        [JsonPropertyName("custom")][JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string Custom { get; } = null;
     }
 
     public static class ToolbarContextExtensions

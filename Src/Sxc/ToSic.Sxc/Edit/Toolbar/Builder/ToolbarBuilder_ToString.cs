@@ -1,5 +1,6 @@
 ﻿using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
+using ToSic.Eav.Serialization;
 using ToSic.Razor.Markup;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 // ReSharper restore AssignNullToNotNullAttribute
                 case ToolbarHtmlModes.Json:
                     var rules = Rules.Select(r => r.ToString()).ToArray();
-                    return JsonConvert.SerializeObject(rules);
+                    return JsonSerializer.Serialize(rules, JsonOptions.SafeJsonForHtmlAttributes);
                 default:
                     return $"error: toolbar ToString mode '{mode}' is not known";
             }

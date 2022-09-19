@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Hosting;
 using Oqtane.Infrastructure;
 using System.IO;
-using Microsoft.Extensions.Hosting;
-using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DI;
 using ToSic.Eav.Run;
@@ -66,12 +64,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // 2sxc Oqtane blob services for Imageflow and other customizations.
             services.AddImageflowExtensions();
-
-            // Help RazorBlade to have a proper best-practices ToJson
-            // New v12.05
-            // 2022-02-01 2dm - should not be necessary any more, if we use .net 5.x DLLs (it is necessary if the .net standard 2 are used)
-            // But we'll leave it in, because possibly this function is more reliable than the built in
-            ToSic.Razor.StartUp.StartUp.RegisterToJson(JsonConvert.SerializeObject);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

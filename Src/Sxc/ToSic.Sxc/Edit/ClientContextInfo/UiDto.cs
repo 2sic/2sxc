@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
     {
         public bool AutoToolbar { get; }
 
-        [JsonProperty(NullValueHandling=NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Edition { get; }
 
         public UiDto(bool autoToolbar)

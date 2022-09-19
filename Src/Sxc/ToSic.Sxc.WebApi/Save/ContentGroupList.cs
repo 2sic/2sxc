@@ -75,8 +75,11 @@ namespace ToSic.Sxc.WebApi.Save
             foreach (var bundle in pairsOrSingleItems)
             {
                 Log.A("processing:" + bundle.Key);
-                var entity = CmsManager.Read.AppState.List.One(bundle.First().Header.ParentOrError);
-                var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
+
+                if (bundle.First().Header.Parent == null) continue;
+
+                var parent = CmsManager.Read.AppState.List.One(bundle.First().Header.GetParentEntityOrError());
+                var targetIsContentBlock = parent.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
                 var primaryId = GetIdFromGuidOrError(postSaveIds, primaryItem.Entity.EntityGuid);
@@ -87,7 +90,7 @@ namespace ToSic.Sxc.WebApi.Save
 
                 var index = primaryItem.Header.IndexSafeOrFallback();
                 // fix https://github.com/2sic/2sxc/issues/2846 - Bug: Adding an item to a list doesn't seem to respect the position
-                // TODO: 2DM - Header.Group should be obsolete and not in use, but it was used on new content item (+)
+                // This is used on new content item (+)
                 var indexNullAddToEnd = primaryItem.Header.Index == null;
                 var willAdd = primaryItem.Header.AddSafe;
 
@@ -98,9 +101,9 @@ namespace ToSic.Sxc.WebApi.Save
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
-                    CmsManager.Entities.FieldListAdd(entity, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd);
+                    CmsManager.Entities.FieldListAdd(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft, indexNullAddToEnd);
                 else
-                    CmsManager.Entities.FieldListReplaceIfModified(entity, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
+                    CmsManager.Entities.FieldListReplaceIfModified(parent, fieldPair, index, ids, block.Context.Publishing.ForceDraft);
 
             }
 
@@ -164,10 +167,12 @@ namespace ToSic.Sxc.WebApi.Save
             var newItems = new List<ItemIdentifier>();
             foreach (var identifier in identifiers)
             {
-                // Case one, it's a Content-Group (older model, probably drop soon)
+                // Case one, it's a Content-Group - in this case the content-type name comes from View configuration
                 if (identifier.IsContentBlockMode)
                 {
-                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.ParentOrError);
+                    if (!identifier.Parent.HasValue) continue;
+
+                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.GetParentEntityOrError());
                     var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field) ?? "";
 
                     // if there is no content-type for this, then skip it (don't deliver anything)
