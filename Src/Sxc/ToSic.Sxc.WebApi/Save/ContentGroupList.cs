@@ -94,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Save
                 Log.A($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
                 var fieldPair = targetIsContentBlock
-                    ? ViewParts.PickFieldPair(primaryItem.Header.Group.Part)
+                    ? ViewParts.PickFieldPair(primaryItem.Header.Field/*Group.Part*/) // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
@@ -111,8 +111,9 @@ namespace ToSic.Sxc.WebApi.Save
 
         private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)
         {
-            var primaryItem = bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.Content, OrdinalIgnoreCase)) 
-                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.FieldHeader, OrdinalIgnoreCase));
+            // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+            var primaryItem = bundle.FirstOrDefault(e => string.Equals(e.Header.Field/*Group.Part*/, ViewParts.Content, OrdinalIgnoreCase)) 
+                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Field/*Group.Part*/, ViewParts.FieldHeader, OrdinalIgnoreCase));
             if (primaryItem == null)
                 throw new Exception("unexpected group-entity assignment, cannot figure it out");
             return primaryItem;
@@ -133,9 +134,10 @@ namespace ToSic.Sxc.WebApi.Save
         {
             int? presentationId = null;
             var presItem =
-                bundle.FirstOrDefault(e => string.Equals(e.Header.Group.Part, ViewParts.Presentation, OrdinalIgnoreCase))
+                // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                bundle.FirstOrDefault(e => string.Equals(e.Header.Field/*Group.Part*/, ViewParts.Presentation, OrdinalIgnoreCase))
                 ?? bundle.FirstOrDefault(e =>
-                    string.Equals(e.Header.Group.Part, ViewParts.ListPresentation, OrdinalIgnoreCase));
+                    string.Equals(e.Header.Field/*Group.Part*/, ViewParts.ListPresentation, OrdinalIgnoreCase));
 
             if (presItem == null) return null;
 
@@ -149,6 +151,17 @@ namespace ToSic.Sxc.WebApi.Save
             return presentationId;
         }
 
+        // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+        internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers)
+        {
+            //var wrapLog = Log.Fn<ContentGroupList>();
+            foreach (var identifier in identifiers.Where(identifier => identifier != null))
+                identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
+
+            return this;
+            //return wrapLog.Return(this);
+        }
+
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
         {
             var wrapLog = Log.Fn<List<ItemIdentifier>>();
@@ -156,11 +169,13 @@ namespace ToSic.Sxc.WebApi.Save
             foreach (var identifier in identifiers)
             {
                 // Case one, it's a Content-Group (older model, probably drop soon)
-                if (identifier.Group != null)
+                // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                if (identifier.IsContentBlockMode/*identifier.Group != null*/)
                 {
-                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.Group.Guid);
+                    // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.Parent.Value/*Group.Guid*/);
                     var contentTypeStaticName = (contentGroup.View as View)?
-                                                .GetTypeStaticName(identifier.Group.Part) ?? "";
+                                                .GetTypeStaticName(identifier.Field/*Group.Part*/) ?? "";
 
                     // if there is no content-type for this, then skip it (don't deliver anything)
                     if (contentTypeStaticName == "")
@@ -190,9 +205,27 @@ namespace ToSic.Sxc.WebApi.Save
         }
 
 
+        /// <summary>
+        /// detects ContentBlockMode
+        /// 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+        /// </summary>
+        /// <param name="identifier"></param>
+        /// <returns></returns>
+        private bool DetectContentBlockMode(ItemIdentifier identifier)
+        {
+            //return identifier.Group != null;
+            if (!identifier.Parent.HasValue) return false;
+
+            // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
+            var entity = CmsManager.Read.AppState.List.One(identifier.ListParent());
+            return entity.Type.Name == BlocksRuntime.BlockTypeName;
+        }
+
+
         private static void ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
         {
-            var part = blockConfiguration[identifier.Group.Part];
+            // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+            var part = blockConfiguration[identifier.Field/*Group.Part*/];
             if (!identifier.ListAdd()) // not in add-mode
             {
                 var idx = identifier.ListIndex(part.Count - 1);
@@ -202,7 +235,8 @@ namespace ToSic.Sxc.WebApi.Save
             }
 
             // tell the UI that it should not actually use this data yet, keep it locked
-            if (!identifier.Group.Part.ToLowerInvariant().Contains(ViewParts.PresentationLower))
+            // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+            if (/*!identifier.Group.Part*/!identifier.Field.ToLowerInvariant().Contains(ViewParts.PresentationLower))
                 return;
 
             // the following steps are only for presentation items
@@ -218,7 +252,8 @@ namespace ToSic.Sxc.WebApi.Save
             identifier.IsEmpty = true;
 
             identifier.DuplicateEntity =
-                identifier.Group.Part.ToLowerInvariant() == ViewParts.PresentationLower
+                // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                /*identifier.Group.Part*/identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
                     ? blockConfiguration.View.PresentationItem?.EntityId
                     : blockConfiguration.View.HeaderPresentationItem?.EntityId;
         }

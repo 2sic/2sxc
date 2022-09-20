@@ -66,7 +66,8 @@ namespace ToSic.Sxc.WebApi.Save
                     Add($"item {list.IndexOf(item)} header or entity is missing");
                 else if(item.Header.Guid != item.Entity.Guid) // check this first (because .Group may not exist)
                 {
-                    if(item.Header.Group == null)
+                    // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                    if (!item.Header.IsContentBlockMode/*Group == null*/)
                         Add($"item {list.IndexOf(item)} has guid mismatch on header/entity, and doesn't have a group");
                     // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
                     else if (!item.Header.IsEmpty /*.Group.SlotIsEmpty*/)
@@ -84,7 +85,8 @@ namespace ToSic.Sxc.WebApi.Save
         private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
         {
             var wrapLog = Log.Fn($"{list.Count}");
-            var groupAssignments = list.Select(i => i.Header.Group).Where(g => g != null).ToList();
+            // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+            var groupAssignments = list.Select(i => i.Header.ListContentBlockAppId()/*Group*/).Where(g => g != null).ToList();
             if (groupAssignments.Count == 0)
             {
                 wrapLog.Done("none of the items is part of a list/group");
@@ -97,8 +99,8 @@ namespace ToSic.Sxc.WebApi.Save
                     "- must stop, never expect items to come from different sources");
             else
             {
-                var firstInnerContentAppId = groupAssignments.First().ContentBlockAppId;
-                if (list.Any(i => i.Header.Group.ContentBlockAppId != firstInnerContentAppId))
+                var firstInnerContentAppId = groupAssignments.First()/*.ContentBlockAppId*/; // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                if (list.Any(i => i.Header.ListContentBlockAppId()/*Group.ContentBlockAppId*/ != firstInnerContentAppId))
                     Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
             }
 
