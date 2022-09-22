@@ -51,8 +51,8 @@ namespace ToSic.Sxc.WebApi.Save
         {
             var wrapLog = Log.Fn<bool>();
             var groupItems = items
-                .Where(i => i.Header.ListHas())
-                .GroupBy(i => i.Header.ListParent().ToString() + i.Header.ListIndex() + i.Header.ListAdd())
+                .Where(i => i.Header.Parent != null)
+                .GroupBy(i => i.Header.Parent.Value.ToString() + i.Header.IndexSafeOrFallback() + i.Header.AddSafe)
                 .ToList();
 
             // if it's new, it has to be added to a group
@@ -68,14 +68,14 @@ namespace ToSic.Sxc.WebApi.Save
         {
             var wrapLog = Log.Fn<bool>($"{_appIdentity.AppId}");
 
+            // If no content block given, skip all this
             if (block == null) return wrapLog.ReturnTrue("no block, nothing to update");
 
-            // todo: if no block given, skip all this
 
             foreach (var bundle in pairsOrSingleItems)
             {
                 Log.A("processing:" + bundle.Key);
-                var entity = CmsManager.Read.AppState.List.One(bundle.First().Header.ListParent());
+                var entity = CmsManager.Read.AppState.List.One(bundle.First().Header.ParentOrError);
                 var targetIsContentBlock = entity.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();
@@ -85,16 +85,16 @@ namespace ToSic.Sxc.WebApi.Save
                     ? new[] {primaryId, FindPresentationItem(postSaveIds, bundle)}
                     : new[] {primaryId as int?};
 
-                var index = primaryItem.Header.ListIndex();
+                var index = primaryItem.Header.IndexSafeOrFallback();
                 // fix https://github.com/2sic/2sxc/issues/2846 - Bug: Adding an item to a list doesn't seem to respect the position
                 // TODO: 2DM - Header.Group should be obsolete and not in use, but it was used on new content item (+)
-                var indexNullAddToEnd = (/*primaryItem.Header.Group?.Index ?? */ primaryItem.Header.Index) == null;
-                var willAdd = primaryItem.Header.ListAdd();
+                var indexNullAddToEnd = primaryItem.Header.Index == null;
+                var willAdd = primaryItem.Header.AddSafe;
 
                 Log.A($"will add: {willAdd}; Group.Add:{primaryItem.Header.Add}; EntityId:{primaryItem.Entity.EntityId}");
 
                 var fieldPair = targetIsContentBlock
-                    ? ViewParts.PickFieldPair(primaryItem.Header.Field/*Group.Part*/) // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                    ? ViewParts.PickFieldPair(primaryItem.Header.Field)
                     : new[] {primaryItem.Header.Field};
 
                 if (willAdd) // this cannot be auto-detected, it must be specified
@@ -111,9 +111,11 @@ namespace ToSic.Sxc.WebApi.Save
 
         private static BundleWithHeader<T> FindContentItem<T>(IGrouping<string, BundleWithHeader<T>> bundle)
         {
-            // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
-            var primaryItem = bundle.FirstOrDefault(e => string.Equals(e.Header.Field/*Group.Part*/, ViewParts.Content, OrdinalIgnoreCase)) 
-                   ?? bundle.FirstOrDefault(e => string.Equals(e.Header.Field/*Group.Part*/, ViewParts.FieldHeader, OrdinalIgnoreCase));
+            var primaryItem = bundle
+                                  .FirstOrDefault(e =>
+                                      string.Equals(e.Header.Field, ViewParts.Content, OrdinalIgnoreCase))
+                              ?? bundle.FirstOrDefault(e =>
+                                  string.Equals(e.Header.Field, ViewParts.FieldHeader, OrdinalIgnoreCase));
             if (primaryItem == null)
                 throw new Exception("unexpected group-entity assignment, cannot figure it out");
             return primaryItem;
@@ -134,32 +136,26 @@ namespace ToSic.Sxc.WebApi.Save
         {
             int? presentationId = null;
             var presItem =
-                // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
-                bundle.FirstOrDefault(e => string.Equals(e.Header.Field/*Group.Part*/, ViewParts.Presentation, OrdinalIgnoreCase))
+                bundle.FirstOrDefault(e => string.Equals(e.Header.Field, ViewParts.Presentation, OrdinalIgnoreCase))
                 ?? bundle.FirstOrDefault(e =>
-                    string.Equals(e.Header.Field/*Group.Part*/, ViewParts.ListPresentation, OrdinalIgnoreCase));
+                    string.Equals(e.Header.Field, ViewParts.ListPresentation, OrdinalIgnoreCase));
 
             if (presItem == null) return null;
 
             if (postSaveIds.ContainsKey(presItem.Entity.EntityGuid))
                 presentationId = postSaveIds[presItem.Entity.EntityGuid];
 
-            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
-            presentationId = presItem.Header.IsEmpty /*.Group.SlotIsEmpty*/ ? null : presentationId;
+            presentationId = presItem.Header.IsEmpty ? null : presentationId;
             // use null if it shouldn't have one
 
             return presentationId;
         }
 
-        // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
         internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers)
         {
-            //var wrapLog = Log.Fn<ContentGroupList>();
             foreach (var identifier in identifiers.Where(identifier => identifier != null))
                 identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
-
             return this;
-            //return wrapLog.Return(this);
         }
 
         internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
@@ -169,25 +165,23 @@ namespace ToSic.Sxc.WebApi.Save
             foreach (var identifier in identifiers)
             {
                 // Case one, it's a Content-Group (older model, probably drop soon)
-                // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
-                if (identifier.IsContentBlockMode/*identifier.Group != null*/)
+                if (identifier.IsContentBlockMode)
                 {
-                    // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
-                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.Parent.Value/*Group.Guid*/);
-                    var contentTypeStaticName = (contentGroup.View as View)?
-                                                .GetTypeStaticName(identifier.Field/*Group.Part*/) ?? "";
+                    var contentGroup = CmsManager.Read.Blocks.GetBlockConfig(identifier.ParentOrError);
+                    var contentTypeName = (contentGroup.View as View)?.GetTypeStaticName(identifier.Field) ?? "";
 
                     // if there is no content-type for this, then skip it (don't deliver anything)
-                    if (contentTypeStaticName == "")
+                    if (contentTypeName == "")
                         continue;
 
-                    identifier.ContentTypeName = contentTypeStaticName;
+                    identifier.ContentTypeName = contentTypeName;
                     ConvertListIndexToEntityIds(identifier, contentGroup);
                     newItems.Add(identifier);
                     continue;
                 }
 
-                // New in v11.01
+                // Case #2 it's an entity inside a field of another entity
+                // Added in v11.01
                 if (identifier.Parent != null && identifier.Field != null)
                 {
                     // look up type
@@ -206,56 +200,46 @@ namespace ToSic.Sxc.WebApi.Save
 
 
         /// <summary>
-        /// detects ContentBlockMode
-        /// 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+        /// Check if the save will affect a ContentBlock.
+        /// If it's a simple entity-edit or edit of item inside a normal field list, it returns false
         /// </summary>
-        /// <param name="identifier"></param>
         /// <returns></returns>
         private bool DetectContentBlockMode(ItemIdentifier identifier)
         {
-            //return identifier.Group != null;
             if (!identifier.Parent.HasValue) return false;
 
             // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
-            var entity = CmsManager.Read.AppState.List.One(identifier.ListParent());
+            var entity = CmsManager.Read.AppState.List.One(identifier.Parent.Value);
             return entity.Type.Name == BlocksRuntime.BlockTypeName;
         }
 
 
         private static void ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
         {
-            // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
-            var part = blockConfiguration[identifier.Field/*Group.Part*/];
-            if (!identifier.ListAdd()) // not in add-mode
+            var part = blockConfiguration[identifier.Field];
+            if (!identifier.AddSafe) // not in add-mode
             {
-                var idx = identifier.ListIndex(part.Count - 1);
+                var idx = identifier.IndexSafeOrFallback(part.Count - 1);
                 if(idx >= 0 && part.Count > idx && // has as many items as desired
                    part[idx] != null) // and the slot has something
                     identifier.EntityId = part[idx].EntityId;
             }
 
             // tell the UI that it should not actually use this data yet, keep it locked
-            // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
-            if (/*!identifier.Group.Part*/!identifier.Field.ToLowerInvariant().Contains(ViewParts.PresentationLower))
+            if (!identifier.Field.ToLowerInvariant().Contains(ViewParts.PresentationLower))
                 return;
 
             // the following steps are only for presentation items
-            //identifier.Group.SlotCanBeEmpty = true; // all presentations can always be locked
-            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
             identifier.IsEmptyAllowed = true;
 
             if (identifier.EntityId != 0)
                 return;
 
-            //identifier.Group.SlotIsEmpty = true; // if it is blank, then lock this one to begin with
-            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
             identifier.IsEmpty = true;
 
-            identifier.DuplicateEntity =
-                // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
-                /*identifier.Group.Part*/identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
-                    ? blockConfiguration.View.PresentationItem?.EntityId
-                    : blockConfiguration.View.HeaderPresentationItem?.EntityId;
+            identifier.DuplicateEntity = identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
+                ? blockConfiguration.View.PresentationItem?.EntityId
+                : blockConfiguration.View.HeaderPresentationItem?.EntityId;
         }
 
     }

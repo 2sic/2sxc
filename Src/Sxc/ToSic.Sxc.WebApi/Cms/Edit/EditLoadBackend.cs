@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = _appStates.IdentityOfApp(appId);
             items = _contentGroupList.Init(appIdentity, Log, showDrafts)
-                .ConvertGroup(items) // 2022-09-20 stv #cleanUpDuplicateGroupHeaders - WIP
+                .ConvertGroup(items)
                 .ConvertListIndexToId(items);
             TryToAutoFindMetadataSingleton(items, context.AppState);
 

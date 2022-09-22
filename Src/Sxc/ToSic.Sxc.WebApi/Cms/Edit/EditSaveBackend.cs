@@ -115,12 +115,12 @@ namespace ToSic.Sxc.WebApi.Cms
                 ent.PlaceDraftInBranch = package.DraftShouldBranch;
 
                 // new in 11.01
-                if (i.Header.ListHas())
+                if (i.Header.Parent != null)
                 {
                     // Check if Add was true, and fix if it had already been saved (EntityId != 0)
                     // the entityId is reset by the validator if it turns out to be an update
                     // todo: verify use - maybe it's to set before we save, as maybe afterwards it's always != 0?
-                    var add = i.Header.ListAdd();
+                    var add = i.Header.AddSafe;
                     i.Header.Add = add;
                     if (ent.EntityId > 0 && add) i.Header.Add = false;
                 }
@@ -146,9 +146,8 @@ namespace ToSic.Sxc.WebApi.Cms
             // only save entities that are
             // a) not in a group
             // b) in a group where the slot isn't marked as empty
-            // 2022-09-19 2dm #cleanUpDuplicateGroupHeaders - WIP
             var entitiesToSave = items
-                .Where(e => !e.Header.IsContentBlockMode /*Group == null*/ || !e.Header.IsEmpty /*.Group.SlotIsEmpty*/)
+                .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
                 .ToList();
 
             var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
