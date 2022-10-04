@@ -19,12 +19,12 @@ namespace ToSic.Sxc.Dnn.Web
         IHtmlString Raw(object stringHtml);
 
         /// <summary>
-        /// Experimental support for Html.Partial to mimic API in .net Core 5
+        /// Render a razor file to the page.
+        /// This mimics the .net core API Html.Partial() in DNN
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">path/file of razor, like "../shared/_list-item.cshtml"</param>
         /// <param name="data"></param>
         /// <returns></returns>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP for v12")]
         IHtmlString Partial(string path, params object[] data);
     }
 }
