@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Newtonsoft.Json;
-using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Documentation;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
 using ToSic.SexyContent.Adam;
 using ToSic.Sxc.Data;

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Api.Api01;
@@ -12,14 +13,11 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Metadata;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Security;
-using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using IApp = ToSic.Eav.Apps.IApp;
@@ -79,7 +77,7 @@ namespace ToSic.Sxc.WebApi.App
                 ?.ToList();
             return wrapLog.Return(result, "found: " + result?.Count);
         }
-        
+
 
         #endregion
 
@@ -162,17 +160,22 @@ namespace ToSic.Sxc.WebApi.App
             var wrapLog = Log.Fn<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
             if (!newContentItemCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
-                return wrapLog.ReturnFalse("'ParentRelationship' key is missing");
+                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' key is missing");
 
-            var parentRelationship = newContentItemCaseInsensitive[SaveApiAttributes.ParentRelationship] as JObject;
-            if (parentRelationship == null) return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' value is null");
+            var objectOrNull = newContentItemCaseInsensitive[SaveApiAttributes.ParentRelationship];
+            if (objectOrNull == null) return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' value is null");
+
+            if (!(objectOrNull is JsonElement jsonElement))
+                return wrapLog.ReturnNull($"'{SaveApiAttributes.ParentRelationship}' value is not jsonElement");
+
+            var parentRelationship = JsonObject.Create(jsonElement);
 
             var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
             if (!parentGuid.HasValue) return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelParent}' guid is missing");
 
             var parentEntity = AppState.List.One(parentGuid.Value);
             if (parentEntity == null) return wrapLog.ReturnFalse("Parent entity is missing");
-            
+
             //var entityId = (int?)parentRelationship["EntityId"];
             var ids = new[] { addedEntityId as int? };
             var index = (int)parentRelationship[SaveApiAttributes.ParentRelIndex];
@@ -190,25 +193,38 @@ namespace ToSic.Sxc.WebApi.App
         {
             var wrapLog = Log.Fn<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
 
-            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog.ReturnNull("'For' key is missing");
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' key is missing");
 
-            var metadataFor = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor] as JObject;
-            if (metadataFor == null) return wrapLog.ReturnNull("'For' value is null");
+            var objectOrNull = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor];
+            if (objectOrNull == null) return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is null");
 
-            var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]), null)
+            if (!(objectOrNull is JsonElement jsonElement))
+                return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is not jsonElement");
+
+            var metadataFor = JsonObject.Create(jsonElement);
+
+            var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null)
             {
-                KeyGuid = (Guid?) metadataFor[Attributes.GuidNiceName],
-                KeyNumber = (int?) metadataFor[Attributes.NumberNiceName],
-                KeyString = (string) metadataFor[Attributes.StringNiceName]
+                KeyGuid = (Guid?)metadataFor[Attributes.GuidNiceName],
+                KeyNumber = (int?)metadataFor[Attributes.NumberNiceName],
+                KeyString = (string)metadataFor[Attributes.StringNiceName]
             };
-            return wrapLog.Return(metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
+            return wrapLog.Return(metaData,
+                $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
+
         }
 
-        private static int GetTargetType(JToken target)
+        private static int GetTargetType(JsonValue target)
         {
-            if (target.Type == JTokenType.Integer) return (int) target;
-            if (target.Type == JTokenType.String && Enum.TryParse<TargetTypes>((string) target, out var targetTypes)) return (int) targetTypes;
-            throw new ArgumentOutOfRangeException(Attributes.TargetNiceName, "Value is not 'int' or TargetTypes 'string'.");
+            switch (target.GetValue<JsonElement>().ValueKind)
+            {
+                case JsonValueKind.Number:
+                    return (int)target;
+                case JsonValueKind.String when Enum.TryParse<TargetTypes>((string)target, out var targetTypes):
+                    return (int)targetTypes;
+                default:
+                    throw new ArgumentOutOfRangeException(Attributes.TargetNiceName, "Value is not 'int' or TargetTypes 'string'.");
+            }
         }
 
         /// <summary>

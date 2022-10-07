@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json.Nodes;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Serialization;
 
 namespace ToSic.Sxc.Data
 {
@@ -15,10 +16,10 @@ namespace ToSic.Sxc.Data
         private const string JsonErrorCode = "error";
 
         [PrivateApi]
-        public static object AsDynamicJacket(string json, string fallback = EmptyJson) => WrapIfJObjectUnwrapIfJValue(AsJToken(json, fallback));
+        public static object AsDynamicJacket(string json, string fallback = EmptyJson) => WrapIfJObjectUnwrapIfJValue(AsJsonNode(json, fallback));
 
         [PrivateApi]
-        private static JToken AsJToken(string json, string fallback = EmptyJson)
+        private static JsonNode AsJsonNode(string json, string fallback = EmptyJson)
         {
             if (!string.IsNullOrWhiteSpace(json))
                 try
@@ -28,10 +29,13 @@ namespace ToSic.Sxc.Data
                     if (firstCharPos > -1)
                     {
                         var firstChar = json[firstCharPos];
-                        if (firstChar == JObjStart)
-                            return JObject.Parse(json);
-                        if (firstChar == JArrayStart)
-                            return JArray.Parse(json);
+                        switch (firstChar)
+                        {
+                            case JObjStart:
+                                return JsonNode.Parse(json, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions)?.AsObject();
+                            case JArrayStart:
+                                return JsonNode.Parse(json, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions)?.AsArray();
+                        }
                     }
                 }
                 catch
@@ -42,7 +46,7 @@ namespace ToSic.Sxc.Data
             // fallback
             return fallback == null
                 ? null
-                : JObject.Parse(fallback);
+                : JsonNode.Parse(fallback, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions);
         }
 
         /// <summary>
@@ -54,16 +58,19 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         internal static object WrapIfJObjectUnwrapIfJValue(object original)
         {
-            switch (original)
+            
+            if (!(original is JsonNode jsonNode)) return original;
+
+            switch (jsonNode)
             {
+                case JsonArray jArray:
+                    return new DynamicJacketList(jArray);
+                case JsonObject jResult: // it's another complex object, so return another wrapped reader
+                    return new DynamicJacket(jResult);
+                case JsonValue jValue: // it's a simple value - so we want to return the underlying real value
+                    return jValue.AsValue();
                 case null:
                     return null;
-                case JArray jArray:
-                    return new DynamicJacketList(jArray);
-                case JObject jResult: // it's another complex object, so return another wrapped reader
-                    return new DynamicJacket(jResult);
-                case JValue jValue: // it's a simple value - so we want to return the underlying real value
-                    return jValue.Value;
                 default: // it's something else, let's just return that
                     return original;
             }

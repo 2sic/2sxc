@@ -64,9 +64,13 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (!adamContext.Security.UserIsPermittedOnField(GrantSets.ReadSomething, out exp))
                     throw exp;
                 
-                // now try to find the item
-                // we already know that the link was able to match, so we'll just use this to get the id
+                // now try to find the item, use this to get the id
                 var parts = new LinkParts(hyperlink);
+
+                // link was not able to match,
+                if (!parts.IsMatch || parts.Id == 0) 
+                    return new LinkInfoDto { Value = hyperlink };
+
                 // Note: kind of temporary solution, will fail if TFileId isn't int!
                 var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
                 var dtoMaker = AdamContext.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(AdamContext);

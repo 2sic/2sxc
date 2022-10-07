@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Text.Json;
 using System.Web;
-using Newtonsoft.Json;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -122,7 +123,7 @@ namespace ToSic.Sxc.Blocks.Output
             return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage);
         }
 
-        public string UiContextInfos() => JsonConvert.SerializeObject(_jsContextAllGen.New.Init(AppRootPath, Block, Log));
+        public string UiContextInfos() => JsonSerializer.Serialize(_jsContextAllGen.New.Init(AppRootPath, Block, Log), JsonOptions.SafeJsonForHtmlAttributes);
 
     }
 }

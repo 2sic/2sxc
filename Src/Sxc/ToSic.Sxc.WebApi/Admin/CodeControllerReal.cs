@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Documentation;
@@ -25,13 +23,16 @@ namespace ToSic.Sxc.WebApi.Admin
             public string Term { get; set; }
             // message from the attribute
             public string[] Help { get; set; }
-            // ignore some of serialization exceptions
-            // https://www.newtonsoft.com/json/help/html/serializationerrorhandling.htm
-            [OnError]
-            internal void OnError(StreamingContext context, ErrorContext errorContext)
-            {
-                errorContext.Handled = true;
-            }
+
+
+            // not supported in System.Text.Json
+            //// ignore some of serialization exceptions
+            //// https://www.newtonsoft.com/json/help/html/serializationerrorhandling.htm
+            //[OnError]
+            //internal void OnError(StreamingContext context, ErrorContext errorContext)
+            //{
+            //    errorContext.Handled = true;
+            //}
         }
 
         public IEnumerable<HelpItem> InlineHelp(string language)

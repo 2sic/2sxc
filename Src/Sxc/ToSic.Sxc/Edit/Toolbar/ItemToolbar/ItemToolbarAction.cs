@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using static Newtonsoft.Json.NullValueHandling;
+﻿using System.Text.Json.Serialization;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
         }
 
-        [JsonProperty(NullValueHandling = Ignore)] public string action { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string action { get; set; }
 
     }
 }

@@ -1,12 +1,12 @@
 ﻿using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
 using System.Configuration;
+using System.Net.Http.Formatting;
 using System.Web.Hosting;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DI;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Images.ImageflowRewrite;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
@@ -40,8 +40,8 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Configure Newtonsoft Time zone handling
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-
+            // System.Text.Json supports ISO 8601-1:2019, including the RFC 3339 profile
+            GlobalConfiguration.Configuration.Formatters.Add(SystemTextJsonMediaTypeFormatter);
             // Getting the service provider in Configure is tricky business, because
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
@@ -64,16 +64,18 @@ namespace ToSic.Sxc.Dnn.StartUp
             Features.FeaturesFromDi = sxcSysLoader.EavSystemLoader.Features;
 #pragma warning restore CS0618
 
-            // Help RazorBlade to have a proper best-practices ToJson
-            // New v12.05
-            // 2022-02-01 2dm - should not be necessary any more, .net Framework doesn't need this
-            // But we'll leave it in, because possibly this function is more reliable than the built in
-            Razor.StartUp.StartUp.RegisterToJson(JsonConvert.SerializeObject);
-
             // Optional registration of query string rewrite functionality implementation for dnn imageflow module
             Imageflow.Dnn.StartUp.RegisterQueryStringRewrite(ImageflowRewrite.QueryStringRewrite);
 
             _alreadyConfigured = true;
         }
+
+        public static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatter =>
+            _systemTextJsonMediaTypeFormatter ?? (_systemTextJsonMediaTypeFormatter =
+                new SystemTextJsonMediaTypeFormatter
+                {
+                    JsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtml
+                });
+        private static SystemTextJsonMediaTypeFormatter _systemTextJsonMediaTypeFormatter;
     }
 }

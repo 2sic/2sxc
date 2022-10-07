@@ -30,6 +30,13 @@ namespace ToSic.Sxc.Apps.Assets
 
         public string Extension => Path.GetExtension(FileName);
 
+        /// <summary>
+        /// parameter-less constructor for deserialization, to fix "System.InvalidOperationException"
+        /// "Each parameter in the deserialization constructor on type 'ToSic.Sxc.Apps.Assets.AssetEditInfo' must bind to an object property or field on deserialization.
+        /// Each parameter name must match with a property or field on the object. The match can be case-insensitive.",
+        /// </summary>
+        public AssetEditInfo() { }
+
         public AssetEditInfo(int appId, string appName, string fileName, bool global)
         {
             AppId = appId;

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Web;
 using IEntity = ToSic.Eav.Data.IEntity;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -44,11 +46,11 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         }
 
-        private string ToolbarObjJson() => JsonConvert.SerializeObject(
-            ClassicToolbarOrNull ?? (Actions.Count == 1 ? Actions.First() : (object) Actions));
+        private string ToolbarObjJson() => JsonSerializer.Serialize(
+            ClassicToolbarOrNull ?? (Actions.Count == 1 ? Actions.First() : (object) Actions), JsonOptions.SafeJsonForHtmlAttributes);
 
 
-        private string SettingsJson => JsonConvert.SerializeObject(Settings);
+        private string SettingsJson => JsonSerializer.Serialize(Settings, JsonOptions.SafeJsonForHtmlAttributes);
 
 
         [JsonIgnore]

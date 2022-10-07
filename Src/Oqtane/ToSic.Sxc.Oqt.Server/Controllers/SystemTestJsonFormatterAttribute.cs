@@ -5,20 +5,22 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
 using System.Buffers;
 using System.Linq;
-using Newtonsoft.Json.Serialization;
+using ToSic.Eav.Serialization;
+using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     // https://blogs.taiga.nl/martijn/2020/05/28/system-text-json-and-newtonsoft-json-side-by-side-in-asp-net-core/
-    public class NewtonsoftJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
+    public class SystemTestJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
     {
+        private static readonly SystemTextJsonOutputFormatter SystemTextJsonOutputFormatter = new SystemTextJsonOutputFormatter(JsonOptions.UnsafeJsonWithoutEncodingHtml);
+
         public void Apply(ControllerModel controller)
         {
             foreach (var action in controller.Actions)
@@ -33,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var parameters = action.Parameters.Where(p => p.BindingInfo?.BindingSource == BindingSource.Body);
             foreach (var p in parameters)
             {
-                p.BindingInfo.BinderType = typeof(NewtonsoftJsonBodyModelBinder);
+                p.BindingInfo.BinderType = typeof(SystemTextJsonBodyModelBinder);
             }
         }
 
@@ -41,15 +43,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             if (context.Result is ObjectResult objectResult)
             {
-                var options = context.HttpContext.RequestServices.GetService<IOptions<MvcNewtonsoftJsonOptions>>();
-                // this ensures that c# objects with Pascal-case keep that
-                options.Value.SerializerSettings.ContractResolver = new DefaultContractResolver();
-
-                objectResult.Formatters.RemoveType<SystemTextJsonOutputFormatter>();
-                objectResult.Formatters.Add(new NewtonsoftJsonOutputFormatter(
-                    Eav.ImportExport.Json.JsonSettings.Defaults(options.Value.SerializerSettings),
-                    context.HttpContext.RequestServices.GetRequiredService<ArrayPool<char>>(),
-                    context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value));
+                objectResult.Formatters.RemoveType<NewtonsoftJsonOutputFormatter>();
+                objectResult.Formatters.Add(SystemTextJsonOutputFormatter); 
             }
             else
             {
@@ -58,9 +53,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
     }
 
-    public class NewtonsoftJsonBodyModelBinder : BodyModelBinder
+    public class SystemTextJsonBodyModelBinder : BodyModelBinder
     {
-        public NewtonsoftJsonBodyModelBinder(
+        public SystemTextJsonBodyModelBinder(
             ILoggerFactory loggerFactory,
             ArrayPool<char> charPool,
             IHttpRequestStreamReaderFactory readerFactory,
@@ -81,14 +76,25 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var jsonOptionsValue = jsonOptions.Value;
             return new IInputFormatter[]
             {
-            new NewtonsoftJsonInputFormatter(
-                loggerFactory.CreateLogger<NewtonsoftJsonBodyModelBinder>(),
-                jsonOptionsValue.SerializerSettings,
-                charPool,
-                objectPoolProvider,
-                mvcOptions.Value,
-                jsonOptionsValue)
+            new SystemTextJsonInputFormatter(SxcJsonOptions,
+                loggerFactory.CreateLogger<SystemTextJsonInputFormatter>())
             };
         }
+
+
+        public static Microsoft.AspNetCore.Mvc.JsonOptions SxcJsonOptions
+        {
+            get
+            {
+                if (_sxcJsonOptions == null)
+                {
+                    _sxcJsonOptions = new Microsoft.AspNetCore.Mvc.JsonOptions();
+                    _sxcJsonOptions.JsonSerializerOptions.SetUnsafeJsonSerializerOptions();
+                }
+                return _sxcJsonOptions;
+            }
+        }
+        private static Microsoft.AspNetCore.Mvc.JsonOptions _sxcJsonOptions;
+
     }
 }

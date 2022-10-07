@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Web.Url;
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (set.Name == KeyData)
             {
                 if (set.Value == null) return set;
-                var json = JsonConvert.SerializeObject(set.Value);
+                var json = JsonSerializer.Serialize(set.Value, JsonOptions.SafeJsonForHtmlAttributes);
                 return new NameObjectSet(set, value: $"{Json64Prefix}{Base64.Encode(json)}");
             }
 

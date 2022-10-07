@@ -99,6 +99,7 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.Dnn*.pdb" />
 
       <!-- 2sxc 13+ netstandard2.0/framework 4.7.2 assemblies -->
+      <AssemblyInclude Include="$(OutDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Abstractions.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.dll" />
       <AssemblyInclude Include="$(OutDir)\Microsoft.EntityFrameworkCore.Relational.dll" />
@@ -126,6 +127,10 @@
       <!--<AssemblyInclude Include="$(OutDir)\System.Net.Http.Formatting.dll" />-->
       <AssemblyInclude Include="$(OutDir)\System.Numerics.Vectors.dll" />
       <AssemblyInclude Include="$(OutDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.Text.Encodings.Web.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.Text.Json.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.Threading.Tasks.Extensions.dll" />
+      <AssemblyInclude Include="$(OutDir)\System.ValueTuple.dll" />
       <!--<AssemblyInclude Include="$(OutDir)\System.Web.Http.dll" />-->
       <!--<AssemblyInclude Include="$(OutDir)\System.Web.Http.WebHost.dll" />-->
 

@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Text.Json;
+using ToSic.Eav.Serialization;
 
 namespace ToSic.Sxc.Web.Parameters
 {
@@ -26,8 +27,8 @@ namespace ToSic.Sxc.Web.Parameters
 
             // Workaround for deserializing KeyValuePair -it requires lowercase properties(case sensitive),
             // which seems to be a bug in some Newtonsoft.Json versions: http://stackoverflow.com/questions/11266695/json-net-case-insensitive-property-deserialization
-            var items = JsonConvert.DeserializeObject<List<UpperCaseStringKeyValuePair>>(paramSet);
-            items.ForEach(a => urlParams.Add(a.Key, a.Value));
+            var items = JsonSerializer.Deserialize<List<UpperCaseStringKeyValuePair>>(paramSet, JsonOptions.SafeJsonForHtmlAttributes);
+            items?.ForEach(a => urlParams.Add(a.Key, a.Value));
 
             return urlParams;
         }

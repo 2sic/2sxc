@@ -47,12 +47,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
 
         /// <inheritdoc />
         [HttpPost("{contentType}")]
+        [HttpPost("{contentType}/{id}")]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, object> CreateOrUpdate(
-            [FromRoute] string contentType,
-            [FromBody] Dictionary<string, object> newContentItem, 
-            [FromQuery] int? id = null,
-            [FromQuery] string appPath = null)
+            string contentType,
+            [FromBody] Dictionary<string, object> newContentItem,
+            int? id = null,
+            string appPath = null)
             =>Real.CreateOrUpdate(contentType, newContentItem, id, appPath);
 
         #endregion
