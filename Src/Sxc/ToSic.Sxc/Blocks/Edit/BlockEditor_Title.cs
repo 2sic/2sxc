@@ -17,8 +17,8 @@ namespace ToSic.Sxc.Blocks.Edit
             var contentGroup = cms.Blocks.GetBlockConfig(BlockConfiguration.Guid);
 
             var titleItem = contentGroup.Header.FirstOrDefault() ?? contentGroup.Content.FirstOrDefault();
-
-            UpdateTitle(titleItem);
+            
+            if (titleItem != null) UpdateTitle(titleItem);
         }
 
     }
