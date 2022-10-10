@@ -111,6 +111,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         }
 
         /// <inheritdoc />
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [SupportedModules("2sxc,2sxc-app")]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId) 
             => Real.GetPendingApps(zoneId);
     }

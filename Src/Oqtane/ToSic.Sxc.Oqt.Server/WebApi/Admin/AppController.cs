@@ -108,6 +108,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         }
 
         /// <inheritdoc />
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
             => Real.GetPendingApps(zoneId);
     }
