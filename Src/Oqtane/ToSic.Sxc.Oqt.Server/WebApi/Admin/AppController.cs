@@ -106,5 +106,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             HotReloadEnabledCheck.Check();
             return Real.Import(new HttpUploadedFile(Request), zoneId, Request.Form["Name"]);
         }
+
+        /// <inheritdoc />
+        public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
+            => Real.GetPendingApps(zoneId);
     }
 }

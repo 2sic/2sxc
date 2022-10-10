@@ -109,5 +109,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             PreventServerTimeout300();
             return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
         }
+
+        /// <inheritdoc />
+        public IEnumerable<PendingAppDto> GetPendingApps(int zoneId) 
+            => Real.GetPendingApps(zoneId);
     }
 }
