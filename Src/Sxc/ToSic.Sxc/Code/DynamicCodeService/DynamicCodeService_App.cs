@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Fn<IApp>($"{appIdentity.LogState()}, site:{site != null}, showDrafts: {withUnpublished}");
             var app = AppGenerator.New;
             if (site != null) app.PreInit(site);
-            var appStuff = app.Init(appIdentity, AppConfigDelegateGenerator.New.Build(withUnpublished ?? _dependencies.User.Value.IsAdmin), Log);
+            var appStuff = app.Init(appIdentity, AppConfigDelegateGenerator.New.Build(withUnpublished ?? _dependencies.User.Value.IsSiteAdmin), Log);
             return wrapLog.Return(appStuff);
         }
 

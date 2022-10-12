@@ -15,7 +15,10 @@ namespace IntegrationSamples.BasicEav01.Context
         public Guid? Guid => System.Guid.Empty;
         public List<int> Roles => new List<int>();
         public bool IsSuperUser => true;
-        public bool IsAdmin => true;
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        public bool IsAdmin => IsSiteAdmin;
+
+        public bool IsSiteAdmin => true;
         public bool IsDesigner => true;
         public bool IsAnonymous => false;
     }

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Code
         {
             var wrapLog = Log.Fn();
             var user = _user.Value;
-            var changes = _pageChangeSummary.Value.FinalizeAndGetAllChanges(_pageServiceShared.Value, user.IsSuperUser || user.IsAdmin);
+            var changes = _pageChangeSummary.Value.FinalizeAndGetAllChanges(_pageServiceShared.Value, user.IsSuperUser || user.IsSiteAdmin);
             _dnnPageChanges.Value.Apply(Page, changes);
             var dnnClientResources = _dnnClientResources.Value.Init(Page, false, null, Log);
             dnnClientResources.AddEverything(changes?.Features);

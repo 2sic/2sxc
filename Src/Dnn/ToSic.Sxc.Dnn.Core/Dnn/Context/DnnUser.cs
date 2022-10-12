@@ -31,8 +31,11 @@ namespace ToSic.Sxc.Dnn.Context
 
         public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
 
-        public bool IsAdmin => _isAdmin ?? (_isAdmin = UnwrappedContents?.UserMayAdminThis() ?? false).Value;
-        private bool? _isAdmin;
+        public bool IsSiteAdmin => _isSiteAdmin ?? (_isSiteAdmin = UnwrappedContents?.UserMayAdminThis() ?? false).Value;
+        private bool? _isSiteAdmin;
+
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        public bool IsAdmin => IsSiteAdmin;
 
         public bool IsDesigner => IsSuperUser;
 

@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (_user.IsSuperUser) return;
 
             // ensure current user is admin - this is the minimum of not super-user
-            if (!_user.IsAdmin) throw new AccessViolationException("current user may not edit templates, requires admin rights");
+            if (!_user.IsSiteAdmin) throw new AccessViolationException("current user may not edit templates, requires admin rights");
 
             // if not super user, check if razor (not allowed; super user only)
             if (!EditInfo.IsSafe)

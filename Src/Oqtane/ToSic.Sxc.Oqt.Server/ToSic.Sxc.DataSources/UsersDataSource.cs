@@ -60,7 +60,7 @@ namespace ToSic.Sxc.DataSources
                         IdentityToken = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
                         Roles = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
                         IsSuperUser = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
-                        IsAdmin = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Admin),
+                        IsSiteAdmin = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Admin),
                         IsDesigner = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
                         IsAnonymous = u.UserId == -1,
                         Created = u.CreatedOn,

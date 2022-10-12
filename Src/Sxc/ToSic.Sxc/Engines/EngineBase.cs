@@ -180,7 +180,7 @@ namespace ToSic.Sxc.Engines
                 .ForItem(Block.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (user.IsAdmin || !templatePermissions.HasPermissions)
+            if (user.IsSiteAdmin || !templatePermissions.HasPermissions)
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))

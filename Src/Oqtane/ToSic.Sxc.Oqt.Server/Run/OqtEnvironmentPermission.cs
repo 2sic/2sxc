@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 return m != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.Edit);
 
             if (condition.Equals("SecurityAccessLevel.Admin", StringComparison.InvariantCultureIgnoreCase))
-                return _oqtUser.Value.IsAdmin;
+                return _oqtUser.Value.IsSiteAdmin;
 
             if (condition.Equals("SecurityAccessLevel.Host", StringComparison.InvariantCultureIgnoreCase))
                 return _oqtUser.Value.IsSuperUser;

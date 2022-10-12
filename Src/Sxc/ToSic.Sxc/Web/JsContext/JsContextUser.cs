@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Web.JsContext
 
         public JsContextUser(IUser user, bool? overrideDesign = null)
         {
-            CanAdmin = user.IsAdmin;
+            CanAdmin = user.IsSiteAdmin;
             // 2022-02-23 2dm remove this, believe it's not used any more
             //CanDesign = overrideDesign ?? user.IsDesigner;
             CanDevelop = user.IsSuperUser;

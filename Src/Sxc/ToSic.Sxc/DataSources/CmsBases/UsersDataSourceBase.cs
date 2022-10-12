@@ -139,7 +139,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
                             {"IdentityToken", u.IdentityToken},
                             {"Roles", u.Roles},
                             {"IsSuperUser", u.IsSuperUser},
-                            {"IsAdmin", u.IsAdmin},
+                            {nameof(u.IsSiteAdmin), u.IsSiteAdmin},
                             {"IsDesigner", u.IsDesigner},
                             {"IsAnonymous", u.IsAnonymous},
                             {"Username", u.Username},
@@ -256,7 +256,11 @@ namespace ToSic.Sxc.DataSources.CmsBases
             public string IdentityToken { get; set; }
             public List<int> Roles { get; set; }
             public bool IsSuperUser { get; set; }
+            [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
             public bool IsAdmin { get; set; }
+
+            public bool IsSiteAdmin { get; set; }
+
             public bool IsDesigner { get; set; }
             public bool IsAnonymous { get; set; }
             public DateTime Created { get; set; }

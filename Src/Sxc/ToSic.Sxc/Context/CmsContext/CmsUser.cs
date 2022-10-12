@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Context
 
         public int Id => _contents.Id;
 
-        public bool IsSiteAdmin => _contents.IsAdmin;
+        public bool IsSiteAdmin => _contents.IsSiteAdmin;
 
         public bool IsSystemAdmin => _contents.IsSuperUser;
 

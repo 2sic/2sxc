@@ -64,8 +64,10 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Host);
         private bool? _isSuperUser;
 
-        public bool IsAdmin => _isAdmin ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Admin);
-        private bool? _isAdmin;
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        public bool IsAdmin => IsSiteAdmin;
+        public bool IsSiteAdmin => _isSiteAdmin ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Admin);
+        private bool? _isSiteAdmin;
 
         public bool IsDesigner => IsSuperUser;
 
