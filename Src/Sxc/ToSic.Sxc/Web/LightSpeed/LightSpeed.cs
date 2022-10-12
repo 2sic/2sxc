@@ -127,7 +127,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         private int Duration => _duration.Get(() =>
         {
             var user = _block.Context.User;
-            if (user.IsSuperUser) return AppConfig.DurationSystemAdmin;
+            if (user.IsSystemAdmin) return AppConfig.DurationSystemAdmin;
             if (user.IsSiteAdmin) return AppConfig.DurationEditor;
             if (!user.IsAnonymous) return AppConfig.DurationUser;
             return AppConfig.Duration;

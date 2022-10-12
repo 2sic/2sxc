@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public override bool EnvironmentAllows(List<Grants> grants)
         {
             var logWrap = Log.Fn<bool>(() => $"[{string.Join(",", grants)}]");
-            var ok = UserIsSuperuser(); // superusers are always ok
+            var ok = UserIsSystemAdmin(); // superusers are always ok
             if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsSiteAdmin()
                      || UserIsModuleAdmin()
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 return _oqtUser.Value.IsSiteAdmin;
 
             if (condition.Equals("SecurityAccessLevel.Host", StringComparison.InvariantCultureIgnoreCase))
-                return _oqtUser.Value.IsSuperUser;
+                return _oqtUser.Value.IsSystemAdmin;
 
             return false;
         }

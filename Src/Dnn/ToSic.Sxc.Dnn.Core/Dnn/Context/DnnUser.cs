@@ -29,7 +29,10 @@ namespace ToSic.Sxc.Dnn.Context
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
         private List<int> _roles;
 
-        public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
+        public bool IsSystemAdmin => UnwrappedContents?.IsSuperUser ?? false;
+
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        public bool IsSuperUser => IsSystemAdmin;
 
         public bool IsSiteAdmin => _isSiteAdmin ?? (_isSiteAdmin = UnwrappedContents?.UserMayAdminThis() ?? false).Value;
         private bool? _isSiteAdmin;
@@ -37,7 +40,7 @@ namespace ToSic.Sxc.Dnn.Context
         [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
         public bool IsAdmin => IsSiteAdmin;
 
-        public bool IsDesigner => IsSuperUser;
+        public bool IsDesigner => IsSystemAdmin;
 
         public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
         private UserInfo _user;

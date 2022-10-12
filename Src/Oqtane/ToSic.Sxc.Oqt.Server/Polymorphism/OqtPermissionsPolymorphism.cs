@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.Polymorphism
             var wrapLog = log.Fn<string>();
             if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
                 return wrapLog.ReturnNull("unknown param");
-            var isSuper = _oqtUser.IsSuperUser;
+            var isSuper = _oqtUser.IsSystemAdmin;
             var result = isSuper ? "staging" : "live";
             return wrapLog.ReturnAndLog(result);
         }

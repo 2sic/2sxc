@@ -51,7 +51,7 @@ namespace ToSic.Sxc.DataSources
                         Guid = d.UserGuid(),
                         IdentityToken = d.UserIdentityToken(),
                         Roles = d.RoleList(portalId: siteId),
-                        IsSuperUser = d.IsSuperUser,
+                        IsSystemAdmin = d.IsSuperUser,
                         IsSiteAdmin = d.UserMayAdminThis(),
                         IsDesigner = d.IsDesigner(),
                         IsAnonymous = d.IsAnonymous(),

@@ -14,6 +14,9 @@ namespace IntegrationSamples.SxcEdit01.Context
         public string IdentityToken => "impl-user:0";
         public Guid? Guid => System.Guid.Empty;
         public List<int> Roles => new List<int>();
+
+        public bool IsSystemAdmin => true;
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
         public bool IsSuperUser => true;
         [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
         public bool IsAdmin => IsSiteAdmin;

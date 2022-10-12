@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Apps.Assets
         public void EnsureUserMayEditAssetOrThrow(string fullPath = null)
         {
             // check super user permissions - then all is allowed
-            if (_user.IsSuperUser) return;
+            if (_user.IsSystemAdmin) return;
 
             // ensure current user is admin - this is the minimum of not super-user
             if (!_user.IsSiteAdmin) throw new AccessViolationException("current user may not edit templates, requires admin rights");
@@ -142,7 +142,7 @@ namespace ToSic.Sxc.Apps.Assets
                     return File.ReadAllText(InternalPath);
 
                 throw new FileNotFoundException("could not find file"
-                                                + (_user.IsSuperUser ? $" for superuser - file tried '{InternalPath}'" : ""));
+                                                + (_user.IsSystemAdmin ? $" for superuser - file tried '{InternalPath}'" : ""));
             }
             set
             {
@@ -151,7 +151,7 @@ namespace ToSic.Sxc.Apps.Assets
                     File.WriteAllText(InternalPath, value);
                 else
                     throw new FileNotFoundException("could not find file"
-                                                    + (_user.IsSuperUser ? $" for superuser - file tried '{InternalPath}'" : ""));
+                                                    + (_user.IsSystemAdmin ? $" for superuser - file tried '{InternalPath}'" : ""));
             }
         }
 

@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Services
             {
                 Log.Ex(ex);
                 wrapLog.Done("error");
-                if (_userLazy.Value.IsSuperUser)
+                if (_userLazy.Value.IsSystemAdmin)
                     throw;
                 else
                     throw new Exception("SMTP configuration problem."); 

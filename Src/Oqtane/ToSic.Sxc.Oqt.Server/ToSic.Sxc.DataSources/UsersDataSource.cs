@@ -59,7 +59,7 @@ namespace ToSic.Sxc.DataSources
                         Guid = new Guid((_identityUserManager.FindByNameAsync(u.Username).Result).Id), // new Guid(new IdentityUser(u.User.Username).Id),
                         IdentityToken = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
                         Roles = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
-                        IsSuperUser = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
+                        IsSystemAdmin = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
                         IsSiteAdmin = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Admin),
                         IsDesigner = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
                         IsAnonymous = u.UserId == -1,

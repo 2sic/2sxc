@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Web
     [PrivateApi("internal class only!")]
     public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IRazor, IDnnRazor
     {
-        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this, _DynCodeRoot?.Block?.Context.User.IsSuperUser ?? false, _DynCodeRoot?.GetService<IFeaturesService>()));
+        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this, _DynCodeRoot?.Block?.Context.User.IsSystemAdmin ?? false, _DynCodeRoot?.GetService<IFeaturesService>()));
         private IHtmlHelper _html;
 
         [PrivateApi]

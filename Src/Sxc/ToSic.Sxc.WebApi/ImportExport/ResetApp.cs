@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _cmsZones.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
             // 3. Now import the App.xml
-            var allowSystemChanges = _user.IsSuperUser;
+            var allowSystemChanges = _user.IsSystemAdmin;
             var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges, Log);
             var imp = new ImportXmlReader(filePath, xmlImport, Log);
             result.Success = xmlImport.ImportXml(zoneId, appId, imp.XmlDoc);

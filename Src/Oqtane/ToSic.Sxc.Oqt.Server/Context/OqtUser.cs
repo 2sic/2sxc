@@ -61,15 +61,19 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public List<int> Roles => _roles ??= _userRoleRepository.Value.GetUserRoles(Id, UnwrappedContents.SiteId).Select(r => r.RoleId).ToList();
         private List<int> _roles;
 
-        public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Host);
-        private bool? _isSuperUser;
+
+        public bool IsSystemAdmin => _isSystemAdmin ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Host);
+        private bool? _isSystemAdmin;
+
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        public bool IsSuperUser => IsSystemAdmin;
 
         [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
         public bool IsAdmin => IsSiteAdmin;
         public bool IsSiteAdmin => _isSiteAdmin ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Admin);
         private bool? _isSiteAdmin;
 
-        public bool IsDesigner => IsSuperUser;
+        public bool IsDesigner => IsSystemAdmin;
 
         #region New Permission properties for v12
 

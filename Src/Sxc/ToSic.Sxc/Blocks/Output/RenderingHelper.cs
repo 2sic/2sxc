@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Blocks.Output
             var msg = prefix + ex + additionalInfo;
             if (addToEventLog) _errorLogger?.LogException(ex);
 
-            if (!Context.User.IsSuperUser)
+            if (!Context.User.IsSystemAdmin)
                 msg = visitorAlternateError ?? DefaultVisitorError;
 
             return DesignMessage(msg, addContextWrapper, encodeMessage);
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Blocks.Output
         {
             msgSuperUser = "Error: " + msgSuperUser;
 
-            if (!Context.User.IsSuperUser)
+            if (!Context.User.IsSystemAdmin)
                 msgSuperUser = msgVisitors ?? DefaultVisitorError;
 
             return DesignMessage(msgSuperUser, addContextWrapper, encodeMessage);
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         public string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true)
         {
-            if (!Context.User.IsSuperUser) return null;
+            if (!Context.User.IsSystemAdmin) return null;
             return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage);
         }
 

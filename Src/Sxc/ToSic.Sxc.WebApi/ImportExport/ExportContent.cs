@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ExportPartsOverviewDto PreExportSummary(int zoneId, int appId, string scope)
         {
-            Log.A($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSuperUser}");
+            Log.A($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSystemAdmin}");
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
