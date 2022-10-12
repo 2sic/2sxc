@@ -52,7 +52,7 @@ namespace ToSic.Sxc.DataSources
                         IdentityToken = d.UserIdentityToken(),
                         Roles = d.RoleList(portalId: siteId),
                         IsSuperUser = d.IsSuperUser,
-                        IsAdmin = d.UserMayAdminThis(),
+                        IsSiteAdmin = d.UserMayAdminThis(),
                         IsDesigner = d.IsDesigner(),
                         IsAnonymous = d.IsAnonymous(),
                         Created = d.CreatedOnDate,
