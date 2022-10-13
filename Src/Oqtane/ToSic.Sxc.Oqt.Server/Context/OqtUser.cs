@@ -56,6 +56,10 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public string Username => UnwrappedContents?.Username;
 
+        public string Name => UnwrappedContents?.DisplayName;
+
+        public string Email => UnwrappedContents?.Email;
+
         public string IdentityToken => $"{OqtConstants.UserTokenPrefix}:{Id}";
 
         public Guid? Guid { get; private set; }

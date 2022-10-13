@@ -26,6 +26,10 @@ namespace IntegrationSamples.SxcEdit01.Context
         public bool IsDesigner => true;
         public bool IsAnonymous => false;
 
-        public string Username => "dummy";
+        public string Username => "unknown";
+        public string Name => Username;
+
+        public string Email => "unknown@unknown.org";
+
     }
 }

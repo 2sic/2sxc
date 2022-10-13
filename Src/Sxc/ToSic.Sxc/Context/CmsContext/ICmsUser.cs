@@ -11,8 +11,17 @@ namespace ToSic.Sxc.Context
     public interface ICmsUser: IHasMetadata
     {
         /// <summary>
+        /// The user e-mail.
+        /// If anonymous/not logged in, would be an empty string.
+        /// </summary>
+        /// <remarks>Added in v.14.09</remarks>
+        string Email { get; }
+
+        /// <summary>
         /// User Id as int. Works in DNN and Oqtane.
-        /// Use in Razor: `CmsContext.User.Id`
+        /// If anonymous is zero.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.User.Id`
         /// </summary>
         int Id { get; }
 
@@ -90,6 +99,13 @@ namespace ToSic.Sxc.Context
 #pragma warning disable CS0108, CS0114
         IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
+
+        /// <summary>
+        /// The user name as should be displayed. 
+        /// If anonymous/not logged in, would be an empty string.
+        /// </summary>
+        /// <remarks>Added in v.14.09</remarks>
+        string Name { get; }
 
 
         /// <summary>

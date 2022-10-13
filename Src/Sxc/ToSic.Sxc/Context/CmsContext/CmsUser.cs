@@ -14,6 +14,9 @@ namespace ToSic.Sxc.Context
 
         private readonly AppState _appState;
 
+        public string Email => IsAnonymous ? "" : _contents.Email;
+
+
         public int Id => _contents.Id;
 
         public bool IsSiteAdmin => _contents.IsSiteAdmin;
@@ -29,6 +32,7 @@ namespace ToSic.Sxc.Context
         protected override IMetadataOf GetMetadataOf() 
             => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
 
-        public string Username => _contents.Username.HasValue() ? _contents.Username : "";
+        public string Name => IsAnonymous ? "" : _contents.Name;
+        public string Username => IsAnonymous ? "" : _contents.Username;
     }
 }

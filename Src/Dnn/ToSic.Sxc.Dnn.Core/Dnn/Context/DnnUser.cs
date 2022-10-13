@@ -74,5 +74,9 @@ namespace ToSic.Sxc.Dnn.Context
         public bool IsAnonymous => Id == -1;
 
         public string Username => UnwrappedContents?.Username;
+
+        public string Name => UnwrappedContents?.DisplayName;
+
+        public string Email => UnwrappedContents?.Email;
     }
 }
