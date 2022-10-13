@@ -142,6 +142,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
                             {nameof(u.IsSystemAdmin), u.IsSystemAdmin},
                             {"IsAdmin", u.IsSiteAdmin},
                             {nameof(u.IsSiteAdmin), u.IsSiteAdmin},
+                            {nameof(u.IsContentAdmin), u.IsContentAdmin},
                             {"IsDesigner", u.IsDesigner},
                             {"IsAnonymous", u.IsAnonymous},
                             {"Username", u.Username},

@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Views
         public THttpResponseType DownloadViewAsJson(int appId, int viewId)
         {
             var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
-            SecurityHelpers.ThrowIfNotAdmin(_user);
+            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin);
             var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var cms = _cmsManagerLazy.Value.Init(app, Log);
             var bundle = new BundleEntityWithAssets

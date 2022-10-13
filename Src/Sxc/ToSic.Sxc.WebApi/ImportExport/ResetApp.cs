@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.A($"Reset App {zoneId}/{appId}");
             var result = new ImportResultDto();
 
-            SecurityHelpers.ThrowIfNotAdmin(_user);
+            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin);
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
