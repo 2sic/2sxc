@@ -151,8 +151,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new bool FolderExists(string path) => GetOqtFolderByName(path) != null;
 
-        private Folder GetOqtFolderByName(string path) => OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.SuffixSlash().Backslash());
-
+        private Folder GetOqtFolderByName(string path) => OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.SuffixSlash().ForwardSlash()) // in Oqt 3.2 in DB paths are stored with ForwardSlash()
+                                                          ?? OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.SuffixSlash().Backslash()); // fallback for older versions of oqtane
 
         public new void AddFolder(string path)
         {

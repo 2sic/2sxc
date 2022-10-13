@@ -66,9 +66,9 @@ namespace ToSic.Sxc.WebApi.Save
                     Add($"item {list.IndexOf(item)} header or entity is missing");
                 else if(item.Header.Guid != item.Entity.Guid) // check this first (because .Group may not exist)
                 {
-                    if(item.Header.Group == null)
+                    if (!item.Header.IsContentBlockMode)
                         Add($"item {list.IndexOf(item)} has guid mismatch on header/entity, and doesn't have a group");
-                    else if (!item.Header.Group.SlotIsEmpty)
+                    else if (!item.Header.IsEmpty)
                         Add($"item {list.IndexOf(item)} header / entity guid miss match");
                     // otherwise we're fine
                 }
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.WebApi.Save
         private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
         {
             var wrapLog = Log.Fn($"{list.Count}");
-            var groupAssignments = list.Select(i => i.Header.Group).Where(g => g != null).ToList();
+            var groupAssignments = list.Select(i => i.Header.ContentBlockAppId).Where(g => g != null).ToList();
             if (groupAssignments.Count == 0)
             {
                 wrapLog.Done("none of the items is part of a list/group");
@@ -96,8 +96,8 @@ namespace ToSic.Sxc.WebApi.Save
                     "- must stop, never expect items to come from different sources");
             else
             {
-                var firstInnerContentAppId = groupAssignments.First().ContentBlockAppId;
-                if (list.Any(i => i.Header.Group.ContentBlockAppId != firstInnerContentAppId))
+                var firstInnerContentAppId = groupAssignments.First();
+                if (list.Any(i => i.Header.ContentBlockAppId != firstInnerContentAppId))
                     Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
             }
 

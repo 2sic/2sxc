@@ -1,16 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Blocks.Output;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -163,7 +163,7 @@ namespace ToSic.Sxc.Engines
             get
             {
                 var toolbar = "<ul class='sc-menu' data-toolbar='" +
-                              JsonConvert.SerializeObject(new {sortOrder = 0, useModuleList = true, action = "edit"}) +
+                              JsonSerializer.Serialize(new {sortOrder = 0, useModuleList = true, action = "edit"}, JsonOptions.SafeJsonForHtmlAttributes) +
                               "'></ul>";
                 var wrapped =
                     "<div class='dnnFormMessage dnnFormInfo'>No demo item exists for the selected template. " +
@@ -180,7 +180,7 @@ namespace ToSic.Sxc.Engines
                 .ForItem(Block.Context, App, Template.Entity, Log);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
-            if (user.IsAdmin || !templatePermissions.HasPermissions)
+            if (user.IsSiteAdmin || !templatePermissions.HasPermissions)
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))

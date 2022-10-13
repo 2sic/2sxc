@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <Reference Include="System.Web" />
     <Reference Include="ToSic.Razor">
 	    <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
@@ -43,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>

@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using ToSic.Eav.Data;
+using ToSic.Eav.Serialization;
 using Build = ToSic.Sxc.Web.Build;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var ctx = ToolbarBuilder?.GetContext();
             return ctx == null
                 ? null
-                : Build.Attribute(ContextAttributeName, JsonConvert.SerializeObject(ctx)).ToString();
+                : Build.Attribute(ContextAttributeName, JsonSerializer.Serialize(ctx, JsonOptions.SafeJsonForHtmlAttributes)).ToString();
         }
 
     }

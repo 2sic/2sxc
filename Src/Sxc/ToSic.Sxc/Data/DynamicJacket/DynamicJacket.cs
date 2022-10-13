@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Data
 {
@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Data
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
     [JsonConverter(typeof(DynamicJsonConverter))]
-    public partial class DynamicJacket: DynamicJacketBase<JObject>, IPropertyLookup, IHasJsonSource
+    public partial class DynamicJacket: DynamicJacketBase<JsonObject>, IPropertyLookup, IHasJsonSource
     {
         /// <inheritdoc />
         [PrivateApi]
-        internal DynamicJacket(JObject originalData) : base(originalData) { }
+        internal DynamicJacket(JsonObject originalData) : base(originalData) { }
 
         /// <inheritdoc />
         public override bool IsList => false;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Data
         /// Use the [key] accessor to get the values as <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/>
         /// </summary>
         /// <returns>the string names of the keys</returns>
-        public override IEnumerator<object> GetEnumerator() => _contents.Properties().Select(p => p.Name).GetEnumerator();
+        public override IEnumerator<object> GetEnumerator() => _contents.Select(p => p.Key).GetEnumerator();
 
 
         /// <summary>
@@ -77,22 +77,22 @@ namespace ToSic.Sxc.Data
 
         protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
-            if (_contents == null || !_contents.HasValues)
+            if (_contents == null || !_contents.Any())
                 return null;
 
-            var found = _contents.Properties()
-                .FirstOrDefault(
-                    p => string.Equals(p.Name, name, comparison));
+            var found = _contents.FirstOrDefault(
+                    p => string.Equals(p.Key, name, comparison));
 
-            return WrapIfJObjectUnwrapIfJValue(found?.Value);
+            return WrapIfJObjectUnwrapIfJValue(found.IsNullOrDefault() ? null : found.Value);
         }
 
         #endregion
 
         /// <inheritdoc />
-        public override object this[int index] => (_propertyArray ?? (_propertyArray = _contents.Properties().ToArray()))[index];
+        // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
+        public override object this[int index] => (_propertyArray ?? (_propertyArray = _contents.Select(p => p.Value).ToArray()))[index];
 
-        private JProperty[] _propertyArray;
+        private JsonNode[] _propertyArray;
 
         /// <inheritdoc />
         object IHasJsonSource.JsonSource => _contents;

@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Dnn
                     SecurityAccessLevel.Edit, true, false);
 
             // App management
-            if (user.IsAdmin && appIsKnown)
+            if (user.IsSiteAdmin && appIsKnown)
                 actions.Add(GetNextActionID(), "Admin" + (block.IsContentApp ? "" : " " + block.App?.Name), "",
                     "", "edit.gif",
                     JsAction("app"),
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Dnn
                     SecurityAccessLevel.Admin, true, false);
 
             // Zone management (app list)
-            if (user.IsAdmin)
+            if (user.IsSiteAdmin)
                 actions.Add(GetNextActionID(), "Apps Management", "AppManagement.Action", "", "action_settings.gif",
                     JsAction("zone"),
                     "", true,

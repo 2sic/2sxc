@@ -122,10 +122,10 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Fn<string>(ImgService.Debug);
             var part1 = Call.ImgClass;
-            string attrClass = null;
+            object attrClass = null;
             ThisResize.Recipe?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClass);
             // var attrClass = attrClassObj;
-            var hasOnAttrs = !string.IsNullOrWhiteSpace(attrClass);
+            var hasOnAttrs = !string.IsNullOrWhiteSpace(attrClass?.ToString());
             var hasOnImgClass = !string.IsNullOrWhiteSpace(Call.ImgClass);
 
             // Must use null if neither are useful

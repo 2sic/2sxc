@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Context
 {
@@ -13,11 +14,16 @@ namespace ToSic.Sxc.Context
 
         private readonly AppState _appState;
 
+        public string Email => IsAnonymous ? "" : _contents.Email;
+
+
         public int Id => _contents.Id;
 
-        public bool IsSiteAdmin => _contents.IsAdmin;
+        public bool IsSiteAdmin => _contents.IsSiteAdmin;
 
-        public bool IsSystemAdmin => _contents.IsSuperUser;
+        public bool IsContentAdmin => _contents.IsContentAdmin;
+
+        public bool IsSystemAdmin => _contents.IsSystemAdmin;
 
         public bool IsSiteDeveloper => _contents.IsDesigner;
 
@@ -25,5 +31,8 @@ namespace ToSic.Sxc.Context
 
         protected override IMetadataOf GetMetadataOf() 
             => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
+
+        public string Name => IsAnonymous ? "" : _contents.Name;
+        public string Username => IsAnonymous ? "" : _contents.Username;
     }
 }

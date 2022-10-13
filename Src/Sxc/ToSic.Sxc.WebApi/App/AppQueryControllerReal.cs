@@ -118,7 +118,7 @@ namespace ToSic.Sxc.WebApi.App
                 .ForItem(context, app, query.Definition.Entity, Log);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
-            var isAdmin = context.User.IsAdmin;
+            var isAdmin = context.User.IsContentAdmin;
 
             // Only return query if permissions ok
             if (!(readExplicitlyAllowed || isAdmin))

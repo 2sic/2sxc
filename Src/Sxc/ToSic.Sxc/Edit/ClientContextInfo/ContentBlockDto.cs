@@ -1,7 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using ToSic.Sxc.Blocks;
-using static Newtonsoft.Json.NullValueHandling;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
@@ -21,8 +20,8 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         public bool HasContent { get; }
         public bool SupportsAjax { get; }
 
-        [JsonProperty(NullValueHandling = Ignore)] public string Edition { get; }
-        [JsonProperty(NullValueHandling = Ignore)] public string TemplatePath { get; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string Edition { get; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string TemplatePath { get; }
         public bool TemplateIsShared { get; }
 
         public ContentBlockDto(IBlock block)

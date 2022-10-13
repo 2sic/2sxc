@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
@@ -12,6 +13,7 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Cms;
+using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
@@ -50,10 +52,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         {
             // get body as json (using this complicated way to read body because it is sometimes null and
             // options.AllowEmptyInputInBodyModelBinding = true or similar solutions are not working)
+            // it is expected to be fixed in .NET 7
+            // https://github.com/dotnet/aspnetcore/issues/29570
             using var reader = new StreamReader(Request.Body);
             var body = await reader.ReadToEndAsync();
-            var items = JsonConvert.DeserializeObject<string[]>(body);
-
+            var items = string.IsNullOrEmpty(body) ? null : JsonNode.Parse(body, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions)?.AsArray().Select(n => n.ToString()).ToArray();
             return Real.EntityPicker(appId, items, contentTypeName);
         }
 

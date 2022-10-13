@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Newtonsoft.Json.Serialization;
+using System.Text.Json;
 using ToSic.Eav.Context;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Adam;
 
 namespace IntegrationSamples.SxcEdit01
@@ -47,13 +48,8 @@ namespace IntegrationSamples.SxcEdit01
         {
             services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })
                 // This is needed to preserve compatibility with previous api usage
-                .AddNewtonsoftJson(options =>
-                {
-                    // this ensures that c# objects with Pascal-case keep that
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings); // make sure dates are handled as we need them
-                });
-
+                // Set the JSON serializer options
+                .AddJsonOptions(options => options.JsonSerializerOptions.SetUnsafeJsonSerializerOptions());
 
             return services;
         }

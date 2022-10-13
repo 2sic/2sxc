@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="14.08.00">
+    <package name="2SexyContent" type="Module" version="14.09.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -59,7 +59,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>14.08.00</version>
+              <version>14.09.00</version>
             </script>
           </scripts>
         </component>
@@ -67,7 +67,7 @@
           Always flush the dist folder before installing new stuff - must always run before the module is installed!
           That means the node has to be in the xml-file before the Module nodes
         -->
-        <component type="Cleanup" version="14.08.00" fileName="cleanup\flush.txt">
+        <component type="Cleanup" version="14.09.00" fileName="cleanup\flush.txt">
         </component>
         <component type="Module">
           <desktopModule>
@@ -110,7 +110,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.08.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.09.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -175,6 +175,8 @@
             </assembly>-->
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
             <!-- System.Memory transitive dependency -->
+            <!-- System.Text.Json transitive dependency -->
+            <!-- System.Text.Encodings.Web transitive dependency -->
             <assembly>
               <name>System.Buffers.dll</name>
               <version>4.0.3.0</version>
@@ -203,6 +205,11 @@
             <assembly>
               <name>CsvHelper.dll</name>
               <version>2.0.0.0</version>
+            </assembly>
+            <!-- System.Text.Json transitive dependency -->
+            <assembly>
+              <name>Microsoft.Bcl.AsyncInterfaces.dll</name>
+              <version>6.0.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -317,11 +324,14 @@
             </assembly>
             <!-- Microsoft.Extensions.Primitives transitive dependency -->
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
+            <!-- System.Text.Encodings.Web transitive dependency -->
+            <!-- System.Text.Encodings.Web transitive dependency -->
             <assembly>
               <name>System.Memory.dll</name>
               <version>4.0.1.1</version>
             </assembly>
             <!-- System.Memory transitive dependency -->
+            <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>System.Numerics.Vectors.dll</name>
               <version>4.1.4.0</version>
@@ -329,11 +339,32 @@
             <!-- Microsoft.EntityFrameworkCore.DependencyInjection transitive dependency -->
             <!-- Microsoft.Extensions.Primitives transitive dependency -->
             <!-- System.Memory transitive dependency -->
+            <!-- System.Text.Json transitive dependency -->
+            <!-- System.Text.Encodings.Web transitive dependency -->
             <assembly>
               <name>System.Runtime.CompilerServices.Unsafe.dll</name>
               <version>6.0.0.0</version>
             </assembly>
-
+            <!-- System.Text.Json transitive dependency -->
+            <assembly>
+              <name>System.Text.Encodings.Web.dll</name>
+              <version>6.0.0.0</version>
+            </assembly>
+            <assembly>
+              <name>System.Text.Json.dll</name>
+              <version>6.0.0.0</version>
+            </assembly>
+            <!-- Microsoft.Bcl.AsyncInterfaces transitive dependency -->
+            <!-- System.Text.Json transitive dependency -->
+            <assembly>
+              <name>System.Threading.Tasks.Extensions.dll</name>
+              <version>4.2.0.1</version>
+            </assembly>
+            <!-- System.Text.Json transitive dependency -->
+            <assembly>
+              <name>System.ValueTuple.dll</name>
+              <version>4.0.3.0</version>
+            </assembly>
           </assemblies>
         </component>
 
@@ -576,7 +607,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="14.08.00">
+    <package name="2SexyContent-App" type="Module" version="14.09.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -686,7 +717,7 @@
 
     <!-- the Imageflow - should be based on the one from https://github.com/2sic/dnn-imageflow -->
     <!-- note that the version number needs the last digits, because otherwise the user will always be informed that it's already installed -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.00.07.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.00.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
@@ -697,7 +728,7 @@
 
       <owner>
         <name>2sic + Imazen</name>
-        <organization>2sic internet solutions (Switzerland)</organization>
+        <organization>2sic internet solutions GmbH, Switzerland</organization>
         <url>http://2sxc.org/</url>
         <email>info@2sxc.org</email>
       </owner>
@@ -720,15 +751,6 @@
             <assembly>
               <name>ToSic.Imageflow.Dnn.dll</name>
             </assembly>
-
-            <!-- *** DNN shared assemblies -->
-
-            <!-- Imageflow.Net transitive dependency -->
-            <!--<assembly>
-              <name>Newtonsoft.Json.dll</name>
-              <version>10.0.0.0</version>
-            </assembly>-->
-
           </assemblies>
 
         </component>
@@ -1685,6 +1707,17 @@
                   </node>-->
 
                   <!-- 09 - Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Buffers.dll, version 4.0.3.0 (aka 4.5.1) -->
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding"
+                        targetpath="/configuration/runtime/ab:assemblyBinding[ab:dependentAssembly/ab:assemblyIdentity/@name='System.Buffers']"
+                        action="add"
+                        collision="ignore"
+                        nameSpace="urn:schemas-microsoft-com:asm.v1"
+                        nameSpacePrefix="ab">
+                    <dependentAssembly xmlns="urn:schemas-microsoft-com:asm.v1">
+                      <assemblyIdentity name="System.Buffers" publicKeyToken="cc7b13ffcd2ddd51" />
+                      <codeBase version="4.0.3.0" href="bin\Imageflow\System.Buffers.dll" />
+                    </dependentAssembly>
+                  </node>-->
                   <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Buffers'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Buffers.dll']"
                         action="remove"
                         collision="overwrite"

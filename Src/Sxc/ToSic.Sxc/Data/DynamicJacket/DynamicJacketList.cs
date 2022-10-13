@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -12,10 +12,10 @@ namespace ToSic.Sxc.Data
     /// This is a DynamicJacket for JSON arrays. You can enumerate through it. 
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public class DynamicJacketList : DynamicJacketBase<JArray>, IReadOnlyList<object>
+    public class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
     {
         /// <inheritdoc />
-        public DynamicJacketList(JArray originalData) :base(originalData) { }
+        public DynamicJacketList(JsonArray originalData) :base(originalData) { }
 
         /// <inheritdoc />
         public override bool IsList => true;
@@ -47,12 +47,12 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
-            if (_contents == null || !_contents.HasValues)
+            if (_contents == null || !_contents.Any())
                 return null;
 
             var found = _contents.FirstOrDefault(p =>
                 {
-                    if (!(p is JObject pJObject))
+                    if (!(p is JsonObject pJObject))
                         return false;
 
                     if (HasPropertyWithValue(pJObject, "Name", name, comparison))
@@ -67,10 +67,10 @@ namespace ToSic.Sxc.Data
             return DynamicJacket.WrapIfJObjectUnwrapIfJValue(found);
         }
 
-        private bool HasPropertyWithValue(JObject obj, string propertyName, string value, StringComparison comparison)
+        private bool HasPropertyWithValue(JsonObject obj, string propertyName, string value, StringComparison comparison)
         {
-            if (obj.TryGetValue(propertyName, out var nameResult) && nameResult is JValue jValResult && jValResult.Type == JTokenType.String)
-                return string.Equals(jValResult.Value as string, value, comparison);
+            if (obj.TryGetPropertyValue(propertyName, out var propertyValue) && propertyValue is JsonValue jValResult && jValResult.TryGetValue<string>(out var stringValue))
+                return string.Equals(stringValue, value, comparison);
 
             return false;
 

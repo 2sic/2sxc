@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -8,8 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
 using RazorPartialToString.Services;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Mvc;
 
 namespace Website
@@ -36,7 +37,7 @@ namespace Website
                 .AddRazorRuntimeCompilation(options =>
                 {
                     var configuredPath = Configuration["SxcRoot"];
-                    var libraryPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, configuredPath)); 
+                    var libraryPath = Path.GetFullPath(Path.Combine(HostEnvironment.ContentRootPath, configuredPath));
                     options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
                 });
 
@@ -46,12 +47,8 @@ namespace Website
             // enable webapi - include all controllers in the Sxc.Mvc assembly
             services.AddControllers(options => { options.AllowEmptyInputInBodyModelBinding = true; })
                 // This is needed to preserve compatibility with previous api usage
-                .AddNewtonsoftJson(options =>
-                {
-                    // this ensures that c# objects with Pascal-case keep that
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    ToSic.Eav.ImportExport.Json.JsonSettings.Defaults(options.SerializerSettings); // make sure dates are handled as we need them
-                })
+                // Set the JSON serializer options
+                .AddJsonOptions(options => options.JsonSerializerOptions.SetUnsafeJsonSerializerOptions())
                 .PartManager.ApplicationParts.Add(new AssemblyPart(typeof(SxcMvc).Assembly));
 
             // enable use of UrlHelper for AbsolutePath

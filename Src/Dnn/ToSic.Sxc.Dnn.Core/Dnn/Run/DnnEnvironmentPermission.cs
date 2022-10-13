@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Run
         {
             var logWrap = Log.Fn<bool>(() => $"[{string.Join(",", grants)}]");
             if (UserIsAnonymous()) logWrap.Return(false, "user anonymous");
-            var ok = UserIsSuperuser(); // superusers are always ok
+            var ok = UserIsSystemAdmin(); // superusers are always ok
             if (!ok && CurrentZoneMatchesSiteZone())
                 ok = UserIsSiteAdmin()
                      || UserIsModuleAdmin()

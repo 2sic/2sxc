@@ -11,8 +11,17 @@ namespace ToSic.Sxc.Context
     public interface ICmsUser: IHasMetadata
     {
         /// <summary>
+        /// The user e-mail.
+        /// If anonymous/not logged in, would be an empty string.
+        /// </summary>
+        /// <remarks>Added in v.14.09</remarks>
+        string Email { get; }
+
+        /// <summary>
         /// User Id as int. Works in DNN and Oqtane.
-        /// Use in Razor: `CmsContext.User.Id`
+        /// If anonymous is zero.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.User.Id`
         /// </summary>
         int Id { get; }
 
@@ -38,6 +47,21 @@ namespace ToSic.Sxc.Context
         /// New in 2sxc 12
         /// </remarks>
         bool IsSiteAdmin { get; }
+
+
+        /// <summary>
+        /// Information if the current user is Site Content Administrator.
+        /// Basically this means a user has Admin permissions, but may not have all admin permissions if excluded through special 2sxc-groups.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.User.IsContentAdmin`
+        /// </summary>
+        /// <remarks>
+        /// These are not the highest possible privileges
+        /// - For the site it would be IsSiteDeveloper
+        /// - For the entire system that would be IsSystemAdmin.
+        /// New in 2sxc 14.09
+        /// </remarks>
+        bool IsContentAdmin { get; }
 
         /// <summary>
         /// Information if the current user is System Administrator.
@@ -76,5 +100,19 @@ namespace ToSic.Sxc.Context
         IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
 
+        /// <summary>
+        /// The user name as should be displayed. 
+        /// If anonymous/not logged in, would be an empty string.
+        /// </summary>
+        /// <remarks>Added in v.14.09</remarks>
+        string Name { get; }
+
+
+        /// <summary>
+        /// The user name used on the login.
+        /// If anonymous/not logged in, would be an empty string.
+        /// </summary>
+        /// <remarks>Added in v.14.09</remarks>
+        string Username { get; }
     }
 }

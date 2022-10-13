@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Text.Json;
 using System.Web;
-using Newtonsoft.Json;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -86,7 +87,7 @@ namespace ToSic.Sxc.Blocks.Output
             var msg = prefix + ex + additionalInfo;
             if (addToEventLog) _errorLogger?.LogException(ex);
 
-            if (!Context.User.IsSuperUser)
+            if (!Context.User.IsSystemAdmin)
                 msg = visitorAlternateError ?? DefaultVisitorError;
 
             return DesignMessage(msg, addContextWrapper, encodeMessage);
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.Blocks.Output
         {
             msgSuperUser = "Error: " + msgSuperUser;
 
-            if (!Context.User.IsSuperUser)
+            if (!Context.User.IsSystemAdmin)
                 msgSuperUser = msgVisitors ?? DefaultVisitorError;
 
             return DesignMessage(msgSuperUser, addContextWrapper, encodeMessage);
@@ -118,11 +119,11 @@ namespace ToSic.Sxc.Blocks.Output
 
         public string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true)
         {
-            if (!Context.User.IsSuperUser) return null;
+            if (!Context.User.IsSystemAdmin) return null;
             return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage);
         }
 
-        public string UiContextInfos() => JsonConvert.SerializeObject(_jsContextAllGen.New.Init(AppRootPath, Block, Log));
+        public string UiContextInfos() => JsonSerializer.Serialize(_jsContextAllGen.New.Init(AppRootPath, Block, Log), JsonOptions.SafeJsonForHtmlAttributes);
 
     }
 }

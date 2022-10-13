@@ -45,22 +45,27 @@ namespace ToSic.Sxc.DataSources
 
                 var result = dnnUsers
                     //.Where(d => !d.IsDeleted)
-                    .Select(d => new UserDataSourceInfo
+                    .Select(d =>
                     {
-                        Id = d.UserID,
-                        Guid = d.UserGuid(),
-                        IdentityToken = d.UserIdentityToken(),
-                        Roles = d.RoleList(portalId: siteId),
-                        IsSuperUser = d.IsSuperUser,
-                        IsAdmin = d.UserMayAdminThis(),
-                        IsDesigner = d.IsDesigner(),
-                        IsAnonymous = d.IsAnonymous(),
-                        Created = d.CreatedOnDate,
-                        Modified = d.LastModifiedOnDate,
-                        //
-                        Username = d.Username,
-                        Email = d.Email,
-                        Name = d.DisplayName
+                        var adminInfo = d.UserMayAdminThis();
+                        return new UserDataSourceInfo
+                        {
+                            Id = d.UserID,
+                            Guid = d.UserGuid(),
+                            IdentityToken = d.UserIdentityToken(),
+                            Roles = d.RoleList(portalId: siteId),
+                            IsSystemAdmin = d.IsSuperUser,
+                            IsSiteAdmin = adminInfo.IsSiteAdmin,
+                            IsContentAdmin = adminInfo.IsContentAdmin,
+                            IsDesigner = d.IsDesigner(),
+                            IsAnonymous = d.IsAnonymous(),
+                            Created = d.CreatedOnDate,
+                            Modified = d.LastModifiedOnDate,
+                            //
+                            Username = d.Username,
+                            Email = d.Email,
+                            Name = d.DisplayName
+                        };
                     }).ToList();
                 return wrapLog.Return(result, "found");
             }

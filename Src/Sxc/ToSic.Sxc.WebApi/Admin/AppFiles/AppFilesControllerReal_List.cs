@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         {
             Log.A($"list a#{appId}, global:{global}, path:{path}, mask:{mask}, withSub:{withSubfolders}, withFld:{returnFolders}");
             // set global access security if ok...
-            if (global && !_user.IsSuperUser)
+            if (global && !_user.IsSystemAdmin)
                 throw new NotSupportedException("only host user may access global files");
 
             // make sure the folder-param is not null if it's missing
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             var fullPath = Path.Combine(appPath, path);
 
             // make sure the resulting path is still inside 2sxc
-            if (!_user.IsSuperUser && !fullPath.Contains("2sxc"))
+            if (!_user.IsSystemAdmin  && !fullPath.Contains("2sxc"))
                 throw new DirectoryNotFoundException("the folder is not inside 2sxc-scope any more and the current user doesn't have the permissions - must cancel");
 
             // if the directory doesn't exist, return empty list
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
                     ? folders.Select(f => f.FullName)
                     : files.Select(f => f.FullName)
                 )
-                .Select(p => EnsurePathMayBeAccessed(p, appPath, _user.IsSuperUser))  // do another security check
+                .Select(p => EnsurePathMayBeAccessed(p, appPath, _user.IsSystemAdmin))  // do another security check
                 .Select(x => x.Replace(appPath + "\\", ""))           // truncate / remove internal server root path
                 .Select(x =>
                     x.Replace("\\", "/")) // tip the slashes to web-convention (old template entries used "\")
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             var localFiles =
                 All(appId, global: false, path: path, mask: mask, withSubfolders: true, returnFolders: false)
                     .Select(f => new AllFileDto { Path = f });
-            var globalFiles = _user.IsSuperUser
+            var globalFiles = _user.IsSystemAdmin
                 ? All(appId, global: true, path: path, mask: mask, withSubfolders: true, returnFolders: false)
                     .Select(f => new AllFileDto { Path = f, Shared = true }).ToArray()
                 : Array.Empty<AllFileDto>();

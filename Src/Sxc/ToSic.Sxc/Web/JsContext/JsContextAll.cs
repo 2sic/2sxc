@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Web.JsContext
         public JsContextUser User;
         public JsContextLanguage Language;
         
-        [JsonProperty("contentBlockReference")]
+        [JsonPropertyName("contentBlockReference")]
         public ContentBlockReferenceDto ContentBlockReference; // todo: still not sure if these should be separate...
         
-        [JsonProperty("contentBlock")]
+        [JsonPropertyName("contentBlock")]
         public ContentBlockDto ContentBlock;
         // ReSharper disable once InconsistentNaming
         public ErrorDto error;

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Serialization;
 using ToSic.Sxc.Web.Url;
 using static System.String;
 using Build = ToSic.Sxc.Web.Build;
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             // Add settings if we have any
             if (Settings.HasValue()) Rules.Add($"settings?{Settings}");
 
-            return JsonConvert.SerializeObject(Rules);
+            return JsonSerializer.Serialize(Rules, JsonOptions.SafeJsonForHtmlAttributes);
         }
 
     }

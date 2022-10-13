@@ -5,7 +5,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
@@ -113,6 +112,20 @@ namespace ToSic.Sxc.WebApi.Admin
             
             var result = _importAppLazy.Ready.Import(stream, zoneId, renameApp);
 
+            return wrapLog.ReturnAsOk(result);
+        }
+
+        /// <summary>
+        /// List all app folders in the 2sxc which:
+        /// - are not installed as apps yet
+        /// - have a App_Data/app.xml
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
+        public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
+        {
+            var wrapLog = Log.Fn<IEnumerable<PendingAppDto>>();
+            var result = _importAppLazy.Ready.GetPendingApps(zoneId);
             return wrapLog.ReturnAsOk(result);
         }
     }

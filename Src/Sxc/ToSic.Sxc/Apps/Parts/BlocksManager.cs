@@ -40,10 +40,17 @@ namespace ToSic.Sxc.Apps
 		    }
 		}
 
-        public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft) =>
+        public void AddEmptyItem(BlockConfiguration block, int? index, bool forceDraft)
+        {
             Parent.Entities.FieldListUpdate(block.Entity, ViewParts.ContentPair, forceDraft,
-                lists => lists.Add(index, new int?[] { null, null }));
-
+                lists =>
+                {
+                    // hitting (+) if the list is empty add two demo items (because we already see one demo item)
+                    if (lists.Lists.First().Value.Count == 0) // on non, add 2 null items
+                        lists.Add(0, new int?[] {null, null});
+                    return lists.Add(index, new int?[] {null, null});
+                });
+        }
 
 
         public int NewBlockReference(int parentId, string field, int index, string app = "", Guid? guid = null)

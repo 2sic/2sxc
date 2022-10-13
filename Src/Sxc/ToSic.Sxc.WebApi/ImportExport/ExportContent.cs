@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ExportPartsOverviewDto PreExportSummary(int zoneId, int appId, string scope)
         {
-            Log.A($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSuperUser}");
+            Log.A($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSystemAdmin}");
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             string templateIdsString)
         {
             Log.A($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
-            SecurityHelpers.ThrowIfNotAdmin(_user); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);

@@ -99,6 +99,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
@@ -297,7 +298,6 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
-    <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +369,7 @@ robocopy /mir "$(ProjectDir)..\..\Data\.data\ " "%25BuildTarget%25\.data\ "
 robocopy /mir "$(ProjectDir)..\..\Data\.databeta\ " "%25BuildTarget%25\.databeta\ "
 robocopy "$(ProjectDir)..\..\Data\.data-custom\ " "%25BuildTarget%25\.data-custom\ "  /MIR /XO /XF "%25BuildTarget%25\.data-custom\configurations\features.json" /XF "%25BuildTarget%25\.data-custom\configurations\default.license.json"
 robocopy /mir "$(ProjectDir)..\..\Data\assets\ " "%25BuildTarget%25\assets\ "
+robocopy /mir "$(ProjectDir)..\..\Data\App_Data\ " "%25BuildTarget%25\App_Data\ "
 
 @REM Add the DNN specific content-types
 robocopy /s "$(ProjectDir)..\..\Data-Dnn\.data\ " "%25BuildTarget%25\.data\ "

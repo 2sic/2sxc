@@ -53,22 +53,29 @@ namespace ToSic.Sxc.DataSources
 
                 var result = users
                     .Where(u => !u.IsDeleted)
-                    .Select(u => new UserDataSourceInfo
+                    .Select(u =>
                     {
-                        Id = u.UserId,
-                        Guid = new Guid((_identityUserManager.FindByNameAsync(u.Username).Result).Id), // new Guid(new IdentityUser(u.User.Username).Id),
-                        IdentityToken = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
-                        Roles = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
-                        IsSuperUser = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
-                        IsAdmin = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Admin),
-                        IsDesigner = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
-                        IsAnonymous = u.UserId == -1,
-                        Created = u.CreatedOn,
-                        Modified = u.ModifiedOn,
-                        //
-                        Username = u.Username,
-                        Email = u.Email,
-                        Name = u.DisplayName,
+                        var isSiteAdmin = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Admin);
+                        return new UserDataSourceInfo
+                        {
+                            Id = u.UserId,
+                            Guid = new Guid((_identityUserManager.FindByNameAsync(u.Username).Result)
+                                .Id), // new Guid(new IdentityUser(u.User.Username).Id),
+                            IdentityToken = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
+                            Roles = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
+                            IsSystemAdmin =
+                                userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
+                            IsSiteAdmin = isSiteAdmin,
+                            IsContentAdmin = isSiteAdmin,
+                            IsDesigner = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
+                            IsAnonymous = u.UserId == -1,
+                            Created = u.CreatedOn,
+                            Modified = u.ModifiedOn,
+                            //
+                            Username = u.Username,
+                            Email = u.Email,
+                            Name = u.DisplayName,
+                        };
                     }).ToList();
                 return wrapLog.Return(result, "found");
             }

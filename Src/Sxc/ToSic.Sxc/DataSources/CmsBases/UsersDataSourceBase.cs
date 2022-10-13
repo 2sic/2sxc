@@ -138,8 +138,11 @@ namespace ToSic.Sxc.DataSources.CmsBases
                         {
                             {"IdentityToken", u.IdentityToken},
                             {"Roles", u.Roles},
-                            {"IsSuperUser", u.IsSuperUser},
-                            {"IsAdmin", u.IsAdmin},
+                            {"IsSuperUser", u.IsSystemAdmin},
+                            {nameof(u.IsSystemAdmin), u.IsSystemAdmin},
+                            {"IsAdmin", u.IsSiteAdmin},
+                            {nameof(u.IsSiteAdmin), u.IsSiteAdmin},
+                            {nameof(u.IsContentAdmin), u.IsContentAdmin},
                             {"IsDesigner", u.IsDesigner},
                             {"IsAnonymous", u.IsAnonymous},
                             {"Username", u.Username},
@@ -238,7 +241,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
 
         private Func<UserDataSourceInfo, bool> SuperUserPredicate() =>
             bool.TryParse(SuperUserFilter, out var superUserFilter)
-                ? (Func<UserDataSourceInfo, bool>)(u => u.IsSuperUser == superUserFilter)
+                ? (Func<UserDataSourceInfo, bool>)(u => u.IsSystemAdmin == superUserFilter)
                 : null;
 
         #region Inner Class Just For Processing
@@ -255,8 +258,16 @@ namespace ToSic.Sxc.DataSources.CmsBases
             public Guid? Guid { get; set; }
             public string IdentityToken { get; set; }
             public List<int> Roles { get; set; }
+            public bool IsSystemAdmin { get; set; }
+            [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
             public bool IsSuperUser { get; set; }
+            [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
             public bool IsAdmin { get; set; }
+
+            public bool IsSiteAdmin { get; set; }
+
+            public bool IsContentAdmin { get; set; }
+
             public bool IsDesigner { get; set; }
             public bool IsAnonymous { get; set; }
             public DateTime Created { get; set; }

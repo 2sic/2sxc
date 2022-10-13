@@ -209,10 +209,15 @@ namespace ToSic.Sxc.WebApi.Context
         {
             var userDto = new ContextUserDto();
             var user = Deps.SiteCtx.User;
+            userDto.Email = user.Email;
             userDto.Id = user.Id;
-            userDto.IsSystemAdmin = user.IsSuperUser;
+            userDto.Guid = user.Guid;
+            userDto.IsSystemAdmin = user.IsSystemAdmin;
             userDto.IsAnonymous = user.IsAnonymous;
-            userDto.IsSiteAdmin = user.IsAdmin;
+            userDto.IsSiteAdmin = user.IsSiteAdmin;
+            userDto.IsContentAdmin = user.IsContentAdmin;
+            userDto.Name = user.Name;
+            userDto.Username = user.Username;
             return userDto;
         }
     }

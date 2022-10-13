@@ -50,12 +50,12 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         private (string Name, DynamicEntity Setting) SettingPreferred => _preferred.Get(() =>
         {
-            Log.A($"Dev: {_devMode}; Super: {_user.IsSuperUser}; Admin: {_user.IsAdmin}; Anon: {_user.IsAnonymous}");
+            Log.A($"Dev: {_devMode}; Super: {_user.IsSystemAdmin}; Admin: {_user.IsSiteAdmin}; Anon: {_user.IsAnonymous}");
             (string, DynamicEntity) GetName(string theName) => (theName, SettingsRoot?.Get(theName) as DynamicEntity);
 
             if (_devMode) return GetName("Dev");
-            if (_user.IsSuperUser) return GetName("SystemAdmin");
-            if (_user.IsAdmin) return GetName("SiteAdmin");
+            if (_user.IsSystemAdmin) return GetName("SystemAdmin");
+            if (_user.IsSiteAdmin) return GetName("SiteAdmin");
             if (_user.IsAnonymous) return GetName("Anonymous");
             return ("none", null);
         }, Log, nameof(SettingPreferred));

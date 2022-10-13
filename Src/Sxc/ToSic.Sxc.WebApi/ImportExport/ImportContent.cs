@@ -71,14 +71,14 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.A("import content start");
             var result = new ImportResultDto();
 
-            var allowSystemChanges = _user.IsSuperUser;
+            var allowSystemChanges = _user.IsSystemAdmin;
             if (fileName.EndsWith(".zip"))
             {   // ZIP
                 try
                 {
                     var zipImport = _zipImport;
 
-                    zipImport.Init(zoneId, appId, _user.IsSuperUser, Log);
+                    zipImport.Init(zoneId, appId, _user.IsSystemAdmin, Log);
                     var temporaryDirectory = Path.Combine(_globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
 
                     result.Success = zipImport.ImportZip(stream, temporaryDirectory);

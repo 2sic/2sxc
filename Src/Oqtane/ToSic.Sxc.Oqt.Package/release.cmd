@@ -6,6 +6,7 @@ robocopy /mir "..\..\Data\.data\ " "%OqtaneRoot%\Content\2sxc\system\.data\ "
 rmdir /Q /S "%BuildTarget%\.databeta"
 rmdir /Q /S "%BuildTarget%\.data-custom"
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
+robocopy /mir "..\..\Data\App_Data\ " "%OqtaneRoot%\Content\2sxc\system\App_Data\ "
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "

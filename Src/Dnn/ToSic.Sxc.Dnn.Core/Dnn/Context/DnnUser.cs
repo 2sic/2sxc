@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn.Run;
+using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 
 namespace ToSic.Sxc.Dnn.Context
 {
@@ -29,12 +30,23 @@ namespace ToSic.Sxc.Dnn.Context
         public List<int> Roles => _roles ?? (_roles = BuildRoleList());
         private List<int> _roles;
 
-        public bool IsSuperUser => UnwrappedContents?.IsSuperUser ?? false;
+        public bool IsSystemAdmin => UnwrappedContents?.IsSuperUser ?? false;
 
-        public bool IsAdmin => _isAdmin ?? (_isAdmin = UnwrappedContents?.UserMayAdminThis() ?? false).Value;
-        private bool? _isAdmin;
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        public bool IsSuperUser => IsSystemAdmin;
 
-        public bool IsDesigner => IsSuperUser;
+        public bool IsSiteAdmin => _getAdminPermissions().IsSiteAdmin;
+        public bool IsContentAdmin => _getAdminPermissions().IsContentAdmin;
+
+        private DnnSiteAdminPermissions _getAdminPermissions() =>
+            _adminPermissions ?? (_adminPermissions = UnwrappedContents?.UserMayAdminThis() ?? new DnnSiteAdminPermissions(false));
+        private DnnSiteAdminPermissions _adminPermissions;
+
+
+        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        public bool IsAdmin => IsSiteAdmin;
+
+        public bool IsDesigner => IsSystemAdmin;
 
         public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
         private UserInfo _user;
@@ -60,5 +72,11 @@ namespace ToSic.Sxc.Dnn.Context
         public int Id => UnwrappedContents?.UserID ?? -1;
 
         public bool IsAnonymous => Id == -1;
+
+        public string Username => UnwrappedContents?.Username;
+
+        public string Name => UnwrappedContents?.DisplayName;
+
+        public string Email => UnwrappedContents?.Email;
     }
 }

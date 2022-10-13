@@ -1,9 +1,9 @@
-﻿# 2sxc 13 - CMS & App-Engine for DNN and Oqtane
+﻿# 2sxc 14 - CMS & App-Engine for DNN and Oqtane
 
 > you can't use DNN or Oqtane without 2sxc 😉
 
 2sxc helps web designers and developers prepare great looking, animated and sexy content and applications in DNN (DotNetNuke) and Oqtane. 
-It works in .net Framework and .net Core 5.
+It works in .net Framework and .net Core 6.
 
 Visit [2sxc.org](https://2sxc.org/) for more information.
 
@@ -15,4 +15,4 @@ Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
 
 Visit https://github.com/2sic/2sxc/releases for the latest releases.
 
-![2sxc 13](https://raw.githubusercontent.com/2sic/2sxc-docs/master/docs/assets/logos/v13/2sxc13-500.png)
+![2sxc 14](https://raw.githubusercontent.com/2sic/2sxc-docs/master/docs/assets/logos/v14/2sxc-14-500.png)

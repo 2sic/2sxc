@@ -1,8 +1,7 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Data;
-using static Newtonsoft.Json.NullValueHandling;
 using IEntity = ToSic.Eav.Data.IEntity;
 // ReSharper disable InconsistentNaming
 
@@ -45,34 +44,34 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         internal const string KeyIndex = "sortOrder";
-        [JsonProperty(NullValueHandling = Ignore)] public int? sortOrder { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public int? sortOrder { get; set; }
 
         internal const string KeyUseModule = "useModuleList";
-        [JsonProperty(NullValueHandling = Ignore)] public bool? useModuleList { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public bool? useModuleList { get; set; }
 
         internal const string KeyPublished = "isPublished";
-        [JsonProperty(NullValueHandling = Ignore)] public bool? isPublished { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public bool? isPublished { get; set; }
 
         internal const string KeyEntityId = "entityId";
-        [JsonProperty(NullValueHandling = Ignore)] public int? entityId { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public int? entityId { get; set; }
 
         internal const string KeyContentType = "contentType";
-        [JsonProperty(NullValueHandling = Ignore)] public string contentType { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string contentType { get; set; }
 
         internal const string KeyPrefill = "prefill";
-        [JsonProperty(NullValueHandling = Ignore)] public object prefill { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public object prefill { get; set; }
 
         internal const string KeyTitle = "title";
-        [JsonProperty(NullValueHandling = Ignore)] public string title { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string title { get; set; }
 
         internal const string KeyEntityGuid = "entityGuid";
-        [JsonProperty(NullValueHandling = Ignore)] public Guid? entityGuid { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public Guid? entityGuid { get; set; }
 
         internal const string KeyParent = "parent";
-        [JsonProperty(NullValueHandling = Ignore)] public Guid? parent { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public Guid? parent { get; set; }
 
         internal const string KeyFields = "fields";
-        [JsonProperty(NullValueHandling = Ignore)] public string fields { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public string fields { get; set; }
 
         internal static string[] KeysOfLists = { KeyIndex, KeyUseModule, KeyParent, KeyFields };
     }
