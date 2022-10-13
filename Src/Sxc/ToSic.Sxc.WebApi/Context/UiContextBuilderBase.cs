@@ -210,6 +210,8 @@ namespace ToSic.Sxc.WebApi.Context
             var userDto = new ContextUserDto();
             var user = Deps.SiteCtx.User;
             userDto.Id = user.Id;
+            userDto.Guid = user.Guid;
+            userDto.Username = user.Username;
             userDto.IsSystemAdmin = user.IsSystemAdmin;
             userDto.IsAnonymous = user.IsAnonymous;
             userDto.IsSiteAdmin = user.IsSiteAdmin;

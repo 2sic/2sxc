@@ -91,5 +91,12 @@ namespace ToSic.Sxc.Context
         IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
 
+
+        /// <summary>
+        /// The user name used on the login.
+        /// If anonymous/not logged in, would be an empty string.
+        /// </summary>
+        /// <remarks>Added in v.14.09</remarks>
+        string Username { get; }
     }
 }

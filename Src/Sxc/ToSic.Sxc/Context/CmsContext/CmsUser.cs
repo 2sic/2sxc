@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Context
 {
@@ -27,5 +28,7 @@ namespace ToSic.Sxc.Context
 
         protected override IMetadataOf GetMetadataOf() 
             => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
+
+        public string Username => _contents.Username.HasValue() ? _contents.Username : "";
     }
 }
