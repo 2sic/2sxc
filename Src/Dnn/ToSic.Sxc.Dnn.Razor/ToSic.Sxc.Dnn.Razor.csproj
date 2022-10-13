@@ -105,7 +105,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
+    <PackageReference Include="DotNetNuke.Core" Version="9.11.0">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
   </ItemGroup>
