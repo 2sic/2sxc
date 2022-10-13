@@ -22,6 +22,7 @@ namespace IntegrationSamples.SxcEdit01.Context
         public bool IsAdmin => IsSiteAdmin;
 
         public bool IsSiteAdmin => true;
+        public bool IsContentAdmin => true;
         public bool IsDesigner => true;
         public bool IsAnonymous => false;
     }

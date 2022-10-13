@@ -7,6 +7,7 @@ using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Dnn.Run;
+using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 
 namespace ToSic.Sxc.Dnn.Context
 {
@@ -34,8 +35,13 @@ namespace ToSic.Sxc.Dnn.Context
         [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
         public bool IsSuperUser => IsSystemAdmin;
 
-        public bool IsSiteAdmin => _isSiteAdmin ?? (_isSiteAdmin = UnwrappedContents?.UserMayAdminThis() ?? false).Value;
-        private bool? _isSiteAdmin;
+        public bool IsSiteAdmin => _getAdminPermissions().IsSiteAdmin;
+        public bool IsContentAdmin => _getAdminPermissions().IsContentAdmin;
+
+        private DnnSiteAdminPermissions _getAdminPermissions() =>
+            _adminPermissions ?? (_adminPermissions = UnwrappedContents?.UserMayAdminThis() ?? new DnnSiteAdminPermissions(false));
+        private DnnSiteAdminPermissions _adminPermissions;
+
 
         [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
         public bool IsAdmin => IsSiteAdmin;

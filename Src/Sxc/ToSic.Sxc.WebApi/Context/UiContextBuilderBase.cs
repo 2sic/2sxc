@@ -213,6 +213,7 @@ namespace ToSic.Sxc.WebApi.Context
             userDto.IsSystemAdmin = user.IsSystemAdmin;
             userDto.IsAnonymous = user.IsAnonymous;
             userDto.IsSiteAdmin = user.IsSiteAdmin;
+            userDto.IsContentAdmin = user.IsContentAdmin;
             return userDto;
         }
     }

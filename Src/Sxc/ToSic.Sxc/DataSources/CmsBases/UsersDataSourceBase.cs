@@ -265,6 +265,8 @@ namespace ToSic.Sxc.DataSources.CmsBases
 
             public bool IsSiteAdmin { get; set; }
 
+            public bool IsContentAdmin { get; set; }
+
             public bool IsDesigner { get; set; }
             public bool IsAnonymous { get; set; }
             public DateTime Created { get; set; }

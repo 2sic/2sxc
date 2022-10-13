@@ -25,30 +25,44 @@ namespace ToSic.Sxc.Dnn.Run
         public static bool IsAnonymous(this UserInfo user) =>
             user == null || user.UserID == -1;
 
-        public static bool UserMayAdminThis(this UserInfo user)
+        internal class DnnSiteAdminPermissions
+        {
+            public bool IsContentAdmin;
+            public bool IsSiteAdmin;
+
+            public DnnSiteAdminPermissions(bool both): this(both, both) { }
+
+            public DnnSiteAdminPermissions(bool isContentAdmin, bool isSiteAdmin)
+            {
+                IsContentAdmin = isContentAdmin;
+                IsSiteAdmin = isSiteAdmin;
+            }
+        }
+
+        internal static DnnSiteAdminPermissions UserMayAdminThis(this UserInfo user)
         {
             // Null-Check
-            if (user.IsAnonymous()) return false;
+            if (user.IsAnonymous()) return new DnnSiteAdminPermissions(false);
 
             // Super always AppAdmin
-            if (user.IsSuperUser) return true;
+            if (user.IsSuperUser) return new DnnSiteAdminPermissions(true);
 
             var portal = PortalSettings.Current;
 
             // Skip the remaining tests if the portal isn't known
-            if (portal == null) return false;
+            if (portal == null) return new DnnSiteAdminPermissions(false);
 
             // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
-            if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return false;
+            if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return new DnnSiteAdminPermissions(false);
 
             var hasSpecialGroup = PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcDesigners);
-            if (hasSpecialGroup && IsDesigner(user)) return true;
+            if (hasSpecialGroup && IsDesigner(user)) return new DnnSiteAdminPermissions(true);
 
             hasSpecialGroup = hasSpecialGroup || PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcAdmins);
-            if (hasSpecialGroup && user.IsInRole(Settings.DnnGroupSxcAdmins)) return true;
+            if (hasSpecialGroup && user.IsInRole(Settings.DnnGroupSxcAdmins)) return new DnnSiteAdminPermissions(true);
 
             // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
-            return !hasSpecialGroup;
+            return new DnnSiteAdminPermissions(true, !hasSpecialGroup);
         }
 
         public static bool IsDesigner(this UserInfo user) =>

@@ -39,6 +39,21 @@ namespace ToSic.Sxc.Context
         /// </remarks>
         bool IsSiteAdmin { get; }
 
+
+        /// <summary>
+        /// Information if the current user is Site Content Administrator.
+        /// Basically this means a user has Admin permissions, but may not have all admin permissions if excluded through special 2sxc-groups.
+        /// 
+        /// 🪒 Use in Razor: `CmsContext.User.IsContentAdmin`
+        /// </summary>
+        /// <remarks>
+        /// These are not the highest possible privileges
+        /// - For the site it would be IsSiteDeveloper
+        /// - For the entire system that would be IsSystemAdmin.
+        /// New in 2sxc 14.09
+        /// </remarks>
+        bool IsContentAdmin { get; }
+
         /// <summary>
         /// Information if the current user is System Administrator.
         /// Basically this means a user has maximum permissions - incl. the ability

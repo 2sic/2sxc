@@ -73,6 +73,8 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public bool IsSiteAdmin => _isSiteAdmin ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Admin);
         private bool? _isSiteAdmin;
 
+        public bool IsContentAdmin => IsSiteAdmin;
+
         public bool IsDesigner => IsSystemAdmin;
 
         #region New Permission properties for v12
