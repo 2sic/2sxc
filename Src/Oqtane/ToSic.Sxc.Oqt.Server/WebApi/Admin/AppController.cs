@@ -80,8 +80,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
-        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool resetPortalFiles = false)
+            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, resetPortalFiles);
 
         /// <inheritdoc />
         [HttpGet]
@@ -94,7 +94,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpPost]
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId) => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode);
+        public ImportResultDto Reset(int zoneId, int appId, bool resetPortalFiles = false) 
+            => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode, resetPortalFiles);
 
         /// <inheritdoc />
         [HttpPost]

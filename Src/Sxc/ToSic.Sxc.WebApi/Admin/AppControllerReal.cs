@@ -86,13 +86,14 @@ namespace ToSic.Sxc.WebApi.Admin
         public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
             => _exportAppLazy.Ready.Export(zoneId, appId, includeContentGroups, resetAppGuid) as THttpResponseType;
 
-        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Ready.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool resetPortalFiles)
+            => _exportAppLazy.Ready.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, resetPortalFiles);
 
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
             => _appStackBackendLazy.Ready.GetAll(appId, part ?? AppConstants.RootNameSettings, key, view, null);
 
-        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage) => _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage);
+        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool resetPortalFiles) 
+            => _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage, resetPortalFiles);
 
         /// <summary>
         /// Import App from import zip.

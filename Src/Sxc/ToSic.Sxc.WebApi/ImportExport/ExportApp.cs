@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             };
         }
 
-        public bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+        public bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool resetPortalFiles)
         {
             Log.A($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin); // must happen inside here, as it's opened as a new browser window, so not all headers exist
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
-            zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid);
+            zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, resetPortalFiles);
 
             return true;
         }

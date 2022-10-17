@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
@@ -22,7 +23,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ImpExpHelpers impExpHelpers,
             CmsZones cmsZones,
             ISite site,
-            IUser user
+            IUser user,
+            IImportExportEnvironment env
             ) : base("Bck.Export")
         {
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
@@ -30,6 +32,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _cmsZones = cmsZones;
             _site = site;
             _user = user;
+            _env = env;
         }
 
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
@@ -37,10 +40,11 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly CmsZones _cmsZones;
         private readonly ISite _site;
         private readonly IUser _user;
+        private readonly IImportExportEnvironment _env;
 
         #endregion
 
-        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage)
+        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool resetPortalFiles)
         {
             Log.A($"Reset App {zoneId}/{appId}");
             var result = new ImportResultDto();
@@ -73,7 +77,15 @@ namespace ToSic.Sxc.WebApi.ImportExport
             // 2. Now we can delete the app before we prepare the import
             _cmsZones.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
-            // 3. Now import the App.xml
+            // 3. Optional reset PortalFiles
+            if (resetPortalFiles)
+            {
+                // copy portal files persisted in /App_Data/PortalFiles/ back to site
+                var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.ZipFolderForPortalFiles);
+                _env.TransferFilesToSite(sourcePath, string.Empty);
+            }
+
+            // 4. Now import the App.xml
             var allowSystemChanges = _user.IsSystemAdmin;
             var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges, Log);
             var imp = new ImportXmlReader(filePath, xmlImport, Log);
