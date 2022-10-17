@@ -10,28 +10,43 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 
-namespace ToSic.Sxc.DataSources.CmsBases
+// Important Info to people working with this
+// It's an abstract class, and must be overriden in each platform
+// In addition, each platform must make sure to register a TryAddTransient with the platform specific implementation
+// This is because any constructor DI should be able to target this type, and get the real implementation
+
+namespace ToSic.Sxc.DataSources
 {
-    [PrivateApi("this is half a DataSource - the final implementation must come from each platform")]
+    [PublicApi]
     // additional info so the visual query can provide the correct buttons and infos
-    public abstract class RolesDataSourceBase : ExternalData
+    [VisualQuery(
+        NiceName = VqNiceName,
+        Icon = VqIcon,
+        UiHint = VqUiHint,
+        HelpLink = VqHelpLink,
+        GlobalName = VqGlobalName,
+        Type = VqType,
+        ExpectsDataOfType = VqExpectsDataOfType,
+        Difficulty = DifficultyBeta.Default
+    )]
+    public abstract class Roles : ExternalData
     {
         #region Public Consts for inheriting implementations
 
-        public const string VqNiceName = "Roles - BETA - DO NOT USE YET";
-        public const string VqIcon = Icons.DateRange;
-        public const string VqUiHint = "Roles in the CMS";
-        public const string VqGlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45"; // random & unique Guid
-        public const DataSourceType VqType = DataSourceType.Source;
-        public const string VqExpectsDataOfType = "";
-        public const string VqHelpLink = ""; // TODO
+        [PrivateApi] public const string VqNiceName = "Roles (User Roles)";
+        [PrivateApi] public const string VqIcon = Icons.UserCircled;
+        [PrivateApi] public const string VqUiHint = "Roles in the CMS";
+        [PrivateApi] public const string VqGlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45"; // random & unique Guid
+        [PrivateApi] public const DataSourceType VqType = DataSourceType.Source;
+        [PrivateApi] public const string VqExpectsDataOfType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d";
+        [PrivateApi] public const string VqHelpLink = "https://r.2sxc.org/ds-roles";
 
         #endregion
 
         #region Other Constants
 
-        public const char RoleSeparator = ',';
-        public const char RoleSeparatorAdvanced = '§';
+        private const char RoleSeparator = ',';
+        private const char RoleSeparatorAdvanced = '§';
 
         #endregion
 
@@ -40,20 +55,20 @@ namespace ToSic.Sxc.DataSources.CmsBases
         private const string ExcludeRoleIdsKey = "ExcludeRoleIds";
 
         /// <summary>
-        /// Optional IncludeRolesFilter (single value or comma-separated integers) filter,
+        /// Optional (single value or comma-separated integers) filter,
         /// include roles based on roleId
         /// </summary>
-        public string FilterRoleIds
+        public virtual string FilterRoleIds
         {
             get => Configuration[RestrictRoleIdsKey];
             set => Configuration[RestrictRoleIdsKey] = value;
         }
 
         /// <summary>
-        /// Optional ExcludeRolesFilter (single value or comma-separated integers) filter,
+        /// Optional (single value or comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
-        public string ExcludeRoleIds
+        public virtual string ExcludeRoleIds
         {
             get => Configuration[ExcludeRoleIdsKey];
             set => Configuration[ExcludeRoleIdsKey] = value;
@@ -67,22 +82,18 @@ namespace ToSic.Sxc.DataSources.CmsBases
         /// <summary>
         /// Constructor to tell the system what out-streams we have
         /// </summary>
-        protected RolesDataSourceBase()
+        [PrivateApi]
+        protected Roles()
         {
             Provide(GetList); // default out, if accessed, will deliver GetList
 
             ConfigMask(RestrictRoleIdsKey, $"[Settings:{RestrictRoleIdsKey}]");
             ConfigMask(ExcludeRoleIdsKey, $"[Settings:{ExcludeRoleIdsKey}]");
-
-            // TEST cases
-            //Configuration[ExcludeRolesFilterKey] = "1096,1097,1101,1102,1103";
-            //Configuration[ExcludeRolesFilterKey] = "1102,1103";
-            //Configuration[ExcludeRolesFilterKey] = "1101";
-            //Configuration[ExcludeRolesFilterKey] = "not-a-integer,-1";
         }
 
         #endregion
 
+        [PrivateApi]
         public IImmutableList<IEntity> GetList()
         {
             var wrapLog = Log.Fn<IImmutableList<IEntity>>();
@@ -146,8 +157,10 @@ namespace ToSic.Sxc.DataSources.CmsBases
         /// The inner list retrieving the pages and doing security checks etc. 
         /// </summary>
         /// <returns></returns>
+        [PrivateApi]
         protected abstract IEnumerable<RoleDataSourceInfo> GetRolesInternal();
-        
+
+        [PrivateApi]
         protected class RoleDataSourceInfo : IRole
         {
             public int Id { get; set; }

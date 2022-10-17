@@ -132,7 +132,8 @@
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\Roles.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />
     <Compile Include="ToSic.Sxc.DataSources\UsersDataSource.cs" />
     <Compile Include="ToSic.Sxc.Services\DnnExtensions.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_IsRunning.cs" />

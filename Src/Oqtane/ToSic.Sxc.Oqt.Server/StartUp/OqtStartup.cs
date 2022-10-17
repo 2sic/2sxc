@@ -12,6 +12,7 @@ using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
 using ToSic.Razor.StartUp;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -53,6 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // 2. Register EAV & 2sxc
             services
                 .AddSxcOqtane()                 // Always first add your override services
+                .AddOqtSxcDataSources()
                 .AddSxcRazor()                  // this is the .net core Razor compiler
                 .AddAdamWebApi<int, int>()      // This is used to enable ADAM WebAPIs
                 .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work

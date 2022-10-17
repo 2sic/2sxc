@@ -1,5 +1,5 @@
-﻿using DotNetNuke.Entities.Portals;
-using DotNetNuke.Security.Roles;
+﻿using Oqtane.Repository;
+using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of roles from the current platform (Dnn or Oqtane)
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still BETA, many changes expected")]
+    [PrivateApi("only show the main roles in docs")]
     [VisualQuery(
         NiceName = VqNiceName,
         Icon = VqIcon,
@@ -24,25 +24,33 @@ namespace ToSic.Sxc.DataSources
         ExpectsDataOfType = VqExpectsDataOfType,
         Difficulty = DifficultyBeta.Default
     )]
-    public class Roles : CmsBases.RolesDataSourceBase
+    public class OqtRoles : Roles
     {
+        private readonly IRoleRepository _roles;
+        private readonly SiteState _siteState;
+
+        public OqtRoles(IRoleRepository roles, SiteState siteState)
+        {
+            _roles = roles;
+            _siteState = siteState;
+        }
         protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
         {
             var wrapLog = Log.Fn<List<RoleDataSourceInfo>>();
-            var siteId = PortalSettings.Current?.PortalId ?? -1;
+            var siteId = _siteState.Alias.SiteId;
             Log.A($"Portal Id {siteId}");
             try
             {
-                var dnnRoles = RoleController.Instance.GetRoles(portalId: siteId);
-                if (!dnnRoles.Any()) return wrapLog.Return(new List<RoleDataSourceInfo>(), "null/empty");
+                var roles = _roles.GetRoles(siteId, includeGlobalRoles: true).ToList();
+                if (!roles.Any()) return wrapLog.Return(new List<RoleDataSourceInfo>(), "null/empty");
 
-                var result = dnnRoles
+                var result = roles
                     .Select(r => new RoleDataSourceInfo
                     {
-                        Id = r.RoleID,
-                        Name = r.RoleName,
-                        Created = r.CreatedOnDate,
-                        Modified = r.LastModifiedOnDate,
+                        Id = r.RoleId,
+                        Name = r.Name,
+                        Created = r.CreatedOn,
+                        Modified = r.ModifiedOn,
                     })
                     .ToList();
                 return wrapLog.Return(result, "found");
