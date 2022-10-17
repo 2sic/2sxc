@@ -8,6 +8,7 @@ namespace ToSic.Sxc.DataSources
     {
         public static IServiceCollection AddOqtSxcDataSources(this IServiceCollection services)
         {
+            services.TryAddTransient<Pages, OqtPages>();
             services.TryAddTransient<Roles, OqtRoles>();
             services.TryAddTransient<Users, OqtUsers>();
             return services;

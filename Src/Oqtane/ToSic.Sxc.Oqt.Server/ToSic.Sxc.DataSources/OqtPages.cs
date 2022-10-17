@@ -17,7 +17,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of pages from the current platform (Dnn or Oqtane)
     /// </summary>
-    [PublicApi]
+    [PrivateApi]
     [VisualQuery(
         ExpectsDataOfType = VqExpectsDataOfType,
         GlobalName = VqGlobalName,
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = VqNiceName,
         Type = VqType,
         UiHint = VqUiHint)]
-    public class Pages : CmsBases.PagesBase
+    public class OqtPages : Pages
     {
         private readonly IPageRepository _pages;
         private readonly SiteState _siteState;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.DataSources
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Lazy<ILinkPaths> _linkPathsLazy;
 
-        public Pages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, Lazy<ILinkPaths> linkPathsLazy)
+        public OqtPages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, Lazy<ILinkPaths> linkPathsLazy)
         {
             _pages = pages;
             _siteState = siteState;

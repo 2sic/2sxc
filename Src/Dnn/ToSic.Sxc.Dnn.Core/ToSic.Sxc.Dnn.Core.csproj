@@ -192,7 +192,7 @@
     <Compile Include="Dnn\Install\DnnReadyCheckTurbo.cs" />
     <Compile Include="Dnn\Search\SearchItem.cs" />
     <Compile Include="ToSic.Sxc.Code\CodeCompilerNetFull.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\Pages.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnPages.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

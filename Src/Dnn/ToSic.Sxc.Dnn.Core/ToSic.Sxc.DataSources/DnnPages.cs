@@ -11,10 +11,7 @@ using ToSic.Eav.Logging;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
 {
-    /// <summary>
-    /// Deliver a list of pages from the current platform (Dnn or Oqtane)
-    /// </summary>
-    [PublicApi]
+    [PrivateApi]
     [VisualQuery(
         ExpectsDataOfType = VqExpectsDataOfType,
         GlobalName = VqGlobalName,
@@ -23,7 +20,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = VqNiceName, 
         Type = VqType, 
         UiHint = VqUiHint)]
-    public class Pages: CmsBases.PagesBase
+    public class DnnPages: Pages
     {
 
         protected override List<TempPageInfo> GetPagesInternal()

@@ -8,10 +8,26 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 
-namespace ToSic.Sxc.DataSources.CmsBases
+// Important Info to people working with this
+// It's an abstract class, and must be overriden in each platform
+// In addition, each platform must make sure to register a TryAddTransient with the platform specific implementation
+// This is because any constructor DI should be able to target this type, and get the real implementation
+
+namespace ToSic.Sxc.DataSources
 {
-    [PrivateApi("this is half a DataSource - the final implementation must come from each platform")]
-    public abstract class PagesBase: ExternalData
+    /// <summary>
+    /// Deliver a list of pages from the current platform (Dnn or Oqtane)
+    /// </summary>
+    [PublicApi]
+    [VisualQuery(
+        ExpectsDataOfType = VqExpectsDataOfType,
+        GlobalName = VqGlobalName,
+        HelpLink = VqHelpLink,
+        Icon = VqIcon,
+        NiceName = VqNiceName,
+        Type = VqType,
+        UiHint = VqUiHint)]
+    public abstract class Pages: ExternalData
     {
         #region Public Consts for inheriting implementations
 
@@ -19,10 +35,10 @@ namespace ToSic.Sxc.DataSources.CmsBases
         public const string VqGlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800";
         public const string VqExpectsDataOfType = "";
         public const string VqNiceName = "Pages";
-        public const string VqUiHint = "Pages in the CMS";
+        public const string VqUiHint = "Pages in this site";
         public const DataSourceType VqType = DataSourceType.Source;
         public const string VqIcon = Icons.PageFind;
-        public const string VqHelpLink = ""; // todo
+        public const string VqHelpLink = "https://r.2sxc.org/ds-pages";
         // ReSharper restore UnusedMember.Global
 
         #endregion
@@ -30,15 +46,12 @@ namespace ToSic.Sxc.DataSources.CmsBases
         #region Configuration properties - As of now no properties ATM
 
 
-        //public int Root { get; set; } = 0;
-
-
         #endregion
 
         #region Constructor
 
-
-        protected PagesBase()
+        [PrivateApi]
+        protected Pages()
         {
             Provide(GetPages);
         }
@@ -50,8 +63,10 @@ namespace ToSic.Sxc.DataSources.CmsBases
         /// The inner list retrieving the pages and doing security checks etc. 
         /// </summary>
         /// <returns></returns>
+        [PrivateApi]
         protected abstract List<TempPageInfo> GetPagesInternal();
-        
+
+        [PrivateApi]
         protected class TempPageInfo
         {
             public int Id;
@@ -68,6 +83,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
 
         #endregion
 
+        [PrivateApi]
         public IImmutableList<IEntity> GetPages()
         {
             var wrapLog = Log.Fn<IImmutableList<IEntity>>();
