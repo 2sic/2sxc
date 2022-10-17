@@ -88,9 +88,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {
                 var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
 
-                // Copy app global template files persisted in /App_Data/PortalFiles/ back to site
-                var globalAppFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
-                if (Directory.Exists(globalAppFolder))
+                // Copy app global template files persisted in /App_Data/2sexyGlobal/ back to app [globalTemplatesRoot]
+                var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
+                if (Directory.Exists(globalTemplatesStateFolder))
                 {
                     _zipImport.Init(zoneId, appId, allowCode: true, Log);
                     var discard = new List<Message>();
