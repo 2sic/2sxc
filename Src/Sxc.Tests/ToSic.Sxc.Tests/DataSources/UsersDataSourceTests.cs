@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithIncludeUserIdsFilter(string includeUsersFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.IncludeUsersFilter = includeUsersFilter;
+            usersDataSource.UserIds = includeUsersFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithIncludeUserGuidsFilter(string includeUsersFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.IncludeUsersFilter = includeUsersFilter;
+            usersDataSource.UserIds = includeUsersFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithExcludeUserIdsFilter(string excludeUsersFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.ExcludeUsersFilter = excludeUsersFilter;
+            usersDataSource.ExcludeUserIds = excludeUsersFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithExcludeUserGuidsFilter(string excludeUsersFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.ExcludeUsersFilter = excludeUsersFilter;
+            usersDataSource.ExcludeUserIds = excludeUsersFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -77,8 +77,8 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithIncludeExcludeUsersFilter(string includeUsersFilter, string excludeUsersFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.IncludeUsersFilter = includeUsersFilter;
-            usersDataSource.ExcludeUsersFilter = excludeUsersFilter;
+            usersDataSource.UserIds = includeUsersFilter;
+            usersDataSource.ExcludeUserIds = excludeUsersFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithIncludeRolesFilter(string includeRolesFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.IncludeRolesFilter = includeRolesFilter;
+            usersDataSource.RoleIds = includeRolesFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithExcludeRolesFilter(string excludeRolesFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.ExcludeRolesFilter = excludeRolesFilter;
+            usersDataSource.ExcludeRoleIds = excludeRolesFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -113,8 +113,8 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithIncludeExcludeRolesFilter(string includeRolesFilter, string excludeRolesFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.IncludeRolesFilter = includeRolesFilter;
-            usersDataSource.ExcludeRolesFilter = excludeRolesFilter;
+            usersDataSource.RoleIds = includeRolesFilter;
+            usersDataSource.ExcludeRoleIds = excludeRolesFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithSuperUserFilter(string superUserFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.SuperUserFilter = superUserFilter;
+            usersDataSource.IncludeSystemAdmins = superUserFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
@@ -146,11 +146,11 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithAllFilters(string includeUsersFilter, string excludeUsersFilter, string includeRolesFilter, string excludeRolesFilter, string superUserFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.IncludeUsersFilter = includeUsersFilter;
-            usersDataSource.ExcludeUsersFilter = excludeUsersFilter;
-            usersDataSource.IncludeRolesFilter = includeRolesFilter;
-            usersDataSource.ExcludeRolesFilter = excludeRolesFilter;
-            usersDataSource.SuperUserFilter = superUserFilter;
+            usersDataSource.UserIds = includeUsersFilter;
+            usersDataSource.ExcludeUserIds = excludeUsersFilter;
+            usersDataSource.RoleIds = includeRolesFilter;
+            usersDataSource.ExcludeRoleIds = excludeRolesFilter;
+            usersDataSource.IncludeSystemAdmins = superUserFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 

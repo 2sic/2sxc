@@ -17,8 +17,10 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.DataSources
 {
+    /// <summary>
+    /// Will get all (or just some) roles of the current site.
+    /// </summary>
     [PublicApi]
-    // additional info so the visual query can provide the correct buttons and infos
     [VisualQuery(
         NiceName = VqNiceName,
         Icon = VqIcon,
@@ -35,7 +37,7 @@ namespace ToSic.Sxc.DataSources
 
         [PrivateApi] public const string VqNiceName = "Roles (User Roles)";
         [PrivateApi] public const string VqIcon = Icons.UserCircled;
-        [PrivateApi] public const string VqUiHint = "Roles in the CMS";
+        [PrivateApi] public const string VqUiHint = "Roles in this site";
         [PrivateApi] public const string VqGlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45"; // random & unique Guid
         [PrivateApi] public const DataSourceType VqType = DataSourceType.Source;
         [PrivateApi] public const string VqExpectsDataOfType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d";
@@ -45,23 +47,22 @@ namespace ToSic.Sxc.DataSources
 
         #region Other Constants
 
-        private const char RoleSeparator = ',';
-        private const char RoleSeparatorAdvanced = '§';
+        private const char Separator = ',';
 
         #endregion
 
         #region Configuration-properties
-        private const string RestrictRoleIdsKey = "FilterRoleIds";
-        private const string ExcludeRoleIdsKey = "ExcludeRoleIds";
+        [PrivateApi] internal const string RoleIdsKey = "RoleIds";
+        [PrivateApi] internal const string ExcludeRoleIdsKey = "ExcludeRoleIds";
 
         /// <summary>
         /// Optional (single value or comma-separated integers) filter,
         /// include roles based on roleId
         /// </summary>
-        public virtual string FilterRoleIds
+        public virtual string RoleIds
         {
-            get => Configuration[RestrictRoleIdsKey];
-            set => Configuration[RestrictRoleIdsKey] = value;
+            get => Configuration[RoleIdsKey];
+            set => Configuration[RoleIdsKey] = value;
         }
 
         /// <summary>
@@ -87,8 +88,8 @@ namespace ToSic.Sxc.DataSources
         {
             Provide(GetList); // default out, if accessed, will deliver GetList
 
-            ConfigMask(RestrictRoleIdsKey, $"[Settings:{RestrictRoleIdsKey}]");
-            ConfigMask(ExcludeRoleIdsKey, $"[Settings:{ExcludeRoleIdsKey}]");
+            ConfigMask(RoleIdsKey);
+            ConfigMask(ExcludeRoleIdsKey);
         }
 
         #endregion
@@ -127,7 +128,7 @@ namespace ToSic.Sxc.DataSources
 
         private Func<RoleDataSourceInfo, bool> IncludeRolesPredicate()
         {
-            var includeRolesFilter = CsvListToInt(FilterRoleIds);
+            var includeRolesFilter = RolesCsvListToInt(RoleIds);
             return includeRolesFilter.Any() 
                 ? (Func<RoleDataSourceInfo, bool>) (r => includeRolesFilter.Contains(r.Id)) 
                 : null;
@@ -135,16 +136,17 @@ namespace ToSic.Sxc.DataSources
 
         private Func<RoleDataSourceInfo, bool> ExcludeRolesPredicate()
         {
-            var excludeRolesFilter = CsvListToInt(ExcludeRoleIds);
+            var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
             return excludeRolesFilter.Any()
                 ? (Func<RoleDataSourceInfo, bool>)(r => !excludeRolesFilter.Contains(r.Id))
                 : null;
         }
-        private static List<int> CsvListToInt(string stringList)
+
+        [PrivateApi]
+        internal static List<int> RolesCsvListToInt(string stringList)
         {
             if (!stringList.HasValue()) return new List<int>();
-            var separator = stringList.Contains(RoleSeparatorAdvanced) ? RoleSeparatorAdvanced : RoleSeparator;
-            return stringList.Split(separator)
+            return stringList.Split(Separator)
                 .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
                 .Where(r => r != -1)
                 .ToList();

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of roles from the current platform (Dnn or Oqtane)
     /// </summary>
-    [PrivateApi("only show the main roles in docs")]
+    [PrivateApi("hide internal implementation")]
     [VisualQuery(
         NiceName = VqNiceName,
         Icon = VqIcon,

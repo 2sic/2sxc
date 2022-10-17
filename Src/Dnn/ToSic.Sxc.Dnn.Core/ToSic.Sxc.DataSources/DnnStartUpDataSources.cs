@@ -9,6 +9,7 @@ namespace ToSic.Sxc.DataSources
         public static IServiceCollection AddDnnSxcDataSources(this IServiceCollection services)
         {
             services.TryAddTransient<Roles, DnnRoles>();
+            services.TryAddTransient<Users, DnnUsers>();
             return services;
         }
     }

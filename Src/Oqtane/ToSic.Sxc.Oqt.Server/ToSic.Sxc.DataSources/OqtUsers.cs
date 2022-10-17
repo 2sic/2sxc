@@ -16,7 +16,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of users from the current platform (Dnn or Oqtane)
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still BETA, many changes expected")]
+    [PrivateApi("hide internal implementation")]
     [VisualQuery(
         NiceName = VqNiceName,
         Icon = VqIcon,
@@ -25,15 +25,15 @@ namespace ToSic.Sxc.DataSources
         GlobalName = VqGlobalName,
         Type = VqType,
         ExpectsDataOfType = VqExpectsDataOfType,
-        Difficulty = DifficultyBeta.Admin
+        Difficulty = DifficultyBeta.Default
     )]
-    public class UsersDataSource : CmsBases.UsersDataSourceBase
+    public class OqtUsers : Users
     {
         private readonly IUserRoleRepository _userRoles;
         private readonly SiteState _siteState;
         private readonly UserManager<IdentityUser> _identityUserManager;
 
-        public UsersDataSource(IUserRoleRepository userRoles, SiteState siteState, UserManager<IdentityUser> identityUserManager)
+        public OqtUsers(IUserRoleRepository userRoles, SiteState siteState, UserManager<IdentityUser> identityUserManager)
         {
             _userRoles = userRoles;
             _siteState = siteState;
@@ -61,13 +61,13 @@ namespace ToSic.Sxc.DataSources
                             Id = u.UserId,
                             Guid = new Guid((_identityUserManager.FindByNameAsync(u.Username).Result)
                                 .Id), // new Guid(new IdentityUser(u.User.Username).Id),
-                            IdentityToken = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
-                            Roles = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
+                            NameId = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
+                            RoleIds = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
                             IsSystemAdmin =
                                 userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
                             IsSiteAdmin = isSiteAdmin,
                             IsContentAdmin = isSiteAdmin,
-                            IsDesigner = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
+                            //IsDesigner = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
                             IsAnonymous = u.UserId == -1,
                             Created = u.CreatedOn,
                             Modified = u.ModifiedOn,

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Mock list of users
     /// </summary>
-    public class MockUsersDataSource : CmsBases.UsersDataSourceBase
+    public class MockUsersDataSource : Users
     {
         protected override IEnumerable<UserDataSourceInfo> GetUsersInternal()
         {
@@ -25,11 +25,11 @@ namespace ToSic.Sxc.DataSources
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
-                    IdentityToken = $"mock:{i}",
-                    Roles = new List<int>() { 1 },
+                    NameId = $"mock:{i}",
+                    RoleIds = new List<int>() { 1 },
                     IsSystemAdmin = true,
                     IsSiteAdmin = true,
-                    IsDesigner = false,
+                    //IsDesigner = false,
                     IsAnonymous = false,
                     Created = DateTime.Today,
                     Modified = DateTime.Now,
@@ -47,11 +47,11 @@ namespace ToSic.Sxc.DataSources
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
-                    IdentityToken = $"mock:{i}",
-                    Roles = new List<int> { 2, 3, i },
+                    NameId = $"mock:{i}",
+                    RoleIds = new List<int> { 2, 3, i },
                     IsSystemAdmin = false,
                     IsSiteAdmin = false,
-                    IsDesigner = false,
+                    //IsDesigner = false,
                     IsAnonymous = false,
                     Created = DateTime.Today,
                     Modified = DateTime.Now,
@@ -69,11 +69,11 @@ namespace ToSic.Sxc.DataSources
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
-                    IdentityToken = $"mock:{i}",
-                    Roles = new List<int> { 9, 10 },
+                    NameId = $"mock:{i}",
+                    RoleIds = new List<int> { 9, 10 },
                     IsSystemAdmin = false,
                     IsSiteAdmin = false,
-                    IsDesigner = false,
+                    //IsDesigner = false,
                     IsAnonymous = false,
                     Created = DateTime.Today,
                     Modified = DateTime.Now,

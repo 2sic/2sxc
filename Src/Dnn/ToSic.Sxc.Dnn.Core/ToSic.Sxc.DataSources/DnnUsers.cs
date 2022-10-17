@@ -14,7 +14,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of users from the current platform (Dnn or Oqtane)
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still BETA, many changes expected")]
+    [PrivateApi("hide internal implementation")]
     [VisualQuery(
         NiceName = VqNiceName,
         Icon = VqIcon,
@@ -23,9 +23,9 @@ namespace ToSic.Sxc.DataSources
         GlobalName = VqGlobalName,
         Type = VqType,
         ExpectsDataOfType = VqExpectsDataOfType,
-        Difficulty = DifficultyBeta.Admin
+        Difficulty = DifficultyBeta.Default
     )]
-    public class UsersDataSource : CmsBases.UsersDataSourceBase
+    public class DnnUsers : Users
     {
         protected override IEnumerable<UserDataSourceInfo> GetUsersInternal()
         {
@@ -52,12 +52,12 @@ namespace ToSic.Sxc.DataSources
                         {
                             Id = d.UserID,
                             Guid = d.UserGuid(),
-                            IdentityToken = d.UserIdentityToken(),
-                            Roles = d.RoleList(portalId: siteId),
+                            NameId = d.UserIdentityToken(),
+                            RoleIds = d.RoleList(portalId: siteId),
                             IsSystemAdmin = d.IsSuperUser,
                             IsSiteAdmin = adminInfo.IsSiteAdmin,
                             IsContentAdmin = adminInfo.IsContentAdmin,
-                            IsDesigner = d.IsDesigner(),
+                            //IsDesigner = d.IsDesigner(),
                             IsAnonymous = d.IsAnonymous(),
                             Created = d.CreatedOnDate,
                             Modified = d.LastModifiedOnDate,
