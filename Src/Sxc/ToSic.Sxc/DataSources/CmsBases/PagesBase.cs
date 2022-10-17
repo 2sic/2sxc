@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
         public const string VqNiceName = "Pages";
         public const string VqUiHint = "Pages in the CMS";
         public const DataSourceType VqType = DataSourceType.Source;
-        public const string VqIcon = "find_in_page";
+        public const string VqIcon = Icons.PageFind;
         public const string VqHelpLink = ""; // todo
         // ReSharper restore UnusedMember.Global
 
