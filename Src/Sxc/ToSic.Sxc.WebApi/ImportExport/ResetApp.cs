@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
 using ToSic.Eav.Context;
+using ToSic.Eav.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
@@ -24,7 +26,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             CmsZones cmsZones,
             ISite site,
             IUser user,
-            IImportExportEnvironment env
+            IImportExportEnvironment env,
+            ZipImport zipImport
             ) : base("Bck.Export")
         {
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
@@ -33,6 +36,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _site = site;
             _user = user;
             _env = env;
+            _zipImport = zipImport;
         }
 
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
@@ -41,6 +45,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly ISite _site;
         private readonly IUser _user;
         private readonly IImportExportEnvironment _env;
+        private readonly ZipImport _zipImport;
 
         #endregion
 
@@ -66,7 +71,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             //    return result;
             //}
 
-            var filePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.AppDataFile);
+            var appDataFolder = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
+            var filePath = Path.Combine(appDataFolder, Eav.Constants.AppDataFile);
             if (!File.Exists(filePath))
             {
                 result.Success = false;
@@ -80,9 +86,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
             // 3. Optional reset PortalFiles
             if (resetPortalFiles)
             {
-                // copy portal files persisted in /App_Data/PortalFiles/ back to site
-                var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder, Eav.Constants.ZipFolderForPortalFiles);
-                _env.TransferFilesToSite(sourcePath, string.Empty);
+                var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
+
+                // Copy app global template files persisted in /App_Data/PortalFiles/ back to site
+                var globalAppFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
+                if (Directory.Exists(globalAppFolder))
+                {
+                    _zipImport.Init(zoneId, appId, allowCode: true, Log);
+                    var discard = new List<Message>();
+                    _zipImport.CopyAppGlobalFiles(discard, appId, sourcePath, deleteGlobalTemplates: true, overwriteFiles: true);
+                }
+
+                // Copy portal files persisted in /App_Data/PortalFiles/ back to site
+                _env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForPortalFiles), string.Empty);
             }
 
             // 4. Now import the App.xml
