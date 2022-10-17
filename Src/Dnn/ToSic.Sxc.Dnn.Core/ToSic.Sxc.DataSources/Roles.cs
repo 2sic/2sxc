@@ -22,9 +22,9 @@ namespace ToSic.Sxc.DataSources
         GlobalName = VqGlobalName,
         Type = VqType,
         ExpectsDataOfType = VqExpectsDataOfType,
-        Difficulty = DifficultyBeta.Admin
+        Difficulty = DifficultyBeta.Default
     )]
-    public class RolesDataSource : CmsBases.RolesDataSourceBase
+    public class Roles : CmsBases.RolesDataSourceBase
     {
         protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
         {

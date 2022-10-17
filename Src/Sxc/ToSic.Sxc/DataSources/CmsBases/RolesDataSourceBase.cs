@@ -8,6 +8,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.DataSources.CmsBases
 {
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
         #region Public Consts for inheriting implementations
 
         public const string VqNiceName = "Roles - BETA - DO NOT USE YET";
-        public const string VqIcon = "date_range";
+        public const string VqIcon = Icons.DateRange;
         public const string VqUiHint = "Roles in the CMS";
         public const string VqGlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45"; // random & unique Guid
         public const DataSourceType VqType = DataSourceType.Source;
@@ -27,28 +28,35 @@ namespace ToSic.Sxc.DataSources.CmsBases
 
         #endregion
 
+        #region Other Constants
+
+        public const char RoleSeparator = ',';
+        public const char RoleSeparatorAdvanced = '§';
+
+        #endregion
+
         #region Configuration-properties
-        private const string IncludeRolesFilterKey = "IncludeRolesFilter";
-        private const string ExcludeRolesFilterKey = "ExcludeRolesFilter";
+        private const string RestrictRoleIdsKey = "FilterRoleIds";
+        private const string ExcludeRoleIdsKey = "ExcludeRoleIds";
 
         /// <summary>
         /// Optional IncludeRolesFilter (single value or comma-separated integers) filter,
         /// include roles based on roleId
         /// </summary>
-        public string IncludeRolesFilter
+        public string FilterRoleIds
         {
-            get => Configuration[IncludeRolesFilterKey];
-            set => Configuration[IncludeRolesFilterKey] = value;
+            get => Configuration[RestrictRoleIdsKey];
+            set => Configuration[RestrictRoleIdsKey] = value;
         }
 
         /// <summary>
         /// Optional ExcludeRolesFilter (single value or comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
-        public string ExcludeRolesFilter
+        public string ExcludeRoleIds
         {
-            get => Configuration[ExcludeRolesFilterKey];
-            set => Configuration[ExcludeRolesFilterKey] = value;
+            get => Configuration[ExcludeRoleIdsKey];
+            set => Configuration[ExcludeRoleIdsKey] = value;
         }
 
         #endregion
@@ -63,8 +71,8 @@ namespace ToSic.Sxc.DataSources.CmsBases
         {
             Provide(GetList); // default out, if accessed, will deliver GetList
 
-            ConfigMask(IncludeRolesFilterKey, "[Settings:IncludeRolesFilter]");
-            ConfigMask(ExcludeRolesFilterKey, "[Settings:ExcludeRolesFilter]");
+            ConfigMask(RestrictRoleIdsKey, $"[Settings:{RestrictRoleIdsKey}]");
+            ConfigMask(ExcludeRoleIdsKey, $"[Settings:{ExcludeRoleIdsKey}]");
 
             // TEST cases
             //Configuration[ExcludeRolesFilterKey] = "1096,1097,1101,1102,1103";
@@ -108,10 +116,7 @@ namespace ToSic.Sxc.DataSources.CmsBases
 
         private Func<RoleDataSourceInfo, bool> IncludeRolesPredicate()
         {
-            if (string.IsNullOrEmpty(IncludeRolesFilter)) return null;
-            var includeRolesFilter = IncludeRolesFilter.Split(',')
-                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
-                .Where(r => r != -1).ToList();
+            var includeRolesFilter = CsvListToInt(FilterRoleIds);
             return includeRolesFilter.Any() 
                 ? (Func<RoleDataSourceInfo, bool>) (r => includeRolesFilter.Contains(r.Id)) 
                 : null;
@@ -119,14 +124,21 @@ namespace ToSic.Sxc.DataSources.CmsBases
 
         private Func<RoleDataSourceInfo, bool> ExcludeRolesPredicate()
         {
-            if (string.IsNullOrEmpty(ExcludeRolesFilter)) return null;
-            var excludeRolesFilter = ExcludeRolesFilter.Split(',')
-                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
-                .Where(r => r != -1).ToList();
+            var excludeRolesFilter = CsvListToInt(ExcludeRoleIds);
             return excludeRolesFilter.Any()
                 ? (Func<RoleDataSourceInfo, bool>)(r => !excludeRolesFilter.Contains(r.Id))
                 : null;
         }
+        private static List<int> CsvListToInt(string stringList)
+        {
+            if (!stringList.HasValue()) return new List<int>();
+            var separator = stringList.Contains(RoleSeparatorAdvanced) ? RoleSeparatorAdvanced : RoleSeparator;
+            return stringList.Split(separator)
+                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
+                .Where(r => r != -1)
+                .ToList();
+        }
+
 
         #region Inner Class Just For Processing
 

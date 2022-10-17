@@ -22,14 +22,14 @@ namespace ToSic.Sxc.DataSources
         GlobalName = VqGlobalName,
         Type = VqType,
         ExpectsDataOfType = VqExpectsDataOfType,
-        Difficulty = DifficultyBeta.Admin
+        Difficulty = DifficultyBeta.Default
     )]
-    public class RolesDataSource : CmsBases.RolesDataSourceBase
+    public class Roles : CmsBases.RolesDataSourceBase
     {
         private readonly IRoleRepository _roles;
         private readonly SiteState _siteState;
 
-        public RolesDataSource(IRoleRepository roles, SiteState siteState)
+        public Roles(IRoleRepository roles, SiteState siteState)
         {
             _roles = roles;
             _siteState = siteState;
