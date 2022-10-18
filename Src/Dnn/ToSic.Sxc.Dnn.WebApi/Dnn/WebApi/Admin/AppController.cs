@@ -80,8 +80,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
-        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool resetPortalFiles = false)
+            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, resetPortalFiles);
 
         /// <inheritdoc />
         [HttpGet]
@@ -94,10 +94,10 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId)
+        public ImportResultDto Reset(int zoneId, int appId, bool resetPortalFiles = false)
         {
             PreventServerTimeout300();
-            return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage);
+            return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, resetPortalFiles);
         }
 
         /// <inheritdoc />

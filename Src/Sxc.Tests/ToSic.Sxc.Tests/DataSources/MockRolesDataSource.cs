@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Logging;
+using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Tests.DataSources
     /// <summary>
     /// Mock a list of roles
     /// </summary>
-    public class MockRolesDataSource : Sxc.DataSources.CmsBases.RolesDataSourceBase
+    public class MockRolesDataSource : Roles
     {
         protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
         {

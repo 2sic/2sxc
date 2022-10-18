@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources
     [VisualQuery(
         NiceName = "CMS Block",
         UiHint = "Data for this CMS Block (instance/module)",
-        Icon = "recent_actors",
+        Icon = Icons.RecentActor,
         Type = DataSourceType.Source, 
         GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",

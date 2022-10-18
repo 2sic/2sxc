@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void RolesWithIncludeFilter(string includeRolesFilter, int expected)
         {
             var rolesDataSource = GenerateRolesDataSourceDataSource();
-            rolesDataSource.IncludeRolesFilter = includeRolesFilter;
+            rolesDataSource.RoleIds = includeRolesFilter;
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Tests.DataSources
         public void RolesWithExcludeFilter(string excludeRolesFilter, int expected)
         {
             var rolesDataSource = GenerateRolesDataSourceDataSource();
-            rolesDataSource.ExcludeRolesFilter = excludeRolesFilter;
+            rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 
@@ -50,8 +50,8 @@ namespace ToSic.Sxc.Tests.DataSources
         public void RolesWithIncludeExcludeFilter(string includeRolesFilter, string excludeRolesFilter, int expected)
         {
             var rolesDataSource = GenerateRolesDataSourceDataSource();
-            rolesDataSource.IncludeRolesFilter = includeRolesFilter;
-            rolesDataSource.ExcludeRolesFilter = excludeRolesFilter;
+            rolesDataSource.RoleIds = includeRolesFilter;
+            rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 

@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Net.Http;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Run;
@@ -24,6 +22,7 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Adam;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
@@ -61,8 +60,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             // This is because the old Dnn wasn't DI aware
             if (services == null) services = new ServiceCollection();
 
-            //var appsCache = GetAppsCacheOverride(); // 2022-05-18: commented because it not in use anymore
-            services.AddDnn(/*appsCache*/)
+            services.AddDnn()
+                .AddDnnSxcDataSources()
                 .AddAdamWebApi<int, int>()
                 .AddSxcWebApi()
                 .AddSxcCore()
@@ -83,20 +82,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
         public static IServiceCollection OriginalServiceCollection;
 
-        // 2022-05-18: commented because it not in use anymore
-        ///// <summary>
-        ///// Expects something like "ToSic.Sxc.Dnn.DnnAppsCacheFarm, ToSic.Sxc.Dnn.Enterprise" - namespaces + class, DLL name without extension
-        ///// </summary>
-        ///// <returns></returns>
-        //internal static string GetAppsCacheOverride()
-        //{
-        //    var farmCacheName = ConfigurationManager.AppSettings["EavAppsCache"];
-        //    if (string.IsNullOrWhiteSpace(farmCacheName)) return null;
-        //    return farmCacheName;
-        //}
-
-
-        public static IServiceCollection AddDnn(this IServiceCollection services /*, string appsCacheOverride*/)
+        public static IServiceCollection AddDnn(this IServiceCollection services)
         {
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
@@ -167,24 +153,6 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v13 option to not use page publishing... #SwitchServicePagePublishingResolver #2749
             services.AddTransient<IPagePublishingGetSettings, Cms.DnnPagePublishingGetSettings>();
-
-            // 2022-05-18: commented because it not in use anymore
-            // new cache implements IAppsCacheSwitchable and it is registered with DNN DI.
-            //if (appsCacheOverride != null)
-            //{
-            //    try
-            //    {
-            //        // replace default cache implementation with farm cache
-            //        services.Remove(ServiceDescriptor.Singleton<IAppsCache, AppsCache>());
-            //        var appsCacheType = Type.GetType(appsCacheOverride);
-            //        services.TryAddSingleton(typeof(IAppsCache), appsCacheType);
-            //    }
-            //    catch
-            //    {
-            //        /* fallback */
-            //        services.TryAddSingleton<IAppsCache, AppsCache>();
-            //    }
-            //}
 
             // new in v12 - .net specific code compiler
             services.TryAddTransient<CodeCompiler, CodeCompilerNetFull>();

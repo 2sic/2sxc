@@ -165,10 +165,8 @@ namespace ToSic.Sxc.WebApi.App
             var objectOrNull = newContentItemCaseInsensitive[SaveApiAttributes.ParentRelationship];
             if (objectOrNull == null) return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' value is null");
 
-            if (!(objectOrNull is JsonElement jsonElement))
-                return wrapLog.ReturnNull($"'{SaveApiAttributes.ParentRelationship}' value is not jsonElement");
-
-            var parentRelationship = JsonObject.Create(jsonElement);
+            if (!(objectOrNull is JsonObject parentRelationship))
+                return wrapLog.ReturnNull($"'{SaveApiAttributes.ParentRelationship}' value is not JsonObject");
 
             var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
             if (!parentGuid.HasValue) return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelParent}' guid is missing");
@@ -198,10 +196,8 @@ namespace ToSic.Sxc.WebApi.App
             var objectOrNull = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor];
             if (objectOrNull == null) return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is null");
 
-            if (!(objectOrNull is JsonElement jsonElement))
-                return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is not jsonElement");
-
-            var metadataFor = JsonObject.Create(jsonElement);
+            if (!(objectOrNull is JsonObject metadataFor))
+                return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
 
             var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null)
             {

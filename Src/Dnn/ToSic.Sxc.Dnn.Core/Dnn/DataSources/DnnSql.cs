@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 	[VisualQuery(
         NiceName = "Dnn SQL",
         UiHint = "Data from the Dnn database",
-        Icon = "dynamic_form",
+        Icon = Icons.DynamicForm,
         Type = DataSourceType.Source, 
         GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
         DynamicOut = false,

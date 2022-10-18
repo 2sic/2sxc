@@ -132,8 +132,9 @@
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\RolesDataSource.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\UsersDataSource.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnUsers.cs" />
     <Compile Include="ToSic.Sxc.Services\DnnExtensions.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_IsRunning.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Manual.cs" />
@@ -191,7 +192,7 @@
     <Compile Include="Dnn\Install\DnnReadyCheckTurbo.cs" />
     <Compile Include="Dnn\Search\SearchItem.cs" />
     <Compile Include="ToSic.Sxc.Code\CodeCompilerNetFull.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\Pages.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnPages.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

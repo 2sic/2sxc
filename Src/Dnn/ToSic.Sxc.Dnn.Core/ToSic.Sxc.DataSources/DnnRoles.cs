@@ -1,5 +1,5 @@
-﻿using Oqtane.Repository;
-using Oqtane.Shared;
+﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Security.Roles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of roles from the current platform (Dnn or Oqtane)
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("Still BETA, many changes expected")]
+    [PrivateApi("hide internal implementation")]
     [VisualQuery(
         NiceName = VqNiceName,
         Icon = VqIcon,
@@ -22,35 +22,28 @@ namespace ToSic.Sxc.DataSources
         GlobalName = VqGlobalName,
         Type = VqType,
         ExpectsDataOfType = VqExpectsDataOfType,
-        Difficulty = DifficultyBeta.Admin
+        Difficulty = DifficultyBeta.Default
     )]
-    public class RolesDataSource : CmsBases.RolesDataSourceBase
+    public class DnnRoles : Roles
     {
-        private readonly IRoleRepository _roles;
-        private readonly SiteState _siteState;
-
-        public RolesDataSource(IRoleRepository roles, SiteState siteState)
-        {
-            _roles = roles;
-            _siteState = siteState;
-        }
+        [PrivateApi]
         protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
         {
             var wrapLog = Log.Fn<List<RoleDataSourceInfo>>();
-            var siteId = _siteState.Alias.SiteId;
+            var siteId = PortalSettings.Current?.PortalId ?? -1;
             Log.A($"Portal Id {siteId}");
             try
             {
-                var roles = _roles.GetRoles(siteId, includeGlobalRoles: true).ToList();
-                if (!roles.Any()) return wrapLog.Return(new List<RoleDataSourceInfo>(), "null/empty");
+                var dnnRoles = RoleController.Instance.GetRoles(portalId: siteId);
+                if (!dnnRoles.Any()) return wrapLog.Return(new List<RoleDataSourceInfo>(), "null/empty");
 
-                var result = roles
+                var result = dnnRoles
                     .Select(r => new RoleDataSourceInfo
                     {
-                        Id = r.RoleId,
-                        Name = r.Name,
-                        Created = r.CreatedOn,
-                        Modified = r.ModifiedOn,
+                        Id = r.RoleID,
+                        Name = r.RoleName,
+                        Created = r.CreatedOnDate,
+                        Modified = r.LastModifiedOnDate,
                     })
                     .ToList();
                 return wrapLog.Return(result, "found");

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Compatibility.Sxc
     {
         public OldDataToDictionaryWrapper(bool userMayEdit, IConvertToEavLight innerConverter)
         {
-            _converter = innerConverter; // Factory.ObsoleteBuild<IConvertToEavLight>();
+            _converter = innerConverter;
             if (_converter is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
         }
 
