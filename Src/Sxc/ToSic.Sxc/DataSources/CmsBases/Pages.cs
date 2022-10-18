@@ -16,7 +16,9 @@ using ToSic.Eav.Logging;
 namespace ToSic.Sxc.DataSources
 {
     /// <summary>
-    /// Deliver a list of pages from the current platform (Dnn or Oqtane)
+    /// Deliver a list of pages from the current platform (Dnn or Oqtane).
+    ///
+    /// As of now there are no parameters to set.
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -32,13 +34,13 @@ namespace ToSic.Sxc.DataSources
         #region Public Consts for inheriting implementations
 
         // ReSharper disable UnusedMember.Global
-        public const string VqGlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800";
-        public const string VqExpectsDataOfType = "";
-        public const string VqNiceName = "Pages";
-        public const string VqUiHint = "Pages in this site";
-        public const DataSourceType VqType = DataSourceType.Source;
-        public const string VqIcon = Icons.PageFind;
-        public const string VqHelpLink = "https://r.2sxc.org/ds-pages";
+        [PrivateApi] public const string VqGlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800";
+        [PrivateApi] public const string VqExpectsDataOfType = "";
+        [PrivateApi] public const string VqNiceName = "Pages";
+        [PrivateApi] public const string VqUiHint = "Pages in this site";
+        [PrivateApi] public const DataSourceType VqType = DataSourceType.Source;
+        [PrivateApi] public const string VqIcon = Icons.PageFind;
+        [PrivateApi] public const string VqHelpLink = "https://r.2sxc.org/ds-pages";
         // ReSharper restore UnusedMember.Global
 
         #endregion
