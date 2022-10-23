@@ -1,6 +1,6 @@
 ﻿using System;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Search
 {

@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi.Adam;
-using ToSic.Sxc.WebApi.PublicApi;
+using ToSic.Lib.Documentation;
 
 // #todo: security checks on APIs still completely missing
 // #todo: upload not implemented yet

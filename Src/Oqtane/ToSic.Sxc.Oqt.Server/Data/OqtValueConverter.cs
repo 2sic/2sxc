@@ -5,9 +5,9 @@ using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 

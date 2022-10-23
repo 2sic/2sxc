@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.DI;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc;
 using ToSic.Sxc.Mvc;

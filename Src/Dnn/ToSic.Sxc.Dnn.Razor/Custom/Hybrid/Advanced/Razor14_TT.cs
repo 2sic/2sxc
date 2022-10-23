@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;

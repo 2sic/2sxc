@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using DotNetNuke.Common.Extensions;
 using ToSic.Eav.DI;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services

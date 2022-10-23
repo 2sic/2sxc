@@ -2,9 +2,9 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Code
 {

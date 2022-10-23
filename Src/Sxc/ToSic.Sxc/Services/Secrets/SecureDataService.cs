@@ -1,6 +1,6 @@
 ﻿using System;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Security.Encryption;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services

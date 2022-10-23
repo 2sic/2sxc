@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Services
 {

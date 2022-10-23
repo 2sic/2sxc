@@ -2,8 +2,8 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps.Assets;
 using IEntity = ToSic.Eav.Data.IEntity;
 

@@ -1,6 +1,9 @@
-﻿using ToSic.Eav.Documentation;
+﻿
 
 // ReSharper disable once CheckNamespace
+
+using ToSic.Lib.Documentation;
+
 namespace Custom.Hybrid
 {
     /// <summary>

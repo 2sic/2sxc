@@ -2,7 +2,7 @@
 using System;
 using System.Web;
 using ToSic.Eav.DI;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn

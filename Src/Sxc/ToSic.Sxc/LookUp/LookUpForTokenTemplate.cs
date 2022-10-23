@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.LookUp

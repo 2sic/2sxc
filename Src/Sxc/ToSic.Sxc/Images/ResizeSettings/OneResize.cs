@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+﻿using ToSic.Eav.Logging;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Images
 {

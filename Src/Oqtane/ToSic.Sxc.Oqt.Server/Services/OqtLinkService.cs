@@ -4,7 +4,7 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using Oqtane.Models;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Oqt.Server.Plumbing;

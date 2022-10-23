@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Context
 {

@@ -5,7 +5,7 @@ using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn.Run;
 using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 

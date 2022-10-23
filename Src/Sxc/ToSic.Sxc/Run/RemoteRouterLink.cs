@@ -1,8 +1,8 @@
 ﻿using ToSic.Eav;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Fingerprint;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Run

@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using ToSic.Custom;
+using ToSic.Eav.Logging.Simple;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Mvc.Dev;
 

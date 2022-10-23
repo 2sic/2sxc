@@ -1,8 +1,9 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Lib.Documentation;
+
 // ReSharper disable UnusedMember.Global - we need these, as it's a public API
 
 namespace ToSic.Sxc.Apps

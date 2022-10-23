@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 
 // Since DynamicEntity... is a wrapper,
 // These things ensure that various standalone wrappers are still regarded as equals

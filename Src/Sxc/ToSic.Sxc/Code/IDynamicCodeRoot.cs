@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.DataSources;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 

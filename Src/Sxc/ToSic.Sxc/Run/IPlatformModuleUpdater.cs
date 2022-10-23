@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 

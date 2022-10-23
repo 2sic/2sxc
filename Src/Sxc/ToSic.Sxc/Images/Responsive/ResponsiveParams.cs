@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Images

@@ -6,8 +6,8 @@ using Oqtane.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 

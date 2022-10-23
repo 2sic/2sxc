@@ -6,9 +6,9 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 

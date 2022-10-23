@@ -4,7 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
 

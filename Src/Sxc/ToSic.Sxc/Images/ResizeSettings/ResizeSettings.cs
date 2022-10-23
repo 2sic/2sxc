@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using static ToSic.Sxc.Images.ImageConstants;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment

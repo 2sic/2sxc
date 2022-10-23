@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;
 

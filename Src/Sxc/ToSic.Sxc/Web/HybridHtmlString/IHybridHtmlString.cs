@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Documentation;
+﻿
+using ToSic.Lib.Documentation;
 #if NETFRAMEWORK
 using IHtmlString = System.Web.IHtmlString;
 #else

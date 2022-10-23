@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Web.Compilation;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Code

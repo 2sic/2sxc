@@ -1,8 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Lib.Documentation;
 
 
 namespace ToSic.Sxc.Cms.Publishing

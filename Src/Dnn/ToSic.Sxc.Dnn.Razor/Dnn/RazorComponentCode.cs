@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Documentation;
 using Custom.Dnn;
 using ToSic.Eav.Run;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
 

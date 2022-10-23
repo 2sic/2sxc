@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Common;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Edit;
 

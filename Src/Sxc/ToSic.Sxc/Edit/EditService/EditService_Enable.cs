@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Lib.Documentation;
 using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 
 namespace ToSic.Sxc.Edit.EditService

@@ -1,6 +1,6 @@
 ﻿using System;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images;

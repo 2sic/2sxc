@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
