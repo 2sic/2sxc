@@ -5,7 +5,6 @@ using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Tests.DynamicData;
 using ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {

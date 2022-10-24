@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 

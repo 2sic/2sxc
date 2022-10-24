@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;

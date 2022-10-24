@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Web;
-
-namespace ToSic.Sxc.Services
+﻿namespace ToSic.Sxc.Services
 {
     
     public interface IContentSecurityPolicyService

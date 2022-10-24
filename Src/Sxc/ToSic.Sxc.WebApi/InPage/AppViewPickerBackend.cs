@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Edit;
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.InPage
 
         public bool Publish(int id)
         {
-            var callLog = Log.Fn<bool>($"{id}");
+            var callLog = Log.Fn<bool>( $"{id}");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
             CmsManagerOfBlock.Entities.Publish(id);
             return callLog.ReturnTrue("ok");

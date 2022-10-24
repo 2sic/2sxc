@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Apps
 {

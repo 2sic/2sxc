@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
+using ToSic.Eav.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;

@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Apps;
 
 namespace ToSic.Sxc.Apps.Assets
 {

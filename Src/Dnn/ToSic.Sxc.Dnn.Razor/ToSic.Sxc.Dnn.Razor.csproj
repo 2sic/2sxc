@@ -175,8 +175,8 @@
       <Project>{04F3A07C-2C6C-4D87-9E8D-E2DB611B0D52}</Project>
       <Name>ToSic.Eav.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Documentation\ToSic.Lib.Documentation\ToSic.Lib.Documentation.csproj">
-      <Project>{5d85a660-445d-4486-a848-a8318fc61577}</Project>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Documentation\ToSic.Lib.Documentation.csproj">
+      <Project>{fbb14a45-f630-4450-9549-d5e0da3975ce}</Project>
       <Name>ToSic.Lib.Documentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Logging\ToSic.Lib.Logging.csproj">

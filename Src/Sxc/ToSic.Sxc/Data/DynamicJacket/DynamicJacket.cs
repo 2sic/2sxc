@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
+using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 

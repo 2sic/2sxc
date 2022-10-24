@@ -9,8 +9,7 @@ using System.Net;
 using System.Threading.Tasks;
 using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -19,7 +18,7 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
-using Log = ToSic.Eav.Logging.Simple.Log;
+using Log = ToSic.Lib.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Modules;
+using System;
 using System.Linq;
 using System.Web.UI;
-using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Logging.Simple;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;

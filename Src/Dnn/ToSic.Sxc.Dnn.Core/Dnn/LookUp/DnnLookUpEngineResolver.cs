@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using DotNetNuke.Entities.Portals;
+﻿using DotNetNuke.Entities.Portals;
+using System.Collections.Generic;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Dnn.LookUp

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Logging;
+﻿using ToSic.Lib.Logging;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Blocks.Output

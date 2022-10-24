@@ -4,12 +4,12 @@ using System.Text;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Logging.Simple;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Blocks.Renderers
 {
     internal class Simple

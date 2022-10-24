@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;

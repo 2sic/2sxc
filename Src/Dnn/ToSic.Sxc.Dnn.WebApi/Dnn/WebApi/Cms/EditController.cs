@@ -3,10 +3,10 @@ using DotNetNuke.Web.Api;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 

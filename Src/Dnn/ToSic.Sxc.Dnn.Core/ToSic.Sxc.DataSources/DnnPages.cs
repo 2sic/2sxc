@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Portals;
+using DotNetNuke.Entities.Tabs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetNuke.Entities.Portals;
-using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources

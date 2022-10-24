@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ToSic.Eav;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;

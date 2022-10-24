@@ -5,8 +5,8 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Logging;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {

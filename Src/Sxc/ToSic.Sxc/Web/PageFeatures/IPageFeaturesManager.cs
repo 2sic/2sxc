@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Logging;
 
 namespace ToSic.Sxc.Web.PageFeatures
 {

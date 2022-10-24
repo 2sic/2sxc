@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 
 namespace ToSic.Sxc.WebApi.Cms

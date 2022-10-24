@@ -158,7 +158,7 @@
     <Compile Include="Dnn\WebApi\Admin\EntityController.cs" />
     <Compile Include="Dnn\WebApi\Admin\MetadataController.cs" />
     <Compile Include="Dnn\WebApi\Admin\QueryController.cs" />
-    <Compile Include="Dnn\WebApi\GetDnnBlock.cs" />
+    <Compile Include="Dnn\WebApi\DnnGetBlock.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Dnn\WebApiRouting\RouteMapper.cs" />
@@ -188,8 +188,8 @@
       <Project>{f93f5fb1-95a6-4c4b-bdcf-b001e82f766f}</Project>
       <Name>ToSic.Eav.WebApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Documentation\ToSic.Lib.Documentation\ToSic.Lib.Documentation.csproj">
-      <Project>{5d85a660-445d-4486-a848-a8318fc61577}</Project>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Documentation\ToSic.Lib.Documentation.csproj">
+      <Project>{fbb14a45-f630-4450-9549-d5e0da3975ce}</Project>
       <Name>ToSic.Lib.Documentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Logging\ToSic.Lib.Logging.csproj">

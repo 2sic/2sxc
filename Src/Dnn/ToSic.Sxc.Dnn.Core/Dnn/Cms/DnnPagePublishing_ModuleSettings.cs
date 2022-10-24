@@ -1,6 +1,6 @@
 ﻿using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Logging;
-using ToSic.SexyContent.Environment.Dnn7;
+using ToSic.Lib.Logging;
+using ToSic.Sxc.Dnn.Web;
 
 namespace ToSic.Sxc.Dnn.Cms
 {

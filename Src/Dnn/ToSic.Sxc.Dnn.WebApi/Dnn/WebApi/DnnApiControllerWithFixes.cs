@@ -3,11 +3,12 @@ using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
+using ToSic.Lib.Logging.Simple;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+
 
 namespace ToSic.Sxc.Dnn.WebApi
 {

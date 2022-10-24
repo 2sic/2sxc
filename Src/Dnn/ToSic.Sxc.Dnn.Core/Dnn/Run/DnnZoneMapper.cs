@@ -9,8 +9,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run

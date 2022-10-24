@@ -4,7 +4,7 @@ using DotNetNuke.Security.Permissions;
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 

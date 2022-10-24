@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Options;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Razor.Engine.DbgWip
 {
     /// <summary>

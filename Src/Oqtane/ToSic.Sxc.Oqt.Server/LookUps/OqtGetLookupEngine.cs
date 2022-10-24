@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Shared;

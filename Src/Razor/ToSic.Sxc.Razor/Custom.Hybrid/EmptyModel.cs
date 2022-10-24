@@ -1,4 +1,5 @@
-﻿namespace ToSic.Sxc.Razor.Razor
+﻿// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.Razor.Razor
 {
     /// <summary>
     /// Dummy model that doesn't do anything

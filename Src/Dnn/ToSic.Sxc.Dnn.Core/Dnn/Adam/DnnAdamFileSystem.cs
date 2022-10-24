@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DotNetNuke.Services.FileSystem;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web.Configuration;
-using DotNetNuke.Services.FileSystem;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Dnn.Adam

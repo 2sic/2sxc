@@ -2,7 +2,7 @@
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Code

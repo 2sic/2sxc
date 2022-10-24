@@ -5,7 +5,6 @@ using Oqtane.Security;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.WebApi;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {

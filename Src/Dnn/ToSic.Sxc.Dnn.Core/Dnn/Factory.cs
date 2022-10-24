@@ -1,11 +1,11 @@
-﻿using System;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Portals;
+using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Logging.Simple;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
@@ -13,6 +13,7 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
+
 
 namespace ToSic.Sxc.Dnn
 {

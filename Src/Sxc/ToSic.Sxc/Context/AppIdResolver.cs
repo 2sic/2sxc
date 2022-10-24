@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Context

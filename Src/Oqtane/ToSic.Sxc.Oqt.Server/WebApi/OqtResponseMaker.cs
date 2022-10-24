@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.StaticFiles;
 using System;
 using System.IO;
-using System.Text;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Plumbing;
 

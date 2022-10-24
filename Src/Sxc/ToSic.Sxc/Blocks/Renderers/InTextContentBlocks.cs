@@ -3,10 +3,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.DI;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Blocks.Renderers
 {
     internal class InTextContentBlocks

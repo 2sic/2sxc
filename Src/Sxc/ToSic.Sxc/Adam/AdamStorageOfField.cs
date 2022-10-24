@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps.Adam;
 using ToSic.Eav.Identity;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {

@@ -1,5 +1,5 @@
 ﻿using Oqtane.Models;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Oqt.Server.Context

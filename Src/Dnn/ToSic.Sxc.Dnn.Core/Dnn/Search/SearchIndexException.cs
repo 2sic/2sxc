@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Modules;
 using ToSic.Lib.Documentation;
 
+// ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Search
 {
     /// <summary>

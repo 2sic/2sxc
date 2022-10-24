@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks

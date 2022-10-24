@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.WebApi.Context;
-using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Server.Controllers;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp

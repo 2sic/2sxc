@@ -2,7 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;

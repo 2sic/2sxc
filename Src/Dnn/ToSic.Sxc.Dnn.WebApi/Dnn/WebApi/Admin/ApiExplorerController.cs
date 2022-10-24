@@ -8,7 +8,7 @@ using System.Web.Compilation;
 using System.Web.Hosting;
 using System.Web.Http;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Eav.WebApi.Plumbing;
 

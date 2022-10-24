@@ -196,6 +196,10 @@
       <Project>{892f9d3b-0578-46a1-a46a-b694a7e15669}</Project>
       <Name>ToSic.Eav</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Logging\ToSic.Lib.Logging.csproj">
+      <Project>{7d0a605e-d6af-4494-b2d2-a21ea07de057}</Project>
+      <Name>ToSic.Lib.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Testing.Shared\ToSic.Testing.Shared.csproj">
       <Project>{41243C6D-2D10-4285-8AF2-719497AE00DB}</Project>
       <Name>ToSic.Testing.Shared</Name>

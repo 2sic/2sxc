@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Images;
 
-namespace ToSic.Sxc.Tests.LinksAndImages
+namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
 {
     [TestClass]
     public class ResizeParamMergeTests

@@ -2,8 +2,9 @@
 using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Logging;
+
 
 namespace ToSic.Sxc.Adam
 {

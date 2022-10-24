@@ -1,7 +1,7 @@
-﻿using System;
+﻿using DotNetNuke.Services.Exceptions;
+using System;
 using System.Web.UI;
-using DotNetNuke.Services.Exceptions;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Dnn

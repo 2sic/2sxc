@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 
 // ReSharper disable once CheckNamespace

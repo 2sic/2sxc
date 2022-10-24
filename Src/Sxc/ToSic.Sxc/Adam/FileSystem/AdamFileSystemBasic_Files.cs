@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {

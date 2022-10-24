@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Data;
+
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {

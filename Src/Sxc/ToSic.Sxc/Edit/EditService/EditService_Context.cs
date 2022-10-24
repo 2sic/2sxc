@@ -2,7 +2,7 @@
 using System.Text.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;

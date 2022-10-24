@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
 {

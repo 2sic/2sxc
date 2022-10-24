@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Configuration;
-using ToSic.Eav.Logging;
 using ToSic.Lib.Logging;
 using static ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 

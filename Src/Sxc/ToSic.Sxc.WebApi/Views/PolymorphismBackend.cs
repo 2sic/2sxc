@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
 using ToSic.Eav.WebApi;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Polymorphism;
 
 namespace ToSic.Sxc.WebApi.Views

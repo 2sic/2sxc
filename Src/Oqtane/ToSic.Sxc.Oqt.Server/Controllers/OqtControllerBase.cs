@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
-using Log = ToSic.Eav.Logging.Simple.Log;
+using Log = ToSic.Lib.Logging.Simple.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {

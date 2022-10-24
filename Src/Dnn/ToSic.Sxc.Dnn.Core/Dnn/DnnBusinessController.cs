@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Logging.Simple;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Install;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Search;
+
 
 namespace ToSic.Sxc.Dnn
 {

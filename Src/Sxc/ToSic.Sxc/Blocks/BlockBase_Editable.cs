@@ -1,8 +1,4 @@
-﻿using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Security.Permissions;
-
-namespace ToSic.Sxc.Blocks
+﻿namespace ToSic.Sxc.Blocks
 {
     public abstract partial class BlockBase
     {

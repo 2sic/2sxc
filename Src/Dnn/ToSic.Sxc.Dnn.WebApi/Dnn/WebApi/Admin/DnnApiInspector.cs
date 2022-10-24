@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin

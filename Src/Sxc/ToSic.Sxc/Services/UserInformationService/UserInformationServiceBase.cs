@@ -1,8 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Services

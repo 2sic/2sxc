@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Web;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn

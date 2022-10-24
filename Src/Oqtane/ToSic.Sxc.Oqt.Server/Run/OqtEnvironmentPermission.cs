@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;

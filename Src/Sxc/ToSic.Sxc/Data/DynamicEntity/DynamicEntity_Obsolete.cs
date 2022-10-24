@@ -1,9 +1,5 @@
 ﻿using System;
-using ToSic.Eav;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data
 {

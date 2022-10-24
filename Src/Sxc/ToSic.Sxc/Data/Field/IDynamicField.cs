@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Images;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Documentation;
 
 // Since DynamicEntity... is a wrapper,

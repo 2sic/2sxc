@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace System.Net.Http.Formatting
 {
     /// <summary>

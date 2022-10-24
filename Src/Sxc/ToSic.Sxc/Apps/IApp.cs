@@ -1,5 +1,5 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Sxc.Apps.Paths;
+﻿using ToSic.Eav.Apps.Paths;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 #if !NETFRAMEWORK
 #pragma warning disable CS0109

@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging.Simple;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 

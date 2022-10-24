@@ -1,6 +1,6 @@
 ﻿using System;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Obsolete;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Compatibility
