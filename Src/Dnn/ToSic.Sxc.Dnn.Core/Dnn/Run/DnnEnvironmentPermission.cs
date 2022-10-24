@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// </remarks>
         protected ModuleInfo Module => _module.Get(
             () => ((Context as IContextOfBlock)?.Module as Module<ModuleInfo>)?.GetContents());
-        private GetOnce<ModuleInfo> _module = new GetOnce<ModuleInfo>();
+        private readonly GetOnce<ModuleInfo> _module = new GetOnce<ModuleInfo>();
 
         public override bool VerifyConditionOfEnvironment(string condition)
         {
