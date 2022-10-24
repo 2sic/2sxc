@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
+using ToSic.Eav.Configuration.Licenses;
 using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.Logging;
@@ -27,7 +28,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ISite site,
             IUser user,
             IImportExportEnvironment env,
-            ZipImport zipImport
+            ZipImport zipImport,
+            ILicenseService licenses
             ) : base("Bck.Export")
         {
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
@@ -37,6 +39,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _user = user;
             _env = env;
             _zipImport = zipImport;
+            _licenses = licenses;
         }
 
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
@@ -46,15 +49,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IUser _user;
         private readonly IImportExportEnvironment _env;
         private readonly ZipImport _zipImport;
+        private readonly ILicenseService _licenses;
 
         #endregion
 
-        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool resetPortalFiles)
+        internal ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles)
         {
             Log.A($"Reset App {zoneId}/{appId}");
             var result = new ImportResultDto();
 
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin);
+
+            // Ensure feature available...
+            if (withPortalFiles) _licenses.ThrowIfNotLicensed(BuiltInLicenses.PatronBasic);
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
@@ -84,7 +91,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _cmsZones.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
             // 3. Optional reset PortalFiles
-            if (resetPortalFiles)
+            if (withPortalFiles)
             {
                 var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
 
