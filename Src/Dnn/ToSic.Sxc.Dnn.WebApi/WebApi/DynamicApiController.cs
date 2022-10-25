@@ -100,7 +100,10 @@ namespace ToSic.Sxc.WebApi
             var found = false;
             try
             {
-                var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
+                // 2022-10-25 2dm old, trying to fix error https://github.com/2sic/2sxc/issues/2879
+                // var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
+                var routeAppPath = new AppFolderUtilities(GetService<IServiceProvider>()).Init(Log)
+                    .GetAppFolder(Request, false);
                 var appId = SharedContextResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? Eav.Constants.NullId;
 
                 if (appId != Eav.Constants.NullId)
