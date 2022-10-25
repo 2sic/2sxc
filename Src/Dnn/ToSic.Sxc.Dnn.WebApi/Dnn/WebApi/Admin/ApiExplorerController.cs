@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var controllerVirtualPath =
                 Path.Combine(
-                    AppFolderUtilities.GetAppFolderVirtualPath(GetService<IServiceProvider>(), Request, GetService<ISite>(), Log), 
+                    new AppFolderUtilities(GetService<IServiceProvider>()).Init(Log).GetAppFolderVirtualPath(Request, GetService<ISite>()), 
                     path);
 
             Log.A($"Controller Virtual Path: {controllerVirtualPath}");

@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             // Now Handle the 2sxc app-api queries
             
             // Figure out the Path, or show error for that
-            var appFolder = AppFolderUtilities.GetAppFolder(sp, request, log, wrapLog);
+            var appFolder = new AppFolderUtilities(sp).Init(log).GetAppFolder(request, true);
 
             var controllerPath = "";
             try
