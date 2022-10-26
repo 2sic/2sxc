@@ -129,5 +129,18 @@ namespace ToSic.Sxc.WebApi.Admin
             var result = _importAppLazy.Ready.GetPendingApps(zoneId);
             return wrapLog.ReturnAsOk(result);
         }
+
+        /// <summary>
+        /// Install pending apps
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <param name="pendingApps"></param>
+        /// <returns></returns>
+        public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+        {
+            var wrapLog = Log.Fn<ImportResultDto>();
+            var result = _importAppLazy.Ready.InstallPendingApps(zoneId, pendingApps);
+            return wrapLog.ReturnAsOk(result);
+        }
     }
 }

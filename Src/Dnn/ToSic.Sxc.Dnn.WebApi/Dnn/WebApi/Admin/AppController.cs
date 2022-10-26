@@ -117,5 +117,15 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId) 
             => Real.GetPendingApps(zoneId);
+
+        /// <inheritdoc />
+        [HttpPost]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        [ValidateAntiForgeryToken]
+        public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+        {
+            PreventServerTimeout300();
+            return Real.InstallPendingApps(zoneId, pendingApps);
+        }
     }
 }

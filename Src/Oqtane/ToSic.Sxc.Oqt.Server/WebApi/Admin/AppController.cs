@@ -114,5 +114,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
             => Real.GetPendingApps(zoneId);
+
+        /// <inheritdoc />
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
+        public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+        {
+            // Ensure that Hot Reload is not enabled or try to disable it.
+            HotReloadEnabledCheck.Check();
+            return Real.InstallPendingApps(zoneId, pendingApps);
+        }
     }
 }
