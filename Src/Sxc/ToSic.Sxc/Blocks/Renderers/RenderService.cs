@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Blocks
 
         #region Constructor & ConnectToRoot
 
-        public RenderService(
+        protected RenderService(
             GeneratorLog<IEditService> editGenerator, 
             LazyInitLog<IModuleAndBlockBuilder> builder,
             GeneratorLog<BlockFromEntity> blkFrmEntGen,
@@ -117,7 +118,9 @@ namespace ToSic.Sxc.Blocks
                     : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent), _blkFrmEntGen));
         }
 
-        public IRenderResult Module(int pageId, int moduleId)
+
+        /// <inheritdoc />
+        public virtual IRenderResult Module(int pageId, int moduleId, string noParamOrder = Parameters.Protector, object page = default)
         {
             MakeSureLogIsInHistory();
             var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");

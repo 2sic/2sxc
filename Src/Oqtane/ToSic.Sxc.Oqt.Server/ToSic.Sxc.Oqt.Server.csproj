@@ -54,7 +54,6 @@
     <None Remove="RazorPartialToString\**" />
     <None Remove="wwwroot\Modules\ToSic.Sxc\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="StartUp\IIsSxcRazorPage.cs" />
     <Compile Remove="StartUp\SxcRazorPage.cs" />
