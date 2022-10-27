@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
@@ -52,8 +53,7 @@ namespace ToSic.Sxc.Apps
             // now really delete the files - if the DB didn't end up throwing an error
             // ...but only if it's a full-delete
             if (fullDelete && !string.IsNullOrEmpty(folder) && Directory.Exists(physPath))
-                Directory.Delete(physPath, true);
-
+                ZipImport.TryToDeleteDirectory(physPath, Log);
         }
     }
 }
