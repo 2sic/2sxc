@@ -43,12 +43,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             services.TryAddTransient<OqtModuleHelper>();
 
-            // TODO stv, probably we need to make OqtRenderService specific implementation
-            services.TryAddTransient<Sxc.Services.IRenderService, RenderService>();
-#pragma warning disable CS0618
-            services.TryAddTransient<Sxc.Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
-#pragma warning restore CS0618
-
             return services;
         }
         
