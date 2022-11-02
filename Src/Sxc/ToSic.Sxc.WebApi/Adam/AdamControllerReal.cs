@@ -65,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Adam
             }
         }
 
-        public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
+        public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
         {
             var callLog = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var results = _adamItems.Value
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.Adam
             return callLog.ReturnAsOk(results);
         }
 
-        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
+        public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
             => _adamFolders.Value
                 .Init(appId, contentType, guid, field, usePortalRoot, Log)
                 .Folder(subfolder, newFolder);
