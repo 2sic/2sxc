@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Adam
         private readonly Lazy<AdamTransDelete<TIdentifier, TIdentifier>> _adamDelete;
         private readonly Lazy<AdamTransRename<TIdentifier, TIdentifier>> _adamRename;
 
-        public /*UploadResultDto*/ AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
+        public IAdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
         {
             // wrap all of it in try/catch, to reformat error in better way for js to tell the user
             try
@@ -39,16 +39,10 @@ namespace ToSic.Sxc.WebApi.Adam
                 // Check if the request contains multipart/form-data.
                 if (!uploadInfo.IsMultipart())
                     return new AdamItemDto("doesn't look like a file-upload");
-                    //return new UploadResultDto
-                    //{
-                    //    //Success = false,
-                    //    Error = "doesn't look like a file-upload"
-                    //};
 
                 if (!uploadInfo.HasFiles())
                 {
                     Log.A("Error, no files");
-                    //return new UploadResultDto { /*Success = false,*/ Error = "No file was uploaded." };
                     return new AdamItemDto("No file was uploaded.");
                 }
 
@@ -59,12 +53,10 @@ namespace ToSic.Sxc.WebApi.Adam
             catch (HttpExceptionAbstraction he)
             {
                 // Our abstraction places an extra message in the value, not sure if this is right, but that's how it is. 
-                //return new UploadResultDto { /*Success = false,*/ Error = he.Message + "\n" + he.Value };
                 return new AdamItemDto(he.Message + "\n" + he.Value);
             }
             catch (Exception e)
             {
-                //return new UploadResultDto { /*Success = false,*/ Error = e.Message + "\n" + e.Message };
                 return new AdamItemDto(e.Message + "\n" + e.Message);
             }
         }

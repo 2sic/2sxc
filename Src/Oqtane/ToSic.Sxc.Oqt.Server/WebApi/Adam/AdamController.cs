@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
         [HttpPost]
         [HttpPut]
-        public /*UploadResultDto*/AdamItemDto Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false) 
+        public IAdamItemDto Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false) 
             => Real.Upload(new HttpUploadedFile(Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
         [HttpGet("items")]
