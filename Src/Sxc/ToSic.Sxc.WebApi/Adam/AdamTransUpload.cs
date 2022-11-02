@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Adam
             dtoMaker.SetInit(dtom => dtom.Init(adamContext.Value));
         }
 
-        public IAdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
+        public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
         {
             var file = UploadOne(stream, fileName, subFolder, false);
             return DtoMaker.Ready.Create(file);

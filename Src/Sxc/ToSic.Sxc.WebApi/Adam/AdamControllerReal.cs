@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.Adam
         private readonly Lazy<AdamTransDelete<TIdentifier, TIdentifier>> _adamDelete;
         private readonly Lazy<AdamTransRename<TIdentifier, TIdentifier>> _adamRename;
 
-        public IAdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
+        public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
         {
             // wrap all of it in try/catch, to reformat error in better way for js to tell the user
             try
