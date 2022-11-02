@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         [HttpPost]
         [HttpPut]
-        public UploadResultDto Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
+        public /*UploadResultDto*/ AdamItemDto Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
             => Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
 

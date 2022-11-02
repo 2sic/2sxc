@@ -1,8 +1,11 @@
 ﻿using System;
 using System.IO;
+using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Adam;
+using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
@@ -11,24 +14,35 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransUpload(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnUpl") { }
+        public LazyInit<AdamItemDtoMaker<TFolderId, TFileId>> DtoMaker { get; }
 
-        public UploadResultDto UploadOne(Stream stream, string subFolder, string fileName)
+        public AdamTransUpload(Lazy<AdamContext<TFolderId, TFileId>> adamContext,
+            LazyInit<AdamItemDtoMaker<TFolderId, TFileId>> dtoMaker, IContextResolver ctxResolver)
+            : base(adamContext, ctxResolver, "Adm.TrnUpl")
+        {
+            DtoMaker = dtoMaker;
+            dtoMaker.SetInit(dtom => dtom.Init(adamContext.Value));
+        }
+
+        public /*UploadResultDto*/ AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
         {
             var file = UploadOne(stream, fileName, subFolder, false);
 
-            return new UploadResultDto
-            {
-                Success = true,
-                Error = "",
-                Name = file.Name,
-                Id = file.Id,
-                Path = file.Url,
-                Type = Classification.TypeName(file.Extension)
-            };
+            return DtoMaker.Ready.Create(file);
+            //return new UploadResultDto
+            //{
+            //    // Success = true,
+            //    // Error = null,
+            //    Name = file.Name,
+            //    Id = file.Id,
+            //    //Path = file.Url,
+            //    Url = file.Url,
+            //    ReferenceId = ((IHasMetadata)file).Metadata.Target.KeyString, // "file:" + file.Id,
+            //    Type = Classification.TypeName(file.Extension)
+            //};
         }
 
-        public IFile UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
+        public File<TFolderId, TFileId> UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)
         {
             Log.A($"upload one subfold:{subFolder}, file: {originalFileName}");
 
