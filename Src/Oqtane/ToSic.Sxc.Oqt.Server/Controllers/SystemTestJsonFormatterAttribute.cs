@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -43,8 +44,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             if (context.Result is ObjectResult objectResult)
             {
-                objectResult.Formatters.RemoveType<NewtonsoftJsonOutputFormatter>();
-                objectResult.Formatters.Add(SystemTextJsonOutputFormatter); 
+                objectResult.Formatters.Add(SystemTextJsonOutputFormatter);
+
+                // Oqtane 3.2.0 and older had NewtonsoftJsonOutputFormatter that we need to remove for our endpoints
+                var newtonsoftJsonOutputFormatterType = Type.GetType("NewtonsoftJsonOutputFormatter");
+                if (newtonsoftJsonOutputFormatterType != null) objectResult.Formatters.RemoveType(newtonsoftJsonOutputFormatterType); ;
             }
             else
             {
@@ -60,9 +64,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ArrayPool<char> charPool,
             IHttpRequestStreamReaderFactory readerFactory,
             ObjectPoolProvider objectPoolProvider,
-            IOptions<MvcOptions> mvcOptions,
-            IOptions<MvcNewtonsoftJsonOptions> jsonOptions)
-            : base(GetInputFormatters(loggerFactory, charPool, objectPoolProvider, mvcOptions, jsonOptions), readerFactory)
+            IOptions<MvcOptions> mvcOptions)
+            : base(GetInputFormatters(loggerFactory, charPool, objectPoolProvider, mvcOptions), readerFactory)
         {
         }
 
@@ -70,10 +73,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ILoggerFactory loggerFactory,
             ArrayPool<char> charPool,
             ObjectPoolProvider objectPoolProvider,
-            IOptions<MvcOptions> mvcOptions,
-            IOptions<MvcNewtonsoftJsonOptions> jsonOptions)
+            IOptions<MvcOptions> mvcOptions)
         {
-            var jsonOptionsValue = jsonOptions.Value;
             return new IInputFormatter[]
             {
             new SystemTextJsonInputFormatter(SxcJsonOptions,
