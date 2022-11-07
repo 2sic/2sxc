@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Blocks
 
         #region Constructor & ConnectToRoot
 
-        protected RenderService(
+        public RenderService(
             GeneratorLog<IEditService> editGenerator, 
             LazyInitLog<IModuleAndBlockBuilder> builder,
             GeneratorLog<BlockFromEntity> blkFrmEntGen,
