@@ -105,7 +105,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
 
                 // Copy portal files persisted in /App_Data/PortalFiles/ back to site
-                _env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForPortalFiles), string.Empty);
+                _env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForSiteFiles), string.Empty);
             }
 
             // 4. Now import the App.xml
