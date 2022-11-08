@@ -1,4 +1,5 @@
 ﻿using DotNetNuke.Web.Api;
+using Newtonsoft.Json;
 using System.Configuration;
 using System.Net.Http.Formatting;
 using System.Web.Hosting;
@@ -40,8 +41,10 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Configure Newtonsoft Time zone handling
             // Moved here in v12.05 - previously it was in the Pre-Serialization converter
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+
             // System.Text.Json supports ISO 8601-1:2019, including the RFC 3339 profile
-            GlobalConfiguration.Configuration.Formatters.Add(SystemTextJsonMediaTypeFormatter);
+            GlobalConfiguration.Configuration.Formatters.Add(JsonFormatters.SystemTextJsonMediaTypeFormatter);
             // Getting the service provider in Configure is tricky business, because
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
@@ -69,13 +72,5 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             _alreadyConfigured = true;
         }
-
-        public static SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatter =>
-            _systemTextJsonMediaTypeFormatter ?? (_systemTextJsonMediaTypeFormatter =
-                new SystemTextJsonMediaTypeFormatter
-                {
-                    JsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtml
-                });
-        private static SystemTextJsonMediaTypeFormatter _systemTextJsonMediaTypeFormatter;
     }
 }

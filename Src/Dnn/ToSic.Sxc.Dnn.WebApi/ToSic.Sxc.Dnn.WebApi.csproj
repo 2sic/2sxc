@@ -109,6 +109,7 @@
     <Compile Include="Custom\Dnn\Api12.cs" />
     <Compile Include="Custom\Hybrid\Api14.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppInternalsController.cs" />
+    <Compile Include="JsonFormatters.cs" />
     <Compile Include="System.Text.Json.Formatter.cs" />
     <Compile Include="WebApi\ApiCoreShim.cs" />
     <Compile Include="Custom\Hybrid\Api12_Api.cs" />

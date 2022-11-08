@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
@@ -13,6 +14,7 @@ namespace Custom.Dnn
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode("This is the official base class for v12+")]
     [DnnLogExceptions]
+    [NewtonsoftJsonResponse]
     public abstract class Api12 : Hybrid.Api12, IDnnDynamicWebApi, IDnnDynamicCodeAdditions
     {
         protected Api12() : base("Dnn12") { }
