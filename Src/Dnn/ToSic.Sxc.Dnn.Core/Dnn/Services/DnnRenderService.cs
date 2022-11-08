@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Web.UI;
+using System.Web;
 using ToSic.Eav;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
+using Page = System.Web.UI.Page;
 
 namespace ToSic.Sxc.Dnn.Services
 {
@@ -13,6 +15,7 @@ namespace ToSic.Sxc.Dnn.Services
     {
         private readonly Lazy<DnnPageChanges> _dnnPageChanges;
         private readonly Lazy<DnnClientResources> _dnnClientResources;
+        private readonly Generator<IContextOfBlock> _context;
 
         public DnnRenderService(
             GeneratorLog<IEditService> editGenerator,
@@ -20,28 +23,32 @@ namespace ToSic.Sxc.Dnn.Services
             GeneratorLog<BlockFromEntity> blkFrmEntGen,
             Lazy<LogHistory> historyLazy,
             Lazy<DnnPageChanges> dnnPageChanges,
-            Lazy<DnnClientResources> dnnClientResources
-
+            Lazy<DnnClientResources> dnnClientResources,
+            Generator<IContextOfBlock> context
         ) : base(editGenerator, builder, blkFrmEntGen, historyLazy)
         {
             _dnnPageChanges = dnnPageChanges;
             _dnnClientResources = dnnClientResources;
+            _context = context;
         }
 
-        public override IRenderResult Module(int pageId, int moduleId, string noParamOrder = Parameters.Protector, object page = default)
+        public override IRenderResult Module(int pageId, int moduleId)
         {
-            Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(All), $"{nameof(page)}");
             var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
             var result = base.Module(pageId, moduleId);
 
             // this code should be executed in PreRender of page (ensure when calling) or it is too late
-            if (page is Page dnnPage)
-            {
-                _dnnPageChanges.Value.Apply(dnnPage, result);
-                _dnnClientResources.Value.Init(dnnPage, null, null, Log).AddEverything(result.Features);
-            }
+            if (HttpContext.Current?.Handler is Page dnnHandler) // detect if we are on the page
+                if (_context.New.Module.BlockIdentifier == null) // find if is in module (because in module it's already handled)
+                    DnnPageProcess(dnnHandler, result);
 
             return wrapLog.ReturnAsOk(result);
+        }
+
+        private void DnnPageProcess(Page dnnPage, IRenderResult result)
+        {
+            _dnnPageChanges.Value.Apply(dnnPage, result);
+            _dnnClientResources.Value.Init(dnnPage, null, null, Log).AddEverything(result.Features);
         }
     }
 }

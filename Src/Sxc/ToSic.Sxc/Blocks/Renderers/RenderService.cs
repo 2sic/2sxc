@@ -3,7 +3,6 @@ using ToSic.Eav;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -120,7 +119,7 @@ namespace ToSic.Sxc.Blocks
 
 
         /// <inheritdoc />
-        public virtual IRenderResult Module(int pageId, int moduleId, string noParamOrder = Parameters.Protector, object page = default)
+        public virtual IRenderResult Module(int pageId, int moduleId)
         {
             MakeSureLogIsInHistory();
             var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");

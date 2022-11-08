@@ -60,16 +60,11 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="pageId"></param>
         /// <param name="moduleId"></param>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="page"></param>
         /// <returns>
         /// An HTML-String which can be added to the output directly.
         /// The object also has additional information like assets or page changes, which are not applied when using this render command. 
         /// </returns>
         /// <remarks>New in 2sxc 13.02</remarks>
-        IRenderResult Module(int pageId,
-            int moduleId,
-            string noParamOrder = Eav.Parameters.Protector,
-            object page = default);
+        IRenderResult Module(int pageId, int moduleId);
     }
 }
