@@ -17,18 +17,18 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
+using ToSic.Sxc.Dnn.WebApi.HttpJson;
 
 // ReSharper disable InheritdocInvalidUsage
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.WebApi
 {
-    /// <inheritdoc cref="SxcApiControllerBase" />
+    /// <inheritdoc cref="DynamicApiController" />
     /// <summary>
     /// This is the base class for API Controllers which need the full context
     /// incl. the current App, DNN, Data, etc.
@@ -38,6 +38,7 @@ namespace ToSic.SexyContent.WebApi
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
     [PrivateApi("This was the official base class a long time ago, Name & APIs must remain stable")]
+    [UseOldNewtonsoftForHttpJson]
     public abstract partial class SxcApiController : 
         DynamicApiController, 
         IDnnDynamicWebApi,

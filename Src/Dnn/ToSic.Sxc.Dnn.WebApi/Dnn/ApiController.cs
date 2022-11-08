@@ -13,9 +13,9 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn
@@ -27,6 +27,7 @@ namespace ToSic.Sxc.Dnn
     [PublicApi("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Dnn.Api12")]
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
+    [UseOldNewtonsoftForHttpJson]
     public abstract class ApiController : DynamicApiController, IDnnDynamicWebApi, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot
     {
         [PrivateApi]
