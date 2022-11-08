@@ -140,8 +140,8 @@ namespace ToSic.Sxc.WebApi.Context
 
             // Otherwise also add the global appId
             var zoneId = Deps.SiteCtx.Site.ZoneId;
-            result.DefaultApp = Deps.AppStates.IdentityOfDefault(zoneId);
-            result.PrimaryApp = Deps.AppStates.IdentityOfPrimary(zoneId);
+            result.DefaultApp = (AppIdentity)Deps.AppStates.IdentityOfDefault(zoneId);
+            result.PrimaryApp = (AppIdentity)Deps.AppStates.IdentityOfPrimary(zoneId);
             return result;
         }
 

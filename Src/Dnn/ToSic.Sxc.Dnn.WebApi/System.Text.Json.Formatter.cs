@@ -115,7 +115,8 @@ namespace System.Net.Http.Formatting
 
             try
             {
-                await JsonSerializer.SerializeAsync(transcodingStream ?? writeStream, value, type, JsonSerializerOptions, cancellationToken);
+                //await JsonSerializer.SerializeAsync(transcodingStream ?? writeStream, value, type, JsonSerializerOptions, cancellationToken);
+                await JsonSerializer.SerializeAsync<object>(transcodingStream ?? writeStream, value, JsonSerializerOptions, cancellationToken);
             }
             finally
             {
