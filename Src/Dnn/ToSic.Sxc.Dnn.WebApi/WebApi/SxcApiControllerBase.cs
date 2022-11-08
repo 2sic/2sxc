@@ -2,10 +2,10 @@
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.WebApi;
+using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.WebApi
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [DnnLogExceptions]
     [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
-    [NewtonsoftJsonResponse]
+    [UseOldNewtonsoftForHttpJson]
     public abstract class SxcApiControllerBase<TRealController>: DnnApiControllerWithFixes<TRealController> where TRealController : class, IHasLog<TRealController>
     {
         protected SxcApiControllerBase(string logSuffix) : base(logSuffix) { }

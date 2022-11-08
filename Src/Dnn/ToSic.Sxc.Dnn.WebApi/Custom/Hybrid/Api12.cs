@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.WebApi.Helpers;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 
@@ -13,7 +13,7 @@ namespace Custom.Hybrid
     /// </summary>
     [PublicApi("This is the official base class for v12+")]
     [DnnLogExceptions]
-    [NewtonsoftJsonResponse]
+    [UseOldNewtonsoftForHttpJson]
     public abstract partial class Api12: ApiCoreShim, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
     {
         protected Api12() : base("Hyb12") { }
