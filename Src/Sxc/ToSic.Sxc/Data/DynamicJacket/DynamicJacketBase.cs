@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Data
         public dynamic Get(string name) => FindValueOrNull(name, StringComparison.InvariantCultureIgnoreCase, null);
 
         /// <inheritdoc />
-        public int Count => ((IList) _contents).Count;
+        public int Count => _contents is IList<System.Text.Json.Nodes.JsonNode> ja ? ja.Count : 0;
 
         /// <summary>
         /// Not yet implemented accessor - must be implemented by the inheriting class.

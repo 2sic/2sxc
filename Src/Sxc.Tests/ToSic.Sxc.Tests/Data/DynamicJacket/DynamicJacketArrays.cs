@@ -27,7 +27,6 @@ namespace ToSic.Sxc.Data.Tests
             AreNotEqual(original[0], original[1]);
         }
 
-        // TODO: @stv - ERRORS
         [TestMethod]
         public void StringArrayCount()
         {
@@ -71,7 +70,6 @@ namespace ToSic.Sxc.Data.Tests
             IsNull(dyn[0].NonExisting);
         }
 
-        // TODO: @stv - ERRORS
         [TestMethod]
         public void StringArray2DCount()
         {
@@ -92,7 +90,6 @@ namespace ToSic.Sxc.Data.Tests
             new MiniObj { Name = "TTT3", Age = 3 }
         });
 
-        // TODO: @STV - ERROR
         [TestMethod]
         public void ObjectArray()
         {
@@ -127,13 +124,6 @@ namespace ToSic.Sxc.Data.Tests
                 new object[] { true, 2, "c3"}
             });
 
-            //var jsonString = @"[ 
-            //    [""a1""], 
-            //    [ 1, ""b2""], 
-            //    [ true , 2, ""c3"" ], 
-            //]";
-
-            //var dynamicValue = AsDynamic(jsonString);
             var expectedType = (new DynamicJacketList(new JsonArray())).GetType();
 
             IsTrue(dyn.IsList);

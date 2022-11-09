@@ -8,19 +8,22 @@ namespace ToSic.Sxc.Data.Tests
     [TestClass]
     public class DynamicJacketMixTests: DynamicJacketTestBase
     {
-        // TODO: @STV make clearer using the base-methods and anonymous object to start with, instead of hard-to-read-json-strings
         [TestMethod]
         public void ObjectWithStringProperty()
         {
-            var jsonString = "{ \"FirstName\": \"test\", }";
-            AreEqual<string>("test", AsDynamic(jsonString).FirstName);
+            var test = PrepareTest( new { FirstName = "test" });
+            AreEqual<string>("test", test.Dyn.FirstName);
         }
 
         [TestMethod]
         public void ArrayOfObjectsWithStringProperty()
         {
-            var jsonString = "[ { \"FirstName\": \"test\" }, { \"FirstName\": \"fn2\" }, ]";
-            AreEqual<string>("test", AsDynamic(jsonString)[0].FirstName);
+            var test = PrepareTest(new object[]
+            {
+                new { FirstName = "test" }, 
+                new { FirstName = "fn2" }
+            });
+            AreEqual<string>("test", test.Dyn[0].FirstName);
         }
 
         [TestMethod]
@@ -28,7 +31,11 @@ namespace ToSic.Sxc.Data.Tests
         {
             var test = PrepareTest(new
             {
-                a = new object[] { new { FirstName = "test" }, new { FirstName = "fn2" } }
+                a = new object[]
+                {
+                    new { FirstName = "test" }, 
+                    new { FirstName = "fn2" }
+                }
             });
             AreEqual<string>("test", test.Dyn.a[0].FirstName);
         }
@@ -36,8 +43,15 @@ namespace ToSic.Sxc.Data.Tests
         [TestMethod]
         public void ObjectWithArrayPropertyWithObjectWithStringArrayProperty()
         {
-            var jsonString = "{ \"a\": [ { \"p1\": \"fn1b\", \"p2\": [\"test\", \"a2\" ] }, { \"p1\": \"fn2\", \"p2\": [\"b1\", \"b2\" ]}, ] }";
-            AreEqual<string>("test", AsDynamic(jsonString).a[0].p2[0]);
+            var test = PrepareTest(new
+            {
+                a = new object[]
+                {
+                    new { p1 = "fn1", p2 = new [] { "test", "a2" } },
+                    new { p1 = "fn2", p2 = new [] { "b1", "b2" } },
+                }
+            });
+            AreEqual<string>("test", test.Dyn.a[0].p2[0]);
         }
     }
 }

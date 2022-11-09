@@ -12,32 +12,36 @@ namespace ToSic.Sxc.Data.Tests
         [TestMethod]
         public void ObjectWithObjects()
         {
-            var jsonString = @"{ 
-                ""ObjectProperty"": { 
-                    ""StringProperty"": ""test"",
-                    ""ObjectProperty"": { 
-                        ""NumberProperty"": 1,
-                        ""ObjectProperty"": { 
-                            ""BoolProperty"": true,
-                        },
-                    },
-                },
-            }";
-            var dynamicValue = AsDynamic(jsonString);
+            var test = PrepareTest(new
+            {
+                ObjectProperty = new
+                {
+                    StringProperty = "test",
+                    ObjectProperty = new
+                    {
+                        NumberProperty = 1,
+                        ObjectProperty = new
+                        {
+                            BoolProperty = true
+                        }
+                    }
+                }
+            });
+ 
             var expectedType = (new DynamicJacket(new JsonObject())).GetType();
 
-            IsFalse(dynamicValue.IsList);
+            IsFalse(test.Dyn.IsList);
 
-            IsInstanceOfType(dynamicValue.ObjectProperty, expectedType);
-            IsInstanceOfType(dynamicValue.ObjectProperty.ObjectProperty, expectedType);
-            IsInstanceOfType(dynamicValue.ObjectProperty.ObjectProperty.ObjectProperty, expectedType);
+            IsInstanceOfType(test.Dyn.ObjectProperty, expectedType);
+            IsInstanceOfType(test.Dyn.ObjectProperty.ObjectProperty, expectedType);
+            IsInstanceOfType(test.Dyn.ObjectProperty.ObjectProperty.ObjectProperty, expectedType);
 
-            AreEqual<string>("test", dynamicValue["objectproperty"]["STRINGPROPERTY"]);
-            AreEqual<string>("test", dynamicValue["ObjectProperty", true]["StringProperty", true]);
-            AreEqual<string>("test", dynamicValue.OBJECTPROPERTY.stringproperty);
+            AreEqual<string>("test", test.Dyn["objectproperty"]["STRINGPROPERTY"]);
+            AreEqual<string>("test", test.Dyn["ObjectProperty", true]["StringProperty", true]);
+            AreEqual<string>("test", test.Dyn.OBJECTPROPERTY.stringproperty);
 
-            AreEqual<int>(1, dynamicValue.ObjectProperty.ObjectProperty.NumberProperty);
-            AreEqual<bool>(true, dynamicValue.ObjectProperty.ObjectProperty.ObjectProperty.BoolProperty);
+            AreEqual<int>(1, test.Dyn.ObjectProperty.ObjectProperty.NumberProperty);
+            AreEqual<bool>(true, test.Dyn.ObjectProperty.ObjectProperty.ObjectProperty.BoolProperty);
         }
     }
 }

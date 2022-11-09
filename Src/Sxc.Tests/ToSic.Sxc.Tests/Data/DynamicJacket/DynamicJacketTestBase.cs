@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Tests.Data.DynamicJacket
+﻿using ToSic.Eav.Serialization;
+
+namespace ToSic.Sxc.Tests.Data.DynamicJacket
 {
     public abstract class DynamicJacketTestBase
     {
@@ -6,7 +8,7 @@
 
         public dynamic AsDynamic(object obj) => AsDynamic(AsJson(obj));
 
-        public string AsJson(object obj) => System.Text.Json.JsonSerializer.Serialize(obj);
+        public string AsJson(object obj) => System.Text.Json.JsonSerializer.Serialize(obj, JsonOptions.UnsafeJsonWithoutEncodingHtml);
 
         public (dynamic Dyn, string Json, T Original) PrepareTest<T>(T original)
         {
