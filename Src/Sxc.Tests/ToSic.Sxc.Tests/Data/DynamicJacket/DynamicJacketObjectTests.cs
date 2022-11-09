@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json.Nodes;
+using ToSic.Sxc.Tests.Data.DynamicJacket;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Data.Tests
 {
     [TestClass]
-    public class DynamicJacketObjectTests
+    public class DynamicJacketObjectTests : DynamicJacketTestBase
     {
-        public dynamic AsDynamic(string jsonString) => DynamicJacket.AsDynamicJacket(jsonString);
-
         [TestMethod]
         public void ObjectWithObjects()
         {
@@ -26,18 +26,18 @@ namespace ToSic.Sxc.Data.Tests
             var dynamicValue = AsDynamic(jsonString);
             var expectedType = (new DynamicJacket(new JsonObject())).GetType();
 
-            Assert.IsFalse(dynamicValue.IsList);
+            IsFalse(dynamicValue.IsList);
 
-            Assert.IsInstanceOfType(dynamicValue.ObjectProperty, expectedType);
-            Assert.IsInstanceOfType(dynamicValue.ObjectProperty.ObjectProperty, expectedType);
-            Assert.IsInstanceOfType(dynamicValue.ObjectProperty.ObjectProperty.ObjectProperty, expectedType);
+            IsInstanceOfType(dynamicValue.ObjectProperty, expectedType);
+            IsInstanceOfType(dynamicValue.ObjectProperty.ObjectProperty, expectedType);
+            IsInstanceOfType(dynamicValue.ObjectProperty.ObjectProperty.ObjectProperty, expectedType);
 
-            Assert.AreEqual<string>("test", dynamicValue["objectproperty"]["STRINGPROPERTY"]);
-            Assert.AreEqual<string>("test", dynamicValue["ObjectProperty", true]["StringProperty", true]);
-            Assert.AreEqual<string>("test", dynamicValue.OBJECTPROPERTY.stringproperty);
+            AreEqual<string>("test", dynamicValue["objectproperty"]["STRINGPROPERTY"]);
+            AreEqual<string>("test", dynamicValue["ObjectProperty", true]["StringProperty", true]);
+            AreEqual<string>("test", dynamicValue.OBJECTPROPERTY.stringproperty);
 
-            Assert.AreEqual<int>(1, dynamicValue.ObjectProperty.ObjectProperty.NumberProperty);
-            Assert.AreEqual<bool>(true, dynamicValue.ObjectProperty.ObjectProperty.ObjectProperty.BoolProperty);
+            AreEqual<int>(1, dynamicValue.ObjectProperty.ObjectProperty.NumberProperty);
+            AreEqual<bool>(true, dynamicValue.ObjectProperty.ObjectProperty.ObjectProperty.BoolProperty);
         }
     }
 }

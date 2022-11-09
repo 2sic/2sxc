@@ -1,46 +1,43 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Tests.Data.DynamicJacket;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Data.Tests
 {
     [TestClass]
-    public class DynamicJacketMixTests
+    public class DynamicJacketMixTests: DynamicJacketTestBase
     {
-        public dynamic AsDynamic(string jsonString) => DynamicJacket.AsDynamicJacket(jsonString);
-
+        // TODO: @STV make clearer using the base-methods and anonymous object to start with, instead of hard-to-read-json-strings
         [TestMethod]
         public void ObjectWithStringProperty()
         {
             var jsonString = "{ \"FirstName\": \"test\", }";
-            Assert.AreEqual<string>("test", AsDynamic(jsonString).FirstName);
+            AreEqual<string>("test", AsDynamic(jsonString).FirstName);
         }
 
         [TestMethod]
         public void ArrayOfObjectsWithStringProperty()
         {
             var jsonString = "[ { \"FirstName\": \"test\" }, { \"FirstName\": \"fn2\" }, ]";
-            Assert.AreEqual<string>("test", AsDynamic(jsonString)[0].FirstName);
+            AreEqual<string>("test", AsDynamic(jsonString)[0].FirstName);
         }
 
         [TestMethod]
         public void ObjectWithArrayPropertyOfObjectsWithStringProperty()
         {
-            var jsonString = "{ \"a\": [ { \"FirstName\": \"test\" }, { \"FirstName\": \"fn2\" }, ] }";
-            Assert.AreEqual<string>("test", AsDynamic(jsonString).a[0].FirstName);
-        }
-
-        [TestMethod]
-        public void ArrayWithStringArrays()
-        {
-            var jsonString = "[ [\"test\", \"a2\" ], [\"b1\", \"b2\" ], ]";
-            Assert.AreEqual<string>("test", AsDynamic(jsonString)[0][0]);
+            var test = PrepareTest(new
+            {
+                a = new object[] { new { FirstName = "test" }, new { FirstName = "fn2" } }
+            });
+            AreEqual<string>("test", test.Dyn.a[0].FirstName);
         }
 
         [TestMethod]
         public void ObjectWithArrayPropertyWithObjectWithStringArrayProperty()
         {
             var jsonString = "{ \"a\": [ { \"p1\": \"fn1b\", \"p2\": [\"test\", \"a2\" ] }, { \"p1\": \"fn2\", \"p2\": [\"b1\", \"b2\" ]}, ] }";
-            Assert.AreEqual<string>("test", AsDynamic(jsonString).a[0].p2[0]);
+            AreEqual<string>("test", AsDynamic(jsonString).a[0].p2[0]);
         }
     }
 }
