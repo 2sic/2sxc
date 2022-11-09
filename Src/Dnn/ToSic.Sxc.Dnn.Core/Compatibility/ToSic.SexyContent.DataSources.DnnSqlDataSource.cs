@@ -10,5 +10,8 @@ namespace ToSic.SexyContent.DataSources
         // - we might also write some SQL to update existing pipelines, but it's not likely to have been used much...
         // - and otherwise im might be in razor-code, which we couldn't auto-update
 
+        public DnnSqlDataSource(Dependencies dependencies) : base(dependencies)
+        {
+        }
     }
 }
