@@ -2,9 +2,9 @@
 using Oqtane.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
