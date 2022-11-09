@@ -4,7 +4,7 @@
 namespace ToSic.Sxc.Data.Tests
 {
     [TestClass]
-    public class DynamicJacketTests
+    public class DynamicJacketMixTests
     {
         public dynamic AsDynamic(string jsonString) => DynamicJacket.AsDynamicJacket(jsonString);
 

@@ -99,7 +99,10 @@
     <Compile Include="DataSources\MockUsersDataSource.cs" />
     <Compile Include="DataSources\UsersDataSourceTests.cs" />
     <Compile Include="DataSources\RolesDataSourceTests.cs" />
-    <Compile Include="Data\DynamicJacket\DynamicJacketTests.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacketArrayTests.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacketPropertyTypeValueTests.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacketObjectTests.cs" />
+    <Compile Include="Data\DynamicJacket\DynamicJacketMixTests.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />
