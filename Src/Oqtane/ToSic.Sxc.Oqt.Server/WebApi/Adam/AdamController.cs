@@ -34,15 +34,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
         [HttpPost]
         [HttpPut]
-        public UploadResultDto Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false) 
+        public /*AdamItemDto*/object Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false) 
             => Real.Upload(new HttpUploadedFile(Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
         [HttpGet("items")]
-        public IEnumerable<AdamItemDto> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
+        public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
             => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
 
         [HttpPost("folder")]
-        public IEnumerable<AdamItemDto> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
+        public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
             => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
 
         [HttpGet("delete")]

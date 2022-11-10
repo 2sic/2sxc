@@ -1,6 +1,7 @@
 ﻿using Custom.Hybrid.Advanced;
 using ToSic.Eav.Documentation;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
@@ -18,6 +19,7 @@ namespace Custom.Hybrid
     /// </remarks>
     [PublicApi]
     [DnnLogExceptions]
+    [UseOldNewtonsoftForHttpJson]
     public abstract class Api14: Api14<dynamic, ServiceKit14>, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
     {
         protected Api14() : base("Hyb12") { }

@@ -7,7 +7,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
@@ -16,28 +15,41 @@ using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn
 {
-    internal static class AppFolderUtilities
+    // todo:
+    // - rename to DnnAppFolderUtilities
+    // - register as DI
+    // - change dependency to SP to be Generator<> of the types we need
+    internal class AppFolderUtilities: HasLog
     {
-        internal static string GetAppFolderVirtualPath(IServiceProvider sp, HttpRequestMessage request, ISite site, ILog log)
-        {
-            var wrapLog = log.Fn<string>();
+        private readonly IServiceProvider _sp;
 
-            var appFolder = GetAppFolder(sp, request, log, wrapLog);
+        public AppFolderUtilities(IServiceProvider sp): base($"{DnnConstants.LogName}.AppFld")
+        {
+            _sp = sp;
+        }
+
+        internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site)
+        {
+            var wrapLog = Log.Fn<string>();
+
+            var appFolder = GetAppFolder(request, true);
 
             var appFolderVirtualPath = Path.Combine(((DnnSite)site).AppsRootRelative, appFolder).ForwardSlash();
 
             return wrapLog.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
         }
 
-        internal static string GetAppFolder<T>(IServiceProvider sp, HttpRequestMessage request, ILog log, LogCall<T> wrapLog)
+        internal string GetAppFolder(HttpRequestMessage request, bool errorIfNotFound)
         {
             const string errPrefix = "Api Controller Finder Error: ";
             const string errSuffix = "Check event-log, code and inner exception. ";
 
+            var l = Log.Fn<string>();
+
             var routeData = request.GetRouteData();
 
             // Figure out the Path, or show error for that.
-            string appFolder = null;
+            string appFolder;
             try
             {
                 appFolder = Route.AppPathOrNull(routeData);
@@ -45,36 +57,38 @@ namespace ToSic.Sxc.Dnn
                 // only check for app folder if we don't have a context
                 if (appFolder == null)
                 {
-                    log.A("no folder found in url, will auto-detect");
-                    appFolder = sp.Build<AppFolder>()?
-                        .Init(() => sp.Build<DnnGetBlock>().GetCmsBlock(request, log))
+                    l.A("no folder found in url, will auto-detect");
+                    appFolder = _sp.Build<AppFolder>()?
+                        .Init(() => _sp.Build<DnnGetBlock>().GetCmsBlock(request, Log))
                         .GetAppFolder();
                 }
 
-                log.A($"App Folder: {appFolder}");
+                l.A($"App Folder: {appFolder}");
             }
             catch (Exception getBlockException)
             {
                 const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
-                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, wrapLog);
+                if (errorIfNotFound)
+                    throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, l);
+                return l.Return(null, "not found, maybe error");
             }
 
-            if (string.IsNullOrWhiteSpace(appFolder))
+            if (string.IsNullOrWhiteSpace(appFolder) && errorIfNotFound)
             {
                 const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
                                    "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-                throw ReportToLogAndThrow<T>(request, HttpStatusCode.BadRequest, new Exception(msg), msg, wrapLog);
+                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg, l);
             }
 
-            return appFolder;
+            return l.ReturnAndLog(appFolder);
         }
 
-        internal static HttpResponseException ReportToLogAndThrow<T>(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, LogCall<T> wrapLog)
+        internal static HttpResponseException ReportToLogAndThrow<T>(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, LogCall<T> logCallToClose)
         {
             var helpText = ErrorHelp.HelpText(e);
             var exception = new Exception(msg + helpText, e);
             DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
-            wrapLog.Return(default, "error");
+            logCallToClose.Return(default, "error");
             return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
         }
     }

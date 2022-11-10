@@ -80,8 +80,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         [Authorize(Roles = RoleNames.Admin)]
         [ValidateAntiForgeryToken]
-        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool resetPortalFiles = false)
-            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, resetPortalFiles);
+        public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
+            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
         /// <inheritdoc />
         [HttpGet]
@@ -94,8 +94,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpPost]
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
-        public ImportResultDto Reset(int zoneId, int appId, bool resetPortalFiles = false) 
-            => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode, resetPortalFiles);
+        public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false) 
+            => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode, withPortalFiles);
 
         /// <inheritdoc />
         [HttpPost]
@@ -114,5 +114,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Admin)]
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
             => Real.GetPendingApps(zoneId);
+
+        /// <inheritdoc />
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = RoleNames.Admin)]
+        public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+        {
+            // Ensure that Hot Reload is not enabled or try to disable it.
+            HotReloadEnabledCheck.Check();
+            return Real.InstallPendingApps(zoneId, pendingApps);
+        }
     }
 }

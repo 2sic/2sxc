@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
@@ -7,6 +8,7 @@ using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
+using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
@@ -28,6 +30,7 @@ namespace ToSic.Sxc.WebApi.Context
             public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
             public Lazy<LanguagesBackend> LanguagesBackend { get; }
             public Lazy<IFeaturesInternal> Features { get; }
+            public Lazy<IUiData> UiDataLazy { get; }
 
             public Dependencies(
                 IContextOfSite siteCtx, 
@@ -35,8 +38,8 @@ namespace ToSic.Sxc.WebApi.Context
                 IAppStates appStates, 
                 Lazy<AppUserLanguageCheck> appUserLanguageCheck, 
                 Lazy<LanguagesBackend> languagesBackend,
-                Lazy<IFeaturesInternal> features
-            )
+                Lazy<IFeaturesInternal> features,
+                Lazy<IUiData> uiDataLazy)
             {
                 SiteCtx = siteCtx;
                 AppToLaterInitialize = appToLaterInitialize;
@@ -44,6 +47,7 @@ namespace ToSic.Sxc.WebApi.Context
                 AppUserLanguageCheck = appUserLanguageCheck;
                 LanguagesBackend = languagesBackend;
                 Features = features;
+                UiDataLazy = uiDataLazy;
             }
         }
 
@@ -90,6 +94,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite(flags);
             if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
             if (flags.HasFlag(Ctx.User)) ctx.User = GetUser(flags);
+            if (flags.HasFlag(Ctx.Features)) ctx.Features = GetFeatures();
 
             return ctx;
         }
@@ -135,8 +140,8 @@ namespace ToSic.Sxc.WebApi.Context
 
             // Otherwise also add the global appId
             var zoneId = Deps.SiteCtx.Site.ZoneId;
-            result.DefaultApp = Deps.AppStates.IdentityOfDefault(zoneId);
-            result.PrimaryApp = Deps.AppStates.IdentityOfPrimary(zoneId);
+            result.DefaultApp = (AppIdentity)Deps.AppStates.IdentityOfDefault(zoneId);
+            result.PrimaryApp = (AppIdentity)Deps.AppStates.IdentityOfPrimary(zoneId);
             return result;
         }
 
@@ -220,5 +225,7 @@ namespace ToSic.Sxc.WebApi.Context
             userDto.Username = user.Username;
             return userDto;
         }
+
+        protected virtual IList<FeatureDto> GetFeatures() => Deps.UiDataLazy.Value.FeaturesDto(Deps.SiteCtx.UserMayEdit);
     }
 }

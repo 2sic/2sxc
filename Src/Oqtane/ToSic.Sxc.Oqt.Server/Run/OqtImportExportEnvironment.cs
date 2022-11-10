@@ -2,8 +2,8 @@
 using Oqtane.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                         using (var stream = IO.File.OpenRead(sourceFilePath))
                         {
                             var fileInfo = Add(folderInfo, stream, destinationFileName, oqtSite);
-                            MassLog($"Transferred '{destinationFileName}', dnn-id is now {fileInfo?.FileId}", null);
+                            MassLog($"Transferred '{destinationFileName}', file id is now {fileInfo?.FileId}", null);
                         }
                     }
                     catch (Exception e)
@@ -125,19 +125,30 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
                 if (!FolderExists(directory))
                 {
-                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in DNN DB");
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in Oqtane DB");
                     continue;
                 }
 
                 var folderInfo = GetOqtFolderByName(directory);
+                if (folderInfo == null)
+                {
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in Oqtane DB (2nd check)");
+                    continue;
+                }
 
                 if (!FileExists(folderInfo, fileName))
                 {
-                    Log.A($"Warning: File '{relativePath}', file doesn't exist in DNN DB");
+                    Log.A($"Warning: File '{relativePath}', file doesn't exist in Oqtane DB");
                     continue;
                 }
 
                 var fileInfo = GetFile(folderInfo, fileName);
+                if (fileInfo == null)
+                {
+                    Log.A($"Warning: File '{relativePath}', file doesn't exist in Oqtane DB (2nd check)");
+                    continue;
+                }
+
                 fileIdMap.Add(fileId, fileInfo.FileId);
                 Log.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
             }

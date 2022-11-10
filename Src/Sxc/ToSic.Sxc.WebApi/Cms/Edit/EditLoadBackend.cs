@@ -127,11 +127,11 @@ namespace ToSic.Sxc.WebApi.Cms
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
-            result.Features = _uiData.Features(context, permCheck);
+            result.Features = _uiData.Features(/*context,*/ permCheck);
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.InitApp(context.AppState, Log)
-                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User, CtxEnable.EditUi);
+                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
 
             try
             {

@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public const string RouteAssets = "assets";
         public const string RouteShared = "shared";
 
-        public static readonly Regex RiskyDetector = ToSic.Eav.Security.Files.FileNames.RiskyDownloadDetector;
+        public static readonly Regex RiskyDetector = Eav.Security.Files.FileNames.RiskyDownloadDetector;
 
         public const string FallbackMimeType = MimeHelper.FallbackType;
         

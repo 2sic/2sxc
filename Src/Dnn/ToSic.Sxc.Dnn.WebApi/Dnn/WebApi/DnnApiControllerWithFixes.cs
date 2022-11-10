@@ -6,12 +6,12 @@ using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Helpers;
+using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
-    [DnnLogWebApi, JsonResponse]
+    [DnnLogWebApi, JsonOnlyResponse]
     public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog<TRealController>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers

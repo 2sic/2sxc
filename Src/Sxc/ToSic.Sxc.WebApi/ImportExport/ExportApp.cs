@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.ImportExport;
 #endif
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
 using ToSic.Eav.DI;
@@ -19,6 +20,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.App;
+using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
@@ -26,13 +28,22 @@ namespace ToSic.Sxc.WebApi.ImportExport
     {
         #region Constructor / DI
 
-        public ExportApp(IZoneMapper zoneMapper, ZipExport zipExport, CmsRuntime cmsRuntime, ISite site, IUser user, GeneratorLog<ImpExpHelpers> impExpHelpers) : base("Bck.Export")
+        public ExportApp(
+            IZoneMapper zoneMapper, 
+            ZipExport zipExport, 
+            CmsRuntime cmsRuntime, 
+            ISite site, 
+            IUser user, 
+            GeneratorLog<ImpExpHelpers> impExpHelpers, 
+            IFeaturesInternal features
+            ) : base("Bck.Export")
         {
             _zoneMapper = zoneMapper;
             _zipExport = zipExport;
             _cmsRuntime = cmsRuntime;
             _site = site;
             _user = user;
+            _features = features;
             _impExpHelpers = impExpHelpers.SetLog(Log);
         }
 
@@ -41,6 +52,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly CmsRuntime _cmsRuntime;
         private readonly ISite _site;
         private readonly IUser _user;
+        private readonly IFeaturesInternal _features;
         private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
 
         public ExportApp Init(ILog parentLog)
@@ -68,7 +80,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 Name = currentApp.Name,
                 Guid = currentApp.NameId,
                 Version = currentApp.VersionSafe(),
-                EntitiesCount = cms.Entities.All.Where(e => !e.HasAncestor()).Count(),
+                EntitiesCount = cms.Entities.All.Count(e => !e.HasAncestor()),
                 LanguagesCount = cultCount,
                 TemplatesCount = cms.Views.GetAll().Count(),
                 HasRazorTemplates = cms.Views.GetRazor().Any(),
@@ -80,18 +92,28 @@ namespace ToSic.Sxc.WebApi.ImportExport
             };
         }
 
-        public bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool resetPortalFiles)
+        internal bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
         {
             Log.A($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+
+            // Ensure feature available...
+            SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
-            zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, resetPortalFiles);
+            zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
 
             return true;
+        }
+
+        internal static void SyncWithSiteFilesVerifyFeaturesOrThrow(IFeaturesInternal features, bool withSiteFiles)
+        {
+            if (!withSiteFiles) return;
+            features.ThrowIfNotEnabled("Requires features enabled to sync with site files ",
+                BuiltInFeatures.AppSyncWithSiteFiles.Guid);
         }
 
 #if NETSTANDARD

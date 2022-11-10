@@ -24,9 +24,9 @@ namespace ToSic.Sxc.Dnn.DataSources
 	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]
 	public class DnnSql : Sql
 	{
-		public DnnSql()
+		public DnnSql(Dependencies dependencies): base(dependencies)
 		{
-			Configuration[ConnectionStringNameKey] = "SiteSqlServer";	// String "SiteSqlServer" isn't available in any constant in DNN
+			Configuration[ConnectionStringNameKey] = DnnSqlPlatformInfo.SiteSqlServer;
 		}
 	}
 

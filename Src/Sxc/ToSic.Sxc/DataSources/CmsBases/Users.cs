@@ -114,6 +114,7 @@ namespace ToSic.Sxc.DataSources
         /// <summary>
         /// Constructor to tell the system what out-streams we have
         /// </summary>
+        [PrivateApi]
         protected Users()
         {
             Provide(GetList); // default out, if accessed, will deliver GetList

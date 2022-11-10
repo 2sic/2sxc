@@ -1,4 +1,5 @@
 {
+  "$schema": "https://schemas.2sxc.org/app/v14/app.json",
   /*
     This is a JSON file but it is treated like a JSONC (with comments).
 

@@ -122,6 +122,7 @@
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures.cs" />
     <Compile Include="Dnn\Configuration.Features\BuiltInFeatures_CorePlus.cs" />
     <Compile Include="Dnn\Context\DnnPage.cs" />
+    <Compile Include="Dnn\DataSources\DnnSqlPlatformInfo.cs" />
     <Compile Include="Dnn\DnnConstants.cs" />
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
     <Compile Include="Dnn\DnnModuleAndBlockBuilder.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
+    <Compile Include="Dnn\Services\DnnRenderService.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />

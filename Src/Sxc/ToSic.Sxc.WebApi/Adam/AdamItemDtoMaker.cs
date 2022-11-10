@@ -55,7 +55,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 Url = url,
                 ReferenceId = (file as IHasMetadata).Metadata.Target.KeyString,
                 AllowEdit = CanEditFolder(file),
-                MetadataId = (int)file.Metadata.EntityId,
+                //MetadataId = (int)file.Metadata.EntityId,
                 Metadata = GetMetadataOf(file.Metadata),
                 Type = Classification.TypeName(file.Extension),
             };
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 Path = folder.Path,
                 AllowEdit = CanEditFolder(folder),
                 ReferenceId = (folder as IHasMetadata).Metadata.Target.KeyString,
-                MetadataId = (int)folder.Metadata.EntityId,
+                //MetadataId = (int)folder.Metadata.EntityId,
                 Metadata = GetMetadataOf(folder.Metadata),
             };
             return item;

@@ -2,14 +2,13 @@
 using Oqtane.Security;
 using Oqtane.Shared;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Security;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
@@ -36,44 +35,32 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private IModule Module => _module ??= (Context as IContextOfBlock)?.Module;
         private IModule _module;
 
-        public override bool EnvironmentAllows(List<Grants> grants)
-        {
-            var logWrap = Log.Fn<bool>(() => $"[{string.Join(",", grants)}]");
-            var ok = UserIsSystemAdmin(); // superusers are always ok
-            if (!ok && CurrentZoneMatchesSiteZone())
-                ok = UserIsSiteAdmin()
-                     || UserIsModuleAdmin()
-                     || UserIsModuleEditor();
-            if (ok) GrantedBecause = Conditions.EnvironmentGlobal;
-            return logWrap.Return(ok, $"{ok} because:{GrantedBecause}");
-        }
-
         public override bool VerifyConditionOfEnvironment(string condition)
         {
             // This terms are historic from DNN
-            if (condition.Equals("SecurityAccessLevel.Anonymous", StringComparison.InvariantCultureIgnoreCase))
+            if (condition.Equals(SalAnonymous, InvariantCultureIgnoreCase))
                 return true;
 
             var m = Module;
 
-            if (condition.Equals("SecurityAccessLevel.View", StringComparison.InvariantCultureIgnoreCase))
+            if (condition.Equals(SalView, InvariantCultureIgnoreCase))
                 return m != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.View);
 
-            if (condition.Equals("SecurityAccessLevel.Edit", StringComparison.InvariantCultureIgnoreCase))
+            if (condition.Equals(SalEdit, InvariantCultureIgnoreCase))
                 return m != null && _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, m.Id, PermissionNames.Edit);
 
-            if (condition.Equals("SecurityAccessLevel.Admin", StringComparison.InvariantCultureIgnoreCase))
+            if (condition.Equals(SalSiteAdmin, InvariantCultureIgnoreCase))
                 return _oqtUser.Value.IsSiteAdmin;
 
-            if (condition.Equals("SecurityAccessLevel.Host", StringComparison.InvariantCultureIgnoreCase))
+            if (condition.Equals(SalSystemUser, InvariantCultureIgnoreCase))
                 return _oqtUser.Value.IsSystemAdmin;
 
             return false;
         }
 
-        protected bool UserIsModuleAdmin() => Log.Return(UserIsModuleEditor);
+        protected override bool UserIsModuleAdmin() => Log.Return(UserIsModuleEditor);
 
-        protected bool UserIsModuleEditor()
+        protected override bool UserIsModuleEditor()
             => _userIsModuleEditor ??= Log.Return(() =>
             {
                 if (Module == null) return false;

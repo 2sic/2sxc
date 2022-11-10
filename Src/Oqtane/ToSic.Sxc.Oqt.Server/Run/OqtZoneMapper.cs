@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override int GetZoneId(int tenantId)
         {
-            // additional protection against invalid portalId which may come from bad dnn configs and execute in search-index mode
+            // additional protection against invalid portalId which may come from bad configs and execute in search-index mode
             // see https://github.com/2sic/2sxc/issues/1054
             if (tenantId < 0)
                 throw new Exception("Can't get zone for invalid portal ID: " + tenantId);

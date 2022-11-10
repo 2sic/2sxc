@@ -150,7 +150,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
                 if (!_featuresLazy.Value.Enabled(BlockFileResolveOutsideOfEntityAdam.Guid)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
-                return !ToSic.Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
+                return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)
                     ? null
                     : result;
             }

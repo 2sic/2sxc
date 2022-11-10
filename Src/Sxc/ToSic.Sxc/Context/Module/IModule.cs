@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Context
 {
@@ -11,7 +10,7 @@ namespace ToSic.Sxc.Context
     /// </summary>
     [PrivateApi]
 
-    public interface IModule //: ICmsModule
+    public interface IModule
 #if NETFRAMEWORK
 #pragma warning disable 618
         // in this case we must also inherit from IContainer - legacy of the signature for CustomizeSearch

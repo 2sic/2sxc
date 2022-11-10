@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
         }
 
-        private Dictionary<string, Dictionary<string, IEnumerable<AdamItemDto>>> PrefetchAdam(int appId, EditDto editData)
+        private Dictionary<string, Dictionary<string, IEnumerable</*AdamItemDto*/object>>> PrefetchAdam(int appId, EditDto editData)
         {
             // Step 1: try to find hyperlink fields
             var bundlesHavingLinks = BundleWithLinkFields(editData, true);
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.WebApi.Cms
             return links;
         }
 
-        private IEnumerable<AdamItemDto> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
+        private IEnumerable</*AdamItemDto*/object> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
         {
             var adamListMaker = GetService<IAdamTransGetItems>();
             adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);

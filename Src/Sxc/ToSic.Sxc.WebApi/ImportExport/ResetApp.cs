@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
-using ToSic.Eav.ImportExport;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
@@ -21,13 +21,15 @@ namespace ToSic.Sxc.WebApi.ImportExport
     {
         #region Constructor / DI
 
-        public ResetApp(Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
+        public ResetApp(
+            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
             ImpExpHelpers impExpHelpers,
             CmsZones cmsZones,
             ISite site,
             IUser user,
             IImportExportEnvironment env,
-            ZipImport zipImport
+            ZipImport zipImport,
+            IFeaturesInternal features
             ) : base("Bck.Export")
         {
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
@@ -37,6 +39,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _user = user;
             _env = env;
             _zipImport = zipImport;
+            _features = features;
         }
 
         private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
@@ -46,15 +49,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IUser _user;
         private readonly IImportExportEnvironment _env;
         private readonly ZipImport _zipImport;
+        private readonly IFeaturesInternal _features;
 
         #endregion
 
-        public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool resetPortalFiles)
+        internal ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withSiteFiles)
         {
             Log.A($"Reset App {zoneId}/{appId}");
             var result = new ImportResultDto();
 
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin);
+
+            // Ensure feature available...
+            ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
@@ -84,7 +91,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             _cmsZones.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
             // 3. Optional reset PortalFiles
-            if (resetPortalFiles)
+            if (withSiteFiles)
             {
                 var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
 
@@ -98,7 +105,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
 
                 // Copy portal files persisted in /App_Data/PortalFiles/ back to site
-                _env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForPortalFiles), string.Empty);
+                _env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForSiteFiles), string.Empty);
             }
 
             // 4. Now import the App.xml

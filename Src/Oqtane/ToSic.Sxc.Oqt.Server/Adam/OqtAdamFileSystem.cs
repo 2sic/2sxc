@@ -2,9 +2,9 @@
 using Oqtane.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Run;
@@ -88,8 +88,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public new void Delete(IFile file)
         {
             var callLog = Log.Fn();
-            var dnnFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
-            OqtFileRepository.DeleteFile(dnnFile.FileId);
+            var oqtFile = OqtFileRepository.GetFile(file.AsOqt().SysId);
+            OqtFileRepository.DeleteFile(oqtFile.FileId);
             callLog.Done("ok");
         }
 
@@ -132,11 +132,11 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         {
             var callLog = Log.Fn<string>($"..., {fileName}");
 
-            var dnnFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
+            var oqtFolder = OqtFolderRepository.GetFolder(parentFolder.AsOqt().SysId);
             var name = Path.GetFileNameWithoutExtension(fileName);
             var ext = Path.GetExtension(fileName);
             for (var i = 1; i < AdamFileSystemBasic.MaxSameFileRetries
-                            && System.IO.File.Exists(Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), dnnFolder.Path, Path.GetFileName(fileName))); i++)
+                            && System.IO.File.Exists(Path.Combine(_serverPaths.FullContentPath(AdamContext.Site.ContentPath), oqtFolder.Path, Path.GetFileName(fileName))); i++)
                 fileName = $"{name}-{i}{ext}";
 
             return callLog.Return(fileName, fileName);

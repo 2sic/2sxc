@@ -100,7 +100,13 @@ namespace ToSic.Sxc.WebApi
             var found = false;
             try
             {
-                var routeAppPath = Route.AppPathOrNull(Request.GetRouteData());
+                // 2022-10-25 2dm old, trying to fix error https://github.com/2sic/2sxc/issues/2879
+                // It seemed to use a different method to find the app folder
+                // which failed when the controller was called using ?appid=...&zoneid=...
+                // TODO: @STV - pls test/verify/ensure in Oqtane as well
+                // Get the latest formulas in tutorial FormulasDropDownWebApiData to test
+                var routeAppPath = new AppFolderUtilities(GetService<IServiceProvider>()).Init(Log)
+                    .GetAppFolder(Request, false);
                 var appId = SharedContextResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? Eav.Constants.NullId;
 
                 if (appId != Eav.Constants.NullId)
