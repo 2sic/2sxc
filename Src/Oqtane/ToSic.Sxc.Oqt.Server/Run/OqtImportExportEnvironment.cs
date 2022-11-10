@@ -130,6 +130,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 }
 
                 var folderInfo = GetOqtFolderByName(directory);
+                if (folderInfo == null)
+                {
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in DNN DB (2nd check)");
+                    continue;
+                }
 
                 if (!FileExists(folderInfo, fileName))
                 {
@@ -138,6 +143,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 }
 
                 var fileInfo = GetFile(folderInfo, fileName);
+                if (fileInfo == null)
+                {
+                    Log.A($"Warning: File '{relativePath}', file doesn't exist in DNN DB (2nd check)");
+                    continue;
+                }
+
                 fileIdMap.Add(fileId, fileInfo.FileId);
                 Log.A($"Map: {fileId} will be {fileInfo.FileId} ({relativePath})");
             }
