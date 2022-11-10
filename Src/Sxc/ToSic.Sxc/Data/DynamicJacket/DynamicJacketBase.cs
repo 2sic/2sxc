@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Text.Json.Nodes;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         protected T _contents;
-        public T GetContents() => _contents; // UnwrappedContents;
+        public T GetContents() => _contents;
 
         /// <summary>
         /// Check if it's an array.
@@ -64,7 +65,7 @@ namespace ToSic.Sxc.Data
         public dynamic Get(string name) => FindValueOrNull(name, StringComparison.InvariantCultureIgnoreCase, null);
 
         /// <inheritdoc />
-        public int Count => _contents is IList<System.Text.Json.Nodes.JsonNode> ja ? ja.Count : 0;
+        public int Count => _contents is IList<JsonNode> ja ? ja.Count : 0;
 
         /// <summary>
         /// Not yet implemented accessor - must be implemented by the inheriting class.

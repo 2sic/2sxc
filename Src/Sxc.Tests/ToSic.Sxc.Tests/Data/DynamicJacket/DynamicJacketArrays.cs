@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json.Nodes;
 using ToSic.Sxc.Tests.Data.DynamicJacket;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -104,13 +105,6 @@ namespace ToSic.Sxc.Data.Tests
             var test = ObjectArrayPrepare();
             IsNull(test.Dyn.Something);
             IsNull(test.Dyn[0].NonExisting);
-        }
-
-        [TestMethod]
-        public void ExpectCount0OnNonArray()
-        {
-            var test = PrepareTest(new { Name = "Test" });
-            AreEqual(0, test.Dyn.Count);
         }
 
 

@@ -37,6 +37,18 @@ namespace ToSic.Sxc.Data.Tests
             AreEqual<double>(original.DoubleType,dyn.DoubleType);
         }
 
+        // TODO: @stv
+        [TestMethod]
+        public void ExpectCountOfPropertiesOnNonArray()
+        {
+            var test = PrepareTest(new { Name = "Test" });
+            AreEqual(1, test.Dyn.Count);
+
+            var test2 = PrepareTest(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
+            AreEqual(3, test2.Dyn.Count);
+        }
+
+
         [TestMethod]
         public void ObjectWithStringProperty()
         {
