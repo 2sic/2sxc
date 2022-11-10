@@ -5,12 +5,11 @@ using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.DataSources
 {
-    public class BlockDataSourceFactory: HasLog/*<BlockDataSourceFactory>*/
+    public class BlockDataSourceFactory: HasLog
     {
         #region Constructor
 
