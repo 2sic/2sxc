@@ -1,5 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Sxc.Tests.Data.DynamicJacket;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -37,7 +40,6 @@ namespace ToSic.Sxc.Data.Tests
             AreEqual<double>(original.DoubleType,dyn.DoubleType);
         }
 
-        // TODO: @stv
         [TestMethod]
         public void ExpectCountOfPropertiesOnNonArray()
         {
@@ -46,6 +48,21 @@ namespace ToSic.Sxc.Data.Tests
 
             var test2 = PrepareTest(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
             AreEqual(3, test2.Dyn.Count);
+        }
+
+        [TestMethod]
+        public void EnumerateProperties()
+        {
+            var test = PrepareTest(new { Name = "Test" });
+            var testList = (test.Dyn as IEnumerable<object>).ToList();
+            AreEqual(1, testList.Count);
+            AreEqual("Name", testList.First().ToString());
+
+            var test2 = PrepareTest(new { Name = "Test", Age = 3, Birthday = new DateTime(2022, 1, 1) });
+            var testList2 = (test2.Dyn as IEnumerable<object>).ToList();
+            AreEqual(3, testList2.Count);
+            IsTrue(testList2.Contains("Name"));
+            IsTrue(testList2.Contains("Birthday"));
         }
 
 
