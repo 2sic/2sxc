@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
+        public ImportResultDto InstallPendingApps(int zoneId, [FromBody] IEnumerable<PendingAppDto> pendingApps)
         {
             // Ensure that Hot Reload is not enabled or try to disable it.
             HotReloadEnabledCheck.Check();
