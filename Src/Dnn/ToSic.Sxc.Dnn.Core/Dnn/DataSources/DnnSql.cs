@@ -24,6 +24,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]
 	public class DnnSql : Sql
 	{
+        [PrivateApi]
 		public DnnSql(Dependencies dependencies): base(dependencies)
 		{
 			Configuration[ConnectionStringNameKey] = DnnSqlPlatformInfo.SiteSqlServer;
