@@ -53,5 +53,13 @@ namespace ToSic.Sxc.Data.Tests
             });
             AreEqual<string>("test", test.Dyn.a[0].p2[0]);
         }
+
+        [TestMethod]
+        public void Gps()
+        {
+            var test = PrepareTest(new { Lat = 43.508075, Long = 16.4665157 });
+            AreEqual<double>(43.508075, test.Dyn.Lat);
+            AreEqual<double>(16.4665157, test.Dyn.Long);
+        }
     }
 }
