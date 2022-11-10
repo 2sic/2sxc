@@ -35,10 +35,6 @@ XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net6.0\ToSic.*.pdb" "%OqtaneBin
 XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\ToSic.Sxc\" /Y /S /I
 
 @Echo(
-@Echo 2sxc Oqtane - System.Data.SqlClient
-XCOPY "..\..\packages\system.data.sqlclient\4.8.3\lib\netstandard2.0\System.Data.SqlClient.dll" "%OqtaneBin%" /Y
-
-@Echo(
 @Echo nuget dependencies - oqt-imageflow
 XCOPY "..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\*" "%OqtaneBin%" /Y
 XCOPY "..\..\packages\tosic.imageflow.oqtane\1.1.0\runtimes\*" "%OqtaneBin%\runtimes" /S /C /Y

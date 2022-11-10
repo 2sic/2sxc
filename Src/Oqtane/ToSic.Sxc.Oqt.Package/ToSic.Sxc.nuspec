@@ -52,8 +52,6 @@
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.CodeAnalysis.Razor.dll" target="lib\net6.0" />
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net6.0" />
-    <!-- ToSic.Eav.DataSources PackageReference -->
-    <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\System.Data.SqlClient.dll" target="lib\net6.0" />
 
     <!-- ToSic.Imageflow.Oqtane 1.1.0 -->
     <file src="..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net6.0" />
