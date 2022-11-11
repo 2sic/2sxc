@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     /// <summary>
     /// This one supplies portal-wide (or cross-portal) settings / configuration
     /// </summary>
-    [SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules(DnnSupportedModuleNames)]
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]

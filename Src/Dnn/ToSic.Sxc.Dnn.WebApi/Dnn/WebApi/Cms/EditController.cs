@@ -12,7 +12,7 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
-    //[SupportedModules("2sxc,2sxc-app")]
+    //[SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     public class EditController : SxcApiControllerBase<EditControllerReal>, IEditController
     {

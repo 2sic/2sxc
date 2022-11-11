@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// <remarks>
     /// Because download JSON call is made in a new window, they won't contain any http-headers like module-id or security token. 
     /// So we can't use the classic protection attributes to the class like:
-    /// - [SupportedModules("2sxc,2sxc-app")]
+    /// - [SupportedModules(DnnSupportedModuleNames)]
     /// - [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     /// - [ValidateAntiForgeryToken]
     /// Instead, each method must have all attributes, or do additional security checking.

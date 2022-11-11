@@ -26,21 +26,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         /// <inheritdoc />
         [HttpGet]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<ViewDetailsDto> All(int appId) => Real.All(appId);
 
         /// <inheritdoc />
         [HttpGet]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public PolymorphismDto Polymorphism(int appId) => Real.Polymorphism(appId);
 
         /// <inheritdoc />
         [HttpGet, HttpDelete]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public bool Delete(int appId, int id) => Real.Delete(appId, id);
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         /// <inheritdoc />
         [HttpGet]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
