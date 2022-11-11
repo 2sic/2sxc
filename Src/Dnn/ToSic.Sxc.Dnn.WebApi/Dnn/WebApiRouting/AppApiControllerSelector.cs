@@ -16,7 +16,6 @@ using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
@@ -98,7 +97,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             // Now Handle the 2sxc app-api queries
             
             // Figure out the Path, or show error for that
-            var appFolder = new AppFolderUtilities(sp).Init(log).GetAppFolder(request, true);
+            var appFolder = sp.Build<DnnAppFolderUtilities>().Init(log).GetAppFolder(request, true);
 
             var controllerPath = "";
             try
@@ -136,12 +135,12 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             catch (Exception e)
             {
                 var msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
-                throw AppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg, wrapLog);
+                throw DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg, wrapLog);
             }
 
             var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
                            $"We checked the virtual path '{controllerPath}'";
-            throw AppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal, wrapLog);
+            throw DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal, wrapLog);
         }
 
         private static string GetEdition(IHttpRouteData routeData)

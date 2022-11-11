@@ -15,17 +15,15 @@ using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn
 {
-    // todo:
-    // - rename to DnnAppFolderUtilities
-    // - register as DI
-    // - change dependency to SP to be Generator<> of the types we need
-    internal class AppFolderUtilities: HasLog
+    public class DnnAppFolderUtilities: HasLog
     {
-        private readonly IServiceProvider _sp;
+        private readonly Generator<AppFolder> _appFolder;
+        private readonly Generator<DnnGetBlock> _dnnGetBlock;
 
-        public AppFolderUtilities(IServiceProvider sp): base($"{DnnConstants.LogName}.AppFld")
+        public DnnAppFolderUtilities(Generator<AppFolder> appFolder, Generator<DnnGetBlock> dnnGetBlock) : base($"{DnnConstants.LogName}.AppFld")
         {
-            _sp = sp;
+            _appFolder = appFolder;
+            _dnnGetBlock = dnnGetBlock;
         }
 
         internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site)
@@ -58,8 +56,8 @@ namespace ToSic.Sxc.Dnn
                 if (appFolder == null)
                 {
                     l.A("no folder found in url, will auto-detect");
-                    appFolder = _sp.Build<AppFolder>()?
-                        .Init(() => _sp.Build<DnnGetBlock>().GetCmsBlock(request, Log))
+                    appFolder = _appFolder.New?
+                        .Init(() => _dnnGetBlock.New.GetCmsBlock(request, Log))
                         .GetAppFolder();
                 }
 

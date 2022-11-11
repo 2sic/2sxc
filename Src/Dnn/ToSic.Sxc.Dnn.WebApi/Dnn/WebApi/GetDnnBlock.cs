@@ -3,13 +3,12 @@ using System.Linq;
 using System.Net.Http;
 using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
-    internal class DnnGetBlock
+    public class DnnGetBlock
     {
  
         private readonly Generator<BlockFromEntity> _blockFromEntity;
