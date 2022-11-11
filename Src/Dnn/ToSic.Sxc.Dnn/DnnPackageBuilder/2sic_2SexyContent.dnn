@@ -162,7 +162,9 @@
             <assembly>
               <name>ToSic.Eav.WebApi.dll</name>
             </assembly>
-
+            <assembly>
+              <name>ToSic.Lib.Logging.dll</name>
+            </assembly>
 
             <!-- *** DNN shared (DNN assembly bindings) ***  -->
 

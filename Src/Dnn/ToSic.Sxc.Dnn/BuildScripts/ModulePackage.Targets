@@ -93,6 +93,8 @@
       <AssemblyHelper Include="$(OutDir)\ToSic.Sxc.WebApi.pdb" />
       <AssemblyInclude Include="$(OutDir)\ToSic.Eav*.dll" />
       <AssemblyHelper Include="$(OutDir)\ToSic.Eav*.pdb" />
+      <AssemblyInclude Include="$(OutDir)\ToSic.Lib*.dll" />
+      <AssemblyHelper Include="$(OutDir)\ToSic.Lib*.pdb" />
 
       <!-- DNN specific DLLs -->
       <AssemblyInclude Include="$(OutDir)\ToSic.Sxc.Dnn*.dll" />
