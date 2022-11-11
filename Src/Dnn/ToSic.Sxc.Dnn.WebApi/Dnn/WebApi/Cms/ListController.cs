@@ -8,7 +8,7 @@ using ToSic.Sxc.WebApi.Cms;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
-    [SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     public class ListController: SxcApiControllerBase<ListControllerReal>, IListController
     {

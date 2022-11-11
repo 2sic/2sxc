@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	/// <summary>
 	/// Proxy Class to the EAV PipelineDesignerController (Web API Controller)
 	/// </summary>
-	[SupportedModules("2sxc,2sxc-app")]
+	[SupportedModules(DnnSupportedModuleNames)]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [DnnLogExceptions]
     [ValidateAntiForgeryToken]

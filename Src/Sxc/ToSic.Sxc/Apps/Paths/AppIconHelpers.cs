@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using static System.StringComparison;
+using static ToSic.Eav.Apps.AppConstants;
 
 namespace ToSic.Sxc.Apps.Paths
 {
 
-    public class AppIconHelpers : HasLog/*<AppIconHelpers>*/
+    public class AppIconHelpers : HasLog
     {
         #region Constructor / DI
 
@@ -24,32 +24,33 @@ namespace ToSic.Sxc.Apps.Paths
         public string IconPathOrNull(IApp app, IView view, PathTypes type)
         {
             var wrapLog = Log.Fn<string>();
-            // 1. Check if the file actually exists
+            // 1. Check if the file actually exists or is a file:... reference
             var iconFile = IconPath(app, view, PathTypes.PhysFull);
-            var exists = File.Exists(iconFile);
+            var assumeExists = ValueConverterBase.CouldBeReference(iconFile) || File.Exists(iconFile);
 
             // 2. Return as needed
-            var result = exists ? IconPath(app, view, type) : null;
+            var result = assumeExists ? IconPath(app, view, type) : null;
             return wrapLog.Return(result, result ?? "not found");
         }
 
         private string IconPath(IApp app, IView view, PathTypes type)
         {
             // See if we have an icon - but only if we need the link
-            if(!string.IsNullOrWhiteSpace(view.Icon))
+            if (view.Icon.HasValue())
             {
-                var iconInConfig = view.Icon;
-                
                 // If we have the App:Path in front, replace as expected, but never on global
-                if (HasAppPathToken(iconInConfig))
-                    return AppPathTokenReplace(iconInConfig, app.PathSwitch(false, type), app.PathSwitch(true, type));
+                if (HasAppPathToken(view.Icon))
+                    return AppPathTokenReplace(view.Icon, app.PathSwitch(false, type), app.PathSwitch(true, type));
 
-                // If not, we must assume it's file:## placeholder and we can only convert to relative link
-                if (type == PathTypes.Link) return _iconConverterLazy.Value.ToValue(iconInConfig, view.Guid);
+                // If not, we must assume it's file:## placeholder
+                // URLs (Links) we can provide...
+                if (type == PathTypes.Link) return _iconConverterLazy.Value.ToValue(view.Icon, view.Guid);
 
-                // Otherwise ignore the request and proceed by standard
+                // ...but file:## can't convert to PhysFull; return it so the caller can check if it's a reference
+                return view.Icon;
             }
 
+            // Don't use the saved value, but return the expected path which would be the default by convention
             var viewPath1 = app.ViewPath(view, type);
             return viewPath1.Substring(0, viewPath1.LastIndexOf(".", Ordinal)) + ".png";
         }
@@ -57,17 +58,17 @@ namespace ToSic.Sxc.Apps.Paths
         public static bool HasAppPathToken(string value)
         {
             value = value ?? "";
-            return value.StartsWith(AppConstants.AppPathPlaceholder, InvariantCultureIgnoreCase)
-                || value.StartsWith(AppConstants.AppPathSharedPlaceholder, InvariantCultureIgnoreCase);
+            return value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase)
+                || value.StartsWith(AppPathSharedPlaceholder, InvariantCultureIgnoreCase);
         }
 
         public static string AppPathTokenReplace(string value, string appPath, string appPathShared)
         {
             value = value ?? "";
-            if (value.StartsWith(AppConstants.AppPathPlaceholder, InvariantCultureIgnoreCase))
-                return appPath + value.After(AppConstants.AppPathPlaceholder);
-            if (value.StartsWith(AppConstants.AppPathSharedPlaceholder, InvariantCultureIgnoreCase))
-                return appPathShared + value.After(AppConstants.AppPathSharedPlaceholder);
+            if (value.StartsWith(AppPathPlaceholder, InvariantCultureIgnoreCase))
+                return appPath + value.After(AppPathPlaceholder);
+            if (value.StartsWith(AppPathSharedPlaceholder, InvariantCultureIgnoreCase))
+                return appPathShared + value.After(AppPathSharedPlaceholder);
             return value;
         }
         

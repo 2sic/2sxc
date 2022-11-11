@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// <remarks>
     /// Added in 2sxc 10
     /// </remarks>
-    [SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     public class FeatureController : DnnApiControllerWithFixes<FeatureControllerReal>, IFeatureController
     {

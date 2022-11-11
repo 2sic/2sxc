@@ -7,7 +7,6 @@ using ToSic.Eav.DI;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Logging.Simple;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web;
@@ -16,7 +15,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.LookUp
 {
-    public class AppConfigDelegate : HasLog/*<AppConfigDelegate>*/
+    public class AppConfigDelegate : HasLog
     {
         #region Constructor / DI
 

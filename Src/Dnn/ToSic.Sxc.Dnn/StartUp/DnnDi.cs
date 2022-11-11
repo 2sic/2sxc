@@ -189,6 +189,10 @@ namespace ToSic.Sxc.Dnn.StartUp
 #pragma warning disable CS0618
             services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618
+
+            services.TryAddTransient<DnnGetBlock>();
+            services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12.01
+
             return services;
         }
     }
