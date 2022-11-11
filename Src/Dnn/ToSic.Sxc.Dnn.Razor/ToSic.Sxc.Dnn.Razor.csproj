@@ -175,6 +175,10 @@
       <Project>{04F3A07C-2C6C-4D87-9E8D-E2DB611B0D52}</Project>
       <Name>ToSic.Eav.WebApi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Logging\ToSic.Lib.Logging.csproj">
+      <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
+      <Name>ToSic.Lib.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToSic.Sxc.Dnn.Core\ToSic.Sxc.Dnn.Core.csproj">
       <Project>{a94de6d7-d1e6-4be2-b5b5-dc4a6a61cd80}</Project>
       <Name>ToSic.Sxc.Dnn.Core</Name>
