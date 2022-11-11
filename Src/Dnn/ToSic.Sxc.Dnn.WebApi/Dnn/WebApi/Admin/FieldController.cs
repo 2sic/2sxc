@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// <summary>
     /// Web API Controller for Content-Type structures, fields etc.
     /// </summary>
-    [SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     public class FieldController : SxcApiControllerBase<FieldControllerReal>, IFieldController

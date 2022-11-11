@@ -7,7 +7,7 @@ using ToSic.Sxc.WebApi;
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     /// <inheritdoc cref="IMetadataController" />
-    [SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
     public class MetadataController : SxcApiControllerBase<MetadataControllerReal>, IMetadataController

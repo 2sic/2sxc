@@ -10,7 +10,7 @@ using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
-	[SupportedModules("2sxc,2sxc-app")]
+	[SupportedModules(DnnSupportedModuleNames)]
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]

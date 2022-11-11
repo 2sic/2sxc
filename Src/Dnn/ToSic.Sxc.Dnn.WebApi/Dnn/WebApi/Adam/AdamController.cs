@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
@@ -18,7 +16,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     /// Should check for security at each standard call - to see if the current user may do this
     /// Then we can reduce security access level to anonymous, because each method will do the security check
     /// </summary>
-    [SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
     public class AdamController : SxcApiControllerBase<AdamControllerReal<int>>, IAdamController<int>

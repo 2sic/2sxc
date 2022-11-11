@@ -27,35 +27,35 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<AppDto> List(int zoneId) => Real.List(zoneId);
 
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public List<AppDto> InheritableApps() => Real.InheritableApps();
 
         /// <inheritdoc />
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
 
         /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
 
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
 
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
-        [SupportedModules("2sxc,2sxc-app")]
+        [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId) 
             => Real.GetPendingApps(zoneId);

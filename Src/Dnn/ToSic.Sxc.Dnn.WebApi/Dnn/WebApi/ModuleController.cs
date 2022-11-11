@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi;
 namespace ToSic.Sxc.Dnn.WebApi
 {
     // support all modules now... 
-    [SupportedModules("2sxc,2sxc-app")]
+    [SupportedModules(DnnSupportedModuleNames)]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
     public class ModuleController: DnnApiControllerWithFixes<DummyControllerReal>

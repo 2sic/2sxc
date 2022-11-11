@@ -15,6 +15,8 @@ namespace ToSic.Sxc.Dnn.WebApi
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
+        internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
+
         protected DnnApiControllerWithFixes(string logSuffix) 
 	    {
             Log = new Log("Api." + logSuffix, null, $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}");
