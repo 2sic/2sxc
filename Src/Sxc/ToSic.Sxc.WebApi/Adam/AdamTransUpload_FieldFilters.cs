@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.WebApi.Adam
 {

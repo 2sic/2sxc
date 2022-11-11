@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;

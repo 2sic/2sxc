@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment

@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
@@ -9,7 +9,7 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.Run
 {
     [PrivateApi]
-    public interface IPlatformModuleUpdater: IHasLog<IPlatformModuleUpdater>
+    public interface IPlatformModuleUpdater: IHasLog
     {
         /// <summary>
         /// Set the App of a Container / Module

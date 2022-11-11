@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-    public class AdamControllerReal<TIdentifier>: HasLog<AdamControllerReal<TIdentifier>>
+    public class AdamControllerReal<TIdentifier>: HasLog
     {
         public AdamControllerReal(
             Lazy<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,

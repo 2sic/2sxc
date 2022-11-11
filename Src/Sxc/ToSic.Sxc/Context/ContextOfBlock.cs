@@ -2,7 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Web.PageService;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment

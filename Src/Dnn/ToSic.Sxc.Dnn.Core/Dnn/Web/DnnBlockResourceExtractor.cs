@@ -1,5 +1,5 @@
 ﻿using DotNetNuke.Web.Client;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Web.PageService;
 

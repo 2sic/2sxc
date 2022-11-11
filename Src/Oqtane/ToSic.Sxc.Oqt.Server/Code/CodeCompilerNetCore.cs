@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Code;
 

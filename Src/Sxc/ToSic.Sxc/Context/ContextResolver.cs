@@ -1,13 +1,13 @@
 ﻿using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Context
 {
-    public class ContextResolver: HasLog<IContextResolver>, IContextResolver
+    public class ContextResolver: HasLog, IContextResolver
     {
         #region Constructor / DI
         protected readonly LazyInitLog<AppIdResolver> AppIdResolver;

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Documentation;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class CodeControllerReal : HasLog<CodeControllerReal>
+    public class CodeControllerReal : HasLog
     {
         public const string LogSuffix = "Code";
 

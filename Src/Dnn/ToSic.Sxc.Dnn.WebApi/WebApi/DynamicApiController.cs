@@ -2,7 +2,7 @@
 using System.IO;
 using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;

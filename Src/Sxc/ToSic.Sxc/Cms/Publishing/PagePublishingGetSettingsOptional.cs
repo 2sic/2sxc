@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Apps.Enums;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Cms.Publishing
 {

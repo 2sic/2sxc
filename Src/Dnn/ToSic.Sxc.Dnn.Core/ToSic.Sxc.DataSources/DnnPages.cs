@@ -6,7 +6,7 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources

@@ -5,7 +5,7 @@ using System;
 using System.Security.Claims;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 using static System.StringComparison;

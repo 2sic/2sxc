@@ -4,7 +4,7 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
@@ -14,7 +14,7 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ExportContent<THttpResponseType> : HasLog<ExportContent<THttpResponseType>>
+    public class ExportContent<THttpResponseType> : HasLog
     {
         #region Constructor / DI
 

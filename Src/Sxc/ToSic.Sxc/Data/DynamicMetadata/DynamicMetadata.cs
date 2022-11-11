@@ -3,7 +3,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 
 namespace ToSic.Sxc.Data

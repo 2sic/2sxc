@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Adam;
@@ -16,7 +16,7 @@ using ToSic.Sxc.WebApi.Views;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class ViewControllerReal<THttpResponseType> : HasLog<ViewControllerReal<THttpResponseType>>, IViewController<THttpResponseType>
+    public class ViewControllerReal<THttpResponseType> : HasLog, IViewController<THttpResponseType>
     {
         public const string LogSuffix = "View";
 

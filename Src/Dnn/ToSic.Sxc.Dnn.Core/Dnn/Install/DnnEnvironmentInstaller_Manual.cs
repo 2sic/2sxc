@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Run;

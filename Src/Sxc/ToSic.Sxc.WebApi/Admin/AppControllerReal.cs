@@ -4,7 +4,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Admin
     /// Experimental new class
     /// Goal is to reduce code in the Dnn and Oqtane controllers, which basically does the same thing, mostly DI work
     /// </summary>
-    public class AppControllerReal<THttpResponseType> : HasLog<AppControllerReal<THttpResponseType>> where THttpResponseType : class
+    public class AppControllerReal<THttpResponseType> : HasLog where THttpResponseType : class
     {
         public const string LogSuffix = "AppCon";
 

@@ -1,12 +1,12 @@
 ﻿using System;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
-    public class OqtGetLookupEngine : HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
+    public class OqtGetLookupEngine : HasLog, ILookUpEngineResolver
     {
         #region Constructor and DI
 

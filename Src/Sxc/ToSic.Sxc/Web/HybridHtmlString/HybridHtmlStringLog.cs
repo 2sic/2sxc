@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+﻿using ToSic.Lib.Logging;
+
 
 namespace ToSic.Sxc.Web
 {

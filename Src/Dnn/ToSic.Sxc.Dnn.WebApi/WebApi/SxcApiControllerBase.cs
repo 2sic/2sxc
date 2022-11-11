@@ -1,6 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [DnnLogExceptions]
     [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
-    public abstract class SxcApiControllerBase<TRealController>: DnnApiControllerWithFixes<TRealController> where TRealController : class, IHasLog<TRealController>
+    public abstract class SxcApiControllerBase<TRealController>: DnnApiControllerWithFixes<TRealController> where TRealController : class, IHasLog
     {
         protected SxcApiControllerBase(string logSuffix) : base(logSuffix) { }
 

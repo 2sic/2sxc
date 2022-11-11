@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.WebApi.Cms
 {

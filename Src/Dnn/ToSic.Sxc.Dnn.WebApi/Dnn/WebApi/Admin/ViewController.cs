@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;

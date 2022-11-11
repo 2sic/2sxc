@@ -4,7 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;

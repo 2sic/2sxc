@@ -1,5 +1,5 @@
 ﻿using DotNetNuke.Entities.Portals;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using static System.StringComparison;
 
 // ReSharper disable once CheckNamespace

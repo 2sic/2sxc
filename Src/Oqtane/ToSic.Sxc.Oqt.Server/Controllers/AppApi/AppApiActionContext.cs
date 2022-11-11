@@ -7,8 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Net;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi

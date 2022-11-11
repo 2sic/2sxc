@@ -3,7 +3,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using System;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Context;
 

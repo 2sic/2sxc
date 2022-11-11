@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Custom.Hybrid;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Engines;
 

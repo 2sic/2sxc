@@ -4,12 +4,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
-    public abstract class CodeCompiler: HasLog<CodeCompiler>
+    public abstract class CodeCompiler: HasLog
     {
         #region Constructor / DI
 

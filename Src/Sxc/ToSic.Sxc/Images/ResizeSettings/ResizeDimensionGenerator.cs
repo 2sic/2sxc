@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Plumbing;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Images.RecipeVariant;

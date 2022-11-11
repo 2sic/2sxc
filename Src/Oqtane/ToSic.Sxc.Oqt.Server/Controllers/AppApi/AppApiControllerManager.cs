@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Server.Code;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using File = System.IO.File;
-using Log = ToSic.Eav.Logging.Simple.Log;
+using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {

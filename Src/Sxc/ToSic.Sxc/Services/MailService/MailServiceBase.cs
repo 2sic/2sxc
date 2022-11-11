@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using MailMessage = System.Net.Mail.MailMessage;

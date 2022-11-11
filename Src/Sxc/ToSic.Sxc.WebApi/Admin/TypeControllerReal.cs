@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
@@ -16,7 +16,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class TypeControllerReal<THttpResponseType> : HasLog<TypeControllerReal<THttpResponseType>>, ITypeController<THttpResponseType>
+    public class TypeControllerReal<THttpResponseType> : HasLog, ITypeController<THttpResponseType>
     {
         public const string LogSuffix = "Types";
 

@@ -2,7 +2,7 @@
 using ToSic.Eav;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;

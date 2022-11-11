@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Context
@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Context
     /// This helps API calls to get the app which is currently needed
     /// It does not perform security checks ATM and maybe never will
     /// </summary>
-    public class AppIdResolver: HasLog<AppIdResolver>
+    public class AppIdResolver: HasLog
     {
         #region Constructor & DI
 

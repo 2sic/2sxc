@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Web.Http;
 using DotNetNuke.Services.Log.EventLog;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn.Run

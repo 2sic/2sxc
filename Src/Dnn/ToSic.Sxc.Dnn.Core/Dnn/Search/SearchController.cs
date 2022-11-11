@@ -14,7 +14,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Search
     /// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
     /// The only difference seems to be exception logging. 
     /// </remarks>
-    public class SearchController : HasLog<SearchController>
+    public class SearchController : HasLog
     {
         public SearchController(
             IServiceProvider serviceProvider,

@@ -4,7 +4,7 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Sxc.Apps;

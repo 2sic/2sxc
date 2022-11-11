@@ -7,7 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Data;
 using EavApp = ToSic.Eav.Apps.App;

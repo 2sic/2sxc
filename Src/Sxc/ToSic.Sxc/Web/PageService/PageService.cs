@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 

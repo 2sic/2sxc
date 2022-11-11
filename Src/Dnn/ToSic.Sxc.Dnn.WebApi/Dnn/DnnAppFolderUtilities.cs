@@ -6,7 +6,7 @@ using System.Web.Http;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;

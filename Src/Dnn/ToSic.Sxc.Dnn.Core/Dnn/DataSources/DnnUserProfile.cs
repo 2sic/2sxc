@@ -10,6 +10,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn.DataSources
 {

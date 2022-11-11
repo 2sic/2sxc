@@ -4,13 +4,13 @@ using Oqtane.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
-    public class OqtApiInspector : HasLog<IApiInspector>, IApiInspector
+    public class OqtApiInspector : HasLog, IApiInspector
     {
 
         public OqtApiInspector(): base(OqtConstants.OqtLogPrefix)

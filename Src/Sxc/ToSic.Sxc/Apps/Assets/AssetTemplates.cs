@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 
 namespace ToSic.Sxc.Apps.Assets
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Apps.Assets
     }
 
     [PrivateApi]
-    public partial class AssetTemplates : HasLog<AssetTemplates>
+    public partial class AssetTemplates : HasLog
     {
         #region Constants
 

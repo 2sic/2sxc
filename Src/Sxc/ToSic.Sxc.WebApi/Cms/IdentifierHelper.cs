@@ -1,6 +1,6 @@
 ﻿// #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
 //using ToSic.Eav.Apps;
-//using ToSic.Eav.Logging;
+//using ToSic.Lib.Logging;
 //using ToSic.Eav.WebApi.Formats;
 //using ToSic.Sxc.Apps;
 

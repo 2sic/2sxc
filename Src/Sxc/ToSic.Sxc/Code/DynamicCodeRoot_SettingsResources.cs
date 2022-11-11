@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Code
             {
                 if (_resources != null) return _resources;
                 var appState = ((App)_DynCodeRoot.App).AppState;
-
+                ;
                 return _resources = new DynamicStack(
                     AppConstants.RootNameResources,
                     DynamicEntityDependencies,

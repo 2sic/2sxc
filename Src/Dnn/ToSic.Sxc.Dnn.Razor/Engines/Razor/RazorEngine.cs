@@ -6,7 +6,7 @@ using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;

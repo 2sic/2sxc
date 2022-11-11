@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 

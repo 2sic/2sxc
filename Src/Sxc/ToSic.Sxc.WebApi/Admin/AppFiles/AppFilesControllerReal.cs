@@ -3,7 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
@@ -11,7 +11,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
-    public partial class AppFilesControllerReal: HasLog<AppFilesControllerReal>, IAppFilesController
+    public partial class AppFilesControllerReal: HasLog, IAppFilesController
     {
         public const string LogSuffix = "AppAss";
         #region Constructor / DI

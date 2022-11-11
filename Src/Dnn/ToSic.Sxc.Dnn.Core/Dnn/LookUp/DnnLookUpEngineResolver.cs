@@ -2,7 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using static ToSic.Sxc.LookUp.LookUpConstants;
 
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnLookUpEngineResolver : HasLog<ILookUpEngineResolver>, ILookUpEngineResolver
+    public class DnnLookUpEngineResolver : HasLog, ILookUpEngineResolver
     {
 
         #region Constructor / Dependency Injection

@@ -2,7 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -11,7 +11,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class ListControllerReal: BlockWebApiBackendBase<ListControllerReal>, IHasLog<ListControllerReal>, IListController
+    public partial class ListControllerReal: BlockWebApiBackendBase<ListControllerReal>, IHasLog, IListController
     {
         public const string LogSuffix = "Lst";
 

@@ -1,10 +1,10 @@
 ﻿using System;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
 {
-    public abstract class ModuleAndBlockBuilder: HasLog<IModuleAndBlockBuilder>, IModuleAndBlockBuilder
+    public abstract class ModuleAndBlockBuilder: HasLog, IModuleAndBlockBuilder
     {
         protected ModuleAndBlockBuilder(string logPrefix): base($"{logPrefix}.BnMBld")
         {

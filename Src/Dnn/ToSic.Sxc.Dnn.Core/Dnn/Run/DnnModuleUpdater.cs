@@ -5,7 +5,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Apps;
@@ -16,7 +16,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnModuleUpdater : HasLog<IPlatformModuleUpdater>, IPlatformModuleUpdater
+    public class DnnModuleUpdater : HasLog, IPlatformModuleUpdater
     {
         #region Constructor and DI
 

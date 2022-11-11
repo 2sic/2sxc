@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Oqtane.Shared;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Edit;

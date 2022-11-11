@@ -5,7 +5,7 @@ using Connect.Koi;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;

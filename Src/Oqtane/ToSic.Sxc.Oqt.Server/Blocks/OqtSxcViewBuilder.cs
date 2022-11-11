@@ -1,7 +1,7 @@
 ﻿using Oqtane.Models;
 using System.Linq;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;

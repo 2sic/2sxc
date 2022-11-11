@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Blocks
 {
     [PrivateApi("internal use only")]
-    public interface IModuleAndBlockBuilder: IHasLog<IModuleAndBlockBuilder>
+    public interface IModuleAndBlockBuilder: IHasLog
     {
         IBlock GetBlock(int pageId, int moduleId);
 

@@ -5,7 +5,7 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Dto;
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
     /// <summary>
     /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
     /// </summary>
-    public class ResetApp: HasLog<ResetApp>
+    public class ResetApp: HasLog
     {
         #region Constructor / DI
 

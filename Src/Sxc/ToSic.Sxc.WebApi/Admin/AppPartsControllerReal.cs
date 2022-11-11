@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
@@ -10,7 +10,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class AppPartsControllerReal<THttpResponseType> : HasLog<AppPartsControllerReal<THttpResponseType>>, IAppPartsController<THttpResponseType>
+    public class AppPartsControllerReal<THttpResponseType> : HasLog, IAppPartsController<THttpResponseType>
     {
         public const string LogSuffix = "AParts";
 

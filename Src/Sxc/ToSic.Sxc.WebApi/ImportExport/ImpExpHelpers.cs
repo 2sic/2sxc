@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ImpExpHelpers: HasLog<ImpExpHelpers>
+    public class ImpExpHelpers: HasLog
     {
         private readonly Apps.App _unInitializedApp;
         private readonly AppConfigDelegate _configProvider;

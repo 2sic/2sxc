@@ -1,5 +1,5 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;

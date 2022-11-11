@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-    public class EditControllerReal: HasLog<EditControllerReal>, IEditController
+    public class EditControllerReal: HasLog, IEditController
     {
         public const string LogSuffix = "Edit";
 

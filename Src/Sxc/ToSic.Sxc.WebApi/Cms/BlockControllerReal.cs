@@ -5,7 +5,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ContentBlocks;
@@ -13,7 +13,7 @@ using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class BlockControllerReal : HasLog<BlockControllerReal>, IBlockController
+    public class BlockControllerReal : HasLog, IBlockController
     {
         public const string LogSuffix = "Block";
 

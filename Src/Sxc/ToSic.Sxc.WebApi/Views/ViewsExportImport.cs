@@ -12,7 +12,7 @@ using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Eav.ImportExport.Validation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -28,7 +28,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsExportImport<THttpResponseType> : HasLog<ViewsExportImport<THttpResponseType>>
+    public class ViewsExportImport<THttpResponseType> : HasLog
     {
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;

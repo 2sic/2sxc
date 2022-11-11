@@ -5,6 +5,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms

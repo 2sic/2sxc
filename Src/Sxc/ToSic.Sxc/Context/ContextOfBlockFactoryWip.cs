@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Context
 {
@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Context
     /// WIP - try to make an injectable Context Initializer
     /// So it can be implemented the same way in Dnn/Oqtane
     /// </summary>
-    public abstract class ContextOfBlockFactoryWip: HasLog<ContextOfBlockFactoryWip>
+    public abstract class ContextOfBlockFactoryWip: HasLog
     {
         protected ContextOfBlockFactoryWip(IContextOfBlock context, string logPrefix): base($"{logPrefix}.CtxBlF")
         {

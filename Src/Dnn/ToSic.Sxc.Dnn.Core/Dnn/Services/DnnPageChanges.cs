@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Sxc.Blocks;
@@ -20,7 +20,7 @@ using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 namespace ToSic.Sxc.Dnn.Services
 {
     [PrivateApi]
-    public class DnnPageChanges : HasLog<DnnPageChanges>
+    public class DnnPageChanges : HasLog
     {
         public DnnPageChanges(Lazy<IFeaturesService> featuresService): base($"{DnnConstants.LogName}.PgeCng")
         {

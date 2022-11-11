@@ -1,5 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output

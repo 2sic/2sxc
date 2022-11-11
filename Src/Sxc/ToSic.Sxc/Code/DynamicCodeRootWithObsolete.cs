@@ -5,7 +5,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.Sxc.Data;

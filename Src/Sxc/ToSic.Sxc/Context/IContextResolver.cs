@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Context
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context
     /// This provides other systems with a context
     /// Note that it's important to always make this **Scoped**, not transient, as there is some re-use after initialization
     /// </summary>
-    public interface IContextResolver: IHasLog<IContextResolver>
+    public interface IContextResolver: IHasLog
     {
         /// <summary>
         /// This is the most basic kind of context. ATM you could also inject it directly,

@@ -7,7 +7,7 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;

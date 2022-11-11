@@ -2,7 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
@@ -10,7 +10,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtEnvironmentInstaller: HasLog<IEnvironmentInstaller>, IEnvironmentInstaller
+    public class OqtEnvironmentInstaller: HasLog, IEnvironmentInstaller
     {
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly RemoteRouterLink _remoteRouterLink;

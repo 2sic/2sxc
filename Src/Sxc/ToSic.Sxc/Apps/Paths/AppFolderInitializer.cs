@@ -3,12 +3,12 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.Apps.Paths
 {
-    public class AppFolderInitializer : HasLog<AppFolderInitializer>
+    public class AppFolderInitializer : HasLog
     {
         #region Constructor / DI
 

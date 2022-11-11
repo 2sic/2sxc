@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 

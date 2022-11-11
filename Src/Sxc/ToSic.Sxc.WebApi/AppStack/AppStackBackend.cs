@@ -8,6 +8,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 

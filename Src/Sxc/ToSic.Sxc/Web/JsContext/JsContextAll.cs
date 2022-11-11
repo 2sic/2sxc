@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Shared;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
 using ToSic.Sxc.Web.PageFeatures;

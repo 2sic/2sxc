@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.Extensions.Primitives;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Context;
+using ToSic.Eav.DI;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;

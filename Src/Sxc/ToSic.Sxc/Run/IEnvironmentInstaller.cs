@@ -1,11 +1,11 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
 
 namespace ToSic.Sxc.Run
 {
-    public interface IEnvironmentInstaller: IHasLog<IEnvironmentInstaller>
+    public interface IEnvironmentInstaller: IHasLog
     {
         /// <summary>
         /// Get upgrade messages to show to the user if the upgrade/install needs attention

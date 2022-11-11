@@ -3,8 +3,7 @@ using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -12,7 +11,7 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 namespace ToSic.Sxc.Dnn.WebApi
 {
     [DnnLogWebApi, JsonOnlyResponse]
-    public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog<TRealController>
+    public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 

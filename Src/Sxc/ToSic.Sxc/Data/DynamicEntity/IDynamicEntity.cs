@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using IEntity = ToSic.Eav.Data.IEntity;
 #if !NETFRAMEWORK
 #pragma warning disable CS0109

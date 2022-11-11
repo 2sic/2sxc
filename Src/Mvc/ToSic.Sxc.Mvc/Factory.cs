@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;

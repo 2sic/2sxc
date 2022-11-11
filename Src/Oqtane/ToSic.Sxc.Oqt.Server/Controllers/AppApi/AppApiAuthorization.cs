@@ -6,8 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {

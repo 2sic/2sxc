@@ -4,7 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
 using Exception = System.Exception;

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
 
@@ -16,7 +15,7 @@ namespace IntegrationSamples.SxcEdit01.Controllers
     /// 4. Standardizes the response ni case of a empty response so it properly reports HTTP 204
     /// </summary>
     /// <typeparam name="TRealController"></typeparam>
-    public abstract class IntControllerBase<TRealController> : Controller, IHasLog where TRealController : class, IHasLog<TRealController>
+    public abstract class IntControllerBase<TRealController> : Controller, IHasLog where TRealController : class, IHasLog
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 

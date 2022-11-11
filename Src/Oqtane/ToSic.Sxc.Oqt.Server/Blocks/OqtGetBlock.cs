@@ -1,7 +1,7 @@
 ﻿using Oqtane.Repository;
 using System;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
     /// <summary>
     /// WIP - separating concerns in OqtState to get the block and provide the state...
     /// </summary>
-    public class OqtGetBlock: HasLog<OqtGetBlock>
+    public class OqtGetBlock: HasLog
     {
         public OqtGetBlock(
             Lazy<IModuleRepository> modRepoLazy,

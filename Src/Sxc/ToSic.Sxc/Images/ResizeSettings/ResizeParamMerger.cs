@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;

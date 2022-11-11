@@ -10,7 +10,7 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
@@ -24,7 +24,7 @@ using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public partial class DnnPagePublishing : HasLog<IPagePublishing>, IPagePublishing
+    public partial class DnnPagePublishing : HasLog, IPagePublishing
     {
         #region DI Constructors and More
 

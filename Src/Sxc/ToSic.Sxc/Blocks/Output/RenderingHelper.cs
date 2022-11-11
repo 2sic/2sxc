@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Web;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;

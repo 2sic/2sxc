@@ -4,8 +4,7 @@ using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
@@ -13,6 +12,7 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ILog = ToSic.Lib.Logging.ILog;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn
         private static ILog NewLog()
         {
             var log = new Log("Dnn.Factor");
-            History.Add("obsolete-dnn-factory", log);
+            StaticBuild<LogHistory>().Add("obsolete-dnn-factory", log);
             return log;
         }
 

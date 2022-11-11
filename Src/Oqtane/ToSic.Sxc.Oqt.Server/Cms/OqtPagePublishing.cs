@@ -1,14 +1,14 @@
 ﻿using System;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Cms
 {
-    internal class OqtPagePublishing : HasLog<IPagePublishing>, IPagePublishing
+    internal class OqtPagePublishing : HasLog, IPagePublishing
     {
         #region Constructor / DI
 

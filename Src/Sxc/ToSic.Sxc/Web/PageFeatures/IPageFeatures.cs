@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Web.PageFeatures;
 
 // ReSharper disable once CheckNamespace

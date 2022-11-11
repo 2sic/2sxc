@@ -4,8 +4,8 @@ using System.Globalization;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
-using ToSic.Eav.Logging.Simple;
+using ToSic.Lib.Logging;
+
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;

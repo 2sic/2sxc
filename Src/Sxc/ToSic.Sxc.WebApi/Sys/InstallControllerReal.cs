@@ -4,7 +4,7 @@ using System.Text;
 using ToSic.Eav;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.ImportExport;
@@ -14,7 +14,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.WebApi.Sys
 {
-    public class InstallControllerReal<THttpResponseType> : HasLog<InstallControllerReal<THttpResponseType>>
+    public class InstallControllerReal<THttpResponseType> : HasLog
     {
         public const string LogSuffix = "Install";
 

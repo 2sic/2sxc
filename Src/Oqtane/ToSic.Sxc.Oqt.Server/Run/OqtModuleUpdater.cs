@@ -5,7 +5,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -15,7 +15,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    internal class OqtModuleUpdater: HasLog<IPlatformModuleUpdater>, IPlatformModuleUpdater
+    internal class OqtModuleUpdater: HasLog, IPlatformModuleUpdater
     {
         private readonly SettingsHelper _settingsHelper;
         private readonly IPageModuleRepository _pageModuleRepository;

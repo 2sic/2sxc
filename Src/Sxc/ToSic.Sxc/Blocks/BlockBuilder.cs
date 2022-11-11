@@ -2,7 +2,7 @@
 using ToSic.Eav.Configuration.Licenses;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;

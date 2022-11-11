@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Mvc.Dev;
 
@@ -24,6 +24,8 @@ namespace ToSic.Sxc.Mvc.Run
 
         /// <inheritdoc />
         public int Id { get; set; }
+
+        public bool IsContent { get; }
 
         /// <inheritdoc />
         public int TenantId { get; set; }

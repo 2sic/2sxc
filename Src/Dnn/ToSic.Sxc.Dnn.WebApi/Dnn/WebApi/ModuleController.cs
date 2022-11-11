@@ -1,7 +1,7 @@
 ﻿using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.Logging;
+using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
