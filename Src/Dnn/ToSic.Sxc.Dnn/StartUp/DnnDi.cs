@@ -191,7 +191,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 #pragma warning restore CS0618
 
             services.TryAddTransient<DnnGetBlock>();
-            services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12.01
+            services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
 
             return services;
         }
