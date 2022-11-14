@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Run
     /// The DNN implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
     [PrivateApi("Hide implementation - not useful for external documentation")]
-    public class DnnValueConverter : IValueConverter
+    public class DnnValueConverter : ValueConverterBase
     {
         public const string CurrentLanguage = "current";
 
@@ -40,10 +40,10 @@ namespace ToSic.Sxc.Dnn.Run
         #endregion
 
         /// <inheritdoc />
-        public string ToReference(string value) => TryToResolveOneLinkToInternalDnnCode(value);
+        public override string ToReference(string value) => TryToResolveOneLinkToInternalDnnCode(value);
 
         /// <inheritdoc />
-        public string ToValue(string reference, Guid itemGuid = default) => TryToResolveDnnCodeToLink(itemGuid, reference);
+        public override string ToValue(string reference, Guid itemGuid = default) => TryToResolveCodeToLink(itemGuid, reference);
 
         /// <summary>
         /// Will take a link like http:\\... to a file or page and try to return a DNN-style info like
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn.Run
             // Try file reference
             var fileInfo = FileManager.Instance.GetFile(_site.Id, potentialFilePath) // PortalId from module di scope
                            ?? FileManager.Instance.GetFile(PageSiteId, potentialFilePath); // PortalId from page di scope (module sharing on different site)
-            if (fileInfo != null) return ValueConverterBase.PrefixFile + ValueConverterBase.Separator + fileInfo.FileId;
+            if (fileInfo != null) return PrefixFile + Separator + fileInfo.FileId;
 
             // Try page / tab ID
             var tabController = new TabController();
@@ -70,33 +70,38 @@ namespace ToSic.Sxc.Dnn.Run
                               .FirstOrDefault(tab => tab.TabPath == potentialFilePath);// PortalId from page di scope (module sharing on different site)
 
             return tabInfo != null
-                ? ValueConverterBase.PrefixPage + ValueConverterBase.Separator + tabInfo.TabID
+                ? PrefixPage + Separator + tabInfo.TabID
                 : potentialFilePath;
         }
 
-        /// <summary>
-        /// Will take a link like "File:17" and convert to "Faq/screenshot1.jpg"
-        /// It will always deliver a relative path to the portal root
-        /// </summary>
-        /// <param name="itemGuid">the item we're in - important for the feature which checks if the file is in this items ADAM</param>
-        /// <param name="originalValue"></param>
-        /// <returns></returns>
-        private string TryToResolveDnnCodeToLink(Guid itemGuid, string originalValue)
-        {
-            try
-            {
-                return ValueConverterBase.TryToResolveCodeToLink(itemGuid, originalValue, ResolvePageLink, ResolveFileLink);
-            }
-            catch (Exception e)
-            {
-                var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
-                Exceptions.LogException(wrappedEx);
-                return originalValue;
-            }
+        ///// <summary>
+        ///// Will take a link like "File:17" and convert to "Faq/screenshot1.jpg"
+        ///// It will always deliver a relative path to the portal root
+        ///// </summary>
+        ///// <param name="itemGuid">the item we're in - important for the feature which checks if the file is in this items ADAM</param>
+        ///// <param name="originalValue"></param>
+        ///// <returns></returns>
+        //private string TryToResolveDnnCodeToLink(Guid itemGuid, string originalValue)
+        //{
+        //    try
+        //    {
+        //        return TryToResolveCodeToLink(itemGuid, originalValue);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        LogConversionExceptions(originalValue, e);
+        //        return originalValue;
+        //    }
 
+        //}
+
+        protected override void LogConversionExceptions(string originalValue, Exception e)
+        {
+            var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
+            Exceptions.LogException(wrappedEx);
         }
 
-        private string ResolveFileLink(int linkId, Guid itemGuid)
+        protected override string ResolveFileLink(int linkId, Guid itemGuid)
         {
             var fileInfo = FileManager.Instance.GetFile(linkId);
             if (fileInfo == null)
@@ -113,7 +118,7 @@ namespace ToSic.Sxc.Dnn.Run
                 var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(Eav.Configuration.BuiltInFeatures.BlockFileResolveOutsideOfEntityAdam.Guid)) return result;
+                if (!_featuresLazy.Value.Enabled(BuiltInFeatures.BlockFileResolveOutsideOfEntityAdam.Guid)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
@@ -127,7 +132,7 @@ namespace ToSic.Sxc.Dnn.Run
             #endregion
         }
 
-        private string ResolvePageLink(int id) => ResolvePageLink(id, CurrentLanguage, new string[] { });
+        protected override string ResolvePageLink(int id) => ResolvePageLink(id, CurrentLanguage, new string[] { });
 
         /// <summary>
         /// Resolve URL to Page with TabId, but handles more situations than DNN framework:
