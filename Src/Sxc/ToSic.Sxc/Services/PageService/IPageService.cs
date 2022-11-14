@@ -178,7 +178,7 @@ namespace ToSic.Sxc.Services
         #region Security
 
         /// <summary>
-        /// Add common html attributes to a `script` or `link` tag to enable optimizations
+        /// Add common html attributes to a `script` or `link` tag to [enable optimizations](xref:Basics.Server.AssetOptimization.Index)
         /// and [automatically whitelist in the Content Security Policy](xref:Abyss.Security.Csp.Parts#auto-white-listing-explicit)
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
