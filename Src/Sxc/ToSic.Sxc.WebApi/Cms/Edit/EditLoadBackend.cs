@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data.Builder;
+using ToSic.Eav.DI;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
@@ -34,7 +35,8 @@ namespace ToSic.Sxc.WebApi.Cms
             ITargetTypes mdTargetTypes,
             EntityPickerApi entityPickerBackend,
             IAppStates appStates,
-            IUiData uiData
+            IUiData uiData,
+            Generator<JsonSerializer> jsonSerializerGenerator
             ) : base(serviceProvider, "Cms.LoadBk")
         {
             _entityApi = entityApi;
@@ -46,6 +48,7 @@ namespace ToSic.Sxc.WebApi.Cms
             _entityPickerBackend = entityPickerBackend;
             _appStates = appStates;
             _uiData = uiData;
+            _jsonSerializerGenerator = jsonSerializerGenerator;
         }
         
         private readonly EntityApi _entityApi;
@@ -57,6 +60,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
+        private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
 
         #endregion
 
@@ -89,7 +93,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = GetService<JsonSerializer>().Init(entityApi.AppRead.AppState, Log);
+            var jsonSerializer = _jsonSerializerGenerator.New.Init(entityApi.AppRead.AppState, Log);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
@@ -112,8 +116,10 @@ namespace ToSic.Sxc.WebApi.Cms
                     throw HttpException.PermissionDenied(error);
 
             // load content-types
+            var serializerForTypes = _jsonSerializerGenerator.New.Init(entityApi.AppRead.AppState, Log);
+            serializerForTypes.ValueConvertHyperlinks = true;
             var types = UsedTypes(list, typeRead);
-            var jsonTypes = types.Select(t => jsonSerializer.ToPackage(t, true)).ToList();
+            var jsonTypes = types.Select(t => serializerForTypes.ToPackage(t, true)).ToList();
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
 
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
@@ -127,7 +133,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.InputTypes = GetNecessaryInputTypes(result.ContentTypes, typeRead);
 
             // also include UI features
-            result.Features = _uiData.Features(/*context,*/ permCheck);
+            result.Features = _uiData.Features(permCheck);
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.InitApp(context.AppState, Log)

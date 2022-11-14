@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
     /// The Oqtane implementation of the <see cref="IValueConverter"/> which converts "file:22" or "page:5" to the url,
     /// </summary>
     [PrivateApi]
-    public class OqtValueConverter : IValueConverter
+    public class OqtValueConverter : ValueConverterBase
     {
         private readonly Lazy<IFeaturesService> _featuresLazy;
         public Lazy<IFileRepository> FileRepository { get; }
@@ -62,10 +62,10 @@ namespace ToSic.Sxc.Oqt.Server.Data
         #endregion
 
         /// <inheritdoc />
-        public string ToReference(string value) => TryToResolveOneLinkToInternalOqtCode(value);
+        public override string ToReference(string value) => TryToResolveOneLinkToInternalOqtCode(value);
 
         /// <inheritdoc />
-        public string ToValue(string reference, Guid itemGuid = default) => TryToResolveOqtCodeToLink(itemGuid, reference);
+        public override string ToValue(string reference, Guid itemGuid = default) => TryToResolveCodeToLink(itemGuid, reference);
 
         /// <summary>
         /// Will take a link like http://... to a file or page and try to return a DNN-style info like
@@ -100,31 +100,39 @@ namespace ToSic.Sxc.Oqt.Server.Data
                 : potentialFilePath;
         }
 
+        ///// <summary>
+        ///// Will take a link like "File:17" and convert to "Faq/screenshot1.jpg"
+        ///// It will always deliver a relative path to the portal root
+        ///// </summary>
+        ///// <param name="itemGuid">the item we're in - important for the feature which checks if the file is in this items ADAM</param>
+        ///// <param name="originalValue"></param>
+        ///// <returns></returns>
+        //private string TryToResolveOqtCodeToLink(Guid itemGuid, string originalValue)
+        //{
+        //    try
+        //    {
+        //        return TryToResolveCodeToLink(itemGuid, originalValue);
+        //    }
+        //    catch /*(Exception e)*/
+        //    {
+        //        return originalValue;
+        //    }
+        //}
+
         /// <summary>
-        /// Will take a link like "File:17" and convert to "Faq/screenshot1.jpg"
-        /// It will always deliver a relative path to the portal root
+        /// Don't do anything here
         /// </summary>
-        /// <param name="itemGuid">the item we're in - important for the feature which checks if the file is in this items ADAM</param>
-        /// <param name="originalValue"></param>
-        /// <returns></returns>
-        private string TryToResolveOqtCodeToLink(Guid itemGuid, string originalValue)
+        protected override void LogConversionExceptions(string originalValue, Exception e)
         {
-            try
-            {
-                return ValueConverterBase.TryToResolveCodeToLink(itemGuid, originalValue, ResolvePageLink, ResolveFileLink);
-            }
-            catch /*(Exception e)*/
-            {
-                // 2021-04-26 2dm: We can't log errors here
-                // - on one hand we would flood the logs
-                // - on the other hand we have issues that if this happens during json-creation of a web-api, the Logger often can't find the DB/SiteState
-                //var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
-                //Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
-                return originalValue;
-            }
+            // 2021-04-26 2dm: We can't log errors here
+            // - on one hand we would flood the logs
+            // - on the other hand we have issues that if this happens during json-creation of a web-api, the Logger often can't find the DB/SiteState
+            //var wrappedEx = new Exception("Error when trying to lookup a friendly url of \"" + originalValue + "\"", e);
+            //Logger.Value.Log(LogLevel.Error, this, LogFunction.Other, wrappedEx.Message);
         }
 
-        private string ResolveFileLink(int linkId, Guid itemGuid)
+
+        protected override string ResolveFileLink(int linkId, Guid itemGuid)
         {
             var fileInfo = FileRepository.Value.GetFile(linkId);
             if (fileInfo == null)
@@ -134,15 +142,15 @@ namespace ToSic.Sxc.Oqt.Server.Data
             #region special handling of issues in case something in the background is broken
             try
             {
-                var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name/*)*/).ForwardSlash();
+                var pathInAdam = Path.Combine(fileInfo.Folder.Path, fileInfo.Name).ForwardSlash();
 
                 // get appName and filePath
                 var adamFolder = "adam/";
                 var prefixStart = pathInAdam.IndexOf(adamFolder, StringComparison.OrdinalIgnoreCase);
-                pathInAdam = pathInAdam.Substring(prefixStart + adamFolder.Length).TrimStart('/');
+                pathInAdam = pathInAdam[(prefixStart + adamFolder.Length)..].TrimStart('/');
                 var indexOfSlash = pathInAdam.IndexOf('/');
-                var appName = pathInAdam.Substring(0, indexOfSlash);
-                var filePath = pathInAdam.Substring(indexOfSlash).TrimStart('/');
+                var appName = pathInAdam[..indexOfSlash];
+                var filePath = pathInAdam[indexOfSlash..].TrimStart('/');
 
                 var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
@@ -161,7 +169,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
             #endregion
         }
 
-        private string ResolvePageLink(int id)
+        protected override string ResolvePageLink(int id)
         {
             var pageResolver = PageRepository.Value;
 

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// based on the header (if none already existed)
         /// </summary>
         /// <returns></returns>
-        internal JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
+        private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
             ContentTypeRuntime typeRead, AppState appState)
         {
             var wrapLog = Log.Fn<JsonEntity>();
