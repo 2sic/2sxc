@@ -20,7 +20,7 @@
     <summary>2sxc 14 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
       <dependency id="Oqtane.Framework" version="3.1.0" />
-      <dependency id="ToSic.Imageflow.Oqtane" version="1.1.0" />
+      <dependency id="ToSic.Imageflow.Oqtane" version="1.0.4" />
     </dependencies>
   </metadata>
   <files>
@@ -53,12 +53,12 @@
     <!-- Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation transitive dependency -->
     <file src="..\ToSic.Sxc.Oqt.Server\bin\Release\net6.0\Microsoft.Extensions.DependencyModel.dll" target="lib\net6.0" />
 
-    <!-- ToSic.Imageflow.Oqtane 1.1.0 -->
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\Imageflow.*" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\Imazen.*" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\Microsoft.IO.*" target="lib\net6.0" />
-    <file src="..\..\packages\tosic.imageflow.oqtane\1.1.0\runtimes\win*\**\*imageflow.*" target="runtimes" />
+    <!-- rollback to ToSic.Imageflow.Oqtane v1.0.4 from v1.1.0 -->
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.dll" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\ToSic.Imageflow.Oqt.Server.Oqtane.pdb" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imageflow.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Imazen.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\Microsoft.IO.*" target="lib\net6.0" />
+    <file src="..\..\packages\tosic.imageflow.oqtane\1.0.4\runtimes\win*\**\*imageflow.*" target="runtimes" />
   </files>
 </package>

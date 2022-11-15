@@ -36,8 +36,8 @@ XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%
 
 @Echo(
 @Echo nuget dependencies - oqt-imageflow
-XCOPY "..\..\packages\tosic.imageflow.oqtane\1.1.0\lib\net6.0\*" "%OqtaneBin%" /Y
-XCOPY "..\..\packages\tosic.imageflow.oqtane\1.1.0\runtimes\*" "%OqtaneBin%\runtimes" /S /C /Y
+XCOPY "..\..\packages\tosic.imageflow.oqtane\1.0.4\lib\net5.0\*" "%OqtaneBin%" /Y
+XCOPY "..\..\packages\tosic.imageflow.oqtane\1.0.4\runtimes\*" "%OqtaneBin%\runtimes" /S /C /Y
 
 @Echo(
 @Echo Copy Koi DLLs
