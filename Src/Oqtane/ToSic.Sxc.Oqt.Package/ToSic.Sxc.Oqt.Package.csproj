@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.1.0" />
+    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
