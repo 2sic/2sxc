@@ -20,17 +20,6 @@ namespace ToSic.Sxc.Edit.EditService
         {
             Eav.Parameters.Protect(noParamOrder, $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
-            // check if feature enabled - if more than the api is needed
-            // extend this list if new parameters are added
-            // 2022-07-04 2dm disabled, as it should now be handled at the requirements-level
-            //if (forms == true)
-            //{
-            //    var feats = new[] { PublicEditForm.Guid };
-            //    var features = Block.Context.Dependencies.FeaturesInternalGenerator.New;
-            //    if (!features.Enabled(feats, "public forms not available", out var exp))
-            //        throw exp;
-            //}
-
             var psf = Block?.Context?.PageServiceShared;
 
             if (js == true || api ==true || forms == true) psf?.Activate(BuiltInFeatures.JsCore.NameId);
