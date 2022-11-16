@@ -53,5 +53,16 @@ namespace ToSic.Sxc.Oqt.Shared.Models
             setter(HtmlAttributes[key]);
             HtmlAttributes.Remove(key);
         }
+
+        public new string Url
+        {
+            get => base.Url;
+            set
+            {
+                // fix issue in Oqtane 3.2
+                // can't set Resource.Url to null
+                if (value != null) base.Url = value;
+            }
+        }
     }
 }
