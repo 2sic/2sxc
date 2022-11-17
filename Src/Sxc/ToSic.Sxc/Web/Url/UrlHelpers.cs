@@ -174,9 +174,16 @@ namespace ToSic.Sxc.Web.Url
             return newUrl;
 
         }
+
+
+        public static string RemoveQuery(this string url) => RemoveAfterSeparator(url, UrlParts.QuerySeparator);
+        public static string RemoveFragment(this string url) => RemoveAfterSeparator(url, UrlParts.FragmentSeparator);
+        public static string RemoveQueryAndFragment(this string url) => url.RemoveQuery().RemoveFragment();
+        private static string RemoveAfterSeparator(string @string, char separator)
+        {
+            if (string.IsNullOrEmpty(@string)) return @string;
+            var start = @string.IndexOf(separator);
+            return start < 0 ? @string : @string.Substring(0, start);
+        }
     }
-
-
-
-
 }
