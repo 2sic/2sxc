@@ -1,14 +1,15 @@
-﻿using Oqtane.Models;
+﻿using Microsoft.Data.SqlClient;
+using Oqtane.Models;
 using Oqtane.Repository;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using File = Oqtane.Models.File;
 
@@ -151,8 +152,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public new bool FolderExists(string path) => GetOqtFolderByName(path) != null;
 
-        private Folder GetOqtFolderByName(string path) => OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.SuffixSlash().ForwardSlash()) // in Oqt 3.2 in DB paths are stored with ForwardSlash()
-                                                          ?? OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.SuffixSlash().Backslash()); // fallback for older versions of oqtane
+        private Folder GetOqtFolderByName(string path) => OqtFolderRepository.GetFolder(AdamContext.Site.Id, path.EnsureOqtaneFolderFormat());
 
         public new void AddFolder(string path)
         {
@@ -164,8 +164,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             try
             {
                 // find parent
-                var pathWithPretendFileName = path.TrimEnd().TrimEnd('/').TrimEnd('\\');
-                var parent = Path.GetDirectoryName(pathWithPretendFileName) + Path.DirectorySeparatorChar;
+                var pathWithPretendFileName = path.TrimLastSlash();
+                var parent = Path.GetDirectoryName(pathWithPretendFileName) + "/";
                 var subfolder = Path.GetFileName(pathWithPretendFileName);
                 var parentFolder = GetOqtFolderByName(parent) ?? GetOqtFolderByName("");
 

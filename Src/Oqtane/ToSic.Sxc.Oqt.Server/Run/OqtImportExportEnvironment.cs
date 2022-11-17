@@ -1,15 +1,16 @@
-﻿using Oqtane.Models;
+﻿using Microsoft.Data.SqlClient;
+using Oqtane.Models;
 using Oqtane.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
+using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using IO = System.IO;
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var oqtSite = (OqtSite)Site;
 
             // Ensure trim prefixSlash and backslash at the end of folder path, because Oqtane require path like that.
-            destinationFolder = EnsureOqtaneFolderFormat(destinationFolder); // (destinationFolder.ForwardSlash().TrimLastSlash() + IO.Path.DirectorySeparatorChar).TrimPrefixSlash();
+            destinationFolder = destinationFolder.EnsureOqtaneFolderFormat();
 
             var destinationVirtualPath = IO.Path.Combine(oqtSite.ContentPath, destinationFolder);
             var destinationFolderFullPath = _oqtServerPaths.FullContentPath(destinationVirtualPath);
@@ -56,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 AddFolder(destinationFolder);
             }
 
-            var folderInfo = _oqtFolderRepository.GetFolder(siteId, destinationFolder);
+            var folderInfo = _oqtFolderRepository.GetFolder(siteId, destinationFolder.EnsureOqtaneFolderFormat());
 
             void MassLog(string msg, Exception exception)
             {
@@ -93,9 +94,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             foreach (var sourceFolderPath in IO.Directory.GetDirectories(sourceFolder))
             {
                 Log.A($"subfolder:{sourceFolderPath}");
-                var newDestinationFolder = IO.Path.Combine(destinationFolder, EnsureOqtaneFolderFormat(sourceFolderPath.Replace(sourceFolder, "")));
-                    //.ForwardSlash()
-                    //.TrimPrefixSlash());
+                var newDestinationFolder = IO.Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").EnsureOqtaneFolderFormat());
+
                 TransferFilesToSite(sourceFolderPath, newDestinationFolder);
             }
 
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var relativePath = file.Value;
 
                 var fileName = IO.Path.GetFileName(relativePath);
-                var directory = EnsureOqtaneFolderFormat(IO.Path.GetDirectoryName(relativePath));
+                var directory = IO.Path.GetDirectoryName(relativePath).EnsureOqtaneFolderFormat();
                 if (directory == null)
                 {
                     Log.A($"Warning: File '{relativePath}', folder is 'null' doesn't exist on drive");
@@ -228,11 +228,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             => _oqtFileRepository.GetFiles(folderInfo.FolderId)
                 .FirstOrDefault(f => f.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
 
-        private Folder GetOqtFolderByPath(string path) => _oqtFolderRepository.GetFolder(Site.Id, EnsureOqtaneFolderFormat(path));
+        private Folder GetOqtFolderByPath(string path) => _oqtFolderRepository.GetFolder(Site.Id, path.EnsureOqtaneFolderFormat());
 
         private Folder AddFolder(string path)
         {
-            path = EnsureOqtaneFolderFormat(path);
+            path = path.EnsureOqtaneFolderFormat();
             var callLog = Log.Fn<Folder>(path);
 
             if (FolderExists(path)) return callLog.ReturnNull("error, missing folder");
@@ -241,7 +241,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             {
                 // find parent
                 var pathWithPretendFileName = path.TrimLastSlash();
-                var parent = IO.Path.GetDirectoryName(pathWithPretendFileName) + IO.Path.DirectorySeparatorChar;
+                var parent = IO.Path.GetDirectoryName(pathWithPretendFileName) + "/";
                 var subfolder = IO.Path.GetFileName(pathWithPretendFileName);
                 var parentFolder = GetOqtFolderByPath(parent) ?? GetOqtFolderByPath("");
 
@@ -264,9 +264,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             return callLog.ReturnNull("?");
         }
-
-        // ensure backslash on the end of path, but not on the start
-        private string EnsureOqtaneFolderFormat(string path) => string.IsNullOrEmpty(path) ? path : path.Trim().ForwardSlash().TrimPrefixSlash().TrimLastSlash() + '/';
 
         private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
         {
