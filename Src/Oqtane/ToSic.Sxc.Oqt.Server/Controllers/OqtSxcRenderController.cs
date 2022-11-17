@@ -55,9 +55,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         private readonly IUserPermissions _userPermissions;
         private readonly Oqtane.Shared.SiteState _siteState;
 
-        [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/Prepare")]
+        [HttpGet("{aliasId:int}/{pageId:int}/{moduleId:int}/{culture}/{preRender:bool}/Prepare")]
         //[Authorize(Policy = PolicyNames.ViewModule)]
-        public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromRoute] string culture, [FromQuery] string originalParameters)
+        public OqtViewResultsDto Prepare([FromRoute] int aliasId, [FromRoute] int pageId, [FromRoute] int moduleId, [FromRoute] string culture, [FromRoute] bool preRender, [FromQuery] string originalParameters)
         {
             if (moduleId != AuthEntityId(EntityNames.Module))
                 return Forbidden("Unauthorized OqtSxcRenderController Get Attempt {ModuleId}", moduleId);
@@ -92,7 +92,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             module.Settings = _settings.GetSettings(EntityNames.Module, moduleId).ToDictionary(setting => setting.SettingName, setting => setting.SettingValue);
 
-            return _sxcOqtane.Prepare(alias, site, page, module);
+            return _sxcOqtane.Prepare(alias, site, page, module, preRender);
         }
 
         private OqtViewResultsDto Forbidden(string message, params object[] args)
