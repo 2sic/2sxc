@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var oqtSite = (OqtSite)Site;
 
             // Ensure trim prefixSlash and backslash at the end of folder path, because Oqtane require path like that.
-            destinationFolder = (destinationFolder.Backslash().TrimLastSlash() + IO.Path.DirectorySeparatorChar).TrimPrefixSlash();
+            destinationFolder = (destinationFolder.ForwardSlash().TrimLastSlash() + IO.Path.DirectorySeparatorChar).TrimPrefixSlash();
 
             var destinationVirtualPath = IO.Path.Combine(oqtSite.ContentPath, destinationFolder);
             var destinationFolderFullPath = _oqtServerPaths.FullContentPath(destinationVirtualPath);
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 AddFolder(destinationFolder);
             }
 
-            var folderInfo = _oqtFolderRepository.GetFolder(siteId, destinationFolder);
+            var folderInfo = _oqtFolderRepository.GetFolder(siteId, destinationFolder.ForwardSlash());
 
             void MassLog(string msg, Exception exception)
             {
