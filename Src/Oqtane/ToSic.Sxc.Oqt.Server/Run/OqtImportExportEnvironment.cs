@@ -266,7 +266,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         // ensure backslash on the end of path, but not on the start
-        private string EnsureOqtaneFolderFormat(string path) => path?.Trim().ForwardSlash().TrimPrefixSlash().TrimLastSlash() + '/';
+        private string EnsureOqtaneFolderFormat(string path) => string.IsNullOrEmpty(path) ? path : path.Trim().ForwardSlash().TrimPrefixSlash().TrimLastSlash() + '/';
 
         private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
         {
