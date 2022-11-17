@@ -16,9 +16,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
         public async Task<OqtViewResultsDto> PrepareAsync(int aliasId, int pageId, int moduleId, string culture,
             string query, bool preRender)
         {
-            // TODO: @STV - GET pre-render info to the server as well and include in insights log
-            // So we can see if the render was server or client-side
-            var url = CreateAuthorizationPolicyUrl($"{ApiUrl}/{aliasId}/{pageId}/{moduleId}/{culture}/Prepare{query}", EntityNames.Module, moduleId);
+            var url = CreateAuthorizationPolicyUrl($"{ApiUrl}/{aliasId}/{pageId}/{moduleId}/{culture}/{preRender}/Prepare{query}", EntityNames.Module, moduleId);
             return await GetJsonAsync<OqtViewResultsDto>(url);
         }
     }
