@@ -8,6 +8,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
+using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
@@ -82,7 +83,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
             // Try to find the Folder
             var pathAsFolder = potentialFilePath.Backslash();
             var folderPath = Path.GetDirectoryName(pathAsFolder);
-            var folder = FolderRepository.Value.GetFolder(Alias.SiteId, folderPath);
+            var folder = FolderRepository.Value.GetFolder(Alias.SiteId, folderPath.EnsureOqtaneFolderFormat());
             if (folder != null)
             {
                 // Try file reference

@@ -2,6 +2,7 @@
 using Oqtane.Models;
 using Oqtane.Shared;
 using System.Collections.Generic;
+using ToSic.Sxc.Oqt.Server.Integration;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 SiteId = siteId,
                 ParentId = parentId,
                 Name = folder,
-                Path = path,
+                Path = path.EnsureOqtaneFolderFormat(),
                 Order = 1,
                 IsSystem = false,
                 Type = FolderTypes.Private,
