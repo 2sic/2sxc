@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Security;
@@ -16,6 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
     {
         private readonly Lazy<IUserRepository> _userRepository;
         private readonly Lazy<IUserRoleRepository> _userRoleRepository;
+        private readonly Lazy<UserManager<IdentityUser>> _identityUserManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SiteState _siteState;
 
@@ -24,11 +26,13 @@ namespace ToSic.Sxc.Oqt.Server.Context
         /// </summary>
         public OqtUser(Lazy<IUserRepository> userRepository,
             Lazy<IUserRoleRepository> userRoleRepository,
+            Lazy<UserManager<IdentityUser>> identityUserManager,
             IHttpContextAccessor httpContextAccessor,
             SiteState siteState)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
+            _identityUserManager = identityUserManager;
             _httpContextAccessor = httpContextAccessor;
             _siteState = siteState;
         }
@@ -106,24 +110,45 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public User GetUserFromIdentity()
         {
-            var user = new User { IsAuthenticated = _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false, Username = "", UserId = -1, Roles = "" };
-            if (!user.IsAuthenticated) return user;
+            var user = new User
+            {
+                IsAuthenticated = false, 
+                Username = string.Empty, 
+                UserId = -1, 
+                Roles = string.Empty
+            };
+
+            // missing identity from http context
+            if (_httpContextAccessor?.HttpContext?.User?.Identity == null) return user;
+
+            // user not auth
+            user.IsAuthenticated = _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
+            if (user.IsAuthenticated == false) return user;
 
             user.Username = _httpContextAccessor.HttpContext.User.Identity.Name;
-            user.UserId = int.Parse(_httpContextAccessor.HttpContext.User.Claims.First(item => item.Type == ClaimTypes.NameIdentifier || item.Type == ClaimTypes.PrimarySid).Value);
-            var roles = _httpContextAccessor.HttpContext.User.Claims.Where(item => item.Type == ClaimTypes.Role).Aggregate("", (current, claim) => current + (claim.Value + ";"));
-            if (roles != "") roles = ";" + roles;
-            user.Roles = roles;
-            
-            Guid = GetUserGuid();
+            user.UserId = UserIdFromClaims();
+            user.Roles = UserRolesFromClaims();
+
+            Guid = UserGuidFromIdentity();
             return user;
         }
 
-        public Guid? GetUserGuid()
+        private int UserIdFromClaims() 
+            => int.Parse(_httpContextAccessor.HttpContext!.User.Claims.First(item => item.Type is ClaimTypes.NameIdentifier or ClaimTypes.PrimarySid).Value);
+
+        private string UserRolesFromClaims()
         {
-            // Sometimes user guid is not available.
-            var guidValue = $"{_httpContextAccessor?.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value}";
-            return System.Guid.TryParse(guidValue, out var result) ? result : null;
+            var roles = _httpContextAccessor.HttpContext!.User.Claims.Where(item => item.Type == ClaimTypes.Role)
+                .Aggregate("", (current, claim) => current + (claim.Value + ";"));
+            if (roles != "") roles = ";" + roles;
+            return roles;
+        }
+
+        public Guid? UserGuidFromIdentity()
+        {
+            var username = _httpContextAccessor.HttpContext!.User.Identity!.Name;
+            if (string.IsNullOrEmpty(username)) return null;
+            return new Guid((_identityUserManager.Value.FindByNameAsync(username).Result).Id);
         }
 
         #endregion
