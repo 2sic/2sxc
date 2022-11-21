@@ -90,7 +90,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             // 2. Now we can delete the app before we prepare the import
             _cmsZones.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
-            // 3. Optional reset PortalFiles
+            // 3. Optional reset SiteFiles
             if (withSiteFiles)
             {
                 var sourcePath = Path.Combine(currentApp.PhysicalPath, Eav.Constants.AppDataProtectedFolder);
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     _zipImport.CopyAppGlobalFiles(discard, appId, sourcePath, deleteGlobalTemplates: true, overwriteFiles: true);
                 }
 
-                // Copy portal files persisted in /App_Data/PortalFiles/ back to site
+                // Copy portal files persisted in /App_Data/SiteFiles/ back to site
                 _env.TransferFilesToSite(Path.Combine(sourcePath, Eav.Constants.ZipFolderForSiteFiles), string.Empty);
             }
 
