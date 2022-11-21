@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ToSic.Sxc.Oqt.Server.Adam.Imageflow;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Tests.Adam.Imageflow
 {
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Tests.Adam.Imageflow
         public void SupportsPathTest(string virtualPath) => Assert.IsTrue(SupportsPath(virtualPath));
 
         [TestMethod()]
-        [DataRow("Modules/ToSic.Sxc/assets/app-primary.png")]
+        [DataRow($"Modules/{OqtConstants.PackageName}/assets/app-primary.png")]
         public void NotSupportsPathTest(string virtualPath) => Assert.IsFalse(SupportsPath(virtualPath));
 
         [TestMethod()]
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Tests.Adam.Imageflow
         }
 
         [TestMethod()]
-        [DataRow("Modules/ToSic.Sxc/assets/app-primary.png")]
+        [DataRow($"Modules/{OqtConstants.PackageName}/assets/app-primary.png")]
         public void NotSupportedGetAppNameAndFilePathTest(string virtualPath) => Assert.IsFalse(GetAppNameAndFilePath(virtualPath, out var actualAppName, out var actualFilePath));
 
         [TestMethod()]
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Tests.Adam.Imageflow
         public void ContainsSxcPathPathTest(string virtualPath) => Assert.IsTrue(ContainsSxcPath(virtualPath));
 
         [TestMethod()]
-        [DataRow("Modules/ToSic.Sxc/assets/app-primary.png")]
+        [DataRow($"Modules/{OqtConstants.PackageName}/assets/app-primary.png")]
         [DataRow("app/Tutori/al/Ra/zor/assets/app-icon.png")]
         [DataRow("app/Content/adam/2aUKYsXls0KCeVH-XnHmRQ/Image/Demo-1.jpg?w=2000&h=1500&quality=75&mode=max&scale=downscaleonly")]
         public void NotContainsSxcPathTest(string virtualPath) => Assert.IsFalse(ContainsSxcPath(virtualPath));

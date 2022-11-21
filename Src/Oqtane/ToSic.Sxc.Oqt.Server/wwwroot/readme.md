@@ -1,6 +1,6 @@
 ﻿# wwwroot in 2sxc Oqtane Server Project
 
-This folder contains the `Modules/ToSic.Sxc/` folder and more
+This folder contains the `Modules/ToSic.Sxc.Oqtane/` folder and more
 
 It has `.data` and JS scripts etc. which are part of the distribution. 
 

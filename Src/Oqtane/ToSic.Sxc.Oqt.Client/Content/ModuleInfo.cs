@@ -2,6 +2,7 @@ using System.Linq;
 using Oqtane.Models;
 using Oqtane.Modules;
 using ToSic.Eav;
+using ToSic.Sxc.Oqt.Shared;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.Content
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Content
             ReleaseVersions = GetSqlAndLatestVersions(),
             // DefaultAction = "",
             // SettingsType = "",
-            PackageName = "ToSic.Sxc",
+            PackageName = OqtConstants.PackageName, // "ToSic.Sxc.Oqtane"
             //Runtimes = "Server",
             Template = "", // "External" (not "internal") "Default Module Template"
 

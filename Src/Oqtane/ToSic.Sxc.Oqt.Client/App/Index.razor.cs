@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Url;
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Oqt.App
 
         public override List<Resource> Resources => new()
         {
-            new Resource { ResourceType = ResourceType.Script, Url = "Modules/ToSic.Sxc/Module.js" }
+            new Resource { ResourceType = ResourceType.Script, Url = $"Modules/{OqtConstants.PackageName}/Module.js" }
         };
 
         #endregion

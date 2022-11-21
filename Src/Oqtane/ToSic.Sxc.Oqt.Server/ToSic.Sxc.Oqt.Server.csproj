@@ -34,25 +34,25 @@
     <Compile Remove="Content\**" />
     <Compile Remove="Engines\**" />
     <Compile Remove="RazorPartialToString\**" />
-    <Compile Remove="wwwroot\Modules\ToSic.Sxc\**" />
+    <Compile Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <Content Remove="Apps\**" />
     <Content Remove="Contents\**" />
     <Content Remove="Content\**" />
     <Content Remove="Engines\**" />
     <Content Remove="RazorPartialToString\**" />
-    <Content Remove="wwwroot\Modules\ToSic.Sxc\**" />
+    <Content Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <EmbeddedResource Remove="Apps\**" />
     <EmbeddedResource Remove="Contents\**" />
     <EmbeddedResource Remove="Content\**" />
     <EmbeddedResource Remove="Engines\**" />
     <EmbeddedResource Remove="RazorPartialToString\**" />
-    <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc\**" />
+    <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <None Remove="Apps\**" />
     <None Remove="Contents\**" />
     <None Remove="Content\**" />
     <None Remove="Engines\**" />
     <None Remove="RazorPartialToString\**" />
-    <None Remove="wwwroot\Modules\ToSic.Sxc\**" />
+    <None Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="StartUp\IIsSxcRazorPage.cs" />
@@ -67,7 +67,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\Modules\ToSic.Sxc\Module.css" />
+    <Content Include="wwwroot\Modules\ToSic.Sxc.Oqtane\Module.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -116,8 +116,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Modules\ToSic.Sxc\NativeModule.js" />
-    <None Include="wwwroot\Modules\ToSic.Sxc\Module.js" />
+    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane\NativeModule.js" />
+    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane\Module.js" />
   </ItemGroup>
 
 </Project>

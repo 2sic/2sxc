@@ -1,5 +1,6 @@
 ﻿using Microsoft.JSInterop;
 using System.Threading.Tasks;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Client
 {
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Client
         {
             try
             {
-                return _jsRuntime.InvokeAsync<string>("ToSic.Sxc.getTitleValue");
+                return _jsRuntime.InvokeAsync<string>($"{OqtConstants.PackageName}.getTitleValue");
             }
             catch
             {
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Oqt.Client
             try
             {
                 return _jsRuntime.InvokeAsync<string>(
-                    "ToSic.Sxc.getMetaTagContentByName",
+                    $"{OqtConstants.PackageName}.getMetaTagContentByName",
                     name);
             }
             catch
@@ -50,17 +51,17 @@ namespace ToSic.Sxc.Oqt.Client
         public async Task IncludeScriptsWithAttributes(object[] scripts)
         {
             // fix for https://github.com/2sic/2sxc/issues/2844
-            // we use solution with javascript native module import "./Modules/ToSic.Sxc/NativeModule.js"
+            // we use solution with javascript native module import "./Modules/ToSic.Sxc.Oqtane/NativeModule.js"
             // instead of default oqtane Module.js pattern (that is commented bellow)
             // because our PageChangesHelper.AttachScriptsAndStyles in OnAfterRenderAsync in index.razor.cs
-            // is sometimes executing interop call to 'ToSic.Sxc.includeScriptsWithAttributes'
-            // earlier than "Modules/ToSic.Sxc/Module.js" is loaded in browser by oqtane ModuleBase.cs
-            var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Modules/ToSic.Sxc/NativeModule.js");
-            await module.InvokeVoidAsync("includeScriptsWithAttributes", (object)scripts);
+            // is sometimes executing interop call to 'ToSic.Sxc.Oqtane.includeScriptsWithAttributes'
+            // earlier than "Modules/ToSic.Sxc.Oqtane/Module.js" is loaded in browser by oqtane ModuleBase.cs
+            var module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", $"./Modules/{OqtConstants.PackageName}/NativeModule.js");
+            await module.InvokeVoidAsync($"includeScriptsWithAttributes", (object)scripts);
             //try
             //{
             //    await _jsRuntime.InvokeVoidAsync(
-            //        "ToSic.Sxc.includeScriptsWithAttributes",
+            //        $"{OqtConstants.PackageName}.includeScriptsWithAttributes",
             //        (object)scripts);
             //}
             //catch

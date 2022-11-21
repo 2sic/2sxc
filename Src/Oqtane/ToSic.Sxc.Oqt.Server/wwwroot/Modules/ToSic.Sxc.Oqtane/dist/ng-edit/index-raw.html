@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <title>Content Management</title>
+  <!-- the base tag, required by Angular - from backend -->
+  <base href="@base">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- This will be pre-filled by the backend -->
+  <meta name="_jsApi" content="@jsapi">
+
+  <!-- optional headers - must be added before 2sxc is loaded -->
+  <!--@customheaders-->
+
+  <script>
+    (function obsoleteBrowserCheck() {
+      var isIE = navigator.userAgent.indexOf("MSIE") >= 0 || navigator.userAgent.indexOf("Trident") >= 0 || !!document.documentMode;
+      // note: new edge is just "Edg"
+      var isEdge = navigator.userAgent.indexOf("Edge") >= 0;
+      if (isIE || isEdge) {
+        alert("Error: Old Browser Detected\n\nIt seems that you are using an old browser like Internet Explorer or Edge. \n\n"
+          + "Edit doesn't work with obsolete browsers. Please use a modern browser like Chrome.");
+        window.parent.$2sxc.totalPopup.close();
+      }
+    })();
+
+    // the version for cache-break in other urls
+    window.sxcVersion = "@sxcver";
+  </script>
+
+<style>@import"https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap";:root{--mdc-layout-grid-margin-desktop:24px;--mdc-layout-grid-gutter-desktop:24px;--mdc-layout-grid-column-width-desktop:72px;--mdc-layout-grid-margin-tablet:16px;--mdc-layout-grid-gutter-tablet:16px;--mdc-layout-grid-column-width-tablet:72px;--mdc-layout-grid-margin-phone:16px;--mdc-layout-grid-gutter-phone:16px;--mdc-layout-grid-column-width-phone:72px}html,body{height:100%}body{margin:0;background-color:transparent;font-family:Roboto,Helvetica Neue,sans-serif;overflow:hidden}</style><link rel="stylesheet" href="styles.657bd14ccb86c3b0.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.657bd14ccb86c3b0.css"></noscript></head>
+
+<body>
+    <!--@custombody-->
+    <!-- Load the $2sxc script - after the custom-body; the @... below will be replaced by the backend for cache-breaking -->
+    <script src="../../js/2sxc.api.min.js?cacheBreak=@sxcver"></script>
+  <app-root></app-root>
+<script src="runtime.bd39f234749869f3.js" type="module"></script><script src="polyfills.e1e757ed6cb1b0f9.js" type="module"></script><script src="scripts.eb93aa1b2de1d2e5.js" defer></script><script src="vendor.da496e5dea940d6b.js" type="module"></script><script src="main.2e31b3882b50ee59.js" type="module"></script>
+
+
+</body></html>

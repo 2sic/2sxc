@@ -15,7 +15,7 @@
 
     <!-- Properties / Variables for the DNN Build which we need early on-->
     <PropertyGroup>
-      <DnnManifestFile>DnnPackageBuilder/2sic_2SexyContent.dnn</DnnManifestFile>
+      <DnnManifestFile>DnnPackageBuilder/ToSic.Sxc.Dnn.dnn</DnnManifestFile>
     </PropertyGroup>
 
     <!-- Get the Version out of the DNN Manifest for this release -->
@@ -24,12 +24,12 @@
     </XmlRead>
 
     <PropertyGroup>
-      <PackageName>2sic_2SexyContent</PackageName>
+      <PackageName>ToSic.Sxc.Dnn</PackageName>
       <TempPackageFolder>$(MSBuildProjectDirectory)\ModulePackages\Temp</TempPackageFolder>
       <TempPackageResourcesFolder>$(MSBuildProjectDirectory)\ModulePackages\TempResources</TempPackageResourcesFolder>
       <TempPackagePdbFolder>$(MSBuildProjectDirectory)\ModulePackages\TempPdb</TempPackagePdbFolder>
       <FinalZipFolder>../../../InstallPackages/Dnn-Installer</FinalZipFolder>
-      <FinalZipFileName>$(PackageName)_$(Version)_Install.zip</FinalZipFileName>
+      <FinalZipFileName>$(PackageName).$(Version)_Install.zip</FinalZipFileName>
       <SourceMapsFolder>$(Dev2sxcAssets)\..\$(Version)</SourceMapsFolder>
     </PropertyGroup>
 

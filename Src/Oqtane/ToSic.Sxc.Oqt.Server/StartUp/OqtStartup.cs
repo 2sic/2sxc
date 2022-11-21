@@ -75,12 +75,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
             
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
-            globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules\\ToSic.Sxc");
+            globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName);
             globalConfig.DataFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.FolderData);
             globalConfig.TemporaryFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.TemporaryFolder);
             globalConfig.InstructionsFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.InstructionsFolder);
             globalConfig.AppDataTemplateFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder);
-            globalConfig.AssetsVirtualUrl = "~/Modules/ToSic.Sxc/assets/";
+            globalConfig.AssetsVirtualUrl = $"~/Modules/{OqtConstants.PackageName}/assets/";
             globalConfig.SharedAppsFolder = $"/{OqtConstants.AppRoot}/{OqtConstants.SharedAppFolder}/"; // "/2sxc/Shared"
 
 
@@ -120,12 +120,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
 
                 // Route for 2sxc UI (after JS updates to use folder route (ending with /ng/ or /ng-edit/), probably this will not be necessary)
-                //endpoints.Map("/Modules/ToSic.Sxc/dist/quickDialog/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\quickDialog\index-raw.html"));
-                //endpoints.Map("/Modules/ToSic.Sxc/dist/ng-edit/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\index-raw.html"));
+                //endpoints.Map($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html"));
+                //endpoints.Map($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html"));
 
                 // Handle / Process URLs to Dialogs route for 2sxc UI
-                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/quickDialog/", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\quickDialog\index-raw.html"));
-                endpoints.MapFallback("/Modules/ToSic.Sxc/dist/ng-edit/", (context) => EditUiMiddleware.PageOutputCached(context, env, @"Modules\ToSic.Sxc\dist\ng-edit\index-raw.html"));
+                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html"));
+                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html"));
             });
         }
 

@@ -287,7 +287,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="ClientScripts\readme.md" />
-    <Content Include="DnnPackageBuilder\2sic_2SexyContent.dnn">
+    <Content Include="DnnPackageBuilder\ToSic.Sxc.Dnn.dnn">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="DnnPackageBuilder\readme.md" />

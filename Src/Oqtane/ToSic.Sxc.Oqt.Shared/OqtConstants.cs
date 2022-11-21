@@ -5,6 +5,9 @@
     /// </summary>
     public static class OqtConstants
     {
+        // used as PackageID in nupkg, oqtane module PackageName, wwwroot/Modules/PackageName, namespace in module.js, etc...
+        public const string PackageName = "ToSic.Sxc.Oqtane";
+
         public const string SiteKeyForZoneId = "EavZone";
 
         public const string AppRoot = "2sxc";
@@ -24,7 +27,7 @@
         public const string UserTokenPrefix = "oqt";
 
         // #uncertain: maybe should incorporate the virtual path of the application?
-        public const string UiRoot = "/Modules/ToSic.Sxc";
+        public const string UiRoot = $"/Modules/{OqtConstants.PackageName}";
         // #uncertain: maybe should be more dynamic
         public const string SiteRoot = "/";
 

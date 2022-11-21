@@ -3,6 +3,7 @@
 @set BuildFolder=%1
 @set Dev2sxcOqtaneRoot=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\
 @set OqtaneBin=%Dev2sxcOqtaneRoot%bin\%BuildFolder%\net6.0\
+@set PackageName=ToSic.Sxc.Oqtane
 
 @Echo(
 @Echo 2sxc Oqtane - Client
@@ -32,7 +33,7 @@ XCOPY "..\ToSic.Sxc.Oqt.Shared\bin\%BuildFolder%\net6.0\ToSic.*.pdb" "%OqtaneBin
 
 @Echo(
 @Echo 2sxc Oqtane - Client Assets
-XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\ToSic.Sxc\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\ToSic.Sxc\" /Y /S /I
+XCOPY "..\ToSic.Sxc.Oqt.Server\wwwroot\Modules\%PackageName%\*" "%Dev2sxcOqtaneRoot%wwwroot\Modules\%PackageName%\" /Y /S /I
 
 @Echo(
 @Echo nuget dependencies - oqt-imageflow
@@ -51,7 +52,7 @@ XCOPY "..\..\..\Dependencies\RazorBlade\Release\net5.0\ToSic.Razor.pdb" "%Oqtane
 
 @Echo(
 @Echo the target for js, css, json etc.
-@set BuildTarget=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\wwwroot\Modules\ToSic.Sxc
+@set BuildTarget=c:\Projects\2sxc\oqtane\oqtane.framework\Oqtane.Server\wwwroot\Modules\%PackageName%
 
 @Echo(
 @Echo Copy ImportExport instructions
