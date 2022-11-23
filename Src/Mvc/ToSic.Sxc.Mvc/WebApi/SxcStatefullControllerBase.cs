@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Mvc.WebApi
             // only if it's negative, do we load the inner block
             if (contentblockId > 0) return wrapLog.Return(block, "found");
 
-            Log.Add($"Inner Content: {contentblockId}");
+            Log.A($"Inner Content: {contentblockId}");
             block = HttpContext.RequestServices.Build<BlockFromEntity>().Init(block, contentblockId, Log);
 
             return wrapLog.Return(block, "found");

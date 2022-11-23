@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Mvc.WebApi.Adam
                 var filesCollection = Request.Form.Files;
                 if (filesCollection.Count <= 0)
                 {
-                    Log.Add("Error, no files");
+                    Log.A("Error, no files");
                     return new UploadResultDto { Success = false, Error = "No file was uploaded." };
                 }
 
