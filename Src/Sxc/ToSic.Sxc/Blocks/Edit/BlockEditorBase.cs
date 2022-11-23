@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         internal BlockEditorBase Init(IBlock block)
         {
-            Log.LinkTo(block.Log);
+            (Log as Log)?.LinkTo(block.Log);
             Block = block;
             return this;
         }

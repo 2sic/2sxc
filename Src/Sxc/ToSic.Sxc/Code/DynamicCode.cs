@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Code
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _DynCodeRoot = codeRoot;
-            Log.LinkTo(codeRoot?.Log);
+            (Log as Log)?.LinkTo(codeRoot?.Log);
             Log.Fn().Done();
         }
 

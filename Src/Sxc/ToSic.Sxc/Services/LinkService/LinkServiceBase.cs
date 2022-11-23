@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Services
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             CodeRoot = codeRoot;
-            Log.LinkTo(codeRoot.Log);
+            (Log as Log)?.LinkTo(codeRoot.Log);
         }
         [PrivateApi] protected IDynamicCodeRoot CodeRoot;
         [PrivateApi] protected IApp App => CodeRoot.App;

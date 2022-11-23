@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.Run
 
                 AttachDnnStateIfPossible(dnnContext, logInfo);
 
-                log?.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
+                (log as Log)?.Entries.ForEach(e => logInfo.AddProperty(e.Source, e.Message));
 
                 new EventLogController().AddLog(logInfo);
             }

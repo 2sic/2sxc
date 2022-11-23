@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Run
 
         public IEnvironmentInstaller Init(ILog parent)
         {
-            Log.LinkTo(parent);
+            (Log as Log)?.LinkTo(parent);
             return this;
         }
 

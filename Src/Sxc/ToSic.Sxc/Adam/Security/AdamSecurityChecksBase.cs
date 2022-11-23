@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
 
         internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             var callLog = Log.Fn<AdamSecurityChecksBase>();
             AdamContext = adamContext;
 

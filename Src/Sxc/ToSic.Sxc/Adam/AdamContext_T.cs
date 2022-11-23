@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Adam
 
         public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
             AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
             AdamRoot = usePortalRoot

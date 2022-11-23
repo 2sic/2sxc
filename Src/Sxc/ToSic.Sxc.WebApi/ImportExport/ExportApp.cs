@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ExportApp Init(ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             _zoneMapper.Init(Log);
             return this;
         }

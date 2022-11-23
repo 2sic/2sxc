@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Web.JsContext
 
         public JsContextAll Init(string systemRootUrl, IBlock block, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             var ctx = block.Context;
 
             Environment = new JsContextEnvironment(systemRootUrl, ctx);

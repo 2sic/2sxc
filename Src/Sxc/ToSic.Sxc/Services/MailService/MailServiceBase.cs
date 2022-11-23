@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Services
         /// <inheritdoc />
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            Log.LinkTo(codeRoot.Log);
+            (Log as Log)?.LinkTo(codeRoot.Log);
             App = codeRoot.App;
         }
 

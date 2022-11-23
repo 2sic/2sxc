@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Polymorphism
 
         public Polymorphism Init(IEnumerable<IEntity> list, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);
             if (Entity == null) return this;
 

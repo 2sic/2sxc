@@ -58,7 +58,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ImportContent Init(IUser user, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             _zoneMapper.Init(Log);
             _user = user;
             return this;

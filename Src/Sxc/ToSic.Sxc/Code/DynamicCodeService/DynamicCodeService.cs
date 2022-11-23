@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Code
 
         public IDynamicCodeService Init(ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
             return this;
         }

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.Adam
         public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
             
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             var context = appId > 0 ? _ctxResolver.BlockOrApp(appId) : _ctxResolver.AppNameRouteBlock(null);
             var logCall = Log.Fn<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, Log);

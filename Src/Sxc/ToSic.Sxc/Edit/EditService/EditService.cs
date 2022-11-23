@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Edit.EditService
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            Log.LinkTo(codeRoot.Log);
+            (Log as Log)?.LinkTo(codeRoot.Log);
             SetBlock(codeRoot, codeRoot.Block);
         }
 
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Edit.EditService
             Block = block;
             var user = codeRoot?.CmsContext?.User;
             Enabled = Block?.Context.UserMayEdit ?? (user?.IsSiteAdmin ?? false) || (user?.IsSystemAdmin ?? false);
-            if(Log.Parent == null && block != null) Log.LinkTo(block.Log);
+            if((Log as Log)?.Parent == null && block != null) (Log as Log)?.LinkTo(block.Log);
             return this;
         }
 

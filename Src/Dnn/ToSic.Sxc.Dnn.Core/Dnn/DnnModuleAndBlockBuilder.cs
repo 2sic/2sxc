@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn
         private readonly Generator<IModule> _moduleGenerator;
         private readonly Generator<IContextOfBlock> _contextGenerator;
         private readonly Generator<BlockFromModule> _blockGenerator;
-        private ILog ParentLog => Log.Parent ?? Log;
+        private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
 
         protected override IModule GetModuleImplementation(int pageId, int moduleId)

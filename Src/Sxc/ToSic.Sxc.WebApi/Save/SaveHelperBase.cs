@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi.Save
 
         public T Init(IContextOfApp context, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             Context = context;
             return this as T;
         }

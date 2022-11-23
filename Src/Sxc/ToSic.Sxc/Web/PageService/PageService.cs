@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Web.PageService
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             CodeRoot = codeRoot;
-            Log.LinkTo(codeRoot?.Log);
+            (Log as Log)?.LinkTo(codeRoot?.Log);
             Log.Fn(message: $"Linked {nameof(PageService)}").Done();
         }
 

@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public AdamCode Init(IDynamicCodeRoot dynCodeRoot, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             _DynCodeRoot = dynCodeRoot;
 
             return this;

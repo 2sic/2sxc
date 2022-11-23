@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Adam
 
         public IAdamFileSystem<string, string> Init(AdamManager<string, string> adamManager, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             AdamManager = adamManager;
             _adamPaths.Init(adamManager, Log);
             return this;

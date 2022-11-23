@@ -8,6 +8,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
+using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly Generator<BlockFromModule> _blockGenerator;
         private readonly Generator<IModuleRepository> _moduleRepositoryGenerator;
         private readonly RequestHelper _requestHelper;
-        private ILog ParentLog => Log.Parent ?? Log;
+        private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
         /// <summary>
         /// 

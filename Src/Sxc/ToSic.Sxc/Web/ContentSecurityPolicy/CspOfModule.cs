@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         {
             if (_alreadyConnected) return;
             _alreadyConnected = true;
-            Log.LinkTo(codeRoot.Log);
+            (Log as Log)?.LinkTo(codeRoot.Log);
             _codeRoot = codeRoot;
             Log.Fn().Done();
         }

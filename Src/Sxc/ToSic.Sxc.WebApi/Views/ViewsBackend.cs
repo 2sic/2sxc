@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Views
 
         public ViewsBackend Init(ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             return this;
         }
 

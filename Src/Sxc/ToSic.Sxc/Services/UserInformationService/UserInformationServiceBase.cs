@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Services
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            Log.LinkTo(codeRoot.Log);
+            (Log as Log)?.LinkTo(codeRoot.Log);
         }
 
         public abstract string PlatformIdentityTokenPrefix();

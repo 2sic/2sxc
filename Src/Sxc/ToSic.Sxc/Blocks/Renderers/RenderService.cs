@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Blocks
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _codeRoot = codeRoot;
-            Log.LinkTo(codeRoot.Log);
+            (Log as Log)?.LinkTo(codeRoot.Log);
             _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
         }
 

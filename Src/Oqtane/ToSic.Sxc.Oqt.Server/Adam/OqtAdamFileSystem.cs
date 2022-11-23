@@ -12,6 +12,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using File = Oqtane.Models.File;
+using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
@@ -34,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamContext;
             _adamPaths.Init(adamContext, Log);

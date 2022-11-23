@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi
 
         public new T Init(ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             return this as T;
         }
 

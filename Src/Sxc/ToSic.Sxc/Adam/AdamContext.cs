@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             //var appId = context.AppState.AppId;
             var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;

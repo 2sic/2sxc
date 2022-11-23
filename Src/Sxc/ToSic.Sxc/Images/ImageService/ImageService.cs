@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Images
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _codeRootOrNull = codeRoot;
-            Log.LinkTo(_codeRootOrNull.Log);
+            (Log as Log)?.LinkTo(_codeRootOrNull.Log);
         }
         private IDynamicCodeRoot _codeRootOrNull;
         internal IEditService EditOrNull => _codeRootOrNull?.Edit;

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Context
 
         public IModule Init(T item, ILog parentLog)
         {
-            Log.LinkTo(parentLog);
+            (Log as Log)?.LinkTo(parentLog);
             _contents = item;
             return this;
         }
