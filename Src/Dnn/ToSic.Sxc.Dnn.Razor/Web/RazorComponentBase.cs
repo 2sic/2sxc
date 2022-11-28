@@ -11,6 +11,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;
 using ToSic.Sxc.Services;
 using File = System.IO.File;
+using LogAdapter = ToSic.Eav.Logging.LogAdapter;
 
 namespace ToSic.Sxc.Web
 {
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasLog, IRazor, IDnnRazor
+    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, Eav.Logging.IHasLog, IHasLog, IRazor, IDnnRazor
     {
         public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this, _DynCodeRoot?.Block?.Context.User.IsSystemAdmin ?? false, _DynCodeRoot?.GetService<IFeaturesService>()));
         private IHtmlHelper _html;
@@ -101,20 +102,24 @@ namespace ToSic.Sxc.Web
         #region IHasLog
 
         /// <inheritdoc />
-        public ILog Log => _log ?? (_log = new Log("Dyn.Temp"));
+        public Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/); 
 
-        private ILog _log;
+        private Eav.Logging.ILog _log;
+
+        ILog IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+
         #endregion
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             // if (!(parent is IDynamicCodeRoot isDynCode)) return;
             _DynCodeRoot = codeRoot; // isDynCode;
-            _log = new Log("Rzr.Comp", _DynCodeRoot?.Log);
+
+            var log = _DynCodeRoot?.Log.SubLogOrNull("Rzr.Comp"); // real log
+            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
             var wrapLog = Log.Fn();
             wrapLog.Done("ok");
         }
+
     }
-
-
 }

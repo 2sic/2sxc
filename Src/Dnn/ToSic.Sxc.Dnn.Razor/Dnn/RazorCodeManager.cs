@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Web;
+using ToSic.Eav.Logging;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Web;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Dnn
     public class RazorCodeManager: HasLog
     {
         public RazorComponentBase Parent;
-        public RazorCodeManager(RazorComponentBase parent): base("Rzr.Code", parent.Log)
+        public RazorCodeManager(RazorComponentBase parent): base("Rzr.Code", (parent?.Log as LogAdapter)?.GetContents())
         {
             Parent = parent;
         }

@@ -4,7 +4,9 @@ using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -17,6 +19,8 @@ using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
+using IHasLog = ToSic.Lib.Logging.IHasLog;
+using ILog = ToSic.Lib.Logging.ILog;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -28,8 +32,19 @@ namespace ToSic.Sxc.Dnn
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
     [UseOldNewtonsoftForHttpJson]
-    public abstract class ApiController : DynamicApiController, IDnnDynamicWebApi, IDynamicCode, IDynamicWebApi, IHasDynamicCodeRoot
+    public abstract class ApiController : DynamicApiController, 
+        IDnnDynamicWebApi, 
+        IDynamicCode, 
+        IDynamicWebApi, 
+        IHasDynamicCodeRoot,
+        Eav.Logging.IHasLog
     {
+        protected ApiController()
+        {
+            var log = base.Log.SubLogOrNull("OldApi.DnnApi"); // real log
+            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+        }
+        
         [PrivateApi]
         public const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
 
@@ -137,6 +152,15 @@ namespace ToSic.Sxc.Dnn
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
+        #endregion
+
+        #region IHasLog
+        public new Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/);
+
+        private Eav.Logging.ILog _log;
+
+        ILog IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+
         #endregion
     }
 }

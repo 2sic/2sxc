@@ -1,10 +1,13 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
+using IHasLog = ToSic.Lib.Logging.IHasLog;
+using ILog = ToSic.Eav.Logging.ILog;
 
 namespace ToSic.Sxc.Code
 {
@@ -13,7 +16,7 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCode : HasLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
+    public abstract partial class DynamicCode : Eav.Logging.IHasLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
     {
 
         #region Constructor - NOT for DI
@@ -21,11 +24,21 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Main constructor, may never have parameters, otherwise inheriting code will run into problems. 
         /// </summary>
-        protected DynamicCode() : base("Sxc.DynCod")
+        protected DynamicCode() : base(/*"Sxc.DynCod"*/)
         {
 
         }
-        
+
+        #endregion
+
+        #region IHasLog
+
+        // <inheritdoc />
+        public Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/);
+
+        private Eav.Logging.ILog _log;
+
+        Lib.Logging.ILog IHasLog.Log => Log.GetContents();
         #endregion
 
         #region Dynamic Code Coupling
@@ -34,7 +47,9 @@ namespace ToSic.Sxc.Code
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _DynCodeRoot = codeRoot;
-            (Log as Log)?.LinkTo(codeRoot?.Log);
+            (Log.GetContents() as Log)?.LinkTo(codeRoot?.Log);
+            var log = _DynCodeRoot?.Log.SubLogOrNull("Sxc.DynCod"); 
+            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
             Log.Fn().Done();
         }
 
@@ -106,6 +121,6 @@ namespace ToSic.Sxc.Code
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
 
-        #endregion CmsContext  
+        #endregion CmsContext
     }
 }

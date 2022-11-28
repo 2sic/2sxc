@@ -4,6 +4,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Logging;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
@@ -22,10 +23,19 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Api12 : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IDynamicCode12
+    public abstract partial class Api12 : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IDynamicCode12, ToSic.Eav.Logging.IHasLog
     {
-        protected Api12() : base(EavWebApiConstants.HistoryNameWebApi) { }
-        protected Api12(string logSuffix): base(logSuffix) { }
+        protected Api12() : base(EavWebApiConstants.HistoryNameWebApi)
+        {
+            var log = base.Log.SubLogOrNull("Hyb12.Api12"); // real log
+            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+        }
+
+        protected Api12(string logSuffix) : base(logSuffix)
+        {
+            var log = base.Log.SubLogOrNull($"{logSuffix}.Api12"); // real log
+            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+        }
 
         /// <summary>
         /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -99,5 +109,16 @@ namespace Custom.Hybrid
                 Log);
             return wrapLog.Return(appStuff);
         }
+
+        #region IHasLog
+
+        /// <inheritdoc />
+        public new ToSic.Eav.Logging.ILog Log => _log ??= new LogAdapter(null);
+
+        private ToSic.Eav.Logging.ILog _log;
+
+        //ToSic.Lib.Logging.ILog ToSic.Lib.Logging.IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+
+        #endregion
     }
 }
