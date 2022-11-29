@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Context.Query
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Context.Query
     /// This should provide cross-platform, neutral way to have page parameters in the Razor
     /// </summary>
     [PrivateApi("Hide implementation")]
-    public class Parameters : IParameters, IReadOnlyDictionary<string, string>
+    public class Parameters : IParameters
     {
         public Parameters() : this(null) { }
 
@@ -86,12 +87,7 @@ namespace ToSic.Sxc.Context.Query
             return new Parameters(copy);
         }
 
-        public IParameters Set(string name)
-        {
-            var copy = new NameValueCollection(Nvc);
-            copy.Set(name, null);
-            return new Parameters(copy);
-        }
+        public IParameters Set(string name) => Set(name, null);
 
         public IParameters Remove(string name)
         {
@@ -100,5 +96,28 @@ namespace ToSic.Sxc.Context.Query
                 copy.Remove(name);
             return new Parameters(copy);
         }
+
+        #region New Object Add/Set
+
+        public IParameters Add(string name, object value) => Add(name, ValueToUrlValue(value));
+
+        public IParameters Set(string name, object value) => Set(name, ValueToUrlValue(value));
+
+        private string ValueToUrlValue(object value)
+        {
+            if (value is null) return null;
+            if (value is bool bVal) return bVal.ToString().ToLower();
+            if (value.IsNumeric()) return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
+            if (value is DateTime dtmVal)
+            {
+                var result = DateTime.SpecifyKind(dtmVal, DateTimeKind.Utc).ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+                // if the time is zero, trim that
+                if (result.EndsWith("T00:00:00")) return result.Substring(0, result.IndexOf('T'));
+                return result;
+            }
+            return value.ToString();
+        }
+
+        #endregion
     }
 }

@@ -38,11 +38,14 @@ namespace ToSic.Sxc.Tests.ContextTests
 
         private void TestParam(int count, string exp, Func<IParameters, IParameters> pFunc)
         {
-            //var p = GetTestParameters();
             var p = pFunc(GetTestParameters());
             AreEqual(count, p.Count);
             AreEqual(exp, p.ToString());
         }
+
+        #region Add String / Null
+
+        
 
         [TestMethod] public void ParameterAdd() 
             => TestParam(3, "id=27&sort=descending&test=wonderful", p => p.Add("test", "wonderful"));
@@ -62,6 +65,63 @@ namespace ToSic.Sxc.Tests.ContextTests
         public void ParameterAddMultipleSameKey()
             => TestParam(3, "id=27&sort=descending&test=wonderful&test=awesome",
                 p => p.Add("test", "wonderful").Add("Test", "awesome"));
+
+        #endregion
+
+        #region Add / Set boolean
+
+        [TestMethod]
+        public void AddBoolTrue() => TestParam(3, "id=27&sort=descending&test=true", p => p.Add("test", true));
+        [TestMethod]
+        public void AddBoolFalse() => TestParam(3, "id=27&sort=descending&test=false", p => p.Add("test", false));
+
+        [TestMethod]
+        public void SetAddBoolTrue() => TestParam(3, "id=27&sort=descending&test=true", p => p.Set("test", true));
+        [TestMethod]
+        public void SetAddBoolFalse() => TestParam(3, "id=27&sort=descending&test=false", p => p.Set("test", false));
+
+        [TestMethod]
+        public void SetBoolTrue() => TestParam(2, "id=true&sort=descending", p => p.Set("id", true));
+        [TestMethod]
+        public void SetBoolFalse() => TestParam(2, "id=false&sort=descending", p => p.Set("id", false));
+
+        #endregion
+
+        #region Add Numbers
+
+        [TestMethod]
+        public void AddInt7() => TestParam(3, "id=27&sort=descending&test=7", p => p.Add("test", 7));
+        [TestMethod]
+        public void AddIntMinus7() => TestParam(3, "id=27&sort=descending&test=-7", p => p.Add("test", -7));
+        
+        [TestMethod]
+        public void AddLong7() => TestParam(3, "id=27&sort=descending&test=7", p => p.Add("test", 7L));
+        [TestMethod]
+        public void AddLongMinus7() => TestParam(3, "id=27&sort=descending&test=-7", p => p.Add("test", -7L));
+
+        [TestMethod]
+        public void AddFloat7dot7() => TestParam(3, "id=27&sort=descending&test=7.7", p => p.Add("test", 7.7F));
+        [TestMethod]
+        public void AddFloatMinus7dot7() => TestParam(3, "id=27&sort=descending&test=-7.7", p => p.Add("test", -7.7F));
+        [TestMethod]
+        public void AddDouble7dot7() => TestParam(3, "id=27&sort=descending&test=7.7", p => p.Add("test", 7.7));
+        [TestMethod]
+        public void AddDoubleMinus7dot7() => TestParam(3, "id=27&sort=descending&test=-7.7", p => p.Add("test", -7.7));
+
+        #endregion
+
+        #region Add Dates
+
+        private static readonly DateTime TestDate = new DateTime(2042, 4, 2);
+        private static readonly DateTime TestDateTime = new DateTime(2042, 4, 2, 3, 4, 56);
+
+        [TestMethod]
+        public void AddDate() => TestParam(3, "id=27&sort=descending&test=2042-04-02", p => p.Add("test", TestDate));
+        
+        [TestMethod]
+        public void AddDateTime() => TestParam(3, "id=27&sort=descending&test=2042-04-02T03:04:56", p => p.Add("test", TestDateTime));
+
+        #endregion
 
         [TestMethod]
         public void ParameterSet()

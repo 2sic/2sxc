@@ -26,7 +26,6 @@ namespace ToSic.Sxc.Context
         /// _Important: this does not change the current object, it returns a new object._
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="value"></param>
         /// <returns></returns>
         IParameters Add(string name);
 
@@ -37,10 +36,27 @@ namespace ToSic.Sxc.Context
         /// 
         /// _Important: this does not change the current object, it returns a new object._
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="name">the key</param>
+        /// <param name="value">the value</param>
+        /// <returns>A new <see cref="IParameters"/> object</returns>
         IParameters Add(string name, string value);
+
+        /// <summary>
+        /// Add another URL parameter and return a new <see cref="IParameters"/>.
+        /// If the name/key already exists, it will extend it, so the parameter will have 2 values.
+        /// Otherwise please use <see cref="Set(string,string)"/>
+        /// 
+        /// _Important: this does not change the current object, it returns a new object._
+        ///
+        /// Note also that this takes an `object` and will do some special conversions.
+        /// For example, bool values are lower case `true`|`false`, numbers are culture invariant and dates
+        /// are treated as is with time removed if it has no time. 
+        /// </summary>
+        /// <param name="name">the key</param>
+        /// <param name="value">object! value</param>
+        /// <returns>A new <see cref="IParameters"/> object</returns>
+        /// <remarks>Added in v15.0</remarks>
+        IParameters Add(string name, object value);
 
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
@@ -50,8 +66,24 @@ namespace ToSic.Sxc.Context
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
-        /// <returns></returns>
+        /// <returns>A new <see cref="IParameters"/> object</returns>
         IParameters Set(string name, string value);
+
+        /// <summary>
+        /// Add another URL parameter and return a new <see cref="IParameters"/>.
+        /// If the name/key already exists, it will just overwrite it.
+        /// 
+        /// _Important: this does not change the current object, it returns a new object._
+        ///
+        /// Note also that this takes an `object` and will do some special conversions.
+        /// For example, bool values are lower case `true`|`false`, numbers are culture invariant and dates
+        /// are treated as is with time removed if it has no time. 
+        /// </summary>
+        /// <param name="name">the key</param>
+        /// <param name="value">object! value</param>
+        /// <returns>A new <see cref="IParameters"/> object</returns>
+        /// <remarks>Added in v15.0</remarks>
+        IParameters Set(string name, object value);
 
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
