@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
@@ -26,8 +25,6 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Logging;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -221,11 +218,13 @@ namespace ToSic.SexyContent.WebApi
 
         #region IHasLog
 
-        public new ICodeLog Log => _log.Get(() => new LogAdapter(base.Log));
+        public new ICodeLog Log => _log.Get(() => new CodeLog(base.Log));
         private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
 
         ILog IHasLog.Log => base.Log;
-        public ILog Log15 => base.Log;
+
+        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
+        //public ILog Log15 => base.Log;
 
         #endregion
     }

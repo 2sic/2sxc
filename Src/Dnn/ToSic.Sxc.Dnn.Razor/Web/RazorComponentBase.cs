@@ -7,13 +7,13 @@ using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;
 using ToSic.Sxc.Services;
 using File = System.IO.File;
-using LogAdapter = ToSic.Eav.Logging.LogAdapter;
+using IHasLog = ToSic.Lib.Logging.IHasLog;
+using ILog = ToSic.Lib.Logging.ILog;
 
 namespace ToSic.Sxc.Web
 {
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Web
         #region IHasLog
 
         /// <inheritdoc />
-        public ICodeLog Log => _logAdapter.Get(() => new LogAdapter(Log15)/*fallback Log*/); 
+        public ICodeLog Log => _logAdapter.Get(() => new CodeLog(Log15)/*fallback Log*/); 
 
         private readonly GetOnce<ICodeLog> _logAdapter = new GetOnce<ICodeLog>();
 

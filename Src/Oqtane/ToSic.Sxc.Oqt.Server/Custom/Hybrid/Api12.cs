@@ -4,12 +4,10 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -117,11 +115,12 @@ namespace Custom.Hybrid
         #region IHasLog
 
         /// <inheritdoc />
-        public new ICodeLog Log => _log.Get(() => new LogAdapter(base.Log));
+        public new ICodeLog Log => _log.Get(() => new CodeLog(base.Log));
 
         private readonly GetOnce<ICodeLog> _log = new();
 
-        [PrivateApi] public ToSic.Lib.Logging.ILog Log15 => base.Log;
+        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
+        //[PrivateApi] public ToSic.Lib.Logging.ILog Log15 => base.Log;
 
         [PrivateApi]
         ToSic.Lib.Logging.ILog ToSic.Lib.Logging.IHasLog.Log => base.Log; // Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)

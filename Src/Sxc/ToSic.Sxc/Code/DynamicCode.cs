@@ -1,10 +1,8 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
@@ -33,11 +31,12 @@ namespace ToSic.Sxc.Code
 
         #region IHasLog
 
-        [PrivateApi] public Lib.Logging.ILog Log15 => base.Log;
+        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
+        //[PrivateApi] public Lib.Logging.ILog Log15 => base.Log;
 
         // <inheritdoc />
         [PrivateApi]
-        public new ICodeLog Log => _logAdapter.Get(() => new LogAdapter(base.Log));
+        public new ICodeLog Log => _logAdapter.Get(() => new CodeLog(base.Log));
         private readonly GetOnce<ICodeLog> _logAdapter = new GetOnce<ICodeLog>();
 
         #endregion
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.Code
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _DynCodeRoot = codeRoot;
-            (Log15 as Log)?.LinkTo(codeRoot?.Log);
+            (base.Log as Log)?.LinkTo(codeRoot?.Log);
             //var log = _DynCodeRoot?.Log.SubLogOrNull("Sxc.DynCod");
             _logAdapter.IsValueCreated = false; // reset in case it was already used before new LogAdapter(log); // Eav.Logging.ILog compatibility
             base.Log.Fn().Done();

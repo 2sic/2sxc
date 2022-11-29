@@ -1,8 +1,7 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Logging;
+using ToSic.Sxc.Code;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 
@@ -27,7 +26,7 @@ namespace Custom.Hybrid
             //Log = new LogAdapter(log); // Eav.Logging.ILog compatibility
         }
 
-        public ICodeLog Log => _log.Get(() => new LogAdapter(Log15));
+        public ICodeLog Log => _log.Get(() => new CodeLog(Log15));
         private readonly GetOnce<ICodeLog> _log = new();
 
         ILog IHasLog.Log => Log15;

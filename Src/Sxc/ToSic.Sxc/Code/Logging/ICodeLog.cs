@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Documentation;
 
-namespace ToSic.Sxc.Code.Logging
+namespace ToSic.Sxc.Code
 {
     [PrivateApi("still WIP")]
-    public interface ICodeLog: ToSic.Eav.Logging.ILog
+    public interface ICodeLog: Eav.Logging.ILog
     {
     }
 }

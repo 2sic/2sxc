@@ -1,9 +1,7 @@
 ﻿using Custom.Hybrid.Advanced;
 using ToSic.Eav.Documentation;
-using ToSic.Eav.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
@@ -45,11 +43,13 @@ namespace Custom.Hybrid
 
         #region IHasLog
 
-        public new ICodeLog Log => _log.Get(() => new LogAdapter(base.Log));
+        public new ICodeLog Log => _log.Get(() => new CodeLog(base.Log));
         private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
 
         ILog IHasLog.Log => base.Log;
-        public ILog Log15 => base.Log;
+
+        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
+        //public ILog Log15 => base.Log;
 
         #endregion
 

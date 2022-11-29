@@ -1,36 +1,37 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Data;
+using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code.Logging;
 
-namespace ToSic.Eav.Logging
+namespace ToSic.Sxc.Code
 {
+    [PrivateApi]
     // inherit from wrapper class
-    public class LogAdapter : Wrapper<Lib.Logging.ILog>, ICodeLog
+    public class CodeLog : Wrapper<ILog>, ICodeLog
     {
-        public LogAdapter(Lib.Logging.ILog log) : base(log ?? new Log(LogConstants.NameUnknown))
+        public CodeLog(ILog log) : base(log ?? new Log(LogConstants.NameUnknown))
         { }
 
-        /// <inheritdoc />
-        public string Id => _contents.Id;
+        ///// <inheritdoc />
+        //public string Id => _contents.Id;
 
-        /// <inheritdoc />
-        public string Identifier => _contents.Identifier;
+        ///// <inheritdoc />
+        //public string Identifier => _contents.Identifier;
 
-        /// <inheritdoc />
-        public bool Preserve
-        {
-            get => _contents.Preserve;
-            set => _contents.Preserve = value;
-        }
+        ///// <inheritdoc />
+        //public bool Preserve
+        //{
+        //    get => _contents.Preserve;
+        //    set => _contents.Preserve = value;
+        //}
 
-        /// <inheritdoc />
-        public int Depth
-        {
-            get => _contents.Depth;
-            set => _contents.Depth = value;
-        }
+        ///// <inheritdoc />
+        //public int Depth
+        //{
+        //    get => _contents.Depth;
+        //    set => _contents.Depth = value;
+        //}
 
         /// <inheritdoc />
         public Action<string> Call(
