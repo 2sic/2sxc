@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Engines.Razor
                     {
                         // Important to know: Once this fires, the page will stop rendering more templates
                         _IsError = true;
-                        _page.Log?.Ex(renderException);
+                        _page.Log?.GetContents().Ex(renderException);
                         // Show a nice / ugly error depending on user permissions
                         // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
                         var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(renderException, true);
@@ -87,9 +87,9 @@ namespace ToSic.Sxc.Engines.Razor
 
                 // Report if first time
                 if (isFirstOccurrence)
-                    _page.Log?.Ex(compileException);
+                    _page.Log?.GetContents().Ex(compileException);
                 _IsError = true;
-                _page.Log.A("Special exception handling - only show message");
+                _page.Log?.GetContents().A("Special exception handling - only show message");
 
                 // Show a nice / ugly error depending on user permissions
                 // Note that if anything breaks here, it will just use the normal error - but for what breaks in here

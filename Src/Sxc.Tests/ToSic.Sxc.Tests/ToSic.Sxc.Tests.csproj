@@ -89,6 +89,10 @@
     </Compile>
     <Compile Include="Adam\AdamSecurity.cs" />
     <Compile Include="Blocks\Output\BlockResourceExtractorGetHtmlAttributesTests.cs" />
+    <Compile Include="CodeTests\LoggingTests\LogAdapterTests.cs" />
+    <Compile Include="CodeTests\LoggingTests\LogFnOldTests.cs" />
+    <Compile Include="CodeTests\LoggingTests\LogFnTests.cs" />
+    <Compile Include="CodeTests\LoggingTests\LogTestBase.cs" />
     <Compile Include="ConfigurationTests\VerifyPatronsPerfectionistPackage.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParametersTests.cs" />
     <Compile Include="ContentSecurityPolicyTests\CspParameterFinalizerTests.cs" />

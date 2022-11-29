@@ -6,11 +6,12 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -37,12 +38,12 @@ namespace ToSic.Sxc.Dnn
         IDynamicCode, 
         IDynamicWebApi, 
         IHasDynamicCodeRoot,
-        Eav.Logging.IHasLog
+        IHasCodeLog
     {
         protected ApiController()
         {
-            var log = base.Log.SubLogOrNull("OldApi.DnnApi"); // real log
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            //var log = base.Log.SubLogOrNull("OldApi.DnnApi"); // real log
+            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
         }
         
         [PrivateApi]
@@ -155,11 +156,12 @@ namespace ToSic.Sxc.Dnn
         #endregion
 
         #region IHasLog
-        public new Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/);
 
-        private Eav.Logging.ILog _log;
+        public new ICodeLog Log => _log.Get(() => new LogAdapter(base.Log));
+        private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
 
-        ILog IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        ILog IHasLog.Log => base.Log;
+        public ILog Log15 => base.Log;
 
         #endregion
     }

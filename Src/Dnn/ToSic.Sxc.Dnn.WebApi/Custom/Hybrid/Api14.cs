@@ -1,12 +1,15 @@
 ﻿using Custom.Hybrid.Advanced;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
+using IHasLog = ToSic.Lib.Logging.IHasLog;
+using ILog = ToSic.Lib.Logging.ILog;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -26,28 +29,27 @@ namespace Custom.Hybrid
         IDynamicCode12, 
         IDynamicWebApi, 
         IHasDynamicCodeRoot,
-        ToSic.Eav.Logging.IHasLog
+        IHasCodeLog
     {
         protected Api14() : base("Hyb14")
         {
-            var log = base.Log.SubLogOrNull("Hyb14.Api14"); // real log
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            //var log = base.Log.SubLogOrNull("Hyb14.Api14"); // real log
+            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
         }
 
         protected Api14(string logSuffix) : base(logSuffix)
         {
-            var log = base.Log.SubLogOrNull($"{logSuffix}.Api14"); // real log
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            //var log = base.Log.SubLogOrNull($"{logSuffix}.Api14"); // real log
+            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
         }
 
         #region IHasLog
 
-        /// <inheritdoc />
-        public new ToSic.Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/);
+        public new ICodeLog Log => _log.Get(() => new LogAdapter(base.Log));
+        private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
 
-        private ToSic.Eav.Logging.ILog _log;
-
-        //ToSic.Lib.Logging.ILog ToSic.Lib.Logging.IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        ILog IHasLog.Log => base.Log;
+        public ILog Log15 => base.Log;
 
         #endregion
 

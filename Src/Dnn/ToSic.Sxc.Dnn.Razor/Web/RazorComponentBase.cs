@@ -4,8 +4,10 @@ using System.Web.Hosting;
 using System.Web.WebPages;
 using Custom.Hybrid;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, Eav.Logging.IHasLog, IHasLog, IRazor, IDnnRazor
+    public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasCodeLog, IHasLog, IRazor, IDnnRazor
     {
         public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this, _DynCodeRoot?.Block?.Context.User.IsSystemAdmin ?? false, _DynCodeRoot?.GetService<IFeaturesService>()));
         private IHtmlHelper _html;
@@ -50,7 +52,7 @@ namespace ToSic.Sxc.Web
             ConnectToRoot(typedParent._DynCodeRoot);
             try
             {
-                Log.A("@RenderPage:" + VirtualPath);
+                Log15.A("@RenderPage:" + VirtualPath);
             } catch { /* ignore */ }
         }
 
@@ -68,7 +70,7 @@ namespace ToSic.Sxc.Web
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrapLog = Log.Fn<dynamic>($"{virtualPath}, ..., {name}");
+            var wrapLog = Log15.Fn<dynamic>($"{virtualPath}, ..., {name}");
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             var result = path.EndsWith(CodeCompiler.CsFileExtension)
@@ -102,11 +104,16 @@ namespace ToSic.Sxc.Web
         #region IHasLog
 
         /// <inheritdoc />
-        public Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/); 
+        public ICodeLog Log => _logAdapter.Get(() => new LogAdapter(Log15)/*fallback Log*/); 
 
-        private Eav.Logging.ILog _log;
+        private readonly GetOnce<ICodeLog> _logAdapter = new GetOnce<ICodeLog>();
 
-        ILog IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        [PrivateApi] public ILog Log15 { get; } = new Log("Rzr.Comp");
+
+        /// <summary>
+        /// EXPLICIT NEW Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        /// </summary>
+        [PrivateApi] ILog IHasLog.Log => Log15;
 
         #endregion
 
@@ -115,9 +122,9 @@ namespace ToSic.Sxc.Web
             // if (!(parent is IDynamicCodeRoot isDynCode)) return;
             _DynCodeRoot = codeRoot; // isDynCode;
 
-            var log = _DynCodeRoot?.Log.SubLogOrNull("Rzr.Comp"); // real log
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
-            var wrapLog = Log.Fn();
+            (Log15 as Log).LinkTo(_DynCodeRoot?.Log, "Rzr.Comp"); // real log
+            _logAdapter.IsValueCreated = false;// = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            var wrapLog = Log15.Fn();
             wrapLog.Done("ok");
         }
 

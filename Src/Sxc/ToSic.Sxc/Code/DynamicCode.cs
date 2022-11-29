@@ -1,13 +1,13 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using IHasLog = ToSic.Lib.Logging.IHasLog;
-using ILog = ToSic.Eav.Logging.ILog;
 
 namespace ToSic.Sxc.Code
 {
@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCode : Eav.Logging.IHasLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
+    public abstract partial class DynamicCode : HasLog, IHasCodeLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
     {
 
         #region Constructor - NOT for DI
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Main constructor, may never have parameters, otherwise inheriting code will run into problems. 
         /// </summary>
-        protected DynamicCode() : base(/*"Sxc.DynCod"*/)
+        protected DynamicCode() : base("Sxc.DynCod")
         {
 
         }
@@ -33,12 +33,13 @@ namespace ToSic.Sxc.Code
 
         #region IHasLog
 
+        [PrivateApi] public Lib.Logging.ILog Log15 => base.Log;
+
         // <inheritdoc />
-        public Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/);
+        [PrivateApi]
+        public new ICodeLog Log => _logAdapter.Get(() => new LogAdapter(base.Log));
+        private readonly GetOnce<ICodeLog> _logAdapter = new GetOnce<ICodeLog>();
 
-        private Eav.Logging.ILog _log;
-
-        Lib.Logging.ILog IHasLog.Log => Log.GetContents();
         #endregion
 
         #region Dynamic Code Coupling
@@ -47,10 +48,10 @@ namespace ToSic.Sxc.Code
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _DynCodeRoot = codeRoot;
-            (Log.GetContents() as Log)?.LinkTo(codeRoot?.Log);
-            var log = _DynCodeRoot?.Log.SubLogOrNull("Sxc.DynCod"); 
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
-            Log.Fn().Done();
+            (Log15 as Log)?.LinkTo(codeRoot?.Log);
+            //var log = _DynCodeRoot?.Log.SubLogOrNull("Sxc.DynCod");
+            _logAdapter.IsValueCreated = false; // reset in case it was already used before new LogAdapter(log); // Eav.Logging.ILog compatibility
+            base.Log.Fn().Done();
         }
 
         /// <inheritdoc />
@@ -105,7 +106,7 @@ namespace ToSic.Sxc.Code
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrapLog = Log.Fn<dynamic>();
+            var wrapLog = base.Log.Fn<dynamic>();
             // usually we don't have a relative path, so we use the preset path from when this class was instantiated
             relativePath = relativePath ?? CreateInstancePath;
             var instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name,
@@ -122,5 +123,6 @@ namespace ToSic.Sxc.Code
 
 
         #endregion CmsContext
+
     }
 }

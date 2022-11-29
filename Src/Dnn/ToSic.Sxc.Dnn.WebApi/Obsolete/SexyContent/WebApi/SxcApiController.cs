@@ -7,6 +7,7 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
@@ -26,6 +27,7 @@ using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Code.Logging;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -51,12 +53,12 @@ namespace ToSic.SexyContent.WebApi
 #pragma warning disable 618
         IAppAndDataHelpers,
 #pragma warning restore 618
-        Eav.Logging.IHasLog
+        IHasCodeLog
     {
         protected SxcApiController() : base("OldApi")
         {
-            var log = base.Log.SubLogOrNull("OldApi.SxcApi"); // real log
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            //var log = base.Log.SubLogOrNull("OldApi.SxcApi"); // real log
+            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
         }
 
         public new IDnnContext Dnn => base.Dnn;
@@ -218,11 +220,12 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region IHasLog
-        public new Eav.Logging.ILog Log => _log ?? (_log = new LogAdapter(null)/*fallback Log*/);
 
-        private Eav.Logging.ILog _log;
+        public new ICodeLog Log => _log.Get(() => new LogAdapter(base.Log));
+        private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
 
-        ILog IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        ILog IHasLog.Log => base.Log;
+        public ILog Log15 => base.Log;
 
         #endregion
     }

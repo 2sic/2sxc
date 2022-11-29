@@ -5,9 +5,11 @@ using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Logging;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
@@ -23,18 +25,20 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Api12 : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IDynamicCode12, ToSic.Eav.Logging.IHasLog
+    public abstract partial class Api12 : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IDynamicCode12, IHasCodeLog
     {
         protected Api12() : base(EavWebApiConstants.HistoryNameWebApi)
         {
-            var log = base.Log.SubLogOrNull("Hyb12.Api12"); // real log
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            // 2dm - don't think we need another intermediate object - TODO: verify!
+            // var log = base.Log.SubLogOrNull("Hyb12.Api12"); // real log
+            //_log = new LogAdapter(base.Log); // Eav.Logging.ILog compatibility
         }
 
         protected Api12(string logSuffix) : base(logSuffix)
         {
-            var log = base.Log.SubLogOrNull($"{logSuffix}.Api12"); // real log
-            _log = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            // 2dm - don't think we need another intermediate object - TODO: verify!
+            //var log = base.Log.SubLogOrNull($"{logSuffix}.Api12"); // real log
+            //_log = new LogAdapter(base.Log); // Eav.Logging.ILog compatibility
         }
 
         /// <summary>
@@ -48,14 +52,14 @@ namespace Custom.Hybrid
 
             // Use the ServiceProvider of the current request to build DynamicCodeRoot
             // Note that BlockOptional was already retrieved in the base class
-            _DynCodeRoot = context.HttpContext.RequestServices.Build<DynamicCodeRoot>().InitDynCodeRoot(BlockOptional, Log, ToSic.Sxc.Constants.CompatibilityLevel12);
+            _DynCodeRoot = context.HttpContext.RequestServices.Build<DynamicCodeRoot>().InitDynCodeRoot(BlockOptional, base.Log, ToSic.Sxc.Constants.CompatibilityLevel12);
 
-            _AdamCode = GetService<AdamCode>().Init(_DynCodeRoot, Log);
+            _AdamCode = GetService<AdamCode>().Init(_DynCodeRoot, base.Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
             {
-                Log.A("DynCode.App is null");
+                base.Log.A("DynCode.App is null");
                 TryToAttachAppFromUrlParams(context);
             }
 
@@ -67,7 +71,7 @@ namespace Custom.Hybrid
 
         private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
         {
-            var wrapLog = Log.Fn();
+            var wrapLog = base.Log.Fn();
             var found = false;
             try
             {
@@ -81,7 +85,7 @@ namespace Custom.Hybrid
                 if (appId != ToSic.Eav.Constants.NullId)
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
-                    Log.A($"AppId: {appId}");
+                    base.Log.A($"AppId: {appId}");
                     var app = LoadAppOnly(appId, CtxResolver.Site().Site);
                     _DynCodeRoot.AttachApp(app);
                     found = true;
@@ -100,24 +104,27 @@ namespace Custom.Hybrid
         /// <returns></returns>
         private IApp LoadAppOnly(int appId, ISite site)
         {
-            var wrapLog = Log.Fn<IApp>($"{appId}");
+            var wrapLog = base.Log.Fn<IApp>($"{appId}");
             var showDrafts = false;
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
             var appStuff = app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                GetService<AppConfigDelegate>().Init(Log).Build(showDrafts),
-                Log);
+                GetService<AppConfigDelegate>().Init(base.Log).Build(showDrafts),
+                base.Log);
             return wrapLog.Return(appStuff);
         }
 
         #region IHasLog
 
         /// <inheritdoc />
-        public new ToSic.Eav.Logging.ILog Log => _log ??= new LogAdapter(null);
+        public new ICodeLog Log => _log.Get(() => new LogAdapter(base.Log));
 
-        private ToSic.Eav.Logging.ILog _log;
+        private readonly GetOnce<ICodeLog> _log = new();
 
-        //ToSic.Lib.Logging.ILog ToSic.Lib.Logging.IHasLog.Log => Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        [PrivateApi] public ToSic.Lib.Logging.ILog Log15 => base.Log;
+
+        [PrivateApi]
+        ToSic.Lib.Logging.ILog ToSic.Lib.Logging.IHasLog.Log => base.Log; // Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
 
         #endregion
     }
