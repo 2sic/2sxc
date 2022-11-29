@@ -11,6 +11,7 @@ using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Web.Url;
 using static System.StringComparison;
 using Runtime = Oqtane.Shared.Runtime;
 
@@ -50,16 +51,13 @@ namespace ToSic.Sxc.Oqt.App
             await base.OnParametersSetAsync();
 
             Log($"1: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
-            
+
             // Call 2sxc engine only when is necessary to render control.
             if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
             {
                 RenderedUri = NavigationManager.Uri;
                 Log($"1.1: RenderUri:{RenderedUri}");
-                var indexOfQuestion = NavigationManager.Uri.IndexOf("?", Ordinal);
-                RenderedPage = indexOfQuestion > -1
-                    ? NavigationManager.Uri.Substring(0, indexOfQuestion)
-                    : NavigationManager.Uri;
+                RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
                 Log($"1.2: Initialize2sxcContentBlock");
                 await Initialize2SxcContentBlock();
                 NewDataArrived = true;

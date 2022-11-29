@@ -1,15 +1,16 @@
-﻿using Oqtane.Models;
+﻿using Microsoft.Data.SqlClient;
+using Oqtane.Models;
 using Oqtane.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Data.SqlClient;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Context;
+using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Run;
 using IO = System.IO;
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var oqtSite = (OqtSite)Site;
 
             // Ensure trim prefixSlash and backslash at the end of folder path, because Oqtane require path like that.
-            destinationFolder = (destinationFolder.Backslash().TrimLastSlash() + IO.Path.DirectorySeparatorChar).TrimPrefixSlash();
+            destinationFolder = destinationFolder.EnsureOqtaneFolderFormat();
 
             var destinationVirtualPath = IO.Path.Combine(oqtSite.ContentPath, destinationFolder);
             var destinationFolderFullPath = _oqtServerPaths.FullContentPath(destinationVirtualPath);
@@ -56,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 AddFolder(destinationFolder);
             }
 
-            var folderInfo = _oqtFolderRepository.GetFolder(siteId, destinationFolder);
+            var folderInfo = _oqtFolderRepository.GetFolder(siteId, destinationFolder.EnsureOqtaneFolderFormat());
 
             void MassLog(string msg, Exception exception)
             {
@@ -75,11 +76,9 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 {
                     try
                     {
-                        using (var stream = IO.File.OpenRead(sourceFilePath))
-                        {
-                            var fileInfo = Add(folderInfo, stream, destinationFileName, oqtSite);
-                            MassLog($"Transferred '{destinationFileName}', file id is now {fileInfo?.FileId}", null);
-                        }
+                        using var stream = IO.File.OpenRead(sourceFilePath);
+                        var fileInfo = Add(folderInfo, stream, destinationFileName, oqtSite);
+                        MassLog($"Transferred '{destinationFileName}', file id is now {fileInfo?.FileId}", null);
                     }
                     catch (Exception e)
                     {
@@ -95,9 +94,8 @@ namespace ToSic.Sxc.Oqt.Server.Run
             foreach (var sourceFolderPath in IO.Directory.GetDirectories(sourceFolder))
             {
                 Log.A($"subfolder:{sourceFolderPath}");
-                var newDestinationFolder = IO.Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "")
-                    .TrimStart('\\'))
-                    .Replace('\\', '/');
+                var newDestinationFolder = IO.Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "").EnsureOqtaneFolderFormat());
+
                 TransferFilesToSite(sourceFolderPath, newDestinationFolder);
             }
 
@@ -116,29 +114,29 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 var relativePath = file.Value;
 
                 var fileName = IO.Path.GetFileName(relativePath);
-                var directory = IO.Path.GetDirectoryName(relativePath)?.Replace('\\', '/');
+                var directory = IO.Path.GetDirectoryName(relativePath).EnsureOqtaneFolderFormat();
                 if (directory == null)
                 {
-                    Log.A($"Warning: File '{relativePath}', folder doesn't exist on drive");
+                    Log.A($"Warning: File '{relativePath}', folder is 'null' doesn't exist on drive");
                     continue;
                 }
 
                 if (!FolderExists(directory))
                 {
-                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in Oqtane DB");
+                    Log.A($"Warning: File '{relativePath}', folder '{directory}' doesn't exist in file system");
                     continue;
                 }
 
-                var folderInfo = GetOqtFolderByName(directory);
+                var folderInfo = GetOqtFolderByPath(directory);
                 if (folderInfo == null)
                 {
-                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in Oqtane DB (2nd check)");
+                    Log.A($"Warning: File '{relativePath}', folder doesn't exist in Oqtane DB");
                     continue;
                 }
 
                 if (!FileExists(folderInfo, fileName))
                 {
-                    Log.A($"Warning: File '{relativePath}', file doesn't exist in Oqtane DB");
+                    Log.A($"Warning: File '{relativePath}', file '{fileName}' doesn't exist in folder #{folderInfo.FolderId} '{folderInfo.Name}' Oqtane DB");
                     continue;
                 }
 
@@ -178,7 +176,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                     var exists = FolderExists(directory);
                     var folderInfo = !exists
                         ? AddFolder(directory)
-                        : GetOqtFolderByName(directory);
+                        : GetOqtFolderByPath(directory);
 
                     folderIdCorrectionList.Add(folder.Key, folderInfo.FolderId);
                     Log.A(
@@ -222,7 +220,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return callLog.ReturnAsOk(oqtFile);
         }
 
-        private bool FolderExists(string path) => GetOqtFolderByName(path) != null;
+        private bool FolderExists(string path) => GetOqtFolderByPath(path) != null;
 
         private bool FileExists(Folder folderInfo, string fileName) => GetFile(folderInfo, fileName) != null;
 
@@ -230,11 +228,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             => _oqtFileRepository.GetFiles(folderInfo.FolderId)
                 .FirstOrDefault(f => f.Name.Equals(fileName, StringComparison.OrdinalIgnoreCase));
 
-        private Folder GetOqtFolderByName(string path) => _oqtFolderRepository.GetFolder(Site.Id, EnsureOqtaneFolderFormat(path));
+        private Folder GetOqtFolderByPath(string path) => _oqtFolderRepository.GetFolder(Site.Id, path.EnsureOqtaneFolderFormat());
 
         private Folder AddFolder(string path)
         {
-            path = EnsureOqtaneFolderFormat(path);
+            path = path.EnsureOqtaneFolderFormat();
             var callLog = Log.Fn<Folder>(path);
 
             if (FolderExists(path)) return callLog.ReturnNull("error, missing folder");
@@ -242,10 +240,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
             try
             {
                 // find parent
-                var pathWithPretendFileName = path.TrimEnd('\\');
-                var parent = IO.Path.GetDirectoryName(pathWithPretendFileName) + IO.Path.DirectorySeparatorChar;
+                var pathWithPretendFileName = path.TrimLastSlash();
+                var parent = IO.Path.GetDirectoryName(pathWithPretendFileName) + "/";
                 var subfolder = IO.Path.GetFileName(pathWithPretendFileName);
-                var parentFolder = GetOqtFolderByName(parent) ?? GetOqtFolderByName("");
+                var parentFolder = GetOqtFolderByPath(parent) ?? GetOqtFolderByPath("");
 
                 // Create the new virtual folder
                 var newFolder = CreateVirtualFolder(parentFolder, path, subfolder);
@@ -266,10 +264,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             return callLog.ReturnNull("?");
         }
-
-        // ensure backslash on the end of path, but not on the start
-        private string EnsureOqtaneFolderFormat(string path)
-            => (path.Trim().Backslash().TrimEnd('\\') + '\\').TrimStart('\\');
 
         private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)
         {
