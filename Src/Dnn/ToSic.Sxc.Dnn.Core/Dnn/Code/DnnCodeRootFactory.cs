@@ -45,13 +45,13 @@ namespace ToSic.Sxc.Dnn.Code
                     .GetInterfaces()
                     .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == requiredDynCode);
 
-                if (interfaceOnCode == null) return null;
+                if (interfaceOnCode == null) return wrapLog.ReturnNull();
 
                 var typesArgs = interfaceOnCode.GetGenericArguments();
-                if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return null;
+                if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return wrapLog.ReturnNull();
 
                 var kitType = typesArgs[1];
-                if (!kitType.IsSubclassOf(typeof(ServiceKit))) return null;
+                if (!kitType.IsSubclassOf(typeof(ServiceKit))) return wrapLog.ReturnNull();
 
                 // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TServiceKit> using the same types
                 var genType = typeof(DnnDynamicCodeRoot<,>);
@@ -59,12 +59,12 @@ namespace ToSic.Sxc.Dnn.Code
 
                 // 3. return that
                 var codeRoot = _serviceProvider.GetService(finalType) as DynamicCodeRoot;
-                return codeRoot;
+                return wrapLog.Return(codeRoot);
             }
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                return null;
+                return wrapLog.ReturnNull();
             }
         }
     }
