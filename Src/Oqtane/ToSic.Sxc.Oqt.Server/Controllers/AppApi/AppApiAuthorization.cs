@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
      */
     public class AppApiAuthorization: IHasLog
     {
-        public AppApiAuthorization(LogHistory logHistory)
+        public AppApiAuthorization(History logHistory)
         {
             Log = new Log(HistoryLogName, null, "AppApiAuthorization");
             logHistory.Add(HistoryLogGroup, Log);

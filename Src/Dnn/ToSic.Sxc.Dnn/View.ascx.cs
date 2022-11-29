@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn
             LogTimer.DoInTimer(() =>
             {
                 // add to insights-history for analytic
-                GetService<LogHistory>().Add("module", Log);
+                GetService<History>().Add("module", Log);
                 LogTimer.Stopwatch.Start();
 
                 var callLog = Log.Fn(startTimer: true);

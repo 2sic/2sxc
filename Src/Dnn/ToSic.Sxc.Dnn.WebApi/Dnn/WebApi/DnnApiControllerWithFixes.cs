@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             TimerWrapLog = Log.Fn(message: "timer", startTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
-            GetService<LogHistory>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
+            GetService<History>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
             // ReSharper restore VirtualMemberCallInConstructor
         }
 

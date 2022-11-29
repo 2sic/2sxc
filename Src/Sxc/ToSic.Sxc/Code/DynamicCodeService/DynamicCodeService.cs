@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code
         public class Dependencies
         {
             public Dependencies(IServiceProvider serviceProvider, 
-                Lazy<LogHistory> history, 
+                Lazy<History> history, 
                 Lazy<IUser> user, 
                 // Dependencies to get primary app
                 Lazy<ISite> site,
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Code
                 AppStates = appStates;
             }
             internal IServiceProvider ServiceProvider { get; }
-            public Lazy<LogHistory> History { get; }
+            public Lazy<History> History { get; }
             public Lazy<IUser> User { get; }
             public Lazy<ISite> Site { get; }
             public Lazy<IZoneMapper> ZoneMapper { get; }

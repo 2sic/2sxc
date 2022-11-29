@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
     public class AppApiActionContext : IHasLog
     {
-        public AppApiActionContext(LogHistory logHistory)
+        public AppApiActionContext(History logHistory)
         {
             Log = new Log(HistoryLogName, null, "AppApiActionContext");
             logHistory.Add(HistoryLogGroup, Log);

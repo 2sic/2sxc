@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// Important: if you want to add more services in a DI Startup, it must happen at Configure.
         /// If you do it earlier, the singleton retrieved then will not be the one at runtime.
         /// </remarks>
-        public PageFeaturesCatalog(LogHistory logHistory): base(logHistory, Constants.SxcLogName + ".PftCat", new CodeRef())
+        public PageFeaturesCatalog(History logHistory): base(logHistory, Constants.SxcLogName + ".PftCat", new CodeRef())
         {
             Register(
                 JQuery,

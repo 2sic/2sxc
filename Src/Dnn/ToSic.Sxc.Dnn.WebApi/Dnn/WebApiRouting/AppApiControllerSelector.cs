@@ -181,7 +181,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 addToHistory = (url?.Contains(InsightsController.InsightsUrlFragment) ?? false);
 #pragma warning restore CS0162
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (addToHistory) new LogHistory().Add("http-request", log);
+            if (addToHistory) new History().Add("http-request", log);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Blocks
             GeneratorLog<IEditService> editGenerator, 
             LazyInitLog<IModuleAndBlockBuilder> builder,
             GeneratorLog<BlockFromEntity> blkFrmEntGen,
-            Lazy<LogHistory> historyLazy
+            Lazy<History> historyLazy
         ) : base("Sxc.RndSvc")
         {
             _historyLazy = historyLazy;
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Blocks
         private readonly GeneratorLog<BlockFromEntity> _blkFrmEntGen;
         private readonly GeneratorLog<IEditService> _editGenerator;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
-        private readonly Lazy<LogHistory> _historyLazy;
+        private readonly Lazy<History> _historyLazy;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {

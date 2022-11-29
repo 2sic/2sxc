@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
         public readonly ConcurrentDictionary<string, bool> CompiledAppApiControllers = new(StringComparer.InvariantCultureIgnoreCase);
 
-        public AppApiFileSystemWatcher(IHostEnvironment hostingEnvironment, LogHistory logHistory)
+        public AppApiFileSystemWatcher(IHostEnvironment hostingEnvironment, History logHistory)
         {
             Log = new Log(HistoryLogName, null, "new AppApiFileSystemWatcher()");
             logHistory.Add(HistoryLogGroup, Log);

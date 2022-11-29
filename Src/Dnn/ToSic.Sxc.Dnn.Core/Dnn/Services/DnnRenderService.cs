@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Services
             GeneratorLog<IEditService> editGenerator,
             LazyInitLog<IModuleAndBlockBuilder> builder,
             GeneratorLog<BlockFromEntity> blkFrmEntGen,
-            Lazy<LogHistory> historyLazy,
+            Lazy<History> historyLazy,
             Lazy<DnnPageChanges> dnnPageChanges,
             Lazy<DnnClientResources> dnnClientResources,
             Generator<IContextOfBlock> context

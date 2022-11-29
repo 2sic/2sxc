@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
     public class AppApiActionInvoker : IHasLog
     {
-        public AppApiActionInvoker(LogHistory logHistory)
+        public AppApiActionInvoker(History logHistory)
         {
             Log = new Log(HistoryLogName, null, "AppApiActionInvoker");
             logHistory.Add(HistoryLogGroup, Log);

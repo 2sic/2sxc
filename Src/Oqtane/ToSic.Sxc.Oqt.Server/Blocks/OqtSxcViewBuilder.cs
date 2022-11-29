@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             IContextOfBlock contextOfBlockEmpty,
             BlockFromModule blockModuleEmpty,
             IContextResolver contextResolverForLookUps,
-            LogHistory logHistory,
+            History logHistory,
             GlobalTypesCheck globalTypesCheck,
             IOutputCache outputCache
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")

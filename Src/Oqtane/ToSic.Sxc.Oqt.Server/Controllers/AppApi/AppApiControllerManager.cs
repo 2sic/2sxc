@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     /// </summary>
     public class AppApiControllerManager: IHasLog
     {
-        public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, LogHistory logHistory)
+        public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, History logHistory)
         {
             _partManager = partManager;
             _compiledAppApiControllers = appApiFileSystemWatcher.CompiledAppApiControllers;
