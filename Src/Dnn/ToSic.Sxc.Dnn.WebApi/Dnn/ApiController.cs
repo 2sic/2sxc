@@ -38,12 +38,6 @@ namespace ToSic.Sxc.Dnn
         IHasDynamicCodeRoot,
         IHasCodeLog
     {
-        protected ApiController()
-        {
-            //var log = base.Log.SubLogOrNull("OldApi.DnnApi"); // real log
-            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
-        }
-        
         [PrivateApi]
         public const string ErrRecommendedNamespaces = "To use it, use the new base class from Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.";
 
@@ -155,13 +149,11 @@ namespace ToSic.Sxc.Dnn
 
         #region IHasLog
 
-        public new ICodeLog Log => _log.Get(() => new CodeLog(base.Log));
-        private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
+        /// <inheritdoc />
+        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
+        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
-        ILog IHasLog.Log => base.Log;
-
-        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
-        //public ILog Log15 => base.Log;
+        [PrivateApi] ILog IHasLog.Log => base.Log;
 
         #endregion
     }

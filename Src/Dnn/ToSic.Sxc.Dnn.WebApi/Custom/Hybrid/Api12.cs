@@ -23,27 +23,17 @@ namespace Custom.Hybrid
         IHasDynamicCodeRoot,
         IHasCodeLog
     {
-        protected Api12() : base("Hyb12")
-        {
-            //var log = base.Log.SubLogOrNull("Hyb12.Api12"); // real log
-            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
-        }
+        protected Api12() : base("Hyb12") { }
 
-        protected Api12(string logSuffix) : base(logSuffix)
-        {
-            //var log = base.Log.SubLogOrNull($"{logSuffix}.Api12"); // real log
-            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
-        }
+        protected Api12(string logSuffix) : base(logSuffix) { }
 
         #region IHasLog
 
-        public new ICodeLog Log => _log.Get(() => new CodeLog(base.Log));
-        private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
+        /// <inheritdoc />
+        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
+        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
-        ILog IHasLog.Log => base.Log;
-
-        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
-        //public ILog Log15 => base.Log;
+        [PrivateApi] ILog IHasLog.Log => base.Log;
 
         #endregion
 

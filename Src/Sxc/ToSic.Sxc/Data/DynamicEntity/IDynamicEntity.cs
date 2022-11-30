@@ -139,8 +139,9 @@ namespace ToSic.Sxc.Data
 
 
         /// <summary>
-        /// Many templates show demo data. If the template code must know if it's the demo item or
-        /// real data, use IsDemoItem.
+        /// Many templates show demo data.
+        /// If the template code must know if it's the demo item or
+        /// real data, use `.IsDemoItem`.
         /// </summary>
         /// <returns>
         /// True if this is the item configured in the view-settings, false if not.

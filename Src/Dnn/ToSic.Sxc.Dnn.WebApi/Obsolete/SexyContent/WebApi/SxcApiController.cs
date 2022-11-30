@@ -52,11 +52,7 @@ namespace ToSic.SexyContent.WebApi
 #pragma warning restore 618
         IHasCodeLog
     {
-        protected SxcApiController() : base("OldApi")
-        {
-            //var log = base.Log.SubLogOrNull("OldApi.SxcApi"); // real log
-            //_log = new LogAdapter(log); // Eav.Logging.ILog compatibility
-        }
+        protected SxcApiController() : base("OldApi") { }
 
         public new IDnnContext Dnn => base.Dnn;
 
@@ -218,13 +214,11 @@ namespace ToSic.SexyContent.WebApi
 
         #region IHasLog
 
-        public new ICodeLog Log => _log.Get(() => new CodeLog(base.Log));
-        private readonly GetOnce<ICodeLog> _log = new GetOnce<ICodeLog>();
+        /// <inheritdoc />
+        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
+        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
-        ILog IHasLog.Log => base.Log;
-
-        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
-        //public ILog Log15 => base.Log;
+        [PrivateApi] ILog IHasLog.Log => base.Log;
 
         #endregion
     }

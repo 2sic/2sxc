@@ -22,22 +22,15 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Main constructor, may never have parameters, otherwise inheriting code will run into problems. 
         /// </summary>
-        protected DynamicCode() : base("Sxc.DynCod")
-        {
-
-        }
+        protected DynamicCode() : base("Sxc.DynCod") { }
 
         #endregion
 
         #region IHasLog
 
-        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
-        //[PrivateApi] public Lib.Logging.ILog Log15 => base.Log;
-
         // <inheritdoc />
-        [PrivateApi]
-        public new ICodeLog Log => _logAdapter.Get(() => new CodeLog(base.Log));
-        private readonly GetOnce<ICodeLog> _logAdapter = new GetOnce<ICodeLog>();
+        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
+        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
         #endregion
 
@@ -48,8 +41,7 @@ namespace ToSic.Sxc.Code
         {
             _DynCodeRoot = codeRoot;
             (base.Log as Log)?.LinkTo(codeRoot?.Log);
-            //var log = _DynCodeRoot?.Log.SubLogOrNull("Sxc.DynCod");
-            _logAdapter.IsValueCreated = false; // reset in case it was already used before new LogAdapter(log); // Eav.Logging.ILog compatibility
+            _codeLog.IsValueCreated = false; // reset in case it was already used before
             base.Log.Fn().Done();
         }
 

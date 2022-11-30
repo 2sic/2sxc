@@ -19,18 +19,14 @@ namespace Custom.Hybrid
         /// <summary>
         /// Constructor - only available for inheritance
         /// </summary>
-        protected Razor12()
-        {
-            // TODO: @2DM reverse log priorities - new one should really exist!
-            //var log = new ToSic.Lib.Logging.Log("Oqt.Rzr12");
-            //Log = new LogAdapter(log); // Eav.Logging.ILog compatibility
-        }
+        protected Razor12() { }
 
-        public ICodeLog Log => _log.Get(() => new CodeLog(Log15));
-        private readonly GetOnce<ICodeLog> _log = new();
+        /// <inheritdoc />
+        public ICodeLog Log => _codeLog.Get(() => new CodeLog(Log15));
+        private readonly GetOnce<ICodeLog> _codeLog = new();
 
-        ILog IHasLog.Log => Log15;
-        public ILog Log15 { get; } = new Log("Oqt.Rzr12"); // Log.GetContents();
+        [PrivateApi] ILog IHasLog.Log => Log15;
+        [PrivateApi] public ILog Log15 { get; } = new Log("Oqt.Rzr12");
 
         #endregion
 

@@ -1,13 +1,16 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code
 {
-    [PrivateApi]
+    /// <summary>
+    /// Marks all Razor / WebAPI classes which provide logging functionality
+    /// </summary>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("This is internal for documentation only, you should never access this interface")]
     public interface IHasCodeLog
     {
+        /// <summary>
+        /// The logger for the current Razor / WebApi
+        /// </summary>
         ICodeLog Log { get; }
-
-        //[PrivateApi] ILog Log15 { get; }
     }
 }

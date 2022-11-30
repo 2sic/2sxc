@@ -104,9 +104,8 @@ namespace ToSic.Sxc.Web
         #region IHasLog
 
         /// <inheritdoc />
-        public ICodeLog Log => _logAdapter.Get(() => new CodeLog(Log15)/*fallback Log*/); 
-
-        private readonly GetOnce<ICodeLog> _logAdapter = new GetOnce<ICodeLog>();
+        public ICodeLog Log => _codeLog.Get(() => new CodeLog(Log15));
+        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
         [PrivateApi] public ILog Log15 { get; } = new Log("Rzr.Comp");
 
@@ -119,11 +118,10 @@ namespace ToSic.Sxc.Web
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            // if (!(parent is IDynamicCodeRoot isDynCode)) return;
-            _DynCodeRoot = codeRoot; // isDynCode;
+            _DynCodeRoot = codeRoot;
 
-            (Log15 as Log).LinkTo(_DynCodeRoot?.Log, "Rzr.Comp"); // real log
-            _logAdapter.IsValueCreated = false;// = new LogAdapter(log); // Eav.Logging.ILog compatibility
+            (Log15 as Log)?.LinkTo(_DynCodeRoot?.Log, "Rzr.Comp"); // real log
+            _codeLog.IsValueCreated = false;
             var wrapLog = Log15.Fn();
             wrapLog.Done("ok");
         }

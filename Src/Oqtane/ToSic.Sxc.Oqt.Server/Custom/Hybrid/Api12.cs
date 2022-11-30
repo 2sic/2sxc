@@ -25,19 +25,9 @@ namespace Custom.Hybrid
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     public abstract partial class Api12 : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IDynamicCode12, IHasCodeLog
     {
-        protected Api12() : base(EavWebApiConstants.HistoryNameWebApi)
-        {
-            // 2dm - don't think we need another intermediate object - TODO: verify!
-            // var log = base.Log.SubLogOrNull("Hyb12.Api12"); // real log
-            //_log = new LogAdapter(base.Log); // Eav.Logging.ILog compatibility
-        }
+        protected Api12() : base(EavWebApiConstants.HistoryNameWebApi) { }
 
-        protected Api12(string logSuffix) : base(logSuffix)
-        {
-            // 2dm - don't think we need another intermediate object - TODO: verify!
-            //var log = base.Log.SubLogOrNull($"{logSuffix}.Api12"); // real log
-            //_log = new LogAdapter(base.Log); // Eav.Logging.ILog compatibility
-        }
+        protected Api12(string logSuffix) : base(logSuffix) { }
 
         /// <summary>
         /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
@@ -115,15 +105,10 @@ namespace Custom.Hybrid
         #region IHasLog
 
         /// <inheritdoc />
-        public new ICodeLog Log => _log.Get(() => new CodeLog(base.Log));
+        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
+        private readonly GetOnce<ICodeLog> _codeLog = new();
 
-        private readonly GetOnce<ICodeLog> _log = new();
-
-        // 2dm: Not needed ATM - reactivate if ever a child-object would really need the base log
-        //[PrivateApi] public ToSic.Lib.Logging.ILog Log15 => base.Log;
-
-        [PrivateApi]
-        ToSic.Lib.Logging.ILog ToSic.Lib.Logging.IHasLog.Log => base.Log; // Log.GetContents(); // explicit Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        [PrivateApi] ILog IHasLog.Log => base.Log;
 
         #endregion
     }

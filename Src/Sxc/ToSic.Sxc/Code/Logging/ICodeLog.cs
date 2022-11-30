@@ -1,11 +1,20 @@
 ﻿using System.Runtime.CompilerServices;
 using System;
+using ToSic.Eav.Data;
 using ToSic.Eav.Documentation;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code
 {
-    [PrivateApi("still WIP")]
-    public interface ICodeLog: Eav.Logging.ILog
+    /// <summary>
+    /// A special logger for dynamic code (Razor, WebApi).
+    /// It is always available to add messages to insights. 
+    /// </summary>
+    /// <remarks>
+    /// Added in v15, replaces the then removed `ILog` interface.
+    /// </remarks>
+    [PublicApi]
+    public interface ICodeLog: IWrapper<ILog>
     {
 
         /// <summary>
@@ -15,8 +24,6 @@ namespace ToSic.Sxc.Code
         /// <param name="cPath">auto pre filled by the compiler - the path to the code file</param>
         /// <param name="cName">auto pre filled by the compiler - the method name</param>
         /// <param name="cLine">auto pre filled by the compiler - the code line</param>
-        /// <returns>The same warning text which was added</returns>
-        [Obsolete("Will remove soon - probably v15 as it's probably internal only")]
         string Add(string message,
             [CallerFilePath] string cPath = null,
             [CallerMemberName] string cName = null,
@@ -27,13 +34,28 @@ namespace ToSic.Sxc.Code
         /// Add a warning log entry
         /// </summary>
         /// <param name="message"></param>
-        /// <returns>The same warning text which was added</returns>
-        [Obsolete("Will remove soon - probably v14 as it's probably internal only")]
-        void Warn(string message);
+        /// <param name="cPath">auto pre filled by the compiler - the path to the code file</param>
+        /// <param name="cName">auto pre filled by the compiler - the method name</param>
+        /// <param name="cLine">auto pre filled by the compiler - the code line</param>
+        void Warn(string message,
+            [CallerFilePath] string cPath = null,
+            [CallerMemberName] string cName = null,
+            [CallerLineNumber] int cLine = 0
+        );
 
 
-        [Obsolete("Will remove soon")]
-        void Exception(Exception ex);
+        /// <summary>
+        /// Add an exception as special log entry
+        /// </summary>
+        /// <param name="ex">The Exception object</param>
+        /// <param name="cPath">auto pre filled by the compiler - the path to the code file</param>
+        /// <param name="cName">auto pre filled by the compiler - the method name</param>
+        /// <param name="cLine">auto pre filled by the compiler - the code line</param>
+        void Exception(Exception ex,
+            [CallerFilePath] string cPath = null,
+            [CallerMemberName] string cName = null,
+            [CallerLineNumber] int cLine = 0
+        );
 
 
         /// <summary>
@@ -65,9 +87,8 @@ namespace ToSic.Sxc.Code
         /// <param name="cLine">auto pre filled by the compiler - the code line</param>
         /// <remarks>
         /// Not used much, but major change in V15 - the first value in the result is the data, the second is the string to log.
-        /// Before it was (message, data), new is (data, message)
+        /// Before in the `ILog` it was (message, data), new is (data, message)
         /// </remarks>
-        [Obsolete("Do not use any more, use Fn(...) extension method instead")]
         Func<T, string, T> Call<T>(
             string parameters = null,
             string message = null,
