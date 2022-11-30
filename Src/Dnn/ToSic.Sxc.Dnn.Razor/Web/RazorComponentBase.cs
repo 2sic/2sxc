@@ -120,7 +120,7 @@ namespace ToSic.Sxc.Web
         {
             _DynCodeRoot = codeRoot;
 
-            (Log15 as Log)?.LinkTo(_DynCodeRoot?.Log, "Rzr.Comp"); // real log
+            (Log15 as Log)?.LinkTo(_DynCodeRoot?.Log, "Rzr.Comp");
             _codeLog.IsValueCreated = false;
             var wrapLog = Log15.Fn();
             wrapLog.Done("ok");
