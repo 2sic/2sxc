@@ -192,7 +192,6 @@
     <Content Include="DnnPackageBuilder\license.txt" />
     <Content Include="DnnPackageBuilder\ReleaseNotes.txt" />
     <Content Include="Extensions\404.png" />
-    <Content Include="Extensions\ImageResizer\ImageResizer.txt" />
     <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
     <Content Include="DnnPackageBuilder\icon-app.png" />
     <Content Include="DnnPackageBuilder\icon.png" />
@@ -232,9 +231,7 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\ImageResizer\bin\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
       <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
