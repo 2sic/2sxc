@@ -194,6 +194,9 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<DnnGetBlock>();
             services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
 
+            // v14.12.03/04 Hack with ModuleId in Lookups
+            services.TryAddScoped<ViewModuleIdHack>();
+
             return services;
         }
     }
