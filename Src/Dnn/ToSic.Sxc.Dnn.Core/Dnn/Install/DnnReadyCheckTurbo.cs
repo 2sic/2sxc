@@ -52,8 +52,8 @@ namespace ToSic.Sxc.Dnn.Install
             // not sure if this doesn't have side-effects...
             if (block?.BlockBuilder == null)
                 throw new Exception("Error - can't find 2sxc instance configuration. " +
-                                    "Probably trying to show an app or content that has been deleted. " +
-                                    "Or you may have EnterpriseCMS features enabled but are missing the license activation. ");
+                                    "Probably trying to show an app or content that has been deleted or not yet installed. " +
+                                    "You may also have EnterpriseCMS features enabled but are missing the license activation (but this is super rare). ");
 
             // check things if it's a module of this portal (ensure everything is ok, etc.)
             var isSharedModule = _module.ModuleConfiguration.PortalID != _module.ModuleConfiguration.OwnerPortalID;

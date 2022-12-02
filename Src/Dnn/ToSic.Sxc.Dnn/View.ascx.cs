@@ -9,6 +9,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;
+using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web.LightSpeed;
@@ -44,6 +45,13 @@ namespace ToSic.Sxc.Dnn
         {
             LogTimer.DoInTimer(() =>
             {
+                // Hack to pass ModuleId into other systems which need it, and ATM can't get it
+                try
+                {
+                    GetService<ViewModuleIdHack>().ModuleId = ModuleId;
+                }
+                catch {/* ignore */}
+
                 // add to insights-history for analytic
                 GetService<LogHistory>().Add("module", Log);
                 LogTimer.Stopwatch.Start();
@@ -76,6 +84,7 @@ namespace ToSic.Sxc.Dnn
                 // ensure everything is ready and that we know if we should activate the client-dependency
                 TryCatchAndLogToDnn(() =>
                 {
+                    var block = Block; // get the block early, to see any errors
                     if (checkPortalIsReady)
                         DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, GetService<Lazy<AppFolderInitializer>>(), Log);
                     DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
