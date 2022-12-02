@@ -52,6 +52,9 @@ namespace ToSic.Sxc.Web
             // Replace base url
             result = result.Replace(BasePlaceholder, $"./?{PageIdInUrl}={pageId}{customBaseParams}");
 
+            // Custom Headers - Experimental WIP
+
+
             // Add any custom headers / body - like for the Oqtane Request Verification Token
             result = result.Replace(CustomHeadersPlaceholder, customHeaders);
             result = result.Replace(CustomBodyPlaceholder, customBody);

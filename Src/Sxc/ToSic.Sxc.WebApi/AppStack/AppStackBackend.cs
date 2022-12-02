@@ -11,6 +11,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using static ToSic.Eav.Apps.AppConstants;
 
 namespace ToSic.Sxc.WebApi.AppStack
 {
@@ -52,13 +53,13 @@ namespace ToSic.Sxc.WebApi.AppStack
         {
             // Ensure name is known
             string realName = null;
-            if (AppConstants.RootNameSettings.Equals(part, StringComparison.InvariantCultureIgnoreCase))
-                realName = AppConstants.RootNameSettings;
-            if (AppConstants.RootNameResources.Equals(part, StringComparison.InvariantCultureIgnoreCase))
-                realName = AppConstants.RootNameResources;
+            if (RootNameSettings.Equals(part, StringComparison.InvariantCultureIgnoreCase))
+                realName = RootNameSettings;
+            if (RootNameResources.Equals(part, StringComparison.InvariantCultureIgnoreCase))
+                realName = RootNameResources;
             if (realName == null)
                 throw new Exception(
-                    $"Parameter '{nameof(part)}' must be {AppConstants.RootNameSettings} or {AppConstants.RootNameResources}");
+                    $"Parameter '{nameof(part)}' must be {RootNameSettings} or {RootNameResources}");
 
             // Get app 
             var appState = _ctxResolver.App(appId).AppState;
@@ -75,16 +76,13 @@ namespace ToSic.Sxc.WebApi.AppStack
                 if (viewEnt == null) throw new Exception($"Tried to get view but not found. Guid was {viewGuid}");
                 var view = new View(viewEnt, languages, Log);
 
-                viewStackPart = realName == AppConstants.RootNameSettings ? view.Settings : view.Resources;
+                viewStackPart = realName == RootNameSettings ? view.Settings : view.Resources;
             }
 
             // Build Sources List
-            var sources = _settingsStack.Init(Log).Init(appState).GetStack(part == AppConstants.RootNameSettings ? ConfigurationConstants.Settings : ConfigurationConstants.Resources, viewStackPart);
-            // (part == AppConstants.RootNameSettings ? appState.SettingsInApp : appState.ResourcesInApp).GetStack(ServiceProvider, viewStackPart);
-            //var sources = (part == AppConstants.RootNameSettings ? appState.SettingsInApp : appState.ResourcesInApp).GetStack(ServiceProvider, viewStackPart);
-            var settings = new PropertyStack();
-            settings.Init(part, sources.ToArray());
-
+            var partId = part == RootNameSettings ? ConfigurationConstants.Settings : ConfigurationConstants.Resources;
+            var sources = _settingsStack.Init(Log).Init(appState).GetStack(partId, viewStackPart);
+            var settings = new PropertyStack().Init(part, sources.ToArray());
 
             // Dump results
             var results = settings._Dump(languages, null, Log);

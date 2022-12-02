@@ -30,7 +30,10 @@ namespace ToSic.Sxc.Data
         /// 
         /// </summary>
         /// <param name="item"></param>
-        /// <param name="wrapChildren">Determines if properties which are objects should again be wrapped. When using this for DynamicModel it should be false, otherwise usually true.</param>
+        /// <param name="wrapChildren">
+        /// Determines if properties which are objects should again be wrapped.
+        /// When using this for DynamicModel it should be false, otherwise usually true.
+        /// </param>
         [PrivateApi]
         public DynamicReadObject(object item, bool wrapChildren, bool wrapRealChildren)
         {
@@ -44,7 +47,7 @@ namespace ToSic.Sxc.Data
         }
         private readonly bool _wrapChildren;
         private readonly bool _wrapRealChildren;
-        private object _contents;
+        private readonly object _contents;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
@@ -60,7 +63,7 @@ namespace ToSic.Sxc.Data
         {
             path = path.KeepOrNew().Add("DynReadObj", field);
             var result = FindValueOrNull(field);
-            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic", Path = path };
+            return new PropertyRequest(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
         }
 
 

@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Data
         {
             path = path.KeepOrNew().Add("DynJacket", field);
             var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
-            return new PropertyRequest { Result = result, FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic", Path = path };
+            return new PropertyRequest(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
         }
 
         public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);
