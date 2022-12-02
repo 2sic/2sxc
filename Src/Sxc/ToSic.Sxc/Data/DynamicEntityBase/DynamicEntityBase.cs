@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Data
         {
             if (contents == null) return null;
             var result = new DynamicEntity(contents, dependencies);
-            if (debug == true) result.Debug = true; // result.SetDebug(true);
+            if (debug == true) result.Debug = true;
             return result;
         }
 
