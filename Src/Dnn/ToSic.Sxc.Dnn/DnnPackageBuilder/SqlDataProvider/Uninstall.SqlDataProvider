@@ -1,79 +1,77 @@
 ﻿-- Remove Tables
 
-DROP TABLE [dbo].[ToSIC_EAV_EntityRelationships]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_EntityRelationships]
 GO
 
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_ContentGroupItems]') AND TYPE IN (N'U'))
-DROP TABLE [dbo].[ToSIC_SexyContent_ContentGroupItems]
+DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_ContentGroupItems]
 GO
 
-IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN (N'U'))
-DROP TABLE [dbo].[ToSIC_SexyContent_Templates]
+DROP TABLE IF EXISTS [dbo].[ToSIC_SexyContent_Templates]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_ValuesDimensions]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_ValuesDimensions]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_Dimensions]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Dimensions]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_Values]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Values]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_Entities]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Entities]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_DataTimeline]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_DataTimeline]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_AttributesInSets]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributesInSets]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_Attributes]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Attributes]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_AttributeTypes]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeTypes]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_AttributeGroups]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeGroups]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_AttributeSets]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AttributeSets]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_Attachments]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Attachments]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_AssignmentObjectTypes]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_AssignmentObjectTypes]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_Apps]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Apps]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_Zones]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_Zones]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_ChangeLog]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_ChangeLog]
 GO
 
-DROP TABLE [dbo].[ToSIC_EAV_ContextInfo]
+DROP TABLE IF EXISTS [dbo].[ToSIC_EAV_ContextInfo]
 GO
 
 -- Remove Stored Procedures
 
-DROP PROCEDURE [dbo].[ToSIC_EAV_DeleteApp]
+DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_DeleteApp]
 GO
 
-DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogAdd]
+DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogAdd]
 GO
 
-DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogSet]
+DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogSet]
 GO
 
-DROP PROCEDURE [dbo].[ToSIC_EAV_LogToTimeline]
-GO
+--DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_LogToTimeline]
+--GO
 
-DROP PROCEDURE [dbo].[ToSIC_EAV_ChangeLogGet]
+DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_ChangeLogGet]
 GO
 
 

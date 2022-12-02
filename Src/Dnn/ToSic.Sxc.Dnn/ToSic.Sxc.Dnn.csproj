@@ -299,6 +299,7 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.00.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.01.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
+    <Content Include="DnnPackageBuilder\SqlDataProvider\15.00.00.SqlDataProvider" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
   </ItemGroup>
   <ItemGroup>
