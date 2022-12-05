@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Dynamic;
-using ToSic.Eav.Data;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 

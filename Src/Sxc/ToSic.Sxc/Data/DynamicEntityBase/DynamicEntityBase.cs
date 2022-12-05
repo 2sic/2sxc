@@ -21,15 +21,10 @@ namespace ToSic.Sxc.Data
         // ReSharper disable once InconsistentNaming
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
-        /// <inheritdoc />
-        public bool Debug { get; set; }
 
+        [PrivateApi]
+        public abstract PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path);
 
-        [PrivateApi("Internal")]
-        public abstract PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path);
-        
-
-        
         /// <summary>
         /// Generate a dynamic entity based on an IEntity.
         /// Used in various cases where a property would return an IEntity, and the Razor should be able to continue in dynamic syntax
@@ -49,8 +44,12 @@ namespace ToSic.Sxc.Data
 
         #region WIP Debug system
 
+        /// <inheritdoc />
+        public bool Debug { get; set; }
+
+
         [PrivateApi("Internal")]
-        public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);
+        public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);
 
         #endregion
 

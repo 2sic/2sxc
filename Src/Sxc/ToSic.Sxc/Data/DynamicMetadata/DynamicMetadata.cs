@@ -26,23 +26,24 @@ namespace ToSic.Sxc.Data
 
         public IEnumerable<IEntity> OfType(string typeName) => _metadata.OfType(typeName);
 
-        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path)
+        [PrivateApi("Internal")]
+        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt", Debug);
-            var safeWrap = logOrNull.Fn<PropertyRequest>($"{nameof(field)}: {field}", "DynEntity");
+            specs = specs.SubLog("Sxc.DynEnt", Debug);
+            var safeWrap = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return safeWrap.ReturnNull("no entity");
-            path = path.KeepOrNew().Add("DynEnt", field);
+            path = path.KeepOrNew().Add("DynEnt", specs.Field);
 
             // Note: most of the following lines are copied from Metadata
-            var list = (this as IHasMetadata).Metadata; // ? MetadataWithoutPermissions : OfType(typeName);
-            var found = list.FirstOrDefault(md => md.Attributes.ContainsKey(field));
+            var list = (this as IHasMetadata).Metadata;
+            var found = list.FirstOrDefault(md => md.Attributes.ContainsKey(specs.Field));
             if (found == null) return safeWrap.ReturnNull("no entity had attribute");
-            var propRequest = found.FindPropertyInternal(field, dimensions, logOrNull, path);
+            var propRequest = found.FindPropertyInternal(specs, path);
             if (propRequest != null && propRequest.Result != null)
                 return safeWrap.Return(propRequest, "found");
 
-            return safeWrap.Return(base.FindPropertyInternal(field, dimensions, parentLogOrNull, path), "base...");
+            return safeWrap.Return(base.FindPropertyInternal(specs, path), "base...");
         }
     }
 }

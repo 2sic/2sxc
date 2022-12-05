@@ -6,6 +6,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
@@ -85,7 +86,7 @@ namespace ToSic.Sxc.WebApi.AppStack
             var settings = new PropertyStack().Init(part, sources.ToArray());
 
             // Dump results
-            var results = settings._Dump(languages, null, Log);
+            var results = settings._Dump(new PropReqSpecs(null, languages, Log), null);
             return results;
         }
     }

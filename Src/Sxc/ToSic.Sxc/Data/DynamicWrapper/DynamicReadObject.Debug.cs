@@ -1,23 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
     public partial class DynamicReadObject
     {
-        private const string _dumpSourceName = "DynamicRead";
+        private const string DumpSourceName = "DynamicRead";
 
         [PrivateApi]
-        public List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
+        public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
         {
             if (_contents == null) return new List<PropertyDumpItem>();
 
-            if (string.IsNullOrEmpty(path)) path = _dumpSourceName;
+            if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
             var allProperties = _ignoreCaseLookup.ToList();
 
@@ -28,8 +26,8 @@ namespace ToSic.Sxc.Data
                     Pdi = new PropertyDumpItem
                     {
                         Path = path + PropertyDumpItem.Separator + p.Key,
-                        Property = FindPropertyInternal(p.Key, languages, parentLogOrNull, new PropertyLookupPath().Add("DynReadObject", p.Key)),
-                        SourceName = _dumpSourceName
+                        Property = FindPropertyInternal(specs.ForOtherField(p.Key), new PropertyLookupPath().Add("DynReadObject", p.Key)),
+                        SourceName = DumpSourceName
                     }
                 })
                 .ToList();
@@ -47,7 +45,7 @@ namespace ToSic.Sxc.Data
                 .Where(p => !(p.CanDump is null))
                 .ToList();
             var deeperLookups = deeperProperties.SelectMany(p =>
-                p.CanDump._Dump(languages, path + PropertyDumpItem.Separator + p.Field, null));
+                p.CanDump._Dump(specs, path + PropertyDumpItem.Separator + p.Field));
 
             var final = resultDynChildren
                 .Where(r => deeperProperties.All(dp => dp.Field != r.Field))

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
 
@@ -32,10 +33,8 @@ namespace ToSic.Sxc.Data
         public override object this[int index] => DynamicJacket.WrapIfJObjectUnwrapIfJValue(_contents[index]);
 
         [PrivateApi("internal")]
-        public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
-        {
-            return new List<PropertyDumpItem> { new PropertyDumpItem { Path = "Not supported on DynamicJacket" } };
-        }
+        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) 
+            => new List<PropertyDumpItem> { new PropertyDumpItem { Path = "Not supported on DynamicJacket" } };
 
         /// <summary>
         /// On a dynamic Jacket List where is no reasonable convention how to find something by name

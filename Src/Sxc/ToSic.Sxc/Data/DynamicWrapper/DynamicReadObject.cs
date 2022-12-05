@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
@@ -58,12 +57,14 @@ namespace ToSic.Sxc.Data
         public override bool TrySetMember(SetMemberBinder binder, object value) 
             => throw new NotSupportedException($"Setting a value on {nameof(DynamicReadObject)} is not supported");
 
-        [PrivateApi]
-        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull, PropertyLookupPath path)
+
+        /// <inheritdoc />
+        [PrivateApi("Internal")]
+        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            path = path.KeepOrNew().Add("DynReadObj", field);
-            var result = FindValueOrNull(field);
-            return new PropertyRequest(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
+            path = path.KeepOrNew().Add("DynReadObj", specs.Field);
+            var result = FindValueOrNull(specs.Field);
+            return new PropReqResult(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
         }
 
 

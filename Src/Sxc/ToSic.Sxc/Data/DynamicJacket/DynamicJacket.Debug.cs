@@ -4,19 +4,18 @@ using System.Text.Json.Nodes;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
 {
     public partial class DynamicJacket
     {
-        private const string _dumpSourceName = "Dynamic";
+        private const string DumpSourceName = "Dynamic";
         [PrivateApi("internal")]
-        public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
+        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
         {
             if (_contents == null || !_contents.Any()) return new List<PropertyDumpItem>();
 
-            if (string.IsNullOrEmpty(path)) path = _dumpSourceName;
+            if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
             var allProperties = _contents.ToList();
 
@@ -24,9 +23,10 @@ namespace ToSic.Sxc.Data
             var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem
                 {
                     Path = path + PropertyDumpItem.Separator + p.Key,
-                    Property = FindPropertyInternal(p.Key, languages, parentLogOrNull, new PropertyLookupPath().Add("DynJacket", p.Key)),
-                    SourceName = _dumpSourceName
-            })
+                    Property = FindPropertyInternal(specs.ForOtherField(p.Key),
+                        new PropertyLookupPath().Add("DynJacket", p.Key)),
+                    SourceName = DumpSourceName
+                })
                 .ToList();
 
             var objectProps = allProperties
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Data
                 .SelectMany(p =>
                 {
                     var jacket = new DynamicJacket(p.Value.AsObject());
-                    return jacket._Dump(languages, path + PropertyDumpItem.Separator + p.Key, parentLogOrNull);
+                    return jacket._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
                 })
                 .Where(p => !(p is null));
 

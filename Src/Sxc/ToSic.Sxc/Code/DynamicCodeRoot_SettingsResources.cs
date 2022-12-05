@@ -5,8 +5,6 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Apps.AppConstants;
 
-// ReSharper disable ConvertToNullCoalescingCompoundAssignment
-
 namespace ToSic.Sxc.Code
 {
     public partial class DynamicCodeRoot

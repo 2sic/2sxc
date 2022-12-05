@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Data
             // check if we already have it in the cache - but only in default languages
             if (useCache && _ValueCache.ContainsKey(field)) return safeWrap.Return(_ValueCache[field], "cached");
 
-            var resultSet = FindPropertyInternal(field, languages, logOrNull, new PropertyLookupPath().Add("DynEntStart", field));
+            var resultSet = FindPropertyInternal(new PropReqSpecs(field, languages, logOrNull), new PropertyLookupPath().Add("DynEntStart", field));
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (resultSet == null) return safeWrap.ReturnNull("null");
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Data
         }
 
 
-        protected object ValueAutoConverted(PropertyRequest original, bool lookup, string field, ILog logOrNull)
+        protected object ValueAutoConverted(PropReqResult original, bool lookup, string field, ILog logOrNull)
         {
             var safeWrap = logOrNull.Fn<object>($"..., {nameof(lookup)}: {lookup}, {nameof(field)}: {field}");
             var result = original.Result;

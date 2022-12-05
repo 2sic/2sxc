@@ -1,12 +1,18 @@
 ﻿using System;
 using System.IO;
+using System.Web;
 using System.Web.Caching;
+using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
-using DotNetNuke.Services.Localization;
+using Microsoft.Extensions.DependencyInjection;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
+using ToSic.Eav.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 
@@ -36,7 +42,25 @@ namespace ToSic.Sxc.Dnn.dist
             var siteRoot = GetSiteRoot(pageId, portalId);
 
             var content = DnnJsApi.GetJsApiJson(pageId, siteRoot);
-            return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, "", "");
+
+            // EXPERIMENTAL 2DM
+            var sp = HttpContext.Current.GetScope().ServiceProvider;
+            var zoneMap = sp.GetService<IZoneMapper>();
+            var zoneId = zoneMap.GetZoneId(portalId);
+            var appsCache = sp.GetService<IAppStates>();
+            var defId = appsCache.IdentityOfPrimary(zoneId);
+            var stackMaker = sp.GetService<AppSettingsStack>();
+
+            var appState = appsCache.Get(defId);
+
+            var settingsProvider = stackMaker.Init(appState).GetStack(ConfigurationConstants.Settings, null);
+            var stack = new PropertyStack().Init(AppConstants.RootNameSettings, settingsProvider.ToArray());
+
+            //var x = stack.
+
+            var customHeaders = appsCache.ToString() + "-" + stack.ToString();
+
+            return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders/*""*/, "");
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

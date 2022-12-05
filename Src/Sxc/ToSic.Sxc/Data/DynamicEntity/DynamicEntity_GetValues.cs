@@ -29,14 +29,14 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi("Internal")]
-        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path)
+        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynEnt", Debug);
-            var safeWrap = logOrNull.Fn<PropertyRequest>($"{nameof(field)}: {field}", "DynEntity");
+            specs = specs.SubLog("Sxc.DynEnt", Debug);
+            var safeWrap = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
             if (Entity == null) return safeWrap.ReturnNull("no entity");
-            path = path.KeepOrNew().Add("DynEnt", field);
-            var propRequest = Entity.FindPropertyInternal(field, dimensions, logOrNull, path);
+            path = path.KeepOrNew().Add("DynEnt", specs.Field);
+            var propRequest = Entity.FindPropertyInternal(specs, path);
 
             // new 12.05, very experimental
             //ApplyDynamicDataFeaturesToResult(field, propRequest);
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Data
         }
 
         // V12.10? This is just PoC to show that we could auto-dynamic data. Will not be available yet
-        private void ApplyDynamicDataFeaturesToResult(string field, PropertyRequest propRequest)
+        private void ApplyDynamicDataFeaturesToResult(string field, PropReqResult propRequest)
         {
             if (propRequest.Value != null && propRequest.Result is string strResult)
             {
@@ -76,11 +76,9 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi("WIP / internal")]
-        public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
-        {
-            if (Entity == null || !Entity.Attributes.Any()) return new List<PropertyDumpItem>();
-            return Entity._Dump(languages, path, parentLogOrNull);
-        }
-
+        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>
+            Entity == null || !Entity.Attributes.Any()
+                ? new List<PropertyDumpItem>()
+                : Entity._Dump(specs, path);
     }
 }

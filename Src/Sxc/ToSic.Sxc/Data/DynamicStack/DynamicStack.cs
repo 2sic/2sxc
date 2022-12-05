@@ -47,23 +47,22 @@ namespace ToSic.Sxc.Data
             return null;
         }
 
+        /// <inheritdoc />
         [PrivateApi("Internal")]
-        public override PropertyRequest FindPropertyInternal(string field, string[] dimensions, ILog parentLogOrNull, PropertyLookupPath path)
+        public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            var logOrNull = parentLogOrNull.SubLogOrNull("Sxc.DynStk", Debug);
-            path = path.KeepOrNew().Add("DynStack", field);
+            specs = specs.SubLog("Sxc.DynStk", Debug);
+            path = path.KeepOrNew().Add("DynStack", specs.Field);
 
-            var wrapLog = logOrNull.Fn<PropertyRequest>($"{nameof(field)}: {field}", "DynamicStack");
-            var result = UnwrappedContents.FindPropertyInternal(field, dimensions, logOrNull, path);
+            var wrapLog = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynamicStack");
+            var result = UnwrappedContents.FindPropertyInternal(specs, path);
             return wrapLog.Return(result, result == null ? "null" : "ok");
         }
 
         [PrivateApi("Internal")]
-        public override List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull)
-        {
-            return UnwrappedContents?._Dump(languages, path, parentLogOrNull)
-                   ?? new List<PropertyDumpItem>();
-        }
+        public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>
+            UnwrappedContents?._Dump(specs, path)
+            ?? new List<PropertyDumpItem>();
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
             => throw new NotSupportedException($"Setting a value on {nameof(DynamicStack)} is not supported");

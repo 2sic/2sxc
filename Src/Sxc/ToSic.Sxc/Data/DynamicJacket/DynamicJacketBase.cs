@@ -93,14 +93,14 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public PropertyRequest FindPropertyInternal(string field, string[] languages, ILog parentLogOrNull, PropertyLookupPath path)
+        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
-            path = path.KeepOrNew().Add("DynJacket", field);
-            var result = FindValueOrNull(field, StringComparison.InvariantCultureIgnoreCase, parentLogOrNull);
-            return new PropertyRequest(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
+            path = path.KeepOrNew().Add("DynJacket", specs.Field);
+            var result = FindValueOrNull(specs.Field, StringComparison.InvariantCultureIgnoreCase, specs.LogOrNull);
+            return new PropReqResult(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
         }
 
-        public abstract List<PropertyDumpItem> _Dump(string[] languages, string path, ILog parentLogOrNull);
+        public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);
 
         protected abstract object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull);
 
