@@ -27,6 +27,7 @@ namespace ToSic.Sxc.WebApi.Sys
 
         public AppInstallRuleDto GetRuleDto() => new AppInstallRuleDto
         {
+            name = Title,
             appGuid = AppGuid,
             mode = Mode,
             target = Target,
