@@ -61,12 +61,16 @@
     <Compile Remove="StartUp\SxcRazorPage_CreateInstance.cs" />
     <Compile Remove="StartUp\SxcRazorPage_IDynamicCode.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Scripts\ToSic.Sxc.15.00.00.sql" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\ToSic.Sxc.15.00.00.sql" />
     <Content Include="wwwroot\Modules\ToSic.Sxc.Oqtane\Module.css" />
   </ItemGroup>
 
