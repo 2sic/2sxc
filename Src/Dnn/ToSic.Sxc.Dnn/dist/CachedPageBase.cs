@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
@@ -49,18 +50,18 @@ namespace ToSic.Sxc.Dnn.dist
             var zoneId = zoneMap.GetZoneId(portalId);
             var appsCache = sp.GetService<IAppStates>();
             var defId = appsCache.IdentityOfPrimary(zoneId);
+            var appState = appsCache.Get(defId);
             var stackMaker = sp.GetService<AppSettingsStack>();
 
-            var appState = appsCache.Get(defId);
+            var settingsSources = stackMaker.Init(appState).GetStack(ConfigurationConstants.Settings);
+            var stack = new PropertyStack().Init(AppConstants.RootNameSettings, settingsSources);
 
-            var settingsProvider = stackMaker.Init(appState).GetStack(ConfigurationConstants.Settings, null);
-            var stack = new PropertyStack().Init(AppConstants.RootNameSettings, settingsProvider.ToArray());
+            var req = new PropReqSpecs("SiteSetup.AutoInstallApps");
+            var x = stack.InternalGetPath(req, null);
 
-            //var x = stack.
-
-            var customHeaders = appsCache.ToString() + "-" + stack.ToString();
-
-            return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders/*""*/, "");
+            // var customHeaders = appsCache.ToString() + "-" + stack.ToString() + "-" + x.Result?.ToString();
+            var customHeaders = ""; 
+            return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders, "");
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";

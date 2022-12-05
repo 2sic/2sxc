@@ -37,15 +37,26 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 
         /// <inheritdoc />
         [HttpGet]
-        // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [Authorize(Roles = RoleNames.Admin)]
-        public IActionResult RemoteWizardUrl(bool isContentApp)
+        // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public InstallAppsDto InstallSettings(bool isContentApp)
+            => Real.InstallSettings(isContentApp, GetContext().Module);
+
+        ///// <inheritdoc />
+        //[HttpGet]
+        //// [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        //[Authorize(Roles = RoleNames.Admin)]
+        //public IActionResult RemoteWizardUrl(bool isContentApp)
+        //{
+        //    PrepareResponseMaker();
+        //    return Real.RemoteWizardUrl(isContentApp, GetContext().Module);
+        //}
+
+        private void PrepareResponseMaker()
         {
             // Make sure the Scoped ResponseMaker has this controller context
             var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
             responseMaker.Init(this);
-
-            return Real.RemoteWizardUrl(isContentApp, GetContext().Module);
         }
 
         /// <inheritdoc />
@@ -56,11 +67,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         public IActionResult RemotePackage(string packageUrl)
         {
             HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
-
-            // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
-            responseMaker.Init(this);
-
+            PrepareResponseMaker();
             return Real.RemotePackage(packageUrl, GetContext().Module);
         }
     }

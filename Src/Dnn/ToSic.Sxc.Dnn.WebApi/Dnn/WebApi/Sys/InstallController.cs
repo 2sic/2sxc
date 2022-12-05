@@ -27,18 +27,28 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public bool Resume() => Real.Resume();
 
 
-        /// <inheritdoc />
-        [HttpGet]
-        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public HttpResponseMessage RemoteWizardUrl(bool isContentApp)
+        ///// <inheritdoc />
+        //[HttpGet]
+        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        //public HttpResponseMessage RemoteWizardUrl(bool isContentApp)
+        //{
+        //    PrepareResponseMaker();
+        //    return Real.RemoteWizardUrl(isContentApp,
+        //        ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
+        //}
+
+        private void PrepareResponseMaker()
         {
             // Make sure the Scoped ResponseMaker has this controller context
             var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
             responseMaker.Init(this);
-
-            return Real.RemoteWizardUrl(isContentApp,
-                ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
         }
+
+        /// <inheritdoc />
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
+        public InstallAppsDto InstallSettings(bool isContentApp) 
+            => Real.InstallSettings(isContentApp, ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
 
 
         /// <inheritdoc />
@@ -48,11 +58,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public HttpResponseMessage RemotePackage(string packageUrl)
         {
             PreventServerTimeout300();
-
-            // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
-            responseMaker.Init(this);
-
+            PrepareResponseMaker();
             return Real.RemotePackage(packageUrl, ((DnnModule)GetService<IModule>()).Init(ActiveModule, Log));
         }
     }

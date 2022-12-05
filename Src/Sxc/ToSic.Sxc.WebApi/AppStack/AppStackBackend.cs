@@ -83,7 +83,7 @@ namespace ToSic.Sxc.WebApi.AppStack
             // Build Sources List
             var partId = part == RootNameSettings ? ConfigurationConstants.Settings : ConfigurationConstants.Resources;
             var sources = _settingsStack.Init(Log).Init(appState).GetStack(partId, viewStackPart);
-            var settings = new PropertyStack().Init(part, sources.ToArray());
+            var settings = new PropertyStack().Init(part, sources);
 
             // Dump results
             var results = settings._Dump(new PropReqSpecs(null, languages, Log), null);

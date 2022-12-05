@@ -83,9 +83,10 @@ namespace ToSic.Sxc.Code
             // New case: many items found, must create a stack
             var sources = entities
                 .Select(e => e as IPropertyLookup)
-                .Where(e => e !=null)
-                .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e));
-            return new DynamicStack("unknown", DynamicEntityDependencies, sources.ToArray());
+                .Where(e => e != null)
+                .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
+                .ToList();
+            return new DynamicStack("unknown", DynamicEntityDependencies, sources);
         }
 
 

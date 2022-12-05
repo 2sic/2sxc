@@ -56,8 +56,4 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Routing\" />
-  </ItemGroup>
-
 </Project>

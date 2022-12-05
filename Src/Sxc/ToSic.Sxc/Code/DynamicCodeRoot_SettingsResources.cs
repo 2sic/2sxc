@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code
                     RootNameResources,
                     DynamicEntityDependencies,
                     Deps.SettingsStack.Init(Log).Init(appState)
-                        .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources).ToArray());
+                        .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
             }
         }
 
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
                     RootNameSettings,
                     DynamicEntityDependencies,
                     Deps.SettingsStack.Init(Log).Init(appState)
-                        .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings).ToArray());
+                        .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
             }
         }
 
