@@ -106,6 +106,31 @@ namespace ToSic.Sxc.Dnn.Install
 
                     //new V9(version, _installLogger, Log).Version09xxxx();
                     // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
+
+                    case "15.00.00":
+                        const string sql150000 = @"                         
+                            -- remove trigger generated data from 'ToSIC_EAV_DataTimeline' in batches
+                            WHILE (SELECT COUNT(*) FROM [dbo].[ToSIC_EAV_DataTimeline] WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')) > 0
+                            BEGIN
+                                ;WITH CTE AS
+                                (
+	                            SELECT TOP 100000 * 
+	                            FROM [dbo].[ToSIC_EAV_DataTimeline] 
+	                            WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')
+	                            )
+                                DELETE FROM CTE;
+                            END;
+
+                            -- drop NewData column from 'ToSIC_EAV_DataTimeline'
+                            ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN IF EXISTS NewData;";
+                        sqlConnection.Open();
+                        var sqlCommand150000 = new SqlCommand(sql150000, sqlConnection);
+                        sqlCommand150000.CommandTimeout = 0; // disable sql execution command timeout on sql server
+                        sqlCommand150000.ExecuteNonQuery();
+                        sqlConnection.Close();
+                        break;
+
+
                 }
                 _installLogger.LogStep(version, "version-list check / switch done", false);
 
