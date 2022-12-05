@@ -14,20 +14,24 @@ DROP TRIGGER IF EXISTS [dbo].[AutoLogAllChangesToTimeline_Values];
 DROP TRIGGER IF EXISTS [dbo].[AutoLogAllChangesToTimeline_ValuesDimensions];
 DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_LogToTimeline]
 GO
- 
--- 2. remove trigger generated data from 'ToSIC_EAV_DataTimeline' in batches
-WHILE (SELECT COUNT(*) FROM [dbo].[ToSIC_EAV_DataTimeline] WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')) > 0
-BEGIN
-    ;WITH CTE AS
-    (
-	SELECT TOP 100000 * 
-	FROM [dbo].[ToSIC_EAV_DataTimeline] 
-	WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')
-	)
-    DELETE FROM CTE;
-END
-GO
 
--- 3. drop NewData column from 'ToSIC_EAV_DataTimeline'
-ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN IF EXISTS NewData;
-GO
+---- simulate pause 120 sec
+--WAITFOR DELAY '00:02';
+--GO
+ 
+---- 2. remove trigger generated data from 'ToSIC_EAV_DataTimeline' in batches
+--WHILE (SELECT COUNT(*) FROM [dbo].[ToSIC_EAV_DataTimeline] WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')) > 0
+--BEGIN
+--    ;WITH CTE AS
+--    (
+--	SELECT TOP 100000 * 
+--	FROM [dbo].[ToSIC_EAV_DataTimeline] 
+--	WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')
+--	)
+--    DELETE FROM CTE;
+--END
+--GO
+
+---- 3. drop NewData column from 'ToSIC_EAV_DataTimeline'
+--ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN IF EXISTS NewData;
+--GO
