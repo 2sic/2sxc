@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Sys
 
         public string Mode => Get("Mode", ModeAllow);
 
-        public string AppGuid => Get("Guid", "");
+        public string AppGuid => Get("AppGuid", "");
 
         public string Url => Get("Url", "");
 

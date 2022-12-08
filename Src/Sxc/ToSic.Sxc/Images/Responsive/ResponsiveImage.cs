@@ -17,8 +17,8 @@ namespace ToSic.Sxc.Images
         public override Img Img => _img2.Get(() =>
         {
             var img = base.Img;
-            if (!string.IsNullOrEmpty(SrcSet)) img.Srcset(SrcSet);
-            if (!string.IsNullOrEmpty(Sizes)) img.Sizes(Sizes);
+            if (!string.IsNullOrEmpty(SrcSet)) img = img.Srcset(SrcSet);
+            if (!string.IsNullOrEmpty(Sizes)) img = img.Sizes(Sizes);
             return img;
         });
         private readonly GetOnce<Img> _img2 = new GetOnce<Img>();
