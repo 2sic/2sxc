@@ -44,22 +44,6 @@ namespace ToSic.Sxc.Dnn.dist
 
             var content = DnnJsApi.GetJsApiJson(pageId, siteRoot);
 
-            // EXPERIMENTAL 2DM
-            var sp = HttpContext.Current.GetScope().ServiceProvider;
-            var zoneMap = sp.GetService<IZoneMapper>();
-            var zoneId = zoneMap.GetZoneId(portalId);
-            var appsCache = sp.GetService<IAppStates>();
-            var defId = appsCache.IdentityOfPrimary(zoneId);
-            var appState = appsCache.Get(defId);
-            var stackMaker = sp.GetService<AppSettingsStack>();
-
-            var settingsSources = stackMaker.Init(appState).GetStack(ConfigurationConstants.Settings);
-            var stack = new PropertyStack().Init(AppConstants.RootNameSettings, settingsSources);
-
-            var req = new PropReqSpecs("SiteSetup.AutoInstallApps");
-            var x = stack.InternalGetPath(req, null);
-
-            // var customHeaders = appsCache.ToString() + "-" + stack.ToString() + "-" + x.Result?.ToString();
             var customHeaders = ""; 
             return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders, "");
         }

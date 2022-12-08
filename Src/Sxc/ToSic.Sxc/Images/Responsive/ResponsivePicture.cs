@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Images
         public Picture Picture => _picTag.Get(() => Razor.Blade.Tag.Picture(Sources, Img));
         private readonly GetOnce<Picture> _picTag = new GetOnce<Picture>();
 
-        protected override ITag GetOutermostTag() => Picture;
+        protected override IHtmlTag GetOutermostTag() => Picture;
 
         public TagList Sources => _sourceTags.Get(() => SourceTagsInternal(Call.Link.Url, Settings));
         private readonly GetOnce<TagList> _sourceTags = new GetOnce<TagList>();

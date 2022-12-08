@@ -1,4 +1,4 @@
-﻿<h3>Release Notes of RazorBlade.net v3</h3>
+﻿<h3>Release Notes of RazorBlade.net v4</h3>
 <p>
 	This is ToSic - RazorBlade.net
 </p>

@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
@@ -16,12 +17,18 @@ namespace ToSic.Sxc.Web.PageService
 #pragma warning restore CS0618
     {
 
-        public PageService(PageServiceShared pageServiceShared, Lazy<ContentSecurityPolicyService> cspServiceLazy) : base("2sxc.PgeSrv")
+        public PageService(
+            PageServiceShared pageServiceShared,
+            Lazy<ContentSecurityPolicyService> cspServiceLazy,
+            Lazy<IHtmlTagService> htmlTagsLazy
+            ) : base("2sxc.PgeSrv")
         {
             _cspServiceLazy = cspServiceLazy;
+            _htmlTagsLazy = htmlTagsLazy;
             PageServiceShared = pageServiceShared;
         }
         private readonly Lazy<ContentSecurityPolicyService> _cspServiceLazy;
+        private readonly Lazy<IHtmlTagService> _htmlTagsLazy;
         public PageServiceShared PageServiceShared { get; }
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)

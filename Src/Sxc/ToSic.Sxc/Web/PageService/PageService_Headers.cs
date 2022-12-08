@@ -23,6 +23,6 @@ namespace ToSic.Sxc.Web.PageService
         }
 
         /// <inheritdoc />
-        public string AddMeta(string name, string content) => AddToHead(new Meta(name, content));
+        public string AddMeta(string name, string content) => AddToHead(_htmlTagsLazy.Value.Meta().Name(name).Content(content));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;
@@ -60,26 +61,26 @@ namespace ToSic.Sxc.Images
                 {
                     Log.A(ImgService.Debug, "will add properties from attributes");
                     foreach (var a in dic)
-                        _imgTag.Attr(a.Key, a.Value);
+                        _imgTag = _imgTag.Attr(a.Key, a.Value);
                 }
 
                 // Only add these if they were really specified / known
-                if (Alt != null) _imgTag.Alt(Alt);
-                if (Class != null) _imgTag.Class(Class);
-                if (Width != null) _imgTag.Width(Width);
-                if (Height != null) _imgTag.Height(Height);
+                if (Alt != null) _imgTag = _imgTag.Alt(Alt);
+                if (Class != null) _imgTag = _imgTag.Class(Class);
+                if (Width != null) _imgTag = _imgTag.Width(Width);
+                if (Height != null) _imgTag = _imgTag.Height(Height);
 
                 return wrapLog.ReturnAsOk(_imgTag);
             }
         }
         private Img _imgTag;
 
-        public ITag Tag => _tag.Get(GetTagWithToolbar);
-        private readonly GetOnce<ITag> _tag = new GetOnce<ITag>();
+        public IHtmlTag Tag => _tag.Get(GetTagWithToolbar);
+        private readonly GetOnce<IHtmlTag> _tag = new GetOnce<IHtmlTag>();
 
-        protected virtual ITag GetOutermostTag() => Img;
+        protected virtual IHtmlTag GetOutermostTag() => Img;
 
-        private ITag GetTagWithToolbar()
+        private IHtmlTag GetTagWithToolbar()
         {
             var tag = GetOutermostTag();
 
@@ -102,7 +103,8 @@ namespace ToSic.Sxc.Images
                  //.Image(Call.Field)
                 ;
                 var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
-                tag.TagAttributes.Add(toolbar);
+                tag.Attr(toolbar);
+                //tag.TagAttributes.Add(toolbar);
             }
             catch { /* ignore */ }
 

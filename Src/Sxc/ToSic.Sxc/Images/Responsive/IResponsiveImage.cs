@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
-using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
         /// The outermost tag - name not yet final
         /// </summary>
         [PrivateApi("Name not yet final")]
-        ITag Tag { get; }
+        IHtmlTag Tag { get; }
 
         /// <summary>
         /// Determines if the image should be shown entirely.
