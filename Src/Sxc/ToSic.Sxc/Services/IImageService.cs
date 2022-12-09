@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Services
     /// <remarks>
     /// History: Released 2sxc 13.10
     /// </remarks>
-    [PublicApi("Still WIP")]
+    [PublicApi]
     public interface IImageService: ICanDebug
     {
         /// <summary>
@@ -122,7 +122,7 @@ namespace ToSic.Sxc.Services
         /// Get a Responsive Picture object which you can then either just show, or use to construct a more customized output as you need it.
         /// 
         /// The resulting object can just be added to the html, like `@pic` or you can work with sub-properties as specified in the <see cref="IResponsivePicture"/>.
-        ///
+        /// 
         /// **Important:** This call only allows you to set the most common parameters `factor` and `width`.
         /// For other parameters like `height`, `aspectRatio`, `quality` etc. create Settings <see cref="Settings"/> and pass them in.
         /// </summary>
@@ -141,9 +141,18 @@ namespace ToSic.Sxc.Services
         /// 
         /// Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
-        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
-        /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
-        /// <param name="imgClass">`class` attribute on the created `img` tag</param>
+        /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+        /// <param name="width">An optional, fixed width of the image</param>
+        /// <param name="imgAlt">
+        /// Optional `alt` attribute on the created `img` tag for SEO etc.
+        /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
+        /// If you want to provide a fallback value (in case the metadata has no alt), use <see cref="imgAltFallback"/>
+        /// </param>
+        /// <param name="imgAltFallback">
+        /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
+        /// _new in v15_
+        /// </param>
+        /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
         /// Can be any one of these:
@@ -155,7 +164,8 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
-        /// History: Added in 2sxc 13.03
+        /// History:
+        /// - Added in 2sxc 13.03
         /// </remarks>
         IResponsivePicture Picture(
             object link = null,
@@ -164,6 +174,7 @@ namespace ToSic.Sxc.Services
             object factor = default,
             object width = default,
             string imgAlt = default,
+            string imgAltFallback = default,
             string imgClass = default,
             object recipe = default
         );
@@ -188,9 +199,18 @@ namespace ToSic.Sxc.Services
         /// 
         ///     Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
-        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
-        /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
-        /// <param name="imgClass">`class` attribute on the created `img` tag</param>
+        /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+        /// <param name="width">An optional, fixed width of the image</param>
+        /// <param name="imgAlt">
+        /// Optional `alt` attribute on the created `img` tag for SEO etc.
+        /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
+        /// If you want to provide a fallback value (in case the metadata has no alt), use <see cref="imgAltFallback"/>
+        /// </param>
+        /// <param name="imgAltFallback">
+        /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
+        /// _new in v15_
+        /// </param>
+        /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
         /// <param name="recipe">
         ///     Optional recipe = instructions how to create the various variants of this link.
         ///     Can be any one of these:
@@ -211,6 +231,7 @@ namespace ToSic.Sxc.Services
             object factor = default,
             object width = default,
             string imgAlt = default,
+            string imgAltFallback = default,
             string imgClass = default,
             object recipe = default
         );
@@ -235,8 +256,17 @@ namespace ToSic.Sxc.Services
         /// 
         ///     Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
         /// </param>
-        /// <param name="factor">A multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
-        /// <param name="imgAlt">`alt` attribute on the created `img` tag for SEO etc.</param>
+        /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
+        /// <param name="width">An optional, fixed width of the image</param>
+        /// <param name="imgAlt">
+        /// Optional `alt` attribute on the created `img` tag for SEO etc.
+        /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
+        /// If you want to provide a fallback value (in case the metadata has no alt), use <see cref="imgAltFallback"/>
+        /// </param>
+        /// <param name="imgAltFallback">
+        /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
+        /// _new in v15_
+        /// </param>
         /// <param name="imgClass">`class` attribute on the created `img` tag</param>
         /// <param name="recipe">
         ///     Optional recipe = instructions how to create the various variants of this link.
@@ -258,6 +288,7 @@ namespace ToSic.Sxc.Services
             object factor = null,
             object width = default,
             string imgAlt = null,
+            string imgAltFallback = default,
             string imgClass = null,
             object recipe = null);
 

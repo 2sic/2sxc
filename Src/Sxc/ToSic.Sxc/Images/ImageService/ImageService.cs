@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
@@ -76,6 +75,7 @@ namespace ToSic.Sxc.Images
             object factor = null,
             object width = default,
             string imgAlt = null,
+            string imgAltFallback = default,
             string imgClass = null,
             object recipe = null)
             => new ResponsiveImage(this,
@@ -91,6 +91,7 @@ namespace ToSic.Sxc.Images
             object factor = null,
             object width = default,
             string imgAlt = null,
+            string imgAltFallback = default,
             string imgClass = null,
             object recipe = null)
         {
@@ -111,6 +112,7 @@ namespace ToSic.Sxc.Images
             object factor = null,
             object width = default,
             string imgAlt = null,
+            string imgAltFallback = default,
             string imgClass = null,
             object recipe = null)
             => new ResponsivePicture(this,

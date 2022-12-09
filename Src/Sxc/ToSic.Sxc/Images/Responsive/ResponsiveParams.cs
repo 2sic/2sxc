@@ -21,6 +21,7 @@ namespace ToSic.Sxc.Images
         public IDynamicField Field { get; }
         public IResizeSettings Settings { get; }
         public string ImgAlt { get; }
+        public string ImgAltFallback { get; }
         public string ImgClass { get; }
 
         internal ResponsiveParams(

@@ -86,9 +86,9 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 HasRazorTemplates = cms.Views.GetRazor().Any(),
                 HasTokenTemplates = cms.Views.GetToken().Any(),
                 FilesCount = zipExport.FileManager.AllFiles.Count() // PortalFilesCount
-                    + (currentApp.AppState.HasParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles.Count()), // GlobalFilesCount
+                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles.Count()), // GlobalFilesCount
                 TransferableFilesCount = zipExport.FileManager.AllTransferableFiles.Count() // TransferablePortalFilesCount
-                    + (currentApp.AppState.HasParentApp() ? 0 : zipExport.FileManagerGlobal.AllTransferableFiles.Count()), // TransferableGlobalFilesCount
+                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllTransferableFiles.Count()), // TransferableGlobalFilesCount
             };
         }
 
