@@ -12,7 +12,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
-using static ToSic.Eav.Apps.AppConstants;
+using static ToSic.Eav.Configuration.ConfigurationConstants;
 
 namespace ToSic.Sxc.WebApi.AppStack
 {
@@ -81,9 +81,10 @@ namespace ToSic.Sxc.WebApi.AppStack
             }
 
             // Build Sources List
-            var partId = part == RootNameSettings ? ConfigurationConstants.Settings : ConfigurationConstants.Resources;
-            var sources = _settingsStack.Init(Log).Init(appState).GetStack(partId, viewStackPart);
-            var settings = new PropertyStack().Init(part, sources);
+            //var partId = part == RootNameSettings ? ConfigurationConstants.Settings : ConfigurationConstants.Resources;
+            //var sources = _settingsStack.Init(Log).Init(appState).GetStack(partId, viewStackPart);
+            var settings = _settingsStack.Init(Log).Init(appState).GetStack(RootNameSettings, viewStackPart);
+            // new PropertyStack().Init(part, sources);
 
             // Dump results
             var results = settings._Dump(new PropReqSpecs(null, languages, Log), null);

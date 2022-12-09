@@ -32,11 +32,14 @@ namespace ToSic.Sxc.Tests.ServicesTests
         }
         /// <summary>
         /// This doesn't actually test anything, but we can use it to get encrypted values for further testing
+        /// and to encrypt stuff we need for our basic encrypted settings
         /// </summary>
         [TestMethod]
         public void DumpEncryptedValue()
         {
-            var encrypted = BasicAesCryptography.Encrypt("6LexDw8UAAAAAGdq-9FejM6LaRpkFx5xWU-0mvfQ");
+            var value = "6LexDw8UAAAAAGdq-9FejM6LaRpkFx5xWU-0mvfQ";
+            // value = ""; // put the key to encrypt for the settings here
+            var encrypted = BasicAesCryptography.Encrypt(value);
             Trace.WriteLine("Encrypted: " + encrypted);
         }
 

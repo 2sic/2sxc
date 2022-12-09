@@ -98,10 +98,9 @@ namespace ToSic.Sxc.WebApi.Sys
                 .ToList();
 
             // Get list of allow/forbid rules for the App installer
-            var appStates = _appStates.Value;
-            var primaryApp = appStates.GetPrimaryApp(site.ZoneId, Log);
+            var primaryApp = _appStates.Value.GetPrimaryApp(site.ZoneId, Log);
             var settingsSources = _appSettingsStack.Ready.Init(primaryApp).GetStack(ConfigurationConstants.Settings);
-            var stack = new PropertyStack().Init(AppConstants.RootNameSettings, settingsSources);
+            var stack = new PropertyStack().Init(ConfigurationConstants.RootNameSettings, settingsSources);
 
             var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", null, Log), null);
             var ruleEntities = rules.Result as IEnumerable<IEntity>;    // note: Result is null if nothing found...

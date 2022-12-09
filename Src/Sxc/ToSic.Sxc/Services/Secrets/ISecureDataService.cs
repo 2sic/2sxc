@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Services
     /// * Added in 2sxc 12.05
     /// </remarks>
     [PublicApi]
-    public interface ISecureDataService
+    public interface ISecureDataService: IHasLog
     {
         ISecureData<string> Parse(string value);
     }

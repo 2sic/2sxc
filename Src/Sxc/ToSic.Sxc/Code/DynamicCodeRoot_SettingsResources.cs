@@ -3,7 +3,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Apps.AppConstants;
+using static ToSic.Eav.Configuration.ConfigurationConstants;
 
 namespace ToSic.Sxc.Code
 {

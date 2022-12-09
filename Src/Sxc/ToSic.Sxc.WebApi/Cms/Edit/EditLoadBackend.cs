@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data.Builder;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DI;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
@@ -17,6 +20,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 
@@ -36,6 +40,8 @@ namespace ToSic.Sxc.WebApi.Cms
             EntityPickerApi entityPickerBackend,
             IAppStates appStates,
             IUiData uiData,
+            LazyInitLog<AppSettingsStack> settingsStack,
+            LazyInitLog<ISecureDataService> secureDataService,
             Generator<JsonSerializer> jsonSerializerGenerator
             ) : base(serviceProvider, "Cms.LoadBk")
         {
@@ -48,6 +54,8 @@ namespace ToSic.Sxc.WebApi.Cms
             _entityPickerBackend = entityPickerBackend;
             _appStates = appStates;
             _uiData = uiData;
+            _secureDataService = secureDataService.SetLog(Log);
+            _settingsStack = settingsStack.SetLog(Log);
             _jsonSerializerGenerator = jsonSerializerGenerator;
         }
         
@@ -60,6 +68,8 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
+        private readonly LazyInitLog<ISecureDataService> _secureDataService;
+        private readonly LazyInitLog<AppSettingsStack> _settingsStack;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
 
         #endregion
@@ -136,8 +146,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Features = _uiData.Features(permCheck);
 
             // Attach context, but only the minimum needed for the UI
-            result.Context = _contextBuilder.InitApp(context.AppState, Log)
-                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
+            result.Context = GetContextForEdit(context, _entityApi.AppRead.AppState);
 
             try
             {
@@ -152,6 +161,80 @@ namespace ToSic.Sxc.WebApi.Cms
                                    $"feats:{result.Features.Count}");
         }
 
+        private ContextDto GetContextForEdit(IContextOfApp context, AppState app)
+        {
+            // Get normal context
+            var ctxDto = _contextBuilder.InitApp(context.AppState, Log)
+                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features,
+                    CtxEnable.EditUi);
+
+            ctxDto.ApiKeys = GetApiKeys(app);
+
+            return ctxDto;
+        }
+
+        private List<ContextApiKeyDto> GetApiKeys(AppState app)
+        {
+            var l = Log.Fn<List<ContextApiKeyDto>>();
+            //var result = new List<ContextApiKeyDto>();
+            // Get App Settings Stack
+            var stack = _settingsStack.Ready.Init(app).GetStack(ConfigurationConstants.RootNameSettings);
+
+            var parts = new Dictionary<string, string>()
+            {
+                { "GoogleMaps.ApiKey", "google-maps" },
+                { "GoogleTranslate.ApiKey", "google-translate" }
+            };
+
+            var result = parts.Select(pair =>
+                {
+                    var prop = stack.InternalGetPath(new PropReqSpecs("GoogleMaps.ApiKey", Array.Empty<string>(), Log),
+                        new PropertyLookupPath());
+
+                    if (!(prop.Result is string strResult))
+                        return null;
+
+                    var decrypted = _secureDataService.Ready.Parse(strResult);
+                    return new ContextApiKeyDto
+                    {
+                        NameId = "google-maps",
+                        ApiKey = decrypted.Value,
+                        IsDemo = decrypted.IsSecure
+                    };
+                })
+                .Where(v => v != null)
+                .ToList();
+
+            //var mapsStack = stack.InternalGetPath(new PropReqSpecs("GoogleMaps.ApiKey", Array.Empty<string>(), Log),
+            //    new PropertyLookupPath());
+
+            //if (mapsStack.Result is string strApiKey)
+            //{
+            //    var decrypted = _secureDataService.Ready.Parse(strApiKey);
+            //    result.Add(new ContextApiKeyDto
+            //    {
+            //        NameId = "google-maps",
+            //        ApiKey = decrypted.Value,
+            //        IsDemo = decrypted.IsEncrypted
+            //    });
+            //}
+            //// Add API Keys
+            //mapsStack = stack.InternalGetPath(new PropReqSpecs("GoogleTranslate.ApiKey", Array.Empty<string>(), Log),
+            //    new PropertyLookupPath());
+
+            //if (mapsStack.Result is string strTranslateKey)
+            //{
+            //    var decrypted = _secureDataService.Ready.Parse(strTranslateKey);
+            //    result.Add(new ContextApiKeyDto
+            //    {
+            //        NameId = "google-translate",
+            //        ApiKey = decrypted.Value,
+            //        IsDemo = decrypted.IsEncrypted
+            //    });
+            //}
+
+            return result.Any() ? l.Return(result) : l.ReturnNull("no useful keys found");
+        }
 
 
         /// <summary>
