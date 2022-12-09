@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Documentation;
-using ToSic.Razor.Markup;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Web;
 
 // ReSharper disable UnusedMember.Global
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="tag"></param>
         /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddToHead(...)`</returns>
-        string AddToHead(TagBase tag);
+        string AddToHead(IHtmlTag tag);
 
 
         /// <summary>

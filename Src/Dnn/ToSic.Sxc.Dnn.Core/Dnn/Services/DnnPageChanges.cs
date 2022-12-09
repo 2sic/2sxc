@@ -9,6 +9,7 @@ using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
@@ -101,7 +102,7 @@ namespace ToSic.Sxc.Dnn.Services
             // ATM there's no reason to, maybe some other time
             //var headChanges = PageServiceShared.GetHeadChangesAndFlush();
             foreach (var h in headChanges)
-                dnnPage.AddToHead(h.Tag);
+                dnnPage.AddToHead(h.Tag as TagBase);
             return headChanges.Count;
         }
 

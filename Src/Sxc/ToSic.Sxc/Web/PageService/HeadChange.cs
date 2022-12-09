@@ -1,4 +1,4 @@
-﻿using ToSic.Razor.Markup;
+﻿using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web.PageService
     {
         public PageChangeModes ChangeMode { get; set; }
 
-        public TagBase Tag { get; set; }
+        public IHtmlTag Tag { get; set; }
 
         /// <summary>
         /// This is part of the original property, which would be replaced.

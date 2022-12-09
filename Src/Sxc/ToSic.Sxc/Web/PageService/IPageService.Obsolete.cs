@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Documentation;
-using ToSic.Razor.Markup;
+using ToSic.Razor.Blade;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Web
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Web
         [PrivateApi] string SetKeywords(string value, string placeholder = null);
         [PrivateApi] string SetHttpStatus(int statusCode, string message = null);
         [PrivateApi] string AddToHead(string tag);
-        [PrivateApi] string AddToHead(TagBase tag);
+        [PrivateApi] string AddToHead(IHtmlTag tag);
         [PrivateApi] string AddMeta(string name, string content);
         [PrivateApi] string AddOpenGraph(string property, string content);
         [PrivateApi] string AddJsonLd(string jsonString);

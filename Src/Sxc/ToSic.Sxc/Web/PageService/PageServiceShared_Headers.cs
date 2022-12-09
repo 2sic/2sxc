@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
-using ToSic.Razor.Markup;
+using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Web.PageService
         }
 
 
-        internal void Add(TagBase tag, string identifier = null)
+        internal void Add(IHtmlTag tag, string identifier = null)
         {
             if (tag == null) return;
             Headers.Add(new HeadChange { ChangeMode = GetMode(PageChangeModes.Append), Tag = tag, ReplacementIdentifier = identifier });

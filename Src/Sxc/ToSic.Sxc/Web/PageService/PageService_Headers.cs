@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web.PageService
     {
 
         /// <inheritdoc />
-        public string AddToHead(TagBase tag)
+        public string AddToHead(IHtmlTag tag)
         {
             PageServiceShared.Add(tag);
             return "";
