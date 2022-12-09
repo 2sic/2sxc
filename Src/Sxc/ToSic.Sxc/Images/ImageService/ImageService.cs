@@ -79,7 +79,9 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsiveImage(this,
-                new ResponsiveParams(nameof(Img), link, noParamOrder, Settings(settings, factor: factor, width: width, recipe: recipe), imgAlt, imgClass))
+                    new ResponsiveParams(nameof(Img), link, noParamOrder,
+                        Settings(settings, factor: factor, width: width, recipe: recipe),
+                        imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
                 .Init(Log);
 
 
@@ -95,7 +97,9 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
         {
-            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder, Settings(settings, factor: factor, width: width, recipe: recipe), imgAlt, imgClass);
+            var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder,
+                Settings(settings, factor: factor, width: width, recipe: recipe),
+                imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass);
             var path = respParams.Link.Url;
             var format = GetFormat(path);
             return format.ResizeFormats.Any()
@@ -108,7 +112,7 @@ namespace ToSic.Sxc.Images
         public IResponsivePicture Picture(
             object link = null,
             object settings = null,
-            string noParamOrder = Eav.Parameters.Protector, 
+            string noParamOrder = Eav.Parameters.Protector,
             object factor = null,
             object width = default,
             string imgAlt = null,
@@ -116,7 +120,9 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsivePicture(this,
-                new ResponsiveParams(nameof(Picture), link, noParamOrder, Settings(settings, factor: factor, width: width, recipe: recipe), imgAlt, imgClass))
+                    new ResponsiveParams(nameof(Picture), link, noParamOrder,
+                        Settings(settings, factor: factor, width: width, recipe: recipe),
+                        imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
                 .Init(Log);
 
         /// <inheritdoc />

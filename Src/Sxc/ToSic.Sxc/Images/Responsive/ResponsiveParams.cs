@@ -28,9 +28,10 @@ namespace ToSic.Sxc.Images
             string method,
             object link,
             string noParamOrder = Parameters.Protector,
-            IResizeSettings settings = null,
-            string imgAlt = null,
-            string imgClass = null
+            IResizeSettings settings = default,
+            string imgAlt = default,
+            string imgAltFallback = default,
+            string imgClass = default
             )
         {
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
@@ -40,6 +41,7 @@ namespace ToSic.Sxc.Images
             Link = (IHasLink)Field ?? new HasLink(link as string);
             Settings = settings;
             ImgAlt = imgAlt;
+            ImgAltFallback = imgAltFallback;
             ImgClass = imgClass;
         }
     }

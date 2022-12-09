@@ -3,7 +3,6 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
-using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
@@ -98,22 +97,27 @@ namespace ToSic.Sxc.Images
                 // Check if it's not a demo-entity, in which case editing settings shouldn't happen
                 if (Call.Field.Parent.IsDemoItem) return tag;
 
-                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field)
-                // 2022-08-20 #cleanUpImageToolbar
-                 //.Image(Call.Field)
-                ;
+                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field);
                 var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
                 tag.Attr(toolbar);
-                //tag.TagAttributes.Add(toolbar);
             }
             catch { /* ignore */ }
 
             return tag;
         }
 
+        public string Description => _description.Get(() => Call.Field?.ImageDecoratorOrNull?.Description);
+        private readonly GetOnce<string> _description = new GetOnce<string>();
 
         /// <inheritdoc />
-        public string Alt => _alt.Get(() => Call.ImgAlt ?? Call.Field?.ImageDecoratorOrNull?.Description);
+        public string Alt => _alt.Get(() =>
+            // If alt is specified, it takes precedence - even if it's an empty string, because there must have been a reason for this
+            Call.ImgAlt 
+            // If we take the image description, empty does NOT take precedence, it will be treated as not-set
+            ?? Description.NullIfNoValue()
+            // If all else fails, take the fallback specified in the call
+            ?? Call.ImgAltFallback
+            );
         private readonly GetOnce<string> _alt = new GetOnce<string>();
 
 

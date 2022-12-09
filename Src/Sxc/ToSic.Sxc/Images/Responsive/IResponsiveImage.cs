@@ -17,7 +17,11 @@ namespace ToSic.Sxc.Images
     public interface IResponsiveImage: IHybridHtmlString
     {
         /// <summary>
-        /// An Alt-description information either from the creator of this object, or from image metadata.
+        /// An Alt-description on the image which is retrieved from (in order of priority):
+        /// 
+        /// 1. the Razor code creating this object using the parameter `imgAlt`
+        /// 2. or from image metadata - see <see cref="Description"/>
+        /// 3. or from the Razor code using the parameter `imgAltFallback` _new v15_
         /// </summary>
         string Alt { get; }
 
@@ -28,6 +32,17 @@ namespace ToSic.Sxc.Images
         /// - Rule which determines if the image should crop or not, which may add a class
         /// </summary>
         string Class { get; }
+
+        /// <summary>
+        /// Image description from the image Metadata.
+        /// </summary>
+        /// <returns>
+        /// * `null` if no metadata exists
+        /// * `""` empty string if metadata exists but no description was given
+        /// * a string containing the added description
+        /// </returns>
+        /// <remarks>Added in v15</remarks>
+        string Description { get; }
 
         /// <summary>
         /// The `img` tag which would normally be added to the page automatically.
