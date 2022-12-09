@@ -4,14 +4,16 @@ using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.JsContext;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
@@ -22,32 +24,39 @@ namespace ToSic.Sxc.WebApi.Context
 
         #region Dependencies 
 
-        public class Dependencies
+        public class Dependencies: DependenciesBase<Dependencies>
         {
             public IContextOfSite SiteCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
-            public Lazy<AppUserLanguageCheck> AppUserLanguageCheck { get; }
-            public Lazy<LanguagesBackend> LanguagesBackend { get; }
+            public LazyInitLog<LanguagesBackend> LanguagesBackend { get; }
             public Lazy<IFeaturesInternal> Features { get; }
             public Lazy<IUiData> UiDataLazy { get; }
+            public LazyInitLog<AppSettingsStack> SettingsStack { get; }
+            public LazyInitLog<ISecureDataService> SecureDataService { get; }
 
             public Dependencies(
                 IContextOfSite siteCtx, 
                 Apps.App appToLaterInitialize, 
                 IAppStates appStates, 
-                Lazy<AppUserLanguageCheck> appUserLanguageCheck, 
-                Lazy<LanguagesBackend> languagesBackend,
                 Lazy<IFeaturesInternal> features,
-                Lazy<IUiData> uiDataLazy)
+                Lazy<IUiData> uiDataLazy,
+                LazyInitLog<LanguagesBackend> languagesBackend,
+                LazyInitLog<AppSettingsStack> settingsStack,
+                LazyInitLog<ISecureDataService> secureDataService
+            )
             {
-                SiteCtx = siteCtx;
-                AppToLaterInitialize = appToLaterInitialize;
-                AppStates = appStates;
-                AppUserLanguageCheck = appUserLanguageCheck;
-                LanguagesBackend = languagesBackend;
-                Features = features;
-                UiDataLazy = uiDataLazy;
+                AddToLogQueue(
+                    SiteCtx = siteCtx,
+                    AppToLaterInitialize = appToLaterInitialize,
+                    AppStates = appStates,
+                    Features = features,
+                    UiDataLazy = uiDataLazy,
+
+                    LanguagesBackend = languagesBackend,
+                    SettingsStack = settingsStack,
+                    SecureDataService = secureDataService
+                );
             }
         }
 
@@ -57,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         protected UiContextBuilderBase(Dependencies dependencies): base(Constants.SxcLogName + ".UiCtx")
         {
-            Deps = dependencies;
+            Deps = dependencies.SetLog(Log);
             _appToLaterInitialize = dependencies.AppToLaterInitialize;
         }
         protected Dependencies Deps;
@@ -95,7 +104,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
             if (flags.HasFlag(Ctx.User)) ctx.User = GetUser(flags);
             if (flags.HasFlag(Ctx.Features)) ctx.Features = GetFeatures();
-
+            if (flags.HasFlag(Ctx.ApiKeys)) ctx.ApiKeys = GetApiKeys();
             return ctx;
         }
 
@@ -104,7 +113,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (ZoneId == 0) return null;
             var site = Deps.SiteCtx.Site;
 
-            var converted = Deps.LanguagesBackend.Value.Init(Log).GetLanguagesOfApp(AppState);
+            var converted = Deps.LanguagesBackend.Ready.GetLanguagesOfApp(AppState);
 
             return new ContextLanguageDto
             {
@@ -227,5 +236,41 @@ namespace ToSic.Sxc.WebApi.Context
         }
 
         protected virtual IList<FeatureDto> GetFeatures() => Deps.UiDataLazy.Value.FeaturesDto(Deps.SiteCtx.UserMayEdit);
+
+
+        private List<ContextApiKeyDto> GetApiKeys()
+        {
+            var l = Log.Fn<List<ContextApiKeyDto>>();
+            if (this.AppState == null) return l.ReturnNull("no AppState");
+
+            var stack = Deps.SettingsStack.Ready.Init(AppState).GetStack(ConfigurationConstants.RootNameSettings);
+
+            var parts = new Dictionary<string, string>
+            {
+                { "GoogleMaps.ApiKey", "google-maps" },
+                { "GoogleTranslate.ApiKey", "google-translate" }
+            };
+
+            var result = parts.Select(pair =>
+                {
+                    var prop = stack.InternalGetPath(new PropReqSpecs(pair.Key, Array.Empty<string>(), Log),
+                        new PropertyLookupPath());
+
+                    if (!(prop.Result is string strResult))
+                        return null;
+
+                    var decrypted = Deps.SecureDataService.Ready.Parse(strResult);
+                    return new ContextApiKeyDto
+                    {
+                        NameId = pair.Value,
+                        ApiKey = decrypted.Value,
+                        IsDemo = decrypted.IsSecure
+                    };
+                })
+                .Where(v => v != null)
+                .ToList();
+
+            return result.Any() ? l.Return(result) : l.ReturnNull("no useful keys found");
+        }
     }
 }
