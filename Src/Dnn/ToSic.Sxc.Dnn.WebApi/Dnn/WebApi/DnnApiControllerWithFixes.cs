@@ -19,8 +19,9 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         protected DnnApiControllerWithFixes(string logSuffix) 
 	    {
-            Log = new Log("Api." + logSuffix, null, $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}");
-            TimerWrapLog = Log.Fn(message: "timer", startTimer: true);
+            // Create log - but set first message separately, so timer is in the first line in the log
+            Log = new Log("Api." + logSuffix);
+            TimerWrapLog = Log.Fn(message: $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", startTimer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
             GetService<History>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
