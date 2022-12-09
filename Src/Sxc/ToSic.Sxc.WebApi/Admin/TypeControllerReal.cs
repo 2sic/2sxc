@@ -123,5 +123,12 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return wrapLog.ReturnAsOk(result);
         }
+
+        /// <summary>
+        /// Used to be GET ContentExport/DownloadTypeAsJson
+        /// </summary>
+
+        public THttpResponseType JsonBundleExport(int appId, Guid exportConfiguration)
+            => _contentExportLazy.Value.Init(appId, Log).JsonBundleExport(_userLazy.Value, exportConfiguration);
     }
 }

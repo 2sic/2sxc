@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
@@ -88,6 +89,18 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public ImportResultDto Import(int zoneId, int appId) => Real.Import(new HttpUploadedFile(Request), zoneId, appId);
+
+
+        [HttpGet]
+        [AllowAnonymous] // will do security check internally
+        public IActionResult JsonBundleExport(int appId, Guid exportConfiguration)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            responseMaker.Init(this);
+
+            return Real.JsonBundleExport(appId, exportConfiguration);
+        }
 
     }
 }

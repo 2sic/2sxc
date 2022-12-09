@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Security;
+﻿using System;
+using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -155,6 +156,23 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             PreventServerTimeout300();
             return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
+        }
+
+        /// <summary>
+        /// Json Bundle Export
+        /// </summary>
+        /// <remarks>
+        /// New in 2sxc v15
+        /// </remarks>
+        [HttpGet]
+        [AllowAnonymous] // will do security check internally
+        public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration)
+        {
+            // Make sure the Scoped ResponseMaker has this controller context
+            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            responseMaker.Init(this);
+
+            return Real.JsonBundleExport(appId, exportConfiguration);
         }
     }
 }
