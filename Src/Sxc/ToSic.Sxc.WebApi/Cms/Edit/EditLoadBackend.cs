@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Data.Builder;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DI;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
@@ -19,10 +17,8 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
-using System.Net.NetworkInformation;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -40,8 +36,6 @@ namespace ToSic.Sxc.WebApi.Cms
             EntityPickerApi entityPickerBackend,
             IAppStates appStates,
             IUiData uiData,
-            LazyInitLog<AppSettingsStack> settingsStack,
-            LazyInitLog<ISecureDataService> secureDataService,
             Generator<JsonSerializer> jsonSerializerGenerator
             ) : base(serviceProvider, "Cms.LoadBk")
         {
@@ -54,8 +48,6 @@ namespace ToSic.Sxc.WebApi.Cms
             _entityPickerBackend = entityPickerBackend;
             _appStates = appStates;
             _uiData = uiData;
-            _secureDataService = secureDataService.SetLog(Log);
-            _settingsStack = settingsStack.SetLog(Log);
             _jsonSerializerGenerator = jsonSerializerGenerator;
         }
         
@@ -68,8 +60,6 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
-        private readonly LazyInitLog<ISecureDataService> _secureDataService;
-        private readonly LazyInitLog<AppSettingsStack> _settingsStack;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
 
         #endregion
