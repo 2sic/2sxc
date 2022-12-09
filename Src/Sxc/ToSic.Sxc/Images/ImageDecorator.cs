@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Images
         public const string FieldCompass = "CropTo";
         public const string NoCrop = "none";
 
-        public ImageDecorator(IEntity entity) : base(entity) { }
+        public ImageDecorator(IEntity entity, string[] languageCodes) : base(entity, languageCodes) { }
 
         public string CropBehavior => Get(FieldCropBehavior, "");
 

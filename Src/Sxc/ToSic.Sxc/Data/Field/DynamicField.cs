@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Data
         public ImageDecorator ImageDecoratorOrNull => _imgDec2.Get(() =>
         {
             var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeNameId);
-            return decItem != null ? new ImageDecorator(decItem) : null;
+            return decItem != null ? new ImageDecorator(decItem, Parent._Dependencies.Dimensions) : null;
         });
         private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();
         
