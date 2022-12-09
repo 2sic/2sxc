@@ -58,6 +58,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
         }
 
+        // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
         private Dictionary<string, Dictionary<string, IEnumerable</*AdamItemDto*/object>>> PrefetchAdam(int appId, EditDto editData)
         {
             // Step 1: try to find hyperlink fields

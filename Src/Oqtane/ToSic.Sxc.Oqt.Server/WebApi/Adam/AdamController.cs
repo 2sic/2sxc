@@ -32,6 +32,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
         public AdamController(): base("Adam") { }
 
+        // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
+
         [HttpPost]
         [HttpPut]
         public /*AdamItemDto*/object Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false) 
