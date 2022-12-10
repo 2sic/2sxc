@@ -13,7 +13,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
-using ToSic.Sxc.Edit;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Engines;
@@ -186,6 +185,11 @@ namespace ToSic.Sxc.Startup
 
             // WIP v14
             services.TryAddTransient<IAdamService, AdamService>();
+
+            // V15
+            services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
+            services.TryAddTransient<ITurnOnService, TurnOnService>();
+
 
             // Sxc StartUp Routines
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();    // must be Add, not TryAdd

@@ -42,9 +42,9 @@ namespace ToSic.Sxc.Web
         [PrivateApi] string AddOpenGraph(string property, string content);
         [PrivateApi] string AddJsonLd(string jsonString);
         [PrivateApi] string AddJsonLd(object jsonObject);
-        [PrivateApi] string AddIcon(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector, 
+        [PrivateApi] string AddIcon(string path, string noParamOrder = Eav.Parameters.Protector, 
             string rel = "", int size = 0, string type = null);
-        [PrivateApi] string AddIconSet(string path, string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
+        [PrivateApi] string AddIconSet(string path, string noParamOrder = Eav.Parameters.Protector,
             object favicon = null, IEnumerable<string> rels = null, IEnumerable<int> sizes = null);
         [PrivateApi] string Activate(params string[] keys);
 #pragma warning restore CS0108, CS0114

@@ -129,16 +129,14 @@ namespace ToSic.Sxc.Services
         /// Add an Icon header tag to the Page. 
         /// </summary>
         /// <param name="path">Path to the image/icon file</param>
-        /// <param name="doNotRelyOnParameterOrder">This is a dummy parameter to force the developer to name the remaining parameters - like size: 75 etc.
-        ///     This allows us to add more parameters in future without worrying that existing code could break. 
-        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="rel">the rel-text, default is 'icon'. common terms are also 'shortcut icon' or 'apple-touch-icon'</param>
         /// <param name="size">Will be used in size='#x#' tag; only relevant if you want to provide multiple separate sizes</param>
         /// <param name="type">An optional type. If not provided, will be auto-detected from known types or remain empty</param>
         /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIcon(...)`</returns>
         string AddIcon(
             string path,
-            string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             string rel = "",
             int size = 0,
             string type = null);
@@ -147,16 +145,14 @@ namespace ToSic.Sxc.Services
         /// Add a set of icons to the page
         /// </summary>
         /// <param name="path">Path to the image/icon file</param>
-        /// <param name="doNotRelyOnParameterOrder">This is a dummy parameter to force the developer to name the remaining parameters - like size: 75 etc.
-        ///     This allows us to add more parameters in future without worrying that existing code could break.
-        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="favicon">path to favicon, default is '/favicon.ico' </param>
         /// <param name="rels"></param>
         /// <param name="sizes"></param>
         /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddIconSet(...)`</returns>
         string AddIconSet(
             string path,
-            string doNotRelyOnParameterOrder = Eav.Parameters.Protector,
+            string noParamOrder = Eav.Parameters.Protector,
             object favicon = null,
             IEnumerable<string> rels = null,
             IEnumerable<int> sizes = null);
@@ -207,6 +203,35 @@ namespace ToSic.Sxc.Services
         /// <param name="values"></param>
         /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddCsp(...)`</returns>
         string AddCsp(string name, params string[] values);
+
+        #endregion
+
+        #region TurnOn (new v15)
+
+        /// <summary>
+        /// Turn on some javascript code when all requirements have been met.
+        /// Uses [turnOn](xref:JsCode.TurnOn.Index).
+        ///
+        /// Will automatically activate the feature and set hidden data on the page for the turnOn JS to pick up.
+        /// </summary>
+        /// <param name="runOrSpecs">
+        /// * either a run `string` like `window.myObject.myJs()` (must always start with window)
+        /// * or a object containing all the parameters which turnOn requires
+        /// </param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="require">
+        /// _optional_ One or more requirements which must be met before the code starts.
+        /// Can be one or many values and/or functions.
+        /// * a `string` such as `window.myObject` or `window.myObject.readyToStart()`
+        /// * a array of such strings
+        /// </param>
+        /// <param name="data">_optional_ any value such as a string, or an object - to pass into the run-command</param>
+        /// <returns>An empty string, just so you can use it directly in Razor like `@Kit.Page.TurnOn("...")`</returns>
+        /// <remarks>New in v15.</remarks>
+        string TurnOn(object runOrSpecs,
+            string noParamOrder = Eav.Parameters.Protector,
+            object require = default,
+            object data = default);
 
         #endregion
     }

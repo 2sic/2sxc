@@ -1,8 +1,10 @@
 ﻿using System;
+using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.PageService
@@ -20,15 +22,20 @@ namespace ToSic.Sxc.Web.PageService
         public PageService(
             PageServiceShared pageServiceShared,
             Lazy<ContentSecurityPolicyService> cspServiceLazy,
-            Lazy<IHtmlTagService> htmlTagsLazy
-            ) : base("2sxc.PgeSrv")
+            Lazy<IHtmlTagService> htmlTagsLazy,
+            LazyInitLog<ITurnOnService> turnOn,
+            LazyInitLog<IModuleService> moduleService) : base("2sxc.PgeSrv")
         {
             _cspServiceLazy = cspServiceLazy;
             _htmlTagsLazy = htmlTagsLazy;
+            _moduleService = moduleService.SetLog(Log);
+            _turnOn = turnOn.SetLog(Log);
             PageServiceShared = pageServiceShared;
         }
         private readonly Lazy<ContentSecurityPolicyService> _cspServiceLazy;
         private readonly Lazy<IHtmlTagService> _htmlTagsLazy;
+        private readonly LazyInitLog<IModuleService> _moduleService;
+        private readonly LazyInitLog<ITurnOnService> _turnOn;
         public PageServiceShared PageServiceShared { get; }
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
