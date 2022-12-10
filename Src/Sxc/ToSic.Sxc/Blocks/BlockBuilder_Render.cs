@@ -165,6 +165,14 @@ namespace ToSic.Sxc.Blocks
                     : body;
                 #endregion
 
+                #region Add Custom Tags to the end if provided by the ModuleService
+
+                var additionalTags = _deps.ModuleService.MoreTags;
+                if (additionalTags.Any()) 
+                    result += "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()));
+
+                #endregion
+
                 return wrapLog.Return((result, err));
             }
             catch (Exception ex)

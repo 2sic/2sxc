@@ -3,10 +3,10 @@ using ToSic.Eav.Configuration.Licenses;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Blocks
@@ -21,20 +21,27 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
     public partial class BlockBuilder : HasLog, IBlockBuilder
     {
-        public class Dependencies
+        public class Dependencies: DependenciesBase<Dependencies>
         {
+            public IModuleService ModuleService { get; }
+
             public Dependencies(
                 EngineFactory engineFactory,
                 Generator<IEnvironmentInstaller> envInstGen, 
                 Generator<IRenderingHelper> renderHelpGen,
                 LazyInitLog<PageChangeSummary> pageChangeSummary,
-                Lazy<ILicenseService> licenseService)
+                Lazy<ILicenseService> licenseService,
+                IModuleService moduleService
+                )
             {
-                EngineFactory = engineFactory;
-                EnvInstGen = envInstGen;
-                RenderHelpGen = renderHelpGen;
-                PageChangeSummary = pageChangeSummary;
-                LicenseService = licenseService;
+                AddToLogQueue(
+                    EngineFactory = engineFactory,
+                    EnvInstGen = envInstGen,
+                    RenderHelpGen = renderHelpGen,
+                    PageChangeSummary = pageChangeSummary,
+                    LicenseService = licenseService,
+                    ModuleService = moduleService
+                );
             }
 
             public EngineFactory EngineFactory { get; }
@@ -47,8 +54,8 @@ namespace ToSic.Sxc.Blocks
         #region Constructor
         public BlockBuilder(Dependencies dependencies) : base("Sxc.BlkBld")
         {
-            _deps = dependencies;
-            _deps.PageChangeSummary.SetLog(Log);
+            _deps = dependencies.SetLog(Log);
+            // _deps.PageChangeSummary.SetLog(Log);
         }
         private readonly Dependencies _deps;
 

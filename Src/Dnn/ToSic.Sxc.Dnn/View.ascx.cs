@@ -16,6 +16,8 @@ namespace ToSic.Sxc.Dnn
 {
     public partial class View : PortalModuleBase, IActionable
     {
+        #region GetService and Service Provider
+
         /// <summary>
         /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
@@ -24,6 +26,8 @@ namespace ToSic.Sxc.Dnn
         private IServiceProvider _serviceProvider;
         private TService GetService<TService>() => ServiceProvider.Build<TService>();
 
+        #endregion
+
         /// <summary>
         /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
         /// which runs before page-load
@@ -31,10 +35,14 @@ namespace ToSic.Sxc.Dnn
         private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration, null)));
         private readonly GetOnce<IBlock> _blockGetOnce = new GetOnce<IBlock>();
 
+        #region Logging
+
         private ILog Log { get; } = new Log("Sxc.View");
 
         protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
         private readonly GetOnce<LogCall> _logTimer = new GetOnce<LogCall>();
+
+        #endregion
 
         /// <summary>
         /// Page Load event
