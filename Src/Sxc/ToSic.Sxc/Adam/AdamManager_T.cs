@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Adam
         public override AdamManager Init(IContextOfApp ctx, int compatibility, ILog parentLog)
         {
             base.Init(ctx, compatibility, parentLog);
-            AdamFs = _adamFsLazy.Ready;
+            AdamFs = _adamFsLazy.Value;
             return this;
         }
 

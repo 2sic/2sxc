@@ -41,16 +41,16 @@ namespace ToSic.Sxc.WebApi.Admin
         private readonly LazyInitLog<ViewsExportImport<THttpResponseType>> _viewExportImport;
 
         /// <inheritdoc />
-        public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Ready.GetAll(appId);
+        public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Value.GetAll(appId);
 
         /// <inheritdoc />
-        public PolymorphismDto Polymorphism(int appId) => _polymorphismBackend.Ready.Polymorphism(appId);
+        public PolymorphismDto Polymorphism(int appId) => _polymorphismBackend.Value.Polymorphism(appId);
 
         /// <inheritdoc />
-        public bool Delete(int appId, int id) => _viewsBackend.Ready.Delete(appId, id);
+        public bool Delete(int appId, int id) => _viewsBackend.Value.Delete(appId, id);
 
         /// <inheritdoc />
-        public THttpResponseType Json(int appId, int viewId) => _viewExportImport.Ready.DownloadViewAsJson(appId, viewId);
+        public THttpResponseType Json(int appId, int viewId) => _viewExportImport.Value.DownloadViewAsJson(appId, viewId);
 
         /// <summary>
         /// This method is not implemented for ControllerReal, because ControllerReal implements Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 var (fileName, stream) = uploadInfo.GetStream(i);
                 streams.Add(new FileUploadDto {Name = fileName, Stream = stream});
             }
-            var result = _viewExportImport.Ready.ImportView(zoneId, appId, streams, _context.Ready.Site.DefaultCultureCode);
+            var result = _viewExportImport.Value.ImportView(zoneId, appId, streams, _context.Value.Site.DefaultCultureCode);
 
             return wrapLog.ReturnAsOk(result);
         }
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 Log.A("Error, FinalBuilder implementation is not set.");
                 throw new ArgumentException("FinalBuilder implementation is not set.");
             }
-            return _usageBackend.Ready.ViewUsage(appId, guid, FinalBuilder);
+            return _usageBackend.Value.ViewUsage(appId, guid, FinalBuilder);
         }
         public ViewControllerReal<THttpResponseType> UsagePreparations(Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
         {
@@ -107,6 +107,6 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <summary>
         /// Helper method to get SiteId for ControllerReal proxy class.
         /// </summary>
-        public int SiteId => _context.Ready.Site.Id;
+        public int SiteId => _context.Value.Site.Id;
     }
 }

@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Web.PageService
             Activate(BuiltInFeatures.TurnOn.NameId);
 
             // then generate the turn-on and add to module state
-            var tag = _turnOn.Ready.Run(runOrSpecs, require: require, data: data);
-            _moduleService.Ready.AddToMore(tag);
+            var tag = _turnOn.Value.Run(runOrSpecs, require: require, data: data);
+            _moduleService.Value.AddToMore(tag);
 
             // Then return empty string
             return "";

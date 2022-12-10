@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Apps
             return this;
         }
 
-        public new CmsRuntime Read => _cmsRuntime.Ready;
+        public new CmsRuntime Read => _cmsRuntime.Value;
 
         public ViewsManager Views => _views ?? (_views = new ViewsManager().Init(this, Log));
         private ViewsManager _views;

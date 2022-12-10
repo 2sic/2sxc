@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Search
             // In case it's not loaded yet
             _appsCache.Value.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
 
-            Block = _moduleAndBlockBuilder.Ready.GetBlock(DnnModule, null);
+            Block = _moduleAndBlockBuilder.Value.GetBlock(DnnModule, null);
 
             if (Block.View == null) return wrapLog.ReturnAndLog("no view");
             if (Block.View.SearchIndexingDisabled) return wrapLog.ReturnAndLog("search disabled"); // new in 12.02
@@ -276,7 +276,7 @@ namespace ToSic.Sxc.Search
                 Log.A("Will try to attach dnn providers to DataSource LookUps");
                 try
                 {
-                    var getLookups = _dnnLookUpEngineResolver.Ready;
+                    var getLookups = _dnnLookUpEngineResolver.Value;
                     var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
                     ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
                 }

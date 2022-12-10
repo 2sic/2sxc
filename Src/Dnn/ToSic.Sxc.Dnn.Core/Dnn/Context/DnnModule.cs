@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Dnn.Context
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
-                var appId = _appFinderLazy.Ready.FindAppId(zoneId, guid);
+                var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
                 return wrapLog.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
             }
 

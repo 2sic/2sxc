@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// Helper method to get SiteId.
         /// </summary>
-        public int SiteId => _context.Ready.Site.Id;
+        public int SiteId => _context.Value.Site.Id;
 
         /// <summary>
         /// Helper method to parse UserID from user identity token.

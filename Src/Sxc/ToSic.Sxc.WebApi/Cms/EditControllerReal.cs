@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly LazyInitLog<AppViewPickerBackend> _appViewPickerBackendLazy;
         private readonly LazyInitLog<HyperlinkBackend<int, int>> _linkBackendLazy;
 
-        public EditDto Load(List<ItemIdentifier> items, int appId) => _loadBackend.Ready.Load(appId, items);
+        public EditDto Load(List<ItemIdentifier> items, int appId) => _loadBackend.Value.Load(appId, items);
 
         public Dictionary<Guid, int> Save(EditDto package, int appId, bool partOfPage)
             => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
@@ -45,14 +45,14 @@ namespace ToSic.Sxc.WebApi.Cms
             int appId,
             string[] items,
             string contentTypeName = null)
-            => _entityBackend.Ready.GetAvailableEntities(appId, items, contentTypeName);
+            => _entityBackend.Value.GetAvailableEntities(appId, items, contentTypeName);
 
 
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)
-            => _linkBackendLazy.Ready.LookupHyperlink(appId, link, contentType, guid, field);
+            => _linkBackendLazy.Value.LookupHyperlink(appId, link, contentType, guid, field);
 
         // TODO: we will need to make simpler implementation
         public bool Publish(int id)
-            => _appViewPickerBackendLazy.Ready.Publish(id);
+            => _appViewPickerBackendLazy.Value.Publish(id);
     }
 }

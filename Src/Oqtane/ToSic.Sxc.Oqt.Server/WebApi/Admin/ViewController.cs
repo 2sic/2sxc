@@ -79,10 +79,10 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
         {
             // create list with all 2sxc modules in this site
-            var allMods = _pages.Ready.AllModulesWithContent(Real.SiteId);
+            var allMods = _pages.Value.AllModulesWithContent(Real.SiteId);
             Log.A($"Found {allMods.Count} modules");
 
-            return views.Select(vwb => _pages.Ready.ViewDtoBuilder(vwb, blocks, allMods));
+            return views.Select(vwb => _pages.Value.ViewDtoBuilder(vwb, blocks, allMods));
         }).Usage(appId, guid);
 
 

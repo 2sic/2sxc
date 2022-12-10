@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (c.ContainsKey(PortalSettingZoneId)) return int.Parse(c[PortalSettingZoneId]);
 
             var portalSettings = new PortalSettings(siteId);
-            var zoneId = _zoneCreatorLazy.Ready/*.Init(Log)*/.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
+            var zoneId = _zoneCreatorLazy.Value/*.Init(Log)*/.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
             PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, zoneId.ToString());
             return zoneId;
 

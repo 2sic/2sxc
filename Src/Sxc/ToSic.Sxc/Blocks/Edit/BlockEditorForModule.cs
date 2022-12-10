@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         private readonly LazyInitLog<IPlatformModuleUpdater> _platformModuleUpdater;
 
-        private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater.Ready;
+        private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater.Value;
 
 
         protected override void SavePreviewTemplateId(Guid templateGuid)

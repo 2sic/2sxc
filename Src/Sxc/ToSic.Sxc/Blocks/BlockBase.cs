@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = _deps.BlockBuilder.Ready /*new BlockBuilder(_deps.BbDependencies).Init(Log)*/.Init(rootBuilderOrNull, this);
+            BlockBuilder = _deps.BlockBuilder.Value /*new BlockBuilder(_deps.BbDependencies).Init(Log)*/.Init(rootBuilderOrNull, this);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder

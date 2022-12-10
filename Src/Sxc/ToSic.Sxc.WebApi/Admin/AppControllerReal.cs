@@ -62,9 +62,9 @@ namespace ToSic.Sxc.WebApi.Admin
         private readonly LazyInitLog<AppStackBackend> _appStackBackendLazy;
 
 
-        public List<AppDto> List(int zoneId) => _appsBackendLazy.Ready.Apps();
+        public List<AppDto> List(int zoneId) => _appsBackendLazy.Value.Apps();
 
-        public List<AppDto> InheritableApps() => _appsBackendLazy.Ready.GetInheritableApps();
+        public List<AppDto> InheritableApps() => _appsBackendLazy.Value.GetInheritableApps();
 
         public void App(int zoneId, int appId, bool fullDelete = true)
             => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
@@ -73,28 +73,28 @@ namespace ToSic.Sxc.WebApi.Admin
             => _appBuilderLazy.Value.Init(zoneId, Log).Create(name, null, inheritAppId);
 
         public List<SiteLanguageDto> Languages(int appId)
-            => _languagesBackendLazy.Ready.GetLanguagesOfApp(_appStatesLazy.Value.Get(appId), true);
+            => _languagesBackendLazy.Value.GetLanguagesOfApp(_appStatesLazy.Value.Get(appId), true);
 
-        public AppExportInfoDto Statistics(int zoneId, int appId) => _exportAppLazy.Ready.GetAppInfo(zoneId, appId);
+        public AppExportInfoDto Statistics(int zoneId, int appId) => _exportAppLazy.Value.GetAppInfo(zoneId, appId);
 
         public bool FlushCache(int zoneId, int appId)
         {
             var wrapLog = Log.Fn<bool>($"{zoneId}, {appId}");
-            _systemManagerLazy.Ready.Purge(zoneId, appId);
+            _systemManagerLazy.Value.Purge(zoneId, appId);
             return wrapLog.ReturnTrue("ok");
         }
 
         public THttpResponseType Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-            => _exportAppLazy.Ready.Export(zoneId, appId, includeContentGroups, resetAppGuid) as THttpResponseType;
+            => _exportAppLazy.Value.Export(zoneId, appId, includeContentGroups, resetAppGuid) as THttpResponseType;
 
         public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles)
-            => _exportAppLazy.Ready.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
+            => _exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
         public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
-            => _appStackBackendLazy.Ready.GetAll(appId, part ?? ConfigurationConstants.RootNameSettings, key, view, null);
+            => _appStackBackendLazy.Value.GetAll(appId, part ?? ConfigurationConstants.RootNameSettings, key, view, null);
 
         public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles) 
-            => _resetAppLazy.Ready.Reset(zoneId, appId, defaultLanguage, withPortalFiles);
+            => _resetAppLazy.Value.Reset(zoneId, appId, defaultLanguage, withPortalFiles);
 
         /// <summary>
         /// Import App from import zip.
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
             var (_, stream) = uploadInfo.GetStream(0);
             
-            var result = _importAppLazy.Ready.Import(stream, zoneId, renameApp);
+            var result = _importAppLazy.Value.Import(stream, zoneId, renameApp);
 
             return wrapLog.ReturnAsOk(result);
         }
@@ -127,7 +127,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId)
         {
             var wrapLog = Log.Fn<IEnumerable<PendingAppDto>>();
-            var result = _importAppLazy.Ready.GetPendingApps(zoneId);
+            var result = _importAppLazy.Value.GetPendingApps(zoneId);
             return wrapLog.ReturnAsOk(result);
         }
 
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
         {
             var wrapLog = Log.Fn<ImportResultDto>();
-            var result = _importAppLazy.Ready.InstallPendingApps(zoneId, pendingApps);
+            var result = _importAppLazy.Value.InstallPendingApps(zoneId, pendingApps);
             return wrapLog.ReturnAsOk(result);
         }
     }

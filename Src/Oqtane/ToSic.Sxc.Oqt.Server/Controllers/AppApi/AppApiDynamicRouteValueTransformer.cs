@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                     // Before trying to get the AppFolder, we must init the ICmsContext as this will
                     var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
                     blockInitializer.TryToLoadBlockAndAttachToResolver();
-                    appFolder = _appFolder.Ready.GetAppFolder();
+                    appFolder = _appFolder.Value.GetAppFolder();
                 }
 
 

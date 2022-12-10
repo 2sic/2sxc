@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
 
             var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, draft:{showDrafts}, view:{block.View?.Name}");
             // Get ModuleDataSource
-            var dsFactory = _dataSourceFactory.Ready;
+            var dsFactory = _dataSourceFactory.Value;
             var initialSource = dsFactory.GetPublishing(block, showDrafts, configurationProvider);
             var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
 

@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly LazyInitLog<ListControllerReal> _listController;
         private readonly LazyInit<CmsManager> _cmsManagerLazy;
         private readonly LazyInitLog<IPagePublishing> _publishing;
-        private CmsManager CmsManager => _cmsManagerLazy.Ready;
+        private CmsManager CmsManager => _cmsManagerLazy.Value;
 
 
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Cms
         
 
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false) 
-            => _listController.Ready.Replace(guid, part, index, entityId, add);
+            => _listController.Value.Replace(guid, part, index, entityId, add);
 
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var wrapLog = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
             var typeNameOfField = FindTypeNameOnContentGroup(guid, part);
-            var result = _listController.Ready.BuildReplaceList(guid, part, index, typeNameOfField);
+            var result = _listController.Value.BuildReplaceList(guid, part, index, typeNameOfField);
             return wrapLog.Return(result);
         }
 
@@ -122,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Log.A($"list for:{guid}, items:{list?.Count}");
             if (list == null) throw new ArgumentNullException(nameof(list));
 
-            _publishing.Ready.DoInsidePublishing(Context, args =>
+            _publishing.Value.DoInsidePublishing(Context, args =>
             {
                 var entity = CmsManager.Read.AppState.List.One(guid);
 

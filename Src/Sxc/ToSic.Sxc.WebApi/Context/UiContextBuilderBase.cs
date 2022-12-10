@@ -113,7 +113,7 @@ namespace ToSic.Sxc.WebApi.Context
             if (ZoneId == 0) return null;
             var site = Deps.SiteCtx.Site;
 
-            var converted = Deps.LanguagesBackend.Ready.GetLanguagesOfApp(AppState);
+            var converted = Deps.LanguagesBackend.Value.GetLanguagesOfApp(AppState);
 
             return new ContextLanguageDto
             {
@@ -243,7 +243,7 @@ namespace ToSic.Sxc.WebApi.Context
             var l = Log.Fn<List<ContextApiKeyDto>>();
             if (this.AppState == null) return l.ReturnNull("no AppState");
 
-            var stack = Deps.SettingsStack.Ready.Init(AppState).GetStack(ConfigurationConstants.RootNameSettings);
+            var stack = Deps.SettingsStack.Value.Init(AppState).GetStack(ConfigurationConstants.RootNameSettings);
 
             var parts = new Dictionary<string, string>
             {
@@ -259,7 +259,7 @@ namespace ToSic.Sxc.WebApi.Context
                     if (!(prop.Result is string strResult))
                         return null;
 
-                    var decrypted = Deps.SecureDataService.Ready.Parse(strResult);
+                    var decrypted = Deps.SecureDataService.Value.Parse(strResult);
                     return new ContextApiKeyDto
                     {
                         NameId = pair.Value,

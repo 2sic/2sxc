@@ -66,14 +66,14 @@ namespace ToSic.Sxc.Context
         public IBlock RealBlockRequired() => _getBlock?.Invoke() ?? throw new Exception("Block required but missing. It was not attached");
 
 
-        public IContextOfApp App(string nameOrPath) => App(AppIdResolver.Ready.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, true));
+        public IContextOfApp App(string nameOrPath) => App(AppIdResolver.Value.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, true));
 
         public IContextOfApp AppOrBlock(string nameOrPath) => AppOrNull(nameOrPath) ?? BlockRequired();
 
         public IContextOfApp AppOrNull(string nameOrPath)
         {
             if (string.IsNullOrWhiteSpace(nameOrPath)) return null;
-            var id = AppIdResolver.Ready.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, false);
+            var id = AppIdResolver.Value.GetAppIdFromPath(Site().Site.ZoneId, nameOrPath, false);
             return id <= Eav.Constants.AppIdEmpty ? null : App(id);
         }
 
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Context
             var ctx = AppOrNull(nameOrPath);
             if (ctx != null) return ctx;
 
-            var identity = AppIdResolver.Ready.GetAppIdFromRoute();
+            var identity = AppIdResolver.Value.GetAppIdFromRoute();
             if (identity != null)
             {
                 ctx = ServiceProvider.Build<IContextOfApp>();

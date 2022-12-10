@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Adam
         public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
         {
             var file = UploadOne(stream, fileName, subFolder, false);
-            return DtoMaker.Ready.Create(file);
+            return DtoMaker.Value.Create(file);
         }
 
         public File<TFolderId, TFileId> UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)

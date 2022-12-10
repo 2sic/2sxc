@@ -119,7 +119,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 streams.Add(new FileUploadDto { Name = fileName, Stream = stream });
             }
             var result = _importContent.New.Init(_userLazy.Value, Log)
-                .ImportContentType(zoneId, appId, streams, _context.Ready.Site.DefaultCultureCode);
+                .ImportContentType(zoneId, appId, streams, _context.Value.Site.DefaultCultureCode);
 
             return wrapLog.ReturnAsOk(result);
         }

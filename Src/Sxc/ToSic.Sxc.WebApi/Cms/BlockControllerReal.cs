@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         #region Block
 
-        private ContentBlockBackend Backend => _backend = _backend ?? _blockBackendLazy.Ready;
+        private ContentBlockBackend Backend => _backend = _backend ?? _blockBackendLazy.Value;
         private ContentBlockBackend _backend;
 
         /// <inheritdoc />
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         /// <param name="appId"></param>
 
-        public void App(int? appId) => _viewsBackendLazy.Ready.SetAppId(appId);
+        public void App(int? appId) => _viewsBackendLazy.Value.SetAppId(appId);
 
         /// <summary>
         /// used to be GET Module/GetSelectableApps
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public IEnumerable<AppUiInfo> Apps(string apps = null)
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = _context.Ready.Site;
+            var tenant = _context.Value.Site;
             return _cmsZones.Value.Init(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps)
                 .ToList();
         }
@@ -85,7 +85,7 @@ namespace ToSic.Sxc.WebApi.Cms
         #region Types
 
         /// <inheritdoc />
-        public IEnumerable<ContentTypeUiInfo> ContentTypes() => _viewsBackendLazy.Ready.ContentTypes();
+        public IEnumerable<ContentTypeUiInfo> ContentTypes() => _viewsBackendLazy.Value.ContentTypes();
 
         #endregion
 
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// used to be GET Module/GetSelectableTemplates
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<TemplateUiInfo> Templates() => _viewsBackendLazy.Ready.Templates();
+        public IEnumerable<TemplateUiInfo> Templates() => _viewsBackendLazy.Value.Templates();
 
         /// <summary>
         /// Used in InPage.js
@@ -105,7 +105,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <param name="forceCreateContentGroup"></param>
         /// <returns></returns>
         public Guid? Template(int templateId, bool forceCreateContentGroup)
-            => _viewsBackendLazy.Ready
+            => _viewsBackendLazy.Value
                 .SaveTemplateId(templateId, forceCreateContentGroup);
 
         #endregion

@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Web.PageService
             // Collect Warnings of page features which may require other features enabled
             var features = pss.PageFeatures.GetFeaturesWithDependentsAndFlush(Log);
 
-            var errors = _requirements.Ready
+            var errors = _requirements.Value
                 .Check(features)
                 .Select(f => f.Message)
                 .ToList();
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Web.PageService
             var newAssets = new List<IClientAsset>();
             foreach (var settingFeature in featuresFromSettings)
             {
-                var extracted = _resourceExtractor.Ready.Process(settingFeature.Html);
+                var extracted = _resourceExtractor.Value.Process(settingFeature.Html);
                 if (!extracted.Assets.Any()) continue;
                 Log.A($"Moved Feature Html {settingFeature.NameId} to assets");
 

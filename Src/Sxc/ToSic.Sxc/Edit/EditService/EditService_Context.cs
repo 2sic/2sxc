@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Edit.EditService
         {
             Parameters.Protect(noParamOrder, $"{nameof(tag)},{nameof(full)},{nameof(enableEdit)},{nameof(instanceId)},{nameof(contentBlockId)}");
 
-            var renderingHelper = _renderHelper.Ready;
+            var renderingHelper = _renderHelper.Value;
 
             return new HybridHtmlString(
                renderingHelper.WrapInContext(content.ToString(),

@@ -83,12 +83,12 @@ namespace ToSic.Sxc.WebApi.Sys
         public InstallAppsDto InstallSettings(bool isContentApp, IModule module)
         {
             // Get Remote Install URL
-            var site = _context.Ready.Site;
+            var site = _context.Value.Site;
             var url = _envInstallerLazy.Value.Init(Log)
                 .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
 
             // Get list of already installed Apps
-            var appsOfThisSite = _appsBackendLazy.Ready.Apps()
+            var appsOfThisSite = _appsBackendLazy.Value.Apps()
                 .Select(a => new AppDtoLight
                 {
                     name = a.Name,
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.WebApi.Sys
 
             // Get list of allow/forbid rules for the App installer
             var primaryApp = _appStates.Value.GetPrimaryApp(site.ZoneId, Log);
-            var settingsSources = _appSettingsStack.Ready.Init(primaryApp).GetStack(ConfigurationConstants.Settings);
+            var settingsSources = _appSettingsStack.Value.Init(primaryApp).GetStack(ConfigurationConstants.Settings);
             var stack = new PropertyStack().Init(ConfigurationConstants.RootNameSettings, settingsSources);
 
             var rules = stack.InternalGetPath(new PropReqSpecs("SiteSetup.AutoInstallApps", null, Log), null);

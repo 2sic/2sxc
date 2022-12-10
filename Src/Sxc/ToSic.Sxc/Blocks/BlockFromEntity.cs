@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Blocks
             temp = blockDefinition.Value<string>(ViewParts.TemplateContentType) ?? "";
             Guid.TryParse(temp, out var previewTemplateGuid);
 
-            var appId = _appFinderLazy.Ready.FindAppId(zoneId, appNameId);
+            var appId = _appFinderLazy.Value.FindAppId(zoneId, appNameId);
             return new BlockIdentifier(zoneId, appId, appNameId, contentGroupGuid, previewTemplateGuid);
         }
         #endregion

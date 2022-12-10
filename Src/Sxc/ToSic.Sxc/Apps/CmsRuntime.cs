@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Apps
         public new CmsRuntime InitWithState(AppState appState, bool showDrafts, ILog parentLog) 
             => base.InitWithState(appState, showDrafts, parentLog) as CmsRuntime;
 
-        public ViewsRuntime Views => _viewsRuntime.Ready;
+        public ViewsRuntime Views => _viewsRuntime.Value;
 
-        public BlocksRuntime Blocks => _blocksRuntime.Ready;
+        public BlocksRuntime Blocks => _blocksRuntime.Value;
     }
 }

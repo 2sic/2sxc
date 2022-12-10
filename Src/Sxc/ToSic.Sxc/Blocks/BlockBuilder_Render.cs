@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Blocks
                 // So only the top-level should get them
                 if (topLevel)
                 {
-                    var allChanges = _deps.PageChangeSummary.Ready
+                    var allChanges = _deps.PageChangeSummary.Value
                         .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Block.Context.UserMayEdit);
 
                     // Head & Page Changes

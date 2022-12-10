@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         {
             try
             {
-                if (appName == WebApiConstants.Auto) appName = _appFolder.Ready.GetAppFolder();
+                if (appName == WebApiConstants.Auto) appName = _appFolder.Value.GetAppFolder();
 
                 var alias = _siteState.Alias;
                 var fullFilePath = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, Route, appName, filePath);

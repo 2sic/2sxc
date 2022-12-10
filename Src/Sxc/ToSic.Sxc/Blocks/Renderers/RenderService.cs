@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Blocks
         {
             MakeSureLogIsInHistory();
             var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-            var block = _builder.Ready.GetBlock(pageId, moduleId).BlockBuilder;
+            var block = _builder.Value.GetBlock(pageId, moduleId).BlockBuilder;
             var result = block.Run(true);
             return wrapLog.ReturnAsOk(result);
         }

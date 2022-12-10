@@ -30,8 +30,8 @@ namespace ToSic.Sxc.Blocks.Edit
 
         #endregion
 
-        private CmsManager CmsManager => Dependencies.CmsManager.Ready;
-        private AppManager AppManager => Dependencies.AppManager.Ready;
+        private CmsManager CmsManager => Dependencies.CmsManager.Value;
+        private AppManager AppManager => Dependencies.AppManager.Value;
 
         protected IBlock Block;
 
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Blocks.Edit
             return true;
         }
 
-        private AppManager BlockAppManager => Dependencies.AppManager.Ready;
+        private AppManager BlockAppManager => Dependencies.AppManager.Value;
 
         #endregion
 

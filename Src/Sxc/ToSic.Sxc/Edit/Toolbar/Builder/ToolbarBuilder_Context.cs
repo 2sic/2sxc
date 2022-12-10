@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             // Get context, specify "true" to force it to be added
             var context = GenerateContext(target, true.ToString());
-            var rule = new ToolbarRuleContext(null, context, _deps.ToolbarButtonHelper.Ready);
+            var rule = new ToolbarRuleContext(null, context, _deps.ToolbarButtonHelper.Value);
             return AddInternal(rule);
         }
 
