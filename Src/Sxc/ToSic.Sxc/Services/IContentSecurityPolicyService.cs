@@ -1,9 +1,8 @@
 ﻿using ToSic.Eav.Documentation;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Services
 {
-    
+    [PrivateApi("The service isn't publicly documented, as the functionality happens on the IPageService object")]
     public interface IContentSecurityPolicyService
     {
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using Connect.Koi;
-using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Razor.Blade;
@@ -37,8 +36,7 @@ namespace ToSic.Sxc.Services
 
         // Wait till we have a signature without the IEntity, but more an IHasEntity or something
         ///// <summary>
-        ///// The TODO Service, used to detect the current CSS framework and other features.
-        ///// See [ICss](xref:Connect.Koi.ICss)
+        ///// The TODO Service, 
         ///// </summary>
         //public IConvertToEavLight Todo => _convEavLight.Get(GetService<IConvertToEavLight>);
         //private readonly ValueGetOnce<IConvertToEavLight> _convEavLight = new ValueGetOnce<IConvertToEavLight>();
@@ -56,6 +54,22 @@ namespace ToSic.Sxc.Services
         public IFeaturesService Feature => _features.Get(GetService<IFeaturesService>);
         private readonly GetOnce<IFeaturesService> _features = new GetOnce<IFeaturesService>();
 
+
+        /// <summary>
+        /// The Razor Blade 4 HtmlTag service, to fluidly create Tags.
+        /// See [](xref:ToSic.Razor.Blade.IHtmlTagService).
+        ///
+        /// > [!IMPORTANT]
+        /// > This is _similar but different_ to the [](xref:ToSic.Razor.Blade.Tag].
+        /// > The [](xref:ToSic.Razor.Blade.IHtmlTag) objects returned here are _immutable_.
+        /// > This means that chained commands like `...HtmlTag.Div().Id(...).Class(...)`
+        /// > all return new objects and don't modify the previous one.
+        /// >
+        /// > The older `Tag` helper created mutable objects where chaining always modified the original and returned it again.
+        /// </summary>
+        /// <remarks>Added in v15</remarks>
+        public IHtmlTagService HtmlTag => _ht.Get(GetService<IHtmlTagService>);
+        private readonly GetOnce<IHtmlTagService> _ht = new GetOnce<IHtmlTagService>();
 
         /// <summary>
         /// The Images service, used to create `img` and `picture` tags
@@ -105,14 +119,14 @@ namespace ToSic.Sxc.Services
         private readonly GetOnce<IRenderService> _render = new GetOnce<IRenderService>();
 
         /// <summary>
-        /// The Secure Data Service - mainly for reading / decrypting secrets. 
+        /// The Secure Data service - mainly for reading / decrypting secrets. 
         /// </summary>
         public ISecureDataService SecureData => _secureData.Get(GetService<ISecureDataService>);
         private readonly GetOnce<ISecureDataService> _secureData = new GetOnce<ISecureDataService>();
 
         /// <summary>
         /// The Razor-Blade Scrub service, used to clean up HTML.
-        /// See [IScrub](xref:ToSic.Razor.Blade.IScrub)
+        /// See [](xref:ToSic.Razor.Blade.IScrub)
         /// </summary>
         public IScrub Scrub => _scrub.Get(GetService<IScrub>);
         private readonly GetOnce<IScrub> _scrub = new GetOnce<IScrub>();
