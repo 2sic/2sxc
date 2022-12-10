@@ -30,11 +30,9 @@ namespace ToSic.Sxc.Blocks.Output
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
             this.LinkLog(parentLog);
-            //var appRoot = _linkPaths.ToAbsolute("~/");
             Block = block;
             Context = block.Context;
             AppRootPath = _linkPaths.AsSeenFromTheDomainRoot("~/");
-
             return this;
         }
 
@@ -57,7 +55,7 @@ namespace ToSic.Sxc.Blocks.Output
             // bool autoToolbar = false,
             bool addLineBreaks = true)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "ContextAttributes", $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(WrapInContext), $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
 
             var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext);
 

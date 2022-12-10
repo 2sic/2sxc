@@ -23,40 +23,33 @@ namespace ToSic.Sxc.Blocks
     {
         public class Dependencies: DependenciesBase<Dependencies>
         {
-            public IModuleService ModuleService { get; }
-
             public Dependencies(
                 EngineFactory engineFactory,
-                Generator<IEnvironmentInstaller> envInstGen, 
+                Generator<IEnvironmentInstaller> envInstGen,
                 Generator<IRenderingHelper> renderHelpGen,
                 LazyInitLog<PageChangeSummary> pageChangeSummary,
                 Lazy<ILicenseService> licenseService,
                 IModuleService moduleService
-                )
-            {
-                AddToLogQueue(
-                    EngineFactory = engineFactory,
-                    EnvInstGen = envInstGen,
-                    RenderHelpGen = renderHelpGen,
-                    PageChangeSummary = pageChangeSummary,
-                    LicenseService = licenseService,
-                    ModuleService = moduleService
-                );
-            }
+            ) => AddToLogQueue(
+                EngineFactory = engineFactory,
+                EnvInstGen = envInstGen,
+                RenderHelpGen = renderHelpGen,
+                PageChangeSummary = pageChangeSummary,
+                LicenseService = licenseService,
+                ModuleService = moduleService
+            );
 
             public EngineFactory EngineFactory { get; }
             public Generator<IEnvironmentInstaller> EnvInstGen { get; }
             public Generator<IRenderingHelper> RenderHelpGen { get; }
             public LazyInitLog<PageChangeSummary> PageChangeSummary { get; }
             public Lazy<ILicenseService> LicenseService { get; }
+            public IModuleService ModuleService { get; }
         }
 
         #region Constructor
-        public BlockBuilder(Dependencies dependencies) : base("Sxc.BlkBld")
-        {
-            _deps = dependencies.SetLog(Log);
-            // _deps.PageChangeSummary.SetLog(Log);
-        }
+        public BlockBuilder(Dependencies dependencies) : base("Sxc.BlkBld") 
+            => _deps = dependencies.SetLog(Log);
         private readonly Dependencies _deps;
 
         public BlockBuilder Init(IBlockBuilder rootBlockBuilder, IBlock cb)
