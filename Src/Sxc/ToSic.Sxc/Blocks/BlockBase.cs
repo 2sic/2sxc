@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;
@@ -19,21 +18,22 @@ namespace ToSic.Sxc.Blocks
     {
         #region Constructor and DI
 
-        public class Dependencies
+        public class Dependencies: DependenciesBase<Dependencies>
         {
             public Dependencies(
                 Lazy<BlockDataSourceFactory> bdsFactoryLazy,
                 Lazy<App> appLazy,
                 Lazy<AppConfigDelegate> appConfigDelegateLazy,
                 Lazy<CmsRuntime> cmsLazy,
-                LazyInitLog<BlockBuilder> blockBuilder)
-            {
-                BdsFactoryLazy = bdsFactoryLazy;
-                AppLazy = appLazy;
-                AppConfigDelegateLazy = appConfigDelegateLazy;
-                CmsLazy = cmsLazy;
-                BlockBuilder = blockBuilder;
-            }
+                LazyInitLog<BlockBuilder> blockBuilder
+            ) => AddToLogQueue(
+                BdsFactoryLazy = bdsFactoryLazy,
+                AppLazy = appLazy,
+                AppConfigDelegateLazy = appConfigDelegateLazy,
+                CmsLazy = cmsLazy,
+                BlockBuilder = blockBuilder
+            );
+
             internal Lazy<BlockDataSourceFactory> BdsFactoryLazy { get; }
             internal Lazy<App> AppLazy { get; }
             internal Lazy<AppConfigDelegate> AppConfigDelegateLazy { get; }
@@ -43,8 +43,7 @@ namespace ToSic.Sxc.Blocks
 
         protected BlockBase(Dependencies dependencies, string logName) : base(logName)
         {
-            _deps = dependencies;
-            _deps.BlockBuilder.SetLog(Log);
+            _deps = dependencies.SetLog(Log);
         }
 
         private readonly Dependencies _deps;
@@ -68,7 +67,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = _deps.BlockBuilder.Value /*new BlockBuilder(_deps.BbDependencies).Init(Log)*/.Init(rootBuilderOrNull, this);
+            BlockBuilder = _deps.BlockBuilder.Value.Init(rootBuilderOrNull, this);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
@@ -87,7 +86,7 @@ namespace ToSic.Sxc.Blocks
             // Get App for this block
             Log.A("About to create app");
             App = _deps.AppLazy.Value.PreInit(Context.Site)
-                .Init(this, _deps.AppConfigDelegateLazy.Value.Init(Log).BuildForNewBlock(Context, this), Log);
+                .Init(this, _deps.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this), Log);
             Log.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
@@ -164,7 +163,7 @@ namespace ToSic.Sxc.Blocks
                 if (_dataSource != null) return _dataSource;
                 Log.A(
                     $"About to load data source with possible app configuration provider. App is probably null: {App}");
-                _dataSource = _deps.BdsFactoryLazy.Value.Init(Log).GetBlockDataSource(this, App?.ConfigurationProvider);
+                _dataSource = _deps.BdsFactoryLazy.Value.GetBlockDataSource(this, App?.ConfigurationProvider);
                 return _dataSource;
             }
         }

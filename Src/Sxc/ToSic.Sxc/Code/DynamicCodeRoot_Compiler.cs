@@ -18,9 +18,7 @@ namespace ToSic.Sxc.Code
                 $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
-            var compiler = Deps.CodeCompilerLazy.IsValueCreated
-                ? Deps.CodeCompilerLazy.Value
-                : Deps.CodeCompilerLazy.Value.Init(Log);
+            var compiler = Deps.CodeCompilerLazy.Value;
             var instance = compiler.InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them

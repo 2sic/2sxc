@@ -6,8 +6,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
-
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
@@ -18,9 +16,12 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         #region Constructors and Init
 
-        public class Dependencies
+        public class Dependencies: DependenciesBase<Dependencies>
         {
-            public Dependencies(Lazy<IAppStates> appStatesLazy, LazyInitLog<ToolbarButtonDecoratorHelper> toolbarButtonHelper)
+            public Dependencies(
+                Lazy<IAppStates> appStatesLazy,
+                LazyInitLog<ToolbarButtonDecoratorHelper> toolbarButtonHelper
+                )
             {
                 ToolbarButtonHelper = toolbarButtonHelper;
                 AppStatesLazy = appStatesLazy;
@@ -28,11 +29,12 @@ namespace ToSic.Sxc.Edit.Toolbar
             internal readonly Lazy<IAppStates> AppStatesLazy;
             public LazyInitLog<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
 
-            internal Dependencies InitLogIfNotYet(ILog parentLog)
+            public override Dependencies SetLog(ILog parentLog)
             {
                 if (_alreadyInited) return this;
                 _alreadyInited = true;
-                ToolbarButtonHelper.SetLog(parentLog);
+                base.SetLog(parentLog);
+                //ToolbarButtonHelper.SetLog(parentLog);
                 return this;
             }
 
@@ -43,7 +45,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Public constructor for DI
         /// </summary>
         /// <param name="deps"></param>
-        public ToolbarBuilder(Dependencies deps) => _deps = deps.InitLogIfNotYet(Log);
+        public ToolbarBuilder(Dependencies deps) => _deps = deps.SetLog(Log);
         private readonly Dependencies _deps;
 
         /// <summary>

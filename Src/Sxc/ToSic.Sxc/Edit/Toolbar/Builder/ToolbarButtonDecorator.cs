@@ -1,7 +1,4 @@
 ﻿using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
-using ToSic.Eav.Serialization;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {

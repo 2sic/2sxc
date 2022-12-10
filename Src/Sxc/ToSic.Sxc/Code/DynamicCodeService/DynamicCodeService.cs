@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
@@ -21,23 +20,25 @@ namespace ToSic.Sxc.Code
     {
         #region Constructor and Init
 
-        public class Dependencies
+        public class Dependencies: DependenciesBase<Dependencies>
         {
-            public Dependencies(IServiceProvider serviceProvider, 
-                Lazy<History> history, 
-                Lazy<IUser> user, 
+            public Dependencies(
+                IServiceProvider serviceProvider,
+                Lazy<History> history,
+                Lazy<IUser> user,
                 // Dependencies to get primary app
                 Lazy<ISite> site,
-                Lazy<IZoneMapper> zoneMapper, 
-                Lazy<IAppStates> appStates)
-            {
-                ServiceProvider = serviceProvider;
-                History = history;
-                User = user;
-                Site = site;
-                ZoneMapper = zoneMapper;
-                AppStates = appStates;
-            }
+                Lazy<IZoneMapper> zoneMapper,
+                Lazy<IAppStates> appStates
+            ) => AddToLogQueue(
+                ServiceProvider = serviceProvider,
+                History = history,
+                User = user,
+                Site = site,
+                ZoneMapper = zoneMapper,
+                AppStates = appStates
+            );
+
             internal IServiceProvider ServiceProvider { get; }
             public Lazy<History> History { get; }
             public Lazy<IUser> User { get; }
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Code
 
         public DynamicCodeService(Dependencies dependencies): base($"{Constants.SxcLogName}.DCS")
         {
-            _dependencies = dependencies;
+            _dependencies = dependencies.SetLog(Log);
             ScopedServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
             // Important: These generators must be built inside the scope, so they must be made here
             // and not come from the constructor injection

@@ -30,14 +30,18 @@ namespace ToSic.Sxc.Code
         /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
         /// </summary>
         [PrivateApi]
-        public class Dependencies
+        public class Dependencies: DependenciesBase<Dependencies>
         {
-            public Dependencies(IServiceProvider serviceProvider, Lazy<CodeCompiler> codeCompilerLazy, AppSettingsStack settingsStack)
-            {
-                ServiceProvider = serviceProvider;
-                CodeCompilerLazy = codeCompilerLazy;
-                SettingsStack = settingsStack;
-            }
+            public Dependencies(
+                IServiceProvider serviceProvider,
+                Lazy<CodeCompiler> codeCompilerLazy,
+                AppSettingsStack settingsStack
+            ) => AddToLogQueue(
+                ServiceProvider = serviceProvider,
+                CodeCompilerLazy = codeCompilerLazy,
+                SettingsStack = settingsStack
+            );
+
             internal IServiceProvider ServiceProvider { get; }
             public Lazy<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
@@ -47,7 +51,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         protected internal DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
         {
-            Deps = dependencies;
+            Deps = dependencies.SetLog(Log);
             _serviceProvider = dependencies.ServiceProvider;
 
             // Prepare services which need to be attached to this dynamic code root
@@ -69,7 +73,7 @@ namespace ToSic.Sxc.Code
         public TService GetService<TService>()
         {
             var newService = _serviceProvider.Build<TService>();
-            if(newService is INeedsDynamicCodeRoot newWithNeeds)
+            if (newService is INeedsDynamicCodeRoot newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
 
             return newService;
