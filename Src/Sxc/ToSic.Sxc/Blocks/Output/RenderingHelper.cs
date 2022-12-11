@@ -12,20 +12,23 @@ using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Blocks.Output
 {
-    public class RenderingHelper: HasLog, IRenderingHelper
+    public class RenderingHelper: ServiceWithLogDependenciesBase, IRenderingHelper
     {
         #region Constructors and DI
 
-        public RenderingHelper(ILinkPaths linkPaths, IEnvironmentLogger errorLogger, Generator<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
-        {
-            _linkPaths = linkPaths;
-            _errorLogger = errorLogger;
-            _jsContextAllGen = jsContextAllGen;
-        }
+        public RenderingHelper(
+            ILinkPaths linkPaths,
+            IEnvironmentLogger errorLogger,
+            GeneratorLog<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
+            => InitServicesLogs(Log,
+                _linkPaths = linkPaths,
+                _errorLogger = errorLogger,
+                _jsContextAllGen = jsContextAllGen
+            );
 
         private readonly ILinkPaths _linkPaths;
         private readonly IEnvironmentLogger _errorLogger;
-        private readonly Generator<JsContextAll> _jsContextAllGen;
+        private readonly GeneratorLog<JsContextAll> _jsContextAllGen;
 
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
@@ -121,7 +124,7 @@ namespace ToSic.Sxc.Blocks.Output
             return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage);
         }
 
-        public string UiContextInfos() => JsonSerializer.Serialize(_jsContextAllGen.New.Init(AppRootPath, Block, Log), JsonOptions.SafeJsonForHtmlAttributes);
+        public string UiContextInfos() => JsonSerializer.Serialize(_jsContextAllGen.New.GetJsContext(AppRootPath, Block), JsonOptions.SafeJsonForHtmlAttributes);
 
     }
 }

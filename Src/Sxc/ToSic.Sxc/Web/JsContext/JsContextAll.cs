@@ -21,15 +21,14 @@ namespace ToSic.Sxc.Web.JsContext
         public ContentBlockDto ContentBlock;
         // ReSharper disable once InconsistentNaming
         public ErrorDto error;
-
         public UiDto Ui;
 
         public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf") => _jsLangCtx = jsLangCtx;
         private readonly JsContextLanguage _jsLangCtx;
 
-        public JsContextAll Init(string systemRootUrl, IBlock block, ILog parentLog)
+        public JsContextAll GetJsContext(string systemRootUrl, IBlock block)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            var l = Log.Fn<JsContextAll>();
             var ctx = block.Context;
 
             Environment = new JsContextEnvironment(systemRootUrl, ctx);
@@ -53,10 +52,11 @@ namespace ToSic.Sxc.Web.JsContext
                 autoToolbar = features.Contains(BuiltInFeatures.ToolbarsAutoInternal);
             }
 
+            l.A($"{nameof(autoToolbar)}: {autoToolbar}");
             Ui = new UiDto(autoToolbar);
 
             error = new ErrorDto(block);
-            return this;
+            return l.Return(this);
         }
     }
 }
