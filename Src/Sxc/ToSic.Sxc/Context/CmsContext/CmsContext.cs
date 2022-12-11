@@ -2,11 +2,11 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Context
     /// This lets the code be platform agnostic, so that it works across implementations (Dnn, Oqtane, NopCommerce)
     /// </summary>
     [PrivateApi("we only show the interface in the docs")]
-    public class CmsContext: HasLog, ICmsContext, INeedsDynamicCodeRoot
+    public class CmsContext: ServiceForDynamicCode, ICmsContext
     {
         #region Constructor
 
@@ -47,12 +47,12 @@ namespace ToSic.Sxc.Context
         private readonly IAppStates _appStates;
         private readonly Lazy<ICmsSite> _cmsSiteLazy;
 
-        /// <summary>
-        /// System to extend the known context by more information if we're running inside a block
-        /// </summary>
-        /// <returns></returns>
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => CodeRoot = codeRoot;
-        internal IDynamicCodeRoot CodeRoot;
+        ///// <summary>
+        ///// System to extend the known context by more information if we're running inside a block
+        ///// </summary>
+        ///// <returns></returns>
+        //public void ConnectToRoot(IDynamicCodeRoot codeRoot) => CodeRoot = codeRoot;
+        //protected IDynamicCodeRoot CodeRoot;
 
         internal DynamicEntityDependencies DEDeps => (CodeRoot as DynamicCodeRoot)?.DynamicEntityDependencies;
 

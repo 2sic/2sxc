@@ -6,7 +6,6 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn.Services
 {
@@ -16,15 +15,13 @@ namespace ToSic.Sxc.Dnn.Services
     [PrivateApi("This implementation shouldn't be visible")]
     public class DnnLinkService : LinkServiceBase
     {
-        private readonly Lazy<DnnValueConverter> _dnnValueConverterLazy;
-
-
-
-        [PrivateApi]
         public DnnLinkService(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy, Lazy<ILinkPaths> linkPathsLazy) : base(imgLinker, linkPathsLazy)
         {
-            _dnnValueConverterLazy = dnnValueConverterLazy;
+            InitServicesLogs(Log,
+                _dnnValueConverterLazy = dnnValueConverterLazy
+            );
         }
+        private readonly Lazy<DnnValueConverter> _dnnValueConverterLazy;
 
         [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = CodeRoot.GetService<IDnnContext>());
         private IDnnContext _dnn;

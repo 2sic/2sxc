@@ -21,7 +21,8 @@ namespace ToSic.Sxc.Services
         [PrivateApi]
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            (Log as Log)?.LinkTo(codeRoot?.Log);                        // Link the logs
+            this.Init(codeRoot?.Log);                                   // Link the logs
+            //(Log as Log)?.LinkTo(codeRoot?.Log);                      
             CodeRoot = codeRoot;                                        // Remember the parent
             Log.Fn(message: $"Linked {nameof(PageService)}").Done();    // report connection in log
         }

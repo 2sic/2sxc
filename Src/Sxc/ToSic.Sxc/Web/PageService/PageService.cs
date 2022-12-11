@@ -2,7 +2,6 @@
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
@@ -10,8 +9,7 @@ namespace ToSic.Sxc.Web.PageService
 {
     public partial class PageService: ServiceForDynamicCode, 
             // Important: Write with namespace, because it's easy to confuse with IPageService it supports
-            ToSic.Sxc.Services.IPageService, 
-            INeedsDynamicCodeRoot,
+            ToSic.Sxc.Services.IPageService,
 #pragma warning disable CS0618
             // Important: Write with namespace, because it's easy to confuse with IPageService it supports
             ToSic.Sxc.Web.IPageService    // Keep for compatibility with some Apps released in v12

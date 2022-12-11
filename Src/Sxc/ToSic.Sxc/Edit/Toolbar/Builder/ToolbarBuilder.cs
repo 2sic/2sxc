@@ -21,11 +21,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             public Dependencies(
                 Lazy<IAppStates> appStatesLazy,
                 LazyInitLog<ToolbarButtonDecoratorHelper> toolbarButtonHelper
-                )
-            {
-                ToolbarButtonHelper = toolbarButtonHelper;
-                AppStatesLazy = appStatesLazy;
-            }
+            ) => AddToLogQueue(
+                ToolbarButtonHelper = toolbarButtonHelper,
+                AppStatesLazy = appStatesLazy
+            );
+
             internal readonly Lazy<IAppStates> AppStatesLazy;
             public LazyInitLog<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
 

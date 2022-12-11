@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
@@ -17,7 +16,8 @@ namespace ToSic.Sxc.Blocks
     /// See also [](xref:Basics.Cms.InnerContent.Index)
     /// </summary>
     [PrivateApi("Hide Implementation")]
-    public class RenderService: HasLog, INeedsDynamicCodeRoot, ToSic.Sxc.Services.IRenderService,
+    public class RenderService: ServiceForDynamicCode,
+        ToSic.Sxc.Services.IRenderService,
 #pragma warning disable CS0618
         ToSic.Sxc.Blocks.IRenderService
 #pragma warning restore CS0618
@@ -26,30 +26,29 @@ namespace ToSic.Sxc.Blocks
         #region Constructor & ConnectToRoot
 
         public RenderService(
-            GeneratorLog<IEditService> editGenerator, 
+            GeneratorLog<IEditService> editGenerator,
             LazyInitLog<IModuleAndBlockBuilder> builder,
             GeneratorLog<BlockFromEntity> blkFrmEntGen,
             Lazy<History> historyLazy
         ) : base("Sxc.RndSvc")
-        {
-            _historyLazy = historyLazy;
-            _blkFrmEntGen = blkFrmEntGen.SetLog(Log);
-            _builder = builder.SetLog(Log);
-            _editGenerator = editGenerator.SetLog(Log);
-        }
+            => InitServicesLogs(Log,
+                _historyLazy = historyLazy,
+                _blkFrmEntGen = blkFrmEntGen,
+                _builder = builder,
+                _editGenerator = editGenerator
+            );
+
         private readonly GeneratorLog<BlockFromEntity> _blkFrmEntGen;
         private readonly GeneratorLog<IEditService> _editGenerator;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
         private readonly Lazy<History> _historyLazy;
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            _codeRoot = codeRoot;
-            (Log as Log)?.LinkTo(codeRoot.Log);
+            base.ConnectToRoot(codeRoot);
             _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
         }
 
-        private IDynamicCodeRoot _codeRoot;
         private bool _logInitDone;
 
         #endregion
@@ -135,8 +134,8 @@ namespace ToSic.Sxc.Blocks
         private IEditService GetEdit(DynamicEntity parent)
         {
             var newEdit = _editGenerator.New;
-            newEdit.ConnectToRoot(_codeRoot);
-            return newEdit.SetBlock(_codeRoot, parent._Dependencies.BlockOrNull);
+            newEdit.ConnectToRoot(CodeRoot);
+            return newEdit.SetBlock(CodeRoot, parent._Dependencies.BlockOrNull);
         }
     }
 }

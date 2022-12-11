@@ -7,27 +7,27 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Images
 {
-    public partial class ImageService: HasLog, IImageService, INeedsDynamicCodeRoot
+    public partial class ImageService: ServiceForDynamicCode, IImageService
     {
         #region Constructor and Inits
 
         public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(Constants.SxcLogName + ".ImgSvc")
-        {
-            Features = features.Init(Log);
-            ImgLinker = imgLinker.Init(Log);
-        }
+            => InitServicesLogs(Log,
+                Features = features,
+                ImgLinker = imgLinker
+            );
         internal ImgResizeLinker ImgLinker { get; }
         internal IFeaturesService Features { get; }
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            _codeRootOrNull = codeRoot;
-            (Log as Log)?.LinkTo(_codeRootOrNull.Log);
-        }
-        private IDynamicCodeRoot _codeRootOrNull;
-        internal IEditService EditOrNull => _codeRootOrNull?.Edit;
+        //public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        //{
+        //    CodeRoot = codeRoot;
+        //    (Log as Log)?.LinkTo(CodeRoot.Log);
+        //}
+        //protected IDynamicCodeRoot CodeRoot;
+        internal IEditService EditOrNull => CodeRoot?.Edit;
 
-        internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _codeRootOrNull?.GetService<IToolbarService>());
+        internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => CodeRoot?.GetService<IToolbarService>());
         private readonly GetOnce<IToolbarService> _toolbarSvc = new GetOnce<IToolbarService>();
 
         #endregion
@@ -53,8 +53,8 @@ namespace ToSic.Sxc.Images
 
         private dynamic GetCodeRootSettingsByName(string strName)
         {
-            var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {_codeRootOrNull != null}");
-            var result = (_codeRootOrNull?.Settings?.Images as ICanGetByName)?.Get(strName);
+            var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {CodeRoot != null}");
+            var result = (CodeRoot?.Settings?.Images as ICanGetByName)?.Get(strName);
             return wrapLog.Return(result, $"found: {result != null}");
         }
 

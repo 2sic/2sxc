@@ -2,7 +2,6 @@
 using System.Collections.Specialized;
 using System.Linq;
 using Connect.Koi;
-using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;

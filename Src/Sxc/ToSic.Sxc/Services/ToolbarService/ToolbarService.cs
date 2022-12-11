@@ -9,21 +9,23 @@ using ToSic.Sxc.Edit.Toolbar;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    public class ToolbarService: HasLog, IToolbarService, INeedsDynamicCodeRoot
+    public class ToolbarService: ServiceForDynamicCode, IToolbarService, INeedsDynamicCodeRoot
     {
         #region Constructor & Init
-        public ToolbarService(GeneratorLog<IToolbarBuilder> toolbarGenerator): base($"{Constants.SxcLogName}.TlbSvc")
-        {
-            _toolbarGenerator = toolbarGenerator.SetLog(Log);
-        }
+
+        public ToolbarService(GeneratorLog<IToolbarBuilder> toolbarGenerator) : base($"{Constants.SxcLogName}.TlbSvc")
+            => InitServicesLogs(Log,
+
+                _toolbarGenerator = toolbarGenerator
+            );
         private readonly GeneratorLog<IToolbarBuilder> _toolbarGenerator;
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            _codeRoot = codeRoot;
-            this.Init(codeRoot.Log);
-        }
-        private IDynamicCodeRoot _codeRoot;
+        //public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        //{
+        //    CodeRoot = codeRoot;
+        //    this.Init(codeRoot.Log);
+        //}
+        //protected IDynamicCodeRoot CodeRoot;
 
 
         #endregion
@@ -65,7 +67,7 @@ namespace ToSic.Sxc.Services
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
             // The following lines must be just as this, because it's a functional object, where each call may return a new copy
             var tlb = _toolbarGenerator.New;
-            tlb.ConnectToRoot(_codeRoot);
+            tlb.ConnectToRoot(CodeRoot);
             tlb = tlb.Toolbar(toolbarTemplate, target, ui, parameters, prefill);
 
             if (_defaultUi.HasValue())
