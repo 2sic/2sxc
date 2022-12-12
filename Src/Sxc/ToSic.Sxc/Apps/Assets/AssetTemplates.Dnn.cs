@@ -16,7 +16,6 @@ namespace ToSic.Sxc.Apps.Assets
     Put your content here
 </div>",
             Description = "razor page dnn template",
-            Prefix = "_",
         };
 
         /// <summary>
@@ -42,7 +41,6 @@ namespace ToSic.Sxc.Apps.Assets
 ",
                 Description = "razor page c# code hybrid template",
                 PlatformTypes = PlatformType.Dnn,
-                Prefix = "_",
             };
 
 

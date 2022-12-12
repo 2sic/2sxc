@@ -14,7 +14,6 @@
     Put your content here
 </div>",
             Description = "razor page hybrid template",
-            Prefix = "_",
         };
 
         public static readonly TemplateInfo CsHybrid =

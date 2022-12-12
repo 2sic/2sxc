@@ -7,6 +7,7 @@ using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Web.PageService
 {
+    [PrivateApi]
     public partial class PageService: ServiceForDynamicCode, 
             // Important: Write with namespace, because it's easy to confuse with IPageService it supports
             ToSic.Sxc.Services.IPageService,

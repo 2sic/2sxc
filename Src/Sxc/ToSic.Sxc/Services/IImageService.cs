@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Services
         /// <param name="imgAlt">
         /// Optional `alt` attribute on the created `img` tag for SEO etc.
         /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
-        /// If you want to provide a fallback value (in case the metadata has no alt), use <see cref="imgAltFallback"/>
+        /// If you want to provide a fallback value (in case the metadata has no alt), use `imgAltFallback`
         /// </param>
         /// <param name="imgAltFallback">
         /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.Services
         /// <param name="imgAlt">
         /// Optional `alt` attribute on the created `img` tag for SEO etc.
         /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
-        /// If you want to provide a fallback value (in case the metadata has no alt), use <see cref="imgAltFallback"/>
+        /// If you want to provide a fallback value (in case the metadata has no alt), use `imgAltFallback`.
         /// </param>
         /// <param name="imgAltFallback">
         /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
@@ -261,7 +261,7 @@ namespace ToSic.Sxc.Services
         /// <param name="imgAlt">
         /// Optional `alt` attribute on the created `img` tag for SEO etc.
         /// If supplied, it takes precedence to the alt-description in the image metadata which the editor added themselves.
-        /// If you want to provide a fallback value (in case the metadata has no alt), use <see cref="imgAltFallback"/>
+        /// If you want to provide a fallback value (in case the metadata has no alt), use `imgAltFallback`.
         /// </param>
         /// <param name="imgAltFallback">
         /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
