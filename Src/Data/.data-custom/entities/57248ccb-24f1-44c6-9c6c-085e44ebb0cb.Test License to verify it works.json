@@ -1,0 +1,1 @@
+{"_":{"V":1},"Entity":{"Id":165979,"Version":1,"Guid":"d0a964a8-8633-4ccf-879f-c2a7387121b7","Type":{"Name":"⚙️License","Id":"57248ccb-24f1-44c6-9c6c-085e44ebb0cb"},"Attributes":{"String":{"Fingerprint":{"en-us":"0000000000000000000000000000000000000000000000001234567890abcdef"},"Title":{"en-us":"Test License to verify it works"}}},"Owner":"dnn:userid=41"}}

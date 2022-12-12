@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
     {
         public LinkImageTestBase()
         {
-            Build<EavSystemLoader>().StartUpFeatures();
+            Build<EavSystemLoader>().LoadLicenseAndFeatures();
         }
 
         public ImgResizeLinker GetLinker() => Build<ImgResizeLinker>();
