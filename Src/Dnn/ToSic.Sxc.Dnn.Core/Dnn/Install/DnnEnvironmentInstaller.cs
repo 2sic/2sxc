@@ -122,7 +122,13 @@ namespace ToSic.Sxc.Dnn.Install
                             END;
 
                             -- drop NewData column from 'ToSIC_EAV_DataTimeline'
-                            ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN IF EXISTS NewData;";
+                            ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN IF EXISTS NewData;
+
+                            -- add CJson column to 'ToSIC_EAV_DataTimeline'
+                            IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'CJson' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
+                            BEGIN
+                                ALTER TABLE ToSIC_EAV_DataTimeline ADD CJson varbinary(max) NULL;
+                            END;";
                         sqlConnection.Open();
                         var sqlCommand150000 = new SqlCommand(sql150000, sqlConnection);
                         sqlCommand150000.CommandTimeout = 0; // disable sql execution command timeout on sql server
