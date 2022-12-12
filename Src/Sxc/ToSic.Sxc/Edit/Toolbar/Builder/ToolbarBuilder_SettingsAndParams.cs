@@ -9,24 +9,24 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         public IToolbarBuilder Settings(
             string noParamOrder = Eav.Parameters.Protector,
-            string show = null,
-            string hover = null,
-            string follow = null,
-            string classes = null,
-            string autoAddMore = null,
-            object ui = null,
-            object parameters = null)
+            string show = default,
+            string hover = default,
+            string follow = default,
+            string classes = default,
+            string autoAddMore = default,
+            object ui = default,
+            object parameters = default)
             => AddInternal(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
                 ui: PrepareUi(ui), parameters: Utils.Par2Url.Serialize(parameters)));
 
 
         public IToolbarBuilder Parameters(
-            object target = null,
+            object target = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object ui = null,
-            object parameters = null,
-            object prefill = null,
-            string context = null
+            object ui = default,
+            object parameters = default,
+            object prefill = default,
+            string context = default
         )
         {
             TargetCheck(target);

@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder More(
             string noParamOrder = Eav.Parameters.Protector,
-            object ui = null
+            object ui = default
         )
         {
             Eav.Parameters.Protect(noParamOrder, nameof(ui));

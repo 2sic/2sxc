@@ -97,7 +97,8 @@ namespace ToSic.Sxc.Images
                 // Check if it's not a demo-entity, in which case editing settings shouldn't happen
                 if (Call.Field.Parent.IsDemoItem) return tag;
 
-                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field);
+                // var tlbUi = ImgService.ToolbarOrNull?.
+                var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field).Settings(hover: "right-middle");
                 var toolbar = ImgService.EditOrNull.TagToolbar(toolbar: toolbarConfig).ToString();
                 tag.Attr(toolbar);
             }
