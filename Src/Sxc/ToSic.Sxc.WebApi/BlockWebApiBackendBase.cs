@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
@@ -36,12 +35,6 @@ namespace ToSic.Sxc.WebApi
         {
             CtxResolver = ctxResolver;
             CmsManagerLazy = cmsManagerLazy;
-        }
-
-        public new T Init(ILog parentLog)
-        {
-            (Log as Log)?.LinkTo(parentLog);
-            return this as T;
         }
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
