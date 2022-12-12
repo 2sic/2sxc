@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Host)]
-        public LicenseFileResultDto Upload() => Real.Upload(new HttpUploadedFile(Request));
+        public LicenseFileResultDto Upload() => Real.Upload(new(Request));
 
 
         /// <inheritdoc />

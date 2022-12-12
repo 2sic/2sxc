@@ -5,11 +5,12 @@ using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
-    public static class ContentFileHelper
+    public class ContentFileHelper: HasLog
     {
         public const string RouteAdam = "adam";
         public const string RouteAssets = "assets";
@@ -18,7 +19,12 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         public static readonly Regex RiskyDetector = Eav.Security.Files.FileNames.RiskyDownloadDetector;
 
         public const string FallbackMimeType = MimeHelper.FallbackType;
-        
+
+        public ContentFileHelper() : base(OqtConstants.OqtLogPrefix + ".FilHlp")
+        {
+        }
+
+
         public static string GetMimeType(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName)) return FallbackMimeType;
@@ -63,7 +69,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             return System.IO.File.Exists(fullFilePath) ? fullFilePath : string.Empty;
         }
 
-        public static bool IsKnownRiskyExtension(string fileName)
+        private static bool IsKnownRiskyExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);
             return !string.IsNullOrEmpty(extension) && RiskyDetector.IsMatch(extension);

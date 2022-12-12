@@ -220,7 +220,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         {
             var callLog = Log.Fn<List<Folder<int, int>>>();
             var fldObj = GetOqtFolder(folder.AsOqt().SysId);
-            if(fldObj == null) return new List<Folder<int, int>>();
+            if(fldObj == null) return new();
 
             var firstList = GetSubFoldersRecursive(fldObj);
             var folders = firstList?.Select(OqtToAdam).ToList()
@@ -231,7 +231,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         private List<Folder> GetSubFoldersRecursive(Folder parentFolder, List<Folder> allFolders = null, List<Folder> subFolders = null)
         {
             allFolders ??= OqtFolderRepository.GetFolders(parentFolder.SiteId).ToList();
-            subFolders ??= new List<Folder>();
+            subFolders ??= new();
             allFolders.Where(f => f.ParentId == parentFolder.FolderId).ToList().ForEach(f =>
             {
                 subFolders.Add(f);
@@ -254,7 +254,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             var callLog = Log.Fn<List<File<int, int>>>();
             var fldObj = OqtFolderRepository.GetFolder(folder.AsOqt().SysId);
             // sometimes the folder doesn't exist for whatever reason
-            if (fldObj == null) return  new List<File<int, int>>();
+            if (fldObj == null) return  new();
 
             // try to find the files
             var firstList = OqtFileRepository.GetFiles(fldObj.FolderId);
@@ -267,7 +267,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         #region OqtToAdam
         private Folder<int, int> OqtToAdam(Folder f)
-            => new Folder<int, int>(AdamContext)
+            => new(AdamContext)
             {
                 Path = ((OqtAdamPaths)_adamPaths).Path(f.Path),
                 SysId = f.FolderId,

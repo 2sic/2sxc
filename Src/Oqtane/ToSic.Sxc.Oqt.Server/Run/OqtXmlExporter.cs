@@ -9,7 +9,6 @@ using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Xml;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
@@ -114,7 +113,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var fileController = _fileRepositoryLazy.Value;
             var file = fileController.GetFile(fileId);
-            if (file == null) return new TenantFileItem
+            if (file == null) return new()
             {
                 Id = fileId,
                 RelativePath = null,
@@ -125,7 +124,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             var alias = _oqtTenantResolverLazy.Value.GetAlias();
             var path = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, relativePath);
 
-            return new TenantFileItem
+            return new()
             {
                 Id = fileId,
                 RelativePath = relativePath,

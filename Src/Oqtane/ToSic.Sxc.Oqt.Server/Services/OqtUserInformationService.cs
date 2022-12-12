@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
         {
             var user = _userRepository.Value.GetUser(userId, false);
             if (user == null) return null;
-            return new UserInformationDto()
+            return new()
                 {
                     Id = user.UserId,
                     Name = user.Username

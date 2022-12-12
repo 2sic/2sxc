@@ -11,14 +11,14 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         internal static File<int, int> AsOqt(this IFile file)
         {
             if (file == null) return null;
-            if (file is not File<int, int> recast) throw new Exception("Tried to cast IFile to internal type, failed");
+            if (file is not File<int, int> recast) throw new("Tried to cast IFile to internal type, failed");
             return recast;
         }
 
         internal static Folder<int, int> AsOqt(this IFolder folder)
         {
             if (folder == null) return null;
-            if (folder is not Folder<int, int> recast) throw new Exception("Tried to cast IFolder to internal type, failed");
+            if (folder is not Folder<int, int> recast) throw new("Tried to cast IFolder to internal type, failed");
             return recast;
         }
     }

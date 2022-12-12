@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
             return CSharpCompilation.Create(peName,
                 new[] { parsedSyntaxTree },
                 references: References,
-                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
+                options: new(OutputKind.DynamicallyLinkedLibrary,
                     optimizationLevel: OptimizationLevel.Debug,
                     assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default));
         }

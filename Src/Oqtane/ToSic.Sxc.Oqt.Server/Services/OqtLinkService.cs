@@ -11,7 +11,6 @@ using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
@@ -75,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             var currentPageId = _context?.Page?.Id;
 
             if ((pageId ?? currentPageId) == null)
-                throw new Exception($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");
+                throw new($"Error, PageId is unknown, pageId: {pageId}, currentPageId: {currentPageId} .");
 
             if (pageId.HasValue)
             {
@@ -100,7 +99,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
                 .FirstOrDefault(a => a.SiteId == page.SiteId);
 
             if (alias == null)
-                throw new Exception($"Error, Alias is unknown, pageId: {page.PageId}, siteId: {page.SiteId}.");
+                throw new($"Error, Alias is unknown, pageId: {page.PageId}, siteId: {page.SiteId}.");
 
             // for invalid page numbers just skip that part 
             var relativePath =

@@ -44,14 +44,14 @@ namespace ToSic.Sxc.Oqt.Server.Run
             // additional protection against invalid portalId which may come from bad configs and execute in search-index mode
             // see https://github.com/2sic/2sxc/issues/1054
             if (tenantId < 0)
-                throw new Exception("Can't get zone for invalid portal ID: " + tenantId);
+                throw new("Can't get zone for invalid portal ID: " + tenantId);
 
             if (HasZoneId(tenantId, out var i)) return i;
 
             // Create new zone automatically
             var portalSettings = _siteRepository.GetSite(tenantId);
             var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.Name + " (Site " + tenantId + ")");
-            _settingRepository.AddSetting(new Setting
+            _settingRepository.AddSetting(new()
             {
                 CreatedBy = "2sxc", 
                 CreatedOn = DateTime.Now, 
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (zoneSetting != null)
             {
                 if (!int.TryParse(zoneSetting.SettingValue, out var zId))
-                    throw new Exception(Log.AddAndReuse($"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int"));
+                    throw new(Log.AddAndReuse($"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int"));
                 i = zId;
                 return true;
             }

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
     {
         public static Folder NewVirtualFolder(int siteId, int? parentId, string path, string folder)
         {
-            return new Folder
+            return new()
             {
                 SiteId = siteId,
                 ParentId = parentId,
@@ -21,11 +21,11 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Type = FolderTypes.Private,
                 Permissions = new List<Permission>
                 {
-                    new Permission(PermissionNames.Browse, RoleNames.Everyone, true),
-                    new Permission(PermissionNames.View, RoleNames.Everyone, true),
-                    new Permission(PermissionNames.Browse, RoleNames.Admin, true),
-                    new Permission(PermissionNames.View, RoleNames.Admin, true),
-                    new Permission(PermissionNames.Edit, RoleNames.Admin, true),
+                    new(PermissionNames.Browse, RoleNames.Everyone, true),
+                    new(PermissionNames.View, RoleNames.Everyone, true),
+                    new(PermissionNames.Browse, RoleNames.Admin, true),
+                    new(PermissionNames.View, RoleNames.Admin, true),
+                    new(PermissionNames.Edit, RoleNames.Admin, true),
                 }.EncodePermissions()
             };
         }

@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         {
             var oqtAuthList = member.GetCustomAttributes<AuthorizeAttribute>().ToList();
 
-            return new ApiSecurityDto
+            return new()
             {
                 ignoreSecurity = member.GetCustomAttribute<AllowAnonymousAttribute>() != null,
                 allowAnonymous = oqtAuthList.Any(a => a.Roles == RoleNames.Everyone),

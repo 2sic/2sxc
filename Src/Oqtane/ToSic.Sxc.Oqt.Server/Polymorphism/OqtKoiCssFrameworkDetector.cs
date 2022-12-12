@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Polymorphism
 
         private static Version GetOqtaneVersion()
         {
-            return Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new Version(1, 0);
+            return Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new(1, 0);
         }
     }
 }

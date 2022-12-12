@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             // if we have any error, set InstallationErrorResult
             if (_refsCheckedAndError.Value)
             {
-                InstallationErrorResult = new OqtViewResultsDto
+                InstallationErrorResult = new()
                 {
                     ErrorMessage = errorMessage,
                 };

@@ -5,7 +5,6 @@ using Oqtane.Security;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.WebApi;
-using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -37,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                     _requestHelper.GetQueryString(WebApiConstants.ModuleId,
                         _requestHelper.GetRouteValuesString(WebApiConstants.ModuleId,
                             -1)));
-                var queryString = httpContext.Request.QueryString.Add(new QueryString($"?entityid={moduleId}"));
+                var queryString = httpContext.Request.QueryString.Add(new($"?entityid={moduleId}"));
                 httpContext.Request.QueryString = queryString;
             }
 

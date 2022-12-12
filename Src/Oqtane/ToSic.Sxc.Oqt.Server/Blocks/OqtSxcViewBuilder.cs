@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 #endregion
                 PageOutput.Init(this, renderResult);
 
-                ret = new OqtViewResultsDto
+                ret = new()
                 {
                     Html = renderResult.Html,
                     TemplateResources = PageOutput.GetSxcResources(),

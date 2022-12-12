@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Integration
                 _settingRepository.UpdateSetting(update);
             }
             else
-                _settingRepository.AddSetting(new Setting
+                _settingRepository.AddSetting(new()
                 {
                     CreatedBy = WipConstants.SettingsChangeUserId,
                     CreatedOn = DateTime.Now,

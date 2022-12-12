@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             // Do not allow saving the temporary template id if a ContentGroup exists for this module
             if (settings.TryGetValue(Settings.ModuleSettingContentGroup, out var value) && !string.IsNullOrEmpty(value))
-                throw new Exception("Preview template id cannot be set for a module that already has content.");
+                throw new("Preview template id cannot be set for a module that already has content.");
 
             UpdateInstanceSetting(instanceId, Settings.ModuleSettingsPreview, previewTemplateGuid.ToString(), Log);
         }

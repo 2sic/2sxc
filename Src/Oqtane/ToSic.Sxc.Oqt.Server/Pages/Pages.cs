@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.Pages
 
         public ViewDto ViewDtoBuilder(IView view, List<BlockConfiguration> blocks, List<Oqtane.Models.PageModule> pageModules, ViewDto dto = null)
         {
-            dto ??= new ViewDto();
+            dto ??= new();
             dto.Id = view.Entity.EntityId;
             dto.Guid = view.Entity.EntityGuid;
             dto.Name = view.Name;
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Pages
 
         private ContentBlockDto ContentBlockDtoBuilder(BlockConfiguration block, List<Oqtane.Models.PageModule> blockModules, ContentBlockDto dto = null)
         {
-            dto ??= new ContentBlockDto();
+            dto ??= new();
             dto.Id = block.Id;
             dto.Guid = block.Guid;
             dto.Modules = blockModules.Select(m => InstanceDtoBuilder(m, _pageRepository.GetPage(m.PageId)));
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.Pages
 
         private static InstanceDto InstanceDtoBuilder(Oqtane.Models.PageModule pageModule, Oqtane.Models.Page page, InstanceDto dto = null)
         {
-            dto ??= new InstanceDto();
+            dto ??= new();
             dto.Id = pageModule.ModuleId;
             dto.ShowOnAllPages = pageModule.Module.AllPages;
             dto.Title = pageModule.Title;
@@ -91,14 +91,14 @@ namespace ToSic.Sxc.Oqt.Server.Pages
 
         private static PageDto PageDtoBuilder(Oqtane.Models.Page page, PageDto dto = null)
         {
-            dto ??= new PageDto();
+            dto ??= new();
             dto.Id = page.PageId;
             dto.Url = page.Url;
             dto.Name = page.Name;
             dto.CultureCode = "unknown";
             dto.Visible = !page.IsDeleted;
             dto.Title = page.Title;
-            dto.Portal = new SiteDto(page.SiteId);
+            dto.Portal = new(page.SiteId);
             return dto;
         }
     }

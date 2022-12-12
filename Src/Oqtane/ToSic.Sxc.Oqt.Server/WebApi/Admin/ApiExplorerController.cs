@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
             var apiFile = oqtServerPaths.FullContentPath(pathFromRoot);
 
             if (!System.IO.File.Exists(apiFile))
-                throw new Exception($"Error: can't find controller file: {pathFromRoot}");
+                throw new($"Error: can't find controller file: {pathFromRoot}");
 
             // get dll name
             var controllerFolder = pathFromRoot.Substring(0, pathFromRoot.LastIndexOf(@"\"));

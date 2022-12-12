@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
                     var queryBits = QueryHelpers.ParseQuery(uri.Query);
                     
                     if (!queryBits.Any()) 
-                        return _queryStringValues = new NameValueCollection();
+                        return _queryStringValues = new();
 
                     var paramList = new NameValueCollection();
                     queryBits.ToList().ForEach(i => paramList.Add(i.Key, i.Value));

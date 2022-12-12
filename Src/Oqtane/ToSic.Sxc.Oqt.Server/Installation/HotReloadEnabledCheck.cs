@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using ToSic.Eav.Serialization;
 
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             }
 
             if (_hotReloadEnabledCheckedAndError.Value)
-                throw new System.Exception(errorMessage);
+                throw new(errorMessage);
          
         }
 

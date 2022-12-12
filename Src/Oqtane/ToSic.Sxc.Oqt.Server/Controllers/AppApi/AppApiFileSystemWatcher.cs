@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 
             var appApiSource = Path.Combine(hostingEnvironment.ContentRootPath, OqtConstants.AppRoot);
 
-            _watcher = new FileSystemWatcher
+            _watcher = new()
             {
                 Path = appApiSource,
                 NotifyFilter = NotifyFilters.LastWrite

@@ -37,24 +37,24 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
                 switch (p.Property)
                 {
                     case PageProperties.Base:
-                        result.Add(new OqtPagePropertyChanges { Property = OqtPageProperties.Base, Value = p.Value });
+                        result.Add(new() { Property = OqtPageProperties.Base, Value = p.Value });
                         break;
                     case PageProperties.Title:
-                        result.Add(new OqtPagePropertyChanges
+                        result.Add(new()
                         {
                             Property = OqtPageProperties.Title, Value = p.Value, Placeholder = p.ReplacementIdentifier,
                             Change = GetOp(p)
                         });
                         break;
                     case PageProperties.Description:
-                        result.Add(new OqtPagePropertyChanges
+                        result.Add(new()
                         {
                             Property = OqtPageProperties.Description, Value = p.Value, Placeholder = p.ReplacementIdentifier,
                             Change = GetOp(p)
                         });
                         break;
                     case PageProperties.Keywords:
-                        result.Add(new OqtPagePropertyChanges
+                        result.Add(new()
                         {
                             Property = OqtPageProperties.Keywords, Value = p.Value, Placeholder = p.ReplacementIdentifier,
                             Change = GetOp(p)

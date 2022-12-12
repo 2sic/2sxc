@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Adam;
-using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Adam;
@@ -37,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
         [HttpPost]
         [HttpPut]
         public /*AdamItemDto*/object Upload(int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false) 
-            => Real.Upload(new HttpUploadedFile(Request), appId, contentType, guid, field, subFolder, usePortalRoot);
+            => Real.Upload(new(Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
         [HttpGet("items")]
         public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)

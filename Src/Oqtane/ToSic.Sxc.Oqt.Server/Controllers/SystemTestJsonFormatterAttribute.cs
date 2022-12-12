@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     // https://blogs.taiga.nl/martijn/2020/05/28/system-text-json-and-newtonsoft-json-side-by-side-in-asp-net-core/
     public class SystemTestJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
     {
-        private static readonly SystemTextJsonOutputFormatter SystemTextJsonOutputFormatter = new SystemTextJsonOutputFormatter(JsonOptions.UnsafeJsonWithoutEncodingHtml);
+        private static readonly SystemTextJsonOutputFormatter SystemTextJsonOutputFormatter = new(JsonOptions.UnsafeJsonWithoutEncodingHtml);
 
         public void Apply(ControllerModel controller)
         {
@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             {
                 if (_sxcJsonOptions == null)
                 {
-                    _sxcJsonOptions = new Microsoft.AspNetCore.Mvc.JsonOptions();
+                    _sxcJsonOptions = new();
                     _sxcJsonOptions.JsonSerializerOptions.SetUnsafeJsonSerializerOptions();
                 }
                 return _sxcJsonOptions;

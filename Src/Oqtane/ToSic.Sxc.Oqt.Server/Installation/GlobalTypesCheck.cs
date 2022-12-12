@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
             if (_globalTypesCheckedAndError.Value)
             {
                 errorMessage = "<strong>Warning:</strong> The \"global types\" are not loaded. Please <a href=\"/admin/system\">Restart Application</a>.";
-                InstallationErrorResult = new OqtViewResultsDto
+                InstallationErrorResult = new()
                 {
                     ErrorMessage = errorMessage,
                 };

@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
         public ImportResultDto Import(int zoneId, int appId) 
-            => Real.Import(uploadInfo: new HttpUploadedFile(Request), zoneId: zoneId, appId: appId);
+            => Real.Import(uploadInfo: new(Request), zoneId: zoneId, appId: appId);
 
         #endregion
     }

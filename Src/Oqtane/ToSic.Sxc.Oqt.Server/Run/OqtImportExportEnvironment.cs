@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             {
                 Log.A(msg);
                 if (exception == null) return;
-                messages.Add(new Message(msg, Message.MessageTypes.Warning));
+                messages.Add(new(msg, Message.MessageTypes.Warning));
                 //Exceptions.LogException(exception);
             }
 
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                     }
                 }
                 else
-                    messages.Add(new Message("File '" + destinationFileName + "' not copied because it already exists", Message.MessageTypes.Warning));
+                    messages.Add(new("File '" + destinationFileName + "' not copied because it already exists", Message.MessageTypes.Warning));
             }
 
             // Call the method recursively to handle subdirectories
@@ -187,7 +187,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                     var msg =
                         $"Had a problem with folder of '{folder.Key}' path '{folder.Value}' - you'll have to figure out yourself if this is a problem";
                     Log.A(msg);
-                    importLog.Add(new Message(msg, Message.MessageTypes.Warning));
+                    importLog.Add(new(msg, Message.MessageTypes.Warning));
                 }
 
             wrapLog.Done($"done - final count {folderIdCorrectionList.Count}");

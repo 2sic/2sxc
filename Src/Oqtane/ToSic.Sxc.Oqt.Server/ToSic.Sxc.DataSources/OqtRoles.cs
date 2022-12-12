@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources
             try
             {
                 var roles = _roles.GetRoles(siteId, includeGlobalRoles: true).ToList();
-                if (!roles.Any()) return wrapLog.Return(new List<RoleDataSourceInfo>(), "null/empty");
+                if (!roles.Any()) return wrapLog.Return(new(), "null/empty");
 
                 var result = roles
                     .Select(r => new RoleDataSourceInfo
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.DataSources
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                return wrapLog.Return(new List<RoleDataSourceInfo>(), "error");
+                return wrapLog.Return(new(), "error");
             }
         }
     }

@@ -49,7 +49,7 @@ namespace ToSic.Sxc.DataSources
             {
                 var userRoles = _userRoles.GetUserRoles(siteId).ToList();
                 var users = userRoles.Select(ur => ur.User).Distinct().ToList();
-                if (!users.Any()) return wrapLog.Return(new List<UserDataSourceInfo>(), "null/empty");
+                if (!users.Any()) return wrapLog.Return(new(), "null/empty");
 
                 var result = users
                     .Where(u => !u.IsDeleted)
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.DataSources
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                return wrapLog.Return(new List<UserDataSourceInfo>(), "error");
+                return wrapLog.Return(new(), "error");
             }
         }
     }

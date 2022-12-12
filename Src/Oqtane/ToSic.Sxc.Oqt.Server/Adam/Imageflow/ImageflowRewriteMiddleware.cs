@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
 
             var qs = UrlHelpers.ParseQueryString(context.Request.QueryString.Value);
             var queryString = "?" + ImageflowRewrite.QueryStringRewrite(qs).NvcToString();
-            context.Request.QueryString = new QueryString(queryString);
+            context.Request.QueryString = new(queryString);
 
             Console.WriteLine($"ImageflowRewriteMiddleware.After:{context.Request.QueryString.Value}");
 

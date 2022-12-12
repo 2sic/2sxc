@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.StaticFiles;
 using System;
 using System.IO;
-using System.Text;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Plumbing;
 
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         private Controller _apiController;
 
         public Controller ApiController => _apiController ??
-                                           throw new Exception(
+                                           throw new(
                                                $"Accessing the {nameof(ApiController)} in the {nameof(OqtResponseMaker)} requires it to be Init first.");
 
         public override IActionResult Error(int statusCode, string message)

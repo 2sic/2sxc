@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
         }
 
         protected override Type GetCsHtmlType(string virtualPath) 
-            => throw new Exception("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
+            => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
         protected override Assembly GetAssembly(string virtualPath, string className)
         {
             var fullPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());

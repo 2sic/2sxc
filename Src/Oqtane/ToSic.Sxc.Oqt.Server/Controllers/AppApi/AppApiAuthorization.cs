@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         // Property key is used by Endpoint routing to determine if Authorization has run
         private const string AuthorizationMiddlewareInvokedWithEndpointKey = "__AuthorizationMiddlewareWithEndpointInvoked";
 
-        private static readonly object AuthorizationMiddlewareWithEndpointInvokedValue = new object();
+        private static readonly object AuthorizationMiddlewareWithEndpointInvokedValue = new();
 
         private RequestDelegate _next = (HttpContext _) => Task.CompletedTask;
 

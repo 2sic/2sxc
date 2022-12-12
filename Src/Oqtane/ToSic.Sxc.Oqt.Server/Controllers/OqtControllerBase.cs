@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected OqtControllerBase(string logSuffix)
         {
             Log = new Log($"Api.{logSuffix}", null, GetType().Name);
-            _helper = new NetCoreControllersHelper(this);
+            _helper = new(this);
         }
 
         protected IServiceProvider ServiceProvider => _helper.ServiceProvider;
