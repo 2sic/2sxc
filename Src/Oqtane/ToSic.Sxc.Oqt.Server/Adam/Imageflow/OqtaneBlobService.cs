@@ -20,10 +20,12 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
         private const string SharedPath = "/shared/";
 
         private readonly IServiceProvider _serviceProvider;
+        private readonly Lazy<OqtAssetsFileHelper> _fileHelper;
 
         public OqtaneBlobService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
+            _fileHelper = serviceProvider.GetService<Lazy<OqtAssetsFileHelper>>();
         }
 
         public IEnumerable<string> GetPrefixes()
@@ -58,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
                 var alias = siteStateInitializer.InitializedState.Alias; // siteStateInitializer.SiteState.Alias;
 
                 // Build physicalPath.
-                var physicalPath = ContentFileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
+                var physicalPath = _fileHelper.Value.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
                 if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
 
                 return BlobData(physicalPath);
@@ -110,9 +112,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
             => Regex.IsMatch(virtualPath, @"^.*app/[a-zA-Z \d-_]+/assets/.*$");
 
         private static string GetRoute(string virtualPath)
-            => ContainsSharedPath(virtualPath) ? ContentFileHelper.RouteShared :
-                ContainsAdamPath(virtualPath) ? ContentFileHelper.RouteAdam :
-                ContainsSxcPath(virtualPath) ? ContentFileHelper.RouteAssets : string.Empty;
+            => ContainsSharedPath(virtualPath) ? OqtAssetsFileHelper.RouteShared :
+                ContainsAdamPath(virtualPath) ? OqtAssetsFileHelper.RouteAdam :
+                ContainsSxcPath(virtualPath) ? OqtAssetsFileHelper.RouteAssets : string.Empty;
 
         private static bool ExistUnderWebRootPath(IWebHostEnvironment webHostEnvironment, string virtualPath, out string filePath)
         {

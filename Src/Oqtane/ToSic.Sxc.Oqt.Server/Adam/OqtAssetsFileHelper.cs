@@ -10,7 +10,7 @@ using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
-    public class ContentFileHelper: HasLog
+    public class OqtAssetsFileHelper: HasLog
     {
         public const string RouteAdam = "adam";
         public const string RouteAssets = "assets";
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public const string FallbackMimeType = MimeHelper.FallbackType;
 
-        public ContentFileHelper() : base(OqtConstants.OqtLogPrefix + ".FilHlp")
+        public OqtAssetsFileHelper() : base(OqtConstants.OqtLogPrefix + ".FilHlp")
         {
         }
 
@@ -34,27 +34,32 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             return contentType;
         }
 
-        public static string GetFilePath(string contentRootPath, Alias alias, string filePath)
-        {
-            return GetFilePath(contentRootPath, alias, string.Empty,  string.Empty, filePath);
-        }
+        public string GetFilePath(string contentRootPath, Alias alias, string filePath) 
+            => GetFilePath(contentRootPath, alias, string.Empty,  string.Empty, filePath);
 
-        public static string GetFilePath(string contentRootPath, Alias alias, string route, string appName, string filePath)
+        public string GetFilePath(string contentRootPath, Alias alias, string route, string appName, string filePath)
         {
+            var l = Log.Fn<string>(
+                $"{nameof(contentRootPath)}: '{contentRootPath}'; {nameof(route)}: {route}; {nameof(appName)}: '{appName}'; {nameof(filePath)}: '{filePath}'");
+            
+            // Validate for alias.
+            if (alias == null) 
+                return l.Return(string.Empty, "no site alias");
+
             // Oqtane path and file name validation.
             // Partly commented because Path validation is not working as expected.
-            if (!appName.IsPathOrFileValid()) return string.Empty;
+            if (!appName.IsPathOrFileValid()) 
+                return l.Return(string.Empty, "not valid");
 
             // Blacklist extensions should be denied.
-            if (IsKnownRiskyExtension(filePath)) return string.Empty;
+            if (IsKnownRiskyExtension(filePath))
+                return l.Return(string.Empty, "risky extension");
 
-            if (Eav.Security.Files.FileNames.IsKnownCodeExtension(filePath)) return string.Empty;
+            if (Eav.Security.Files.FileNames.IsKnownCodeExtension(filePath))
+                return l.Return(string.Empty, "code extesion");
 
             // Nothing in a ".xyz" folder or a subfolder of this should be allowed (like .data must be protected).
             if (appName.StartsWith(".") || filePath.StartsWith(".") || filePath.Backslash().Contains(@"\.")) return string.Empty;
-
-            // Validate for alias.
-            if (alias == null) return string.Empty;
 
             var fullFilePath = route switch
             {
@@ -66,7 +71,8 @@ namespace ToSic.Sxc.Oqt.Server.Adam
             };
 
             // Check that file exist in file system.
-            return System.IO.File.Exists(fullFilePath) ? fullFilePath : string.Empty;
+            var exists = System.IO.File.Exists(fullFilePath);
+            return l.Return(exists ? fullFilePath : string.Empty, exists? "found" : "file not found");
         }
 
         private static bool IsKnownRiskyExtension(string fileName)

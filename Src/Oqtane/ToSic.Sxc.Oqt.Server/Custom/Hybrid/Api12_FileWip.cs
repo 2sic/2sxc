@@ -26,7 +26,7 @@ namespace Custom.Hybrid
 
             // Try to figure out file mime type as needed
             if (string.IsNullOrWhiteSpace(contentType))
-                contentType = ContentFileHelper.GetMimeType(fileDownloadName ?? virtualPath);
+                contentType = OqtAssetsFileHelper.GetMimeType(fileDownloadName ?? virtualPath);
 
             // check if this may just be a call to the built in file, which has two strings
             // this can only be possible if only the virtualPath and contentType were set

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.SharedRootPathNdLang + "/{appName}/")]
     public class AppSharedController: AppAssetsControllerBase
     {
-        public AppSharedController(AppAssetsDependencies dependencies) 
-            : base(dependencies, ContentFileHelper.RouteShared, "Shared") { }
+        public AppSharedController(Dependencies dependencies) 
+            : base(dependencies, OqtAssetsFileHelper.RouteShared, "Shared") { }
     }
 }

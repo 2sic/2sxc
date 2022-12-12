@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // action filter instead of global option AllowEmptyInputInBodyModelBinding = true
             services.AddTransient<OptionalBodyFilter>();
 
-            services.TryAddTransient<AppAssetsDependencies>();
+            services.TryAddTransient<AppAssetsControllerBase.Dependencies>();
 
             // ViewController deps for AllModulesWithContent
             services.TryAddTransient<Pages.Pages>();

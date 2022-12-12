@@ -5,6 +5,7 @@ using Oqtane.Repository;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Lib.Logging;
@@ -24,6 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly Lazy<IFileRepository> _fileRepositoryLazy;
         private readonly Lazy<IFolderRepository> _folderRepositoryLazy;
         private readonly Lazy<ITenantResolver> _oqtTenantResolverLazy;
+        private readonly LazyInitLog<OqtAssetsFileHelper> _fileHelper;
         private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
@@ -36,13 +38,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
             Lazy<IFileRepository> fileRepositoryLazy,
             Lazy<IFolderRepository> folderRepositoryLazy,
             Lazy<ITenantResolver> oqtTenantResolverLazy,
-            IAppStates appStates
+            IAppStates appStates,
+            LazyInitLog<OqtAssetsFileHelper> fileHelper
             ) : base(xmlSerializer, appStates, OqtConstants.OqtLogPrefix)
         {
             _hostingEnvironment = hostingEnvironment;
             _fileRepositoryLazy = fileRepositoryLazy;
             _folderRepositoryLazy = folderRepositoryLazy;
             _oqtTenantResolverLazy = oqtTenantResolverLazy;
+            _fileHelper = fileHelper.SetLog(Log);
             _ctxResolver = ctxResolver.Init(Log);
             AdamManager = adamManager;
         }
@@ -122,7 +126,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             var relativePath = Path.Combine(file?.Folder.Path.Backslash(), file?.Name);
             var alias = _oqtTenantResolverLazy.Value.GetAlias();
-            var path = ContentFileHelper.GetFilePath(_hostingEnvironment.ContentRootPath, alias, relativePath);
+            var path = _fileHelper.Value.GetFilePath(_hostingEnvironment.ContentRootPath, alias, relativePath);
 
             return new()
             {

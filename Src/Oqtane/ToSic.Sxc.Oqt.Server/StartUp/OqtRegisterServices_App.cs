@@ -23,6 +23,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<OqtPageLookUp>();
             services.TryAddTransient<OqtModuleLookUp>();
             services.TryAddScoped<UserLookUp>();
+
+            // New v15 for better DI/Logging
+            services.TryAddTransient<OqtAssetsFileHelper>();
             return services;
         }
         
