@@ -44,6 +44,8 @@ namespace ToSic.Sxc.Data
             return safeWrap.Return(propRequest);
         }
 
+        protected internal override IPropertyLookup LookupRoot => Entity;
+
         // V12.10? This is just PoC to show that we could auto-dynamic data. Will not be available yet
         private void ApplyDynamicDataFeaturesToResult(string field, PropReqResult propRequest)
         {

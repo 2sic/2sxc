@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
@@ -14,38 +15,49 @@ namespace ToSic.Sxc.Data
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
             var logOrNull = _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
-            var safeWrap = logOrNull.Fn<object>(Debug,
+            var l = logOrNull.Fn<object>(Debug,
                     $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
                     "Debug: true");
-            
+
+            if (!field.HasValue())
+                return l.ReturnNull("field null/empty");
+
             // This determines if we should access & store in cache
+            // check if we already have it in the cache - but only in default case (no language, lookup=true)
             var useCache = language == null && lookup;
+            if (useCache && _ValueCache.ContainsKey(field))
+                return l.Return(_ValueCache[field], "cached");
 
             // use the standard dimensions or overload
             var languages = language == null ? _Dependencies.Dimensions : new[] { language };
-            safeWrap.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
+            var isPath = field.Contains(".");
+            l.A($"{nameof(useCache)}: {useCache}, {nameof(isPath)}:{isPath} {nameof(languages)}:{languages}");
 
-            // check if we already have it in the cache - but only in default languages
-            if (useCache && _ValueCache.ContainsKey(field)) return safeWrap.Return(_ValueCache[field], "cached");
 
-            var resultSet = FindPropertyInternal(new PropReqSpecs(field, languages, logOrNull), new PropertyLookupPath().Add("DynEntStart", field));
+            // Get the field or the path if it has one
+            // Classic field case
+            var specs = new PropReqSpecs(field, languages, logOrNull);
+            var path = new PropertyLookupPath().Add("DynEntStart", field);
+            var resultSet = !isPath
+                ? FindPropertyInternal(specs, path)
+                : PropertyStack.TraversePath(specs, path, LookupRoot);
 
             // check Entity is null (in cases where null-objects are asked for properties)
-            if (resultSet == null) return safeWrap.ReturnNull("null");
+            if (resultSet == null) return l.ReturnNull("result null");
 
-            safeWrap.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
+            l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
 
             var result = ValueAutoConverted(resultSet, lookup, field, logOrNull);
 
             // cache result, but only if using default languages
             if (useCache)
             {
-                safeWrap.A("add to cache");
+                l.A("add to cache");
                 _ValueCache.Add(field, result);
             }
-            return safeWrap.ReturnAsOk(result);
+            return l.ReturnAsOk(result);
         }
-
+        
 
         protected object ValueAutoConverted(PropReqResult original, bool lookup, string field, ILog logOrNull)
         {

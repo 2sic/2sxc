@@ -20,8 +20,11 @@ namespace ToSic.Sxc.Data
         }
         
         public IPropertyStack UnwrappedContents { get; }
+
+        /// <inheritdoc />
         public IPropertyStack GetContents() => UnwrappedContents;
 
+        /// <inheritdoc />
         public dynamic GetSource(string name)
         {
             var source = UnwrappedContents.GetSource(name)
@@ -31,6 +34,7 @@ namespace ToSic.Sxc.Data
             return SourceToDynamicEntity(source);
         }
 
+        /// <inheritdoc />
         public dynamic GetStack(params string[] names)
         {
             var wrapLog = LogOrNull.Fn<dynamic>();
@@ -65,6 +69,8 @@ namespace ToSic.Sxc.Data
 
             return l.Return(r, $"{(r == null ? "null" : "ok")} using {(hasDot ? "Path" : "Property")}");
         }
+
+        protected internal override IPropertyLookup LookupRoot => throw new NotSupportedException();
 
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>

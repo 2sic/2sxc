@@ -25,6 +25,8 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public abstract PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path);
 
+        protected internal abstract IPropertyLookup LookupRoot { get; }
+
         /// <summary>
         /// Generate a dynamic entity based on an IEntity.
         /// Used in various cases where a property would return an IEntity, and the Razor should be able to continue in dynamic syntax
