@@ -130,26 +130,15 @@ namespace ToSic.Sxc.Dnn.Install
                             if (File.Exists(oldAppJsonTemplateFilePath) && !File.Exists(appJsonTemplateFilePath))
                                 File.Move(oldAppJsonTemplateFilePath, appJsonTemplateFilePath);
 
-                            // delete old .data folder
-                            var oldDataFolder =Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".data"));
-                            if (Directory.Exists(oldDataFolder)) ZipImport.TryToDeleteDirectory(oldDataFolder, Log);
-
                             // migrate old .data-custom folder
                             var oldDataCustomFolder = Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".data-custom"));
-                            if (Directory.Exists(oldDataCustomFolder))
-                            {
-                                ZipImport.CopyDirectory(oldDataCustomFolder, _globalConfiguration.Value.ConfigFolder, true);
-                                ZipImport.TryToDeleteDirectory(oldDataCustomFolder, Log);
-                            }
+                            if (Directory.Exists(oldDataCustomFolder) && !Directory.Exists(_globalConfiguration.Value.DataCustomFolder))
+                                Directory.Move(oldDataCustomFolder, _globalConfiguration.Value.DataCustomFolder);
 
                             // migrate old .databeta folder
                             var oldDataBetaFolder = Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".databeta"));
-                            if (Directory.Exists(oldDataBetaFolder))
-                            {
-                                var dataBetaFolder = Path.Combine(DataFolder.GetDataRoot(_globalConfiguration.Value.DataFolder), Eav.Constants.FolderDataCustom, FsDataConstants.ConfigFolder);
-                                ZipImport.CopyDirectory(oldDataBetaFolder, dataBetaFolder, true);
-                                ZipImport.TryToDeleteDirectory(oldDataBetaFolder, Log);
-                            }
+                            if (Directory.Exists(oldDataBetaFolder) && !Directory.Exists(_globalConfiguration.Value.DataBetaFolder))
+                                Directory.Move(oldDataBetaFolder, _globalConfiguration.Value.DataBetaFolder);
                         }
                         catch
                         {
