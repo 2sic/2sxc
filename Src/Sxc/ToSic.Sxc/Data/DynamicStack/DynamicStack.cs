@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
@@ -53,9 +54,16 @@ namespace ToSic.Sxc.Data
             specs = specs.SubLog("Sxc.DynStk", Debug);
             path = path.KeepOrNew().Add("DynStack", specs.Field);
 
-            var wrapLog = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynamicStack");
-            var result = UnwrappedContents.FindPropertyInternal(specs, path);
-            return wrapLog.Return(result, result == null ? "null" : "ok");
+            var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynamicStack");
+            if (!specs.Field.HasValue())
+                return l.Return(null, "no key");
+
+            var hasDot = specs.Field.Contains(".");
+            var r = hasDot
+                ? UnwrappedContents.InternalGetPath(specs, path)
+                : UnwrappedContents.FindPropertyInternal(specs, path);
+
+            return l.Return(r, $"{(r == null ? "null" : "ok")} using {(hasDot ? "Path" : "Property")}");
         }
 
         [PrivateApi("Internal")]
