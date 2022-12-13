@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Data
             return result;
         }
 
-        #region WIP Debug system
+        #region Debug system
 
         /// <inheritdoc />
         public bool Debug { get; set; }

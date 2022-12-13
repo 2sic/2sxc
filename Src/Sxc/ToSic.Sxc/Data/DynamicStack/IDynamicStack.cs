@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         dynamic GetStack(params string[] names);
 
-        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         /// <summary>
         /// Get a value of the entity. Usually you will prefer the quick access like
         /// @content.FirstName - which will give you the same things as content.Get("FirstName").
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Data
         /// <returns>An object which can be either a string, number, boolean or List&lt;IDynamicEntity&gt;, depending on the field type. Will return null if the field was not found. </returns>
         dynamic Get(string name);
 
-        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         /// <summary>
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
@@ -54,13 +54,38 @@ namespace ToSic.Sxc.Data
             bool? debug = null
         );
 
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
+        /// <summary>
+        /// Get a value using the name - and cast it to the expected strong type.
+        /// For example to get an int even though it's stored as decimal.
+        /// </summary>
+        /// <typeparam name="TValue">The expected type, like `string`, `int`, etc.</typeparam>
+        /// <param name="name">The name of the property, like `Title`</param>
+        /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
+        /// <remarks>Added in v15</remarks>
+        TValue Get<TValue>(string name);
 
-        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityGet and IDynamicStack */
-        ///// <summary>
-        ///// Activate debugging, so that you'll see details in [Insights](xref:NetCode.Debug.Insights.Index) how the value was retrieved.
-        ///// </summary>
-        ///// <param name="debug"></param>
-        //void SetDebug(bool debug);
+        /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
+        /// <summary>
+        /// Get a value using the name - and cast it to the expected strong type.
+        /// For example to get an int even though it's stored as decimal.
+        /// 
+        /// Since the parameter `fallback` determines the type `TValue` you can just write this like
+        /// `Content.Get("Title", fallback: "no title")
+        /// </summary>
+        /// <typeparam name="TValue">
+        /// The expected type, like `string`, `int`, etc.
+        /// Note that you don't need to specify it, if you specify the `fallback` property.
+        /// </typeparam>
+        /// <param name="name">The name of the property, like `Title`</param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="fallback">the fallback value to provide if not found</param>
+        /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
+        /// <remarks>Added in v15</remarks>
+        TValue Get<TValue>(string name,
+            // ReSharper disable once MethodOverloadWithOptionalParameter
+            string noParamOrder = Eav.Parameters.Protector,
+            TValue fallback = default);
 
     }
 }

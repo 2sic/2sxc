@@ -1,9 +1,24 @@
-﻿namespace ToSic.Sxc.Data
+﻿using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
+
+namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntityBase: ICanGetByName
     {
         /// <inheritdoc/>
         public dynamic Get(string name) => GetInternal(name);
+
+        [PrivateApi]
+        public TValue Get<TValue>(string name) => GetInternal(name).ConvertOrDefault<TValue>();
+
+        [PrivateApi]
+        public TValue Get<TValue>(string name,
+            // ReSharper disable once MethodOverloadWithOptionalParameter
+            string noParamOrder = Eav.Parameters.Protector,
+            TValue fallback = default)
+        {
+            return GetInternal(name).ConvertOrFallback(fallback);
+        }
 
         /// <inheritdoc/>
         public dynamic Get(string name,
