@@ -2,8 +2,12 @@
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
@@ -30,18 +34,25 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Instance initializers...
         /// </summary>
-        public DnnEnvironmentInstaller(History logHistory, DnnInstallLogger installLogger, Lazy<IAppStates> appStatesLazy, Lazy<CmsRuntime> cmsRuntimeLazy, Lazy<RemoteRouterLink> remoteRouterLazy) : base("Dnn.InstCo")
+        public DnnEnvironmentInstaller(History logHistory, 
+            DnnInstallLogger installLogger, 
+            Lazy<IAppStates> appStatesLazy, 
+            Lazy<CmsRuntime> cmsRuntimeLazy, 
+            Lazy<RemoteRouterLink> remoteRouterLazy,
+            Lazy<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
         {
             logHistory.Add(LogNames.LogHistoryGlobalInstallation, Log);
             _installLogger = installLogger;
             _appStatesLazy = appStatesLazy;
             _cmsRuntimeLazy = cmsRuntimeLazy;
             _remoteRouterLazy = remoteRouterLazy;
+            _globalConfiguration = globalConfiguration;
         }
         private readonly DnnInstallLogger _installLogger;
         private readonly Lazy<IAppStates> _appStatesLazy;
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly Lazy<RemoteRouterLink> _remoteRouterLazy;
+        private readonly Lazy<IGlobalConfiguration> _globalConfiguration;
 
         public IEnvironmentInstaller Init(ILog parent)
         {
@@ -108,6 +119,44 @@ namespace ToSic.Sxc.Dnn.Install
                     // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
 
                     case "15.00.00":
+                        
+                        try
+                        {
+                            // move app.json template from old to new location
+                            var appDataProtectedFolder = new DirectoryInfo(Path.Combine(_globalConfiguration.Value.GlobalFolder, Eav.Constants.AppDataProtectedFolder));
+                            Directory.CreateDirectory(_globalConfiguration.Value.AppDataTemplateFolder);
+                            var oldAppJsonTemplateFilePath = Path.Combine(appDataProtectedFolder.FullName, Eav.Constants.AppJson);
+                            var appJsonTemplateFilePath = Path.Combine(_globalConfiguration.Value.AppDataTemplateFolder, Eav.Constants.AppJson);
+                            if (File.Exists(oldAppJsonTemplateFilePath) && !File.Exists(appJsonTemplateFilePath))
+                                File.Move(oldAppJsonTemplateFilePath, appJsonTemplateFilePath);
+
+                            // delete old .data folder
+                            var oldDataFolder =Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".data"));
+                            if (Directory.Exists(oldDataFolder)) ZipImport.TryToDeleteDirectory(oldDataFolder, Log);
+
+                            // migrate old .data-custom folder
+                            var oldDataCustomFolder = Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".data-custom"));
+                            if (Directory.Exists(oldDataCustomFolder))
+                            {
+                                ZipImport.CopyDirectory(oldDataCustomFolder, _globalConfiguration.Value.ConfigFolder, true);
+                                ZipImport.TryToDeleteDirectory(oldDataCustomFolder, Log);
+                            }
+
+                            // migrate old .databeta folder
+                            var oldDataBetaFolder = Path.Combine(Path.Combine(_globalConfiguration.Value.GlobalFolder, ".databeta"));
+                            if (Directory.Exists(oldDataBetaFolder))
+                            {
+                                var dataBetaFolder = Path.Combine(DataFolder.GetDataRoot(_globalConfiguration.Value.DataFolder), Eav.Constants.FolderDataCustom, FsDataConstants.ConfigFolder);
+                                ZipImport.CopyDirectory(oldDataBetaFolder, dataBetaFolder, true);
+                                ZipImport.TryToDeleteDirectory(oldDataBetaFolder, Log);
+                            }
+                        }
+                        catch
+                        {
+                            // ignored
+                        }
+
+                        // ToSic_EAV_DataTimeline cleaning data and change schema for CJson
                         const string sql150000 = @"                         
                             -- remove trigger generated data from 'ToSIC_EAV_DataTimeline' in batches
                             WHILE (SELECT COUNT(*) FROM [dbo].[ToSIC_EAV_DataTimeline] WHERE [SourceTable] IN ('ToSIC_EAV_Values', 'ToSIC_EAV_EntityRelationships', 'ToSIC_EAV_ValuesDimensions')) > 0
@@ -134,6 +183,7 @@ namespace ToSic.Sxc.Dnn.Install
                         sqlCommand150000.CommandTimeout = 0; // disable sql execution command timeout on sql server
                         sqlCommand150000.ExecuteNonQuery();
                         sqlConnection.Close();
+
                         break;
 
 

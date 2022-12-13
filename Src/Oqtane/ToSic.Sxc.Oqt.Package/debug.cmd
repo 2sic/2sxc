@@ -60,12 +60,8 @@ robocopy /mir "..\ToSic.Sxc.Oqt.Server\Content\2sxc\system\ImportExport\ " "%Dev
 
 @Echo(
 @Echo Copy the data folders
-robocopy /mir "..\..\Data\.data\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.data\ "
-robocopy /mir "..\..\Data\.databeta\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.databeta\ "
-robocopy /mir "..\..\Data\.data-custom\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.data-custom\ "
-@REM robocopy "..\..\Data\.data-custom\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\.data-custom\ " /MIR /XO /XF "%BuildTarget%\.data-custom\configurations\features.json" /XF "%BuildTarget%\.data-custom\configurations\default.license.json"
-robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 robocopy /mir "..\..\Data\App_Data\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\App_Data\ "
+robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 @Echo(
 @Echo Copy 2sxc JS stuff

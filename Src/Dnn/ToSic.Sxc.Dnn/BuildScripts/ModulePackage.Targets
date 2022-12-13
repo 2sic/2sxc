@@ -65,13 +65,14 @@
       <InstallInclude Include="$(Dev2sxcAssets)\**\*.*" Exclude="$(Dev2sxcAssets)\**\*.map" />
 
       <!-- WIP - turnOn map files must be included for now-->
-      <InstallInclude Include="$(Dev2sxcAssets)\dist\turnOn\*.*" />
+      <InstallInclude Include="$(Dev2sxcAssets)\**\dist\turnOn\*.*" />
 
       <!-- all global types and queries -->
-      <InstallInclude Include="..\..\Data\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
+      <InstallInclude Include="..\..\Data\**\App_Data\new-app\**\*.*" />
+      <InstallInclude Include="..\..\Data\**\App_Data\system\**\*.json" Exclude="@(DefaultExclude)" />
       <InstallInclude Include="..\..\Data\**\assets\**\*.*" />
-      <InstallInclude Include="..\..\Data\**\App_Data\**\*.*" />
-      <InstallInclude Include="..\..\Data-Dnn\**\.data\**\*.json" Exclude="@(DefaultExclude)" />
+
+      <InstallInclude Include="..\..\Data-Dnn\**\App_Data\system\**\*.json" Exclude="@(DefaultExclude)" />
 
       <InstallInclude Include="**\*.txt" Exclude="@(DefaultExclude);**\obj\**;**\_ReSharper*\**;License.txt;ReleaseNotes.txt" />
       <InstallInclude Include="**\*.ashx" Exclude="@(DefaultExclude)" />
