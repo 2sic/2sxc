@@ -1,2 +1,3 @@
 DesktopModules\ToSIC_SexyContent\dist\
 DesktopModules\ToSIC_SexyContent\.data\
+DesktopModules\ToSIC_SexyContent\App_Data\system\

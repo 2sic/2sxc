@@ -3,11 +3,13 @@
 @set BuildTarget=%OqtaneRoot%\wwwroot\Modules\%PackageName%
 
 @REM Copy the data folders
-robocopy /mir "..\..\Data\.data\ " "%OqtaneRoot%\Content\2sxc\system\.data\ "
+robocopy /mir "..\..\Data\App_Data\new-app\ " "%OqtaneRoot%\Content\2sxc\system\App_Data\new-app\ "
+robocopy /mir "..\..\Data\App_Data\system\ " "%OqtaneRoot%\Content\2sxc\system\App_Data\system\ "
 rmdir /Q /S "%BuildTarget%\.databeta"
 rmdir /Q /S "%BuildTarget%\.data-custom"
+rmdir /Q /S "%BuildTarget%\App_Data\system-beta"
+rmdir /Q /S "%BuildTarget%\App_Data\system-custom"
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
-robocopy /mir "..\..\Data\App_Data\ " "%OqtaneRoot%\Content\2sxc\system\App_Data\ "
 
 @REM Copy 2sxc JS stuff
 robocopy /mir "%Dev2sxcAssets%\js\ " "%BuildTarget%\js\ "
