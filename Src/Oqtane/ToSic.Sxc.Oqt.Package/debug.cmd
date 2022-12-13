@@ -61,6 +61,7 @@ robocopy /mir "..\ToSic.Sxc.Oqt.Server\Content\2sxc\system\ImportExport\ " "%Dev
 @Echo(
 @Echo Copy the data folders
 robocopy /mir "..\..\Data\App_Data\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\App_Data\ "
+robocopy /s "..\..\..\..\2sxc-dev-materials\App_Data\ " "%Dev2sxcOqtaneRoot%\Content\2sxc\system\App_Data\ "
 robocopy /mir "..\..\Data\assets\ " "%BuildTarget%\assets\ "
 
 @Echo(

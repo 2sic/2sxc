@@ -368,10 +368,11 @@ if exist $(TargetDir)runtimes\win-x86\native\imageflow.dll (
 
 @REM Copy the data folders
 robocopy "$(ProjectDir)..\..\Data\App_Data\ " "%25BuildTarget%25\App_Data\ " /MIR /XO /XF "%25BuildTarget%25\App_Data\system-custom\configurations\features.json" /XF "%25BuildTarget%25\App_Data\system-custom\configurations\default.license.json"
+robocopy "$(ProjectDir)..\..\..\..\2sxc-dev-materials\App_Data\ " "%25BuildTarget%25\App_Data\ " /s
 robocopy /mir "$(ProjectDir)..\..\Data\assets\ " "%25BuildTarget%25\assets\ "
 
 @REM Add the DNN specific content-types
-robocopy /s "$(ProjectDir)..\..\Data-Dnn\.data\ " "%25BuildTarget%25\App_Data\system\ "
+robocopy /s "$(ProjectDir)..\..\Data-Dnn\App_Data\system\ " "%25BuildTarget%25\App_Data\system\ "
 
 @REM Copy DNN JavaScripts and Bridge
 robocopy /mir "$(ProjectDir)ClientScripts\ " "%25BuildTarget%25\ClientScripts\ "
