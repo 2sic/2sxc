@@ -3,7 +3,6 @@ using System.IO;
 using DotNetNuke.Entities.Host;
 using DotNetNuke.Security.Permissions;
 using DotNetNuke.Services.FileSystem;
-using JetBrains.Annotations;
 using ToSic.Sxc.Adam;
 using IAsset = ToSic.Eav.Apps.Assets.IAsset;
 using IFile = ToSic.Eav.Apps.Assets.IFile;
@@ -23,7 +22,6 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// <remarks>
         /// mostly a copy from https://github.com/dnnsoftware/Dnn.Platform/blob/115ae75da6b152f77ad36312eb76327cdc55edd7/DNN%20Platform/Modules/Journal/FileUploadController.cs#L72
         /// </remarks>
-        [AssertionMethod]
         public override bool SiteAllowsExtension(string fileName)
         {
             var extension = Path.GetExtension(fileName);

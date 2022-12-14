@@ -92,12 +92,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="ToSic.Razor, Version=3.7.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net472\ToSic.Razor.dll</HintPath>
+    <Reference Include="ToSic.Razor">
+      <HintPath>..\ToSic.Sxc.Dnn\razorblade\bin\ToSic.Razor.dll</HintPath>
     </Reference>
     <Reference Include="ToSic.Razor.Dnn">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Dnn\ToSic.Razor.Dnn.dll</HintPath>
+      <HintPath>..\ToSic.Sxc.Dnn\razorblade\bin\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
