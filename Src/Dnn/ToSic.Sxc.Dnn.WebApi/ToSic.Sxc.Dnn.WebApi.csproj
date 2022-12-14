@@ -220,9 +220,6 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
       <Version>5.2.3</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>10.0.3</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
