@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Web.PageService
         public IPageFeatures PageFeatures { get; }
         public CspOfModule Csp { get; }
 
-        public string CspEphemeralMarker => _cspEphemeralMarker.Get();
+        public string CspEphemeralMarker => _cspEphemeralMarker.Value;
         private readonly GetOnce<string> _cspEphemeralMarker = new GetOnce<string>(
             () => new Random().Next(100000000, 999999999).ToString());
 
