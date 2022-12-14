@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn940
         /// <param name="mapRouteManager"></param>
         public void RegisterRoutes(IMapRoute mapRouteManager)
         {
-            var config = GlobalConfiguration.Configuration;
+            var config = System.Web.Http.GlobalConfiguration.Configuration;
 
             // only override the existing one, if a special one was registered
             if (config.Services.GetService(typeof(IHttpControllerActivator)) is IHttpControllerActivator dnnActivator)
