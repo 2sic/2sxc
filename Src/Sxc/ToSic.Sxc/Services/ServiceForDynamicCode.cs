@@ -17,19 +17,33 @@ namespace ToSic.Sxc.Services
         {
         }
 
+        /// <summary>
+        /// Connect to CodeRoot and it's log
+        /// </summary>
+        /// <param name="codeRoot"></param>
         [PrivateApi]
-        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot) => ConnectToRoot(codeRoot, codeRoot?.Log);
+        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot) => ConnectToRoot(codeRoot, null);
 
+        /// <summary>
+        /// Connect to CodeRoot and a custom log
+        /// </summary>
+        /// <param name="codeRoot"></param>
+        /// <param name="parentLog"></param>
         [PrivateApi]
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot, ILog parentLog)
         {
+            // Avoid unnecessary reconnects
+            if (_alreadyConnected) return;
+            _alreadyConnected = true;
+
             // Link the logs
-            this.Init(parentLog);
+            this.Init(parentLog ?? codeRoot?.Log);
             // Remember the parent
             _DynCodeRoot = codeRoot;
             // report connection in log
             Log.Fn(message: "Linked to Root").Done();
         }
+        private bool _alreadyConnected;
 
         [PrivateApi]
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }

@@ -15,7 +15,7 @@ using MailMessage = System.Net.Mail.MailMessage;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services
 {
-    public abstract class MailServiceBase : HasLog, IMailService
+    public abstract class MailServiceBase : ServiceForDynamicCode, IMailService
     {
         private static readonly Regex HtmlDetectionRegex = new Regex("<(.*\\s*)>", RegexOptions.Compiled);
 
@@ -29,9 +29,9 @@ namespace ToSic.Sxc.Services
         }
 
         /// <inheritdoc />
-        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            (Log as Log)?.LinkTo(codeRoot.Log);
+            base.ConnectToRoot(codeRoot);
             App = codeRoot.App;
         }
 

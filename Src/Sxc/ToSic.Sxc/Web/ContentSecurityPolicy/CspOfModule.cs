@@ -3,19 +3,19 @@ using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 using static ToSic.Eav.Configuration.ConfigurationStack;
 using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public  class CspOfModule: HasLog, INeedsDynamicCodeRoot
+    public  class CspOfModule: ServiceForDynamicCode
     {
         #region Constructor
 
-        public CspOfModule(IUser user, IFeaturesService featuresService): base(CspConstants.LogPrefix + ".ModLvl")
+        public CspOfModule(IUser user, IFeaturesService featuresService): base($"{CspConstants.LogPrefix}.ModLvl")
         {
             _user = user;
             _featuresService = featuresService;
@@ -24,26 +24,26 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private readonly IUser _user;
         private readonly IFeaturesService _featuresService;
 
-        /// <summary>
-        /// Connect to code root, so page-parameters and settings will be available later on.
-        /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
-        /// </summary>
-        /// <param name="codeRoot"></param>
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            if (_alreadyConnected) return;
-            _alreadyConnected = true;
-            (Log as Log)?.LinkTo(codeRoot.Log);
-            _codeRoot = codeRoot;
-            Log.Fn().Done();
-        }
+        ///// <summary>
+        ///// Connect to code root, so page-parameters and settings will be available later on.
+        ///// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
+        ///// </summary>
+        ///// <param name="codeRoot"></param>
+        //public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        //{
+        //    if (_alreadyConnected) return;
+        //    _alreadyConnected = true;
+        //    (Log as Log)?.LinkTo(codeRoot.Log);
+        //    _codeRoot = codeRoot;
+        //    Log.Fn().Done();
+        //}
 
-        private bool _alreadyConnected;
+        //private bool _alreadyConnected;
 
-        private IDynamicCodeRoot _codeRoot;
+        //private IDynamicCodeRoot _codeRoot;
         private DynamicStack CodeRootSettings()
         {
-            var stack = _codeRoot?.Settings as DynamicStack;
+            var stack = _DynCodeRoot?.Settings as DynamicStack;
             // Enable this for detailed debugging
             //if (stack != null) stack.Debug = true;
             return stack;
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         {
             if (!_featuresService.IsEnabled(BuiltInFeatures.ContentSecurityPolicyTestUrl.NameId))
                 return null;
-            var pageParameters = _codeRoot?.CmsContext?.Page?.Parameters;
+            var pageParameters = _DynCodeRoot?.CmsContext?.Page?.Parameters;
             if (pageParameters == null) return null;
             pageParameters.TryGetValue(CspConstants.CspUrlParameter, out var cspParam);
             return cspParam;
