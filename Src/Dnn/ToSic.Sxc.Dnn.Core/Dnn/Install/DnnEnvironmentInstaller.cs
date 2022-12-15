@@ -17,18 +17,6 @@ namespace ToSic.Sxc.Dnn.Install
     {
         public static bool SaveUnimportantDetails = true;
 
-        //#region Service Providing
-
-        ///// <summary>
-        ///// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
-        ///// If we would get it multiple times, there are edge cases where it could be different each time! #2614
-        ///// </summary>
-        //private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider());
-        //private IServiceProvider _serviceProvider;
-
-        //#endregion
-
-
         /// <summary>
         /// Instance initializers...
         /// </summary>

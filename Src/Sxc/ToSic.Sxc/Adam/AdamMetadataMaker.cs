@@ -14,13 +14,11 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class AdamMetadataMaker
     {
-        public AdamMetadataMaker(/*IServiceProvider serviceProvider,*/ Generator<DynamicEntityDependencies> deGenerator)
+        public AdamMetadataMaker(Generator<DynamicEntityDependencies> deGenerator)
         {
-            //_serviceProvider = serviceProvider;
             _deGenerator = deGenerator;
         }
 
-        //private readonly IServiceProvider _serviceProvider;
         private readonly Generator<DynamicEntityDependencies> _deGenerator;
 
         /// <summary>

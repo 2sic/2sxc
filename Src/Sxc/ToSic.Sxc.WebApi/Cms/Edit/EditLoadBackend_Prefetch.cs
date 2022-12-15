@@ -11,14 +11,12 @@ namespace ToSic.Sxc.WebApi.Cms
     {
 
         public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData)
-        {
-            return new EditPrefetchDto
+            => new EditPrefetchDto
             {
                 Links = PrefetchLinks(appId, editData),
                 Entities = PrefetchEntities(appId, editData),
                 Adam = PrefetchAdam(appId, editData),
             };
-        }
 
         private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData)
         {

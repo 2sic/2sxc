@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditDto Load(int appId, List<ItemIdentifier> items)
         {
             // Security check
-            var wrapLog = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
+            var l = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
 
             var context = _ctxResolver.BlockOrApp(appId);
 
@@ -83,7 +83,6 @@ namespace ToSic.Sxc.WebApi.Cms
             TryToAutoFindMetadataSingleton(items, context.AppState);
 
             // now look up the types, and repeat security check with type-names
-            // todo: 2020-03-20 new feat 11.01, may not check inner type permissions ATM
             var permCheck = GetService<MultiPermissionsTypes>().Init(context, context.AppState, items, Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
@@ -140,14 +139,23 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
                     CtxEnable.EditUi);
 
+            result.Settings = GetSettings();
+
             try
             {
                 result.Prefetch = TryToPrefectAdditionalData(appId, result);
-            } 
-            catch (Exception) { /* ignore */ }
+            }
+            catch (Exception ex)
+            {
+                Log.A("Ran into an error during Prefetch");
+                Log.Ex(ex);
+                /* ignore */
+            }
+
+
 
             // done
-            return wrapLog.Return(result, $"ready, sending items:{result.Items.Count}, " +
+            return l.Return(result, $"ready, sending items:{result.Items.Count}, " +
                                    $"types:{result.ContentTypes.Count}, " +
                                    $"inputs:{result.InputTypes.Count}, " +
                                    $"feats:{result.Features.Count}");

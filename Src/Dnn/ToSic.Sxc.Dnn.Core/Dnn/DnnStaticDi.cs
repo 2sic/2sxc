@@ -13,18 +13,10 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     public static class DnnStaticDi
     {
-        private static Func<IServiceProvider> GetGlobalDnnServiceProvider = null;
+        private static Func<IServiceProvider> GetGlobalDnnServiceProvider;
 
-        //public static IServiceCollection StaticServiceCollection = null;
-        //public static IServiceProvider GlobalServiceProvider = null;
-        //public static void StaticDiReady(IServiceProvider sp = null) 
-        //    => _sp = sp ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
         public static void StaticDiReady(Func<IServiceProvider> spFunc = null) 
             => GetGlobalDnnServiceProvider = spFunc ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
-
-        //public static void StaticDiReady(IServiceProvider sp = null) 
-        //    => _sp = sp ?? StaticServiceCollection?.BuildServiceProvider()
-        //    ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
         /// <summary>
         /// This is a special internal resolver for static objects
