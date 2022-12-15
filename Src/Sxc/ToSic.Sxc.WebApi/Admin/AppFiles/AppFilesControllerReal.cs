@@ -4,14 +4,13 @@ using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
-    public partial class AppFilesControllerReal: HasLog, IAppFilesController
+    public partial class AppFilesControllerReal: ServiceWithLogDependenciesBase, IAppFilesController
     {
         public const string LogSuffix = "AppAss";
         #region Constructor / DI
@@ -19,21 +18,24 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         public AppFilesControllerReal(
             ISite site,
             IUser user, 
-            Generator<AssetEditor> assetEditorGenerator,
+            GeneratorLog<AssetEditor> assetEditorGenerator,
             IAppStates appStates,
             AppPaths appPaths
             ) : base("Bck.Assets")
         {
+            
             _site = site;
-            _assetEditorGenerator = assetEditorGenerator;
-            _assetTemplates = new AssetTemplates().Init(Log);
-            _appStates = appStates;
-            _appPaths = appPaths;
             _user = user;
+            ConnectServices(
+                _assetEditorGenerator = assetEditorGenerator,
+                _assetTemplates = new AssetTemplates(),
+                _appStates = appStates,
+                _appPaths = appPaths
+            );
         }
 
         private readonly ISite _site;
-        private readonly Generator<AssetEditor> _assetEditorGenerator;
+        private readonly GeneratorLog<AssetEditor> _assetEditorGenerator;
         private readonly AssetTemplates _assetTemplates;
         private readonly IAppStates _appStates;
         private readonly AppPaths _appPaths;
@@ -71,13 +73,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         /// <param name="global">this determines, if the app-file store is the global in _default or the local in the current app</param>
         /// <param name="templateKey"></param>
         /// <returns></returns>
-        public bool Create(// note: as of 2020-09 the content is never submitted
-            int appId,
-            string path,
-            bool global,
-            string templateKey
-            // as of 2021-12, all create calls include templateKey
-        )
+        public bool Create(int appId, string path, bool global, string templateKey)
         {
             var assetFromTemplateDto = new AppFile
             {
@@ -91,7 +87,8 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
 
             // ensure all .cshtml start with "_"
-            EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
+            // 2022-12-15 2dm - disabled, as we don't require this any more #2963
+            //EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
 
             var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);
 
@@ -165,7 +162,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
 
             try
             {
-                var assetFromTemplateDto = new AppFile()
+                var assetFromTemplateDto = new AppFile
                 {
                     AppId = appId,
                     Path = path?.Replace("/", "\\") ?? string.Empty,
@@ -174,7 +171,8 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
                 };
 
                 // ensure all .cshtml start with "_"
-                EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
+                // 2022-12-15 2dm - disabled, as we don't require this any more #2963
+                //EnsureCshtmlStartWithUnderscore(assetFromTemplateDto);
 
                 // check if file can be created
                 var assetEditor = GetAssetEditorOrThrowIfInsufficientPermissions(assetFromTemplateDto);

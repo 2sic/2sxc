@@ -85,17 +85,18 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
                 .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
         }
 
-        private static void EnsureCshtmlStartWithUnderscore(AppFile assetFromTemplateDto)
-        {
-            var name = Path.GetFileName(assetFromTemplateDto.Path);
-            if ((assetFromTemplateDto.TemplateKey == AssetTemplates.RazorHybrid.Key || assetFromTemplateDto.TemplateKey == AssetTemplates.DnnCsCode.Key)
-                && !name.StartsWith(AssetEditor.CshtmlPrefix))
-            {
-                name = AssetEditor.CshtmlPrefix + name;
-                var folder = Path.GetDirectoryName(assetFromTemplateDto.Path) ?? "";
-                assetFromTemplateDto.Path = Path.Combine(folder, name);
-            }
-        }
+        // 2022-12-15 2dm - disabled, as we don't require this any more #2963
+        //private static void EnsureCshtmlStartWithUnderscore(AppFile assetFromTemplateDto)
+        //{
+        //    var name = Path.GetFileName(assetFromTemplateDto.Path);
+        //    if ((assetFromTemplateDto.TemplateKey == AssetTemplates.RazorHybrid.Key || assetFromTemplateDto.TemplateKey == AssetTemplates.DnnCsCode.Key)
+        //        && !name.StartsWith(AssetEditor.CshtmlPrefix))
+        //    {
+        //        name = AssetEditor.CshtmlPrefix + name;
+        //        var folder = Path.GetDirectoryName(assetFromTemplateDto.Path) ?? "";
+        //        assetFromTemplateDto.Path = Path.Combine(folder, name);
+        //    }
+        //}
 
         [AssertionMethod]
         private string EnsurePathMayBeAccessed(string p, string appPath, bool allowFullAccess)
