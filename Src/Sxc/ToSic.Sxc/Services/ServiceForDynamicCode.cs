@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     // TODO: MAYBE SET PRIVATE in docs, if the remaining docs still work as expected
-    public abstract class ServiceForDynamicCode: ServiceWithLogDependenciesBase, INeedsDynamicCodeRoot
+    public abstract class ServiceForDynamicCode: ServiceWithLog, INeedsDynamicCodeRoot
     {
         [PrivateApi]
         protected ServiceForDynamicCode(string logName) : base(logName)

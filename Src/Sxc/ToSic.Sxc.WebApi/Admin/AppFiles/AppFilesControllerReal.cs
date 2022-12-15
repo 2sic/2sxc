@@ -10,7 +10,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
-    public partial class AppFilesControllerReal: ServiceWithLogDependenciesBase, IAppFilesController
+    public partial class AppFilesControllerReal: ServiceWithLog, IAppFilesController
     {
         public const string LogSuffix = "AppAss";
         #region Constructor / DI

@@ -12,7 +12,7 @@ using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Blocks.Output
 {
-    public class RenderingHelper: ServiceWithLogDependenciesBase, IRenderingHelper
+    public class RenderingHelper: ServiceWithLog, IRenderingHelper
     {
         #region Constructors and DI
 
