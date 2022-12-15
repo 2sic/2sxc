@@ -31,8 +31,8 @@ namespace ToSic.Sxc.WebApi.Save
 
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items)
         {
-            var app = _appGen.New.Init(appId, Log, null, Context.UserMayEdit);
-            var permCheck = _multiPermissionsTypesGen.New.Init(Context, app, items.Select(i => i.Header).ToList(), Log);
+            var app = _appGen.New().Init(appId, Log, null, Context.UserMayEdit);
+            var permCheck = _multiPermissionsTypesGen.New().Init(Context, app, items.Select(i => i.Header).ToList(), Log);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
             if (!permCheck.UserCanWriteAndPublicFormsEnabled(out _, out error))

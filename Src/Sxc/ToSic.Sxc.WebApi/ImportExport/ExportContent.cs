@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         {
             Log.A($"get content info for z#{zoneId}, a#{appId}, scope:{scope} super?:{_user.IsSystemAdmin}");
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var cms = CmsRuntime.Init(currentApp, true, Log);
             var contentTypes = cms.ContentTypes.All.OfScope(scope);
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
             var appRuntime = CmsRuntime.Init(currentApp, true, Log);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";

@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Data
         private readonly Lazy<IDataBuilder> _dataBuilderLazy;
 
 
-        internal IRenderService RenderService => _renderServiceGenerator.New;
+        internal IRenderService RenderService => _renderServiceGenerator.New();
         private readonly Generator<IRenderService> _renderServiceGenerator;
     }
 }

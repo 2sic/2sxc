@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
             var (fileName, stream) = uploadInfo.GetStream(0);
 
-            var result = _importContent.New.Init(_user.Value, Log)
+            var result = _importContent.New().Init(_user.Value, Log)
                 .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: _context.Value.Site.DefaultCultureCode);
 
             return wrapLog.ReturnAsOk(result);

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         [PrivateApi]
-        public IRenderingHelper RenderingHelper => _rendHelp.Get(() => _deps.RenderHelpGen.New.Init(Block, Log));
+        public IRenderingHelper RenderingHelper => _rendHelp.Get(() => _deps.RenderHelpGen.New().Init(Block, Log));
         private readonly GetOnce<IRenderingHelper> _rendHelp = new GetOnce<IRenderingHelper>();
 
         public IRenderResult Run(bool topLevel)
@@ -190,7 +190,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (InstallationOk) return (null, false);
 
-            var installer = _deps.EnvInstGen.New;
+            var installer = _deps.EnvInstGen.New();
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {

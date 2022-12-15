@@ -138,7 +138,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         {
             var wrapLog = Log.Fn<AssetEditor>($"{appId}, {templateId}, {global}, {path}");
             var app = _appStates.Get(appId);
-            var assetEditor = _assetEditorGenerator.New;
+            var assetEditor = _assetEditorGenerator.New();
 
             // TODO: simplify once we release v13 #cleanUp EOY 2021
             if (path == null)
@@ -153,7 +153,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         {
             var wrapLog = Log.Fn<AssetEditor>($"a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
             var app = _appStates.Get(assetFromTemplateDto.AppId);
-            var assetEditor = _assetEditorGenerator.New.Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
+            var assetEditor = _assetEditorGenerator.New().Init(app, assetFromTemplateDto.Path, assetFromTemplateDto.Global, 0, Log);
             assetEditor.EnsureUserMayEditAssetOrThrow(assetEditor.InternalPath);
             return wrapLog.Return(assetEditor);
         }

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Code
             MakeSureLogIsInHistory();
             ActivateEditUi();
             var cmsBlock = ModuleAndBlockBuilder.Value.GetBlock(pageId, moduleId);
-            var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
+            var codeRoot = CodeRootGenerator.New().InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
 
             return wrapLog.ReturnAsOk(codeRoot);
         }
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Fn<IDynamicCode12>();
             MakeSureLogIsInHistory();
             ActivateEditUi();
-            var codeRoot = CodeRootGenerator.New.InitDynCodeRoot(null, Log, Constants.CompatibilityLevel12);
+            var codeRoot = CodeRootGenerator.New().InitDynCodeRoot(null, Log, Constants.CompatibilityLevel12);
             var app = App(zoneId: zoneId, appId: appId);
             codeRoot.AttachApp(app);
             return wrapLog.ReturnAsOk(codeRoot);

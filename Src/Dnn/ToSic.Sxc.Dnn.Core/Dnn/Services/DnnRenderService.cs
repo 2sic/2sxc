@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.Services
 
             // this code should be executed in PreRender of page (ensure when calling) or it is too late
             if (HttpContext.Current?.Handler is Page dnnHandler) // detect if we are on the page
-                if (_context.New.Module.BlockIdentifier == null) // find if is in module (because in module it's already handled)
+                if (_context.New().Module.BlockIdentifier == null) // find if is in module (because in module it's already handled)
                     DnnPageProcess(dnnHandler, result);
 
             return wrapLog.ReturnAsOk(result);

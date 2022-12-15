@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Blocks.Renderers
 
             // render it
             log.A("found, will render");
-            var cb = blkFrmEntGen.New.Init(parentBlock, entity, log);
+            var cb = blkFrmEntGen.New().Init(parentBlock, entity, log);
             var result = cb.BlockBuilder.Run(false);
 
             // Special: during Run() various things are picked up like header changes, activations etc.

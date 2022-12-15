@@ -132,7 +132,7 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         private IEditService GetEdit(DynamicEntity parent)
         {
-            var newEdit = _editGenerator.New;
+            var newEdit = _editGenerator.New();
             newEdit.ConnectToRoot(CodeRoot);
             return newEdit.SetBlock(CodeRoot, parent._Dependencies.BlockOrNull);
         }

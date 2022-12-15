@@ -32,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
 
             // use dnn versioning - this is always part of page
-            _versioning.New.DoInsidePublishing(Context, InternalSave);
+            _versioning.New().DoInsidePublishing(Context, InternalSave);
             wrapLog.Done();
         }
 

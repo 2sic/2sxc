@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Engines
         private readonly Generator<TokenEngine> _tokenEngineGen;
 
         public IEngine CreateEngine(IView view) => view.IsRazor
-            ? (IEngine)_razorEngineGen.New
-            : _tokenEngineGen.New;
+            ? (IEngine)_razorEngineGen.New()
+            : _tokenEngineGen.New();
     }
 }

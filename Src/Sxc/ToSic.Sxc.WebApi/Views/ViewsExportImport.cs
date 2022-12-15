@@ -69,7 +69,7 @@ namespace ToSic.Sxc.WebApi.Views
         {
             var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin);
-            var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+            var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var cms = _cmsManagerLazy.Value.Init(app, Log);
             var bundle = new BundleEntityWithAssets
             {
@@ -115,7 +115,7 @@ namespace ToSic.Sxc.WebApi.Views
             try
             {
                 // 0.1 Check permissions, get the app, 
-                var app = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
+                var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
                 //_appHelpers.Init(app, Log);
 
                 // 0.2 Verify it's json etc.

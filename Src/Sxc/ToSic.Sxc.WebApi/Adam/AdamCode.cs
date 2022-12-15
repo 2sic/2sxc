@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw exp;
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
-            return _adamUploadGenerator.New
+            return _adamUploadGenerator.New()
                 .Init(appId, contentType, guid.Value, field, false, Log)
                 .UploadOne(stream, fileName, subFolder, true);
         }

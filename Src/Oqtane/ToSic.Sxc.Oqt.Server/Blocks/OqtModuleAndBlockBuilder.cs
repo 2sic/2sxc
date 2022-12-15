@@ -44,9 +44,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         /// <returns></returns>
         protected override IModule GetModuleImplementation(int pageId, int moduleId)
         {
-            var oqtModule = (_moduleRepositoryGenerator.New).GetModule(moduleId);
+            var oqtModule = (_moduleRepositoryGenerator.New()).GetModule(moduleId);
             ThrowIfModuleIsNull(pageId, moduleId, oqtModule);
-            var module = ((OqtModule) _moduleGenerator.New).Init(oqtModule, Log);
+            var module = ((OqtModule) _moduleGenerator.New()).Init(oqtModule, Log);
             return module;
         }
 
@@ -66,14 +66,14 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             Log.A($"Module: {oqtModule.ModuleId}");
             var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule, pageId);
-            var result = _blockGenerator.New.Init(initializedCtx, ParentLog);
+            var result = _blockGenerator.New().Init(initializedCtx, ParentLog);
             return wrapLog.ReturnAsOk(result);
         }
 
         private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
         {
             var wrapLog = Log.Fn<IContextOfBlock>();
-            var context = _contextGenerator.New;
+            var context = _contextGenerator.New();
             context.Init(ParentLog);
             //Log.Add($"Will try-swap module info of {oqtModule.ModuleId} into site");
             //((OqtSite)context.Site).TrySwap(oqtModule, ParentLog);

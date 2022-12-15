@@ -56,8 +56,8 @@ namespace ToSic.Sxc.Dnn
                 if (appFolder == null)
                 {
                     l.A("no folder found in url, will auto-detect");
-                    appFolder = _appFolder.New?
-                        .Init(() => _dnnGetBlock.New.GetCmsBlock(request, Log))
+                    appFolder = _appFolder.New()?
+                        .Init(() => _dnnGetBlock.New().GetCmsBlock(request, Log))
                         .GetAppFolder();
                 }
 

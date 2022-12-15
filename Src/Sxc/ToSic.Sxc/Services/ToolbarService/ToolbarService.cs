@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Services
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
             // The following lines must be just as this, because it's a functional object, where each call may return a new copy
-            var tlb = _toolbarGenerator.New;
+            var tlb = _toolbarGenerator.New();
             tlb.ConnectToRoot(CodeRoot);
             tlb = tlb.Toolbar(toolbarTemplate, target, ui, parameters, prefill);
 

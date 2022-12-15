@@ -123,7 +123,7 @@ namespace ToSic.Sxc.Blocks.Output
             return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage);
         }
 
-        public string UiContextInfos() => JsonSerializer.Serialize(_jsContextAllGen.New.GetJsContext(AppRootPath, Block), JsonOptions.SafeJsonForHtmlAttributes);
+        public string UiContextInfos() => JsonSerializer.Serialize(_jsContextAllGen.New().GetJsContext(AppRootPath, Block), JsonOptions.SafeJsonForHtmlAttributes);
 
     }
 }

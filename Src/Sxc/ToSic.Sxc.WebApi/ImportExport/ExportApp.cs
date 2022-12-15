@@ -68,7 +68,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         {
             Log.A($"get app info for app:{appId} and zone:{zoneId}");
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
@@ -101,7 +101,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             zipExport.ExportForSourceControl(includeContentGroups, resetAppGuid, withSiteFiles);
@@ -127,7 +127,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.New.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             var addOnWhenContainingContent = includeContentGroups ? "_withPageContent_" + DateTime.Now.ToString("yyyy-MM-ddTHHmm") : "";

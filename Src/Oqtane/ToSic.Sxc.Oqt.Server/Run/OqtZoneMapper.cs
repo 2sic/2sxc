@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         {
             var sites = _siteRepository.GetSites().ToList();
             var found = sites.FirstOrDefault(p => HasZoneId(p.SiteId, out var zoneOfSite) && zoneOfSite == zoneId);
-            return found != null ? ((OqtSite)_site.New).Init(found) : null;
+            return found != null ? ((OqtSite)_site.New()).Init(found) : null;
         }
 
         public override List<ISiteLanguageState> CulturesWithState(ISite site)

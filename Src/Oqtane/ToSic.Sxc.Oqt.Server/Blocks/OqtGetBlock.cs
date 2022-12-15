@@ -77,15 +77,15 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 return wrapLog.ReturnNull("missing block because PageId not found in request");
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
-            var ctx = _cntOfBlkGen.New.Init(pageId, module, Log);
-            var block = _blkFromModGen.New.Init(ctx, Log);
+            var ctx = _cntOfBlkGen.New().Init(pageId, module, Log);
+            var block = _blkFromModGen.New().Init(ctx, Log);
 
             // only if it's negative, do we load the inner block
             var contentBlockId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             if (contentBlockId >= 0) return wrapLog.Return(block, "found block");
 
             Log.A($"Inner Content: {contentBlockId}");
-            var entityBlock = _blkFromEntGen.New.Init(block, contentBlockId, Log);
+            var entityBlock = _blkFromEntGen.New().Init(block, contentBlockId, Log);
             return wrapLog.Return(entityBlock, "found inner block");
         }
 

@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Search
             if (DnnModule == null) return wrapLog.ReturnAndLog("no module");
             
             // This changes site in whole scope
-            DnnSite = ((DnnSite)_site.New).TrySwap(DnnModule, Log);
+            DnnSite = ((DnnSite)_site.New()).TrySwap(DnnModule, Log);
 
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
@@ -322,7 +322,7 @@ namespace ToSic.Sxc.Search
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
                 .ForwardSlash();
             Log.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-            var instance = _codeCompiler.New.InstantiateClass(block.View.ViewController, null, path, true);
+            var instance = _codeCompiler.New().InstantiateClass(block.View.ViewController, null, path, true);
             Log.A("got instance of compiled ViewController class");
 
             // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
@@ -332,7 +332,7 @@ namespace ToSic.Sxc.Search
             if (instance is DynamicCode instanceWithContext)
             {
                 Log.A($"attach DynamicCode context to class instance");
-                var parentDynamicCodeRoot = _dnnDynamicCodeRoot.New.InitDynCodeRoot(block, Log, Constants.CompatibilityLevel10);
+                var parentDynamicCodeRoot = _dnnDynamicCodeRoot.New().InitDynCodeRoot(block, Log, Constants.CompatibilityLevel10);
                 instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
             }
 

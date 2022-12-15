@@ -11,8 +11,8 @@ namespace ToSic.Sxc.Blocks.Edit
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt)
         {
-            if (block is BlockFromModule) return blkEdtForMod.New.Init(block);
-            if (block is BlockFromEntity) return blkEdtForEnt.New.Init(block);
+            if (block is BlockFromModule) return blkEdtForMod.New().Init(block);
+            if (block is BlockFromEntity) return blkEdtForEnt.New().Init(block);
             throw new Exception("Can't find BlockEditor - the base block type in unknown");
         }
 

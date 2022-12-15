@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = _jsonSerializerGenerator.New.Init(entityApi.AppRead.AppState, Log);
+            var jsonSerializer = _jsonSerializerGenerator.New().Init(entityApi.AppRead.AppState, Log);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     throw HttpException.PermissionDenied(error);
 
             // load content-types
-            var serializerForTypes = _jsonSerializerGenerator.New.Init(entityApi.AppRead.AppState, Log);
+            var serializerForTypes = _jsonSerializerGenerator.New().Init(entityApi.AppRead.AppState, Log);
             serializerForTypes.ValueConvertHyperlinks = true;
             var types = UsedTypes(list, typeRead);
             var jsonTypes = types.Select(t => serializerForTypes.ToPackage(t, true)).ToList();

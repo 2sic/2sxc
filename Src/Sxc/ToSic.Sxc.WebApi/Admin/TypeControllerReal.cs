@@ -118,7 +118,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 var (fileName, stream) = uploadInfo.GetStream(i);
                 streams.Add(new FileUploadDto { Name = fileName, Stream = stream });
             }
-            var result = _importContent.New.Init(_userLazy.Value, Log)
+            var result = _importContent.New().Init(_userLazy.Value, Log)
                 .ImportContentType(zoneId, appId, streams, _context.Value.Site.DefaultCultureCode);
 
             return wrapLog.ReturnAsOk(result);
