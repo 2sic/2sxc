@@ -16,7 +16,6 @@ using ToSic.Eav.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -44,31 +43,32 @@ namespace ToSic.Sxc.Search
     public class SearchController : HasLog
     {
         public SearchController(
-            IServiceProvider serviceProvider,
             AppsCacheSwitch appsCache,
             Generator<CodeCompiler> codeCompiler,
             Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
-            Generator<ISite> site,
+            Generator<ISite> siteGenerator,
             LazyInitLog<IModuleAndBlockBuilder> moduleAndBlockBuilder,
             LazyInitLog<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
-            EngineFactory engineFactory
+            EngineFactory engineFactory,
+            Lazy<IAppLoaderTools> loaderTools
             ) : base("DNN.Search")
         {
-            _serviceProvider = serviceProvider;
             _appsCache = appsCache;
             _codeCompiler = codeCompiler;
             _dnnDynamicCodeRoot = dnnDynamicCodeRoot;
-            _site = site;
+            _siteGenerator = siteGenerator;
             _engineFactory = engineFactory;
+            _loaderTools = loaderTools;
             _dnnLookUpEngineResolver = dnnLookUpEngineResolver.SetLog(Log);
             _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
         }
-        private readonly IServiceProvider _serviceProvider;
+
         private readonly AppsCacheSwitch _appsCache;
         private readonly Generator<CodeCompiler> _codeCompiler;
         private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
-        private readonly Generator<ISite> _site;
+        private readonly Generator<ISite> _siteGenerator;
         private readonly EngineFactory _engineFactory;
+        private readonly Lazy<IAppLoaderTools> _loaderTools;
         private readonly LazyInitLog<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
         private readonly LazyInitLog<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Search
             if (DnnModule == null) return wrapLog.ReturnAndLog("no module");
             
             // This changes site in whole scope
-            DnnSite = ((DnnSite)_site.New()).TrySwap(DnnModule, Log);
+            DnnSite = ((DnnSite)_siteGenerator.New()).TrySwap(DnnModule, Log);
 
             // New Context because Portal-Settings.Current is null
             var appId = module.BlockIdentifier.AppId;
@@ -94,7 +94,8 @@ namespace ToSic.Sxc.Search
 
             // Ensure cache builds up with correct primary language
             // In case it's not loaded yet
-            _appsCache.Value.Load(_serviceProvider, module.BlockIdentifier, DnnSite.DefaultCultureCode);
+            var appLoaderTool = _loaderTools.Value;
+            _appsCache.Value.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode, appLoaderTool);
 
             Block = _moduleAndBlockBuilder.Value.GetBlock(DnnModule, null);
 
