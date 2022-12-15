@@ -1,0 +1,103 @@
+{
+  "_": {
+    "V": 1
+  },
+  "ContentType": {
+    "Id": "6d5bebc7-1caf-430c-9628-a7c30b77f393",
+    "Name": "TstData",
+    "Scope": "Default",
+    "Description": "",
+    "Attributes": [
+      {
+        "Name": "SomeText",
+        "Type": "String",
+        "InputType": "string-default",
+        "IsTitle": true,
+        "Metadata": [
+          {
+            "Id": 203992,
+            "Version": 1,
+            "Guid": "a78c4c6e-c543-454c-9ebc-b86a84491ea9",
+            "Type": {
+              "Name": "@All",
+              "Id": "@All"
+            },
+            "Attributes": {
+              "String": {
+                "InputType": {
+                  "*": "string-default"
+                },
+                "Name": {
+                  "*": "SomeText"
+                }
+              },
+              "Entity": {
+                "Errors": {
+                  "*": []
+                },
+                "Formulas": {
+                  "*": []
+                },
+                "Warnings": {
+                  "*": []
+                }
+              },
+              "Boolean": {
+                "VisibleInEditUI": {
+                  "*": true
+                }
+              }
+            },
+            "Owner": "dnn:userid=1"
+          }
+        ]
+      },
+      {
+        "Name": "SomeHtml",
+        "Type": "String",
+        "InputType": "string-wysiwyg",
+        "IsTitle": false,
+        "Metadata": [
+          {
+            "Id": 203993,
+            "Version": 1,
+            "Guid": "508becc7-5f90-4ae5-bbdd-07a8234d1250",
+            "Type": {
+              "Name": "@All",
+              "Id": "@All"
+            },
+            "Attributes": {
+              "String": {
+                "InputType": {
+                  "*": "string-wysiwyg"
+                },
+                "Name": {
+                  "*": "SomeHtml"
+                }
+              },
+              "Entity": {
+                "Errors": {
+                  "*": []
+                },
+                "Formulas": {
+                  "*": []
+                },
+                "Warnings": {
+                  "*": []
+                }
+              },
+              "Boolean": {
+                "VisibleInEditUI": {
+                  "*": true
+                }
+              }
+            },
+            "Owner": "dnn:userid=1"
+          }
+        ]
+      }
+    ],
+    "Metadata": []
+  },
+  "Entities": []
+}

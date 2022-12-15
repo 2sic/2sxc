@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks.Output
@@ -10,14 +11,14 @@ namespace ToSic.Sxc.Blocks.Output
         protected string ExtractStyles(string renderedTemplate)
         {
             var wrapLog = Log.Fn<string>();
-            var styleMatches = StyleDetection.Matches(renderedTemplate);
+            var styleMatches = RegexUtil.StyleDetection.Matches(renderedTemplate);
             var styleMatchesToRemove = new List<Match>();
 
             Log.A($"Found {styleMatches.Count} external styles");
             foreach (Match match in styleMatches)
             {
                 // Also get the ID (new in v12)
-                var idMatches = IdDetection.Match(match.Value);
+                var idMatches = RegexUtil.IdDetection.Match(match.Value);
                 var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
 
                 // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Blocks.Output
                 // ...and another for the priority etc.
 
                 // skip if not stylesheet
-                if (!StyleRelDetect.IsMatch(match.Value)) continue;
+                if (!RegexUtil.StyleRelDetect.IsMatch(match.Value)) continue;
 
                 // skip if not matched and setting only wants matches
                 var (skip, posInPage, priority) = CheckOptimizationSettings(match, "head", CssDefaultPriority);

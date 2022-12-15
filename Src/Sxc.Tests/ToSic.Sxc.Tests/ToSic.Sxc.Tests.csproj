@@ -108,6 +108,8 @@
     <Compile Include="Data\DynamicJacket\DynamicJacketObjectTests.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacketMixTests.cs" />
     <Compile Include="Data\DynamicJacket\DynamicJacketTestBase.cs" />
+    <Compile Include="DynamicData\DynamicFieldTest.cs" />
+    <Compile Include="DynamicData\DynamicFieldTestBase.cs" />
     <Compile Include="DynamicData\DynamicReadObjectTest.cs" />
     <Compile Include="DynamicData\SimpleObject.cs" />
     <Compile Include="DynamicData\TestAccessors.cs" />

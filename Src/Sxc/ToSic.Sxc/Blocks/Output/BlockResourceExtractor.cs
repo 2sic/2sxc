@@ -6,6 +6,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageService;
@@ -80,7 +81,7 @@ namespace ToSic.Sxc.Blocks.Output
         {
             if (string.IsNullOrWhiteSpace(htmlTag)) return (null, null);
 
-            var attributesMatch = AttributesDetection.Matches(htmlTag);
+            var attributesMatch = RegexUtil.AttributesDetection.Matches(htmlTag);
 
             if (attributesMatch.Count == 0) return (null, null);
 
