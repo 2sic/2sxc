@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Startup
 {
     public class SxcStartUpRegistrations: HasLog, IStartUpRegistrations
     {
-        public string NameId => Log.Identifier;
+        public string NameId => Log.NameId;
 
         public SxcStartUpRegistrations(FeaturesCatalog featuresCatalog): base($"{Constants.SxcLogName}.SUpReg")
         {

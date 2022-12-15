@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 {
     public class DnnStartUpRegistrations: HasLog, IStartUpRegistrations
     {
-        public string NameId => Log.Identifier;
+        public string NameId => Log.NameId;
 
         public DnnStartUpRegistrations(FeaturesCatalog featuresCatalog): base($"{DnnConstants.LogName}.SUpReg")
         {
