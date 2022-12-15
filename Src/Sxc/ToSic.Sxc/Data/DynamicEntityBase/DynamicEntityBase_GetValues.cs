@@ -30,17 +30,13 @@ namespace ToSic.Sxc.Data
 
             // use the standard dimensions or overload
             var languages = language == null ? _Dependencies.Dimensions : new[] { language };
-            var isPath = field.Contains(".");
-            l.A($"{nameof(useCache)}: {useCache}, {nameof(isPath)}:{isPath} {nameof(languages)}:{languages}");
-
+            l.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
 
             // Get the field or the path if it has one
             // Classic field case
             var specs = new PropReqSpecs(field, languages, logOrNull);
             var path = new PropertyLookupPath().Add("DynEntStart", field);
-            var resultSet = !isPath
-                ? FindPropertyInternal(specs, path)
-                : PropertyStack.TraversePath(specs, path, LookupRoot);
+            var resultSet = FindPropertyInternal(specs, path);
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (resultSet == null) return l.ReturnNull("result null");
@@ -57,7 +53,7 @@ namespace ToSic.Sxc.Data
             }
             return l.ReturnAsOk(result);
         }
-        
+
 
         protected object ValueAutoConverted(PropReqResult original, bool lookup, string field, ILog logOrNull)
         {

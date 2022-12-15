@@ -62,15 +62,13 @@ namespace ToSic.Sxc.Data
             if (!specs.Field.HasValue())
                 return l.Return(null, "no key");
 
-            var hasDot = specs.Field.Contains(".");
-            var r = hasDot
+            var hasPath = specs.Field.Contains(".");
+            var r = hasPath
                 ? UnwrappedContents.InternalGetPath(specs, path)
                 : UnwrappedContents.FindPropertyInternal(specs, path);
 
-            return l.Return(r, $"{(r == null ? "null" : "ok")} using {(hasDot ? "Path" : "Property")}");
+            return l.Return(r, $"{(r == null ? "null" : "ok")} using {(hasPath ? "Path" : "Property")}");
         }
-
-        protected internal override IPropertyLookup LookupRoot => throw new NotSupportedException();
 
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>

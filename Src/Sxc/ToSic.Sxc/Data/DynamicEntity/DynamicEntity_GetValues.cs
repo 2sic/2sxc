@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Documentation;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
@@ -32,19 +33,24 @@ namespace ToSic.Sxc.Data
         public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
             specs = specs.SubLog("Sxc.DynEnt", Debug);
-            var safeWrap = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
+            var l = specs.LogOrNull.Fn<PropReqResult>(specs.Dump(), "DynEntity");
             // check Entity is null (in cases where null-objects are asked for properties)
-            if (Entity == null) return safeWrap.ReturnNull("no entity");
+            if (Entity == null) return l.ReturnNull("no entity");
+            if (!specs.Field.HasValue()) return l.ReturnNull("no path");
+
             path = path.KeepOrNew().Add("DynEnt", specs.Field);
-            var propRequest = Entity.FindPropertyInternal(specs, path);
+            var isPath = specs.Field.Contains(".");
+            var propRequest = !isPath
+                ? Entity.FindPropertyInternal(specs, path)
+                : PropertyStack.TraversePath(specs, path, Entity);
+            // var propRequest = Entity.FindPropertyInternal(specs, path);
 
             // new 12.05, very experimental
             //ApplyDynamicDataFeaturesToResult(field, propRequest);
 
-            return safeWrap.Return(propRequest);
+            return l.Return(propRequest, $"{nameof(isPath)}: {isPath}");
         }
 
-        protected internal override IPropertyLookup LookupRoot => Entity;
 
         // V12.10? This is just PoC to show that we could auto-dynamic data. Will not be available yet
         private void ApplyDynamicDataFeaturesToResult(string field, PropReqResult propRequest)
