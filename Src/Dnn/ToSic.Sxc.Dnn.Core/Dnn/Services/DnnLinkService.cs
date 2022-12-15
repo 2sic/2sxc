@@ -15,12 +15,11 @@ namespace ToSic.Sxc.Dnn.Services
     [PrivateApi("This implementation shouldn't be visible")]
     public class DnnLinkService : LinkServiceBase
     {
-        public DnnLinkService(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy, Lazy<ILinkPaths> linkPathsLazy) : base(imgLinker, linkPathsLazy)
-        {
-            InitServicesLogs(Log,
+        public DnnLinkService(ImgResizeLinker imgLinker, Lazy<DnnValueConverter> dnnValueConverterLazy,
+            Lazy<ILinkPaths> linkPathsLazy) : base(imgLinker, linkPathsLazy)
+            => ConnectServices(
                 _dnnValueConverterLazy = dnnValueConverterLazy
             );
-        }
         private readonly Lazy<DnnValueConverter> _dnnValueConverterLazy;
 
         [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = CodeRoot.GetService<IDnnContext>());

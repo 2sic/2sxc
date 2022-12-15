@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
@@ -12,19 +11,12 @@ namespace ToSic.Sxc.Images
         #region Constructor and Inits
 
         public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(Constants.SxcLogName + ".ImgSvc")
-            => InitServicesLogs(Log,
-                Features = features,
+            => ConnectServices(Features = features,
                 ImgLinker = imgLinker
             );
         internal ImgResizeLinker ImgLinker { get; }
         internal IFeaturesService Features { get; }
 
-        //public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        //{
-        //    CodeRoot = codeRoot;
-        //    (Log as Log)?.LinkTo(CodeRoot.Log);
-        //}
-        //protected IDynamicCodeRoot CodeRoot;
         internal IEditService EditOrNull => CodeRoot?.Edit;
 
         internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => CodeRoot?.GetService<IToolbarService>());

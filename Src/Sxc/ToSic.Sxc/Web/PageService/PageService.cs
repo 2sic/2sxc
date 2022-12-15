@@ -24,8 +24,7 @@ namespace ToSic.Sxc.Web.PageService
             LazyInitLog<ITurnOnService> turnOn,
             LazyInitLog<IModuleService> moduleService
         ) : base("2sxc.PgeSrv")
-            => InitServicesLogs(Log,
-                _cspServiceLazy = cspServiceLazy,
+            => ConnectServices(_cspServiceLazy = cspServiceLazy,
                 _htmlTagsLazy = htmlTagsLazy,
                 _moduleService = moduleService,
                 _turnOn = turnOn,

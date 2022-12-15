@@ -1,10 +1,8 @@
 ﻿using System;
-using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
@@ -16,24 +14,16 @@ namespace ToSic.Sxc.Services
     [PrivateApi]
     public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     {
-        protected LinkServiceBase(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy) : base($"{Constants.SxcLogName}.LnkHlp")
-        {
-            InitServicesLogs(Log,
+        protected LinkServiceBase(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy) : base(
+            $"{Constants.SxcLogName}.LnkHlp")
+            => ConnectServices(
                 _linkPathsLazy = linkPathsLazy,
                 ImgLinker = imgLinker
             );
-            //ImgLinker.Init(Log);
-        }
         private ImgResizeLinker ImgLinker { get; }
         private readonly Lazy<ILinkPaths> _linkPathsLazy;
         public ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
-        //public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        //{
-        //    CodeRoot = codeRoot;
-        //    (Log as Log)?.LinkTo(codeRoot.Log);
-        //}
-        //[PrivateApi] protected IDynamicCodeRoot CodeRoot;
         [PrivateApi] protected IApp App => CodeRoot.App;
 
 

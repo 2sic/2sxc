@@ -14,19 +14,8 @@ namespace ToSic.Sxc.Services
         #region Constructor & Init
 
         public ToolbarService(GeneratorLog<IToolbarBuilder> toolbarGenerator) : base($"{Constants.SxcLogName}.TlbSvc")
-            => InitServicesLogs(Log,
-
-                _toolbarGenerator = toolbarGenerator
-            );
+            => ConnectServices(_toolbarGenerator = toolbarGenerator);
         private readonly GeneratorLog<IToolbarBuilder> _toolbarGenerator;
-
-        //public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        //{
-        //    CodeRoot = codeRoot;
-        //    this.Init(codeRoot.Log);
-        //}
-        //protected IDynamicCodeRoot CodeRoot;
-
 
         #endregion
 

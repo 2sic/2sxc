@@ -20,8 +20,7 @@ namespace ToSic.Sxc.Blocks.Output
             ILinkPaths linkPaths,
             IEnvironmentLogger errorLogger,
             GeneratorLog<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
-            => InitServicesLogs(Log,
-                _linkPaths = linkPaths,
+            => ConnectServices(_linkPaths = linkPaths,
                 _errorLogger = errorLogger,
                 _jsContextAllGen = jsContextAllGen
             );

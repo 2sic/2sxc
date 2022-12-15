@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Blocks
             GeneratorLog<BlockFromEntity> blkFrmEntGen,
             Lazy<History> historyLazy
         ) : base("Sxc.RndSvc")
-            => InitServicesLogs(Log,
-                _historyLazy = historyLazy,
+            => ConnectServices(_historyLazy = historyLazy,
                 _blkFrmEntGen = blkFrmEntGen,
                 _builder = builder,
                 _editGenerator = editGenerator
