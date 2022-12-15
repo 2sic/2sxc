@@ -29,12 +29,17 @@ END
 GO
 
 -- 3. drop NewData column from 'ToSIC_EAV_DataTimeline'
-ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN IF EXISTS NewData;
+ALTER TABLE [dbo].[ToSIC_EAV_DataTimeline] DROP COLUMN IF EXISTS [NewData];
 GO
 
 -- 4. add CJson column to 'ToSIC_EAV_DataTimeline'
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'CJson' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
 BEGIN
-    ALTER TABLE ToSIC_EAV_DataTimeline ADD CJson varbinary(max) NULL;
+    ALTER TABLE [dbo].[ToSIC_EAV_DataTimeline] ADD [CJson] varbinary(max) NULL;
 END
+GO
+
+-- 5. remove SortOrder column from 'ToSIC_EAV_AttributeGroups' and 'ToSIC_EAV_Entities'
+ALTER TABLE [dbo].[ToSIC_EAV_AttributeGroups] DROP COLUMN IF EXISTS [SortOrder];
+ALTER TABLE [dbo].[ToSIC_EAV_Entities] DROP COLUMN IF EXISTS [SortOrder];
 GO
