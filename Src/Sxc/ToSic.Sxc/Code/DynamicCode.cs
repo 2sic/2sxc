@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Code
         public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _DynCodeRoot = codeRoot;
-            (base.Log as Log)?.LinkTo(codeRoot?.Log);
+            this.Init(codeRoot?.Log);
             _codeLog.IsValueCreated = false; // reset in case it was already used before
             base.Log.Fn().Done();
         }

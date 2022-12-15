@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         public IUiContextBuilder InitApp(AppState appState, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             AppState = appState;
             App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null, Log) : null;
             return this;

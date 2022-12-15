@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Web.PageService
             {
                 var added = PageServiceShared.Activate(keys);
                 // also add to this specific module, as we need a few module-level features to activate in case...
-                CodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
+                _DynCodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
             }
             
             return wrapLog.Return("");
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Web.PageService
             return wrapLog.Return(keys);
         }
 
-        private DynamicEntity WebResources => _webResources.Get(() => (CodeRoot?.Settings as DynamicStack)?.Get(WebResourcesNode) as DynamicEntity);
+        private DynamicEntity WebResources => _webResources.Get(() => (_DynCodeRoot?.Settings as DynamicStack)?.Get(WebResourcesNode) as DynamicEntity);
         private readonly GetOnce<DynamicEntity> _webResources = new GetOnce<DynamicEntity>();
         
     }

@@ -5,7 +5,6 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Security.Permissions;
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Adam
 
         internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             var callLog = Log.Fn<AdamSecurityChecksBase>();
             AdamContext = adamContext;
 

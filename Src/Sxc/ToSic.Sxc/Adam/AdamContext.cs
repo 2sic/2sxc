@@ -6,9 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Security;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam
@@ -40,8 +38,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public virtual AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
-            //var appId = context.AppState.AppId;
+            this.Init(parentLog);
             var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;
 

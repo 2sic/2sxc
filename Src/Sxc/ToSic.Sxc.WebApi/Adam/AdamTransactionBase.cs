@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
+using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
@@ -11,24 +12,21 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: HasLog, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
+    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: ServiceWithLog, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
     {
-        //public const int UseAppIdFromContext = -12456;
-
         #region Constructor / DI
 
-        protected AdamTransactionBase(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, string logName) : base(logName)
-        {
-            _adamState = adamState;
-            _ctxResolver = ctxResolver.Init(Log);
-        }
+        protected AdamTransactionBase(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, string logName) : base(logName) =>
+            ConnectServices(
+                _adamState = adamState,
+                _ctxResolver = ctxResolver
+            );
         private readonly Lazy<AdamContext<TFolderId, TFileId>> _adamState;
         private readonly IContextResolver _ctxResolver;
 
-        public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog) 
-            
+        public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             var context = appId > 0 ? _ctxResolver.BlockOrApp(appId) : _ctxResolver.AppNameRouteBlock(null);
             var logCall = Log.Fn<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, Log);

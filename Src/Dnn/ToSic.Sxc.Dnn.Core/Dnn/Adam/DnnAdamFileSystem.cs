@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamManager, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamManager;
             return wrapLog.ReturnAsOk(this);

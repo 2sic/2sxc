@@ -17,9 +17,9 @@ namespace ToSic.Sxc.Images
         internal ImgResizeLinker ImgLinker { get; }
         internal IFeaturesService Features { get; }
 
-        internal IEditService EditOrNull => CodeRoot?.Edit;
+        internal IEditService EditOrNull => _DynCodeRoot?.Edit;
 
-        internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => CodeRoot?.GetService<IToolbarService>());
+        internal IToolbarService ToolbarOrNull => _toolbarSvc.Get(() => _DynCodeRoot?.GetService<IToolbarService>());
         private readonly GetOnce<IToolbarService> _toolbarSvc = new GetOnce<IToolbarService>();
 
         #endregion
@@ -45,8 +45,8 @@ namespace ToSic.Sxc.Images
 
         private dynamic GetCodeRootSettingsByName(string strName)
         {
-            var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {CodeRoot != null}");
-            var result = (CodeRoot?.Settings?.Images as ICanGetByName)?.Get(strName);
+            var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {_DynCodeRoot != null}");
+            var result = (_DynCodeRoot?.Settings?.Images as ICanGetByName)?.Get(strName);
             return wrapLog.Return(result, $"found: {result != null}");
         }
 

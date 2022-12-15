@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Adam
 
         public virtual AdamManager Init(IContextOfApp ctx, int compatibility, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             AppContext = ctx;
 
             var callLog = Log.Fn<AdamManager>();

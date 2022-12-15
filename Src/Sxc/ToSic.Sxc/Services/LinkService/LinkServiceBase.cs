@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Services
         private readonly Lazy<ILinkPaths> _linkPathsLazy;
         public ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
-        [PrivateApi] protected IApp App => CodeRoot.App;
+        [PrivateApi] protected IApp App => _DynCodeRoot.App;
 
 
         /// <inheritdoc />

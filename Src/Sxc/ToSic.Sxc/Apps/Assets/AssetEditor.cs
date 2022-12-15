@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Apps.Assets
 
         private void InitShared(AppState app, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             _appState = app;
             _appPaths.Init(_site, _appState, Log);
 

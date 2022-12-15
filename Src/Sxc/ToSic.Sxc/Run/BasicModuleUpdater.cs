@@ -1,9 +1,7 @@
 ﻿using System;
 using ToSic.Eav;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -18,13 +16,6 @@ namespace ToSic.Sxc.Run
         /// </summary>
         // ReSharper disable once UnusedMember.Global
         public BasicModuleUpdater(WarnUseOfUnknown<BasicModuleUpdater> warn) : base($"{LogNames.NotImplemented}.MapA2I") { }
-
-
-        public IPlatformModuleUpdater Init(ILog parent)
-        {
-            (Log as Log)?.LinkTo(parent);
-            return this;
-        }
 
 
         public void SetAppId(IModule instance, int? appId)

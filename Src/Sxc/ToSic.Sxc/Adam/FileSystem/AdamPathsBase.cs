@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Adam
 
         public IAdamPaths Init(AdamManager adamManager, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             AdamManager = adamManager;
             return this;
         }

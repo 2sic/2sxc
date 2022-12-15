@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Code
     /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls
     /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
     /// </summary>
-    public partial class DynamicCodeService: HasLog, IDynamicCodeService
+    public partial class DynamicCodeService: HasLog, IDynamicCodeService, ILogWasConnected
     {
         #region Constructor and Init
 
@@ -68,12 +68,7 @@ namespace ToSic.Sxc.Code
         protected readonly GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator;
         protected readonly LazyInitLog<IModuleAndBlockBuilder> ModuleAndBlockBuilder;
 
-        public IDynamicCodeService Init(ILog parentLog)
-        {
-            (Log as Log)?.LinkTo(parentLog);
-            _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
-            return this;
-        }
+        public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
         private bool _logInitDone;
 
         protected void MakeSureLogIsInHistory()

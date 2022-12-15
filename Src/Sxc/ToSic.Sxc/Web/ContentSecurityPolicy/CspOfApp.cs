@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// <param name="codeRoot"></param>
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            (Log as Log)?.LinkTo(codeRoot.Log);
+            this.Init(codeRoot.Log);
             var wrapLog = Log.Fn();
             _codeRoot = codeRoot;
 

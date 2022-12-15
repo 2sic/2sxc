@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)
         {
-            (Log as Log)?.LinkTo(parentLog ?? block?.Log);
+            this.Init(parentLog ?? block?.Log);
             var cLog = Log.Fn<IDynamicCodeRoot>();
 
             CompatibilityLevel = compatibility;

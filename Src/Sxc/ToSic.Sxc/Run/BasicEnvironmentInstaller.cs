@@ -14,13 +14,6 @@ namespace ToSic.Sxc.Run
         {
         }
 
-        public IEnvironmentInstaller Init(ILog parent)
-        {
-            (Log as Log)?.LinkTo(parent);
-            return this;
-        }
-
-
         public string UpgradeMessages()
         {
             // for now, always assume installation worked

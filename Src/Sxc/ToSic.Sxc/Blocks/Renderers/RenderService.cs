@@ -133,8 +133,8 @@ namespace ToSic.Sxc.Blocks
         private IEditService GetEdit(DynamicEntity parent)
         {
             var newEdit = _editGenerator.New();
-            newEdit.ConnectToRoot(CodeRoot);
-            return newEdit.SetBlock(CodeRoot, parent._Dependencies.BlockOrNull);
+            newEdit.ConnectToRoot(_DynCodeRoot);
+            return newEdit.SetBlock(_DynCodeRoot, parent._Dependencies.BlockOrNull);
         }
     }
 }

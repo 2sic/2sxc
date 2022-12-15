@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public AppContent Init(string appName, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
 
             // if app-path specified, use that app, otherwise use from context
             Context = _ctxResolver.AppNameRouteBlock(appName);

@@ -5,9 +5,9 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.DI;
 using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Services;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Adam
@@ -17,25 +17,25 @@ namespace ToSic.Sxc.WebApi.Adam
     /// See docs of official interface <see cref="IDynamicWebApi"/>
     /// </summary>
     [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
-    public class AdamCode: HasLog
+    public class AdamCode: ServiceForDynamicCode
     {
 
-        // ReSharper disable once InconsistentNaming
-        public IDynamicCodeRoot _DynCodeRoot { get; private set; }
+        //// ReSharper disable once InconsistentNaming
+        //public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
-        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, Lazy<IFeaturesInternal> featuresLazy) : base("AdamCode")
-        {
-            _adamUploadGenerator = adamUploadGenerator;
-            _featuresLazy = featuresLazy;
-        }
+        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, Lazy<IFeaturesInternal> featuresLazy) : base("AdamCode") =>
+            ConnectServices(
+                _adamUploadGenerator = adamUploadGenerator,
+                _featuresLazy = featuresLazy
+            );
         private readonly Generator<AdamTransUpload<int, int>> _adamUploadGenerator;
         private readonly Lazy<IFeaturesInternal> _featuresLazy;
 
         public AdamCode Init(IDynamicCodeRoot dynCodeRoot, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
-            _DynCodeRoot = dynCodeRoot;
-
+            ConnectToRoot(dynCodeRoot, parentLog);
+            //this.Init(parentLog);
+            //_DynCodeRoot = dynCodeRoot;
             return this;
         }
 

@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Save
 
         public ContentGroupList Init(IAppIdentity appIdentity, ILog parentLog, bool withDraftsTemp)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             _appIdentity = appIdentity;
             _withDrafts = withDraftsTemp;
             return this;

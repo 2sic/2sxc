@@ -5,9 +5,7 @@ using System.Data.SqlClient;
 using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
@@ -53,12 +51,6 @@ namespace ToSic.Sxc.Dnn.Install
         private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
         private readonly Lazy<RemoteRouterLink> _remoteRouterLazy;
         private readonly Lazy<IGlobalConfiguration> _globalConfiguration;
-
-        public IEnvironmentInstaller Init(ILog parent)
-        {
-            (Log as Log)?.LinkTo(parent);
-            return this;
-        }
 
         internal string UpgradeModule(string version)
         {

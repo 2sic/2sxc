@@ -2,31 +2,24 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Services
 {
-    public abstract class UserInformationServiceBase : HasLog, IUserInformationService
+    public abstract class UserInformationServiceBase : ServiceForDynamicCode, IUserInformationService
     {
-        public static readonly UserInformationDto AnonymousUser = new UserInformationDto() { Id = -1, Name = Constants.Anonymous };
+        public static readonly UserInformationDto AnonymousUser = new UserInformationDto { Id = -1, Name = Constants.Anonymous };
 
 
-        public static readonly UserInformationDto UnknownUser = new UserInformationDto() { Id = -2, Name = Unknown };
+        public static readonly UserInformationDto UnknownUser = new UserInformationDto { Id = -2, Name = Unknown };
         internal const string Unknown = "unknown";
 
         public const StringComparison StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
 
-        protected UserInformationServiceBase(LazyInitLog<IContextOfSite> context) : base($"{Constants.SxcLogName}.UsrInfoSrv")
-        {
-            _context = context.SetLog(Log);
-        }
+        protected UserInformationServiceBase(LazyInitLog<IContextOfSite> context) : base($"{Constants.SxcLogName}.UsrInfoSrv") =>
+            ConnectServices(
+                _context = context
+            );
         private readonly LazyInitLog<IContextOfSite> _context;
-
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            (Log as Log)?.LinkTo(codeRoot.Log);
-        }
 
         public abstract string PlatformIdentityTokenPrefix();
 

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Services
             );
         private readonly Lazy<DnnValueConverter> _dnnValueConverterLazy;
 
-        [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = CodeRoot.GetService<IDnnContext>());
+        [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = _DynCodeRoot.GetService<IDnnContext>());
         private IDnnContext _dnn;
         [PrivateApi] private DnnValueConverter DnnValueConverter => _dnnValueConverter ?? (_dnnValueConverter = _dnnValueConverterLazy.Value);
         private DnnValueConverter _dnnValueConverter;

@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IAppStates appStates,
             SystemManager systemManager) : base("Bck.Export")
         {
-            _zoneMapper = zoneMapper;
+            _zoneMapper = zoneMapper.Init(Log);
             _envLogger = envLogger;
             _importerLazy = importerLazy;
             _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
@@ -58,8 +58,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         public ImportContent Init(IUser user, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
-            _zoneMapper.Init(Log);
+            this.Init(parentLog);
             _user = user;
             return this;
         }

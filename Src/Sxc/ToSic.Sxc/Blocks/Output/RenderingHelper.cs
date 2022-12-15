@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
-            this.LinkLog(parentLog);
+            this.Init(parentLog);
             Block = block;
             Context = block.Context;
             AppRootPath = _linkPaths.AsSeenFromTheDomainRoot("~/");

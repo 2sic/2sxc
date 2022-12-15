@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Web
         
         public DnnClientResources Init(Page page, bool? forcePre1025Behavior, IBlockBuilder blockBuilder, ILog parentLog)
         {
-            (Log as Log)?.LinkTo(parentLog);
+            this.Init(parentLog);
             _forcePre1025Behavior = forcePre1025Behavior;
             Page = page;
             BlockBuilder = blockBuilder as BlockBuilder;

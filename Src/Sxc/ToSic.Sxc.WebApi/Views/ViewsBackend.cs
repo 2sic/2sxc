@@ -36,19 +36,13 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly ISite _site;
         private readonly IUser _user;
 
-        public ViewsBackend Init(ILog parentLog)
-        {
-            (Log as Log)?.LinkTo(parentLog);
-            return this;
-        }
-
 
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.A($"get all a#{appId}");
             var cms = _cmsManagerLazy.Value.Init(_appStates.IdentityOfApp(appId), true, Log).Read;
 
-            var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default /*Settings.AttributeSetScope*/).ToList();
+            var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default).ToList();
             var viewList = cms.Views.GetAll().ToList();
             Log.A($"attribute list count:{attributeSetList.Count}, template count:{viewList.Count}");
             var ser = (_convertToEavLight.Value as ConvertToEavLight);

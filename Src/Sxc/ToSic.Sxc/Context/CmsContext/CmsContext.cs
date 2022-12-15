@@ -54,16 +54,16 @@ namespace ToSic.Sxc.Context
         //public void ConnectToRoot(IDynamicCodeRoot codeRoot) => CodeRoot = codeRoot;
         //protected IDynamicCodeRoot CodeRoot;
 
-        internal DynamicEntityDependencies DEDeps => (CodeRoot as DynamicCodeRoot)?.DynamicEntityDependencies;
+        internal DynamicEntityDependencies DEDeps => (_DynCodeRoot as DynamicCodeRoot)?.DynamicEntityDependencies;
 
         private AppState SiteAppState => _siteAppState.Get(() => _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log));
         private readonly GetOnce<AppState> _siteAppState = new GetOnce<AppState>();
 
 
-        private IBlock RealBlockOrNull => _realBlock.Get(() => CodeRoot?.Block);
+        private IBlock RealBlockOrNull => _realBlock.Get(() => _DynCodeRoot?.Block);
         private readonly GetOnce<IBlock> _realBlock = new GetOnce<IBlock>();
 
-        internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => CodeRoot?.Block?.Context);
+        internal IContextOfBlock CtxBlockOrNull => _ctxBlock.Get(() => _DynCodeRoot?.Block?.Context);
         private readonly GetOnce<IContextOfBlock> _ctxBlock = new GetOnce<IContextOfBlock>();
 
         #endregion

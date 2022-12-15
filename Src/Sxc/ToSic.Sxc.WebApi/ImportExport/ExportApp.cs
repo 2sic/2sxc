@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IFeaturesInternal features
             ) : base("Bck.Export")
         {
-            _zoneMapper = zoneMapper;
+            _zoneMapper = zoneMapper.Init(Log);
             _zipExport = zipExport;
             _cmsRuntime = cmsRuntime;
             _site = site;
@@ -55,12 +55,6 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IFeaturesInternal _features;
         private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
 
-        public ExportApp Init(ILog parentLog)
-        {
-            (Log as Log)?.LinkTo(parentLog);
-            _zoneMapper.Init(Log);
-            return this;
-        }
 
         #endregion
 
