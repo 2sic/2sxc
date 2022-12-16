@@ -1,12 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Services.CmsService;
 using ToSic.Sxc.Utils;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ToSic.Sxc.Tests.DynamicData
+namespace ToSic.Sxc.Tests.ServicesTests.CmsService
 {
     [TestClass]
-    public class DynamicFieldTest : DynamicFieldTestBase
+    public class CmsServiceTest : CmsServiceTestBase
     {
         [TestMethod]
         [DataRow(null, "")]
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.Tests.DynamicData
         [DataRow("wysiwyg-width1of5", "1/5")]
         [DataRow("wysiwyg-width of5", null)]
         [DataRow("class1   WYSIWYG-WIDTH2OF3 class3 wysiwyg-width1of5", "2/3")]
-        public void GetFactor(string classAttribute, string expectedFactor) => AreEqual(expectedFactor, CmsService.GetFactor(classAttribute));
+        public void GetFactor(string classAttribute, string expectedFactor) => AreEqual(expectedFactor, Services.CmsService.CmsService.GetFactor(classAttribute));
 
         [TestMethod]
         [DataRow("<p>some html</p>", 0)]

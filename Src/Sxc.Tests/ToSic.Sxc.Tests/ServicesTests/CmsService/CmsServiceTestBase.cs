@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
@@ -10,18 +10,17 @@ using ToSic.Eav.Run;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.CmsService;
 using ToSic.Testing.Shared.Mocks;
 
-namespace ToSic.Sxc.Tests.DynamicData
+namespace ToSic.Sxc.Tests.ServicesTests.CmsService
 {
-    public class DynamicFieldTestBase : TestBaseSxcDb
+    public class CmsServiceTestBase : TestBaseSxcDb
     {
         public const int AppId = -1;
         public const string SomeTextField = "SomeText";
         public const string SomeHtmlField = "SomeHtml";
 
-        public DynamicFieldTestBase()
+        public CmsServiceTestBase()
         {
             var eavSystemLoader = Build<EavSystemLoader>();
             eavSystemLoader.StartUp();
@@ -30,6 +29,7 @@ namespace ToSic.Sxc.Tests.DynamicData
             var appStates = Build<IAppStates>();
             var app = appStates.GetPresetOrNull();
             TstDataContentType = app.GetContentType("TstData");
+            if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
             DynamicEntityDependencies = Build<DynamicEntityDependencies>();
         }
         public readonly DynamicEntityDependencies DynamicEntityDependencies;
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Tests.DynamicData
             var dynamicField = dynamicEntity.Field(SomeHtmlField);
             var imgService = Build<Lazy<IImageService>>();
             var valueConverter = Build<Lazy<IValueConverter>>();
-            var cmsService = new CmsService(imgService, valueConverter);
+            var cmsService = new Services.CmsService.CmsService(imgService, valueConverter);
             return cmsService.Show(dynamicField);
         }
     }
