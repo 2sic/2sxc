@@ -19,13 +19,14 @@ using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.App;
 using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ExportApp: ServiceWithLog
+    public class ExportApp: ServiceBase
     {
         #region Constructor / DI
 

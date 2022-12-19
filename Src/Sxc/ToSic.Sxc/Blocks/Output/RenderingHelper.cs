@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -12,7 +13,7 @@ using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Blocks.Output
 {
-    public class RenderingHelper: ServiceWithLog, IRenderingHelper
+    public class RenderingHelper: ServiceBase, IRenderingHelper
     {
         #region Constructors and DI
 

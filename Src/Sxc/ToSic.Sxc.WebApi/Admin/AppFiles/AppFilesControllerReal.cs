@@ -5,12 +5,13 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Assets;
 using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Admin.AppFiles
 {
-    public partial class AppFilesControllerReal: ServiceWithLog, IAppFilesController
+    public partial class AppFilesControllerReal: ServiceBase, IAppFilesController
     {
         public const string LogSuffix = "AppAss";
         #region Constructor / DI

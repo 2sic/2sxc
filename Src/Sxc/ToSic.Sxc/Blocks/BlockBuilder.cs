@@ -3,6 +3,7 @@ using ToSic.Eav.Configuration.Licenses;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Run;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Blocks
     [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
     public partial class BlockBuilder : HasLog, IBlockBuilder
     {
-        public class Dependencies: DependenciesBase<Dependencies>
+        public class Dependencies: ServiceDependencies
         {
             public Dependencies(
                 EngineFactory engineFactory,

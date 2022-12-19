@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Code
         /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
         /// </summary>
         [PrivateApi]
-        public class Dependencies: DependenciesBase<Dependencies>
+        public class Dependencies: ServiceDependencies
         {
             public Dependencies(
                 IServiceProvider serviceProvider,

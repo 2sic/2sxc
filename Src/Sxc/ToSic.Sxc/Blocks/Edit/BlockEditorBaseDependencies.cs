@@ -1,10 +1,11 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    public class BlockEditorBaseDependencies: DependenciesBase<BlockEditorBaseDependencies>
+    public class BlockEditorBaseDependencies: ServiceDependencies
     {
         public LazyInit<CmsRuntime> CmsRuntime { get; }
         public LazyInit<CmsManager> CmsManager { get; }

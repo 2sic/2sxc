@@ -5,6 +5,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helper;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
@@ -14,7 +15,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class ContentGroupControllerReal: ServiceWithLog, IContentGroupController
+    public class ContentGroupControllerReal: ServiceBase, IContentGroupController
     {
         #region Constructor / di
         public const string LogSuffix = "CntGrp";

@@ -5,6 +5,7 @@ using Oqtane.Shared;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 
         #region Dependencies
 
-        public class Dependencies : DependenciesBase<Dependencies>
+        public class Dependencies : ServiceDependencies
         {
             public LazyInitLog<OqtAssetsFileHelper> FileHelper { get; }
             public IWebHostEnvironment HostingEnvironment { get; }

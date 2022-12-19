@@ -10,6 +10,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Engines
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public abstract partial class EngineBase : ServiceWithLog, IEngine
+    public abstract partial class EngineBase : ServiceBase, IEngine
     {
         protected readonly EngineBaseDependencies Helpers;
         [PrivateApi] protected IView Template;

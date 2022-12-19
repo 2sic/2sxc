@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Services;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Code
     {
         #region Constructor and Init
 
-        public class Dependencies: DependenciesBase<Dependencies>
+        public class Dependencies: ServiceDependencies
         {
             public Dependencies(
                 IServiceProvider serviceProvider,
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Code
             public Lazy<IAppStates> AppStates { get; }
         }
 
-        public class ScopedDependencies: DependenciesBase<ScopedDependencies>
+        public class ScopedDependencies: ServiceDependencies
         {
             public Generator<App> AppGenerator { get; }
             public Generator<DynamicCodeRoot> CodeRootGenerator { get; }

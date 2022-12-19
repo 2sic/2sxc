@@ -5,6 +5,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Blocks
     {
         #region Constructor and DI
 
-        public class Dependencies: DependenciesBase<Dependencies>
+        public class Dependencies: ServiceDependencies
         {
             public Dependencies(
                 Lazy<BlockDataSourceFactory> bdsFactoryLazy,

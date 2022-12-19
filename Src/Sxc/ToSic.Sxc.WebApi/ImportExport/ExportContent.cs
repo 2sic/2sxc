@@ -10,12 +10,13 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ExportContent<THttpResponseType> : ServiceWithLog
+    public class ExportContent<THttpResponseType> : ServiceBase
     {
         #region Constructor / DI
 

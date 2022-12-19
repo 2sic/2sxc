@@ -13,6 +13,7 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.JsContext;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         #region Dependencies 
 
-        public class Dependencies: DependenciesBase<Dependencies>
+        public class Dependencies: ServiceDependencies
         {
             public IContextOfSite SiteCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }

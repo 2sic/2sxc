@@ -20,6 +20,7 @@ using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Eav.WebApi.Validation;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
@@ -27,7 +28,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsExportImport<THttpResponseType> : ServiceWithLog
+    public class ViewsExportImport<THttpResponseType> : ServiceBase
     {
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;

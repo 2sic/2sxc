@@ -1,6 +1,7 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Services
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Services
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     // TODO: MAYBE SET PRIVATE in docs, if the remaining docs still work as expected
-    public abstract class ServiceForDynamicCode: ServiceWithLog, INeedsDynamicCodeRoot, IHasDynamicCodeRoot
+    public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot, IHasDynamicCodeRoot
     {
         [PrivateApi]
         protected ServiceForDynamicCode(string logName) : base(logName)

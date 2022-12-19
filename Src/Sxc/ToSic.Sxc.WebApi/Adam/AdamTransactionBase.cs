@@ -7,12 +7,13 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: ServiceWithLog, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
+    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: ServiceBase, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
     {
         #region Constructor / DI
 

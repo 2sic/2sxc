@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
 
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         #region Constructors and Init
 
-        public class Dependencies: DependenciesBase<Dependencies>
+        public class Dependencies: ServiceDependencies
         {
             public Dependencies(
                 Lazy<IAppStates> appStatesLazy,

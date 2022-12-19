@@ -3,11 +3,12 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Engines
 {
-    public class EngineBaseDependencies: DependenciesBase<EngineBaseDependencies>
+    public class EngineBaseDependencies: ServiceDependencies
     {
 
         public EngineBaseDependencies(IServerPaths serverPaths,

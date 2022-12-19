@@ -7,6 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Services;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Adam
     /// <remarks>
     /// It's abstract, because there will be a typed implementation inheriting this
     /// </remarks>
-    public abstract class AdamManager: ServiceWithLog, ICompatibilityLevel
+    public abstract class AdamManager: ServiceBase, ICompatibilityLevel
     {
         #region Constructor for inheritance
 

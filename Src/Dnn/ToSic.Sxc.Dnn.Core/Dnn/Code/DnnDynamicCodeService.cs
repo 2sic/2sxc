@@ -4,6 +4,7 @@ using System.Web.UI;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Code
     /// </summary>
     public class DnnDynamicCodeService: DynamicCodeService
     {
-        public new class ScopedDependencies: DependenciesBase<ScopedDependencies>
+        public new class ScopedDependencies: ServiceDependencies
         {
             public Lazy<PageServiceShared> PageServiceShared { get; }
             public LazyInitLog<PageChangeSummary> PageChangeSummary { get; }
