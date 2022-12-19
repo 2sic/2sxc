@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;

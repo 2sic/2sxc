@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;

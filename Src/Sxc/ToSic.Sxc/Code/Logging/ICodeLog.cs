@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code

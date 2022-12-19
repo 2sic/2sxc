@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;

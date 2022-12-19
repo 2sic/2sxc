@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DI;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Web.PageService;

@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 #if NETFRAMEWORK
 using System.Web;
 #else

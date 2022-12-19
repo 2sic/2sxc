@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Configuration.Licenses;
 using ToSic.Eav.DI;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;

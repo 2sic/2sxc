@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
+
 #if !NETFRAMEWORK
 #pragma warning disable CS0109
 #endif

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
 using static ToSic.Sxc.Compatibility.Obsolete;
 

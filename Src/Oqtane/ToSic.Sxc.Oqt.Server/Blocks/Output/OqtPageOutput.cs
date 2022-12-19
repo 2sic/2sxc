@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Oqtane.Shared;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;

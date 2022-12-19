@@ -10,7 +10,7 @@ using DotNetNuke.Services.Localization;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn.Run

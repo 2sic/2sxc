@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment

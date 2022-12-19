@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 using System.Text;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 
 // ReSharper disable once CheckNamespace

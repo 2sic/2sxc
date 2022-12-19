@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DI;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;

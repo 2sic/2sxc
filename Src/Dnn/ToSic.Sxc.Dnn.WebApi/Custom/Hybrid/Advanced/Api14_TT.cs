@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;

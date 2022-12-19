@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {

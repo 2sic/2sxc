@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 using IApp = ToSic.Sxc.Apps.IApp;
 

@@ -1,6 +1,6 @@
 ﻿using Connect.Koi;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Services

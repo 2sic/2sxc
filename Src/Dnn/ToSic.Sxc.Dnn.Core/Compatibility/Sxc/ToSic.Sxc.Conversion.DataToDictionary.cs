@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace

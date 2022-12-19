@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;

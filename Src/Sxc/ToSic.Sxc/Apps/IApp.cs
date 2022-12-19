@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
 #if !NETFRAMEWORK

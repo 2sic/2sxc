@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 

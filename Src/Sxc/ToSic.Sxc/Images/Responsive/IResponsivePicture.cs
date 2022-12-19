@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;

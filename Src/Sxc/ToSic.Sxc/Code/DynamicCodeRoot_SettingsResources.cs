@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Configuration.ConfigurationConstants;

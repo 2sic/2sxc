@@ -8,7 +8,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Lib.Logging;
 

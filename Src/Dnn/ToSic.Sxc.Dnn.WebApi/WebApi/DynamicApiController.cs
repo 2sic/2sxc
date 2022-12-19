@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Web.Http.Controllers;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Code;

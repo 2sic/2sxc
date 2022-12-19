@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;

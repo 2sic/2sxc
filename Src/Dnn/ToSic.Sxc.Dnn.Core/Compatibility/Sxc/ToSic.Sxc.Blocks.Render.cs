@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 using static ToSic.Sxc.Compatibility.Obsolete;
 using IHtmlString = System.Web.IHtmlString;

@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Services.CmsService

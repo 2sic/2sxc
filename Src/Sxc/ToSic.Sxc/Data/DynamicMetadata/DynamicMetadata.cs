@@ -2,9 +2,9 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {

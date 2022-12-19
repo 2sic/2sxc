@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using Connect.Koi;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;

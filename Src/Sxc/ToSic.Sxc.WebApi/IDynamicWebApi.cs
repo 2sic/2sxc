@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 
 // ReSharper disable UnusedMember.Global

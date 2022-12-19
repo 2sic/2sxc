@@ -1,4 +1,4 @@
-﻿//using ToSic.Eav.Documentation;
+﻿//using ToSic.Lib.Documentation;
 
 //// ReSharper disable once CheckNamespace
 //namespace Custom.Dnn

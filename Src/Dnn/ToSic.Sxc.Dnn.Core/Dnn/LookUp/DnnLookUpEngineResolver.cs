@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DotNetNuke.Entities.Portals;
 using ToSic.Eav.Context;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using static ToSic.Sxc.LookUp.LookUpConstants;

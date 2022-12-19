@@ -3,7 +3,7 @@ using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
 using Custom.Hybrid;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;

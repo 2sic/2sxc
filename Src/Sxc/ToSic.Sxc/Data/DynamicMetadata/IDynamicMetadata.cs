@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;

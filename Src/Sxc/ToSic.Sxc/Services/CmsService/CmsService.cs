@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Data;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;

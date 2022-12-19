@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 

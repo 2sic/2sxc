@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar

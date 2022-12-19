@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Serialization;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {

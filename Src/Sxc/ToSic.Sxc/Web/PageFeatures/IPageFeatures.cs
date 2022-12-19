@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Web.PageFeatures;
 

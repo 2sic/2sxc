@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Web.WebPages;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Web
 {

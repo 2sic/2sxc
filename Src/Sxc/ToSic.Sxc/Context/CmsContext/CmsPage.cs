@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Documentation;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 

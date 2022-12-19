@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.WebPages;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;

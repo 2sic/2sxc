@@ -4,8 +4,8 @@ using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data

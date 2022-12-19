@@ -4,7 +4,7 @@ using System.Linq;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 

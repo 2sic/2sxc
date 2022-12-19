@@ -5,7 +5,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 // Important Info to people working with this

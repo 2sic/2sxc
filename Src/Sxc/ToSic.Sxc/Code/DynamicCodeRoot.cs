@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DI;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;

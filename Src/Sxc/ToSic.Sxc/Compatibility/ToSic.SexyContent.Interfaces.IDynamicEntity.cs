@@ -1,6 +1,6 @@
 ﻿#if NETFRAMEWORK
 using System;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace

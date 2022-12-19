@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.Documentation;
+﻿using ToSic.Lib.Documentation;
 
 #if NETFRAMEWORK
 namespace ToSic.Sxc.Blocks

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Documentation;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;

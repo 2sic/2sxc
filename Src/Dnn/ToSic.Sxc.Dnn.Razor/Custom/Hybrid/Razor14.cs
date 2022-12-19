@@ -1,5 +1,6 @@
 ﻿using Custom.Hybrid.Advanced;
-using ToSic.Eav.Documentation;
+using ToSic.Lib.Documentation;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
