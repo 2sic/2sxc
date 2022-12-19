@@ -101,7 +101,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2sxc Core Tests", "2sxc Cor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{32E45183-6A02-41A2-A4D5-6CB58A6D39A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Lib.Logging", "..\..\eav-server\ToSic.Lib.Logging\ToSic.Lib.Logging.csproj", "{BC93EFB1-D740-4617-9C90-D9167F9E4545}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Lib.Logging", "..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj", "{BC93EFB1-D740-4617-9C90-D9167F9E4545}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
