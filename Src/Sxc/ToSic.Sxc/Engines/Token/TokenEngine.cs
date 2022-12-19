@@ -77,11 +77,11 @@ namespace ToSic.Sxc.Engines
         private readonly Lazy<DynamicCodeRoot> _dynCodeRootLazy;
         private readonly GeneratorLog<AppConfigDelegate> _appConfigDelegateGenerator;
 
-        public TokenEngine(EngineBaseDependencies helpers, Lazy<DynamicCodeRoot> dynCodeRootLazy, GeneratorLog<AppConfigDelegate> appConfigDelegateGenerator) : base(helpers)
-        {
-            _dynCodeRootLazy = dynCodeRootLazy;
-            _appConfigDelegateGenerator = appConfigDelegateGenerator.SetLog(Log);
-        }
+        public TokenEngine(EngineBaseDependencies helpers, Lazy<DynamicCodeRoot> dynCodeRootLazy, GeneratorLog<AppConfigDelegate> appConfigDelegateGenerator) : base(helpers) =>
+            ConnectServices(
+                _dynCodeRootLazy = dynCodeRootLazy,
+                _appConfigDelegateGenerator = appConfigDelegateGenerator
+            );
 
         #endregion
 

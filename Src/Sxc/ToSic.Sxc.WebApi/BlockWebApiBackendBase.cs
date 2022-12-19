@@ -31,11 +31,12 @@ namespace ToSic.Sxc.WebApi
         #endregion
 
 
-        protected BlockWebApiBackendBase(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy, IContextResolver ctxResolver, string logName) : base(sp, logName)
-        {
-            CtxResolver = ctxResolver;
-            CmsManagerLazy = cmsManagerLazy;
-        }
+        protected BlockWebApiBackendBase(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy,
+            IContextResolver ctxResolver, string logName) : base(sp, logName)
+            => ConnectServices(
+                CtxResolver = ctxResolver,
+                CmsManagerLazy = cmsManagerLazy
+            );
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {

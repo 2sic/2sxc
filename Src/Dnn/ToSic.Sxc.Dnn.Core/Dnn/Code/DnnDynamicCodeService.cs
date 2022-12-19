@@ -18,23 +18,41 @@ namespace ToSic.Sxc.Dnn.Code
     /// </summary>
     public class DnnDynamicCodeService: DynamicCodeService
     {
+        public new class ScopedDependencies: DependenciesBase<ScopedDependencies>
+        {
+            public Lazy<PageServiceShared> PageServiceShared { get; }
+            public LazyInitLog<PageChangeSummary> PageChangeSummary { get; }
+            public LazyInitLog<DnnPageChanges> DnnPageChanges { get; }
+            public LazyInitLog<DnnClientResources> DnnClientResources { get; }
+
+            public ScopedDependencies(
+                Lazy<PageServiceShared> pageServiceShared,
+                LazyInitLog<PageChangeSummary> pageChangeSummary,
+                LazyInitLog<DnnPageChanges> dnnPageChanges,
+                LazyInitLog<DnnClientResources> dnnClientResources
+                )
+            {
+                AddToLogQueue(
+                    PageServiceShared = pageServiceShared,
+                    PageChangeSummary = pageChangeSummary,
+                    DnnPageChanges = dnnPageChanges,
+                    DnnClientResources = dnnClientResources
+                );
+            }
+        }
+
         public DnnDynamicCodeService(Dependencies dependencies) : base(dependencies)
         {
             Log.Rename(DnnConstants.LogName + ".DynCdS");
-            _pageServiceShared = ScopedServiceProvider.Build<Lazy<PageServiceShared>>();
-            _pageChangeSummary = ScopedServiceProvider.Build<Lazy<PageChangeSummary>>();
-            _dnnPageChanges = ScopedServiceProvider.Build<Lazy<DnnPageChanges>>();
-            _dnnClientResources = ScopedServiceProvider.Build<Lazy<DnnClientResources>>();
+            _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
             _user = dependencies.User;
             Page = HttpContext.Current?.Handler as Page;
 
             if (Page != null)
                 Page.PreRender += Page_PreRender;
         }
-        private readonly Lazy<PageServiceShared> _pageServiceShared;
-        private readonly Lazy<PageChangeSummary> _pageChangeSummary;
-        private readonly Lazy<DnnPageChanges> _dnnPageChanges;
-        private readonly Lazy<DnnClientResources> _dnnClientResources;
+
+        private readonly ScopedDependencies _scopedDeps;
         private readonly Lazy<IUser> _user;
 
 
@@ -42,9 +60,9 @@ namespace ToSic.Sxc.Dnn.Code
         {
             var wrapLog = Log.Fn();
             var user = _user.Value;
-            var changes = _pageChangeSummary.Value.FinalizeAndGetAllChanges(_pageServiceShared.Value, user.IsContentAdmin);
-            _dnnPageChanges.Value.Apply(Page, changes);
-            var dnnClientResources = _dnnClientResources.Value.Init(Page, false, null, Log);
+            var changes = _scopedDeps.PageChangeSummary.Value.FinalizeAndGetAllChanges(_scopedDeps.PageServiceShared.Value, user.IsContentAdmin);
+            _scopedDeps.DnnPageChanges.Value.Apply(Page, changes);
+            var dnnClientResources = _scopedDeps.DnnClientResources.Value.Init(Page, false, null, Log);
             dnnClientResources.AddEverything(changes?.Features);
             wrapLog.Done();
         }

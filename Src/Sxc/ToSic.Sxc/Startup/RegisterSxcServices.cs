@@ -172,6 +172,7 @@ namespace ToSic.Sxc.Startup
             // v13 DynamicCodeService
             services.TryAddTransient<IEditService, EditService>();
             services.TryAddTransient<DynamicCodeService.Dependencies>();
+            services.TryAddTransient<DynamicCodeService.ScopedDependencies>();  // new v15
             services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
             // v13 LightSpeed

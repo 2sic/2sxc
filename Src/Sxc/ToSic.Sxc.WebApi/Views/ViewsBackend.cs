@@ -6,7 +6,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
@@ -16,17 +15,19 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsBackend: HasLog
+    public class ViewsBackend: ServiceWithLog
     {
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates, Lazy<IConvertToEavLight> convertToEavLight, GeneratorLog<ImpExpHelpers> impExpHelpers) : base("Bck.Views")
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates, Lazy<IConvertToEavLight> convertToEavLight, GeneratorLog<ImpExpHelpers> impExpHelpers)
+            : base("Bck.Views")
         {
-            _cmsManagerLazy = cmsManagerLazy;
-            _appStates = appStates;
-            _convertToEavLight = convertToEavLight;
-            _impExpHelpers = impExpHelpers.SetLog(Log);
-
-            _site = context.Site;
-            _user = context.User;
+            ConnectServices(
+                _cmsManagerLazy = cmsManagerLazy,
+                _appStates = appStates,
+                _convertToEavLight = convertToEavLight,
+                _impExpHelpers = impExpHelpers,
+                _site = context.Site,
+                _user = context.User
+            );
         }
 
         private readonly Lazy<CmsManager> _cmsManagerLazy;

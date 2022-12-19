@@ -13,7 +13,6 @@ using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Eav.ImportExport.Validation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
@@ -28,7 +27,7 @@ using ToSic.Sxc.WebApi.ImportExport;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsExportImport<THttpResponseType> : HasLog
+    public class ViewsExportImport<THttpResponseType> : ServiceWithLog
     {
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
@@ -52,15 +51,16 @@ namespace ToSic.Sxc.WebApi.Views
             ResponseMaker<THttpResponseType> responseMaker
             ) : base("Bck.Views")
         {
-            _serverPaths = serverPaths;
-            _envLogger = envLogger;
-            _cmsManagerLazy = cmsManagerLazy;
-            _jsonBundleLazy = jsonBundleLazy;
-            _appStates = appStates;
-            _appIconHelpers = appIconHelpers;
-            _impExpHelpers = impExpHelpers.SetLog(Log);
-            _responseMaker = responseMaker;
-
+            ConnectServices(
+                _serverPaths = serverPaths,
+                _envLogger = envLogger,
+                _cmsManagerLazy = cmsManagerLazy,
+                _jsonBundleLazy = jsonBundleLazy,
+                _appStates = appStates,
+                _appIconHelpers = appIconHelpers,
+                _impExpHelpers = impExpHelpers,
+                _responseMaker = responseMaker
+            );
             _site = context.Site;
             _user = context.User;
         }

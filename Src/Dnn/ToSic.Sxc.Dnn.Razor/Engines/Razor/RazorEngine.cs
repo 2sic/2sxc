@@ -30,10 +30,10 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers, DnnCodeRootFactory codeRootFactory) : base(helpers)
-        {
-            _codeRootFactory = codeRootFactory;
-        }
+        public RazorEngine(EngineBaseDependencies helpers, DnnCodeRootFactory codeRootFactory) : base(helpers) =>
+            ConnectServices(
+                _codeRootFactory = codeRootFactory
+            );
         private readonly DnnCodeRootFactory _codeRootFactory;
 
         #endregion
@@ -186,7 +186,7 @@ namespace ToSic.Sxc.Engines
         private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
             var wrapLog = Log.Fn();
-            var dynCode = _codeRootFactory.Init(Log).BuildDynamicCodeRoot(webPage);
+            var dynCode = _codeRootFactory.BuildDynamicCodeRoot(webPage);
             // only do this if not already initialized
             //if (dynCode.Block != null)
             dynCode.InitDynCodeRoot(Block, Log, compatibility);

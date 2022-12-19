@@ -25,10 +25,10 @@ namespace ToSic.Sxc.WebApi.Cms
             IContextResolver ctxResolver,
             GeneratorLog<IPagePublishing> versioning
         ) : base(sp, cmsManagerLazy, ctxResolver, "Api.LstRl")
-        {
-            _publishing = publishing.Init(Log);
-            _versioning = versioning.SetLog(Log);
-        }
+            => ConnectServices(
+                _publishing = publishing,
+                _versioning = versioning
+            );
 
         private readonly GeneratorLog<IPagePublishing> _versioning;
         private readonly IPagePublishing _publishing;

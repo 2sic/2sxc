@@ -8,6 +8,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.Serialization;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Engines
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public abstract partial class EngineBase : HasLog, IEngine
+    public abstract partial class EngineBase : ServiceWithLog, IEngine
     {
         protected readonly EngineBaseDependencies Helpers;
         [PrivateApi] protected IView Template;
@@ -37,11 +38,10 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(EngineBaseDependencies helpers) : base("Sxc.EngBas")
-        {
-            Helpers = helpers;
-            helpers.BlockResourceExtractor.Init(Log);
-        }
+        protected EngineBase(EngineBaseDependencies helpers) : base("Sxc.EngBas") =>
+            ConnectServices(
+                Helpers = helpers
+            );
 
         #endregion
 

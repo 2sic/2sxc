@@ -185,6 +185,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // v14
             services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
+            services.TryAddTransient<DnnDynamicCodeService.ScopedDependencies>();   // new v15
             services.TryAddTransient<Sxc.Services.IRenderService, DnnRenderService>();
 #pragma warning disable CS0618
             services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12

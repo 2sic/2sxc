@@ -14,19 +14,20 @@ using ToSic.Sxc.WebApi.App;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ExportContent<THttpResponseType> : HasLog
+    public class ExportContent<THttpResponseType> : ServiceWithLog
     {
         #region Constructor / DI
 
-        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user, GeneratorLog<ImpExpHelpers> impExpHelpers, ResponseMaker<THttpResponseType> responseMaker) : base("Bck.Export")
-        {
-            _xmlExporter = xmlExporter;
-            _cmsRuntime = cmsRuntime;
-            _site = site;
-            _user = user;
-            _impExpHelpers = impExpHelpers.SetLog(Log);
-            _responseMaker = responseMaker;
-        }
+        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user, GeneratorLog<ImpExpHelpers> impExpHelpers, ResponseMaker<THttpResponseType> responseMaker)
+            : base("Bck.Export") =>
+            ConnectServices(
+                _xmlExporter = xmlExporter,
+                _cmsRuntime = cmsRuntime,
+                _site = site,
+                _user = user,
+                _impExpHelpers = impExpHelpers,
+                _responseMaker = responseMaker
+            );
 
         private readonly XmlExporter _xmlExporter;
         private readonly Lazy<CmsRuntime> _cmsRuntime;

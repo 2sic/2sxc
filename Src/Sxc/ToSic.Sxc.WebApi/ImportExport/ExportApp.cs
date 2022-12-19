@@ -24,7 +24,7 @@ using ISite = ToSic.Eav.Context.ISite;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ExportApp: HasLog
+    public class ExportApp: ServiceWithLog
     {
         #region Constructor / DI
 
@@ -36,16 +36,16 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IUser user, 
             GeneratorLog<ImpExpHelpers> impExpHelpers, 
             IFeaturesInternal features
-            ) : base("Bck.Export")
-        {
-            _zoneMapper = zoneMapper.Init(Log);
-            _zipExport = zipExport;
-            _cmsRuntime = cmsRuntime;
-            _site = site;
-            _user = user;
-            _features = features;
-            _impExpHelpers = impExpHelpers.SetLog(Log);
-        }
+            ) : base("Bck.Export") =>
+            ConnectServices(
+                _zoneMapper = zoneMapper,
+                _zipExport = zipExport,
+                _cmsRuntime = cmsRuntime,
+                _site = site,
+                _user = user,
+                _features = features,
+                _impExpHelpers = impExpHelpers
+            );
 
         private readonly IZoneMapper _zoneMapper;
         private readonly ZipExport _zipExport;

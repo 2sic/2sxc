@@ -47,26 +47,40 @@ namespace ToSic.Sxc.Code
             public Lazy<IAppStates> AppStates { get; }
         }
 
+        public class ScopedDependencies: DependenciesBase<ScopedDependencies>
+        {
+            public Generator<App> AppGenerator { get; }
+            public Generator<DynamicCodeRoot> CodeRootGenerator { get; }
+            public GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator { get; }
+            public LazyInitLog<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
+
+            public ScopedDependencies(
+                Generator<DynamicCodeRoot> codeRootGenerator,
+                Generator<App> appGenerator,
+                GeneratorLog<AppConfigDelegate> appConfigDelegateGenerator,
+                LazyInitLog<IModuleAndBlockBuilder> modAndBlockBuilder
+            ) => AddToLogQueue(
+                CodeRootGenerator = codeRootGenerator,
+                AppGenerator = appGenerator,
+                AppConfigDelegateGenerator = appConfigDelegateGenerator,
+                ModAndBlockBuilder = modAndBlockBuilder
+            );
+        }
+
         public DynamicCodeService(Dependencies dependencies): base($"{Constants.SxcLogName}.DCS")
         {
             _dependencies = dependencies.SetLog(Log);
             ScopedServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
             // Important: These generators must be built inside the scope, so they must be made here
-            // and not come from the constructor injection
-            CodeRootGenerator = ScopedServiceProvider.Build<Generator<DynamicCodeRoot>>();
-            AppGenerator = ScopedServiceProvider.Build<Generator<App>>();
-            AppConfigDelegateGenerator = ScopedServiceProvider.Build<GeneratorLog<AppConfigDelegate>>().SetLog(Log);
-            ModuleAndBlockBuilder = ScopedServiceProvider.Build<LazyInitLog<IModuleAndBlockBuilder>>().SetLog(Log);
+            // and NOT come from the constructor injection
+            _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
         }
         /// <summary>
         /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects
         /// </summary>
         protected IServiceProvider ScopedServiceProvider { get; }
         private readonly Dependencies _dependencies;
-        protected readonly Generator<DynamicCodeRoot> CodeRootGenerator;
-        protected readonly Generator<App> AppGenerator;
-        protected readonly GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator;
-        protected readonly LazyInitLog<IModuleAndBlockBuilder> ModuleAndBlockBuilder;
+        private readonly ScopedDependencies _scopedDeps;
 
         public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
         private bool _logInitDone;
@@ -75,15 +89,12 @@ namespace ToSic.Sxc.Code
         {
             if (_logInitDone) return;
             _logInitDone = true;
-            _dependencies.History.Value.Add("dynamic-code-service", base.Log);
+            _dependencies.History.Value.Add("dynamic-code-service", Log);
         }
 
-        protected void ActivateEditUi()
-        {
-            EditUiRequired = true;
-        }
+        protected void ActivateEditUi() => EditUiRequired = true;
 
-        protected bool EditUiRequired = false;
+        protected bool EditUiRequired;
 
         #endregion
 

@@ -54,9 +54,9 @@ namespace ToSic.Sxc.Code
         private IApp App(IAppIdentity appIdentity, ISite site, bool? withUnpublished = null)
         {
             var wrapLog = Log.Fn<IApp>($"{appIdentity.LogState()}, site:{site != null}, showDrafts: {withUnpublished}");
-            var app = AppGenerator.New();
+            var app = _scopedDeps.AppGenerator.New();
             if (site != null) app.PreInit(site);
-            var appStuff = app.Init(appIdentity, AppConfigDelegateGenerator.New().Build(withUnpublished ?? _dependencies.User.Value.IsContentAdmin), Log);
+            var appStuff = app.Init(appIdentity, _scopedDeps.AppConfigDelegateGenerator.New().Build(withUnpublished ?? _dependencies.User.Value.IsContentAdmin), Log);
             return wrapLog.Return(appStuff);
         }
 
