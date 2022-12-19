@@ -223,7 +223,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj">
       <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
-      <Name>ToSic.Lib.Logging</Name>
+      <Name>ToSic.Lib.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj">
       <Project>{5D87EB0C-BF67-4814-A0FF-D96256C9B852}</Project>
