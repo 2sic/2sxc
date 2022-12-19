@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helper;
 using ToSic.Razor.Html5;
 
 namespace ToSic.Sxc.Images

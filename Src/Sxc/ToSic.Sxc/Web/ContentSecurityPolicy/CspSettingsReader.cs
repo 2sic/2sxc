@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Helper;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy

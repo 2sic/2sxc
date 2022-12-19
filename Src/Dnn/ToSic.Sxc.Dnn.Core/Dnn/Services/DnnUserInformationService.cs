@@ -1,11 +1,6 @@
 ﻿using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
-<<<<<<< HEAD
-using ToSic.Eav.DI;
-=======
 using ToSic.Lib.DI;
-using ToSic.Eav.Plumbing;
->>>>>>> Move the Eav.DI to ToSic.Lib.DI
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Services

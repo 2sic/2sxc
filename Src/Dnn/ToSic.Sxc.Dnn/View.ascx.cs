@@ -4,7 +4,7 @@ using System.Web.UI;
 using DotNetNuke.Entities.Modules;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.Helper;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;
