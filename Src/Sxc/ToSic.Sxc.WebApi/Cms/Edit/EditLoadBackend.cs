@@ -17,6 +17,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
@@ -40,8 +41,8 @@ namespace ToSic.Sxc.WebApi.Cms
             IUiData uiData,
             Generator<JsonSerializer> jsonSerializerGenerator,
             GoogleMapsSettings googleMapsSettings,
-            LazyInitLog<AppSettingsStack> settingsStack
-        ) : base(serviceProvider, "Cms.LoadBk") =>
+            LazyInitLog<AppSettingsStack> settingsStack,
+            LazyInitLog<IFeaturesService> features) : base(serviceProvider, "Cms.LoadBk") =>
             ConnectServices(
                 _entityApi = entityApi,
                 _contentGroupList = contentGroupList,
@@ -53,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 _appStates = appStates,
                 _uiData = uiData,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
-                _settingsStack = settingsStack,
+                _features = features,
                 _googleMapsSettings = googleMapsSettings
             );
 
@@ -67,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
-        private readonly LazyInitLog<AppSettingsStack> _settingsStack;
+        private readonly LazyInitLog<IFeaturesService> _features;
         private readonly GoogleMapsSettings _googleMapsSettings;
 
         #endregion

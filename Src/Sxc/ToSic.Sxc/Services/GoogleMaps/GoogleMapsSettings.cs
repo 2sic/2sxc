@@ -29,14 +29,14 @@ namespace ToSic.Sxc.Services.GoogleMaps
         private MapsCoordinates GetMapsCoordinates() => Log.WrpFn<MapsCoordinates>(action: _ =>
         {
             var json = Get(nameof(DefaultCoordinates), "");
-            if (!json.HasValue()) return (MapsCoordinates.Default, "no json");
+            if (!json.HasValue()) return (Default: MapsCoordinates.Defaults, "no json");
             try
             {
                 return (_jsonService.To<MapsCoordinates>(json), "from json");
             }
             catch
             {
-                return (MapsCoordinates.Default, "error");
+                return (Default: MapsCoordinates.Defaults, "error");
             }
         });
 

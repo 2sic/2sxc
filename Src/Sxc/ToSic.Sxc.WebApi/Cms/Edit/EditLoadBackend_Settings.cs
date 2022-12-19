@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Sxc.Services.GoogleMaps;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -16,11 +18,16 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <returns></returns>
         public IDictionary<string, object> GetSettings(IContextOfApp contextOfApp)
         {
-            var getMaps = contextOfApp.AppSettings.InternalGetPath(_googleMapsSettings.SettingsIdentifier);
+            var coordinates = MapsCoordinates.Defaults;
 
-            var coordinates = (getMaps.Result is IEntity mapsEntity) 
-                ? _googleMapsSettings.Init(mapsEntity).DefaultCoordinates 
-                : MapsCoordinates.Default;
+            if (_features.Value.IsEnabled(BuiltInFeatures.EditUiGpsCustomDefaults.NameId))
+            {
+                var getMaps = contextOfApp.AppSettings.InternalGetPath(_googleMapsSettings.SettingsIdentifier);
+                // if (getMaps.Result is IEnumerable) { }
+                coordinates = getMaps.GetFirstResultEntity() is IEntity mapsEntity
+                    ? _googleMapsSettings.Init(mapsEntity).DefaultCoordinates
+                    : MapsCoordinates.Defaults;
+            }
 
             var settings = new Dictionary<string, object>
             {
