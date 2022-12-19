@@ -120,8 +120,7 @@ namespace ToSic.Sxc.Web
         {
             _DynCodeRoot = codeRoot;
             (this as IHasLog).Init(codeRoot?.Log, "Rzr.Comp");
-            // Reset inner log, so it will reconnect
-            _codeLog.IsValueCreated = false;
+            _codeLog.Reset();   // Reset inner log, so it will reconnect
             Log15.Fn().Done("connected");
         }
 

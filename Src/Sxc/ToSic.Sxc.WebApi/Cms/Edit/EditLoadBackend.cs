@@ -17,6 +17,7 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 
@@ -24,33 +25,38 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
+
         #region DI Constructor
 
-        public EditLoadBackend(EntityApi entityApi, 
-            ContentGroupList contentGroupList, 
+        public EditLoadBackend(EntityApi entityApi,
+            ContentGroupList contentGroupList,
             EntityBuilder entityBuilder,
-            IServiceProvider serviceProvider, 
-            IUiContextBuilder contextBuilder, 
-            IContextResolver ctxResolver, 
+            IServiceProvider serviceProvider,
+            IUiContextBuilder contextBuilder,
+            IContextResolver ctxResolver,
             ITargetTypes mdTargetTypes,
             EntityPickerApi entityPickerBackend,
             IAppStates appStates,
             IUiData uiData,
-            Generator<JsonSerializer> jsonSerializerGenerator
-            ) : base(serviceProvider, "Cms.LoadBk")
-        {
-            _entityApi = entityApi;
-            _contentGroupList = contentGroupList;
-            _entityBuilder = entityBuilder;
-            _contextBuilder = contextBuilder;
-            _ctxResolver = ctxResolver;
-            _mdTargetTypes = mdTargetTypes;
-            _entityPickerBackend = entityPickerBackend;
-            _appStates = appStates;
-            _uiData = uiData;
-            _jsonSerializerGenerator = jsonSerializerGenerator;
-        }
-        
+            Generator<JsonSerializer> jsonSerializerGenerator,
+            GoogleMapsSettings googleMapsSettings,
+            LazyInitLog<AppSettingsStack> settingsStack
+        ) : base(serviceProvider, "Cms.LoadBk") =>
+            ConnectServices(
+                _entityApi = entityApi,
+                _contentGroupList = contentGroupList,
+                _entityBuilder = entityBuilder,
+                _contextBuilder = contextBuilder,
+                _ctxResolver = ctxResolver,
+                _mdTargetTypes = mdTargetTypes,
+                _entityPickerBackend = entityPickerBackend,
+                _appStates = appStates,
+                _uiData = uiData,
+                _jsonSerializerGenerator = jsonSerializerGenerator,
+                _settingsStack = settingsStack,
+                _googleMapsSettings = googleMapsSettings
+            );
+
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
         private readonly EntityBuilder _entityBuilder;
@@ -61,6 +67,8 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
+        private readonly LazyInitLog<AppSettingsStack> _settingsStack;
+        private readonly GoogleMapsSettings _googleMapsSettings;
 
         #endregion
 
@@ -139,7 +147,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
                     CtxEnable.EditUi);
 
-            result.Settings = GetSettings();
+            result.Settings = GetSettings(context);
 
             try
             {

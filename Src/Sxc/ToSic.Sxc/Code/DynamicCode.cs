@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
         {
             _DynCodeRoot = codeRoot;
             this.Init(codeRoot?.Log);
-            _codeLog.IsValueCreated = false; // reset in case it was already used before
+            _codeLog.Reset(); // reset in case it was already used before
             base.Log.Fn().Done();
         }
 

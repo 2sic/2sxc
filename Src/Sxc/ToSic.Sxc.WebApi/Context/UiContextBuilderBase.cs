@@ -36,28 +36,25 @@ namespace ToSic.Sxc.WebApi.Context
             public LazyInitLog<ISecureDataService> SecureDataService { get; }
 
             public Dependencies(
-                IContextOfSite siteCtx, 
-                Apps.App appToLaterInitialize, 
-                IAppStates appStates, 
+                IContextOfSite siteCtx,
+                Apps.App appToLaterInitialize,
+                IAppStates appStates,
                 Lazy<IFeaturesInternal> features,
                 Lazy<IUiData> uiDataLazy,
                 LazyInitLog<LanguagesBackend> languagesBackend,
                 LazyInitLog<AppSettingsStack> settingsStack,
                 LazyInitLog<ISecureDataService> secureDataService
-            )
-            {
-                AddToLogQueue(
-                    SiteCtx = siteCtx,
-                    AppToLaterInitialize = appToLaterInitialize,
-                    AppStates = appStates,
-                    Features = features,
-                    UiDataLazy = uiDataLazy,
+            ) => AddToLogQueue(
+                SiteCtx = siteCtx,
+                AppToLaterInitialize = appToLaterInitialize,
+                AppStates = appStates,
+                Features = features,
+                UiDataLazy = uiDataLazy,
 
-                    LanguagesBackend = languagesBackend,
-                    SettingsStack = settingsStack,
-                    SecureDataService = secureDataService
-                );
-            }
+                LanguagesBackend = languagesBackend,
+                SettingsStack = settingsStack,
+                SecureDataService = secureDataService
+            );
         }
 
         #endregion

@@ -21,6 +21,7 @@ using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.JsContext;
@@ -197,10 +198,18 @@ namespace ToSic.Sxc.Startup
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services
+                .ExternalConfig()
                 .AddKoi()
                 .AddImageflowCustomization()
                 .AddSxcCoreFallbackServices();
 
+            return services;
+        }
+
+        public static IServiceCollection ExternalConfig(this IServiceCollection services)
+        {
+            // new v15
+            services.TryAddTransient<GoogleMapsSettings>();
             return services;
         }
 
