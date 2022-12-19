@@ -1,7 +1,7 @@
 ﻿using Oqtane.Repository;
 using System;
 using ToSic.Eav.Context;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Services;
 

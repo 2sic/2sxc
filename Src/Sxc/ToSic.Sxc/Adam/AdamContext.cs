@@ -4,9 +4,9 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.DI;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam

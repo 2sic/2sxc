@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ToSic.Eav.Context;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;

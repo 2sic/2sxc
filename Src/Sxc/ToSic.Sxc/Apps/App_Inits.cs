@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.LookUp;
 

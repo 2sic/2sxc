@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;

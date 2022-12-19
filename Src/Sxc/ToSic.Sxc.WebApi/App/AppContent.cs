@@ -10,7 +10,7 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security;

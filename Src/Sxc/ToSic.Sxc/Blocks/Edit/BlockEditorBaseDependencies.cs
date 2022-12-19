@@ -1,6 +1,6 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.DI;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit

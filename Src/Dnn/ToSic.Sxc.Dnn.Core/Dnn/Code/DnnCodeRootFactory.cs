@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;

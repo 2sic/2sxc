@@ -2,9 +2,9 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Assets;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Assets;
 using static System.StringComparison;
 

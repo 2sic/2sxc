@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
-using ToSic.Eav.DI;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Blocks.Edit
 {

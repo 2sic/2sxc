@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Web;
+<<<<<<< HEAD
 using ToSic.Eav.DI;
+=======
+using ToSic.Eav;
+using ToSic.Lib.DI;
+>>>>>>> Move the Eav.DI to ToSic.Lib.DI
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;

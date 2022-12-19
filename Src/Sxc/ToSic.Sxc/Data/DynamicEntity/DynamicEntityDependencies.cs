@@ -1,8 +1,8 @@
 ﻿using System;
 using ToSic.Eav.Data;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using IRenderService = ToSic.Sxc.Services.IRenderService;

@@ -4,7 +4,7 @@ using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;

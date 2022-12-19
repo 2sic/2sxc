@@ -1,5 +1,5 @@
-﻿using ToSic.Eav.DI;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Plumbing
 {

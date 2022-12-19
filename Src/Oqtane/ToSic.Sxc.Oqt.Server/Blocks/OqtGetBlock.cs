@@ -1,6 +1,6 @@
 ﻿using Oqtane.Repository;
 using System;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;

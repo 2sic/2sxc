@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Web;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Plumbing;
 

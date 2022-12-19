@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.DI;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam

@@ -8,7 +8,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.ImportExport;

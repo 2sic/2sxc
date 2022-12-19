@@ -12,7 +12,7 @@ using ToSic.Eav.Caching;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Web.UI;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps.Paths;

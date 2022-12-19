@@ -5,7 +5,7 @@ using Oqtane.Repository;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Lib.Logging;

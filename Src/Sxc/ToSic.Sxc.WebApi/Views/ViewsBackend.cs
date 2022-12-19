@@ -5,12 +5,12 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ImportExport;
 

@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using DotNetNuke.Common.Extensions;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Documentation;
 

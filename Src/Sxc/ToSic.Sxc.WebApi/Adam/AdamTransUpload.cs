@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;

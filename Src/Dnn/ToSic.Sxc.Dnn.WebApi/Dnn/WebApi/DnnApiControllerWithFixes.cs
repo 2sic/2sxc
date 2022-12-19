@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;

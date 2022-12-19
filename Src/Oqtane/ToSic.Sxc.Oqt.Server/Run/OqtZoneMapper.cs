@@ -9,7 +9,7 @@ using ToSic.Eav.Apps.Languages;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;

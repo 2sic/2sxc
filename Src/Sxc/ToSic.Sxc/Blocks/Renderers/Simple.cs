@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 

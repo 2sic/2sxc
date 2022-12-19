@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;

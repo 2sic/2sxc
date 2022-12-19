@@ -6,9 +6,9 @@ using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Apps
 {

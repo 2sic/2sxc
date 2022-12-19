@@ -1,7 +1,7 @@
 ﻿using System;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;

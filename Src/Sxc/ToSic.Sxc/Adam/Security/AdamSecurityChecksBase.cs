@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.Security.Files;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Adam
 {

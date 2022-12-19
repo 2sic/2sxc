@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Ui;
-using ToSic.Eav.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Context;

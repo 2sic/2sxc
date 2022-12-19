@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Context;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Services

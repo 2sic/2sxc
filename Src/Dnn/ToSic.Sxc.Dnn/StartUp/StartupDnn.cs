@@ -5,7 +5,7 @@ using System.Net.Http.Formatting;
 using System.Web.Hosting;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.Eav.DI;
+using ToSic.Lib.DI;
 using ToSic.Eav.Run;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Images.ImageflowRewrite;

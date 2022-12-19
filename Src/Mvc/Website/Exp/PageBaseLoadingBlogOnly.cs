@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.DI;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Mvc.RazorPages.Exp
 {

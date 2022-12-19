@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ToSic.Eav.DI;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
