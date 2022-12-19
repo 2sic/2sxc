@@ -4,7 +4,9 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data.Builder;
+using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
+using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
@@ -101,7 +103,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = _jsonSerializerGenerator.New().Init(entityApi.AppRead.AppState, Log);
+            var jsonSerializer = _jsonSerializerGenerator.New().Init(Log).SetApp(entityApi.AppRead.AppState);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
@@ -124,7 +126,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     throw HttpException.PermissionDenied(error);
 
             // load content-types
-            var serializerForTypes = _jsonSerializerGenerator.New().Init(entityApi.AppRead.AppState, Log);
+            var serializerForTypes = _jsonSerializerGenerator.New().Init(Log).SetApp(entityApi.AppRead.AppState);
             serializerForTypes.ValueConvertHyperlinks = true;
             var types = UsedTypes(list, typeRead);
             var jsonTypes = types.Select(t => serializerForTypes.ToPackage(t, true)).ToList();

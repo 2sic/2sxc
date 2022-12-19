@@ -18,10 +18,8 @@ namespace ToSic.Sxc.Apps
         private readonly IZoneCultureResolver _cultureResolver;
         public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-        public BlocksRuntime(IZoneCultureResolver cultureResolver) : base("Sxc.BlkRdr")
-        {
-            _cultureResolver = cultureResolver;
-        }
+        public BlocksRuntime(IZoneCultureResolver cultureResolver) : base("Sxc.BlkRdr") 
+            => ConnectServices(_cultureResolver = cultureResolver);
 
         public List<BlockConfiguration> AllWithView()
         {

@@ -90,7 +90,7 @@ namespace ToSic.Sxc.WebApi.Views
             }
 
             var serializer = _jsonBundleLazy.Value;
-            serializer.Init(cms.AppState, Log);
+            serializer.Init(Log).SetApp(cms.AppState);
             var serialized = serializer.Serialize(bundle, 0);
 
             return logCall.ReturnAsOk(_responseMaker.File(serialized,
@@ -117,7 +117,6 @@ namespace ToSic.Sxc.WebApi.Views
             {
                 // 0.1 Check permissions, get the app, 
                 var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-                //_appHelpers.Init(app, Log);
 
                 // 0.2 Verify it's json etc.
                 if (files.Any(file => !Json.IsValidJson(file.Contents)))
@@ -125,7 +124,7 @@ namespace ToSic.Sxc.WebApi.Views
 
                 // 1. create the views
                 var serializer = _jsonBundleLazy.Value;
-                serializer.Init(_appStates.Get(app), Log);
+                serializer.Init(Log).SetApp(_appStates.Get(app));
 
                 var bundles = files.Select(f => serializer.Deserialize(f.Contents)).ToList();
 

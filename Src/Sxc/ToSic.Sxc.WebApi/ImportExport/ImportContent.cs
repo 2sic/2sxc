@@ -10,6 +10,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Identity;
 using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Run;
@@ -113,7 +114,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the content type
-                var serializer = _jsonSerializerLazy.Value.Init(_appStates.Get(new AppIdentity(zoneId, appId)), Log);
+                var serializer = _jsonSerializerLazy.Value.Init(Log).SetApp(_appStates.Get(new AppIdentity(zoneId, appId)));
 
                 var types = files.Select(f => serializer.DeserializeContentType(f.Contents)).ToList();
 
@@ -121,7 +122,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new NullReferenceException("One ContentType is null, something is wrong");
 
                 // 2. Import the type
-                var import = _importerLazy.Value.Init(zoneId, appId, true, true, Log);
+                var import = _importerLazy.Value.Init(Log).Init(zoneId, appId, true, true);
                 import.ImportIntoDb(types, null);
 
                 Log.A($"Purging {zoneId}/{appId}");

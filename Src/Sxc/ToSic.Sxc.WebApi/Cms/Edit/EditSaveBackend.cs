@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
+using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var appMan = _appManagerLazy.Value.Init(Log).Init(_appId);
             var appRead = appMan.Read;
-            var ser = GetService<JsonSerializer>().Init(appRead.AppState, Log);
+            var ser = GetService<JsonSerializer>().Init(Log).SetApp(appRead.AppState);
             // Since we're importing directly into this app, we would prefer local content-types
             ser.PreferLocalAppTypes = true;
             validator.PrepareForEntityChecks(appRead);

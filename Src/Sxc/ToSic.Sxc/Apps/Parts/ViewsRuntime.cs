@@ -19,16 +19,14 @@ namespace ToSic.Sxc.Apps
 {
 	public class ViewsRuntime: PartOf<CmsRuntime>
     {
-        private readonly DataSourceFactory _dataSourceFactory;
 
         #region Constructor / DI
 
-        private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
         private readonly LazyInitLog<AppIconHelpers> _appIconHelpers;
-        private IValueConverter _valConverter;
+        private readonly DataSourceFactory _dataSourceFactory;
 
         public ViewsRuntime(Lazy<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
@@ -149,13 +147,15 @@ namespace ToSic.Sxc.Apps
             var templates = GetAll().ToList();
             var visible = templates.Where(t => !t.IsHidden).ToList();
 
+            var valConverter = _valConverterLazy.Value;
+
             return Parent.ContentTypes.All.OfScope(Scopes.Default) 
                 .Where(ct => templates.Any(t => t.ContentType == ct.NameId)) // must exist in at least 1 template
                 .OrderBy(ct => ct.Name)
                 .Select(ct =>
                 {
                     var details = ct.Metadata.DetailsOrNull;
-                    var thumbnail = ValueConverter.ToValue(details?.Icon);
+                    var thumbnail = valConverter.ToValue(details?.Icon);
                     if (AppIconHelpers.HasAppPathToken(thumbnail))
                         thumbnail = AppIconHelpers.AppPathTokenReplace(thumbnail, appPath, appPathShared);
                     return new ContentTypeUiInfo {
