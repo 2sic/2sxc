@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Code
             [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
         {
             // must call the opener first, then return the closing function
-            var call = _contents.Fn(parameters, message, useTimer, new CodeRef(cPath, cName, cLine));
+            var call = _contents.Fn(parameters, message, useTimer, CodeRef.Create(cPath, cName, cLine));
             return finalMsg => call.Done(finalMsg);
         }
 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Code
             [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
         {
             // must call the opener first, then return the closing function
-            var call = _contents.Fn<T>(parameters, message, useTimer, new CodeRef( cPath, cName, cLine));
+            var call = _contents.Fn<T>(parameters, message, useTimer, CodeRef.Create( cPath, cName, cLine));
             return (data, finalMsg) => call.Return(data, finalMsg);
         }
     }

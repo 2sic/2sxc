@@ -23,7 +23,6 @@ namespace ToSic.Sxc.WebApi.Cms
             if (_features.Value.IsEnabled(BuiltInFeatures.EditUiGpsCustomDefaults.NameId))
             {
                 var getMaps = contextOfApp.AppSettings.InternalGetPath(_googleMapsSettings.SettingsIdentifier);
-                // if (getMaps.Result is IEnumerable) { }
                 coordinates = getMaps.GetFirstResultEntity() is IEntity mapsEntity
                     ? _googleMapsSettings.Init(mapsEntity).DefaultCoordinates
                     : MapsCoordinates.Defaults;

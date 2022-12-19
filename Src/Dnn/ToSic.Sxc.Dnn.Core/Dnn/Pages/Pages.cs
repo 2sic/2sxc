@@ -4,7 +4,6 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Lib.Logging;
-using ToSic.Eav.WebApi.Context;
 
 namespace ToSic.Sxc.Dnn.Pages
 {

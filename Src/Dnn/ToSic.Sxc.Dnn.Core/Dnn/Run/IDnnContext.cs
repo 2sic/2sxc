@@ -3,7 +3,6 @@ using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Entities.Users;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Dnn.Run
 {
