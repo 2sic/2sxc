@@ -5,7 +5,6 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
             return new DialogContextStandaloneDto
             {
-                Context = cb.Get(Ctx.All, CtxEnable.All),
+                Context = cb.Get(Ctx.General, CtxEnable.All),
             };
         }
 
