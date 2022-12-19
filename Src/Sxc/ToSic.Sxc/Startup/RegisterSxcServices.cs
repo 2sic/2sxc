@@ -83,8 +83,8 @@ namespace ToSic.Sxc.Startup
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
-            services.TryAddTransient<ContextOfApp.ContextOfAppDependencies>();
-            services.TryAddTransient<ContextOfSite.ContextOfSiteDependencies>();
+            services.TryAddTransient<ContextOfApp.Dependencies>();
+            services.TryAddTransient<ContextOfSite.Dependencies>();
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
             services.TryAddTransient<ICmsContext, CmsContext>();

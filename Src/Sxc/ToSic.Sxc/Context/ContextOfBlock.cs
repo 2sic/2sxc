@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Context
             IModule module,
             LazyInitLog<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
-            ContextOfSiteDependencies contextOfSiteDependencies,
-            ContextOfAppDependencies appDependencies)
-            : base(contextOfSiteDependencies, appDependencies)
+            ContextOfSite.Dependencies siteCtxDeps,
+            ContextOfApp.Dependencies appDependencies)
+            : base(siteCtxDeps, appDependencies)
         {
             Page = page;
             Module = module;
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Context
         private BlockPublishingSettings _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, Dependencies, Deps)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, SiteDeps, Deps)
             .Init(parentLog);
     }
 }
