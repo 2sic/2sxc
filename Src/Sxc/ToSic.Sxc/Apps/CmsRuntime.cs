@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Parts;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps
@@ -21,15 +21,14 @@ namespace ToSic.Sxc.Apps
             LazyInit<BlocksRuntime> blocksRuntime) 
             : base(dependencies, entityRuntime, metadataRuntime, contentTypeRuntime, queryRuntime, "Sxc.CmsRt")
         {
-            _blocksRuntime = blocksRuntime.SetInit(r => r.Init(this, Log));
-            _viewsRuntime = viewsRuntime.SetInit(r => r.Init(this, Log));
+            _blocksRuntime = blocksRuntime.SetInit(r => r.Init(Log).ConnectTo(this));
+            _viewsRuntime = viewsRuntime.SetInit(r => r.Init(Log).ConnectTo(this));
         }
 
-        public new CmsRuntime Init(IAppIdentity app, bool showDrafts, ILog parentLog) 
-            => base.Init(app, showDrafts, parentLog) as CmsRuntime;
-
-        public new CmsRuntime InitWithState(AppState appState, bool showDrafts, ILog parentLog) 
-            => base.InitWithState(appState, showDrafts, parentLog) as CmsRuntime;
+        public new CmsRuntime InitWithState(AppState appState, bool showDrafts)
+        {
+            return base.InitWithState(appState, showDrafts) as CmsRuntime;
+        }
 
         public ViewsRuntime Views => _viewsRuntime.Value;
 

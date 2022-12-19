@@ -1,8 +1,10 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.LookUp;
@@ -13,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
     {
         public const string LogSuffix = "Query";
 
-        public QueryControllerReal(QueryControllerDependencies dependencies, Lazy<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
+        public QueryControllerReal(QueryControllerDependencies dependencies, LazyInitLog<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
             : base(dependencies, "Api." + LogSuffix)
         {
             _cmsManagerLazy = cmsManagerLazy;
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
             _contextResolver = contextResolver;
             _appConfigMaker = appConfigMaker;
         }
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly LazyInitLog<CmsManager> _cmsManagerLazy;
         private readonly IAppStates _appStates;
         private readonly IContextResolver _contextResolver;
         private readonly AppConfigDelegate _appConfigMaker;
@@ -32,7 +34,8 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         /// </summary>
         public bool DeleteIfUnused(int appId, int id)
             => _cmsManagerLazy.Value
-                .Init(_appStates.IdentityOfApp(appId), true, Log)
+                .Init(Log)
+                .InitQ(_appStates.IdentityOfApp(appId), true)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
 

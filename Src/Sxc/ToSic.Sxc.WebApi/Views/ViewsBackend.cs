@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
@@ -17,18 +18,16 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: ServiceWithLog
     {
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates, Lazy<IConvertToEavLight> convertToEavLight, GeneratorLog<ImpExpHelpers> impExpHelpers)
-            : base("Bck.Views")
-        {
-            ConnectServices(
-                _cmsManagerLazy = cmsManagerLazy,
-                _appStates = appStates,
-                _convertToEavLight = convertToEavLight,
-                _impExpHelpers = impExpHelpers,
-                _site = context.Site,
-                _user = context.User
-            );
-        }
+        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates,
+            Lazy<IConvertToEavLight> convertToEavLight, GeneratorLog<ImpExpHelpers> impExpHelpers)
+            : base("Bck.Views") => ConnectServices(
+            _cmsManagerLazy = cmsManagerLazy,
+            _appStates = appStates,
+            _convertToEavLight = convertToEavLight,
+            _impExpHelpers = impExpHelpers,
+            _site = context.Site,
+            _user = context.User
+        );
 
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly IAppStates _appStates;
@@ -41,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.A($"get all a#{appId}");
-            var cms = _cmsManagerLazy.Value.Init(_appStates.IdentityOfApp(appId), true, Log).Read;
+            var cms = _cmsManagerLazy.Value.Init(Log).InitQ(_appStates.IdentityOfApp(appId), true).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default).ToList();
             var viewList = cms.Views.GetAll().ToList();
@@ -92,7 +91,7 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.A($"delete a{appId}, t:{id}");
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(app, Log);
+            var cms = _cmsManagerLazy.Value.Init(Log).Init(app);
             cms.Views.DeleteView(id);
             return true;
         }

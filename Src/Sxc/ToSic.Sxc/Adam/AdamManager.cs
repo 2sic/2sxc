@@ -1,11 +1,13 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Context;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Adam
@@ -17,15 +19,17 @@ namespace ToSic.Sxc.Adam
     /// <remarks>
     /// It's abstract, because there will be a typed implementation inheriting this
     /// </remarks>
-    public abstract class AdamManager: HasLog, ICompatibilityLevel
+    public abstract class AdamManager: ServiceWithLog, ICompatibilityLevel
     {
         #region Constructor for inheritance
 
-        protected AdamManager(Lazy<AppRuntime> appRuntimeLazy, Lazy<AdamMetadataMaker> metadataMakerLazy, AdamConfiguration adamConfiguration, string logName) : base(logName ?? "Adm.Managr")
+        protected AdamManager(LazyInitLog<AppRuntime> appRuntimeLazy, Lazy<AdamMetadataMaker> metadataMakerLazy, AdamConfiguration adamConfiguration, string logName) : base(logName ?? "Adm.Managr")
         {
-            _appRuntimeLazy = appRuntimeLazy;
-            _metadataMakerLazy = metadataMakerLazy;
-            _adamConfiguration = adamConfiguration;
+            ConnectServices(
+                _appRuntimeLazy = appRuntimeLazy,
+                _metadataMakerLazy = metadataMakerLazy,
+                _adamConfiguration = adamConfiguration
+            );
         }
         
         public AdamMetadataMaker MetadataMaker => _metadataMakerLazy.Value;
@@ -33,7 +37,7 @@ namespace ToSic.Sxc.Adam
         private readonly AdamConfiguration _adamConfiguration;
 
         public AppRuntime AppRuntime => _appRuntimeLazy.Value;
-        private readonly Lazy<AppRuntime> _appRuntimeLazy;
+        private readonly LazyInitLog<AppRuntime> _appRuntimeLazy;
 
         #endregion
 
@@ -46,7 +50,7 @@ namespace ToSic.Sxc.Adam
 
             var callLog = Log.Fn<AdamManager>();
             Site = AppContext.Site;
-            AppRuntime.Init(AppContext.AppState, AppContext.UserMayEdit, null);
+            AppRuntime.Init(Log).InitQ(AppContext.AppState, AppContext.UserMayEdit);
             CompatibilityLevel = compatibility;
             return callLog.Return(this, "ready");
         }

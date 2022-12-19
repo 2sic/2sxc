@@ -3,6 +3,7 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(_site.ZoneId, appId.Value);
-                var cms = _lazyCmsRuntime.Value.Init(appIdentity, true, Log);
+                var cms = _lazyCmsRuntime.Value.Init(Log).InitQ(appIdentity, true);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }

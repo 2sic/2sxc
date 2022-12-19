@@ -29,16 +29,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             internal readonly Lazy<IAppStates> AppStatesLazy;
             public LazyInitLog<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
 
-            public override Dependencies SetLog(ILog parentLog)
-            {
-                if (_alreadyInited) return this;
-                _alreadyInited = true;
-                base.SetLog(parentLog);
-                //ToolbarButtonHelper.SetLog(parentLog);
-                return this;
-            }
+            //public override Dependencies SetLog(ILog parentLog)
+            //{
+            //    if (_alreadyInited) return this;
+            //    _alreadyInited = true;
+            //    base.SetLog(parentLog);
+            //    //ToolbarButtonHelper.SetLog(parentLog);
+            //    return this;
+            //}
 
-            private bool _alreadyInited;
+            //private bool _alreadyInited;
         }
 
         /// <summary>

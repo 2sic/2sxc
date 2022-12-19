@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi.InPage
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
         public AppViewPickerBackend(IServiceProvider sp, 
-            Lazy<CmsManager> cmsManagerLazy, 
+            LazyInitLog<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
             var tenant = ContextOfBlock.Site;
-            return GetService<CmsZones>().Init(tenant.ZoneId, Log)
+            return GetService<CmsZones>().Init(Log).SetId(tenant.ZoneId)
                 .AppsRt
                 .GetSelectableApps(tenant, apps)
                 .ToList();

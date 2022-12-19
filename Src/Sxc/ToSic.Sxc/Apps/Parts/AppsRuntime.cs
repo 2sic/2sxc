@@ -7,12 +7,11 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppsRuntime: ZonePartRuntimeBase<CmsZones, AppsRuntime>
+    public class AppsRuntime: ZonePartRuntimeBase //</*CmsZones,*/ AppsRuntime>
     {
         #region Constructor / DI
 
@@ -70,7 +69,7 @@ namespace ToSic.Sxc.Apps
             var zId = ZoneRuntime.ZoneId;
             var appIds = _appStates.Apps(zId);
             return appIds
-                .Select(a => _appGenerator.New() // ServiceProvider.Build<App>()
+                .Select(a => _appGenerator.New()
                     .PreInit(site)
                     .Init(new AppIdentity(zId, a.Key), buildConfig, Log) as IApp)
                 .OrderBy(a => a.Name)

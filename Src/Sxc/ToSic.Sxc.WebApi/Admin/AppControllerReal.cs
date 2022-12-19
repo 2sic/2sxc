@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public List<AppDto> InheritableApps() => _appsBackendLazy.Value.GetInheritableApps();
 
         public void App(int zoneId, int appId, bool fullDelete = true)
-            => _cmsZonesLazy.Value.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
+            => _cmsZonesLazy.Value.Init(Log).SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         public void App(int zoneId, string name, int? inheritAppId = null)
             => _appBuilderLazy.Value.Init(zoneId, Log).Create(name, null, inheritAppId);

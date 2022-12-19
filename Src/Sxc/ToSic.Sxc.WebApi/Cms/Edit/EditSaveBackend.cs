@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Cms
             //    appId = targetAppId;
             //}
 
-            var appMan = _appManagerLazy.Value.Init(_appId, Log);
+            var appMan = _appManagerLazy.Value.Init(Log).Init(_appId);
             var appRead = appMan.Read;
             var ser = GetService<JsonSerializer>().Init(appRead.AppState, Log);
             // Since we're importing directly into this app, we would prefer local content-types

@@ -10,7 +10,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {
-	public class BlocksManager: PartOf<CmsManager, BlocksManager>
+	public class BlocksManager: PartOf<CmsManager>
 	{
         public BlocksManager() : base("CG.Manage") { }
 

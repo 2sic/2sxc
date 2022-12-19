@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var cms = CmsRuntime.Init(currentApp, true, Log);
+            var cms = CmsRuntime.Init(Log).InitQ(currentApp, true);
             var contentTypes = cms.ContentTypes.All.OfScope(scope);
             var entities = cms.Entities.All;
             var templates = cms.Views.GetAll();
@@ -90,7 +91,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
-            var appRuntime = CmsRuntime.Init(currentApp, true, Log);
+            var appRuntime = CmsRuntime.Init(Log).InitQ(currentApp, true);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
             var fileXml = _xmlExporter.Init(zoneId, appId, appRuntime, false,

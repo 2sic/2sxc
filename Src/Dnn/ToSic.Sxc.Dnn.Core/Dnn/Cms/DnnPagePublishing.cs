@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 if (cb.ContentGroupExists)
                 {
                     Log.A("cb exists");
-                    var appManager = _appManager.Value.Init(cb, Log);
+                    var appManager = _appManager.Value.Init(Log).Init(cb);
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();

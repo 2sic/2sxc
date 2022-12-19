@@ -6,6 +6,7 @@ using System.Text.Json.Nodes;
 using ToSic.Eav.Api.Api01;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Api.Api01;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -18,6 +19,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.Helper;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using IApp = ToSic.Eav.Apps.IApp;
@@ -28,22 +30,23 @@ namespace ToSic.Sxc.WebApi.App
     {
         #region Constructor / DI
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, Lazy<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, Lazy<AppManager> appManagerLazy,
-            LazyInitLog<SimpleDataController> dataControllerLazy) : base(sp, "Sxc.ApiApC")
-        {
-            _entityApi = entityApi;
-            _entToDicLazy = entToDicLazy;
-            _ctxResolver = ctxResolver;
-            _appManagerLazy = appManagerLazy;
-            _dataControllerLazy = dataControllerLazy.SetLog(Log);
-        }
+        public AppContent(IServiceProvider sp, EntityApi entityApi, LazyInitLog<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, LazyInitLog<AppManager> appManagerLazy,
+            LazyInitLog<SimpleDataController> dataControllerLazy) : base(sp, "Sxc.ApiApC") =>
+            ConnectServices(
+                _entityApi = entityApi,
+                _entToDicLazy = entToDicLazy,
+                _ctxResolver = ctxResolver,
+                _appManagerLazy = appManagerLazy,
+                _dataControllerLazy = dataControllerLazy
+            );
+
         private readonly EntityApi _entityApi;
-        private readonly Lazy<IConvertToEavLight> _entToDicLazy;
+        private readonly LazyInitLog<IConvertToEavLight> _entToDicLazy;
         private readonly IContextResolver _ctxResolver;
-        private readonly Lazy<AppManager> _appManagerLazy;
+        private readonly LazyInitLog<AppManager> _appManagerLazy;
         private readonly LazyInitLog<SimpleDataController> _dataControllerLazy;
-        private AppManager AppManager => _appManager ?? (_appManager = _appManagerLazy.Value.Init(AppState, showDrafts: false, Log));
-        private AppManager _appManager;
+        private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState, showDrafts: false));
+        private readonly GetOnce<AppManager> _appManager = new GetOnce<AppManager>();
 
         public AppContent Init(string appName, ILog parentLog)
         {

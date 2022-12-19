@@ -21,7 +21,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public ListControllerReal(
             IServiceProvider sp,
             IPagePublishing publishing,
-            Lazy<CmsManager> cmsManagerLazy,
+            LazyInitLog<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver,
             GeneratorLog<IPagePublishing> versioning
         ) : base(sp, cmsManagerLazy, ctxResolver, "Api.LstRl")

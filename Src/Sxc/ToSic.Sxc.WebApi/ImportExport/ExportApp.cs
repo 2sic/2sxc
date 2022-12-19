@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.ImportExport;
 #endif
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Shared;
@@ -67,7 +68,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var zipExport = _zipExport.Init(zoneId, appId, currentApp.Folder, currentApp.PhysicalPath, currentApp.PhysicalPathShared, Log);
             var cultCount = _zoneMapper.CulturesWithState(_site).Count(c => c.IsEnabled);
 
-            var cms = _cmsRuntime.Init(currentApp, true, Log);
+            var cms = _cmsRuntime.Init(Log).InitQ(currentApp, true);
 
             return new AppExportInfoDto
             {

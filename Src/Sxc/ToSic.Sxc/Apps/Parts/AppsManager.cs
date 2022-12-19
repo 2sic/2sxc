@@ -5,10 +5,11 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppsManager: ZonePartRuntimeBase<ZoneRuntime, AppsManager>
+    public class AppsManager: ZonePartRuntimeBase //</*ZoneRuntime,*/ AppsManager>
     {
         #region Constructor / DI
 
@@ -48,7 +49,7 @@ namespace ToSic.Sxc.Apps
 
             // now remove from DB. This sometimes fails, so we do this before trying to clean the files
             // as the db part should be in a transaction, and if it fails, everything should stay as is
-            _zoneManagerLazy.Value.Init(zoneId, Log).DeleteApp(appId, fullDelete);
+            _zoneManagerLazy.Value.Init(Log).SetId(zoneId).DeleteApp(appId, fullDelete);
 
             // now really delete the files - if the DB didn't end up throwing an error
             // ...but only if it's a full-delete

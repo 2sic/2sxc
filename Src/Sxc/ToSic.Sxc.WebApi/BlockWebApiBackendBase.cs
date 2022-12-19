@@ -6,6 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.WebApi
     public abstract class BlockWebApiBackendBase<T>: WebApiBackendBase<BlockWebApiBackendBase<T>> where T: class
     {
         public IContextResolver CtxResolver { get; }
-        protected readonly Lazy<CmsManager> CmsManagerLazy;
+        protected readonly LazyInitLog<CmsManager> CmsManagerLazy;
 
         protected IContextOfApp ContextOfBlock =>
             _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockRequired());
@@ -25,14 +26,16 @@ namespace ToSic.Sxc.WebApi
         public IBlock Block => _block ?? (_block = CtxResolver.RealBlockRequired());
         private IBlock _block;
 
-        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context, Log));
+        protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context));
         private CmsManager _cmsManager;
 
         #endregion
 
 
-        protected BlockWebApiBackendBase(IServiceProvider sp, Lazy<CmsManager> cmsManagerLazy,
-            IContextResolver ctxResolver, string logName) : base(sp, logName)
+        protected BlockWebApiBackendBase(IServiceProvider sp,
+            LazyInitLog<CmsManager> cmsManagerLazy,
+            IContextResolver ctxResolver, string logName
+            ) : base(sp, logName)
             => ConnectServices(
                 CtxResolver = ctxResolver,
                 CmsManagerLazy = cmsManagerLazy

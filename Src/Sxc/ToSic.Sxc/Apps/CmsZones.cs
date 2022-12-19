@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Lib.Logging;
+using ToSic.Eav.Apps.Parts;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Apps
 {
@@ -8,26 +9,20 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        private readonly Lazy<AppsRuntime> _appsRuntimeLazy;
-        private readonly Lazy<AppsManager> _appsManagerLazy;
-        public CmsZones(Lazy<AppsRuntime> appsRuntimeLazy, Lazy<AppsManager> appsManagerLazy, IAppStates appStates) : base("Sxc.ZoneRt")
-        {
-            _appsRuntimeLazy = appsRuntimeLazy;
-            _appsManagerLazy = appsManagerLazy;
-        }
-
-        public new CmsZones Init(int zoneId, ILog parentLog)
-        {
-            base.Init(zoneId, parentLog);
-            return this;
-        }
+        private readonly LazyInitLog<AppsRuntime> _appsRuntimeLazy;
+        private readonly LazyInitLog<AppsManager> _appsManagerLazy;
+        public CmsZones(LazyInitLog<AppsRuntime> appsRuntimeLazy, LazyInitLog<AppsManager> appsManagerLazy) : base("Sxc.ZoneRt") =>
+            ConnectServices(
+                _appsRuntimeLazy = appsRuntimeLazy,
+                _appsManagerLazy = appsManagerLazy
+            );
 
         #endregion
 
-        public AppsRuntime AppsRt => _apps ?? (_apps = _appsRuntimeLazy.Value.Init(this, Log));
+        public AppsRuntime AppsRt => _apps ?? (_apps = _appsRuntimeLazy.Value.ConnectTo(this));
         private AppsRuntime _apps;
 
-        public AppsManager AppsMan => _appsMan ?? (_appsMan = _appsManagerLazy.Value.Init(this, Log));
+        public AppsManager AppsMan => _appsMan ?? (_appsMan = _appsManagerLazy.Value.ConnectTo(this));
         private AppsManager _appsMan;
     }
 }

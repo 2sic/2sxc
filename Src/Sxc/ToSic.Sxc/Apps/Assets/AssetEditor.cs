@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
@@ -64,7 +65,7 @@ namespace ToSic.Sxc.Apps.Assets
             _appPaths.Init(_site, _appState, Log);
 
             // todo: 2dm Views - see if we can get logger to flow
-            _cmsRuntime = _cmsRuntimeLazy.Value.Init(_appState, true, Log);
+            _cmsRuntime = _cmsRuntimeLazy.Value.Init(Log).InitQ(_appState, true);
         }
 
         #endregion

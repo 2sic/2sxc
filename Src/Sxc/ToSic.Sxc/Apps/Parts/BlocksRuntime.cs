@@ -13,7 +13,7 @@ using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {
-    public class BlocksRuntime: PartOf<CmsRuntime, BlocksRuntime>
+    public class BlocksRuntime: PartOf<CmsRuntime>
     {
         private readonly IZoneCultureResolver _cultureResolver;
         public const string BlockTypeName = "2SexyContent-ContentGroup";
@@ -22,16 +22,6 @@ namespace ToSic.Sxc.Apps
         {
             _cultureResolver = cultureResolver;
         }
-
-        //private IDataSource ContentGroupSource()
-        //{
-        //    if (_contentGroupSource != null) return _contentGroupSource;
-        //    var dataSource = Parent.Data;
-        //    var onlyCGs = Parent.DataSourceFactory.GetDataSource<EntityTypeFilter>(Parent, dataSource);
-        //    onlyCGs.TypeName = BlockTypeName;
-        //    return _contentGroupSource = dataSource;
-        //}
-        //private IDataSource _contentGroupSource;
 
         public List<BlockConfiguration> AllWithView()
         {

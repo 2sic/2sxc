@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Adam
         private readonly LazyInit<IAdamFileSystem<TFolderId, TFileId>> _adamFsLazy;
 
         #region Constructor / DI
-        public AdamManager(Lazy<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMaker, AdamConfiguration adamConfiguration, LazyInit<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy)
+        public AdamManager(LazyInitLog<AppRuntime> appRuntime, Lazy<AdamMetadataMaker> metadataMaker, AdamConfiguration adamConfiguration, LazyInit<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy)
             : base(appRuntime, metadataMaker, adamConfiguration, "Adm.MngrTT")
         {
             _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this, Log));

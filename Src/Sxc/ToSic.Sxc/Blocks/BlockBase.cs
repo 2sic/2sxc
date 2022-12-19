@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -90,7 +91,7 @@ namespace ToSic.Sxc.Blocks
             Log.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = _deps.CmsLazy.Value.Init(App, Context.UserMayEdit, Log);
+            var cms = _deps.CmsLazy.Value.Init(Log).InitQ(App, Context.UserMayEdit);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 

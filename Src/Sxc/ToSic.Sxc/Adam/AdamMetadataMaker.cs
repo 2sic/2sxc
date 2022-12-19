@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Adam
 
         private DynamicEntityDependencies DynamicEntityDependencies(AdamManager manager) =>
             _dynamicEntityDeps
-            ?? (_dynamicEntityDeps = _deGenerator.New() // _serviceProvider.Build<DynamicEntityDependencies>()
+            ?? (_dynamicEntityDeps = _deGenerator.New()
                 .Init(null, (manager.AppContext?.Site).SafeLanguagePriorityCodes(), null, manager.CompatibilityLevel));
         private DynamicEntityDependencies _dynamicEntityDeps;
 

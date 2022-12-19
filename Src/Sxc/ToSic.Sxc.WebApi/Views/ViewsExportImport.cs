@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi.Views
             var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin);
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(app, Log);
+            var cms = _cmsManagerLazy.Value.Init(Log).Init(app);
             var bundle = new BundleEntityWithAssets
             {
                 Entity = app.Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
@@ -138,7 +138,7 @@ namespace ToSic.Sxc.WebApi.Views
 
                 // 2. Import the views
                 // todo: construction of this should go into init
-                _cmsManagerLazy.Value.Init(app.AppId, Log).Entities.Import(bundles.Select(v => v.Entity).ToList());
+                _cmsManagerLazy.Value.Init(Log).Init(app.AppId).Entities.Import(bundles.Select(v => v.Entity).ToList());
 
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);

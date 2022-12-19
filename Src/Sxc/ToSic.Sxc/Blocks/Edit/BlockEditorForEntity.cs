@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Apps;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
@@ -57,7 +58,7 @@ namespace ToSic.Sxc.Blocks.Edit
             => ParentBlockAppManager().Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
 
         protected AppManager ParentBlockAppManager() =>
-            _appManager ?? (_appManager = _parentBlockManagerLazy.Value.Init(((BlockBase)Block).Parent.App, Log));
+            _appManager ?? (_appManager = _parentBlockManagerLazy.Value.Init(Log).Init(((BlockBase)Block).Parent.App));
         private AppManager _appManager;
         private readonly Lazy<CmsManager> _parentBlockManagerLazy;
         private readonly IAppStates _appStates;

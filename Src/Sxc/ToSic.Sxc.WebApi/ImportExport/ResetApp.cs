@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
@@ -88,7 +89,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             }
 
             // 2. Now we can delete the app before we prepare the import
-            _cmsZones.Init(zoneId, Log).AppsMan.RemoveAppInSiteAndEav(appId, false);
+            _cmsZones.Init(Log).SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
             // 3. Optional reset SiteFiles
             if (withSiteFiles)

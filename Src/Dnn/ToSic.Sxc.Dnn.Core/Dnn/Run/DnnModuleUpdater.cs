@@ -3,6 +3,7 @@ using DotNetNuke.Services.Localization;
 using System;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -62,7 +63,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = _cmsRuntimeLazy.Value.Init(appIdentity, true, Log);
+                var cms = _cmsRuntimeLazy.Value.Init(Log).InitQ(appIdentity, true);
 
                 var templateGuid = cms.Views.GetAll()
                     .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC

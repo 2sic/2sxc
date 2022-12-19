@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Formats;
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Save
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly Generator<BlockEditorForModule> _blkEdtForMod;
         private readonly Generator<BlockEditorForEntity> _blkEdtForEnt;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(_appIdentity, _withDrafts, Log));
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Log).InitQ(_appIdentity, _withDrafts));
         private CmsManager _cmsManager;
         private bool _withDrafts = false;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
@@ -15,9 +16,9 @@ namespace ToSic.Sxc.Blocks.Edit
         internal BlockEditorBase(BlockEditorBaseDependencies dependencies) : base("CG.RefMan")
         {
             Dependencies = dependencies;
-            Dependencies.CmsRuntime.SetInit(r => r.Init(Block?.App, true, Log));
-            Dependencies.CmsManager.SetInit(r => r.Init(Block?.App, Log));
-            Dependencies.AppManager.SetInit(r => r.Init(Block?.App, Log));
+            Dependencies.CmsRuntime.SetInit(r => r.Init(Log).InitQ(Block?.App, true));
+            Dependencies.CmsManager.SetInit(r => r.Init(Log).Init(Block?.App));
+            Dependencies.AppManager.SetInit(r => r.Init(Log).Init(Block?.App));
         }
         public BlockEditorBaseDependencies Dependencies { get; }
 

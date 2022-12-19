@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
@@ -18,23 +17,33 @@ using ToSic.Sxc.Blocks;
 // note: not sure if the final namespace should be Sxc.Apps or Sxc.Views
 namespace ToSic.Sxc.Apps
 {
-	public class ViewsRuntime: PartOf<CmsRuntime, ViewsRuntime>
+	public class ViewsRuntime: PartOf<CmsRuntime>
     {
+        private readonly DataSourceFactory _dataSourceFactory;
+
         #region Constructor / DI
 
         private IValueConverter ValueConverter => _valConverter ?? (_valConverter = _valConverterLazy.Value);
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
-        private readonly Lazy<AppIconHelpers> _appIconHelpers;
+        private readonly LazyInitLog<AppIconHelpers> _appIconHelpers;
         private IValueConverter _valConverter;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy, IZoneCultureResolver cultureResolver, IConvertToEavLight dataToFormatLight, Lazy<AppIconHelpers> appIconHelpers) : base("Cms.ViewRd")
+        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy,
+            IZoneCultureResolver cultureResolver,
+            IConvertToEavLight dataToFormatLight,
+            LazyInitLog<AppIconHelpers> appIconHelpers,
+            DataSourceFactory dataSourceFactory
+            ) : base("Cms.ViewRd")
         {
-            _valConverterLazy = valConverterLazy;
-            _cultureResolver = cultureResolver;
-            _dataToFormatLight = dataToFormatLight;
-            _appIconHelpers = appIconHelpers;
+            ConnectServices(
+                _valConverterLazy = valConverterLazy,
+                _cultureResolver = cultureResolver,
+                _dataToFormatLight = dataToFormatLight,
+                _appIconHelpers = appIconHelpers,
+                _dataSourceFactory = dataSourceFactory
+            );
         }
 
         #endregion
@@ -45,10 +54,10 @@ namespace ToSic.Sxc.Apps
             if(_viewDs!= null)return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = Parent.Data;
-			dataSource = Parent.DataSourceFactory.GetDataSource<EntityTypeFilter>(dataSource);
-		    ((EntityTypeFilter) dataSource).TypeName = Eav.Apps.Configuration.TemplateContentType;
-		    _viewDs = dataSource;
-			return dataSource;
+			var typeFilter = _dataSourceFactory.GetDataSource<EntityTypeFilter>(dataSource);
+		    typeFilter.TypeName = Eav.Apps.Configuration.TemplateContentType;
+		    _viewDs = typeFilter;
+            return typeFilter;
 		}
 
         public IEnumerable<IView> GetAll() 
@@ -99,7 +108,7 @@ namespace ToSic.Sxc.Apps
 	        else
 	            availableTemplates = GetAll().Where(p => p.UseForList);
 
-            var thumbnailHelper = _appIconHelpers.Value.Init(Log);
+            var thumbnailHelper = _appIconHelpers.Value;
 
             var result = availableTemplates.Select(t => new TemplateUiInfo
 	        {

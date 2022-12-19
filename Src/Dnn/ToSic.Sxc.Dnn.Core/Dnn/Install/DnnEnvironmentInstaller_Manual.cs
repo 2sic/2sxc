@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
@@ -54,16 +55,16 @@ namespace ToSic.Sxc.Dnn.Install
             if (forContentApp)
                 try
                 {
-                    var primaryAppId = _appStatesLazy.Value/* ServiceProvider.Build<IAppStates>()*/.IdentityOfDefault(site.ZoneId);
+                    var primaryAppId = _appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = _cmsRuntimeLazy.Value // ServiceProvider.Build<CmsRuntime>()
-                        .Init(primaryAppId, false, Log)
+                    var contentViews = _cmsRuntimeLazy.Value.Init(Log)
+                        .InitQ(primaryAppId, false)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
                 catch { /* ignore */ }
             
-            var gettingStartedSrc = _remoteRouterLazy.Value /*ServiceProvider.Build<RemoteRouterLink>()*/.LinkToRemoteRouter(
+            var gettingStartedSrc = _remoteRouterLazy.Value.LinkToRemoteRouter(
                 RemoteDestinations.AutoConfigure, 
                 site,
                 module.Id,

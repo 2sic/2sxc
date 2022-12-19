@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helper;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -13,7 +14,7 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class ContentGroupControllerReal: HasLog, IContentGroupController
+    public class ContentGroupControllerReal: ServiceWithLog, IContentGroupController
     {
         #region Constructor / di
         public const string LogSuffix = "CntGrp";
@@ -21,20 +22,21 @@ namespace ToSic.Sxc.WebApi.Cms
             LazyInitLog<IPagePublishing> publishing, 
             LazyInit<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            LazyInitLog<ListControllerReal> listController) : base("Api.CntGrpRl")
-        {
-            CtxResolver = ctxResolver;
-            _cmsManagerLazy = cmsManagerLazy.SetInit(m => m.Init(Context, Log));
-            _publishing = publishing.SetLog(Log);
-            _listController = listController.SetLog(Log);
-        }
+            LazyInitLog<ListControllerReal> listController) : base("Api.CntGrpRl") =>
+            ConnectServices(
+                CtxResolver = ctxResolver,
+                _cmsManagerLazy = cmsManagerLazy,
+                _publishing = publishing,
+                _listController = listController
+            );
 
         public IContextResolver CtxResolver { get; }
 
         private readonly LazyInitLog<ListControllerReal> _listController;
         private readonly LazyInit<CmsManager> _cmsManagerLazy;
         private readonly LazyInitLog<IPagePublishing> _publishing;
-        private CmsManager CmsManager => _cmsManagerLazy.Value;
+        private CmsManager CmsManager => _cmsManager.Get(() => _cmsManagerLazy.Value.Init(Context));
+        private readonly GetOnce<CmsManager> _cmsManager = new GetOnce<CmsManager>();
 
 
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());

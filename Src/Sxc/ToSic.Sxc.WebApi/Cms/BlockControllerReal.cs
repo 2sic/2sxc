@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
             var tenant = _context.Value.Site;
-            return _cmsZones.Value.Init(tenant.ZoneId, Log).AppsRt.GetSelectableApps(tenant, apps)
+            return _cmsZones.Value.Init(Log).SetId(tenant.ZoneId).AppsRt.GetSelectableApps(tenant, apps)
                 .ToList();
         }
 

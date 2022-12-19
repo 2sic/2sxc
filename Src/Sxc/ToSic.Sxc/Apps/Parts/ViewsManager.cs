@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Sxc.Blocks;
 
@@ -9,7 +8,7 @@ namespace ToSic.Sxc.Apps
     /// <summary>
     /// Views manager for the app engine - in charge of importing / modifying templates at app-level
     /// </summary>
-    public class ViewsManager: PartOf<CmsManager, ViewsManager>
+    public class ViewsManager: PartOf<CmsManager>
     {
         public ViewsManager() : base("Cms.ViewMn") { }
 

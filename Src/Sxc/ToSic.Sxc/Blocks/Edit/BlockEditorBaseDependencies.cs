@@ -1,11 +1,10 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    public class BlockEditorBaseDependencies
+    public class BlockEditorBaseDependencies: DependenciesBase<BlockEditorBaseDependencies>
     {
         public LazyInit<CmsRuntime> CmsRuntime { get; }
         public LazyInit<CmsManager> CmsManager { get; }
@@ -19,11 +18,13 @@ namespace ToSic.Sxc.Blocks.Edit
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt)
         {
-            CmsRuntime = cmsRuntime;
-            CmsManager = cmsManager;
-            AppManager = appManager;
-            BlkEdtForMod = blkEdtForMod;
-            BlkEdtForEnt = blkEdtForEnt;
+            AddToLogQueue(
+                CmsRuntime = cmsRuntime,
+                CmsManager = cmsManager,
+                AppManager = appManager,
+                BlkEdtForMod = blkEdtForMod,
+                BlkEdtForEnt = blkEdtForEnt
+            );
         }
     }
 }

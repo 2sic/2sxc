@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
+using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public List<AppDto> Apps()
         {
-            var cms = _cmsZones.Init(_context.Site.ZoneId, Log);
+            var cms = _cmsZones.Init(Log).SetId(_context.Site.ZoneId);
             var configurationBuilder = GetService<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
             var list = cms.AppsRt.GetApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
@@ -65,7 +66,7 @@ namespace ToSic.Sxc.WebApi.App
 
         public List<AppDto> GetInheritableApps()
         {
-            var cms = _cmsZones.Init(_context.Site.ZoneId, Log);
+            var cms = _cmsZones.Init(Log).SetId(_context.Site.ZoneId);
             var configurationBuilder = GetService<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
             var list = cms.AppsRt.GetInheritableApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();

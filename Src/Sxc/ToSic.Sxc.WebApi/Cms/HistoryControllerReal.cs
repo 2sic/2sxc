@@ -24,12 +24,12 @@ namespace ToSic.Sxc.WebApi.Cms
 
 
         public List<ItemHistory> Get(int appId, ItemIdentifier item)
-            => _appManagerLazy.Value.Init(appId, Log).Entities.VersionHistory(item.EntityId);
+            => _appManagerLazy.Value.Init(Log).Init(appId).Entities.VersionHistory(item.EntityId);
 
 
         public bool Restore(int appId, int changeId, ItemIdentifier item)
         {
-            _appManagerLazy.Value.Init(appId, Log).Entities.VersionRestore(item.EntityId, changeId);
+            _appManagerLazy.Value.Init(Log).Init(appId).Entities.VersionRestore(item.EntityId, changeId);
             return true;
         }
     }
