@@ -7,6 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -16,25 +17,27 @@ using BlockEditorBase = ToSic.Sxc.Blocks.Edit.BlockEditorBase;
 
 namespace ToSic.Sxc.WebApi.Save
 {
-    public class ContentGroupList: HasLog
+    public class ContentGroupList: ServiceBase
     {
         #region Constructor / DI
 
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
-        private readonly Generator<BlockEditorForModule> _blkEdtForMod;
-        private readonly Generator<BlockEditorForEntity> _blkEdtForEnt;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.Init(Log).InitQ(_appIdentity, _withDrafts));
+        private readonly LazyInitLog<CmsManager> _cmsManagerLazy;
+        private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
+        private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity, _withDrafts));
         private CmsManager _cmsManager;
         private bool _withDrafts = false;
 
-        public ContentGroupList(Lazy<CmsManager> cmsManagerLazy, 
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt
+        public ContentGroupList(LazyInitLog<CmsManager> cmsManagerLazy, 
+            GeneratorLog<BlockEditorForModule> blkEdtForMod,
+            GeneratorLog<BlockEditorForEntity> blkEdtForEnt
             ) : base("Api.GrpPrc")
         {
-            _cmsManagerLazy = cmsManagerLazy;
-            _blkEdtForMod = blkEdtForMod;
-            _blkEdtForEnt = blkEdtForEnt;
+            ConnectServices(
+                _cmsManagerLazy = cmsManagerLazy,
+                _blkEdtForMod = blkEdtForMod,
+                _blkEdtForEnt = blkEdtForEnt
+            );
         }
 
         public ContentGroupList Init(IAppIdentity appIdentity, ILog parentLog, bool withDraftsTemp)

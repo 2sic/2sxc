@@ -4,7 +4,6 @@ using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
@@ -22,6 +21,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 {
     public class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
     {
+        private readonly GeneratorLog<BlockFromEntity> _entityBlockGenerator;
+
         #region constructor / DI
 
         public ContentBlockBackend(IServiceProvider sp, 
@@ -29,19 +30,24 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             LazyInitLog<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             Lazy<IBlockResourceExtractor> optimizerLazy,
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt)
+            GeneratorLog<BlockEditorForModule> blkEdtForMod,
+            GeneratorLog<BlockEditorForEntity> blkEdtForEnt,
+            GeneratorLog<BlockFromEntity> entityBlockGenerator)
             : base(sp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
-            _optimizer = optimizerLazy;
-            _blkEdtForMod = blkEdtForMod;
-            _blkEdtForEnt = blkEdtForEnt;
-            _publishing = publishing.Init(Log);
+            ;
+            ConnectServices(
+                _optimizer = optimizerLazy,
+                _blkEdtForMod = blkEdtForMod,
+                _blkEdtForEnt = blkEdtForEnt,
+                _publishing = publishing,
+                _entityBlockGenerator = entityBlockGenerator
+            );
         }
 
         private readonly Lazy<IBlockResourceExtractor> _optimizer;
-        private readonly Generator<BlockEditorForModule> _blkEdtForMod;
-        private readonly Generator<BlockEditorForEntity> _blkEdtForEnt;
+        private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
+        private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private readonly IPagePublishing _publishing;
 
         #endregion
@@ -52,7 +58,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             var entityId = NewBlock(parentId, field, index, app, guid);
 
             // now return a rendered instance
-            var newContentBlock = GetService<BlockFromEntity>().Init(Block, entityId, Log);
+            var newContentBlock = _entityBlockGenerator.New() /*GetService<BlockFromEntity>()*/.Init(Block, entityId, Log);
             return newContentBlock.BlockBuilder.Run(true);
         }
 

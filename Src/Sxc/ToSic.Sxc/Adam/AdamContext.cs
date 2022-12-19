@@ -7,6 +7,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.Adam
@@ -17,15 +18,29 @@ namespace ToSic.Sxc.Adam
     /// <remarks>
     /// It's abstract, because there will be a typed implementation inheriting this
     /// </remarks>
-    public abstract class AdamContext: HasLog
+    public abstract class AdamContext: ServiceBase
     {
         #region Constructor and DI
 
-        protected AdamContext(IServiceProvider serviceProvider, string logName) : base(logName ?? "Adm.Ctx")
+        public class Dependencies: ServiceDependencies
+        {
+            public GeneratorLog<MultiPermissionsTypes> TypesPermissions { get; }
+
+            public Dependencies(GeneratorLog<MultiPermissionsTypes> typesPermissions)
+            {
+                AddToLogQueue(
+                    TypesPermissions = typesPermissions
+                );
+            }
+        }
+
+        protected AdamContext(IServiceProvider serviceProvider, Dependencies dependencies, string logName) : base(logName ?? "Adm.Ctx")
         {
             ServiceProvider = serviceProvider;
+            _dependencies = dependencies.SetLog(Log);
         }
         public readonly IServiceProvider ServiceProvider;
+        private readonly Dependencies _dependencies;
         public AdamSecurityChecksBase Security;
         public MultiPermissionsTypes Permissions;
 
@@ -42,8 +57,8 @@ namespace ToSic.Sxc.Adam
             var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;
 
-            Permissions = ServiceProvider.Build<MultiPermissionsTypes>()
-                .Init(context, context.AppState, contentType, Log);
+            Permissions = _dependencies.TypesPermissions.New() // ServiceProvider.Build<MultiPermissionsTypes>()
+                .Init(context, context.AppState, contentType);
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
             UseSiteRoot = usePortalRoot;

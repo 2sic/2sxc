@@ -28,17 +28,30 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : WebApiBackendBase<AppContent>
     {
+        private readonly GeneratorLog<MultiPermissionsTypes> _typesPermissions;
+        private readonly GeneratorLog<MultiPermissionsItems> _itemsPermissions;
+
         #region Constructor / DI
 
-        public AppContent(IServiceProvider sp, EntityApi entityApi, LazyInitLog<IConvertToEavLight> entToDicLazy, IContextResolver ctxResolver, LazyInitLog<AppManager> appManagerLazy,
-            LazyInitLog<SimpleDataController> dataControllerLazy) : base(sp, "Sxc.ApiApC") =>
+        public AppContent(IServiceProvider sp,
+            EntityApi entityApi,
+            LazyInitLog<IConvertToEavLight> entToDicLazy,
+            IContextResolver ctxResolver,
+            GeneratorLog<MultiPermissionsTypes> typesPermissions,
+            GeneratorLog<MultiPermissionsItems> itemsPermissions,
+            LazyInitLog<AppManager> appManagerLazy,
+            LazyInitLog<SimpleDataController> dataControllerLazy) : base(sp, "Sxc.ApiApC")
+        {
             ConnectServices(
                 _entityApi = entityApi,
                 _entToDicLazy = entToDicLazy,
                 _ctxResolver = ctxResolver,
                 _appManagerLazy = appManagerLazy,
+                _typesPermissions = typesPermissions,
+                _itemsPermissions = itemsPermissions,
                 _dataControllerLazy = dataControllerLazy
             );
+        }
 
         private readonly EntityApi _entityApi;
         private readonly LazyInitLog<IConvertToEavLight> _entToDicLazy;
@@ -289,7 +302,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsTypes ThrowIfNotAllowedInType(string contentType, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = GetService<MultiPermissionsTypes>().Init(Context, alternateApp ?? AppState, contentType, Log);
+            var permCheck = _typesPermissions.New().Init(Context, alternateApp ?? AppState, contentType);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;
@@ -297,7 +310,7 @@ namespace ToSic.Sxc.WebApi.App
 
         protected MultiPermissionsItems ThrowIfNotAllowedInItem(IEntity itm, List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = GetService<MultiPermissionsItems>().Init(Context, alternateApp ?? AppState, itm, Log);
+            var permCheck = _itemsPermissions.New().Init(Context, alternateApp ?? AppState, itm);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
             return permCheck;

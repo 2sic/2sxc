@@ -76,9 +76,8 @@ namespace ToSic.Sxc.WebApi.Context
 
         #endregion
 
-        public IUiContextBuilder InitApp(AppState appState, ILog parentLog)
+        public IUiContextBuilder InitApp(AppState appState)
         {
-            this.Init(parentLog);
             AppState = appState;
             App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null, Log) : null;
             return this;

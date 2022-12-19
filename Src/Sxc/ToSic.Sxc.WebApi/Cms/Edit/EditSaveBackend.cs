@@ -21,6 +21,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : WebApiBackendBase<EditSaveBackend>
     {
+        private readonly JsonSerializer _jsonSerializer;
 
         #region DI Constructor and Init
 
@@ -30,14 +31,19 @@ namespace ToSic.Sxc.WebApi.Cms
             IServiceProvider serviceProvider, 
             IContextResolver ctxResolver,
             Generator<Apps.App> appGen,
-            Generator<MultiPermissionsTypes> multiPermissionsTypesGen
+            Generator<MultiPermissionsTypes> multiPermissionsTypesGen,
+            JsonSerializer jsonSerializer
             ) : base(serviceProvider, "Cms.SaveBk")
         {
-            _pagePublishing = pagePublishing;
-            _appManagerLazy = appManagerLazy;
-            _ctxResolver = ctxResolver;
-            _appGen = appGen;
-            _multiPermissionsTypesGen = multiPermissionsTypesGen;
+            
+            ConnectServices(
+                _pagePublishing = pagePublishing,
+                _appManagerLazy = appManagerLazy,
+                _ctxResolver = ctxResolver,
+                _appGen = appGen,
+                _multiPermissionsTypesGen = multiPermissionsTypesGen,
+                _jsonSerializer = jsonSerializer
+            );
         }
         private readonly SxcPagePublishing _pagePublishing;
         private readonly Lazy<AppManager> _appManagerLazy;
@@ -45,14 +51,13 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly Generator<Apps.App> _appGen;
         private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
 
-        public EditSaveBackend Init(int appId, ILog log)
+        public EditSaveBackend Init(int appId)
         {
-            this.Init(log);
             _appId = appId;
             // The context should be from the block if there is one, because it affects saving/publishing
             // Basically it can result in things being saved draft or titles being updated
             _context = _ctxResolver.BlockOrApp(appId);
-            _pagePublishing.Init(_context, Log);
+            _pagePublishing.Init(_context);
             return this;
         }
 
@@ -78,9 +83,9 @@ namespace ToSic.Sxc.WebApi.Cms
             //    appId = targetAppId;
             //}
 
-            var appMan = _appManagerLazy.Value.Init(Log).Init(_appId);
+            var appMan = _appManagerLazy.Value.Init(_appId);
             var appRead = appMan.Read;
-            var ser = GetService<JsonSerializer>().Init(Log).SetApp(appRead.AppState);
+            var ser = _jsonSerializer.SetApp(appRead.AppState);
             // Since we're importing directly into this app, we would prefer local content-types
             ser.PreferLocalAppTypes = true;
             validator.PrepareForEntityChecks(appRead);

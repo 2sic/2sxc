@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Blocks.Edit
@@ -8,8 +7,8 @@ namespace ToSic.Sxc.Blocks.Edit
     public partial class BlockEditorBase
     {
         internal static BlockEditorBase GetEditor(IBlock block, 
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt)
+            IGenerator<BlockEditorForModule> blkEdtForMod,
+            IGenerator<BlockEditorForEntity> blkEdtForEnt)
         {
             if (block is BlockFromModule) return blkEdtForMod.New().Init(block);
             if (block is BlockFromEntity) return blkEdtForEnt.New().Init(block);

@@ -10,6 +10,7 @@ using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -32,7 +33,8 @@ namespace ToSic.Sxc.WebApi
         #endregion
 
 
-        protected BlockWebApiBackendBase(IServiceProvider sp,
+        protected BlockWebApiBackendBase(
+            IServiceProvider sp,
             LazyInitLog<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver, string logName
             ) : base(sp, logName)
@@ -43,7 +45,7 @@ namespace ToSic.Sxc.WebApi
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = GetService<MultiPermissionsApp>().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState, Log);
+            var permCheck = GetService<MultiPermissionsApp>().Init(Log).Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
         }

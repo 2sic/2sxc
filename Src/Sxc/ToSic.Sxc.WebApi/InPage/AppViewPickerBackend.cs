@@ -17,16 +17,18 @@ namespace ToSic.Sxc.WebApi.InPage
         public AppViewPickerBackend(IServiceProvider sp, 
             LazyInitLog<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt
+            GeneratorLog<BlockEditorForModule> blkEdtForMod,
+            GeneratorLog<BlockEditorForEntity> blkEdtForEnt
             ) : base(sp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
         {
-            _blkEdtForMod = blkEdtForMod;
-            _blkEdtForEnt = blkEdtForEnt;
+            ConnectServices(
+                _blkEdtForMod = blkEdtForMod,
+                _blkEdtForEnt = blkEdtForEnt
+            );
         }
 
-        private readonly Generator<BlockEditorForModule> _blkEdtForMod;
-        private readonly Generator<BlockEditorForEntity> _blkEdtForEnt;
+        private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
+        private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
 
         public void SetAppId(int? appId) => BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SetAppId(appId);
 
@@ -35,15 +37,16 @@ namespace ToSic.Sxc.WebApi.InPage
                 ? Array.Empty<TemplateUiInfo>()
                 : CmsManagerOfBlock?.Read.Views.GetCompatibleViews(Block?.App, Block?.Configuration);
 
-        public IEnumerable<AppUiInfo> Apps(string apps = null)
-        {
-            // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
-            var tenant = ContextOfBlock.Site;
-            return GetService<CmsZones>().Init(Log).SetId(tenant.ZoneId)
-                .AppsRt
-                .GetSelectableApps(tenant, apps)
-                .ToList();
-        }
+        // 2022-12-20 2dm - doesn't seem to be in use?
+        //public IEnumerable<AppUiInfo> Apps(string apps = null)
+        //{
+        //    // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
+        //    var tenant = ContextOfBlock.Site;
+        //    return GetService<CmsZones>().Init(Log).SetId(tenant.ZoneId)
+        //        .AppsRt
+        //        .GetSelectableApps(tenant, apps)
+        //        .ToList();
+        //}
 
         public IEnumerable<ContentTypeUiInfo> ContentTypes()
         {

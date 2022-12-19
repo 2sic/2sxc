@@ -5,13 +5,14 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Lib.Services;
 using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-    public class EditControllerReal: HasLog, IEditController
+    public class EditControllerReal: ServiceBase, IEditController
     {
         public const string LogSuffix = "Edit";
 
@@ -23,11 +24,13 @@ namespace ToSic.Sxc.WebApi.Cms
                 LazyInitLog<AppViewPickerBackend> appViewPickerBackendLazy
             ) : base("Api.EditRl")
         {
-            _entityBackend = entityBackend.SetLog(Log);
-            _loadBackend = loadBackend.SetLog(Log);
-            _saveBackendLazy = saveBackendLazy;
-            _linkBackendLazy = linkBackendLazy.SetLog(Log);
-            _appViewPickerBackendLazy = appViewPickerBackendLazy.SetLog(Log);
+            ConnectServices(
+                _entityBackend = entityBackend,
+                _loadBackend = loadBackend,
+                _saveBackendLazy = saveBackendLazy,
+                _linkBackendLazy = linkBackendLazy,
+                _appViewPickerBackendLazy = appViewPickerBackendLazy
+            );
 
         }
         private readonly LazyInitLog<EntityPickerBackend> _entityBackend;
@@ -39,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditDto Load(List<ItemIdentifier> items, int appId) => _loadBackend.Value.Load(appId, items);
 
         public Dictionary<Guid, int> Save(EditDto package, int appId, bool partOfPage)
-            => _saveBackendLazy.Value.Init(appId, Log).Save(package, partOfPage);
+            => _saveBackendLazy.Value.Init(appId).Save(package, partOfPage);
 
         public IEnumerable<EntityForPickerDto> EntityPicker(
             int appId,

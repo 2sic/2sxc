@@ -5,7 +5,6 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
@@ -14,14 +13,25 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
     {
-        private readonly Lazy<AdamContext<TFolderId, TFileId>> _adamState;
+        private readonly IValueConverter _valueConverter;
+        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
+        private readonly LazyInitLog<AdamContext<TFolderId, TFileId>> _adamState;
         private readonly IContextResolver _ctxResolver;
         private AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
 
-        public HyperlinkBackend(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
+        public HyperlinkBackend(
+            LazyInitLog<AdamContext<TFolderId, TFileId>> adamState,
+            IContextResolver ctxResolver,
+            GeneratorLog<MultiPermissionsApp> appPermissions,
+            IValueConverter valueConverter,
+            IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
         {
-            _adamState = adamState;
-            _ctxResolver = ctxResolver.Init(Log);
+            ConnectServices(
+                _adamState = adamState,
+                _appPermissions = appPermissions,
+                _ctxResolver = ctxResolver,
+                _valueConverter = valueConverter
+            );
         }
         
 
@@ -38,14 +48,14 @@ namespace ToSic.Sxc.WebApi.Cms
                 var lookupPage = hyperlink.Trim().StartsWith(ValueConverterBase.PrefixPage, StringComparison.OrdinalIgnoreCase);
 
                 // look it up first, because we need to know if the result is in ADAM or not (different security scenario)
-                var conv = GetService<IValueConverter>();
+                var conv = _valueConverter;
                 var resolved = conv.ToValue(hyperlink, guid);
 
                 if (lookupPage)
                 {
                     // page link - only resolve if the user has edit-permissions
                     // only people who have some full edit permissions may actually look up pages
-                    var permCheckPage = GetService<MultiPermissionsApp>().Init(context, context.AppState, Log);
+                    var permCheckPage = _appPermissions.New().Init(context, context.AppState);
                     var userMay= permCheckPage.UserMayOnAll(GrantSets.WritePublished);
                     return new LinkInfoDto {Value = userMay ? resolved : hyperlink};
                 }
@@ -58,7 +68,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
                 // file-check, more abilities to allow
                 // this will already do a ensure-or-throw inside it if outside of adam
-                var adamContext = AdamContext;
+                var adamContext = _adamState.Value;
                 adamContext.Init(context, contentType, field, guid, isOutsideOfAdam, Log);
                 if (!adamContext.Security.SuperUserOrAccessingItemFolder(resolved, out var exp))
                     throw exp;

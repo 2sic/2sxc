@@ -12,7 +12,7 @@ using ToSic.Sxc.Cms.Publishing;
 
 namespace ToSic.Sxc.WebApi.Save
 {
-    public class SxcPagePublishing: SaveHelperBase<SxcPagePublishing>
+    public class SxcPagePublishing: SaveHelperBase
     {
         #region Constructor / DI
         public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppStates appStates) : base("Sxc.PgPubl")

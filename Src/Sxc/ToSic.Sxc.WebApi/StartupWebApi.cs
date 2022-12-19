@@ -113,6 +113,7 @@ namespace ToSic.Sxc.WebApi
             // Adam Controllers etc.
             services.TryAddTransient(typeof(AdamManager<,>));
             services.TryAddTransient(typeof(AdamContext<,>));
+            services.TryAddTransient<AdamContext.Dependencies>();
             services.TryAddTransient(typeof(HyperlinkBackend<,>));
             services.TryAddTransient(typeof(AdamTransGetItems<,>));
             services.TryAddTransient(typeof(AdamTransDelete<,>));

@@ -5,18 +5,27 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
     public class DialogControllerReal: WebApiBackendBase<DialogControllerReal>, IDialogController
     {
+        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
         public const string LogSuffix = "Dialog";
 
-        public DialogControllerReal(IServiceProvider serviceProvider, IContextResolver ctxResolver, IUiContextBuilder uiContextBuilder) : base(serviceProvider, $"{LogNames.WebApi}.{LogSuffix}Rl")
+        public DialogControllerReal(IServiceProvider serviceProvider,
+            IContextResolver ctxResolver,
+            IUiContextBuilder uiContextBuilder,
+            GeneratorLog<MultiPermissionsApp> appPermissions) : base(serviceProvider, $"{LogNames.WebApi}.{LogSuffix}Rl")
         {
-            _ctxResolver = ctxResolver;
-            _uiContextBuilder = uiContextBuilder;
+            
+            ConnectServices(
+                _ctxResolver = ctxResolver,
+                _uiContextBuilder = uiContextBuilder,
+                _appPermissions = appPermissions
+            );
         }
         private readonly IContextResolver _ctxResolver;
         private readonly IUiContextBuilder _uiContextBuilder;
@@ -32,12 +41,12 @@ namespace ToSic.Sxc.WebApi.Admin
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
             if (appContext != null)
             {
-                var appAndPerms = GetService<MultiPermissionsApp>().Init(appContext, appContext.AppState, Log);
+                var appAndPerms = _appPermissions.New().Init(appContext, appContext.AppState, Log);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                     throw HttpException.PermissionDenied(error);
             }
 
-            var cb = _uiContextBuilder.InitApp(appContext?.AppState, Log);
+            var cb = _uiContextBuilder.InitApp(appContext?.AppState);
 
             return new DialogContextStandaloneDto
             {

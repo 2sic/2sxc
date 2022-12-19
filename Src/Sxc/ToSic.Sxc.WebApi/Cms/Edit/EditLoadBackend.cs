@@ -4,7 +4,6 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data.Builder;
-using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
@@ -28,6 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
     {
+        private readonly GeneratorLog<MultiPermissionsTypes> _typesPermissions;
 
         #region DI Constructor
 
@@ -43,8 +43,10 @@ namespace ToSic.Sxc.WebApi.Cms
             IUiData uiData,
             Generator<JsonSerializer> jsonSerializerGenerator,
             GoogleMapsSettings googleMapsSettings,
-            LazyInitLog<AppSettingsStack> settingsStack,
-            LazyInitLog<IFeaturesService> features) : base(serviceProvider, "Cms.LoadBk") =>
+            GeneratorLog<MultiPermissionsTypes> typesPermissions,
+            LazyInitLog<IFeaturesService> features) : base(serviceProvider, "Cms.LoadBk")
+        {
+
             ConnectServices(
                 _entityApi = entityApi,
                 _contentGroupList = contentGroupList,
@@ -57,8 +59,10 @@ namespace ToSic.Sxc.WebApi.Cms
                 _uiData = uiData,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _features = features,
-                _googleMapsSettings = googleMapsSettings
+                _googleMapsSettings = googleMapsSettings,
+                _typesPermissions = typesPermissions
             );
+        }
 
         private readonly EntityApi _entityApi;
         private readonly ContentGroupList _contentGroupList;
@@ -94,7 +98,7 @@ namespace ToSic.Sxc.WebApi.Cms
             TryToAutoFindMetadataSingleton(items, context.AppState);
 
             // now look up the types, and repeat security check with type-names
-            var permCheck = GetService<MultiPermissionsTypes>().Init(context, context.AppState, items, Log);
+            var permCheck = _typesPermissions.New().Init(context, context.AppState, items);
             if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
@@ -146,7 +150,7 @@ namespace ToSic.Sxc.WebApi.Cms
             result.Features = _uiData.Features(permCheck);
 
             // Attach context, but only the minimum needed for the UI
-            result.Context = _contextBuilder.InitApp(context.AppState, Log)
+            result.Context = _contextBuilder.InitApp(context.AppState)
                 .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
                     CtxEnable.EditUi);
 

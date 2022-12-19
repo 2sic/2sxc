@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Adam
         internal AdamManager<TFolderId, TFileId> AdamManager => _adamManagerLazy.Value;
         private readonly Lazy<AdamManager<TFolderId, TFileId>> _adamManagerLazy;
 
-        public AdamContext(Lazy<AdamManager<TFolderId, TFileId>> adamManagerLazy, IServiceProvider serviceProvider): base(serviceProvider, "Adm.CtxTT")
+        public AdamContext(Lazy<AdamManager<TFolderId, TFileId>> adamManagerLazy, IServiceProvider serviceProvider, Dependencies dependencies): base(serviceProvider, dependencies, "Adm.CtxTT")
         {
             _adamManagerLazy = adamManagerLazy;
         }

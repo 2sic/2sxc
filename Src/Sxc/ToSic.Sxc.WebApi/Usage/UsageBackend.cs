@@ -8,6 +8,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -18,12 +19,21 @@ namespace ToSic.Sxc.WebApi.Usage
     public class UsageBackend: WebApiBackendBase<UsageBackend>
     {
         private readonly CmsRuntime _cmsRuntime;
+        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
         private readonly IContextResolver _ctxResolver;
 
-        public UsageBackend(CmsRuntime cmsRuntime, IServiceProvider serviceProvider, IContextResolver ctxResolver) : base(serviceProvider, "Bck.Usage")
+        public UsageBackend(
+            CmsRuntime cmsRuntime,
+            IServiceProvider serviceProvider,
+            GeneratorLog<MultiPermissionsApp> appPermissions,
+            IContextResolver ctxResolver
+            ) : base(serviceProvider, "Bck.Usage")
         {
-            _cmsRuntime = cmsRuntime;
-            _ctxResolver = ctxResolver;
+            ConnectServices(
+                _cmsRuntime = cmsRuntime,
+                _appPermissions = appPermissions,
+                _ctxResolver = ctxResolver
+            );
         }
 
         public IEnumerable<ViewDto> ViewUsage(int appId, Guid guid, Func<List<IView>, List<BlockConfiguration>, IEnumerable<ViewDto>> finalBuilder)
@@ -32,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Usage
             var context = _ctxResolver.BlockOrApp(appId);
 
             // extra security to only allow zone change if host user
-            var permCheck = GetService<MultiPermissionsApp>().Init(context, context.AppState, Log);
+            var permCheck = _appPermissions.New().Init(context, context.AppState);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
