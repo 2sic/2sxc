@@ -5,7 +5,6 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Services;
 using Page = System.Web.UI.Page;
 
 namespace ToSic.Sxc.Dnn.Services
@@ -17,14 +16,15 @@ namespace ToSic.Sxc.Dnn.Services
         private readonly Generator<IContextOfBlock> _context;
 
         public DnnRenderService(
-            GeneratorLog<IEditService> editGenerator,
-            LazyInitLog<IModuleAndBlockBuilder> builder,
-            GeneratorLog<BlockFromEntity> blkFrmEntGen,
-            Lazy<History> historyLazy,
+            Dependencies dependencies,
+            //GeneratorLog<IEditService> editGenerator,
+            //LazyInitLog<IModuleAndBlockBuilder> builder,
+            //GeneratorLog<BlockFromEntity> blkFrmEntGen,
+            //Lazy<ILogHistoryLive> historyLazy,
             Lazy<DnnPageChanges> dnnPageChanges,
             Lazy<DnnClientResources> dnnClientResources,
             Generator<IContextOfBlock> context
-        ) : base(editGenerator, builder, blkFrmEntGen, historyLazy)
+        ) : base(/*editGenerator, builder, blkFrmEntGen, historyLazy*/dependencies)
         {
             _dnnPageChanges = dnnPageChanges;
             _dnnClientResources = dnnClientResources;

@@ -1,7 +1,6 @@
 ﻿using Oqtane.Models;
 using System.Linq;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
 using ToSic.Sxc.Blocks;
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             IContextOfBlock contextOfBlockEmpty,
             BlockFromModule blockModuleEmpty,
             IContextResolver contextResolverForLookUps,
-            History logHistory,
+            ILogStore logStore,
             GlobalTypesCheck globalTypesCheck,
             IOutputCache outputCache
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
@@ -38,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             _globalTypesCheck = globalTypesCheck;
             _outputCache = outputCache;
             PageOutput = pageOutput;
-            logHistory.Add("oqt-view", Log);
+            logStore.Add("oqt-view", Log);
         }
 
         public Output.OqtPageOutput PageOutput { get; }

@@ -20,14 +20,14 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Instance initializers...
         /// </summary>
-        public DnnEnvironmentInstaller(History logHistory, 
+        public DnnEnvironmentInstaller(ILogStore logStore, 
             DnnInstallLogger installLogger, 
             Lazy<IAppStates> appStatesLazy, 
             Lazy<CmsRuntime> cmsRuntimeLazy, 
             Lazy<RemoteRouterLink> remoteRouterLazy,
             Lazy<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
         {
-            logHistory.Add(LogNames.LogHistoryGlobalInstallation, Log);
+            logStore.Add(LogNames.LogHistoryGlobalInstallation, Log);
             _installLogger = installLogger;
             _appStatesLazy = appStatesLazy;
             _cmsRuntimeLazy = cmsRuntimeLazy;

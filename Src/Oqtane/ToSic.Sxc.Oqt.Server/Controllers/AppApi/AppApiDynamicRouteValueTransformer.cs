@@ -37,10 +37,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
             LazyInitLog<AppFolder> appFolder,
-            History logHistory)
+            ILogStore logStore)
         {
             Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
-            logHistory.Add(HistoryLogGroup, Log);
+            logStore.Add(HistoryLogGroup, Log);
 
             _tenantResolver = tenantResolver;
             _hostingEnvironment = hostingEnvironment;

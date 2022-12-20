@@ -66,6 +66,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<BlockFromEntity>();
             services.TryAddTransient<BlockBase.Dependencies>();
             services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
+            services.TryAddTransient<RenderService.Dependencies>();
 #pragma warning disable CS0618
             services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618

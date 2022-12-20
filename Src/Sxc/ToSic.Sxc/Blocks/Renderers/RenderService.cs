@@ -2,6 +2,7 @@
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -22,33 +23,57 @@ namespace ToSic.Sxc.Blocks
         ToSic.Sxc.Blocks.IRenderService
 #pragma warning restore CS0618
     {
-
         #region Constructor & ConnectToRoot
 
-        public RenderService(
-            GeneratorLog<IEditService> editGenerator,
-            LazyInitLog<IModuleAndBlockBuilder> builder,
-            GeneratorLog<BlockFromEntity> blkFrmEntGen,
-            Lazy<History> historyLazy
-        ) : base("Sxc.RndSvc")
-            => ConnectServices(_historyLazy = historyLazy,
-                _blkFrmEntGen = blkFrmEntGen,
-                _builder = builder,
-                _editGenerator = editGenerator
-            );
+        public class Dependencies: ServiceDependencies
+        {
+            public GeneratorLog<IEditService> EditGenerator { get; }
+            public LazyInitLog<IModuleAndBlockBuilder> Builder { get; }
+            public GeneratorLog<BlockFromEntity> BlkFrmEntGen { get; }
+            public Lazy<ILogStore> LogStore { get; }
 
-        private readonly GeneratorLog<BlockFromEntity> _blkFrmEntGen;
-        private readonly GeneratorLog<IEditService> _editGenerator;
-        private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
-        private readonly Lazy<History> _historyLazy;
+            public Dependencies(GeneratorLog<IEditService> editGenerator,
+                LazyInitLog<IModuleAndBlockBuilder> builder,
+                GeneratorLog<BlockFromEntity> blkFrmEntGen,
+                Lazy<ILogStore> logStore
+            ) => AddToLogQueue(
+                EditGenerator = editGenerator,
+                Builder = builder,
+                BlkFrmEntGen = blkFrmEntGen,
+                LogStore = logStore
+            );
+        }
+
+        public RenderService(
+            Dependencies dependencies
+            //GeneratorLog<IEditService> editGenerator,
+            //LazyInitLog<IModuleAndBlockBuilder> builder,
+            //GeneratorLog<BlockFromEntity> blkFrmEntGen,
+            //Lazy<ILogHistoryLive> historyLazy
+        ) : base("Sxc.RndSvc")
+        {
+            _Deps = dependencies.SetLog(Log);
+            //ConnectServices(_historyLazy = historyLazy
+            //    _blkFrmEntGen = blkFrmEntGen,
+            //    _builder = builder,
+            //    _editGenerator = editGenerator
+            //);
+        }
+
+        private readonly Dependencies _Deps;
+
+        //private readonly GeneratorLog<BlockFromEntity> _blkFrmEntGen;
+        //private readonly GeneratorLog<IEditService> _editGenerator;
+        //private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
+        //private readonly Lazy<ILogHistoryLive> _historyLazy;
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             base.ConnectToRoot(codeRoot);
-            _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
+            _logIsInHistory = true; // if we link it to a parent, we don't need to add own entry in log history
         }
 
-        private bool _logInitDone;
+        private bool _logIsInHistory;
 
         #endregion
 
@@ -56,9 +81,9 @@ namespace ToSic.Sxc.Blocks
 
         protected void MakeSureLogIsInHistory()
         {
-            if (_logInitDone) return;
-            _logInitDone = true;
-            _historyLazy.Value.Add("render-service", base.Log);
+            if (_logIsInHistory) return;
+            _logIsInHistory = true;
+            _Deps.LogStore.Value.Add("render-service", Log);
         }
 
         #endregion
@@ -85,8 +110,8 @@ namespace ToSic.Sxc.Blocks
             item = item ?? parent;
             MakeSureLogIsInHistory();
             return new HybridHtmlString(field == null
-                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity, _blkFrmEntGen) // without field edit-context
-                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), _blkFrmEntGen)); // with field-edit-context data-list-context
+                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity, _Deps.BlkFrmEntGen) // without field edit-context
+                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), _Deps.BlkFrmEntGen)); // with field-edit-context data-list-context
         }
 
         /// <summary>
@@ -111,8 +136,8 @@ namespace ToSic.Sxc.Blocks
 
             MakeSureLogIsInHistory();
             return new HybridHtmlString(merge == null
-                    ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent), _blkFrmEntGen)
-                    : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent), _blkFrmEntGen));
+                    ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent), _Deps.BlkFrmEntGen)
+                    : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent), _Deps.BlkFrmEntGen));
         }
 
 
@@ -121,7 +146,7 @@ namespace ToSic.Sxc.Blocks
         {
             MakeSureLogIsInHistory();
             var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-            var block = _builder.Value.GetBlock(pageId, moduleId).BlockBuilder;
+            var block = _Deps.Builder.Value.GetBlock(pageId, moduleId).BlockBuilder;
             var result = block.Run(true);
             return wrapLog.ReturnAsOk(result);
         }
@@ -132,7 +157,7 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         private IEditService GetEdit(DynamicEntity parent)
         {
-            var newEdit = _editGenerator.New();
+            var newEdit = _Deps.EditGenerator.New();
             newEdit.ConnectToRoot(_DynCodeRoot);
             return newEdit.SetBlock(_DynCodeRoot, parent._Dependencies.BlockOrNull);
         }

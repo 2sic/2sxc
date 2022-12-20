@@ -16,6 +16,7 @@ using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
@@ -40,8 +41,10 @@ namespace ToSic.Sxc.Search
     /// But the code is 99% clean, so it would be easy to split into dnn/Oqtane versions once ready.
     /// The only difference seems to be exception logging. 
     /// </remarks>
-    public class SearchController : HasLog
+    public class SearchController : ServiceBase
     {
+        private readonly Lazy<ILogStore> _logStore;
+
         public SearchController(
             AppsCacheSwitch appsCache,
             Generator<CodeCompiler> codeCompiler,
@@ -50,17 +53,20 @@ namespace ToSic.Sxc.Search
             LazyInitLog<IModuleAndBlockBuilder> moduleAndBlockBuilder,
             LazyInitLog<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
             EngineFactory engineFactory,
-            Lazy<IAppLoaderTools> loaderTools
-            ) : base("DNN.Search")
+            Lazy<IAppLoaderTools> loaderTools,
+            Lazy<ILogStore> logStore) : base("DNN.Search")
         {
-            _appsCache = appsCache;
-            _codeCompiler = codeCompiler;
-            _dnnDynamicCodeRoot = dnnDynamicCodeRoot;
-            _siteGenerator = siteGenerator;
-            _engineFactory = engineFactory;
-            _loaderTools = loaderTools;
-            _dnnLookUpEngineResolver = dnnLookUpEngineResolver.SetLog(Log);
-            _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
+            ConnectServices(
+                _appsCache = appsCache,
+                _codeCompiler = codeCompiler,
+                _dnnDynamicCodeRoot = dnnDynamicCodeRoot,
+                _siteGenerator = siteGenerator,
+                _engineFactory = engineFactory,
+                _loaderTools = loaderTools,
+                _dnnLookUpEngineResolver = dnnLookUpEngineResolver,
+                _moduleAndBlockBuilder = moduleAndBlockBuilder,
+                _logStore = logStore
+            );
         }
 
         private readonly AppsCacheSwitch _appsCache;
@@ -187,7 +193,7 @@ namespace ToSic.Sxc.Search
             // At the of the code, add it to insights / history. This must happen at the end.
             // It will only be preserved, if the inner code ran a Log.Preserve = true;
             if (Log.Preserve)
-                new History().Add("dnn-search", Log);
+                _logStore.Value.Add("dnn-search", Log);
 
             // reduce load by only keeping recently modified items
             var searchDocuments = KeepOnlyChangesSinceLastIndex(beginDate, SearchItems);

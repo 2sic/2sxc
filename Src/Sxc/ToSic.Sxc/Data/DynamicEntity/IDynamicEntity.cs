@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using IEntity = ToSic.Eav.Data.IEntity;
+#pragma warning disable CS0108, CS0114
 #if !NETFRAMEWORK
 #pragma warning disable CS0109
 #endif

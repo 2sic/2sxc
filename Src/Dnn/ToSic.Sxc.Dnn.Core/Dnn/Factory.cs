@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn
         private static ILog NewLog()
         {
             var log = new Log("Dnn.Factor");
-            StaticBuild<History>().Add("obsolete-dnn-factory", log);
+            StaticBuild<ILogStore>().Add("obsolete-dnn-factory", log);
             return log;
         }
 

@@ -77,17 +77,17 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
         public HttpControllerDescriptor SelectController(HttpRequestMessage request)
         {
+            // Do this once and early, to be really sure we always use the same one
+            var sp = DnnStaticDi.GetPageScopedServiceProvider();
+
             // Log this lookup and add to history for insights
             var log = new Log("Sxc.Http", null, request?.RequestUri?.AbsoluteUri);
-            AddToInsightsHistory(request?.RequestUri?.AbsoluteUri, log);
+            AddToInsightsHistory(sp, request?.RequestUri?.AbsoluteUri, log);
 
             var wrapLog = log.Fn<HttpControllerDescriptor>();
 
             if (!HandleRequestWithThisController(request))
                 return wrapLog.Return(PreviousSelector.SelectController(request), "upstream");
-
-            // Do this once and early, to be really sure we always use the same one
-            var sp = DnnStaticDi.GetPageScopedServiceProvider();
 
             var routeData = request.GetRouteData();
 
@@ -173,7 +173,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             return wrapLog.ReturnAsOk(descriptor);
         }
 
-        private static void AddToInsightsHistory(string url, ILog log)
+        private static void AddToInsightsHistory(IServiceProvider sp, string url, ILog log)
         {
             var addToHistory = true;
 #pragma warning disable CS0162
@@ -181,7 +181,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 addToHistory = (url?.Contains(InsightsController.InsightsUrlFragment) ?? false);
 #pragma warning restore CS0162
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (addToHistory) new History().Add("http-request", log);
+            if (addToHistory) sp.Build<ILogStore>().Add("http-request", log);
         }
     }
 }

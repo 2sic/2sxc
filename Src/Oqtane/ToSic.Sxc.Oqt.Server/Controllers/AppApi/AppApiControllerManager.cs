@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     /// </summary>
     public class AppApiControllerManager: IHasLog
     {
-        public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, History logHistory)
+        public AppApiControllerManager(ApplicationPartManager partManager, AppApiFileSystemWatcher appApiFileSystemWatcher, ILogStore logStore)
         {
             _partManager = partManager;
             _compiledAppApiControllers = appApiFileSystemWatcher.CompiledAppApiControllers;
             Log = new Log(HistoryLogName, null, "AppApiControllerManager");
-            logHistory.Add(HistoryLogGroup, Log);
+            logStore.Add(HistoryLogGroup, Log);
         }
         private readonly ConcurrentDictionary<string, bool> _compiledAppApiControllers;
         private readonly ApplicationPartManager _partManager;

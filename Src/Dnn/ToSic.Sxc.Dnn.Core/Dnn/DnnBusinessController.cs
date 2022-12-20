@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn
 
                 // if publishing is used, make sure it's in the log-history
                 _publishing = ServiceProvider.Build<IPagePublishing>().Init(Log);
-                ServiceProvider.Build<History>().Add("dnn-publishing", Log);
+                ServiceProvider.Build<ILogStore>().Add("dnn-publishing", Log);
                 return _publishing;
             }
         }

@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
      */
     public class AppApiAuthorization: IHasLog
     {
-        public AppApiAuthorization(History logHistory)
+        public AppApiAuthorization(ILogStore logStore)
         {
             Log = new Log(HistoryLogName, null, "AppApiAuthorization");
-            logHistory.Add(HistoryLogGroup, Log);
+            logStore.Add(HistoryLogGroup, Log);
         }
 
         public AppApiAuthorization Init(RequestDelegate next)

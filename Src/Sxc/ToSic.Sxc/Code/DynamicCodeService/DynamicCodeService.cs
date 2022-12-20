@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Code
         {
             public Dependencies(
                 IServiceProvider serviceProvider,
-                Lazy<History> history,
+                Lazy<ILogStore> logStore,
                 Lazy<IUser> user,
                 // Dependencies to get primary app
                 Lazy<ISite> site,
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Code
                 Lazy<IAppStates> appStates
             ) => AddToLogQueue(
                 ServiceProvider = serviceProvider,
-                History = history,
+                LogStore = logStore,
                 User = user,
                 Site = site,
                 ZoneMapper = zoneMapper,
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
             );
 
             internal IServiceProvider ServiceProvider { get; }
-            public Lazy<History> History { get; }
+            public Lazy<ILogStore> LogStore { get; }
             public Lazy<IUser> User { get; }
             public Lazy<ISite> Site { get; }
             public Lazy<IZoneMapper> ZoneMapper { get; }
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Code
         {
             if (_logInitDone) return;
             _logInitDone = true;
-            _dependencies.History.Value.Add("dynamic-code-service", Log);
+            _dependencies.LogStore.Value.Add("dynamic-code-service", Log);
         }
 
         protected void ActivateEditUi() => EditUiRequired = true;
