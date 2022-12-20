@@ -1,12 +1,12 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Save
 {
     /// <summary>
     /// All save helpers usually need the sxc-instance and the log
     /// </summary>
-    public abstract class SaveHelperBase: HasLog
+    public abstract class SaveHelperBase: ServiceBase
     {
         internal IContextOfApp Context { get; private set; }
 

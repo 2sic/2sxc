@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditControllerReal(
             LazyInitLog<EntityPickerBackend> entityBackend,
                 LazyInitLog<EditLoadBackend> loadBackend,
-                Lazy<EditSaveBackend> saveBackendLazy,
+                LazyInitLog<EditSaveBackend> saveBackendLazy,
                 LazyInitLog<HyperlinkBackend<int, int>> linkBackendLazy,
                 LazyInitLog<AppViewPickerBackend> appViewPickerBackendLazy
             ) : base("Api.EditRl")
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Cms
         }
         private readonly LazyInitLog<EntityPickerBackend> _entityBackend;
         private readonly LazyInitLog<EditLoadBackend> _loadBackend;
-        private readonly Lazy<EditSaveBackend> _saveBackendLazy;
+        private readonly LazyInitLog<EditSaveBackend> _saveBackendLazy;
         private readonly LazyInitLog<AppViewPickerBackend> _appViewPickerBackendLazy;
         private readonly LazyInitLog<HyperlinkBackend<int, int>> _linkBackendLazy;
 

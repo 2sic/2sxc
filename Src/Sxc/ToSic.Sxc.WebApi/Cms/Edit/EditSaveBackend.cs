@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
@@ -21,34 +20,30 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : ServiceBase
     {
+        private readonly SaveSecurity _saveSecurity;
         private readonly JsonSerializer _jsonSerializer;
 
         #region DI Constructor and Init
 
         public EditSaveBackend(
             SxcPagePublishing pagePublishing, 
-            Lazy<AppManager> appManagerLazy,
+            LazyInitLog<AppManager> appManagerLazy,
             IContextResolver ctxResolver,
-            Generator<Apps.App> appGen,
-            Generator<MultiPermissionsTypes> multiPermissionsTypesGen,
-            JsonSerializer jsonSerializer
+            JsonSerializer jsonSerializer,
+            SaveSecurity saveSecurity
             ) : base("Cms.SaveBk")
         {
-            
             ConnectServices(
                 _pagePublishing = pagePublishing,
                 _appManagerLazy = appManagerLazy,
                 _ctxResolver = ctxResolver,
-                _appGen = appGen,
-                _multiPermissionsTypesGen = multiPermissionsTypesGen,
-                _jsonSerializer = jsonSerializer
+                _jsonSerializer = jsonSerializer,
+                _saveSecurity = saveSecurity
             );
         }
         private readonly SxcPagePublishing _pagePublishing;
-        private readonly Lazy<AppManager> _appManagerLazy;
+        private readonly LazyInitLog<AppManager> _appManagerLazy;
         private readonly IContextResolver _ctxResolver;
-        private readonly Generator<Apps.App> _appGen;
-        private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
 
         public EditSaveBackend Init(int appId)
         {
@@ -91,7 +86,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             #region check if it's an update, and do more security checks then - shared with EntitiesController.Save
             // basic permission checks
-            var permCheck = new Save.SaveSecurity(_context, _appGen, _multiPermissionsTypesGen, Log)
+            var permCheck = _saveSecurity.Init(_context)
                 .DoPreSaveSecurityCheck(_appId, package.Items);
 
             var foundItems = package.Items.Where(i => i.Entity.Id != 0 && i.Entity.Guid != Guid.Empty)

@@ -12,20 +12,21 @@ using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.WebApi.Save
 {
-    internal class SaveSecurity: SaveHelperBase
+    public class SaveSecurity: SaveHelperBase
     {
-        private readonly Generator<Apps.App> _appGen;
-        private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
+        private readonly IGenerator<Apps.App> _appGen;
+        private readonly IGenerator<MultiPermissionsTypes> _multiPermissionsTypesGen;
 
-        public SaveSecurity(IContextOfApp context, 
-            Generator<Apps.App> appGen,
-            Generator<MultiPermissionsTypes> multiPermissionsTypesGen, 
-            ILog parentLog) : base("Api.SavSec")
+        public SaveSecurity(GeneratorLog<Apps.App> appGen, GeneratorLog<MultiPermissionsTypes> multiPermissionsTypesGen) : base("Api.SavSec") =>
+            ConnectServices(
+                _appGen = appGen,
+                _multiPermissionsTypesGen = multiPermissionsTypesGen
+            );
+
+        internal new SaveSecurity Init(IContextOfApp context)
         {
-            _appGen = appGen;
-            _multiPermissionsTypesGen = multiPermissionsTypesGen;
-            this.Init(parentLog);
             base.Init(context);
+            return this;
         }
 
 
