@@ -16,19 +16,21 @@ namespace ToSic.Sxc.Dnn.Run
 {
     public class DnnZoneMapper : ZoneMapperBase
     {
+
+
         /// <summary>
         /// This is the name of the setting in the PortalSettings pointing to the zone of this portal
         /// </summary>
         private const string PortalSettingZoneId = "ToSIC_SexyContent_ZoneID";
 
         /// <inheritdoc />
-        public DnnZoneMapper(IServiceProvider spForNewSites, LazyInitLog<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
+        public DnnZoneMapper(Generator<ISite> site, LazyInitLog<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
         {
-            _spForNewSites = spForNewSites;
+            _site = site;
             _zoneCreatorLazy = zoneCreatorLazy.SetLog(Log);
         }
-        private readonly IServiceProvider _spForNewSites;
         private readonly LazyInitLog<ZoneCreator> _zoneCreatorLazy;
+        private readonly Generator<ISite> _site;
 
 
         /// <inheritdoc />
@@ -75,7 +77,7 @@ namespace ToSic.Sxc.Dnn.Run
             
             return found == null 
                 ? wrapLog.Return((DnnSite)null, "not found") 
-                : wrapLog.Return(((DnnSite)_spForNewSites.Build<ISite>()).Swap(found, Log), $"found {found.PortalId}");
+                : wrapLog.Return(((DnnSite)_site.New()).Swap(found, Log), $"found {found.PortalId}");
         }
 
         /// <inheritdoc />

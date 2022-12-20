@@ -3,32 +3,41 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helper;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Context
 {
-    public class ContextResolver: HasLog, IContextResolver
+    public class ContextResolver: ServiceBase, IContextResolver
     {
         #region Constructor / DI
+        
         protected readonly LazyInitLog<AppIdResolver> AppIdResolver;
+        private readonly GeneratorLog<IContextOfSite> _contextOfSite;
+        private readonly GeneratorLog<IContextOfApp> _contextOfApp;
 
-        private IServiceProvider ServiceProvider { get; }
-
-        public ContextResolver(IServiceProvider serviceProvider, LazyInitLog<AppIdResolver> appIdResolverLazy) : base("Sxc.CtxRes")
+        public ContextResolver(
+            LazyInitLog<AppIdResolver> appIdResolverLazy,
+            GeneratorLog<IContextOfSite> contextOfSite,
+            GeneratorLog<IContextOfApp> contextOfApp) : base("Sxc.CtxRes")
         {
-            AppIdResolver = appIdResolverLazy.SetLog(Log);
-            ServiceProvider = serviceProvider;
+            ConnectServices(
+                _contextOfSite = contextOfSite,
+                _contextOfApp = contextOfApp,
+                AppIdResolver = appIdResolverLazy
+                );
         }
 
         #endregion
 
-        public IContextOfSite Site() => _site ?? (_site = ServiceProvider.Build<IContextOfSite>());
-        private IContextOfSite _site;
+        public IContextOfSite Site() => _site.Get(() => _contextOfSite.New());
+        private readonly GetOnce<IContextOfSite> _site = new GetOnce<IContextOfSite>();
 
         public IContextOfApp App(int appId)
         {
-            var appContext = ServiceProvider.Build<IContextOfApp>();
-            appContext.Init(Log);
+            var appContext = _contextOfApp.New();
+            //appContext.Init(Log);
             appContext.ResetApp(appId);
             return appContext;
         }
@@ -52,8 +61,8 @@ namespace ToSic.Sxc.Context
             return App(appId);
         }
 
-        private IContextOfBlock BlockContext => _blockContext ?? (_blockContext = RealBlockOrNull()?.Context);// _getBlockContext?.Invoke());
-        private IContextOfBlock _blockContext;
+        private IContextOfBlock BlockContext => _blockContext.Get(() => RealBlockOrNull()?.Context);// _getBlockContext?.Invoke());
+        private readonly GetOnce<IContextOfBlock> _blockContext = new GetOnce<IContextOfBlock>();
 
         //public void AttachBlockContext(Func<IContextOfBlock> getBlockContext) => _getBlockContext = getBlockContext;
         //private Func<IContextOfBlock> _getBlockContext;
@@ -85,8 +94,8 @@ namespace ToSic.Sxc.Context
             var identity = AppIdResolver.Value.GetAppIdFromRoute();
             if (identity != null)
             {
-                ctx = ServiceProvider.Build<IContextOfApp>();
-                ctx.Init(Log);
+                ctx = _contextOfApp.New();
+                //ctx.Init(Log);
                 ctx.ResetApp(identity);
                 return ctx;
             }

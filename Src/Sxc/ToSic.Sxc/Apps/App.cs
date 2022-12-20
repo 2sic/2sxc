@@ -8,8 +8,11 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helper;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.LookUp;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -24,20 +27,30 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
         [PrivateApi]
-        public App(IServiceProvider serviceProvider, AppDependencies dependencies, Lazy<GlobalPaths> globalPaths, Lazy<AppPaths> appPathsLazy, Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy) : base(dependencies, "App.SxcApp")
+        public App(AppDependencies dependencies, 
+            Lazy<GlobalPaths> globalPaths, 
+            Lazy<AppPaths> appPathsLazy, 
+            Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy,
+            Generator<IAppStates> appStates,
+            GeneratorLog<AppConfigDelegate> appConfigDelegate) 
+            : base(dependencies, "App.SxcApp")
         {
-            _serviceProvider = serviceProvider;
             _globalPaths = globalPaths;
             _appPathsLazy = appPathsLazy;
             _dynamicEntityDependenciesLazy = dynamicEntityDependenciesLazy;
+            _appStates = appStates;
+            _appConfigDelegate = appConfigDelegate.Init(Log);
         }
 
-        private readonly IServiceProvider _serviceProvider;
+        //private readonly IServiceProvider _serviceProvider;
         private readonly Lazy<GlobalPaths> _globalPaths;
         private readonly Lazy<AppPaths> _appPathsLazy;
         private readonly Lazy<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
-        private AppPaths _appPaths;
-        private AppPaths AppPaths => _appPaths ?? (_appPaths = _appPathsLazy.Value.Init(Site, AppState, Log));
+        private readonly Generator<IAppStates> _appStates;
+        private readonly GeneratorLog<AppConfigDelegate> _appConfigDelegate;
+
+        private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState, Log));
+        private readonly GetOnce<AppPaths> _appPaths = new GetOnce<AppPaths>();
 
         [PrivateApi]
         public App PreInit(ISite site)
@@ -66,9 +79,8 @@ namespace ToSic.Sxc.Apps
         /// <inheritdoc />
         public AppConfiguration Configuration
             // Create config object. Note that AppConfiguration could be null, then it would use default values
-            => _appConfig ?? (_appConfig = new AppConfiguration(AppConfiguration, Log));
-
-        private AppConfiguration _appConfig;
+            => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
+        private readonly GetOnce<AppConfiguration> _appConfig = new GetOnce<AppConfiguration>();
 
 #if NETFRAMEWORK
         [PrivateApi("obsolete, use the typed accessor instead, only included for old-compatibility")]
@@ -88,35 +100,17 @@ namespace ToSic.Sxc.Apps
         // TO GET THE DynamicEntityDependencies from the DynamicCodeRoot which creates the App...? 
         // ATM it's a bit limited, for example it probably cannot resolve links
         private DynamicEntityDependencies DynamicEntityDependencies
-            => _dynamicEntityDependencies ?? (_dynamicEntityDependencies =
+            => _dynamicEntityDependencies.Get(() =>
                 _dynamicEntityDependenciesLazy.Value.Init(null, Site.SafeLanguagePriorityCodes(), Log));
-        private DynamicEntityDependencies _dynamicEntityDependencies;
+        private readonly GetOnce<DynamicEntityDependencies> _dynamicEntityDependencies = new GetOnce<DynamicEntityDependencies>();
 
         /// <inheritdoc />
-        public dynamic Settings
-        {
-            get
-            {
-                if (!_settingsLoaded && AppSettings != null) _settings = MakeDynProperty(AppSettings);
-                _settingsLoaded = true;
-                return _settings;
-            }
-        }
-        private bool _settingsLoaded;
-        private dynamic _settings;
+        public dynamic Settings => AppSettings != null ? _settings.Get(() => MakeDynProperty(AppSettings)) : null;
+        private readonly GetOnce<dynamic> _settings = new GetOnce<dynamic>();
 
         /// <inheritdoc />
-        public dynamic Resources
-        {
-            get
-            {
-                if (!_resLoaded && AppResources != null) _res = MakeDynProperty(AppResources);
-                _resLoaded = true;
-                return _res;
-            }
-        }
-        private bool _resLoaded;
-        private dynamic _res;
+        public dynamic Resources => AppResources != null ? _res.Get(() => MakeDynProperty(AppResources)) : null;
+        private readonly GetOnce<dynamic> _res = new GetOnce<dynamic>();
 
         #endregion
 
@@ -124,8 +118,8 @@ namespace ToSic.Sxc.Apps
         #region Paths
 
         /// <inheritdoc />
-        public string Path => _path ?? (_path = AppPaths.Path);
-        private string _path;
+        public string Path => _path.Get(() => AppPaths.Path);
+        private readonly GetOnce<string> _path = new GetOnce<string>();
 
         /// <inheritdoc />
         public string Thumbnail
@@ -155,20 +149,21 @@ namespace ToSic.Sxc.Apps
         private string _thumbnail;
 
         /// <inheritdoc />
-        public string PathShared => _pathShared ?? (_pathShared = AppPaths.PathShared);
-        private string _pathShared;
+        public string PathShared => _pathShared.Get(() => AppPaths.PathShared);
+        private readonly GetOnce<string> _pathShared = new GetOnce<string>();
 
         /// <inheritdoc />
-        public string PhysicalPathShared => _physicalPathGlobal ?? (_physicalPathGlobal = AppPaths.PhysicalPathShared);
-        private string _physicalPathGlobal;
+        public string PhysicalPathShared => _physicalPathGlobal.Get(() => AppPaths.PhysicalPathShared);
+        private readonly GetOnce<string> _physicalPathGlobal = new GetOnce<string>();
 
         [PrivateApi("not public, not sure if we should surface this")]
-        public string RelativePath => _relativePath ?? (_relativePath = AppPaths.RelativePath);
-        private string _relativePath;
+        public string RelativePath => _relativePath.Get(() => AppPaths.RelativePath);
+        private readonly GetOnce<string> _relativePath = new GetOnce<string>();
+
 
         [PrivateApi("not public, not sure if we should surface this")]
-        public string RelativePathShared => _relativePathShared ?? (_relativePathShared = AppPaths.RelativePathShared);
-        private string _relativePathShared;
+        public string RelativePathShared => _relativePathShared.Get(() => AppPaths.RelativePathShared);
+        private readonly GetOnce<string> _relativePathShared = new GetOnce<string>();
 
 
         #endregion

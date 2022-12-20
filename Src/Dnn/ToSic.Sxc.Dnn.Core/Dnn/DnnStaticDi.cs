@@ -3,6 +3,7 @@ using System;
 using System.Web;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helper;
 using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn
@@ -13,10 +14,10 @@ namespace ToSic.Sxc.Dnn
     /// </summary>
     public static class DnnStaticDi
     {
-        private static Func<IServiceProvider> GetGlobalDnnServiceProvider;
+        private static Func<IServiceProvider> _getGlobalDnnServiceProvider;
 
         public static void StaticDiReady(Func<IServiceProvider> spFunc = null) 
-            => GetGlobalDnnServiceProvider = spFunc ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
+            => _getGlobalDnnServiceProvider = spFunc ?? throw new Exception("Can't start Static DI for old Dnn, because the ServiceCollection is null.");
 
         /// <summary>
         /// This is a special internal resolver for static objects
@@ -39,8 +40,8 @@ namespace ToSic.Sxc.Dnn
 
 
         [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
-        public static IServiceProvider GetGlobalServiceProvider() => _sp ?? (_sp = GetGlobalDnnServiceProvider?.Invoke() ?? throw new Exception("can't access global DNN service provider"));
-        private static IServiceProvider _sp;
+        public static IServiceProvider GetGlobalServiceProvider() => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new Exception("can't access global DNN service provider"));
+        private static readonly GetOnce<IServiceProvider> Sp = new GetOnce<IServiceProvider>();
 
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
         public static IServiceProvider GetPageScopedServiceProvider() => GetPageServiceProvider();

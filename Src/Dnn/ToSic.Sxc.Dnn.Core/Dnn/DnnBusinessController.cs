@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helper;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
@@ -38,8 +39,8 @@ namespace ToSic.Sxc.Dnn
         /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
         /// </summary>
-        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider());
-        private IServiceProvider _serviceProvider;
+        private IServiceProvider ServiceProvider => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider);
+        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
 
         #endregion
 
@@ -126,6 +127,6 @@ namespace ToSic.Sxc.Dnn
         }
 
         #endregion
-
+        
     }
 }

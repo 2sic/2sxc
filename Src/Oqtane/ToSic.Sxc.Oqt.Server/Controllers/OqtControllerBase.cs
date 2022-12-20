@@ -4,6 +4,7 @@ using System;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
+using ToSic.Lib.Helper;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
 using Log = ToSic.Lib.Logging.Log;
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// The RealController which is the full backend of this controller.
         /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
         /// </summary>
-        protected virtual TRealController Real => _real ??= _helper.Real<TRealController>();
-        private TRealController _real;
+        protected virtual TRealController Real => _real.Get(() => _helper.Real<TRealController>()) ;
+        private readonly GetOnce<TRealController> _real = new();
     }
 }

@@ -11,9 +11,9 @@ namespace ToSic.Sxc.Apps
     {
         public IApp Init(int appId, ILog log, IBlock optionalBlock = null, bool showDrafts = false)
         {
-            var appStates = _serviceProvider.Build<IAppStates>();
+            var appStates = _appStates.New();
             var appIdentity = appStates.IdentityOfApp(appId);
-            var confProvider = _serviceProvider.Build<AppConfigDelegate>().Init(log);
+            var confProvider = _appConfigDelegate.New().Init(log);
             var buildConfig = (optionalBlock == null)
                 ? confProvider.Build(showDrafts)
                 : confProvider.Build(optionalBlock);

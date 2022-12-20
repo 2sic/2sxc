@@ -5,6 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
+using ToSic.Lib.Helper;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -61,18 +62,18 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
         /// <inheritdoc />
-        public virtual TService GetService<TService>() => (_serviceProvider ?? (_serviceProvider = DnnStaticDi.GetPageScopedServiceProvider())).Build<TService>();
+        public virtual TService GetService<TService>() => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>();
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
-        private IServiceProvider _serviceProvider;
+        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
 
         /// <summary>
         /// The RealController which is the full backend of this controller.
         /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
         /// </summary>
         protected virtual TRealController Real
-            => _real ?? (_real = GetService<TRealController>().Init(Log)
-                                 ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
-        private TRealController _real;
+            => _real.Get(() => GetService<TRealController>().Init(Log) 
+                               ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
+        private readonly GetOnce<TRealController> _real = new GetOnce<TRealController>();
 
     }
 }
