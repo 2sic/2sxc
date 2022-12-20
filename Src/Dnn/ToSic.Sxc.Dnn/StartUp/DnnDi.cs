@@ -195,7 +195,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
 
             // v14.12.03/04 Hack with ModuleId in Lookups
-            services.TryAddScoped<ViewModuleIdHack>();
+            // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
+            //services.TryAddScoped<ViewModuleIdHack>();
 
             return services;
         }
