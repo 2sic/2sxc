@@ -1,14 +1,13 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
-using ToSic.Eav.WebApi;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Polymorphism;
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class PolymorphismBackend : WebApiBackendBase<PolymorphismBackend>
+    public class PolymorphismBackend : ServiceBase
     {
-        public PolymorphismBackend(IServiceProvider serviceProvider, Polymorphism.Polymorphism polymorphism, IAppStates appStates) : base(serviceProvider, "Bck.Views")
+        public PolymorphismBackend(Polymorphism.Polymorphism polymorphism, IAppStates appStates) : base("Bck.Views")
         {
             _polymorphism = polymorphism;
             _appStates = appStates;

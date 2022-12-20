@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Web.LightSpeed;
@@ -16,21 +16,25 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppsBackend: WebApiBackendBase<AppsBackend>
+    public class AppsBackend: ServiceBase
     {
         private readonly CmsZones _cmsZones;
         private readonly IContextOfSite _context;
+        private readonly GeneratorLog<AppConfigDelegate> _appConfigDelegate;
 
-        public AppsBackend(CmsZones cmsZones, IContextOfSite context, IServiceProvider serviceProvider) : base(serviceProvider, "Bck.Apps")
+        public AppsBackend(CmsZones cmsZones, IContextOfSite context, GeneratorLog<AppConfigDelegate> appConfigDelegate) : base("Bck.Apps")
         {
-            _cmsZones = cmsZones;
-            _context = context;
+            ConnectServices(
+                _cmsZones = cmsZones,
+                _context = context,
+                _appConfigDelegate = appConfigDelegate
+            );
         }
-
+        
         public List<AppDto> Apps()
         {
-            var cms = _cmsZones.Init(Log).SetId(_context.Site.ZoneId);
-            var configurationBuilder = GetService<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
+            var cms = _cmsZones.SetId(_context.Site.ZoneId);
+            var configurationBuilder = _appConfigDelegate.New().Build(_context.UserMayEdit);
             var list = cms.AppsRt.GetApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
         }
@@ -66,8 +70,8 @@ namespace ToSic.Sxc.WebApi.App
 
         public List<AppDto> GetInheritableApps()
         {
-            var cms = _cmsZones.Init(Log).SetId(_context.Site.ZoneId);
-            var configurationBuilder = GetService<AppConfigDelegate>().Init(Log).Build(_context.UserMayEdit);
+            var cms = _cmsZones.SetId(_context.Site.ZoneId);
+            var configurationBuilder = _appConfigDelegate.New().Build(_context.UserMayEdit);
             var list = cms.AppsRt.GetInheritableApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
         }

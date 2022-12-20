@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         #region constructor / DI
 
-        public ContentBlockBackend(IServiceProvider sp, 
+        public ContentBlockBackend(GeneratorLog<MultiPermissionsApp> multiPermissionsApp, 
             IPagePublishing publishing, 
             LazyInitLog<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             GeneratorLog<BlockEditorForModule> blkEdtForMod,
             GeneratorLog<BlockEditorForEntity> blkEdtForEnt,
             GeneratorLog<BlockFromEntity> entityBlockGenerator)
-            : base(sp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
+            : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
             ;
             ConnectServices(

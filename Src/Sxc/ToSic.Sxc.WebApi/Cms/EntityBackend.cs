@@ -2,20 +2,20 @@
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class EntityBackend: WebApiBackendBase<EntityBackend>
+    public class EntityBackend: ServiceBase
     {
         private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
         private readonly IContextResolver _ctxResolver;
 
-        public EntityBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver,
-            GeneratorLog<MultiPermissionsApp> appPermissions) : base(serviceProvider, "Bck.Entity")
+        public EntityBackend(IContextResolver ctxResolver,
+            GeneratorLog<MultiPermissionsApp> appPermissions) : base("Bck.Entity")
             => ConnectServices(
                 _ctxResolver = ctxResolver,
                 _appPermissions = appPermissions

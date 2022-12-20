@@ -20,29 +20,32 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Helper;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
-    public class AppContent : WebApiBackendBase<AppContent>
+    public class AppContent : ServiceBase
     {
+        private readonly GeneratorLog<Apps.App> _app;
         private readonly GeneratorLog<MultiPermissionsTypes> _typesPermissions;
         private readonly GeneratorLog<MultiPermissionsItems> _itemsPermissions;
 
         #region Constructor / DI
 
-        public AppContent(IServiceProvider sp,
+        public AppContent(GeneratorLog<Apps.App> app,
             EntityApi entityApi,
             LazyInitLog<IConvertToEavLight> entToDicLazy,
             IContextResolver ctxResolver,
             GeneratorLog<MultiPermissionsTypes> typesPermissions,
             GeneratorLog<MultiPermissionsItems> itemsPermissions,
             LazyInitLog<AppManager> appManagerLazy,
-            LazyInitLog<SimpleDataController> dataControllerLazy) : base(sp, "Sxc.ApiApC")
+            LazyInitLog<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
         {
             ConnectServices(
+                _app = app,
                 _entityApi = entityApi,
                 _entToDicLazy = entToDicLazy,
                 _ctxResolver = ctxResolver,
@@ -243,7 +246,7 @@ namespace ToSic.Sxc.WebApi.App
         /// used for API calls to get the current app
         /// </summary>
         /// <returns></returns>
-        internal IApp GetApp(int appId, bool showDrafts) => GetService<Apps.App>().Init(appId, Log, null, showDrafts);
+        internal IApp GetApp(int appId, bool showDrafts) => _app.New().Init(appId, Log, null, showDrafts);
 
         // TODO: THIS SHOULD probably replace The GetApp above, as it's just an indirect way of getting the data-controller?
         private SimpleDataController DataController(IAppIdentity app) => _dataController ?? (_dataController = _dataControllerLazy.Value.Init(app.ZoneId, app.AppId));

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Security;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -16,7 +16,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Usage
 {
-    public class UsageBackend: WebApiBackendBase<UsageBackend>
+    public class UsageBackend: ServiceBase
     {
         private readonly CmsRuntime _cmsRuntime;
         private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
@@ -24,10 +24,9 @@ namespace ToSic.Sxc.WebApi.Usage
 
         public UsageBackend(
             CmsRuntime cmsRuntime,
-            IServiceProvider serviceProvider,
             GeneratorLog<MultiPermissionsApp> appPermissions,
             IContextResolver ctxResolver
-            ) : base(serviceProvider, "Bck.Usage")
+            ) : base("Bck.Usage")
         {
             ConnectServices(
                 _cmsRuntime = cmsRuntime,

@@ -97,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private IEnumerable</*AdamItemDto*/object> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
         {
-            var adamListMaker = GetService<IAdamTransGetItems>();
+            var adamListMaker = _adamTransGetItems.New();
             adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
             var dic = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>;
             return dic;

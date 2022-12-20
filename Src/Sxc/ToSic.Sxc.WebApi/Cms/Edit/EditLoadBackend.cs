@@ -10,6 +10,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -22,11 +23,14 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class EditLoadBackend: WebApiBackendBase<EditLoadBackend>
+    public partial class EditLoadBackend: ServiceBase
     {
+        public GeneratorLog<HyperlinkBackend<int, int>> HyperlinkBackend { get; }
+        private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
         private readonly GeneratorLog<MultiPermissionsTypes> _typesPermissions;
 
         #region DI Constructor
@@ -34,7 +38,6 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditLoadBackend(EntityApi entityApi,
             ContentGroupList contentGroupList,
             EntityBuilder entityBuilder,
-            IServiceProvider serviceProvider,
             IUiContextBuilder contextBuilder,
             IContextResolver ctxResolver,
             ITargetTypes mdTargetTypes,
@@ -44,7 +47,9 @@ namespace ToSic.Sxc.WebApi.Cms
             Generator<JsonSerializer> jsonSerializerGenerator,
             GoogleMapsSettings googleMapsSettings,
             GeneratorLog<MultiPermissionsTypes> typesPermissions,
-            LazyInitLog<IFeaturesService> features) : base(serviceProvider, "Cms.LoadBk")
+            LazyInitLog<IFeaturesService> features,
+            Generator<IAdamTransGetItems> adamTransGetItems,
+            GeneratorLog<HyperlinkBackend<int, int>> hyperlinkBackend) : base("Cms.LoadBk")
         {
 
             ConnectServices(
@@ -60,7 +65,9 @@ namespace ToSic.Sxc.WebApi.Cms
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _features = features,
                 _googleMapsSettings = googleMapsSettings,
-                _typesPermissions = typesPermissions
+                _typesPermissions = typesPermissions,
+                _adamTransGetItems = adamTransGetItems,
+                HyperlinkBackend = hyperlinkBackend
             );
         }
 

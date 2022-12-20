@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Lib.Helper;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -52,8 +53,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             try
             {
-                var hlnkBackend = _hyperlinkBackend ??
-                                  (_hyperlinkBackend = GetService<HyperlinkBackend<int, int>>().Init(Log));
+                var hlnkBackend = _hyperlinkBackend.Get(() => HyperlinkBackend.New());
                 var result = hlnkBackend.LookupHyperlink(appId, value, contentType, entityGuid, field);
                 return result;
             }
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 return new LinkInfoDto  { Value = "error" };
             }
         }
-        private HyperlinkBackend<int, int> _hyperlinkBackend;
+        private GetOnce<HyperlinkBackend<int, int>> _hyperlinkBackend = new GetOnce<HyperlinkBackend<int, int>>();
 
 
         private static List<BundleWithLinkField> BundleWithLinkFields(EditDto editData, bool includeStringFields = false)

@@ -11,11 +11,13 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi
 {
-    public abstract class BlockWebApiBackendBase<T>: WebApiBackendBase<BlockWebApiBackendBase<T>> where T: class
+    public abstract class BlockWebApiBackendBase<T>: ServiceBase
     {
+        private readonly GeneratorLog<MultiPermissionsApp> _multiPermissionsApp;
         public IContextResolver CtxResolver { get; }
         protected readonly LazyInitLog<CmsManager> CmsManagerLazy;
 
@@ -34,18 +36,21 @@ namespace ToSic.Sxc.WebApi
 
 
         protected BlockWebApiBackendBase(
-            IServiceProvider sp,
+            GeneratorLog<MultiPermissionsApp> multiPermissionsApp,
             LazyInitLog<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver, string logName
-            ) : base(sp, logName)
-            => ConnectServices(
+            ) : base(logName)
+        {
+            ConnectServices(
+                _multiPermissionsApp = multiPermissionsApp,
                 CtxResolver = ctxResolver,
                 CmsManagerLazy = cmsManagerLazy
             );
+        }
 
         protected void ThrowIfNotAllowedInApp(List<Grants> requiredGrants, IAppIdentity alternateApp = null)
         {
-            var permCheck = GetService<MultiPermissionsApp>().Init(Log).Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
+            var permCheck = _multiPermissionsApp.New().Init(ContextOfBlock, alternateApp ?? ContextOfBlock.AppState);
             if (!permCheck.EnsureAll(requiredGrants, out var error))
                 throw HttpException.PermissionDenied(error);
         }

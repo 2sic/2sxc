@@ -7,19 +7,19 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class EditSaveBackend : WebApiBackendBase<EditSaveBackend>
+    public class EditSaveBackend : ServiceBase
     {
         private readonly JsonSerializer _jsonSerializer;
 
@@ -27,13 +27,12 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public EditSaveBackend(
             SxcPagePublishing pagePublishing, 
-            Lazy<AppManager> appManagerLazy, 
-            IServiceProvider serviceProvider, 
+            Lazy<AppManager> appManagerLazy,
             IContextResolver ctxResolver,
             Generator<Apps.App> appGen,
             Generator<MultiPermissionsTypes> multiPermissionsTypesGen,
             JsonSerializer jsonSerializer
-            ) : base(serviceProvider, "Cms.SaveBk")
+            ) : base("Cms.SaveBk")
         {
             
             ConnectServices(

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps.Parts;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
@@ -14,12 +15,12 @@ namespace ToSic.Sxc.WebApi.InPage
 {
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
-        public AppViewPickerBackend(IServiceProvider sp, 
+        public AppViewPickerBackend(GeneratorLog<MultiPermissionsApp> multiPermissionsApp, 
             LazyInitLog<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             GeneratorLog<BlockEditorForModule> blkEdtForMod,
             GeneratorLog<BlockEditorForEntity> blkEdtForEnt
-            ) : base(sp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
+            ) : base(multiPermissionsApp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
         {
             ConnectServices(
                 _blkEdtForMod = blkEdtForMod,

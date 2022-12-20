@@ -6,21 +6,21 @@ using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class DialogControllerReal: WebApiBackendBase<DialogControllerReal>, IDialogController
+    public class DialogControllerReal: ServiceBase, IDialogController
     {
         private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
         public const string LogSuffix = "Dialog";
 
-        public DialogControllerReal(IServiceProvider serviceProvider,
+        public DialogControllerReal(
             IContextResolver ctxResolver,
             IUiContextBuilder uiContextBuilder,
-            GeneratorLog<MultiPermissionsApp> appPermissions) : base(serviceProvider, $"{LogNames.WebApi}.{LogSuffix}Rl")
+            GeneratorLog<MultiPermissionsApp> appPermissions) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
-            
             ConnectServices(
                 _ctxResolver = ctxResolver,
                 _uiContextBuilder = uiContextBuilder,

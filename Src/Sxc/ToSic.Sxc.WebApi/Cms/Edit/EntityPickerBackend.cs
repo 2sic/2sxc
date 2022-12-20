@@ -5,22 +5,20 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class EntityPickerBackend: WebApiBackendBase<EntityPickerBackend>
+    public class EntityPickerBackend: ServiceBase
     {
         #region DI Constructor
 
         public EntityPickerBackend(EntityPickerApi entityPickerApi,
             IContextResolver ctxResolver,
             GeneratorLog<MultiPermissionsApp> appPermissions,
-            GeneratorLog<MultiPermissionsTypes> typePermissions,
-            IServiceProvider serviceProvider) : base(serviceProvider, "BE.EntPck")
+            GeneratorLog<MultiPermissionsTypes> typePermissions) : base("BE.EntPck")
         {
             ConnectServices(
                 _entityPickerApi = entityPickerApi,

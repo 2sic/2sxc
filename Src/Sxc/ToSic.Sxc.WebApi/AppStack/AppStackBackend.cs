@@ -2,26 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using static ToSic.Eav.Configuration.ConfigurationConstants;
 
 namespace ToSic.Sxc.WebApi.AppStack
 {
-    public class AppStackBackend: WebApiBackendBase<AppStackBackend>
+    public class AppStackBackend: ServiceBase
     {
 
         #region Constructor / DI
 
-        public AppStackBackend(IServiceProvider serviceProvider, IContextResolver ctxResolver, AppSettingsStack settingsStack) : base(serviceProvider, "Sxc.ApiApQ")
+        public AppStackBackend(IContextResolver ctxResolver, AppSettingsStack settingsStack) : base("Sxc.ApiApQ")
         {
             _ctxResolver = ctxResolver;
             _settingsStack = settingsStack;

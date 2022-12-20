@@ -5,13 +5,14 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class HyperlinkBackend<TFolderId, TFileId>: WebApiBackendBase<HyperlinkBackend<TFolderId, TFileId>>
+    public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
     {
         private readonly IValueConverter _valueConverter;
         private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
@@ -23,8 +24,7 @@ namespace ToSic.Sxc.WebApi.Cms
             LazyInitLog<AdamContext<TFolderId, TFileId>> adamState,
             IContextResolver ctxResolver,
             GeneratorLog<MultiPermissionsApp> appPermissions,
-            IValueConverter valueConverter,
-            IServiceProvider serviceProvider) : base(serviceProvider, "Bck.HypLnk")
+            IValueConverter valueConverter) : base("Bck.HypLnk")
         {
             ConnectServices(
                 _adamState = adamState,
