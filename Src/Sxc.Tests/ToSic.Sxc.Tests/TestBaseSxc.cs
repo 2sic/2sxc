@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav;
 using ToSic.Eav.StartUp;
+using ToSic.Lib;
 using ToSic.Sxc.Startup;
 using ToSic.Testing.Shared;
 
@@ -14,8 +15,8 @@ namespace ToSic.Sxc.Tests
             return base.SetupServices(services)
                 .AddSxcCore()
                 .AddEavCore()
-                .AddEavCorePlumbing()
-                .AddEavCoreFallbackServices();
+                .AddEavCoreFallbackServices()
+                .AddLibCore();
         }
 
     }
