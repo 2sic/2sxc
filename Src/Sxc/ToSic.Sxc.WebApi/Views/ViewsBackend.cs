@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Views
     public class ViewsBackend: ServiceBase
     {
         public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates,
-            Lazy<IConvertToEavLight> convertToEavLight, GeneratorLog<ImpExpHelpers> impExpHelpers)
+            Lazy<IConvertToEavLight> convertToEavLight, Generator<ImpExpHelpers> impExpHelpers)
             : base("Bck.Views") => ConnectServices(
             _cmsManagerLazy = cmsManagerLazy,
             _appStates = appStates,
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly Lazy<CmsManager> _cmsManagerLazy;
         private readonly IAppStates _appStates;
         private readonly Lazy<IConvertToEavLight> _convertToEavLight;
-        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
+        private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly ISite _site;
         private readonly IUser _user;
 

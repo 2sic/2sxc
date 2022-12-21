@@ -52,13 +52,13 @@ namespace ToSic.Sxc.Code
         {
             public Generator<App> AppGenerator { get; }
             public Generator<DynamicCodeRoot> CodeRootGenerator { get; }
-            public GeneratorLog<AppConfigDelegate> AppConfigDelegateGenerator { get; }
+            public Generator<AppConfigDelegate> AppConfigDelegateGenerator { get; }
             public LazyInitLog<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
 
             public ScopedDependencies(
                 Generator<DynamicCodeRoot> codeRootGenerator,
                 Generator<App> appGenerator,
-                GeneratorLog<AppConfigDelegate> appConfigDelegateGenerator,
+                Generator<AppConfigDelegate> appConfigDelegateGenerator,
                 LazyInitLog<IModuleAndBlockBuilder> modAndBlockBuilder
             ) => AddToLogQueue(
                 CodeRootGenerator = codeRootGenerator,

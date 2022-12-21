@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Apps
             Lazy<AppPaths> appPathsLazy, 
             Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy,
             Generator<IAppStates> appStates,
-            GeneratorLog<AppConfigDelegate> appConfigDelegate) 
+            Generator<AppConfigDelegate> appConfigDelegate) 
             : base(dependencies, "App.SxcApp")
         {
             _globalPaths = globalPaths;
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Apps
         private readonly Lazy<AppPaths> _appPathsLazy;
         private readonly Lazy<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
         private readonly Generator<IAppStates> _appStates;
-        private readonly GeneratorLog<AppConfigDelegate> _appConfigDelegate;
+        private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
         private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState, Log));
         private readonly GetOnce<AppPaths> _appPaths = new GetOnce<AppPaths>();

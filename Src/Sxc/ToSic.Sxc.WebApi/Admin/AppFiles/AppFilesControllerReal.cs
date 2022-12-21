@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         public AppFilesControllerReal(
             ISite site,
             IUser user, 
-            GeneratorLog<AssetEditor> assetEditorGenerator,
+            Generator<AssetEditor> assetEditorGenerator,
             IAppStates appStates,
             AppPaths appPaths
             ) : base("Bck.Assets")
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         }
 
         private readonly ISite _site;
-        private readonly GeneratorLog<AssetEditor> _assetEditorGenerator;
+        private readonly Generator<AssetEditor> _assetEditorGenerator;
         private readonly AssetTemplates _assetTemplates;
         private readonly IAppStates _appStates;
         private readonly AppPaths _appPaths;

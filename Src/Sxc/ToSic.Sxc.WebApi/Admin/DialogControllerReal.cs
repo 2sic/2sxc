@@ -13,13 +13,13 @@ namespace ToSic.Sxc.WebApi.Admin
 {
     public class DialogControllerReal: ServiceBase, IDialogController
     {
-        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
+        private readonly Generator<MultiPermissionsApp> _appPermissions;
         public const string LogSuffix = "Dialog";
 
         public DialogControllerReal(
             IContextResolver ctxResolver,
             IUiContextBuilder uiContextBuilder,
-            GeneratorLog<MultiPermissionsApp> appPermissions) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            Generator<MultiPermissionsApp> appPermissions) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _ctxResolver = ctxResolver,

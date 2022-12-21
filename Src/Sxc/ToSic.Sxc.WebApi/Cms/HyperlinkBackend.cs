@@ -15,7 +15,7 @@ namespace ToSic.Sxc.WebApi.Cms
     public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
     {
         private readonly IValueConverter _valueConverter;
-        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
+        private readonly Generator<MultiPermissionsApp> _appPermissions;
         private readonly LazyInitLog<AdamContext<TFolderId, TFileId>> _adamState;
         private readonly IContextResolver _ctxResolver;
         private AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public HyperlinkBackend(
             LazyInitLog<AdamContext<TFolderId, TFileId>> adamState,
             IContextResolver ctxResolver,
-            GeneratorLog<MultiPermissionsApp> appPermissions,
+            Generator<MultiPermissionsApp> appPermissions,
             IValueConverter valueConverter) : base("Bck.HypLnk")
         {
             ConnectServices(

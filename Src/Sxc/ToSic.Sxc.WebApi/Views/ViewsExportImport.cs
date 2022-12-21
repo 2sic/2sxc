@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly Lazy<JsonBundleSerializer> _jsonBundleLazy;
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
-        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
+        private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
         private readonly ISite _site;
         private readonly IUser _user;
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Views
             IContextOfSite context,
             IAppStates appStates,
             AppIconHelpers appIconHelpers,
-            GeneratorLog<ImpExpHelpers> impExpHelpers,
+            Generator<ImpExpHelpers> impExpHelpers,
             ResponseMaker<THttpResponseType> responseMaker
             ) : base("Bck.Views")
         {

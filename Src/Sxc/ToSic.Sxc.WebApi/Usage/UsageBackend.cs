@@ -19,12 +19,12 @@ namespace ToSic.Sxc.WebApi.Usage
     public class UsageBackend: ServiceBase
     {
         private readonly CmsRuntime _cmsRuntime;
-        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
+        private readonly Generator<MultiPermissionsApp> _appPermissions;
         private readonly IContextResolver _ctxResolver;
 
         public UsageBackend(
             CmsRuntime cmsRuntime,
-            GeneratorLog<MultiPermissionsApp> appPermissions,
+            Generator<MultiPermissionsApp> appPermissions,
             IContextResolver ctxResolver
             ) : base("Bck.Usage")
         {

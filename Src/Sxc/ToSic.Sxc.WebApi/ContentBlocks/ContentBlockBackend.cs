@@ -22,18 +22,18 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 {
     public class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
     {
-        private readonly GeneratorLog<BlockFromEntity> _entityBlockGenerator;
+        private readonly Generator<BlockFromEntity> _entityBlockGenerator;
 
         #region constructor / DI
 
-        public ContentBlockBackend(GeneratorLog<MultiPermissionsApp> multiPermissionsApp, 
+        public ContentBlockBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
             IPagePublishing publishing, 
             LazyInitLog<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             Lazy<IBlockResourceExtractor> optimizerLazy,
-            GeneratorLog<BlockEditorForModule> blkEdtForMod,
-            GeneratorLog<BlockEditorForEntity> blkEdtForEnt,
-            GeneratorLog<BlockFromEntity> entityBlockGenerator)
+            Generator<BlockEditorForModule> blkEdtForMod,
+            Generator<BlockEditorForEntity> blkEdtForEnt,
+            Generator<BlockFromEntity> entityBlockGenerator)
             : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
             ;

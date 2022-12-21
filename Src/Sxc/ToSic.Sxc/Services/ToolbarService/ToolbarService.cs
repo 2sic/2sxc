@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Services
     {
         #region Constructor & Init
 
-        public ToolbarService(GeneratorLog<IToolbarBuilder> toolbarGenerator) : base($"{Constants.SxcLogName}.TlbSvc")
+        public ToolbarService(Generator<IToolbarBuilder> toolbarGenerator) : base($"{Constants.SxcLogName}.TlbSvc")
             => ConnectServices(_toolbarGenerator = toolbarGenerator);
-        private readonly GeneratorLog<IToolbarBuilder> _toolbarGenerator;
+        private readonly Generator<IToolbarBuilder> _toolbarGenerator;
 
         #endregion
 

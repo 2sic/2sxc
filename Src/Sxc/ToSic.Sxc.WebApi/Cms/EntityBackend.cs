@@ -11,11 +11,11 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EntityBackend: ServiceBase
     {
-        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
+        private readonly Generator<MultiPermissionsApp> _appPermissions;
         private readonly IContextResolver _ctxResolver;
 
         public EntityBackend(IContextResolver ctxResolver,
-            GeneratorLog<MultiPermissionsApp> appPermissions) : base("Bck.Entity")
+            Generator<MultiPermissionsApp> appPermissions) : base("Bck.Entity")
             => ConnectServices(
                 _ctxResolver = ctxResolver,
                 _appPermissions = appPermissions

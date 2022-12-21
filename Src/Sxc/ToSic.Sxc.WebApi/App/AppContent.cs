@@ -29,18 +29,18 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppContent : ServiceBase
     {
-        private readonly GeneratorLog<Apps.App> _app;
-        private readonly GeneratorLog<MultiPermissionsTypes> _typesPermissions;
-        private readonly GeneratorLog<MultiPermissionsItems> _itemsPermissions;
+        private readonly Generator<Apps.App> _app;
+        private readonly Generator<MultiPermissionsTypes> _typesPermissions;
+        private readonly Generator<MultiPermissionsItems> _itemsPermissions;
 
         #region Constructor / DI
 
-        public AppContent(GeneratorLog<Apps.App> app,
+        public AppContent(Generator<Apps.App> app,
             EntityApi entityApi,
             LazyInitLog<IConvertToEavLight> entToDicLazy,
             IContextResolver ctxResolver,
-            GeneratorLog<MultiPermissionsTypes> typesPermissions,
-            GeneratorLog<MultiPermissionsItems> itemsPermissions,
+            Generator<MultiPermissionsTypes> typesPermissions,
+            Generator<MultiPermissionsItems> itemsPermissions,
             LazyInitLog<AppManager> appManagerLazy,
             LazyInitLog<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
         {

@@ -20,9 +20,9 @@ namespace ToSic.Sxc.WebApi.App
     {
         private readonly CmsZones _cmsZones;
         private readonly IContextOfSite _context;
-        private readonly GeneratorLog<AppConfigDelegate> _appConfigDelegate;
+        private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
-        public AppsBackend(CmsZones cmsZones, IContextOfSite context, GeneratorLog<AppConfigDelegate> appConfigDelegate) : base("Bck.Apps")
+        public AppsBackend(CmsZones cmsZones, IContextOfSite context, Generator<AppConfigDelegate> appConfigDelegate) : base("Bck.Apps")
         {
             ConnectServices(
                 _cmsZones = cmsZones,

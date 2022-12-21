@@ -17,8 +17,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public EntityPickerBackend(EntityPickerApi entityPickerApi,
             IContextResolver ctxResolver,
-            GeneratorLog<MultiPermissionsApp> appPermissions,
-            GeneratorLog<MultiPermissionsTypes> typePermissions) : base("BE.EntPck")
+            Generator<MultiPermissionsApp> appPermissions,
+            Generator<MultiPermissionsTypes> typePermissions) : base("BE.EntPck")
         {
             ConnectServices(
                 _entityPickerApi = entityPickerApi,
@@ -29,8 +29,8 @@ namespace ToSic.Sxc.WebApi.Cms
         }
         private readonly EntityPickerApi _entityPickerApi;
         private readonly IContextResolver _ctxResolver;
-        private readonly GeneratorLog<MultiPermissionsApp> _appPermissions;
-        private readonly GeneratorLog<MultiPermissionsTypes> _typePermissions;
+        private readonly Generator<MultiPermissionsApp> _appPermissions;
+        private readonly Generator<MultiPermissionsTypes> _typePermissions;
 
         #endregion
 

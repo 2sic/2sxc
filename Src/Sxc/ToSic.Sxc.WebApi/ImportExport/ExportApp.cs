@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             CmsRuntime cmsRuntime, 
             ISite site, 
             IUser user, 
-            GeneratorLog<ImpExpHelpers> impExpHelpers, 
+            Generator<ImpExpHelpers> impExpHelpers, 
             IFeaturesInternal features
             ) : base("Bck.Export") =>
             ConnectServices(
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly ISite _site;
         private readonly IUser _user;
         private readonly IFeaturesInternal _features;
-        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
+        private readonly Generator<ImpExpHelpers> _impExpHelpers;
 
 
         #endregion

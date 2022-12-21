@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
     {
         #region Constructor / DI
 
-        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user, GeneratorLog<ImpExpHelpers> impExpHelpers, ResponseMaker<THttpResponseType> responseMaker)
+        public ExportContent(XmlExporter xmlExporter, Lazy<CmsRuntime> cmsRuntime, ISite site, IUser user, Generator<ImpExpHelpers> impExpHelpers, ResponseMaker<THttpResponseType> responseMaker)
             : base("Bck.Export") =>
             ConnectServices(
                 _xmlExporter = xmlExporter,
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly ISite _site;
         private CmsRuntime CmsRuntime => _cmsRuntime.Value;
         private readonly IUser _user;
-        private readonly GeneratorLog<ImpExpHelpers> _impExpHelpers;
+        private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
 
         #endregion

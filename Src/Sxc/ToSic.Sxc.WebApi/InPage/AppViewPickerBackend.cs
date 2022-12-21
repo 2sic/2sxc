@@ -15,11 +15,11 @@ namespace ToSic.Sxc.WebApi.InPage
 {
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
-        public AppViewPickerBackend(GeneratorLog<MultiPermissionsApp> multiPermissionsApp, 
+        public AppViewPickerBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
             LazyInitLog<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            GeneratorLog<BlockEditorForModule> blkEdtForMod,
-            GeneratorLog<BlockEditorForEntity> blkEdtForEnt
+            Generator<BlockEditorForModule> blkEdtForMod,
+            Generator<BlockEditorForEntity> blkEdtForEnt
             ) : base(multiPermissionsApp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
         {
             ConnectServices(

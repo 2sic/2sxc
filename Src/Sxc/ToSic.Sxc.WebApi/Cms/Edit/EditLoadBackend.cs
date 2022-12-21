@@ -29,9 +29,9 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: ServiceBase
     {
-        public GeneratorLog<HyperlinkBackend<int, int>> HyperlinkBackend { get; }
+        public Generator<HyperlinkBackend<int, int>> HyperlinkBackend { get; }
         private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
-        private readonly GeneratorLog<MultiPermissionsTypes> _typesPermissions;
+        private readonly Generator<MultiPermissionsTypes> _typesPermissions;
 
         #region DI Constructor
 
@@ -46,10 +46,10 @@ namespace ToSic.Sxc.WebApi.Cms
             IUiData uiData,
             Generator<JsonSerializer> jsonSerializerGenerator,
             GoogleMapsSettings googleMapsSettings,
-            GeneratorLog<MultiPermissionsTypes> typesPermissions,
+            Generator<MultiPermissionsTypes> typesPermissions,
             LazyInitLog<IFeaturesService> features,
             Generator<IAdamTransGetItems> adamTransGetItems,
-            GeneratorLog<HyperlinkBackend<int, int>> hyperlinkBackend) : base("Cms.LoadBk")
+            Generator<HyperlinkBackend<int, int>> hyperlinkBackend) : base("Cms.LoadBk")
         {
 
             ConnectServices(

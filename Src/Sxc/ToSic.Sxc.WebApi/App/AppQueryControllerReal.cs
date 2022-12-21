@@ -25,8 +25,8 @@ namespace ToSic.Sxc.WebApi.App
     /// </summary>
     public class AppQueryControllerReal: ServiceBase , IAppQueryController
     {
-        private readonly GeneratorLog<AppConfigDelegate> _appConfigDelegate;
-        private readonly GeneratorLog<Apps.App> _app;
+        private readonly Generator<AppConfigDelegate> _appConfigDelegate;
+        private readonly Generator<Apps.App> _app;
         public const string LogSuffix = "AppQry";
 
         private const string AllStreams = "*";
@@ -35,9 +35,9 @@ namespace ToSic.Sxc.WebApi.App
 
         public AppQueryControllerReal(IContextResolver ctxResolver, 
             IConvertToEavLight dataToFormatLight, 
-            GeneratorLog<AppPermissionCheck> appPermissionCheck,
-            GeneratorLog<AppConfigDelegate> appConfigDelegate,
-            GeneratorLog<Apps.App> app) : base("Sxc.ApiApQ")
+            Generator<AppPermissionCheck> appPermissionCheck,
+            Generator<AppConfigDelegate> appConfigDelegate,
+            Generator<Apps.App> app) : base("Sxc.ApiApQ")
         {
             ConnectServices(
                 _ctxResolver = ctxResolver,
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.WebApi.App
         
         private readonly IContextResolver _ctxResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
-        private readonly GeneratorLog<AppPermissionCheck> _appPermissionCheck;
+        private readonly Generator<AppPermissionCheck> _appPermissionCheck;
 
         #endregion
 

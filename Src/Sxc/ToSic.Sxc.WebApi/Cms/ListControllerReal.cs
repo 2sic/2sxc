@@ -20,18 +20,18 @@ namespace ToSic.Sxc.WebApi.Cms
         #region constructor / DI
 
         public ListControllerReal(
-            GeneratorLog<MultiPermissionsApp> multiPermissionsApp,
+            Generator<MultiPermissionsApp> multiPermissionsApp,
             IPagePublishing publishing,
             LazyInitLog<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver,
-            GeneratorLog<IPagePublishing> versioning
+            Generator<IPagePublishing> versioning
         ) : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Api.LstRl")
             => ConnectServices(
                 _publishing = publishing,
                 _versioning = versioning
             );
 
-        private readonly GeneratorLog<IPagePublishing> _versioning;
+        private readonly Generator<IPagePublishing> _versioning;
         private readonly IPagePublishing _publishing;
 
         private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());

@@ -24,9 +24,9 @@ namespace ToSic.Sxc.Adam
 
         public class Dependencies: ServiceDependencies
         {
-            public GeneratorLog<MultiPermissionsTypes> TypesPermissions { get; }
+            public Generator<MultiPermissionsTypes> TypesPermissions { get; }
 
-            public Dependencies(GeneratorLog<MultiPermissionsTypes> typesPermissions)
+            public Dependencies(Generator<MultiPermissionsTypes> typesPermissions)
             {
                 AddToLogQueue(
                     TypesPermissions = typesPermissions

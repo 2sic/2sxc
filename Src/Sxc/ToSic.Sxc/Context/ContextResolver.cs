@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Context
         #region Constructor / DI
         
         protected readonly LazyInitLog<AppIdResolver> AppIdResolver;
-        private readonly GeneratorLog<IContextOfSite> _contextOfSite;
-        private readonly GeneratorLog<IContextOfApp> _contextOfApp;
+        private readonly Generator<IContextOfSite> _contextOfSite;
+        private readonly Generator<IContextOfApp> _contextOfApp;
 
         public ContextResolver(
             LazyInitLog<AppIdResolver> appIdResolverLazy,
-            GeneratorLog<IContextOfSite> contextOfSite,
-            GeneratorLog<IContextOfApp> contextOfApp) : base("Sxc.CtxRes")
+            Generator<IContextOfSite> contextOfSite,
+            Generator<IContextOfApp> contextOfApp) : base("Sxc.CtxRes")
         {
             ConnectServices(
                 _contextOfSite = contextOfSite,

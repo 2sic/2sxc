@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi
 {
     public abstract class BlockWebApiBackendBase<T>: ServiceBase
     {
-        private readonly GeneratorLog<MultiPermissionsApp> _multiPermissionsApp;
+        private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
         public IContextResolver CtxResolver { get; }
         protected readonly LazyInitLog<CmsManager> CmsManagerLazy;
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi
 
 
         protected BlockWebApiBackendBase(
-            GeneratorLog<MultiPermissionsApp> multiPermissionsApp,
+            Generator<MultiPermissionsApp> multiPermissionsApp,
             LazyInitLog<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver, string logName
             ) : base(logName)

@@ -29,8 +29,8 @@ namespace ToSic.Sxc.WebApi.Save
         private bool _withDrafts = false;
 
         public ContentGroupList(LazyInitLog<CmsManager> cmsManagerLazy, 
-            GeneratorLog<BlockEditorForModule> blkEdtForMod,
-            GeneratorLog<BlockEditorForEntity> blkEdtForEnt
+            Generator<BlockEditorForModule> blkEdtForMod,
+            Generator<BlockEditorForEntity> blkEdtForEnt
             ) : base("Api.GrpPrc")
         {
             ConnectServices(

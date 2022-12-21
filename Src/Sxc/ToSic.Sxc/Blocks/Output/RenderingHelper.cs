@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Blocks.Output
         public RenderingHelper(
             ILinkPaths linkPaths,
             IEnvironmentLogger errorLogger,
-            GeneratorLog<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
+            Generator<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
             => ConnectServices(_linkPaths = linkPaths,
                 _errorLogger = errorLogger,
                 _jsContextAllGen = jsContextAllGen
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         private readonly ILinkPaths _linkPaths;
         private readonly IEnvironmentLogger _errorLogger;
-        private readonly GeneratorLog<JsContextAll> _jsContextAllGen;
+        private readonly Generator<JsContextAll> _jsContextAllGen;
 
         public IRenderingHelper Init(IBlock block, ILog parentLog)
         {
