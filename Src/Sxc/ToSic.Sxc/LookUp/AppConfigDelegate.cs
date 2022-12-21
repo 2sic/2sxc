@@ -12,20 +12,23 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Web;
 using CmsBlock = ToSic.Sxc.DataSources.CmsBlock;
 using IApp = ToSic.Sxc.Apps.IApp;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.LookUp
 {
-    public class AppConfigDelegate : HasLog
+    public class AppConfigDelegate : ServiceBase
     {
         #region Constructor / DI
 
-        private readonly LazyInitLog<ILookUpEngineResolver> _getEngineLazy;
-        private readonly Lazy<IHttp> _httpLazy;
+        private readonly LazyInit<ILookUpEngineResolver> _getEngineLazy;
+        private readonly LazyInit<IHttp> _httpLazy;
 
-        public AppConfigDelegate(LazyInitLog<ILookUpEngineResolver> getEngineLazy, Lazy<IHttp> httpLazy) : base("Sxc.CnfPrv")
+        public AppConfigDelegate(LazyInit<ILookUpEngineResolver> getEngineLazy, LazyInit<IHttp> httpLazy) : base("Sxc.CnfPrv")
         {
-            _getEngineLazy = getEngineLazy.SetLog(Log);
-            _httpLazy = httpLazy;
+            ConnectServices(
+                _getEngineLazy = getEngineLazy,
+                _httpLazy = httpLazy
+            );
         }
 
 

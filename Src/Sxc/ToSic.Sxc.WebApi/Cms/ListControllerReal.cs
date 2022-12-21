@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public ListControllerReal(
             Generator<MultiPermissionsApp> multiPermissionsApp,
             IPagePublishing publishing,
-            LazyInitLog<CmsManager> cmsManagerLazy,
+            LazyInit<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver,
             Generator<IPagePublishing> versioning
         ) : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Api.LstRl")

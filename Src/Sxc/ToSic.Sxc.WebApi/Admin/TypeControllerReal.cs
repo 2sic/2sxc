@@ -4,7 +4,6 @@ using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
@@ -13,32 +12,35 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Lib.DI;
 using ToSic.Sxc.WebApi.ImportExport;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class TypeControllerReal<THttpResponseType> : HasLog, ITypeController<THttpResponseType>
+    public class TypeControllerReal<THttpResponseType> : ServiceBase, ITypeController<THttpResponseType>
     {
         public const string LogSuffix = "Types";
 
         public TypeControllerReal(
-            LazyInitLog<IContextOfSite> context,
-            Lazy<ContentTypeApi> ctApiLazy, 
-            Lazy<ContentExportApi<THttpResponseType>> contentExportLazy, 
-            Lazy<IUser> userLazy,
+            LazyInit<IContextOfSite> context,
+            LazyInit<ContentTypeApi> ctApiLazy, 
+            LazyInit<ContentExportApi<THttpResponseType>> contentExportLazy, 
+            LazyInit<IUser> userLazy,
             Generator<ImportContent> importContent
             ) : base("Api.TypesRl")
         {
-            _context = context.SetLog(Log);
-            _ctApiLazy = ctApiLazy;
-            _contentExportLazy = contentExportLazy;
-            _userLazy = userLazy;
-            _importContent = importContent;
+            ConnectServices(
+                _context = context,
+                _ctApiLazy = ctApiLazy,
+                _contentExportLazy = contentExportLazy,
+                _userLazy = userLazy,
+                _importContent = importContent
+            );
         }
 
-        private readonly LazyInitLog<IContextOfSite> _context;
-        private readonly Lazy<ContentTypeApi> _ctApiLazy;
-        private readonly Lazy<ContentExportApi<THttpResponseType>> _contentExportLazy;
-        private readonly Lazy<IUser> _userLazy;
+        private readonly LazyInit<IContextOfSite> _context;
+        private readonly LazyInit<ContentTypeApi> _ctApiLazy;
+        private readonly LazyInit<ContentExportApi<THttpResponseType>> _contentExportLazy;
+        private readonly LazyInit<IUser> _userLazy;
         private readonly Generator<ImportContent> _importContent;
 
 

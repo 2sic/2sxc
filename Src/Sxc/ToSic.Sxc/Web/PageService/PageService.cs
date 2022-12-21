@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Web.PageService
             PageServiceShared pageServiceShared,
             Lazy<ContentSecurityPolicyService> cspServiceLazy,
             Lazy<IHtmlTagService> htmlTagsLazy,
-            LazyInitLog<ITurnOnService> turnOn,
-            LazyInitLog<IModuleService> moduleService
+            LazyInit<ITurnOnService> turnOn,
+            LazyInit<IModuleService> moduleService
         ) : base("2sxc.PgeSrv")
             => ConnectServices(_cspServiceLazy = cspServiceLazy,
                 _htmlTagsLazy = htmlTagsLazy,
@@ -33,8 +33,8 @@ namespace ToSic.Sxc.Web.PageService
 
         private readonly Lazy<ContentSecurityPolicyService> _cspServiceLazy;
         private readonly Lazy<IHtmlTagService> _htmlTagsLazy;
-        private readonly LazyInitLog<IModuleService> _moduleService;
-        private readonly LazyInitLog<ITurnOnService> _turnOn;
+        private readonly LazyInit<IModuleService> _moduleService;
+        private readonly LazyInit<ITurnOnService> _turnOn;
         public PageServiceShared PageServiceShared { get; }
 
         /// <summary>

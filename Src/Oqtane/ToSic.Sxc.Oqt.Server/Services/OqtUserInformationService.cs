@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
     {
         private readonly Lazy<IUserRepository> _userRepository;
 
-        public OqtUserInformationService(LazyInitLog<IContextOfSite> context, Lazy<IUserRepository> userRepository) : base(context)
+        public OqtUserInformationService(LazyInit<IContextOfSite> context, Lazy<IUserRepository> userRepository) : base(context)
         {
             _userRepository = userRepository;
         }

@@ -17,44 +17,47 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.App;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Sys
 {
-    public class InstallControllerReal<THttpResponseType> : HasLog
+    public class InstallControllerReal<THttpResponseType> : ServiceBase
     {
         public const string LogSuffix = "Install";
 
         #region System Installation
 
         public InstallControllerReal(
-            LazyInitLog<IContextOfSite> context,
-            Lazy<IEnvironmentInstaller> envInstallerLazy, 
-            Lazy<ImportFromRemote> impFromRemoteLazy, 
-            Lazy<IUser> userLazy,
+            LazyInit<IContextOfSite> context,
+            LazyInit<IEnvironmentInstaller> envInstallerLazy, 
+            LazyInit<ImportFromRemote> impFromRemoteLazy, 
+            LazyInit<IUser> userLazy,
             ResponseMaker<THttpResponseType> responseMaker,
 
-            LazyInitLog<AppsBackend> appsBackend,
-            Lazy<IAppStates> appStates,
-            LazyInitLog<AppSettingsStack> appSettingsStack) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            LazyInit<AppsBackend> appsBackend,
+            LazyInit<IAppStates> appStates,
+            LazyInit<AppSettingsStack> appSettingsStack) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
-            _context = context.SetLog(Log);
-            _envInstallerLazy = envInstallerLazy;
-            _impFromRemoteLazy = impFromRemoteLazy;
-            _userLazy = userLazy;
-            _responseMaker = responseMaker;
-            _appStates = appStates;
-            _appSettingsStack = appSettingsStack.SetLog(Log);
-            _appsBackendLazy = appsBackend.SetLog(Log);
+            ConnectServices(
+                _context = context,
+                _envInstallerLazy = envInstallerLazy,
+                _impFromRemoteLazy = impFromRemoteLazy,
+                _userLazy = userLazy,
+                _responseMaker = responseMaker,
+                _appStates = appStates,
+                _appSettingsStack = appSettingsStack,
+                _appsBackendLazy = appsBackend
+            );
         }
 
-        private readonly LazyInitLog<IContextOfSite> _context;
-        private readonly Lazy<IEnvironmentInstaller> _envInstallerLazy;
-        private readonly Lazy<ImportFromRemote> _impFromRemoteLazy;
-        private readonly Lazy<IUser> _userLazy;
+        private readonly LazyInit<IContextOfSite> _context;
+        private readonly LazyInit<IEnvironmentInstaller> _envInstallerLazy;
+        private readonly LazyInit<ImportFromRemote> _impFromRemoteLazy;
+        private readonly LazyInit<IUser> _userLazy;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
-        private readonly Lazy<IAppStates> _appStates;
-        private readonly LazyInitLog<AppSettingsStack> _appSettingsStack;
-        private readonly LazyInitLog<AppsBackend> _appsBackendLazy;
+        private readonly LazyInit<IAppStates> _appStates;
+        private readonly LazyInit<AppSettingsStack> _appSettingsStack;
+        private readonly LazyInit<AppsBackend> _appsBackendLazy;
 
 
         /// <summary>

@@ -25,26 +25,27 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     /// <summary>
     /// Enable dynamically manipulating of route value to select a 2sxc app api dynamic code controller action.
     /// </summary>
-    public class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer
+    public class AppApiDynamicRouteValueTransformer : DynamicRouteValueTransformer, IHasLog
     {
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly LazyInitLog<AppFolder> _appFolder;
+        private readonly LazyInit<AppFolder> _appFolder;
 
         public const string HttpContextKeyForAppFolder = "SxcAppFolderName";
 
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
-            LazyInitLog<AppFolder> appFolder,
+            LazyInit<AppFolder> appFolder,
             ILogStore logStore)
         {
             Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
             logStore.Add(HistoryLogGroup, Log);
-
-            _tenantResolver = tenantResolver;
-            _hostingEnvironment = hostingEnvironment;
-            _appFolder = appFolder.SetLog(Log);
+            this.ConnectServices(
+                _tenantResolver = tenantResolver,
+                _hostingEnvironment = hostingEnvironment,
+                _appFolder = appFolder
+            );
         }
 
         public ILog Log { get; }

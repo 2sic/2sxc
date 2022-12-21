@@ -9,6 +9,7 @@ using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -16,20 +17,22 @@ namespace ToSic.Sxc.Web.PageService
     /// This should bundle all the page changes once a module is done.
     /// Usually used at the top-level of render-result, and in future also on page-level dynamic code
     /// </summary>
-    public class PageChangeSummary: HasLog
+    public class PageChangeSummary: ServiceBase
     {
 
         public PageChangeSummary(
-            LazyInitLog<IBlockResourceExtractor> resourceExtractor,
-            LazyInitLog<RequirementsService> requirements
+            LazyInit<IBlockResourceExtractor> resourceExtractor,
+            LazyInit<RequirementsService> requirements
         ) : base(Constants.SxcLogName + "PgChSm")
         {
-            _requirements = requirements.SetLog(Log);
-            _resourceExtractor = resourceExtractor.SetLog(Log);
+            ConnectServices(
+                _requirements = requirements,
+                _resourceExtractor = resourceExtractor
+            );
         }
 
-        private readonly LazyInitLog<IBlockResourceExtractor> _resourceExtractor;
-        private readonly LazyInitLog<RequirementsService> _requirements;
+        private readonly LazyInit<IBlockResourceExtractor> _resourceExtractor;
+        private readonly LazyInit<RequirementsService> _requirements;
 
         public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
         {

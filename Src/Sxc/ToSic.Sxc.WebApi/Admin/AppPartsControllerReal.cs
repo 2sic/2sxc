@@ -1,33 +1,35 @@
 ﻿using System;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Sxc.WebApi.ImportExport;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class AppPartsControllerReal<THttpResponseType> : HasLog, IAppPartsController<THttpResponseType>
+    public class AppPartsControllerReal<THttpResponseType> : ServiceBase, IAppPartsController<THttpResponseType>
     {
         public const string LogSuffix = "AParts";
 
         public AppPartsControllerReal(
-            LazyInitLog<IContextOfSite> context,
-            LazyInitLog<ExportContent<THttpResponseType>> exportContent,
+            LazyInit<IContextOfSite> context,
+            LazyInit<ExportContent<THttpResponseType>> exportContent,
             Generator<ImportContent> importContent, 
             Lazy<IUser> user
             ): base("Api.APartsRl")
         {
-            _context = context.SetLog(Log);
-            _exportContent = exportContent.SetLog(Log);
-            _importContent = importContent;
+            ConnectServices(
+                _context = context,
+                _exportContent = exportContent,
+                _importContent = importContent
+            );
             _user = user;
         }
-        private readonly LazyInitLog<IContextOfSite> _context;
-        private readonly LazyInitLog<ExportContent<THttpResponseType>> _exportContent;
+        private readonly LazyInit<IContextOfSite> _context;
+        private readonly LazyInit<ExportContent<THttpResponseType>> _exportContent;
         private readonly Generator<ImportContent> _importContent;
         private readonly Lazy<IUser> _user;
 

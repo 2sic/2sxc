@@ -30,11 +30,11 @@ namespace ToSic.Sxc.WebApi.Context
             public IContextOfSite SiteCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
-            public LazyInitLog<LanguagesBackend> LanguagesBackend { get; }
+            public LazyInit<LanguagesBackend> LanguagesBackend { get; }
             public Lazy<IFeaturesInternal> Features { get; }
             public Lazy<IUiData> UiDataLazy { get; }
-            public LazyInitLog<AppSettingsStack> SettingsStack { get; }
-            public LazyInitLog<ISecureDataService> SecureDataService { get; }
+            public LazyInit<AppSettingsStack> SettingsStack { get; }
+            public LazyInit<ISecureDataService> SecureDataService { get; }
 
             public Dependencies(
                 IContextOfSite siteCtx,
@@ -42,9 +42,9 @@ namespace ToSic.Sxc.WebApi.Context
                 IAppStates appStates,
                 Lazy<IFeaturesInternal> features,
                 Lazy<IUiData> uiDataLazy,
-                LazyInitLog<LanguagesBackend> languagesBackend,
-                LazyInitLog<AppSettingsStack> settingsStack,
-                LazyInitLog<ISecureDataService> secureDataService
+                LazyInit<LanguagesBackend> languagesBackend,
+                LazyInit<AppSettingsStack> settingsStack,
+                LazyInit<ISecureDataService> secureDataService
             ) => AddToLogQueue(
                 SiteCtx = siteCtx,
                 AppToLaterInitialize = appToLaterInitialize,

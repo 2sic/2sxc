@@ -28,12 +28,12 @@ namespace ToSic.Sxc.Blocks
         public class Dependencies: ServiceDependencies
         {
             public Generator<IEditService> EditGenerator { get; }
-            public LazyInitLog<IModuleAndBlockBuilder> Builder { get; }
+            public LazyInit<IModuleAndBlockBuilder> Builder { get; }
             public Generator<BlockFromEntity> BlkFrmEntGen { get; }
             public Lazy<ILogStore> LogStore { get; }
 
             public Dependencies(Generator<IEditService> editGenerator,
-                LazyInitLog<IModuleAndBlockBuilder> builder,
+                LazyInit<IModuleAndBlockBuilder> builder,
                 Generator<BlockFromEntity> blkFrmEntGen,
                 Lazy<ILogStore> logStore
             ) => AddToLogQueue(
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Blocks
         public RenderService(
             Dependencies dependencies
             //GeneratorLog<IEditService> editGenerator,
-            //LazyInitLog<IModuleAndBlockBuilder> builder,
+            //LazyInit<IModuleAndBlockBuilder> builder,
             //GeneratorLog<BlockFromEntity> blkFrmEntGen,
             //Lazy<ILogHistoryLive> historyLazy
         ) : base("Sxc.RndSvc")
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Blocks
 
         //private readonly GeneratorLog<BlockFromEntity> _blkFrmEntGen;
         //private readonly GeneratorLog<IEditService> _editGenerator;
-        //private readonly LazyInitLog<IModuleAndBlockBuilder> _builder;
+        //private readonly LazyInit<IModuleAndBlockBuilder> _builder;
         //private readonly Lazy<ILogHistoryLive> _historyLazy;
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)

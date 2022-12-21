@@ -25,13 +25,13 @@ namespace ToSic.Sxc.Apps
         private readonly Lazy<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
-        private readonly LazyInitLog<AppIconHelpers> _appIconHelpers;
+        private readonly LazyInit<AppIconHelpers> _appIconHelpers;
         private readonly DataSourceFactory _dataSourceFactory;
 
         public ViewsRuntime(Lazy<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
             IConvertToEavLight dataToFormatLight,
-            LazyInitLog<AppIconHelpers> appIconHelpers,
+            LazyInit<AppIconHelpers> appIconHelpers,
             DataSourceFactory dataSourceFactory
             ) : base("Cms.ViewRd")
         {

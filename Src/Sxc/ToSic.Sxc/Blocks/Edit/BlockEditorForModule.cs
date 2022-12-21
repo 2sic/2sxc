@@ -2,7 +2,6 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Blocks.Edit
@@ -10,12 +9,12 @@ namespace ToSic.Sxc.Blocks.Edit
     public class BlockEditorForModule : BlockEditorBase
     {
         public BlockEditorForModule(BlockEditorBaseDependencies dependencies,
-            LazyInitLog<IPlatformModuleUpdater> platformModuleUpdater) : base(dependencies)
+            LazyInit<IPlatformModuleUpdater> platformModuleUpdater) : base(dependencies)
         {
-            _platformModuleUpdater = platformModuleUpdater.SetLog(Log);
+            ConnectServices(_platformModuleUpdater = platformModuleUpdater);
         }
 
-        private readonly LazyInitLog<IPlatformModuleUpdater> _platformModuleUpdater;
+        private readonly LazyInit<IPlatformModuleUpdater> _platformModuleUpdater;
 
         private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater.Value;
 

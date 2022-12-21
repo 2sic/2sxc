@@ -7,34 +7,36 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.InPage;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public class BlockControllerReal : HasLog, IBlockController
+    public class BlockControllerReal : ServiceBase, IBlockController
     {
         public const string LogSuffix = "Block";
 
         public BlockControllerReal(
-            LazyInitLog<IContextOfSite> context,
-            LazyInitLog<ContentBlockBackend> blockBackend,
-            LazyInitLog<AppViewPickerBackend> viewsBackend,
-            Lazy<CmsZones> cmsZones
+            LazyInit<IContextOfSite> context,
+            LazyInit<ContentBlockBackend> blockBackend,
+            LazyInit<AppViewPickerBackend> viewsBackend,
+            LazyInit<CmsZones> cmsZones
             ): base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
-            _context = context.SetLog(Log);
-            _blockBackendLazy = blockBackend.SetLog(Log);
-            _viewsBackendLazy = viewsBackend.SetLog(Log);
-            _cmsZones = cmsZones;
+            ConnectServices(
+                _context = context,
+                _blockBackendLazy = blockBackend,
+                _viewsBackendLazy = viewsBackend,
+                _cmsZones = cmsZones
+            );
         }
 
-        private readonly LazyInitLog<IContextOfSite> _context;
-        private readonly LazyInitLog<ContentBlockBackend> _blockBackendLazy;
-        private readonly LazyInitLog<AppViewPickerBackend> _viewsBackendLazy;
-        private readonly Lazy<CmsZones> _cmsZones;
+        private readonly LazyInit<IContextOfSite> _context;
+        private readonly LazyInit<ContentBlockBackend> _blockBackendLazy;
+        private readonly LazyInit<AppViewPickerBackend> _viewsBackendLazy;
+        private readonly LazyInit<CmsZones> _cmsZones;
 
 
         #region Block

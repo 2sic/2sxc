@@ -22,15 +22,15 @@ namespace ToSic.Sxc.Dnn.Code
         public new class ScopedDependencies: ServiceDependencies
         {
             public Lazy<PageServiceShared> PageServiceShared { get; }
-            public LazyInitLog<PageChangeSummary> PageChangeSummary { get; }
-            public LazyInitLog<DnnPageChanges> DnnPageChanges { get; }
-            public LazyInitLog<DnnClientResources> DnnClientResources { get; }
+            public LazyInit<PageChangeSummary> PageChangeSummary { get; }
+            public LazyInit<DnnPageChanges> DnnPageChanges { get; }
+            public LazyInit<DnnClientResources> DnnClientResources { get; }
 
             public ScopedDependencies(
                 Lazy<PageServiceShared> pageServiceShared,
-                LazyInitLog<PageChangeSummary> pageChangeSummary,
-                LazyInitLog<DnnPageChanges> dnnPageChanges,
-                LazyInitLog<DnnClientResources> dnnClientResources
+                LazyInit<PageChangeSummary> pageChangeSummary,
+                LazyInit<DnnPageChanges> dnnPageChanges,
+                LazyInit<DnnClientResources> dnnClientResources
                 )
             {
                 AddToLogQueue(

@@ -4,7 +4,6 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Context;
@@ -13,32 +12,35 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.Usage;
 using ToSic.Sxc.WebApi.Views;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class ViewControllerReal<THttpResponseType> : HasLog, IViewController<THttpResponseType>
+    public class ViewControllerReal<THttpResponseType> : ServiceBase, IViewController<THttpResponseType>
     {
         public const string LogSuffix = "View";
 
         public ViewControllerReal(
-            LazyInitLog<IContextOfSite> context,
-            LazyInitLog<ViewsBackend> viewsBackend, 
-            LazyInitLog<ViewsExportImport<THttpResponseType>> viewExportImport, 
-            LazyInitLog<UsageBackend> usageBackend, 
-            LazyInitLog<PolymorphismBackend> polymorphismBackend
+            LazyInit<IContextOfSite> context,
+            LazyInit<ViewsBackend> viewsBackend, 
+            LazyInit<ViewsExportImport<THttpResponseType>> viewExportImport, 
+            LazyInit<UsageBackend> usageBackend, 
+            LazyInit<PolymorphismBackend> polymorphismBackend
             ) : base("Api.ViewRl")
         {
-            _context = context.SetLog(Log);
-            _polymorphismBackend = polymorphismBackend.SetLog(Log);
-            _usageBackend = usageBackend.SetLog(Log);
-            _viewsBackend = viewsBackend.SetLog(Log);
-            _viewExportImport = viewExportImport.SetLog(Log);
+            ConnectServices(
+                _context = context,
+                _polymorphismBackend = polymorphismBackend,
+                _usageBackend = usageBackend,
+                _viewsBackend = viewsBackend,
+                _viewExportImport = viewExportImport
+            );
         }
-        private readonly LazyInitLog<IContextOfSite> _context;
-        private readonly LazyInitLog<PolymorphismBackend> _polymorphismBackend;
-        private readonly LazyInitLog<UsageBackend> _usageBackend;
-        private readonly LazyInitLog<ViewsBackend> _viewsBackend;
-        private readonly LazyInitLog<ViewsExportImport<THttpResponseType>> _viewExportImport;
+        private readonly LazyInit<IContextOfSite> _context;
+        private readonly LazyInit<PolymorphismBackend> _polymorphismBackend;
+        private readonly LazyInit<UsageBackend> _usageBackend;
+        private readonly LazyInit<ViewsBackend> _viewsBackend;
+        private readonly LazyInit<ViewsExportImport<THttpResponseType>> _viewExportImport;
 
         /// <inheritdoc />
         public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Value.GetAll(appId);

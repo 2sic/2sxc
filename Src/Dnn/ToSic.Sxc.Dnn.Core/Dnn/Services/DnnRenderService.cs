@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Services
         public DnnRenderService(
             Dependencies dependencies,
             //GeneratorLog<IEditService> editGenerator,
-            //LazyInitLog<IModuleAndBlockBuilder> builder,
+            //LazyInit<IModuleAndBlockBuilder> builder,
             //GeneratorLog<BlockFromEntity> blkFrmEntGen,
             //Lazy<ILogHistoryLive> historyLazy,
             Lazy<DnnPageChanges> dnnPageChanges,

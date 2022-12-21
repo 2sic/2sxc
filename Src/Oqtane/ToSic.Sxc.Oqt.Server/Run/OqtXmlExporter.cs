@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
 using ToSic.Eav;
@@ -22,10 +21,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtXmlExporter : XmlExporter
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly Lazy<IFileRepository> _fileRepositoryLazy;
-        private readonly Lazy<IFolderRepository> _folderRepositoryLazy;
-        private readonly Lazy<ITenantResolver> _oqtTenantResolverLazy;
-        private readonly LazyInitLog<OqtAssetsFileHelper> _fileHelper;
+        private readonly LazyInit<IFileRepository> _fileRepositoryLazy;
+        private readonly LazyInit<IFolderRepository> _folderRepositoryLazy;
+        private readonly LazyInit<ITenantResolver> _oqtTenantResolverLazy;
+        private readonly LazyInit<OqtAssetsFileHelper> _fileHelper;
         private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
@@ -35,20 +34,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
             IContextResolver ctxResolver,
             XmlSerializer xmlSerializer,
             IWebHostEnvironment hostingEnvironment,
-            Lazy<IFileRepository> fileRepositoryLazy,
-            Lazy<IFolderRepository> folderRepositoryLazy,
-            Lazy<ITenantResolver> oqtTenantResolverLazy,
+            LazyInit<IFileRepository> fileRepositoryLazy,
+            LazyInit<IFolderRepository> folderRepositoryLazy,
+            LazyInit<ITenantResolver> oqtTenantResolverLazy,
             IAppStates appStates,
-            LazyInitLog<OqtAssetsFileHelper> fileHelper
+            LazyInit<OqtAssetsFileHelper> fileHelper
             ) : base(xmlSerializer, appStates, OqtConstants.OqtLogPrefix)
         {
-            _hostingEnvironment = hostingEnvironment;
-            _fileRepositoryLazy = fileRepositoryLazy;
-            _folderRepositoryLazy = folderRepositoryLazy;
-            _oqtTenantResolverLazy = oqtTenantResolverLazy;
-            _fileHelper = fileHelper.SetLog(Log);
-            _ctxResolver = ctxResolver.Init(Log);
-            AdamManager = adamManager;
+            ConnectServices(
+                _hostingEnvironment = hostingEnvironment,
+                _fileRepositoryLazy = fileRepositoryLazy,
+                _folderRepositoryLazy = folderRepositoryLazy,
+                _oqtTenantResolverLazy = oqtTenantResolverLazy,
+                _fileHelper = fileHelper,
+                _ctxResolver = ctxResolver,
+                AdamManager = adamManager
+            );
         }
 
         internal AdamManager<int, int> AdamManager { get; }

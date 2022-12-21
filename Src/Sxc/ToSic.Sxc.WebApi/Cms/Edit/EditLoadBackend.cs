@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
             Generator<JsonSerializer> jsonSerializerGenerator,
             GoogleMapsSettings googleMapsSettings,
             Generator<MultiPermissionsTypes> typesPermissions,
-            LazyInitLog<IFeaturesService> features,
+            LazyInit<IFeaturesService> features,
             Generator<IAdamTransGetItems> adamTransGetItems,
             Generator<HyperlinkBackend<int, int>> hyperlinkBackend) : base("Cms.LoadBk")
         {
@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
-        private readonly LazyInitLog<IFeaturesService> _features;
+        private readonly LazyInit<IFeaturesService> _features;
         private readonly GoogleMapsSettings _googleMapsSettings;
 
         #endregion

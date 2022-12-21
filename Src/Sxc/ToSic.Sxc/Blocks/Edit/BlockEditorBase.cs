@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 
@@ -10,15 +11,17 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     // todo: create interface
     // todo: move some parts out into a BlockManagement
-    public abstract partial class BlockEditorBase : HasLog
+    public abstract partial class BlockEditorBase : ServiceBase
     {
         #region DI and Construction
         internal BlockEditorBase(BlockEditorBaseDependencies dependencies) : base("CG.RefMan")
         {
-            Dependencies = dependencies;
-            Dependencies.CmsRuntime.SetInit(r => r.Init(Log).InitQ(Block?.App, true));
-            Dependencies.CmsManager.SetInit(r => r.Init(Log).Init(Block?.App));
-            Dependencies.AppManager.SetInit(r => r.Init(Log).Init(Block?.App));
+            Dependencies = dependencies.SetLog(Log);
+            ConnectServices(
+                Dependencies.CmsRuntime.SetInit(r => r.InitQ(Block?.App, true)),
+                Dependencies.CmsManager.SetInit(r => r.Init(Block?.App)),
+                Dependencies.AppManager.SetInit(r => r.Init(Block?.App))
+            );
         }
         public BlockEditorBaseDependencies Dependencies { get; }
 

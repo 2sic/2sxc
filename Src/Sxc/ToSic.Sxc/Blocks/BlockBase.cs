@@ -16,7 +16,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    public abstract partial class BlockBase : HasLog, IBlock
+    public abstract partial class BlockBase : ServiceBase, IBlock
     {
         #region Constructor and DI
 
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Blocks
                 Lazy<App> appLazy,
                 Lazy<AppConfigDelegate> appConfigDelegateLazy,
                 Lazy<CmsRuntime> cmsLazy,
-                LazyInitLog<BlockBuilder> blockBuilder
+                LazyInit<BlockBuilder> blockBuilder
             ) => AddToLogQueue(
                 BdsFactoryLazy = bdsFactoryLazy,
                 AppLazy = appLazy,
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Blocks
             internal Lazy<App> AppLazy { get; }
             internal Lazy<AppConfigDelegate> AppConfigDelegateLazy { get; }
             internal Lazy<CmsRuntime> CmsLazy { get; }
-            public LazyInitLog<BlockBuilder> BlockBuilder { get; }
+            public LazyInit<BlockBuilder> BlockBuilder { get; }
         }
 
         protected BlockBase(Dependencies dependencies, string logName) : base(logName)

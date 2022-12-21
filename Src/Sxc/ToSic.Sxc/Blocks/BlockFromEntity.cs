@@ -4,7 +4,6 @@ using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
@@ -23,11 +22,11 @@ namespace ToSic.Sxc.Blocks
         
         #region Constructor and DI
 
-        public BlockFromEntity(Dependencies dependencies, LazyInitLog<AppFinder> appFinderLazy) : base(dependencies, "CB.Ent")
+        public BlockFromEntity(Dependencies dependencies, LazyInit<AppFinder> appFinderLazy) : base(dependencies, "CB.Ent")
         {
-            _appFinderLazy = appFinderLazy.SetLog(Log);
+            ConnectServices(_appFinderLazy = appFinderLazy);
         }
-        private readonly LazyInitLog<AppFinder> _appFinderLazy;
+        private readonly LazyInit<AppFinder> _appFinderLazy;
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {

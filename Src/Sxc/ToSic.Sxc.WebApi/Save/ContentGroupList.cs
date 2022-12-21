@@ -21,14 +21,14 @@ namespace ToSic.Sxc.WebApi.Save
     {
         #region Constructor / DI
 
-        private readonly LazyInitLog<CmsManager> _cmsManagerLazy;
+        private readonly LazyInit<CmsManager> _cmsManagerLazy;
         private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
         private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity, _withDrafts));
         private CmsManager _cmsManager;
         private bool _withDrafts = false;
 
-        public ContentGroupList(LazyInitLog<CmsManager> cmsManagerLazy, 
+        public ContentGroupList(LazyInit<CmsManager> cmsManagerLazy, 
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt
             ) : base("Api.GrpPrc")

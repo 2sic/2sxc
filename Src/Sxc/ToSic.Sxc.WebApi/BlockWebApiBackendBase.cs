@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi
     {
         private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
         public IContextResolver CtxResolver { get; }
-        protected readonly LazyInitLog<CmsManager> CmsManagerLazy;
+        protected readonly LazyInit<CmsManager> CmsManagerLazy;
 
         protected IContextOfApp ContextOfBlock =>
             _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockRequired());
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi
 
         protected BlockWebApiBackendBase(
             Generator<MultiPermissionsApp> multiPermissionsApp,
-            LazyInitLog<CmsManager> cmsManagerLazy,
+            LazyInit<CmsManager> cmsManagerLazy,
             IContextResolver ctxResolver, string logName
             ) : base(logName)
         {

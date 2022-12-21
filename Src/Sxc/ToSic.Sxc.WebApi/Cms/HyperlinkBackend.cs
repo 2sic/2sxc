@@ -16,12 +16,12 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private readonly IValueConverter _valueConverter;
         private readonly Generator<MultiPermissionsApp> _appPermissions;
-        private readonly LazyInitLog<AdamContext<TFolderId, TFileId>> _adamState;
+        private readonly LazyInit<AdamContext<TFolderId, TFileId>> _adamState;
         private readonly IContextResolver _ctxResolver;
         private AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
 
         public HyperlinkBackend(
-            LazyInitLog<AdamContext<TFolderId, TFileId>> adamState,
+            LazyInit<AdamContext<TFolderId, TFileId>> adamState,
             IContextResolver ctxResolver,
             Generator<MultiPermissionsApp> appPermissions,
             IValueConverter valueConverter) : base("Bck.HypLnk")

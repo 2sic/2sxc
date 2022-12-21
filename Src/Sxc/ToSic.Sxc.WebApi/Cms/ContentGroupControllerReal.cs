@@ -20,10 +20,10 @@ namespace ToSic.Sxc.WebApi.Cms
         #region Constructor / di
         public const string LogSuffix = "CntGrp";
         public ContentGroupControllerReal(
-            LazyInitLog<IPagePublishing> publishing, 
+            LazyInit<IPagePublishing> publishing, 
             LazyInit<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            LazyInitLog<ListControllerReal> listController) : base("Api.CntGrpRl") =>
+            LazyInit<ListControllerReal> listController) : base("Api.CntGrpRl") =>
             ConnectServices(
                 CtxResolver = ctxResolver,
                 _cmsManagerLazy = cmsManagerLazy,
@@ -33,9 +33,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public IContextResolver CtxResolver { get; }
 
-        private readonly LazyInitLog<ListControllerReal> _listController;
+        private readonly LazyInit<ListControllerReal> _listController;
         private readonly LazyInit<CmsManager> _cmsManagerLazy;
-        private readonly LazyInitLog<IPagePublishing> _publishing;
+        private readonly LazyInit<IPagePublishing> _publishing;
         private CmsManager CmsManager => _cmsManager.Get(() => _cmsManagerLazy.Value.Init(Context));
         private readonly GetOnce<CmsManager> _cmsManager = new GetOnce<CmsManager>();
 

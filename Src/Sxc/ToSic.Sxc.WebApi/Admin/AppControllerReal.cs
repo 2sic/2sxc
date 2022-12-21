@@ -14,6 +14,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
@@ -21,45 +22,47 @@ namespace ToSic.Sxc.WebApi.Admin
     /// Experimental new class
     /// Goal is to reduce code in the Dnn and Oqtane controllers, which basically does the same thing, mostly DI work
     /// </summary>
-    public class AppControllerReal<THttpResponseType> : HasLog where THttpResponseType : class
+    public class AppControllerReal<THttpResponseType> : ServiceBase where THttpResponseType : class
     {
         public const string LogSuffix = "AppCon";
 
         public AppControllerReal(
-            LazyInitLog<AppsBackend> appsBackendLazy,
-            Lazy<CmsZones> cmsZonesLazy,
-            LazyInitLog<ExportApp> exportAppLazy,
-            LazyInitLog<ImportApp> importAppLazy,
-            Lazy<AppCreator> appBuilderLazy,
-            LazyInitLog<ResetApp> resetAppLazy,
-            LazyInitLog<SystemManager> systemManagerLazy,
-            LazyInitLog<LanguagesBackend> languagesBackendLazy,
-            Lazy<IAppStates> appStatesLazy,
-            LazyInitLog<AppStackBackend> appStackBackendLazy
+            LazyInit<AppsBackend> appsBackendLazy,
+            LazyInit<CmsZones> cmsZonesLazy,
+            LazyInit<ExportApp> exportAppLazy,
+            LazyInit<ImportApp> importAppLazy,
+            LazyInit<AppCreator> appBuilderLazy,
+            LazyInit<ResetApp> resetAppLazy,
+            LazyInit<SystemManager> systemManagerLazy,
+            LazyInit<LanguagesBackend> languagesBackendLazy,
+            LazyInit<IAppStates> appStatesLazy,
+            LazyInit<AppStackBackend> appStackBackendLazy
             ) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
-            _appsBackendLazy = appsBackendLazy.SetLog(Log);
-            _cmsZonesLazy = cmsZonesLazy;
-            _exportAppLazy = exportAppLazy.SetLog(Log);
-            _importAppLazy = importAppLazy.SetLog(Log);
-            _appBuilderLazy = appBuilderLazy;
-            _resetAppLazy = resetAppLazy.SetLog(Log);
-            _systemManagerLazy = systemManagerLazy.SetLog(Log);
-            _languagesBackendLazy = languagesBackendLazy.SetLog(Log);
-            _appStatesLazy = appStatesLazy;
-            _appStackBackendLazy = appStackBackendLazy.SetLog(Log);
+            ConnectServices(
+                _appsBackendLazy = appsBackendLazy,
+                _cmsZonesLazy = cmsZonesLazy,
+                _exportAppLazy = exportAppLazy,
+                _importAppLazy = importAppLazy,
+                _appBuilderLazy = appBuilderLazy,
+                _resetAppLazy = resetAppLazy,
+                _systemManagerLazy = systemManagerLazy,
+                _languagesBackendLazy = languagesBackendLazy,
+                _appStatesLazy = appStatesLazy,
+                _appStackBackendLazy = appStackBackendLazy
+            );
         }
 
-        private readonly LazyInitLog<AppsBackend> _appsBackendLazy;
-        private readonly Lazy<CmsZones> _cmsZonesLazy;
-        private readonly LazyInitLog<ExportApp> _exportAppLazy;
-        private readonly LazyInitLog<ImportApp> _importAppLazy;
-        private readonly Lazy<AppCreator> _appBuilderLazy;
-        private readonly LazyInitLog<ResetApp> _resetAppLazy;
-        private readonly LazyInitLog<SystemManager> _systemManagerLazy;
-        private readonly LazyInitLog<LanguagesBackend> _languagesBackendLazy;
-        private readonly Lazy<IAppStates> _appStatesLazy;
-        private readonly LazyInitLog<AppStackBackend> _appStackBackendLazy;
+        private readonly LazyInit<AppsBackend> _appsBackendLazy;
+        private readonly LazyInit<CmsZones> _cmsZonesLazy;
+        private readonly LazyInit<ExportApp> _exportAppLazy;
+        private readonly LazyInit<ImportApp> _importAppLazy;
+        private readonly LazyInit<AppCreator> _appBuilderLazy;
+        private readonly LazyInit<ResetApp> _resetAppLazy;
+        private readonly LazyInit<SystemManager> _systemManagerLazy;
+        private readonly LazyInit<LanguagesBackend> _languagesBackendLazy;
+        private readonly LazyInit<IAppStates> _appStatesLazy;
+        private readonly LazyInit<AppStackBackend> _appStackBackendLazy;
 
 
         public List<AppDto> List(int zoneId) => _appsBackendLazy.Value.Apps();

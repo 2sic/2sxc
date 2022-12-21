@@ -6,20 +6,23 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.DataSources
 {
-    public class BlockDataSourceFactory: HasLog
+    public class BlockDataSourceFactory: ServiceBase
     {
         #region Constructor
 
-        public BlockDataSourceFactory(LazyInitLog<DataSourceFactory> dataSourceFactory, Lazy<Query> queryLazy): base("Sxc.BDsFct")
+        public BlockDataSourceFactory(LazyInit<DataSourceFactory> dataSourceFactory, LazyInit<Query> queryLazy): base("Sxc.BDsFct")
         {
-            _dataSourceFactory = dataSourceFactory.SetLog(Log);
-            _queryLazy = queryLazy;
+            ConnectServices(
+                _dataSourceFactory = dataSourceFactory,
+                _queryLazy = queryLazy
+            );
         }
-        private readonly LazyInitLog<DataSourceFactory> _dataSourceFactory;
-        private readonly Lazy<Query> _queryLazy;
+        private readonly LazyInit<DataSourceFactory> _dataSourceFactory;
+        private readonly LazyInit<Query> _queryLazy;
 
         #endregion
 

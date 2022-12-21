@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Services
 
         public const StringComparison StringComparison = System.StringComparison.InvariantCultureIgnoreCase;
 
-        protected UserInformationServiceBase(LazyInitLog<IContextOfSite> context) : base($"{Constants.SxcLogName}.UsrInfoSrv") =>
+        protected UserInformationServiceBase(LazyInit<IContextOfSite> context) : base($"{Constants.SxcLogName}.UsrInfoSrv") =>
             ConnectServices(
                 _context = context
             );
-        private readonly LazyInitLog<IContextOfSite> _context;
+        private readonly LazyInit<IContextOfSite> _context;
 
         public abstract string PlatformIdentityTokenPrefix();
 

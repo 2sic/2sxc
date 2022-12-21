@@ -26,11 +26,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     public class ViewController : OqtStatefulControllerBase<ViewControllerReal<IActionResult>>, IViewController<IActionResult>
     {
-        public ViewController(LazyInitLog<Pages.Pages> pages) : base(ViewControllerReal<IActionResult>.LogSuffix)
+        public ViewController(LazyInit<Pages.Pages> pages) : base(ViewControllerReal<IActionResult>.LogSuffix)
         {
-            _pages = pages.SetLog(Log);
+            this.ConnectServices(
+                _pages = pages
+            );
         }
-        private readonly LazyInitLog<Pages.Pages> _pages;
+        private readonly LazyInit<Pages.Pages> _pages;
 
         /// <inheritdoc />
         [HttpGet]

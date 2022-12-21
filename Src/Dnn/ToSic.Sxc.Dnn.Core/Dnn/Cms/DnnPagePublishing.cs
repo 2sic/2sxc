@@ -20,20 +20,23 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
 using IEntity = ToSic.Eav.Data.IEntity;
+using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
-    public partial class DnnPagePublishing : HasLog, IPagePublishing
+    public partial class DnnPagePublishing : ServiceBase, IPagePublishing
     {
         #region DI Constructors and More
 
-        private readonly Lazy<AppManager> _appManager;
+        private readonly LazyInit<AppManager> _appManager;
         private readonly LazyInit<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
-        public DnnPagePublishing(Lazy<AppManager> appManager, LazyInitLog<IModuleAndBlockBuilder> moduleAndBlockBuilder) : base("Dnn.Publsh")
+        public DnnPagePublishing(LazyInit<AppManager> appManager, LazyInit<IModuleAndBlockBuilder> moduleAndBlockBuilder) : base("Dnn.Publsh")
         {
-            _appManager = appManager;
-            _moduleAndBlockBuilder = moduleAndBlockBuilder.SetLog(Log);
+            ConnectServices(
+                _appManager = appManager,
+                _moduleAndBlockBuilder = moduleAndBlockBuilder
+            );
         }
         
         #endregion

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Context
         public ContextOfBlock(
             IPage page, 
             IModule module,
-            LazyInitLog<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
+            LazyInit<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
             ContextOfSite.Dependencies siteCtxDeps,
             ContextOfApp.Dependencies appDependencies)
@@ -25,15 +25,18 @@ namespace ToSic.Sxc.Context
         {
             Page = page;
             Module = module;
-            PageServiceShared = pageServiceShared;
-            _publishingResolver = publishingResolver;
+            ConnectServices(
+                PageServiceShared = pageServiceShared,
+                _publishingResolver = publishingResolver
+            );
 
+            // 2022-12-21 2dm removed this now that we have connectServices - could cause side-effects?
             // special check to prevent duplicate SetLog, because it could be cloned and already initialized
-            if (!_publishingResolver.HasInitCall)
-                _publishingResolver.SetLog(Log);
+            //if (!_publishingResolver.HasInitCall)
+            //    _publishingResolver.SetLog(Log);
             Log.Rename("Sxc.CtxBlk");
         }
-        private readonly LazyInitLog<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
+        private readonly LazyInit<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 
         #endregion
 
