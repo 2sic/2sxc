@@ -31,7 +31,8 @@ BEGIN
 END
 GO
 
--- 3. remove SortOrder column from 'ToSIC_EAV_AttributeGroups' and 'ToSIC_EAV_Entities'
+-- 3. remove columns not in use
 ALTER TABLE [dbo].[ToSIC_EAV_AttributeGroups] DROP COLUMN IF EXISTS [SortOrder];
 ALTER TABLE [dbo].[ToSIC_EAV_Entities] DROP COLUMN IF EXISTS [SortOrder];
+ALTER TABLE [dbo].[ToSIC_EAV_AttributeSets] DROP COLUMN IF EXISTS [Description];
 GO
