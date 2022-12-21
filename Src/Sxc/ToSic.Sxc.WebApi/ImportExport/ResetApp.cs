@@ -11,6 +11,8 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Security;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.WebApi.ImportExport
@@ -18,12 +20,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
     /// <summary>
     /// This object will ensure that an app is reset to the state it was in when the app.xml was last exported
     /// </summary>
-    public class ResetApp: HasLog
+    public class ResetApp: ServiceBase
     {
         #region Constructor / DI
 
         public ResetApp(
-            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
+            ILazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ImpExpHelpers impExpHelpers,
             CmsZones cmsZones,
             ISite site,
@@ -33,17 +35,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IFeaturesInternal features
             ) : base("Bck.Export")
         {
-            _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
-            _impExpHelpers = impExpHelpers;
-            _cmsZones = cmsZones;
-            _site = site;
-            _user = user;
-            _env = env;
-            _zipImport = zipImport;
-            _features = features;
+            ConnectServices(
+                _xmlImportWithFilesLazy = xmlImportWithFilesLazy,
+                _impExpHelpers = impExpHelpers,
+                _cmsZones = cmsZones,
+                _site = site,
+                _user = user,
+                _env = env,
+                _zipImport = zipImport,
+                _features = features
+            );
         }
 
-        private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
+        private readonly ILazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ImpExpHelpers _impExpHelpers;
         private readonly CmsZones _cmsZones;
         private readonly ISite _site;

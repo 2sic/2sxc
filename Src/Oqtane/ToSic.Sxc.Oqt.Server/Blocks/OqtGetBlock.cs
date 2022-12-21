@@ -2,6 +2,7 @@
 using System;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -13,10 +14,10 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
     /// <summary>
     /// WIP - separating concerns in OqtState to get the block and provide the state...
     /// </summary>
-    public class OqtGetBlock: HasLog
+    public class OqtGetBlock: ServiceBase
     {
         public OqtGetBlock(
-            Lazy<IModuleRepository> modRepoLazy,
+            ILazySvc<IModuleRepository> modRepoLazy,
             RequestHelper requestHelper,
             IContextResolver contextResolverToInit,
             Generator<IContextOfBlock> cntOfBlkGen,
@@ -24,15 +25,17 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             Generator<BlockFromEntity> blkFromEntGen
         ) : base($"{OqtConstants.OqtLogPrefix}.GetBlk")
         {
-            _modRepoLazy = modRepoLazy;
-            this.requestHelper = requestHelper;
-            _contextResolverToInit = contextResolverToInit;
-            _cntOfBlkGen = cntOfBlkGen;
-            _blkFromModGen = blkFromModGen;
-            _blkFromEntGen = blkFromEntGen;
+            ConnectServices(
+                _modRepoLazy = modRepoLazy,
+                this.requestHelper = requestHelper,
+                _contextResolverToInit = contextResolverToInit,
+                _cntOfBlkGen = cntOfBlkGen,
+                _blkFromModGen = blkFromModGen,
+                _blkFromEntGen = blkFromEntGen
+            );
         }
 
-        private readonly Lazy<IModuleRepository> _modRepoLazy;
+        private readonly ILazySvc<IModuleRepository> _modRepoLazy;
         private readonly RequestHelper requestHelper;
         private readonly IContextResolver _contextResolverToInit;
         private readonly Generator<IContextOfBlock> _cntOfBlkGen;

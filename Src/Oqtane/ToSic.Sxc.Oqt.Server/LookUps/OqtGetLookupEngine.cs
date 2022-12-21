@@ -1,21 +1,23 @@
 ﻿using System;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
-    public class OqtGetLookupEngine : HasLog, ILookUpEngineResolver
+    public class OqtGetLookupEngine : ServiceBase, ILookUpEngineResolver
     {
         #region Constructor and DI
 
         public OqtGetLookupEngine(
-            Lazy<QueryStringLookUp> queryStringLookUp,
-            Lazy<SiteLookUp> siteLookUp,
-            Lazy<OqtPageLookUp> pageLookUp,
-            Lazy<OqtModuleLookUp> moduleLookUp,
-            Lazy<UserLookUp> userLookUp) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
+            ILazySvc<QueryStringLookUp> queryStringLookUp,
+            ILazySvc<SiteLookUp> siteLookUp,
+            ILazySvc<OqtPageLookUp> pageLookUp,
+            ILazySvc<OqtModuleLookUp> moduleLookUp,
+            ILazySvc<UserLookUp> userLookUp) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
         {
             _queryStringLookUp = queryStringLookUp;
             _siteLookUp = siteLookUp;
@@ -23,11 +25,11 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
             _moduleLookUp = moduleLookUp;
             _userLookUp = userLookUp;
         }
-        private readonly Lazy<QueryStringLookUp> _queryStringLookUp;
-        private readonly Lazy<SiteLookUp> _siteLookUp;
-        private readonly Lazy<OqtPageLookUp> _pageLookUp;
-        private readonly Lazy<OqtModuleLookUp> _moduleLookUp;
-        private readonly Lazy<UserLookUp> _userLookUp;
+        private readonly ILazySvc<QueryStringLookUp> _queryStringLookUp;
+        private readonly ILazySvc<SiteLookUp> _siteLookUp;
+        private readonly ILazySvc<OqtPageLookUp> _pageLookUp;
+        private readonly ILazySvc<OqtModuleLookUp> _moduleLookUp;
+        private readonly ILazySvc<UserLookUp> _userLookUp;
 
         #endregion
 

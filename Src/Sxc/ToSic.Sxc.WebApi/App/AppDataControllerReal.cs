@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.App;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.App
 {
     /// <inheritdoc />
-    public class AppDataControllerReal: HasLog, IAppDataController
+    public class AppDataControllerReal: ServiceBase, IAppDataController
     {
         public const string LogSuffix = "Data";
 
-        public AppDataControllerReal(Lazy<AppContent> appContentLazy): base("Api.DataRl")
+        public AppDataControllerReal(ILazySvc<AppContent> appContentLazy): base("Api.DataRl")
         {
-            _appContentLazy = appContentLazy;
+            ConnectServices(
+                _appContentLazy = appContentLazy
+            );
         }
-        private readonly Lazy<AppContent> _appContentLazy;
+        private readonly ILazySvc<AppContent> _appContentLazy;
 
 
         #region Get List / all of a certain content-type

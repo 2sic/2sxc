@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransRename<TFolderId, TFileId> : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransRename(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnRen") { }
+        public AdamTransRename(ILazySvc<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnRen") { }
 
         public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {

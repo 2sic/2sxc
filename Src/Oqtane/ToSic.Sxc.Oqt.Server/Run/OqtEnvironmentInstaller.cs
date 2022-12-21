@@ -3,7 +3,9 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
@@ -11,17 +13,19 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtEnvironmentInstaller: HasLog, IEnvironmentInstaller
+    public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller
     {
-        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly ILazySvc<CmsRuntime> _cmsRuntimeLazy;
         private readonly RemoteRouterLink _remoteRouterLink;
         private readonly IAppStates _appStates;
 
-        public OqtEnvironmentInstaller(Lazy<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(ILazySvc<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
-            _cmsRuntimeLazy = cmsRuntimeLazy;
-            _remoteRouterLink = remoteRouterLink;
-            _appStates = appStates;
+            ConnectServices(
+                _cmsRuntimeLazy = cmsRuntimeLazy,
+                _remoteRouterLink = remoteRouterLink,
+                _appStates = appStates
+            );
         }
 
 

@@ -5,11 +5,12 @@ using System.Runtime.CompilerServices;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Code
 {
     [PrivateApi]
-    public abstract class CodeCompiler: HasLog
+    public abstract class CodeCompiler: ServiceBase
     {
         #region Constructor / DI
 

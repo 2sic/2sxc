@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Engines
 
         public EngineBaseDependencies(IServerPaths serverPaths,
             IBlockResourceExtractor blockResourceExtractor,
-            Lazy<AppPermissionCheck> appPermCheckLazy,
+            ILazySvc<AppPermissionCheck> appPermCheckLazy,
             Polymorphism.Polymorphism polymorphism,
-            Lazy<IAppStates> appStatesLazy
+            ILazySvc<IAppStates> appStatesLazy
         ) => AddToLogQueue(
             Polymorphism = polymorphism,
             AppStatesLazy = appStatesLazy,
@@ -26,8 +26,8 @@ namespace ToSic.Sxc.Engines
 
         internal readonly IServerPaths ServerPaths;
         internal readonly IBlockResourceExtractor BlockResourceExtractor;
-        internal readonly Lazy<AppPermissionCheck> AppPermCheckLazy;
+        internal readonly ILazySvc<AppPermissionCheck> AppPermCheckLazy;
         internal Polymorphism.Polymorphism Polymorphism { get; }
-        internal Lazy<IAppStates> AppStatesLazy { get; }
+        internal ILazySvc<IAppStates> AppStatesLazy { get; }
     }
 }

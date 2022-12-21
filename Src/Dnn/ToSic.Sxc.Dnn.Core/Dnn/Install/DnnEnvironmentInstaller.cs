@@ -39,10 +39,10 @@ namespace ToSic.Sxc.Dnn.Install
             );
         }
         private readonly DnnInstallLogger _installLogger;
-        private readonly ILazyLike<IAppStates> _appStatesLazy;
-        private readonly ILazyLike<CmsRuntime> _cmsRuntimeLazy;
-        private readonly ILazyLike<RemoteRouterLink> _remoteRouterLazy;
-        private readonly ILazyLike<IGlobalConfiguration> _globalConfiguration;
+        private readonly ILazySvc<IAppStates> _appStatesLazy;
+        private readonly ILazySvc<CmsRuntime> _cmsRuntimeLazy;
+        private readonly ILazySvc<RemoteRouterLink> _remoteRouterLazy;
+        private readonly ILazySvc<IGlobalConfiguration> _globalConfiguration;
 
         internal string UpgradeModule(string version)
         {

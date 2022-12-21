@@ -7,19 +7,22 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
     public class OqtMailService : MailServiceBase
     {
-        private readonly Lazy<ISiteRepository> _siteRepositoryLazy;
-        private readonly Lazy<ISettingRepository> _settingRepositoryLazy;
+        private readonly ILazySvc<ISiteRepository> _siteRepositoryLazy;
+        private readonly ILazySvc<ISettingRepository> _settingRepositoryLazy;
 
-        public OqtMailService(Lazy<ISiteRepository> siteRepositoryLazy, Lazy<ISettingRepository> settingRepositoryLazy, Lazy<IUser> userLazy) : base(userLazy)
+        public OqtMailService(ILazySvc<ISiteRepository> siteRepositoryLazy, ILazySvc<ISettingRepository> settingRepositoryLazy, ILazySvc<IUser> userLazy) : base(userLazy)
         {
-            _siteRepositoryLazy = siteRepositoryLazy;
-            _settingRepositoryLazy = settingRepositoryLazy;
+            ConnectServices(
+                _siteRepositoryLazy = siteRepositoryLazy,
+                _settingRepositoryLazy = settingRepositoryLazy
+            );
         }
 
         protected override SmtpClient SmtpClient()

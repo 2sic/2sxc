@@ -2,11 +2,11 @@
 using Oqtane.Models;
 using Oqtane.Modules;
 using Oqtane.Shared;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.App
 
         [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
-        [Inject] public Lazy<IFeaturesService> FeaturesService { get; set; }
+        [Inject] public ILazySvc<IFeaturesService> FeaturesService { get; set; }
 
         #endregion
 

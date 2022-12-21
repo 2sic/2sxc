@@ -1,21 +1,24 @@
-﻿using System;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services
 {
-    public class TurnOnService: HasLog, ITurnOnService
+    public class TurnOnService: ServiceBase, ITurnOnService
     {
         private const string TagName = "turnOn";
         private const string AttributeName = "turn-on";
 
-        public TurnOnService(Lazy<IHtmlTagService> htmlTagService) : base(Constants.SxcLogName + ".TrnOnS")
+        public TurnOnService(ILazySvc<IHtmlTagService> htmlTagService) : base(Constants.SxcLogName + ".TrnOnS")
         {
-            _htmlTagService = htmlTagService;
+            ConnectServices(
+                _htmlTagService = htmlTagService
+            );
         }
 
-        private readonly Lazy<IHtmlTagService> _htmlTagService;
+        private readonly ILazySvc<IHtmlTagService> _htmlTagService;
 
         // TODO:
         // - TEST

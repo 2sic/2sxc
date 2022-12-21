@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Context
     [PrivateApi("Hide implementation")]
     public class CmsSite: CmsContextPartBase<ISite>, ICmsSite
     {
-        public CmsSite(ILazyLike<App> siteAppLazy) => _siteAppLazy = siteAppLazy;
-        private readonly ILazyLike<App> _siteAppLazy;
+        public CmsSite(ILazySvc<App> siteAppLazy) => _siteAppLazy = siteAppLazy;
+        private readonly ILazySvc<App> _siteAppLazy;
 
         public ICmsSite Init(CmsContext parent, AppState appState)
         {

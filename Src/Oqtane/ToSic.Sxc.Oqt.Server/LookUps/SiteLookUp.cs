@@ -2,6 +2,7 @@
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using static ToSic.Sxc.LookUp.LookUpConstants;
 
@@ -11,10 +12,10 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
     {
         public SiteState SiteState { get; }
         protected Oqtane.Models.Site Site { get; set; }
-        private readonly Lazy<SiteStateInitializer> _siteStateInitializer;
-        private readonly Lazy<SiteRepository> _siteRepository;
+        private readonly ILazySvc<SiteStateInitializer> _siteStateInitializer;
+        private readonly ILazySvc<SiteRepository> _siteRepository;
 
-        public SiteLookUp(Lazy<SiteStateInitializer> siteStateInitializer, SiteState siteState, Lazy<SiteRepository> siteRepository)
+        public SiteLookUp(ILazySvc<SiteStateInitializer> siteStateInitializer, SiteState siteState, ILazySvc<SiteRepository> siteRepository)
         {
             Name = SourceSite;
             SiteState = siteState;

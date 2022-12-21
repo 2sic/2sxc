@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
@@ -19,8 +18,8 @@ namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsBackend: ServiceBase
     {
-        public ViewsBackend(Lazy<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates,
-            Lazy<IConvertToEavLight> convertToEavLight, Generator<ImpExpHelpers> impExpHelpers)
+        public ViewsBackend(ILazySvc<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates,
+            ILazySvc<IConvertToEavLight> convertToEavLight, Generator<ImpExpHelpers> impExpHelpers)
             : base("Bck.Views") => ConnectServices(
             _cmsManagerLazy = cmsManagerLazy,
             _appStates = appStates,
@@ -30,9 +29,9 @@ namespace ToSic.Sxc.WebApi.Views
             _user = context.User
         );
 
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly ILazySvc<CmsManager> _cmsManagerLazy;
         private readonly IAppStates _appStates;
-        private readonly Lazy<IConvertToEavLight> _convertToEavLight;
+        private readonly ILazySvc<IConvertToEavLight> _convertToEavLight;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
         private readonly ISite _site;
         private readonly IUser _user;

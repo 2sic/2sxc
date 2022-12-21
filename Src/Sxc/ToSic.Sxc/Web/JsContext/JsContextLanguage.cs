@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Web.JsContext
 {
@@ -12,8 +13,8 @@ namespace ToSic.Sxc.Web.JsContext
         public string Primary { get; private set; }
         public IEnumerable<ClientInfoLanguage> All { get; private set; }
 
-        public JsContextLanguage(Lazy<IZoneMapper> zoneMapperLazy) => _zoneMapperLazy = zoneMapperLazy;
-        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
+        public JsContextLanguage(ILazySvc<IZoneMapper> zoneMapperLazy) => _zoneMapperLazy = zoneMapperLazy;
+        private readonly ILazySvc<IZoneMapper> _zoneMapperLazy;
 
         public JsContextLanguage Init(ISite site, int zoneId)
         {

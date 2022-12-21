@@ -9,32 +9,36 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context
 {
-    public class OqtUser: IUser<User>
+    public class OqtUser: ServiceBase, IUser<User>
     {
-        private readonly Lazy<IUserRepository> _userRepository;
-        private readonly Lazy<IUserRoleRepository> _userRoleRepository;
-        private readonly Lazy<UserManager<IdentityUser>> _identityUserManager;
+        private readonly ILazySvc<IUserRepository> _userRepository;
+        private readonly ILazySvc<IUserRoleRepository> _userRoleRepository;
+        private readonly ILazySvc<UserManager<IdentityUser>> _identityUserManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SiteState _siteState;
 
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtUser(Lazy<IUserRepository> userRepository,
-            Lazy<IUserRoleRepository> userRoleRepository,
-            Lazy<UserManager<IdentityUser>> identityUserManager,
+        public OqtUser(ILazySvc<IUserRepository> userRepository,
+            ILazySvc<IUserRoleRepository> userRoleRepository,
+            ILazySvc<UserManager<IdentityUser>> identityUserManager,
             IHttpContextAccessor httpContextAccessor,
-            SiteState siteState)
+            SiteState siteState): base(OqtConstants.OqtLogPrefix + ".User")
         {
-            _userRepository = userRepository;
-            _userRoleRepository = userRoleRepository;
-            _identityUserManager = identityUserManager;
-            _httpContextAccessor = httpContextAccessor;
-            _siteState = siteState;
+            ConnectServices(
+                _userRepository = userRepository,
+                _userRoleRepository = userRoleRepository,
+                _identityUserManager = identityUserManager,
+                _httpContextAccessor = httpContextAccessor,
+                _siteState = siteState
+            );
         }
 
         public User UnwrappedContents

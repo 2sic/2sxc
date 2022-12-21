@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.WebApi;
@@ -25,26 +26,28 @@ namespace ToSic.Sxc.Oqt.Server.Context
         /// Constructor for DI
         /// </summary>
         public OqtSite(SiteStateInitializer siteStateInitializer,
-            Lazy<ISiteRepository> siteRepository,
-            Lazy<IServerPaths> serverPaths,
-            Lazy<IZoneMapper> zoneMapper,
-            Lazy<OqtCulture> oqtCulture,
-            Lazy<ILinkPaths> linkPathsLazy): base(OqtConstants.OqtLogPrefix)
+            ILazySvc<ISiteRepository> siteRepository,
+            ILazySvc<IServerPaths> serverPaths,
+            ILazySvc<IZoneMapper> zoneMapper,
+            ILazySvc<OqtCulture> oqtCulture,
+            ILazySvc<ILinkPaths> linkPathsLazy): base(OqtConstants.OqtLogPrefix)
         {
-            _siteStateInitializer = siteStateInitializer;
-            _siteRepository = siteRepository;
-            _serverPaths = serverPaths;
-            _zoneMapper = zoneMapper;
-            _oqtCulture = oqtCulture;
-            _linkPathsLazy = linkPathsLazy;
+            this.ConnectServices(
+                _siteStateInitializer = siteStateInitializer,
+                _siteRepository = siteRepository,
+                _serverPaths = serverPaths,
+                _zoneMapper = zoneMapper,
+                _oqtCulture = oqtCulture,
+                _linkPathsLazy = linkPathsLazy
+            );
         }
 
         private readonly SiteStateInitializer _siteStateInitializer;
-        private readonly Lazy<ISiteRepository> _siteRepository;
-        private readonly Lazy<IServerPaths> _serverPaths;
-        private readonly Lazy<IZoneMapper> _zoneMapper;
-        private readonly Lazy<OqtCulture> _oqtCulture;
-        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+        private readonly ILazySvc<ISiteRepository> _siteRepository;
+        private readonly ILazySvc<IServerPaths> _serverPaths;
+        private readonly ILazySvc<IZoneMapper> _zoneMapper;
+        private readonly ILazySvc<OqtCulture> _oqtCulture;
+        private readonly ILazySvc<ILinkPaths> _linkPathsLazy;
 
         private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 

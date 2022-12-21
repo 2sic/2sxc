@@ -4,6 +4,7 @@ using Oqtane.UI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.App;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
@@ -160,7 +161,7 @@ namespace ToSic.Sxc.Oqt.Client
             return result3;
         }
 
-        public static int ApplyHttpHeaders(OqtViewResultsDto result, Lazy<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
+        public static int ApplyHttpHeaders(OqtViewResultsDto result, ILazySvc<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
         {
             var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
 

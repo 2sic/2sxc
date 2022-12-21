@@ -4,6 +4,7 @@ using System.Reflection;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 
@@ -12,11 +13,13 @@ namespace ToSic.Sxc.Oqt.Server.Code
     [PrivateApi]
     public class CodeCompilerNetCore: CodeCompiler
     {
-        private readonly Lazy<IServerPaths> _serverPaths;
+        private readonly ILazySvc<IServerPaths> _serverPaths;
 
-        public CodeCompilerNetCore(Lazy<IServerPaths> serverPaths)
+        public CodeCompilerNetCore(ILazySvc<IServerPaths> serverPaths)
         {
-            _serverPaths = serverPaths;
+            ConnectServices(
+                _serverPaths = serverPaths
+            );
         }
 
         protected override Type GetCsHtmlType(string virtualPath) 

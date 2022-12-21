@@ -6,6 +6,7 @@ using Oqtane.Shared;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
@@ -18,18 +19,20 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private readonly SettingsHelper _settingsHelper;
         private readonly IModuleRepository _moduleRepository;
         private readonly IAppStates _appStates;
-        private readonly Lazy<AppFinder> _appFinderLazy;
+        private readonly ILazySvc<AppFinder> _appFinderLazy;
         private readonly ISite _site;
         private Dictionary<string, string> _settings;
 
         public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository, 
-            IAppStates appStates, Lazy<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+            IAppStates appStates, ILazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
-            _settingsHelper = settingsHelper;
-            _moduleRepository = moduleRepository;
-            _appStates = appStates;
-            _appFinderLazy = appFinderLazy;
-            _site = site;
+            ConnectServices(
+                _settingsHelper = settingsHelper,
+                _moduleRepository = moduleRepository,
+                _appStates = appStates,
+                _appFinderLazy = appFinderLazy,
+                _site = site
+            );
         }
 
         public new OqtModule Init(Module module, ILog parentLog)

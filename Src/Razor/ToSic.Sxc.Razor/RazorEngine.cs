@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Custom.Hybrid;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
@@ -17,15 +18,17 @@ namespace ToSic.Sxc.Razor
 
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
-        private readonly Lazy<DynamicCodeRoot> _dynCodeRootLazy;
+        private readonly ILazySvc<DynamicCodeRoot> _dynCodeRootLazy;
         public IRazorRenderer RazorRenderer { get; }
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers, IRazorRenderer razorRenderer, Lazy<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
+        public RazorEngine(EngineBaseDependencies helpers, IRazorRenderer razorRenderer, ILazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
         {
-            _dynCodeRootLazy = dynCodeRootLazy;
-            RazorRenderer = razorRenderer;
+            ConnectServices(
+                _dynCodeRootLazy = dynCodeRootLazy,
+                RazorRenderer = razorRenderer
+            );
         }
         
         #endregion

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Utils;
@@ -12,15 +14,17 @@ using ToSic.Sxc.Utils;
 namespace ToSic.Sxc.Services.CmsService
 {
     [PrivateApi("WIP")]
-    public class CmsService: HasLog, ICmsService
+    public class CmsService: ServiceBase, ICmsService
     {
-        private readonly Lazy<IImageService> _imgService;
-        private readonly Lazy<IValueConverter> _valueConverter;
+        private readonly ILazySvc<IImageService> _imgService;
+        private readonly ILazySvc<IValueConverter> _valueConverter;
 
-        public CmsService(Lazy<IImageService> imgService, Lazy<IValueConverter> valueConverter) : base(Constants.SxcLogName + ".CmsSrv")
+        public CmsService(ILazySvc<IImageService> imgService, ILazySvc<IValueConverter> valueConverter) : base(Constants.SxcLogName + ".CmsSrv")
         {
-            _imgService = imgService;
-            _valueConverter = valueConverter;
+            ConnectServices(
+                _imgService = imgService,
+                _valueConverter = valueConverter
+            );
         }
 
         public IHtmlTag Show(object thing, string noParamOrder = Eav.Parameters.Protector, object container = null)

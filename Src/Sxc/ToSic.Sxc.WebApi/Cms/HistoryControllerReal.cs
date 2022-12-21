@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-    public class HistoryControllerReal : HasLog, IHistoryController
+    public class HistoryControllerReal : ServiceBase, IHistoryController
     {
         public const string LogSuffix = "Hist";
 
         // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
-        public HistoryControllerReal(Lazy<AppManager> appManagerLazy) : base("Api.CmsHistoryRl")
+        public HistoryControllerReal(ILazySvc<AppManager> appManagerLazy) : base("Api.CmsHistoryRl")
         {
-            _appManagerLazy = appManagerLazy;
+            ConnectServices(
+                _appManagerLazy = appManagerLazy
+            );
         }
 
-        private readonly Lazy<AppManager> _appManagerLazy;
+        private readonly ILazySvc<AppManager> _appManagerLazy;
 
 
         public List<ItemHistory> Get(int appId, ItemIdentifier item)

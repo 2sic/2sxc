@@ -6,7 +6,9 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -16,11 +18,11 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    internal class OqtModuleUpdater: HasLog, IPlatformModuleUpdater
+    internal class OqtModuleUpdater: ServiceBase, IPlatformModuleUpdater
     {
         private readonly SettingsHelper _settingsHelper;
         private readonly IPageModuleRepository _pageModuleRepository;
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
+        private readonly ILazySvc<CmsRuntime> _lazyCmsRuntime;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
 
@@ -30,13 +32,15 @@ namespace ToSic.Sxc.Oqt.Server.Run
         // ReSharper disable once UnusedMember.Global
         public OqtModuleUpdater(SettingsHelper settingsHelper,
             IPageModuleRepository pageModuleRepository,
-            Lazy<CmsRuntime> lazyCmsRuntime, IAppStates appStates, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
+            ILazySvc<CmsRuntime> lazyCmsRuntime, IAppStates appStates, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
-            _settingsHelper = settingsHelper;
-            _pageModuleRepository = pageModuleRepository;
-            _lazyCmsRuntime = lazyCmsRuntime;
-            _appStates = appStates;
-            _site = site;
+            ConnectServices(
+                _settingsHelper = settingsHelper,
+                _pageModuleRepository = pageModuleRepository,
+                _lazyCmsRuntime = lazyCmsRuntime,
+                _appStates = appStates,
+                _site = site
+            );
         }
 
         public void SetAppId(IModule instance, int? appId)

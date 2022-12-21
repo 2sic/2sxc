@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
@@ -20,26 +19,15 @@ namespace ToSic.Sxc.Edit.Toolbar
         public class Dependencies: ServiceDependencies
         {
             public Dependencies(
-                Lazy<IAppStates> appStatesLazy,
+                ILazySvc<IAppStates> appStatesLazy,
                 LazyInit<ToolbarButtonDecoratorHelper> toolbarButtonHelper
             ) => AddToLogQueue(
                 ToolbarButtonHelper = toolbarButtonHelper,
                 AppStatesLazy = appStatesLazy
             );
 
-            internal readonly Lazy<IAppStates> AppStatesLazy;
+            internal readonly ILazySvc<IAppStates> AppStatesLazy;
             public LazyInit<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
-
-            //public override Dependencies SetLog(ILog parentLog)
-            //{
-            //    if (_alreadyInited) return this;
-            //    _alreadyInited = true;
-            //    base.SetLog(parentLog);
-            //    //ToolbarButtonHelper.SetLog(parentLog);
-            //    return this;
-            //}
-
-            //private bool _alreadyInited;
         }
 
         /// <summary>

@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helper;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
@@ -16,22 +16,24 @@ using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.LightSpeed
 {
-    public class LightSpeed : HasLog, IOutputCache
+    public class LightSpeed : ServiceBase, IOutputCache
     {
 
-        public LightSpeed(IFeaturesInternal features, Lazy<IAppStates> appStatesLazy, Lazy<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, Lazy<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IFeaturesInternal features, ILazySvc<IAppStates> appStatesLazy, ILazySvc<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, ILazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
         {
-            LightSpeedStats = lightSpeedStats;
-            _features = features;
-            _appStatesLazy = appStatesLazy;
-            _appPathsLazy = appPathsLazy;
-            _cmsContext = cmsContext;
+            ConnectServices(
+                LightSpeedStats = lightSpeedStats,
+                _features = features,
+                _appStatesLazy = appStatesLazy,
+                _appPathsLazy = appPathsLazy,
+                _cmsContext = cmsContext
+            );
         }
         public LightSpeedStats LightSpeedStats { get; }
         private readonly IFeaturesInternal _features;
-        private readonly Lazy<IAppStates> _appStatesLazy;
-        private readonly Lazy<AppPaths> _appPathsLazy;
-        private readonly Lazy<ICmsContext> _cmsContext;
+        private readonly ILazySvc<IAppStates> _appStatesLazy;
+        private readonly ILazySvc<AppPaths> _appPathsLazy;
+        private readonly ILazySvc<ICmsContext> _cmsContext;
 
         public IOutputCache Init(int moduleId, int pageId, IBlock block)
         {

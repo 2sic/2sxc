@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using System;
 using System.Linq;
 using Oqtane.Models;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Images;
@@ -23,15 +24,15 @@ namespace ToSic.Sxc.Oqt.Server.Services
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
-        private readonly Lazy<IAliasRepository> _aliasRepositoryLazy;
+        private readonly ILazySvc<IAliasRepository> _aliasRepositoryLazy;
         private Sxc.Context.IContextOfBlock _context;
 
         public OqtLinkService(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
             ImgResizeLinker imgLinker,
-            Lazy<ILinkPaths> linkPathsLazy,
-            Lazy<IAliasRepository> aliasRepositoryLazy
+            ILazySvc<ILinkPaths> linkPathsLazy,
+            ILazySvc<IAliasRepository> aliasRepositoryLazy
         ) : base(imgLinker, linkPathsLazy)
         {
             _pageRepository = pageRepository;

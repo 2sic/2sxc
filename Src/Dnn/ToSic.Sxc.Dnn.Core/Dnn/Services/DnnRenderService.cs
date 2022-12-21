@@ -1,5 +1,4 @@
-﻿using System;
-using System.Web;
+﻿using System.Web;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -11,20 +10,16 @@ namespace ToSic.Sxc.Dnn.Services
 {
     public class DnnRenderService : RenderService
     {
-        private readonly Lazy<DnnPageChanges> _dnnPageChanges;
-        private readonly Lazy<DnnClientResources> _dnnClientResources;
+        private readonly ILazySvc<DnnPageChanges> _dnnPageChanges;
+        private readonly ILazySvc<DnnClientResources> _dnnClientResources;
         private readonly Generator<IContextOfBlock> _context;
 
         public DnnRenderService(
             Dependencies dependencies,
-            //GeneratorLog<IEditService> editGenerator,
-            //LazyInit<IModuleAndBlockBuilder> builder,
-            //GeneratorLog<BlockFromEntity> blkFrmEntGen,
-            //Lazy<ILogHistoryLive> historyLazy,
-            Lazy<DnnPageChanges> dnnPageChanges,
-            Lazy<DnnClientResources> dnnClientResources,
+            ILazySvc<DnnPageChanges> dnnPageChanges,
+            ILazySvc<DnnClientResources> dnnClientResources,
             Generator<IContextOfBlock> context
-        ) : base(/*editGenerator, builder, blkFrmEntGen, historyLazy*/dependencies)
+        ) : base(dependencies)
         {
             _dnnPageChanges = dnnPageChanges;
             _dnnClientResources = dnnClientResources;

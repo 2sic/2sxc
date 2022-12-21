@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -12,10 +13,12 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
     [PrivateApi]
     public class OqtaneDynamicCodeRoot : DynamicCodeRoot<object, ServiceKit>
     {
-        private readonly Lazy<SiteStateInitializer> _siteStateInitializerLazy;
-        public OqtaneDynamicCodeRoot(Dependencies dependencies, Lazy<SiteStateInitializer> siteStateInitializerLazy) : base(dependencies, OqtConstants.OqtLogPrefix)
+        private readonly ILazySvc<SiteStateInitializer> _siteStateInitializerLazy;
+        public OqtaneDynamicCodeRoot(Dependencies dependencies, ILazySvc<SiteStateInitializer> siteStateInitializerLazy) : base(dependencies, OqtConstants.OqtLogPrefix)
         {
-            _siteStateInitializerLazy = siteStateInitializerLazy;
+            ConnectServices(
+                _siteStateInitializerLazy = siteStateInitializerLazy
+            );
         }
 
         public override IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility = Constants.CompatibilityLevel12)

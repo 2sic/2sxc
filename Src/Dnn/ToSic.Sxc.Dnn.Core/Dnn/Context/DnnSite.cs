@@ -35,8 +35,8 @@ namespace ToSic.Sxc.Dnn.Context
             );
             Swap(null, null);
         }
-        private readonly ILazyLike<IZoneMapper> _zoneMapperLazy;
-        private readonly ILazyLike<ILinkPaths> _linkPathsLazy;
+        private readonly ILazySvc<IZoneMapper> _zoneMapperLazy;
+        private readonly ILazySvc<ILinkPaths> _linkPathsLazy;
         private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         /// <inheritdoc />

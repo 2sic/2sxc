@@ -33,9 +33,9 @@ namespace ToSic.Sxc.DataSources
         private readonly SiteState _siteState;
         private readonly IUserPermissions _userPermissions;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILazyLike<ILinkPaths> _linkPathsLazy;
+        private readonly ILazySvc<ILinkPaths> _linkPathsLazy;
 
-        public OqtPages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, LazyInit<ILinkPaths> linkPathsLazy)
+        public OqtPages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, ILazySvc<ILinkPaths> linkPathsLazy)
         {
             _pages = pages;
             _siteState = siteState;

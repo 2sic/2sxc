@@ -31,8 +31,8 @@ namespace ToSic.Sxc.DataSources
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSourceBase
     {
-        private readonly ILazyLike<CmsRuntime> _lazyCmsRuntime;
-        private readonly ILazyLike<IModule> _moduleLazy;
+        private readonly ILazySvc<CmsRuntime> _lazyCmsRuntime;
+        private readonly ILazySvc<IModule> _moduleLazy;
 
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Oqtane.Models;
 using Oqtane.Repository;
 using Oqtane.Shared;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using Page = ToSic.Sxc.Context.Page;
@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Oqt.Server.Context
     public class OqtPage : Page, IWrapper<Oqtane.Models.Page>
     {
         private readonly SiteState _siteState;
-        private readonly Lazy<IAliasRepository> _aliasRepository;
-        private readonly Lazy<IPageRepository> _pages;
-        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+        private readonly LazyInit<IAliasRepository> _aliasRepository;
+        private readonly LazyInit<IPageRepository> _pages;
+        private readonly LazyInit<ILinkPaths> _linkPathsLazy;
 
         public Alias Alias { get; set; }
 
-        public OqtPage(Lazy<IHttp> httpBlazor, SiteState siteState, Lazy<IAliasRepository> aliasRepository, Lazy<IPageRepository> pages, Lazy<ILinkPaths> linkPathsLazy) : base(httpBlazor)
+        public OqtPage(LazyInit<IHttp> httpBlazor, SiteState siteState, LazyInit<IAliasRepository> aliasRepository, LazyInit<IPageRepository> pages, LazyInit<ILinkPaths> linkPathsLazy) : base(httpBlazor)
         {
             _siteState = siteState;
             _aliasRepository = aliasRepository;

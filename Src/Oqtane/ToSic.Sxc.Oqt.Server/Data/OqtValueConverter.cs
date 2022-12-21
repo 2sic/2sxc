@@ -7,6 +7,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
@@ -20,32 +21,34 @@ namespace ToSic.Sxc.Oqt.Server.Data
     [PrivateApi]
     public class OqtValueConverter : ValueConverterBase
     {
-        private readonly Lazy<IFeaturesService> _featuresLazy;
-        public Lazy<IFileRepository> FileRepository { get; }
-        public Lazy<IFolderRepository> FolderRepository { get; }
-        public Lazy<ITenantResolver> TenantResolver { get; }
-        public Lazy<IPageRepository> PageRepository { get; }
-        public Lazy<IServerPaths> ServerPaths { get; }
-        public Lazy<SiteStateInitializer> SiteStateInitializerLazy { get; }
+        private readonly ILazySvc<IFeaturesService> _featuresLazy;
+        public ILazySvc<IFileRepository> FileRepository { get; }
+        public ILazySvc<IFolderRepository> FolderRepository { get; }
+        public ILazySvc<ITenantResolver> TenantResolver { get; }
+        public ILazySvc<IPageRepository> PageRepository { get; }
+        public ILazySvc<IServerPaths> ServerPaths { get; }
+        public ILazySvc<SiteStateInitializer> SiteStateInitializerLazy { get; }
 
         #region DI Constructor
 
         public OqtValueConverter(
-            Lazy<IFileRepository> fileRepository,
-            Lazy<IFolderRepository> folderRepository,
-            Lazy<ITenantResolver> tenantResolver,
-            Lazy<IPageRepository> pageRepository,
-            Lazy<IServerPaths> serverPaths,
-            Lazy<SiteStateInitializer> siteStateInitializerLazy,
-            Lazy<IFeaturesService> featuresLazy) 
+            ILazySvc<IFileRepository> fileRepository,
+            ILazySvc<IFolderRepository> folderRepository,
+            ILazySvc<ITenantResolver> tenantResolver,
+            ILazySvc<IPageRepository> pageRepository,
+            ILazySvc<IServerPaths> serverPaths,
+            ILazySvc<SiteStateInitializer> siteStateInitializerLazy,
+            ILazySvc<IFeaturesService> featuresLazy) : base("Oqt.ValCn")
         {
-            _featuresLazy = featuresLazy;
-            FileRepository = fileRepository;
-            FolderRepository = folderRepository;
-            TenantResolver = tenantResolver;
-            PageRepository = pageRepository;
-            ServerPaths = serverPaths;
-            SiteStateInitializerLazy = siteStateInitializerLazy;
+            ConnectServices(
+                _featuresLazy = featuresLazy,
+                FileRepository = fileRepository,
+                FolderRepository = folderRepository,
+                TenantResolver = tenantResolver,
+                PageRepository = pageRepository,
+                ServerPaths = serverPaths,
+                SiteStateInitializerLazy = siteStateInitializerLazy
+            );
         }
 
         protected Alias Alias

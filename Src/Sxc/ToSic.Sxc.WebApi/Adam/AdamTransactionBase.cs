@@ -17,12 +17,12 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         #region Constructor / DI
 
-        protected AdamTransactionBase(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, string logName) : base(logName) =>
+        protected AdamTransactionBase(ILazySvc<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, string logName) : base(logName) =>
             ConnectServices(
                 _adamState = adamState,
                 _ctxResolver = ctxResolver
             );
-        private readonly Lazy<AdamContext<TFolderId, TFileId>> _adamState;
+        private readonly ILazySvc<AdamContext<TFolderId, TFileId>> _adamState;
         private readonly IContextResolver _ctxResolver;
 
         public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog)

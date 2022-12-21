@@ -22,20 +22,22 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtZoneMapper(ISiteRepository siteRepository, 
             ISettingRepository settingRepository,
             Generator<ISite> site,
-            Lazy<ZoneCreator> zoneCreatorLazy,
+            ILazySvc<ZoneCreator> zoneCreatorLazy,
             OqtCulture oqtCulture, 
             IAppStates appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
-            _siteRepository = siteRepository;
-            _settingRepository = settingRepository;
-            _site = site;
-            _zoneCreatorLazy = zoneCreatorLazy;
-            _oqtCulture = oqtCulture;
+            ConnectServices(
+                _siteRepository = siteRepository,
+                _settingRepository = settingRepository,
+                _site = site,
+                _zoneCreatorLazy = zoneCreatorLazy,
+                _oqtCulture = oqtCulture
+            );
         }
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
         private readonly Generator<ISite> _site;
-        private readonly Lazy<ZoneCreator> _zoneCreatorLazy;
+        private readonly ILazySvc<ZoneCreator> _zoneCreatorLazy;
         private readonly OqtCulture _oqtCulture;
 
 

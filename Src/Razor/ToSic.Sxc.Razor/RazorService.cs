@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.IO;
-using ToSic.Eav.Helpers;
+﻿using System;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Razor
@@ -11,9 +8,9 @@ namespace ToSic.Sxc.Razor
     public class RazorService : IRazorService
     {
 
-        private readonly Lazy<IRazorRenderer> _razorRendererLazy;
+        private readonly ILazySvc<IRazorRenderer> _razorRendererLazy;
 
-        public RazorService(Lazy<IRazorRenderer> razorRendererLazy)
+        public RazorService(ILazySvc<IRazorRenderer> razorRendererLazy)
         {
             _razorRendererLazy = razorRendererLazy;
         }

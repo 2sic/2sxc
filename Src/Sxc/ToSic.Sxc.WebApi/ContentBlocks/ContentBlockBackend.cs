@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             IPagePublishing publishing, 
             LazyInit<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            Lazy<IBlockResourceExtractor> optimizerLazy,
+            ILazySvc<IBlockResourceExtractor> optimizerLazy,
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt,
             Generator<BlockFromEntity> entityBlockGenerator)
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             );
         }
 
-        private readonly Lazy<IBlockResourceExtractor> _optimizer;
+        private readonly ILazySvc<IBlockResourceExtractor> _optimizer;
         private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
         private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private readonly IPagePublishing _publishing;

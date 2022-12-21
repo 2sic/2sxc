@@ -7,6 +7,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -59,8 +60,8 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var entity = TstDataEntity(someTextValue, someHtmlValue, TstDataContentType);
             var dynamicEntity = DynEntity(entity);
             var dynamicField = dynamicEntity.Field(SomeHtmlField);
-            var imgService = Build<Lazy<IImageService>>();
-            var valueConverter = Build<Lazy<IValueConverter>>();
+            var imgService = Build<ILazySvc<IImageService>>();
+            var valueConverter = Build<ILazySvc<IValueConverter>>();
             var cmsService = new Services.CmsService.CmsService(imgService, valueConverter);
             return cmsService.Show(dynamicField);
         }

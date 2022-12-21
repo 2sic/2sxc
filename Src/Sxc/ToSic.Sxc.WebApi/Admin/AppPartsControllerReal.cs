@@ -18,20 +18,21 @@ namespace ToSic.Sxc.WebApi.Admin
             LazyInit<IContextOfSite> context,
             LazyInit<ExportContent<THttpResponseType>> exportContent,
             Generator<ImportContent> importContent, 
-            Lazy<IUser> user
+            ILazySvc<IUser> user
             ): base("Api.APartsRl")
         {
             ConnectServices(
                 _context = context,
                 _exportContent = exportContent,
-                _importContent = importContent
+                _importContent = importContent,
+                _user = user
             );
-            _user = user;
+            
         }
         private readonly LazyInit<IContextOfSite> _context;
         private readonly LazyInit<ExportContent<THttpResponseType>> _exportContent;
         private readonly Generator<ImportContent> _importContent;
-        private readonly Lazy<IUser> _user;
+        private readonly ILazySvc<IUser> _user;
 
 
         #region Parts Export/Import

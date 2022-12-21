@@ -1,12 +1,13 @@
-﻿using System;
-using DotNetNuke.Web.Client.ClientResourceManagement;
+﻿using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Dnn;
 using ToSic.Razor.Markup;
@@ -21,13 +22,15 @@ using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 namespace ToSic.Sxc.Dnn.Services
 {
     [PrivateApi]
-    public class DnnPageChanges : HasLog
+    public class DnnPageChanges : ServiceBase
     {
-        public DnnPageChanges(Lazy<IFeaturesService> featuresService): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(ILazySvc<IFeaturesService> featuresService): base($"{DnnConstants.LogName}.PgeCng")
         {
-            _featuresService = featuresService;
+            ConnectServices(
+                _featuresService = featuresService
+            );
         }
-        private readonly Lazy<IFeaturesService> _featuresService;
+        private readonly ILazySvc<IFeaturesService> _featuresService;
 
         public int Apply(Page page, IRenderResult renderResult)
         {

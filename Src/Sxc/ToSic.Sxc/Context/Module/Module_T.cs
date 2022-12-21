@@ -2,6 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Context
 {
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.Context
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [PrivateApi("this is just fyi")]
-    public abstract class Module<T>: HasLog, IModule, IWrapper<T> where T: class
+    public abstract class Module<T>: ServiceBase, IModule, IWrapper<T> where T: class
     {
         #region Constructors and DI
 

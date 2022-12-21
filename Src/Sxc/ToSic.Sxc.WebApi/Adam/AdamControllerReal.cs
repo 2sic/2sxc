@@ -4,32 +4,36 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
     // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-    public class AdamControllerReal<TIdentifier>: HasLog
+    public class AdamControllerReal<TIdentifier>: ServiceBase
     {
         public AdamControllerReal(
-            Lazy<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,
-            Lazy<AdamTransGetItems<TIdentifier, TIdentifier>> adamItems,
-            Lazy<AdamTransFolder<TIdentifier, TIdentifier>> adamFolders,
-            Lazy<AdamTransDelete<TIdentifier, TIdentifier>> adamDelete,
-            Lazy<AdamTransRename<TIdentifier, TIdentifier>> adamRename
+            ILazySvc<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,
+            ILazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> adamItems,
+            ILazySvc<AdamTransFolder<TIdentifier, TIdentifier>> adamFolders,
+            ILazySvc<AdamTransDelete<TIdentifier, TIdentifier>> adamDelete,
+            ILazySvc<AdamTransRename<TIdentifier, TIdentifier>> adamRename
             ) : base("Api.Adam")
         {
-            _adamUpload = adamUpload;
-            _adamItems = adamItems;
-            _adamFolders = adamFolders;
-            _adamDelete = adamDelete;
-            _adamRename = adamRename;
+            ConnectServices(
+                _adamUpload = adamUpload,
+                _adamItems = adamItems,
+                _adamFolders = adamFolders,
+                _adamDelete = adamDelete,
+                _adamRename = adamRename
+            );
         }
-        private readonly Lazy<AdamTransUpload<TIdentifier, TIdentifier>> _adamUpload;
-        private readonly Lazy<AdamTransGetItems<TIdentifier, TIdentifier>> _adamItems;
-        private readonly Lazy<AdamTransFolder<TIdentifier, TIdentifier>> _adamFolders;
-        private readonly Lazy<AdamTransDelete<TIdentifier, TIdentifier>> _adamDelete;
-        private readonly Lazy<AdamTransRename<TIdentifier, TIdentifier>> _adamRename;
+        private readonly ILazySvc<AdamTransUpload<TIdentifier, TIdentifier>> _adamUpload;
+        private readonly ILazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> _adamItems;
+        private readonly ILazySvc<AdamTransFolder<TIdentifier, TIdentifier>> _adamFolders;
+        private readonly ILazySvc<AdamTransDelete<TIdentifier, TIdentifier>> _adamDelete;
+        private readonly ILazySvc<AdamTransRename<TIdentifier, TIdentifier>> _adamRename;
 
         public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
         {

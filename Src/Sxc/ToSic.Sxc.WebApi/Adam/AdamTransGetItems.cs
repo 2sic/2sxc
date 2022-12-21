@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.WebApi.Adam;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 
@@ -11,6 +12,6 @@ namespace ToSic.Sxc.WebApi.Adam
     /// </summary>
     public class AdamTransGetItems<TFolderId, TFileId> : AdamTransactionBase<AdamTransGetItems<TFolderId, TFileId>, TFolderId, TFileId>, IAdamTransGetItems
     {
-        public AdamTransGetItems(Lazy<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnItm") { }
+        public AdamTransGetItems(ILazySvc<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver) : base(adamState, ctxResolver, "Adm.TrnItm") { }
     }
 }

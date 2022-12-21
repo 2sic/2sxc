@@ -1,6 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Server.Installation
@@ -9,15 +11,17 @@ namespace ToSic.Sxc.Oqt.Server.Installation
     // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
     // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
     // this code will check if there is less than 50 global types and warn user to restart application to fix that
-    public class GlobalTypesCheck
+    public class GlobalTypesCheck: ServiceBase
     {
 
-        public GlobalTypesCheck(Lazy<IAppStates> appStates)
+        public GlobalTypesCheck(ILazySvc<IAppStates> appStates): base($"{OqtConstants.OqtLogPrefix}.GlbTCh")
         {
-            _appStates = appStates;
+            ConnectServices(
+                _appStates = appStates
+            );
         }
 
-        private readonly Lazy<IAppStates> _appStates;
+        private readonly ILazySvc<IAppStates> _appStates;
 
         private static bool? _globalTypesCheckedAndError;
 

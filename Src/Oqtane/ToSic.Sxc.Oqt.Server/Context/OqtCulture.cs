@@ -2,24 +2,30 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Oqtane.Controllers;
 using Oqtane.Infrastructure;
 using Oqtane.Repository;
 using ToSic.Eav.Apps.Languages;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context
 {
     /// <summary>
     /// Manage oqtane site culture info
     /// </summary>
-    public class OqtCulture
+    public class OqtCulture: ServiceBase
     {
-        public OqtCulture(Lazy<ILocalizationManager> localizationManager, Lazy<ILanguageRepository> languageRepository)
+        public OqtCulture(ILazySvc<ILocalizationManager> localizationManager, ILazySvc<ILanguageRepository> languageRepository): base($"{OqtConstants.OqtLogPrefix}.Cultur")
         {
-            _localizationManager = localizationManager;
-            _languageRepository = languageRepository;
+            ConnectServices(
+                _localizationManager = localizationManager,
+                _languageRepository = languageRepository
+            );
         }
-        private readonly Lazy<ILocalizationManager> _localizationManager;
-        private readonly Lazy<ILanguageRepository> _languageRepository;
+        private readonly ILazySvc<ILocalizationManager> _localizationManager;
+        private readonly ILazySvc<ILanguageRepository> _languageRepository;
 
         const string FallbackLanguageCode = "en-us";
 

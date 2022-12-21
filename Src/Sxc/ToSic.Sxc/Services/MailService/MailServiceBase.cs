@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Services
 
         [PrivateApi] protected IApp App;
 
-        private readonly LazyInit<IUser> _userLazy;
+        private readonly ILazySvc<IUser> _userLazy;
 
-        protected MailServiceBase(LazyInit<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
+        protected MailServiceBase(ILazySvc<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
         {
             ConnectServices(
                 _userLazy = userLazy

@@ -23,13 +23,13 @@ namespace ToSic.Sxc.WebApi.Adam
         //// ReSharper disable once InconsistentNaming
         //public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
-        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, Lazy<IFeaturesInternal> featuresLazy) : base("AdamCode") =>
+        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, ILazySvc<IFeaturesInternal> featuresLazy) : base("AdamCode") =>
             ConnectServices(
                 _adamUploadGenerator = adamUploadGenerator,
                 _featuresLazy = featuresLazy
             );
         private readonly Generator<AdamTransUpload<int, int>> _adamUploadGenerator;
-        private readonly Lazy<IFeaturesInternal> _featuresLazy;
+        private readonly ILazySvc<IFeaturesInternal> _featuresLazy;
 
         public AdamCode Init(IDynamicCodeRoot dynCodeRoot, ILog parentLog)
         {

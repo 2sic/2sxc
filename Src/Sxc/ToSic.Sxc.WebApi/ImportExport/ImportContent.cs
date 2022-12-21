@@ -17,41 +17,45 @@ using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Validation;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ImportContent: HasLog
+    public class ImportContent: ServiceBase
     {
 
         #region DI Constructor
 
         public ImportContent(IZoneMapper zoneMapper, 
             IEnvironmentLogger envLogger,
-            Lazy<Import> importerLazy,
-            Lazy<XmlImportWithFiles> xmlImportWithFilesLazy,
+            ILazySvc<Import> importerLazy,
+            ILazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
-            Lazy<JsonSerializer> jsonSerializerLazy, 
+            ILazySvc<JsonSerializer> jsonSerializerLazy, 
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
             SystemManager systemManager) : base("Bck.Export")
         {
-            _zoneMapper = zoneMapper.Init(Log);
-            _envLogger = envLogger;
-            _importerLazy = importerLazy;
-            _xmlImportWithFilesLazy = xmlImportWithFilesLazy;
-            _zipImport = zipImport;
-            _jsonSerializerLazy = jsonSerializerLazy;
-            _globalConfiguration = globalConfiguration;
-            _appStates = appStates;
-            SystemManager = systemManager.Init(Log);
+            ConnectServices(
+                _zoneMapper = zoneMapper.Init(Log),
+                _envLogger = envLogger,
+                _importerLazy = importerLazy,
+                _xmlImportWithFilesLazy = xmlImportWithFilesLazy,
+                _zipImport = zipImport,
+                _jsonSerializerLazy = jsonSerializerLazy,
+                _globalConfiguration = globalConfiguration,
+                _appStates = appStates,
+                SystemManager = systemManager
+            );
         }
 
         private readonly IZoneMapper _zoneMapper;
         private readonly IEnvironmentLogger _envLogger;
-        private readonly Lazy<Import> _importerLazy;
-        private readonly Lazy<XmlImportWithFiles> _xmlImportWithFilesLazy;
+        private readonly ILazySvc<Import> _importerLazy;
+        private readonly ILazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
-        private readonly Lazy<JsonSerializer> _jsonSerializerLazy;
+        private readonly ILazySvc<JsonSerializer> _jsonSerializerLazy;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IAppStates _appStates;
         protected readonly SystemManager SystemManager;

@@ -4,20 +4,22 @@ using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtServerPaths : ServerPathsBase
     {
-        public OqtServerPaths(IWebHostEnvironment hostingEnvironment, Lazy<IFileRepository> fileRepository)
+        public OqtServerPaths(IWebHostEnvironment hostingEnvironment, ILazySvc<IFileRepository> fileRepository)
         {
+            
             _hostingEnvironment = hostingEnvironment;
             _fileRepository = fileRepository;
         }
 
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly Lazy<IFileRepository> _fileRepository;
+        private readonly ILazySvc<IFileRepository> _fileRepository;
 
 
         public override string FullAppPath(string virtualPath) => FullContentPath(virtualPath);

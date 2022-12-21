@@ -5,6 +5,7 @@ using System;
 using System.Security.Claims;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Shared;
@@ -15,16 +16,18 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtEnvironmentPermission : EnvironmentPermission
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly Lazy<IUserPermissions> _userPermissions;
-        private readonly Lazy<IUser> _oqtUser;
+        private readonly ILazySvc<IUserPermissions> _userPermissions;
+        private readonly ILazySvc<IUser> _oqtUser;
 
         public OqtEnvironmentPermission(IHttpContextAccessor httpContextAccessor,
-            Lazy<IUserPermissions> userPermissions,
-            Lazy<IUser> oqtUser) : base(OqtConstants.OqtLogPrefix)
+            ILazySvc<IUserPermissions> userPermissions,
+            ILazySvc<IUser> oqtUser) : base(OqtConstants.OqtLogPrefix)
         {
-            _httpContextAccessor = httpContextAccessor;
-            _userPermissions = userPermissions;
-            _oqtUser = oqtUser;
+            ConnectServices(
+                _httpContextAccessor = httpContextAccessor,
+                _userPermissions = userPermissions,
+                _oqtUser = oqtUser
+            );
         }
 
         /// <summary>

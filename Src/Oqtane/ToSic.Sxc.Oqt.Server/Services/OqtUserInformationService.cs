@@ -9,11 +9,13 @@ namespace ToSic.Sxc.Oqt.Server.Services
 {
     public class OqtUserInformationService : UserInformationServiceBase
     {
-        private readonly Lazy<IUserRepository> _userRepository;
+        private readonly ILazySvc<IUserRepository> _userRepository;
 
-        public OqtUserInformationService(LazyInit<IContextOfSite> context, Lazy<IUserRepository> userRepository) : base(context)
+        public OqtUserInformationService(LazyInit<IContextOfSite> context, ILazySvc<IUserRepository> userRepository) : base(context)
         {
-            _userRepository = userRepository;
+            ConnectServices(
+                _userRepository = userRepository
+            );
         }
 
         public override string PlatformIdentityTokenPrefix() => $"{OqtConstants.UserTokenPrefix}:";

@@ -3,8 +3,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using Connect.Koi;
 using ToSic.Eav.Configuration;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
@@ -15,16 +17,18 @@ using static ToSic.Sxc.Images.RecipeVariant;
 namespace ToSic.Sxc.Images
 {
     [PrivateApi("Internal stuff")]
-    public class ImgResizeLinker : HasLog, ICanDebug
+    public class ImgResizeLinker : ServiceBase, ICanDebug
     {
-        public ImgResizeLinker(Lazy<IFeaturesInternal> features, Lazy<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
+        public ImgResizeLinker(ILazySvc<IFeaturesInternal> features, ILazySvc<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
         {
-            _features = features;
-            _koi = koi;
-            DimGen = new ResizeDimensionGenerator().Init(Log);
+            ConnectServices(
+                _features = features,
+                _koi = koi,
+                DimGen = new ResizeDimensionGenerator()
+            );
         }
-        private readonly Lazy<IFeaturesInternal> _features;
-        private readonly Lazy<ICss> _koi;
+        private readonly ILazySvc<IFeaturesInternal> _features;
+        private readonly ILazySvc<ICss> _koi;
 
         public bool Debug { get; set; }
 

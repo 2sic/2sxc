@@ -8,6 +8,7 @@ using Imazen.Common.Storage;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
@@ -20,12 +21,13 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
         private const string SharedPath = "/shared/";
 
         private readonly IServiceProvider _serviceProvider;
-        private readonly Lazy<OqtAssetsFileHelper> _fileHelper;
+        private readonly ILazySvc<OqtAssetsFileHelper> _fileHelper;
 
+        // TODO: Why do we need the IServiceProvider? this should probably get Generators or something
         public OqtaneBlobService(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            _fileHelper = serviceProvider.GetService<Lazy<OqtAssetsFileHelper>>();
+            _fileHelper = serviceProvider.GetService<ILazySvc<OqtAssetsFileHelper>>();
         }
 
         public IEnumerable<string> GetPrefixes()

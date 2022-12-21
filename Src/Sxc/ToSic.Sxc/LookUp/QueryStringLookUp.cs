@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Parameters;
 
@@ -12,12 +13,12 @@ namespace ToSic.Sxc.LookUp
         /// Constructor for DI
         /// </summary>
 
-        public QueryStringLookUp(Lazy<IHttp> httpLazy)
+        public QueryStringLookUp(ILazySvc<IHttp> httpLazy)
         {
             Name = "QueryString";
             _httpLazy = httpLazy;
         }
-        private readonly Lazy<IHttp> _httpLazy;
+        private readonly ILazySvc<IHttp> _httpLazy;
         private NameValueCollection _source;
         private NameValueCollection _originalParams;
 

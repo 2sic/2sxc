@@ -4,23 +4,28 @@ using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using System.Linq;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Plumbing
 {
-    public class SiteStateInitializer
+    public class SiteStateInitializer: ServiceBase
     {
-        public Lazy<SiteState> SiteStateLazy { get; }
-        public Lazy<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; }
+        public ILazySvc<SiteState> SiteStateLazy { get; }
+        public ILazySvc<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
-        public Lazy<IAliasRepository> AliasRepositoryLazy { get; }
+        public ILazySvc<IAliasRepository> AliasRepositoryLazy { get; }
 
-        public SiteStateInitializer(Lazy<SiteState> siteStateLazy, Lazy<Oqtane.Infrastructure.SiteState> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
-            Lazy<IAliasRepository> aliasRepositoryLazy)
+        public SiteStateInitializer(ILazySvc<SiteState> siteStateLazy, ILazySvc<Oqtane.Infrastructure.SiteState> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
+            ILazySvc<IAliasRepository> aliasRepositoryLazy): base($"{OqtConstants.OqtLogPrefix}.SSInit")
         {
-            SiteStateLazy = siteStateLazy;
-            SiteState2Lazy = siteState2Lazy;
-            HttpContextAccessor = httpContextAccessor;
-            AliasRepositoryLazy = aliasRepositoryLazy;
+            ConnectServices(
+                SiteStateLazy = siteStateLazy,
+                SiteState2Lazy = siteState2Lazy,
+                HttpContextAccessor = httpContextAccessor,
+                AliasRepositoryLazy = aliasRepositoryLazy
+            );
         }
 
         /// <summary>
