@@ -26,18 +26,19 @@ namespace ToSic.Sxc.Oqt.Server.Adam
 
         public OqtAdamFileSystem(IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository, IServerPaths serverPaths, IAdamPaths adamPaths) : base(adamPaths)
         {
-            _serverPaths = serverPaths;
-            _adamPaths = adamPaths;
-            OqtFileRepository = oqtFileRepository;
-            OqtFolderRepository = oqtFolderRepository;
+            ConnectServices(
+                _serverPaths = serverPaths,
+                _adamPaths = adamPaths,
+                OqtFileRepository = oqtFileRepository,
+                OqtFolderRepository = oqtFolderRepository
+            );
         }
 
-        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext, ILog parentLog)
+        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamContext)
         {
-            this.Init(parentLog);
             var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamContext;
-            _adamPaths.Init(adamContext, Log);
+            _adamPaths.Init(adamContext);
             return wrapLog.ReturnAsOk(this);
         }
 

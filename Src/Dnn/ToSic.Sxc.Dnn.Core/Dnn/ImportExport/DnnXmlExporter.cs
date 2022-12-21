@@ -18,9 +18,11 @@ namespace ToSic.Sxc.Dnn.ImportExport
         public DnnXmlExporter(ISite site, AdamManager<int, int> adamManager, IContextResolver ctxResolver, XmlSerializer xmlSerializer, IAppStates appStates)
             : base(xmlSerializer, appStates, DnnConstants.LogName)
         {
-            _site = site;
-            _ctxResolver = ctxResolver.Init(Log);
-            AdamManager = adamManager;
+            ConnectServices(
+                _site = site,
+                _ctxResolver = ctxResolver,
+                AdamManager = adamManager
+            );
         }
 
         private readonly ISite _site;

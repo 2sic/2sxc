@@ -121,7 +121,7 @@ namespace ToSic.Sxc.WebApi.Sys
             Log.A("install package:" + packageUrl);
 
             var block = container.BlockIdentifier;
-            var (success, messages) = _impFromRemoteLazy.Value.Init(_userLazy.Value, Log)
+            var (success, messages) = _impFromRemoteLazy.Value.Init(_userLazy.Value)
                 .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
             Log.A("install completed with success:" + success);

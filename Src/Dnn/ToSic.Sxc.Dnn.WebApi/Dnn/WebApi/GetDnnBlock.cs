@@ -3,21 +3,24 @@ using System.Linq;
 using System.Net.Http;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
-    public class DnnGetBlock
+    public class DnnGetBlock: ServiceBase
     {
  
         private readonly Generator<BlockFromEntity> _blockFromEntity;
         private readonly Generator<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
-        public DnnGetBlock(Generator<BlockFromEntity> blockFromEntity, Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder)
+        public DnnGetBlock(Generator<BlockFromEntity> blockFromEntity, Generator<IModuleAndBlockBuilder> moduleAndBlockBuilder): base($"{DnnConstants.LogName}GetBlk")
         {
-            _blockFromEntity = blockFromEntity;
-            _moduleAndBlockBuilder = moduleAndBlockBuilder;
+            ConnectServices(
+                _blockFromEntity = blockFromEntity,
+                _moduleAndBlockBuilder = moduleAndBlockBuilder
+            );
         }
 
         internal IBlock GetCmsBlock(HttpRequestMessage request, ILog log)

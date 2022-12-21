@@ -14,9 +14,11 @@ namespace ToSic.Sxc.Dnn
     {
         public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base(DnnConstants.LogName)
         {
-            _moduleGenerator = moduleGenerator;
-            _contextGenerator = contextGenerator;
-            _blockGenerator = blockGenerator;
+            ConnectServices(
+                _moduleGenerator = moduleGenerator,
+                _contextGenerator = contextGenerator,
+                _blockGenerator = blockGenerator
+            );
         }
         private readonly Generator<IModule> _moduleGenerator;
         private readonly Generator<IContextOfBlock> _contextGenerator;

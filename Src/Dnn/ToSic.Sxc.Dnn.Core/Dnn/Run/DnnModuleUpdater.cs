@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Dnn.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(zoneId, appId.Value);
-                var cms = _cmsRuntimeLazy.Value.Init(Log).InitQ(appIdentity, true);
+                var cms = _cmsRuntimeLazy.Value.InitQ(appIdentity, true);
 
                 var templateGuid = cms.Views.GetAll()
                     .OrderByDescending(v => v.Metadata.HasType(Decorators.IsDefaultDecorator)) // first sort by IsDefaultDecorator DESC

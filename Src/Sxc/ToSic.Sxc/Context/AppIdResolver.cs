@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Context
@@ -10,14 +11,16 @@ namespace ToSic.Sxc.Context
     /// This helps API calls to get the app which is currently needed
     /// It does not perform security checks ATM and maybe never will
     /// </summary>
-    public class AppIdResolver: HasLog
+    public class AppIdResolver: ServiceBase
     {
         #region Constructor & DI
 
         public AppIdResolver(IHttp http, AppFinder appFinder): base("Api.FindAp")
         {
-            _http = http;
-            _appFinder = appFinder.Init(Log);
+            ConnectServices(
+                _http = http,
+                _appFinder = appFinder
+            );
         }
         private readonly IHttp _http;
         private readonly AppFinder _appFinder;

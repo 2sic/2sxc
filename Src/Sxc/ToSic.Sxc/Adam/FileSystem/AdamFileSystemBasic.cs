@@ -17,15 +17,16 @@ namespace ToSic.Sxc.Adam
 
         public AdamFileSystemBasic(IAdamPaths adamPaths) : base(LogNames.Basic)
         {
-            _adamPaths = adamPaths;
+            ConnectServices(
+                _adamPaths = adamPaths
+            );
         }
         private readonly IAdamPaths _adamPaths;
 
-        public IAdamFileSystem<string, string> Init(AdamManager<string, string> adamManager, ILog parentLog)
+        public IAdamFileSystem<string, string> Init(AdamManager<string, string> adamManager)
         {
-            this.Init(parentLog);
             AdamManager = adamManager;
-            _adamPaths.Init(adamManager, Log);
+            _adamPaths.Init(adamManager);
             return this;
         }
 

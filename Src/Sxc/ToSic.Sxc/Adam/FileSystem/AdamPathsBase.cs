@@ -22,9 +22,8 @@ namespace ToSic.Sxc.Adam
         }
         private readonly IServerPaths _serverPaths;
 
-        public IAdamPaths Init(AdamManager adamManager, ILog parentLog)
+        public IAdamPaths Init(AdamManager adamManager)
         {
-            this.Init(parentLog);
             AdamManager = adamManager;
             return this;
         }

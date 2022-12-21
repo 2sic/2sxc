@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Dnn.Code
             var user = _user.Value;
             var changes = _scopedDeps.PageChangeSummary.Value.FinalizeAndGetAllChanges(_scopedDeps.PageServiceShared.Value, user.IsContentAdmin);
             _scopedDeps.DnnPageChanges.Value.Apply(Page, changes);
-            var dnnClientResources = _scopedDeps.DnnClientResources.Value.Init(Page, false, null, Log);
+            var dnnClientResources = _scopedDeps.DnnClientResources.Value.Init(Page, false, null);
             dnnClientResources.AddEverything(changes?.Features);
             wrapLog.Done();
         }

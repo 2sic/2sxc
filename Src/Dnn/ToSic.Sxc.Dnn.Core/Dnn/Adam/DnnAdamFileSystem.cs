@@ -17,9 +17,8 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public DnnAdamFileSystem(): base("Dnn.FilSys") { }
 
-        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamManager, ILog parentLog)
+        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamManager)
         {
-            this.Init(parentLog);
             var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
             AdamContext = adamManager;
             return wrapLog.ReturnAsOk(this);

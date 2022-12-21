@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Apps
 
             // now remove from DB. This sometimes fails, so we do this before trying to clean the files
             // as the db part should be in a transaction, and if it fails, everything should stay as is
-            _zoneManagerLazy.Value.Init(Log).SetId(zoneId).DeleteApp(appId, fullDelete);
+            _zoneManagerLazy.Value.SetId(zoneId).DeleteApp(appId, fullDelete);
 
             // now really delete the files - if the DB didn't end up throwing an error
             // ...but only if it's a full-delete

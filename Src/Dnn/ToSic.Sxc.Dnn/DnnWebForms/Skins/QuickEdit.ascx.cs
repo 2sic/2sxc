@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Dnn.DnnWebForms.Skins
             if (!_isEdit) return;
 
             this.GetScopedService<DnnClientResources>()
-                .Init(Page, false, null, null)
+                .Init(Page, false, null)
                 .RegisterClientDependencies(Page, true, true, true);
         }
 

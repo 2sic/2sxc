@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Apps
         {
             var appStates = _appStates.New();
             var appIdentity = appStates.IdentityOfApp(appId);
-            var confProvider = _appConfigDelegate.New().Init(log);
+            var confProvider = _appConfigDelegate.New();
             var buildConfig = (optionalBlock == null)
                 ? confProvider.Build(showDrafts)
                 : confProvider.Build(optionalBlock);

@@ -21,9 +21,11 @@ namespace ToSic.Sxc.Dnn.Services
             Generator<IContextOfBlock> context
         ) : base(dependencies)
         {
-            _dnnPageChanges = dnnPageChanges;
-            _dnnClientResources = dnnClientResources;
-            _context = context;
+            ConnectServices(
+                _dnnPageChanges = dnnPageChanges,
+                _dnnClientResources = dnnClientResources,
+                _context = context
+            );
         }
 
         public override IRenderResult Module(int pageId, int moduleId)
@@ -42,7 +44,7 @@ namespace ToSic.Sxc.Dnn.Services
         private void DnnPageProcess(Page dnnPage, IRenderResult result)
         {
             _dnnPageChanges.Value.Apply(dnnPage, result);
-            _dnnClientResources.Value.Init(dnnPage, null, null, Log).AddEverything(result.Features);
+            _dnnClientResources.Value.Init(dnnPage, null, null).AddEverything(result.Features);
         }
     }
 }

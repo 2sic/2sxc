@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Dnn.Install
                 {
                     var primaryAppId = _appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = _cmsRuntimeLazy.Value.Init(Log)
+                    var contentViews = _cmsRuntimeLazy.Value
                         .InitQ(primaryAppId, false)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;

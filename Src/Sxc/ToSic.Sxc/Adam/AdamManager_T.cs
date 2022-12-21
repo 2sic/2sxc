@@ -16,7 +16,9 @@ namespace ToSic.Sxc.Adam
         public AdamManager(LazySvc<AppRuntime> appRuntime, LazySvc<AdamMetadataMaker> metadataMaker, AdamConfiguration adamConfiguration, LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy)
             : base(appRuntime, metadataMaker, adamConfiguration, "Adm.MngrTT")
         {
-            _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this, Log));
+            ConnectServices(
+                _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this))
+            );
         }
 
         public override AdamManager Init(IContextOfApp ctx, int compatibility, ILog parentLog)

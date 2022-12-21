@@ -2,9 +2,9 @@
 
 namespace ToSic.Sxc.Adam
 {
-    public interface IAdamPaths
+    public interface IAdamPaths: IHasLog
     {
-        IAdamPaths Init(AdamManager adamManager, ILog parentLog);
+        IAdamPaths Init(AdamManager adamManager);
 
         string PhysicalPath(string path);
 

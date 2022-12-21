@@ -82,14 +82,16 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 		public DnnUserProfile(ISite site, IZoneMapper zoneMapper)
 		{
+            ConnectServices(
+                _site = site,
+                _zoneMapper = zoneMapper
+            );
+
 			Provide(GetList);
 			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
 			Configuration.Values.Add(PropertiesKey, PropertiesDefaultKeyToken);
 			Configuration.Values.Add(ContentTypeKey, ContentTypeDefaultToken);
 			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
-
-            _site = site;
-            _zoneMapper = zoneMapper;
         }
 
         private readonly ISite _site;
@@ -98,7 +100,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         private ImmutableArray<IEntity> GetList()
 		{
             Configuration.Parse();
-			var realTenant = _site.Id != Eav.Constants.NullId ? _site : _zoneMapper.Init(Log).SiteOfApp(AppId);
+			var realTenant = _site.Id != Eav.Constants.NullId ? _site : _zoneMapper.SiteOfApp(AppId);
 
 			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
             var portalId = realTenant.Id;

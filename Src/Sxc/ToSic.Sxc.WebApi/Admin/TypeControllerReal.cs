@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// </summary>
 
         public THttpResponseType Json(int appId, string name)
-            => _contentExportLazy.Value.Init(appId, Log).DownloadTypeAsJson(_userLazy.Value, name);
+            => _contentExportLazy.Value.Init(appId).DownloadTypeAsJson(_userLazy.Value, name);
 
         /// <summary>
         /// This method is not implemented for ControllerReal, because ControllerReal implements Import(HttpUploadedFile uploadInfo, int zoneId, int appId)
@@ -131,6 +131,6 @@ namespace ToSic.Sxc.WebApi.Admin
         /// </summary>
 
         public THttpResponseType JsonBundleExport(int appId, Guid exportConfiguration)
-            => _contentExportLazy.Value.Init(appId, Log).JsonBundleExport(_userLazy.Value, exportConfiguration);
+            => _contentExportLazy.Value.Init(appId).JsonBundleExport(_userLazy.Value, exportConfiguration);
     }
 }

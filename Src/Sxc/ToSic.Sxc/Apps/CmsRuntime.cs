@@ -21,8 +21,10 @@ namespace ToSic.Sxc.Apps
             LazySvc<BlocksRuntime> blocksRuntime) 
             : base(dependencies, entityRuntime, metadataRuntime, contentTypeRuntime, queryRuntime, "Sxc.CmsRt")
         {
-            _blocksRuntime = blocksRuntime.SetInit(r => r.Init(Log).ConnectTo(this));
-            _viewsRuntime = viewsRuntime.SetInit(r => r.Init(Log).ConnectTo(this));
+            ConnectServices(
+                _blocksRuntime = blocksRuntime.SetInit(r => r.ConnectTo(this)),
+                _viewsRuntime = viewsRuntime.SetInit(r => r.ConnectTo(this))
+            );
         }
 
         public new CmsRuntime InitWithState(AppState appState, bool showDrafts)

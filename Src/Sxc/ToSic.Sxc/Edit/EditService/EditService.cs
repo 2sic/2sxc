@@ -8,7 +8,7 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.EditService
 {
-    public partial class EditService : HasLog, IEditService
+    public partial class EditService : ServiceForDynamicCode, IEditService
     {
 
         public EditService(IJsonService jsonService, LazySvc<IRenderingHelper> renderHelper) : base("Sxc.Edit")
@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Edit.EditService
         private readonly IJsonService _jsonService;
         private readonly LazySvc<IRenderingHelper> _renderHelper;
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            this.Init(codeRoot.Log);
+            base.ConnectToRoot(codeRoot);
             SetBlock(codeRoot, codeRoot.Block);
         }
 

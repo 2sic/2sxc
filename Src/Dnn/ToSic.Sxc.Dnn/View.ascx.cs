@@ -8,7 +8,6 @@ using ToSic.Lib.Helper;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Dnn.Install;
-using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web.LightSpeed;
@@ -95,7 +94,7 @@ namespace ToSic.Sxc.Dnn
                     var block = Block; // get the block early, to see any errors
                     if (checkPortalIsReady)
                         DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, GetService<LazySvc<AppFolderInitializer>>(), Log);
-                    DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
+                    DnnClientResources = GetService<DnnClientResources>().Init(Log).Init(Page, null, requiresPre1025Behavior == false ? null : Block?.BlockBuilder);
                     var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                     if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
                     // #lightspeed

@@ -111,7 +111,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // load items - similar
             var result = new EditDto();
-            var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft), Log);
+            var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft));
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
             var jsonSerializer = _jsonSerializerGenerator.New().Init(Log).SetApp(entityApi.AppRead.AppState);

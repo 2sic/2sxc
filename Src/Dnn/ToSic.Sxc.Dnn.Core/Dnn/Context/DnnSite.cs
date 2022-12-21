@@ -185,7 +185,7 @@ namespace ToSic.Sxc.Dnn.Context
                 if(_zoneId != null) return _zoneId.Value;
                 // check if id is negative; 0 is a valid tenant id
                 if (Id < 0) return (_zoneId = Eav.Constants.NullId).Value;
-                _zoneId = _zoneMapperLazy.Value.Init(null).GetZoneId(Id);
+                _zoneId = _zoneMapperLazy.Value.GetZoneId(Id);
                 return _zoneId.Value;
             }
         }

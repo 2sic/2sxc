@@ -4,9 +4,9 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {
-    public interface IAdamFileSystem<TFolderId, TFileId>
+    public interface IAdamFileSystem<TFolderId, TFileId>: IHasLog
     {
-        IAdamFileSystem<TFolderId, TFileId> Init(AdamManager<TFolderId, TFileId> adamManager, ILog parentLog);
+        IAdamFileSystem<TFolderId, TFileId> Init(AdamManager<TFolderId, TFileId> adamManager);
 
         #region FileSystem Settings
 

@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Code
     /// It delegates all properties like App and methods like AsDynamic() to the parent item which initially caused it to be compiled.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCode : HasLog, IHasCodeLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
+    public abstract partial class DynamicCode : ServiceForDynamicCode, IHasCodeLog, IDynamicCode, IWrapper<IDynamicCode>, IHasDynamicCodeRoot, INeedsDynamicCodeRoot
     {
 
         #region Constructor - NOT for DI
@@ -38,10 +38,9 @@ namespace ToSic.Sxc.Code
         #region Dynamic Code Coupling
 
         [PrivateApi]
-        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            _DynCodeRoot = codeRoot;
-            this.Init(codeRoot?.Log);
+            base.ConnectToRoot(codeRoot);
             _codeLog.Reset(); // reset in case it was already used before
             base.Log.Fn().Done();
         }
@@ -53,8 +52,6 @@ namespace ToSic.Sxc.Code
         public IDynamicCode UnwrappedContents => _DynCodeRoot;
 
         public IDynamicCode GetContents() => _DynCodeRoot;
-
-        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
         #endregion
 

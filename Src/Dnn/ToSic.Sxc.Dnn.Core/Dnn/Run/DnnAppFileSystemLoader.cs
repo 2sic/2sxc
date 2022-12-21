@@ -14,8 +14,12 @@ namespace ToSic.Sxc.Dnn.Run
         /// <summary>
         /// Constructor for DI - you must always call Init(...) afterwards
         /// </summary>
-        public DnnAppFileSystemLoader(IZoneMapper zoneMapper, Dependencies deps): base(deps, "Dnn.AppStf") 
-            => ZoneMapper = zoneMapper;
+        public DnnAppFileSystemLoader(IZoneMapper zoneMapper, Dependencies deps): base(deps, "Dnn.AppStf")
+        {
+            ConnectServices(
+                ZoneMapper = zoneMapper
+            );
+        }
 
         protected readonly IZoneMapper ZoneMapper;
 
@@ -54,7 +58,6 @@ namespace ToSic.Sxc.Dnn.Run
             if (Site.Id != Eav.Constants.NullId/* && Site.Id != 0*/) // 2021-12-09 2dm disabled zero check, because portal 0 is actually very common
                 return wrapLog.ReturnTrue($"All ok since siteId isn't {Eav.Constants.NullId}");
             Log.A($"SiteId = {Site.Id} - not found. Must be in search mode or something else DI-style failed, will try to find correct PortalSettings");
-            ZoneMapper.Init(Log);
             Site = ZoneMapper.SiteOfApp(AppId);
             return wrapLog.ReturnTrue($"SiteId: {Site.Id}");
         }

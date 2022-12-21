@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
 
             var cms = _lazyCmsRuntime.IsValueCreated
                 ? _lazyCmsRuntime.Value
-                : _lazyCmsRuntime.Value.Init(Log).InitQ(this, userMayEdit);
+                : _lazyCmsRuntime.Value.InitQ(this, userMayEdit);
             var container = _moduleLazy.Value.Init(ModuleId.Value, Log);
             var blockId = container.BlockIdentifier;
             return wrapLog.ReturnAsOk(cms.Blocks.GetOrGeneratePreviewConfig(blockId));
