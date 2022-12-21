@@ -1,7 +1,5 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
@@ -18,10 +16,12 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         public QueryControllerReal(QueryControllerDependencies dependencies, LazyInitLog<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
             : base(dependencies, "Api." + LogSuffix)
         {
-            _cmsManagerLazy = cmsManagerLazy;
-            _appStates = appStates;
-            _contextResolver = contextResolver;
-            _appConfigMaker = appConfigMaker;
+            ConnectServices(
+                _cmsManagerLazy = cmsManagerLazy,
+                _appStates = appStates,
+                _contextResolver = contextResolver,
+                _appConfigMaker = appConfigMaker
+            );
         }
         private readonly LazyInitLog<CmsManager> _cmsManagerLazy;
         private readonly IAppStates _appStates;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         /// </summary>
         public bool DeleteIfUnused(int appId, int id)
             => _cmsManagerLazy.Value
-                .Init(Log)
+                //.Init(Log)
                 .InitQ(_appStates.IdentityOfApp(appId), true)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
         {
             var block = _contextResolver.RealBlockRequired();
-            var lookUps = _appConfigMaker.Init(Log)
+            var lookUps = _appConfigMaker//.Init(Log)
                 .GetLookupEngineForContext(block.Context, block.App, block);
             return DebugStream(appId, id, top, lookUps, @from, @out);
         }
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         public QueryRunDto RunDev(int appId, int id, int top)
         {
             var block = _contextResolver.RealBlockRequired();
-            var lookUps = _appConfigMaker.Init(Log)
+            var lookUps = _appConfigMaker//.Init(Log)
                 .GetLookupEngineForContext(block.Context, block.App, block);
 
             return RunDevInternal(appId, id, lookUps, top, builtQuery => builtQuery.Item1);
