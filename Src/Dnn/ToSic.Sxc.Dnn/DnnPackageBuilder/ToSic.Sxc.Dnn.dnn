@@ -1987,48 +1987,48 @@
     <!-- Keep the 4th version number part as it is needed to prevent "repair install" message that DNN
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
-    <packages>
-	    <package name="ToSic.RazorBlade" type="Library" version="04.00.00.01">
-		    <friendlyName>2sic RazorBlade</friendlyName>
-		    <description>2sic RazorBlade</description>
-		    <iconFile>icon.png</iconFile>
-		    <owner>
-			    <name>2sic/2sxc</name>
-			    <organization>2sic.com</organization>
-			    <url>https://razor-blade.net</url>
-			    <email>info@2sxc.org</email>
-		    </owner>
-		    <license src="razorblade\License.txt"></license>
-		    <releaseNotes src="razorblade\ReleaseNotes.txt"></releaseNotes>
-		    <azureCompatible>true</azureCompatible>
-		    <dependencies>
-			    <dependency type="CoreVersion">07.00.02</dependency>
-		    </dependencies>
 
-		    <components>
-			    <component type="ResourceFile">
-				    <resourceFiles>
-					    <basePath>DesktopModules\ToSic.Razor\</basePath>
-					    <resourceFile>
-						    <name>razorblade\Resources.zip</name>
-					    </resourceFile>
-				    </resourceFiles>
-			    </component>
-			    <component type="Assembly">
-				    <assemblies>
-					    <assembly>
-						    <name>ToSic.Razor.dll</name>
-						    <path>bin</path>
-					    </assembly>
-					    <assembly>
-						    <name>ToSic.Razor.Dnn.dll</name>
-						    <path>bin</path>
-					    </assembly>
-				    </assemblies>
-			    </component>
-		    </components>
-	    </package>
-    </packages>
+	  <package name="ToSic.RazorBlade" type="Library" version="04.00.00.01">
+		  <friendlyName>2sic RazorBlade</friendlyName>
+		  <description>2sic RazorBlade</description>
+		  <iconFile>icon.png</iconFile>
+		  <owner>
+			  <name>2sic/2sxc</name>
+			  <organization>2sic.com</organization>
+			  <url>https://razor-blade.net</url>
+			  <email>info@2sxc.org</email>
+		  </owner>
+		  <license src="razorblade\License.txt"></license>
+		  <releaseNotes src="razorblade\ReleaseNotes.txt"></releaseNotes>
+		  <azureCompatible>true</azureCompatible>
+		  <dependencies>
+			  <dependency type="CoreVersion">07.00.02</dependency>
+		  </dependencies>
+
+		  <components>
+			  <component type="ResourceFile">
+				  <resourceFiles>
+					  <basePath>DesktopModules\ToSic.Razor\</basePath>
+					  <resourceFile>
+						  <name>razorblade\Resources.zip</name>
+					  </resourceFile>
+				  </resourceFiles>
+			  </component>
+			  <component type="Assembly">
+				  <assemblies>
+					  <assembly>
+						  <name>ToSic.Razor.dll</name>
+						  <path>bin</path>
+					  </assembly>
+					  <assembly>
+						  <name>ToSic.Razor.Dnn.dll</name>
+						  <path>bin</path>
+					  </assembly>
+				  </assemblies>
+			  </component>
+		  </components>
+	  </package>
+
 
 
     <!-- old Connect.Razor Blade package - keep for compatibility, so old stuff doesn't break-->
