@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Errors;
@@ -44,7 +42,8 @@ namespace ToSic.Sxc.WebApi.App
                 _dataToFormatLight = dataToFormatLight,
                 _appPermissionCheck = appPermissionCheck,
                 _appConfigDelegate = appConfigDelegate,
-                _app = app);
+                _app = app
+            );
         }
         
         private readonly IContextResolver _ctxResolver;
@@ -73,7 +72,7 @@ namespace ToSic.Sxc.WebApi.App
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = _app.New().Init(appCtx.AppState.AppId, Log, maybeBlock, appCtx.UserMayEdit);
+            var app = _app.New().Init(appCtx.AppState.AppId, maybeBlock, appCtx.UserMayEdit);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
             return wrapLog.Return(result);
@@ -95,8 +94,7 @@ namespace ToSic.Sxc.WebApi.App
 
             var appCtx = _ctxResolver.AppOrBlock(appPath);
             
-            var queryApp = _app.New().Init(appCtx.AppState,
-                _appConfigDelegate.New().Build(appCtx.UserMayEdit), Log);
+            var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build(appCtx.UserMayEdit));
 
             // now just run the default query check and serializer
             var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, appCtx.UserMayEdit, more);

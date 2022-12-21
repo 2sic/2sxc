@@ -1,23 +1,26 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.LookUp;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ImpExpHelpers: HasLog
+    public class ImpExpHelpers: ServiceBase
     {
-        private readonly Apps.App _unInitializedApp;
-        private readonly AppConfigDelegate _configProvider;
-
         #region Constructor / DI
 
         public ImpExpHelpers(Apps.App unInitializedApp, AppConfigDelegate configProvider) : base("Sxc.ImExHl")
         {
-            _unInitializedApp = unInitializedApp;
-            _configProvider = configProvider.Init(Log);
+            ConnectServices(
+                _unInitializedApp = unInitializedApp,
+                _configProvider = configProvider
+            );
         }
+        private readonly Apps.App _unInitializedApp;
+        private readonly AppConfigDelegate _configProvider;
+
 
         #endregion
         /// <summary>
@@ -33,8 +36,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
             }
 
-            var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId),
-                _configProvider.Build(true), Log);
+            var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId), _configProvider.Build(true));
             return wrapLog.Return(app);
         }
 

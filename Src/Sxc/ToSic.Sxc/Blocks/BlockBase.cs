@@ -87,8 +87,9 @@ namespace ToSic.Sxc.Blocks
 
             // Get App for this block
             Log.A("About to create app");
-            App = _deps.AppLazy.Value.PreInit(Context.Site)
-                .Init(this, _deps.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this), Log);
+            App = _deps.AppLazy.Value
+                .PreInit(Context.Site)
+                .Init(this, _deps.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
             Log.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created

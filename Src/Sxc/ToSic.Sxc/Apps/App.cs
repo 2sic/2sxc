@@ -65,9 +65,9 @@ namespace ToSic.Sxc.Apps
         /// Main constructor which auto-configures the app-data
         /// </summary>
         [PrivateApi]
-        public new App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig, ILog parentLog)
+        public new App Init(IAppIdentity appId, Func<EavApp, IAppDataConfiguration> buildConfig)
         {
-            base.Init(appId, buildConfig, parentLog);
+            base.Init(appId, buildConfig);
             if (buildConfig != null) return this;
             Log.Rename("App.SxcLgt");
             Log.A("App only initialized for light use - .Data shouldn't be used");

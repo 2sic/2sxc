@@ -17,8 +17,10 @@ namespace ToSic.Sxc.Apps
 
         public AppsRuntime(IAppStates appStates, Generator<App> appGenerator) : base("Cms.AppsRt")
         {
-            _appStates = appStates;
-            _appGenerator = appGenerator;
+            ConnectServices(
+                _appStates = appStates,
+                _appGenerator = appGenerator
+            );
         }
 
         private readonly IAppStates _appStates;
@@ -71,7 +73,7 @@ namespace ToSic.Sxc.Apps
             return appIds
                 .Select(a => _appGenerator.New()
                     .PreInit(site)
-                    .Init(new AppIdentity(zId, a.Key), buildConfig, Log) as IApp)
+                    .Init(new AppIdentity(zId, a.Key), buildConfig) as IApp)
                 .OrderBy(a => a.Name)
                 .ToList();
         }
@@ -106,9 +108,7 @@ namespace ToSic.Sxc.Apps
                             var appState = _appStates.Get(aId);
                             return appState != null && appState.IsShared() && !siteApps.Any(sa => sa.Equals(appState.Folder, StringComparison.InvariantCultureIgnoreCase));
                         })
-                        .Select(a => _appGenerator.New() // ServiceProvider.Build<App>()
-                            .PreInit(site)
-                            .Init(a, buildConfig, Log) as IApp)
+                        .Select(a => _appGenerator.New().PreInit(site).Init(a, buildConfig) as IApp)
                         .OrderBy(a => a.Name)
                         .ToList();
                 })

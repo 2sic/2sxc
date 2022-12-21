@@ -79,7 +79,7 @@ namespace ToSic.Sxc.WebApi.Context
         public IUiContextBuilder InitApp(AppState appState)
         {
             AppState = appState;
-            App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null, Log) : null;
+            App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null) : null;
             return this;
         }
 

@@ -165,11 +165,9 @@ namespace ToSic.Sxc.Dnn
             Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             var log = new Log("Dnn.Factry", parentLog ?? NewLog());
             log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
-            var app = StaticBuild<App>();
+            var app = StaticBuild<App>().Init(log);
             if (site != null) app.PreInit(site);
-            var appStuff = app.Init(new AppIdentity(zoneId, appId), 
-                StaticBuild<AppConfigDelegate>().Init(log).Build(showDrafts),
-                log);
+            var appStuff = app.Init(new AppIdentity(zoneId, appId), StaticBuild<AppConfigDelegate>().Init(log).Build(showDrafts));
             return appStuff;
         }
 

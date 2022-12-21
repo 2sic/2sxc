@@ -32,6 +32,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected IBlock BlockOptional { get; private set; }
 
         protected IApp GetApp(int appId)
-            => GetService<Apps.App>().Init(appId, Log, BlockOptional);
+            => GetService<Apps.App>().Init(Log).Init(appId, BlockOptional);
     }
 }
