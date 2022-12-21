@@ -45,20 +45,20 @@ namespace ToSic.Sxc.WebApi.Admin
 
 
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
-            => _ctApiLazy.Value.Init(appId, Log).Get(scope, withStatistics);
+            => _ctApiLazy.Value.Init(appId).Get(scope, withStatistics);
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes
         /// </summary>
-        public IDictionary<string, string> Scopes(int appId) => _ctApiLazy.Value.Init(appId, Log).Scopes();
+        public IDictionary<string, string> Scopes(int appId) => _ctApiLazy.Value.Init(appId).Scopes();
 
         /// <summary>
         /// Used to be GET ContentTypes/Scopes
         /// </summary>
-        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value.Init(appId, Log).GetSingle(contentTypeId, scope);
+        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => _ctApiLazy.Value.Init(appId).GetSingle(contentTypeId, scope);
 
 
-        public bool Delete(int appId, string staticName) => _ctApiLazy.Value.Init(appId, Log).Delete(staticName);
+        public bool Delete(int appId, string staticName) => _ctApiLazy.Value.Init(appId).Delete(staticName);
 
 
         // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public bool Save(int appId, Dictionary<string, object> item)
         {
             var cleanList = item.ToDictionary(i => i.Key, i => i.Value?.ToString());
-            return _ctApiLazy.Value.Init(appId, Log).Save(cleanList);
+            return _ctApiLazy.Value.Init(appId).Save(cleanList);
         }
 
         /// <summary>
@@ -77,11 +77,11 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <param name="sourceStaticName"></param>
         /// <returns></returns>
 
-        public bool AddGhost(int appId, string sourceStaticName) => _ctApiLazy.Value.Init(appId, Log).CreateGhost(sourceStaticName);
+        public bool AddGhost(int appId, string sourceStaticName) => _ctApiLazy.Value.Init(appId).CreateGhost(sourceStaticName);
 
 
         public void SetTitle(int appId, int contentTypeId, int attributeId)
-            => _ctApiLazy.Value.Init(appId, Log).SetTitle(contentTypeId, attributeId);
+            => _ctApiLazy.Value.Init(appId).SetTitle(contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentExport/DownloadTypeAsJson

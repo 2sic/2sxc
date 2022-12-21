@@ -24,22 +24,28 @@ namespace ToSic.Sxc.Adam
 
         public class Dependencies: ServiceDependencies
         {
+            public ILazySvc<IFeaturesInternal> FeaturesSvc { get; }
+            public Generator<AdamSecurityChecksBase> AdamSecurityGenerator { get; }
             public Generator<MultiPermissionsTypes> TypesPermissions { get; }
 
-            public Dependencies(Generator<MultiPermissionsTypes> typesPermissions)
+            public Dependencies(
+                Generator<MultiPermissionsTypes> typesPermissions,
+                Generator<AdamSecurityChecksBase> adamSecurityGenerator,
+                ILazySvc<IFeaturesInternal> featuresSvc)
             {
                 AddToLogQueue(
-                    TypesPermissions = typesPermissions
+                    TypesPermissions = typesPermissions,
+                    AdamSecurityGenerator = adamSecurityGenerator,
+                    FeaturesSvc = featuresSvc
                 );
             }
         }
 
-        protected AdamContext(IServiceProvider serviceProvider, Dependencies dependencies, string logName) : base(logName ?? "Adm.Ctx")
+        protected AdamContext(Dependencies dependencies,
+            string logName) : base(logName ?? "Adm.Ctx")
         {
-            ServiceProvider = serviceProvider;
             _dependencies = dependencies.SetLog(Log);
         }
-        public readonly IServiceProvider ServiceProvider;
         private readonly Dependencies _dependencies;
         public AdamSecurityChecksBase Security;
         public MultiPermissionsTypes Permissions;
@@ -57,7 +63,7 @@ namespace ToSic.Sxc.Adam
             var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;
 
-            Permissions = _dependencies.TypesPermissions.New() // ServiceProvider.Build<MultiPermissionsTypes>()
+            Permissions = _dependencies.TypesPermissions.New()
                 .Init(context, context.AppState, contentType);
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
@@ -68,13 +74,13 @@ namespace ToSic.Sxc.Adam
                 ItemGuid = entityGuid;
             }
 
-            Security = ServiceProvider.Build<AdamSecurityChecksBase>().Init(this, usePortalRoot, Log);
+            Security = _dependencies.AdamSecurityGenerator.New().Init(this, usePortalRoot);
 
             if (Security.MustThrowIfAccessingRootButNotAllowed(usePortalRoot, out var exception))
                 throw exception;
 
             Log.A("check if feature enabled");
-            var sysFeatures = ServiceProvider.Build<IFeaturesInternal>();
+            var sysFeatures = _dependencies.FeaturesSvc.Value;
             if (Security.UserIsRestricted && !sysFeatures.Enabled(FeaturesForRestrictedUsers))
             {
                 var msg = sysFeatures.MsgMissingSome(FeaturesForRestrictedUsers);

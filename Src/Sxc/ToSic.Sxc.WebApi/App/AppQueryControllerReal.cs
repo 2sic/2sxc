@@ -127,7 +127,7 @@ namespace ToSic.Sxc.WebApi.App
             }
 
             var permissionChecker = _appPermissionCheck.New()
-                .ForItem(context, app, query.Definition.Entity, Log);
+                .ForItem(context, app, query.Definition.Entity);
             var readExplicitlyAllowed = permissionChecker.UserMay(GrantSets.ReadSomething);
 
             var isAdmin = context.User.IsContentAdmin;

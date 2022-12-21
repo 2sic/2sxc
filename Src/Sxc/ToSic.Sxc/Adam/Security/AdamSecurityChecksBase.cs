@@ -9,18 +9,35 @@ using ToSic.Eav.Security.Files;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
     public abstract class AdamSecurityChecksBase: HasLog
     {
+
         #region DI / Constructor
 
-        protected AdamSecurityChecksBase(string logPrefix) : base($"{logPrefix}.TnScCk") { }
-
-        internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot, ILog parentLog)
+        public class Dependencies: ServiceDependencies
         {
-            this.Init(parentLog);
+            public Generator<AppPermissionCheck> AppPermissionChecks { get; }
+
+            public Dependencies(Generator<AppPermissionCheck> appPermissionChecks)
+            {
+                AddToLogQueue(
+                    AppPermissionChecks = appPermissionChecks
+                );
+            }
+        }
+
+        protected AdamSecurityChecksBase(Dependencies dependencies, string logPrefix) : base($"{logPrefix}.TnScCk")
+        {
+            _deps = dependencies.SetLog(Log);
+        }
+        private readonly Dependencies _deps;
+
+        internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot)
+        {
             var callLog = Log.Fn<AdamSecurityChecksBase>();
             AdamContext = adamContext;
 
@@ -129,8 +146,8 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = AdamContext.ServiceProvider.Build<AppPermissionCheck>().ForAttribute(
-                AdamContext.Permissions.Context, AdamContext.Context.AppState, AdamContext.Attribute, Log);
+            var fieldPermissions = _deps.AppPermissionChecks.New()
+                .ForAttribute(AdamContext.Permissions.Context, AdamContext.Context.AppState, AdamContext.Attribute);
 
             return fieldPermissions.UserMay(requiredGrant);
         }

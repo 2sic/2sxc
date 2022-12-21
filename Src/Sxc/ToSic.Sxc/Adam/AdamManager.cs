@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Adam
 
             var callLog = Log.Fn<AdamManager>();
             Site = AppContext.Site;
-            AppRuntime.Init(Log).InitQ(AppContext.AppState, AppContext.UserMayEdit);
+            AppRuntime.InitQ(AppContext.AppState, AppContext.UserMayEdit);
             CompatibilityLevel = compatibility;
             return callLog.Return(this, "ready");
         }

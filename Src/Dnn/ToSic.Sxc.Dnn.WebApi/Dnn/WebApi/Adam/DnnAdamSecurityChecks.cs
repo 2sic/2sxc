@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 {
     public class DnnAdamSecurityChecks: AdamSecurityChecksBase
     {
-        public DnnAdamSecurityChecks() : base(DnnConstants.LogName) { }
+        public DnnAdamSecurityChecks(Dependencies dependencies) : base(dependencies, DnnConstants.LogName) { }
 
         /// <summary>
         /// Helper to check extension based on DNN settings

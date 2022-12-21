@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Eav.Security.Permissions;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -14,6 +13,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class HyperlinkBackend<TFolderId, TFileId>: ServiceBase
     {
+        private readonly Generator<AdamItemDtoMaker<TFolderId, TFileId>> _adamDtoMaker;
         private readonly IValueConverter _valueConverter;
         private readonly Generator<MultiPermissionsApp> _appPermissions;
         private readonly LazySvc<AdamContext<TFolderId, TFileId>> _adamState;
@@ -24,8 +24,10 @@ namespace ToSic.Sxc.WebApi.Cms
             LazySvc<AdamContext<TFolderId, TFileId>> adamState,
             IContextResolver ctxResolver,
             Generator<MultiPermissionsApp> appPermissions,
+            Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
             IValueConverter valueConverter) : base("Bck.HypLnk")
         {
+            _adamDtoMaker = adamDtoMaker;
             ConnectServices(
                 _adamState = adamState,
                 _appPermissions = appPermissions,
@@ -84,7 +86,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
                 // Note: kind of temporary solution, will fail if TFileId isn't int!
                 var file = ((IAdamFileSystem<int, int>)adamContext.AdamManager.AdamFs).GetFile(parts.Id);
-                var dtoMaker = AdamContext.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(AdamContext);
+                var dtoMaker = _adamDtoMaker.New().Init(AdamContext);
                 // if everything worked till now, it's ok to return the result
                 var adam = dtoMaker.Create(file as File<TFolderId, TFileId>);
                 return new LinkInfoDto {Adam = adam, Value = adam.Url};

@@ -178,7 +178,7 @@ namespace ToSic.Sxc.Engines
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
             var templatePermissions = Helpers.AppPermCheckLazy.Value
-                .ForItem(Block.Context, App, Template.Entity, Log);
+                .ForItem(Block.Context, App, Template.Entity);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions
             if (user.IsSiteAdmin || !templatePermissions.HasPermissions)

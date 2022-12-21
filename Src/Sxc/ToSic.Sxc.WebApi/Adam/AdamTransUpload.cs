@@ -1,31 +1,26 @@
 ﻿using System;
 using System.IO;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
     public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public LazySvc<AdamItemDtoMaker<TFolderId, TFileId>> DtoMaker { get; }
+        public AdamItemDtoMaker<TFolderId, TFileId> DtoMaker { get; }
 
-        public AdamTransUpload(ILazySvc<AdamContext<TFolderId, TFileId>> adamContext,
-            LazySvc<AdamItemDtoMaker<TFolderId, TFileId>> dtoMaker, IContextResolver ctxResolver)
-            : base(adamContext, ctxResolver, "Adm.TrnUpl")
+        public AdamTransUpload(AdamDependencies<TFolderId, TFileId> dependencies) : base(dependencies, "Adm.TrnUpl")
         {
-            DtoMaker = dtoMaker;
-            dtoMaker.SetInit(dtom => dtom.Init(adamContext.Value));
+            DtoMaker = _Deps.AdamDtoMaker.New().Init(AdamContext);
         }
 
         public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
         {
             var file = UploadOne(stream, fileName, subFolder, false);
-            return DtoMaker.Value.Create(file);
+            return DtoMaker.Create(file);
         }
 
         public File<TFolderId, TFileId> UploadOne(Stream stream, string originalFileName, string subFolder, bool skipFieldAndContentTypePermissionCheck)

@@ -45,27 +45,12 @@ namespace ToSic.Sxc.Blocks
         }
 
         public RenderService(
-            Dependencies dependencies
-            //GeneratorLog<IEditService> editGenerator,
-            //LazyInit<IModuleAndBlockBuilder> builder,
-            //GeneratorLog<BlockFromEntity> blkFrmEntGen,
-            //Lazy<ILogHistoryLive> historyLazy
-        ) : base("Sxc.RndSvc")
+            Dependencies dependencies) : base("Sxc.RndSvc")
         {
             _Deps = dependencies.SetLog(Log);
-            //ConnectServices(_historyLazy = historyLazy
-            //    _blkFrmEntGen = blkFrmEntGen,
-            //    _builder = builder,
-            //    _editGenerator = editGenerator
-            //);
         }
 
         private readonly Dependencies _Deps;
-
-        //private readonly GeneratorLog<BlockFromEntity> _blkFrmEntGen;
-        //private readonly GeneratorLog<IEditService> _editGenerator;
-        //private readonly LazyInit<IModuleAndBlockBuilder> _builder;
-        //private readonly Lazy<ILogHistoryLive> _historyLazy;
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {

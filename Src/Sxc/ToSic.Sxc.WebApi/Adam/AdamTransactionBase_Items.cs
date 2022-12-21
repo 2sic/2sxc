@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
@@ -50,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Adam
             var subfolders = currentFolder.Folders.ToList();
             var files = currentFolder.Files.ToList();
 
-            var dtoMaker = AdamContext.ServiceProvider.Build<AdamItemDtoMaker<TFolderId, TFileId>>().Init(AdamContext);
+            var dtoMaker = _Deps.AdamDtoMaker.New().Init(AdamContext);
 
             var currentFolderDto = dtoMaker.Create(currentFolder);
             currentFolderDto.Name = ".";

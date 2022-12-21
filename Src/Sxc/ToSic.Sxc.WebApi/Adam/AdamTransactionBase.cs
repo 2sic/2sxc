@@ -13,22 +13,40 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
+    public class AdamDependencies<TFolderId, TFileId>: ServiceDependencies
+    {
+        public ILazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
+        public IContextResolver CtxResolver { get; }
+        public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; }
+
+        public AdamDependencies(
+            Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
+            ILazySvc<AdamContext<TFolderId, TFileId>> adamState,
+            IContextResolver ctxResolver)
+        {
+            AddToLogQueue(
+                AdamDtoMaker = adamDtoMaker,
+                AdamState = adamState,
+                CtxResolver = ctxResolver
+            );
+        }
+    }
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: ServiceBase, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
     {
+
         #region Constructor / DI
 
-        protected AdamTransactionBase(ILazySvc<AdamContext<TFolderId, TFileId>> adamState, IContextResolver ctxResolver, string logName) : base(logName) =>
-            ConnectServices(
-                _adamState = adamState,
-                _ctxResolver = ctxResolver
-            );
-        private readonly ILazySvc<AdamContext<TFolderId, TFileId>> _adamState;
-        private readonly IContextResolver _ctxResolver;
+        protected AdamTransactionBase(AdamDependencies<TFolderId, TFileId> dependencies, string logName) : base(logName)
+        {
+            _Deps = dependencies.SetLog(Log);
+        }
+
+        protected readonly AdamDependencies<TFolderId, TFileId> _Deps;
 
         public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog)
         {
             this.Init(parentLog);
-            var context = appId > 0 ? _ctxResolver.BlockOrApp(appId) : _ctxResolver.AppNameRouteBlock(null);
+            var context = appId > 0 ? _Deps.CtxResolver.BlockOrApp(appId) : _Deps.CtxResolver.AppNameRouteBlock(null);
             var logCall = Log.Fn<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
             return logCall.Return(this as T);
@@ -40,7 +58,7 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        protected AdamContext<TFolderId, TFileId> AdamContext => _adamState.Value;
+        protected AdamContext<TFolderId, TFileId> AdamContext => _Deps.AdamState.Value;
 
         #endregion
 
