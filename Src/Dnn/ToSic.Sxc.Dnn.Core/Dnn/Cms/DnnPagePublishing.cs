@@ -28,10 +28,10 @@ namespace ToSic.Sxc.Dnn.Cms
     {
         #region DI Constructors and More
 
-        private readonly LazyInit<AppManager> _appManager;
-        private readonly LazyInit<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
+        private readonly LazySvc<AppManager> _appManager;
+        private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
-        public DnnPagePublishing(LazyInit<AppManager> appManager, LazyInit<IModuleAndBlockBuilder> moduleAndBlockBuilder) : base("Dnn.Publsh")
+        public DnnPagePublishing(LazySvc<AppManager> appManager, LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder) : base("Dnn.Publsh")
         {
             ConnectServices(
                 _appManager = appManager,

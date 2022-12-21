@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        private readonly LazyInit<AppsRuntime> _appsRuntimeLazy;
-        private readonly LazyInit<AppsManager> _appsManagerLazy;
-        public CmsZones(LazyInit<AppsRuntime> appsRuntimeLazy, LazyInit<AppsManager> appsManagerLazy) : base("Sxc.ZoneRt") =>
+        private readonly LazySvc<AppsRuntime> _appsRuntimeLazy;
+        private readonly LazySvc<AppsManager> _appsManagerLazy;
+        public CmsZones(LazySvc<AppsRuntime> appsRuntimeLazy, LazySvc<AppsManager> appsManagerLazy) : base("Sxc.ZoneRt") =>
             ConnectServices(
                 _appsRuntimeLazy = appsRuntimeLazy,
                 _appsManagerLazy = appsManagerLazy

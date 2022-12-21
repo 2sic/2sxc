@@ -29,14 +29,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     {
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly LazyInit<AppFolder> _appFolder;
+        private readonly LazySvc<AppFolder> _appFolder;
 
         public const string HttpContextKeyForAppFolder = "SxcAppFolderName";
 
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
-            LazyInit<AppFolder> appFolder,
+            LazySvc<AppFolder> appFolder,
             ILogStore logStore)
         {
             Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));

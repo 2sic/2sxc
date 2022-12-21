@@ -13,8 +13,8 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public Page(LazyInit<IHttp> httpLazy) => _httpLazy = httpLazy;
-        private readonly LazyInit<IHttp> _httpLazy;
+        public Page(LazySvc<IHttp> httpLazy) => _httpLazy = httpLazy;
+        private readonly LazySvc<IHttp> _httpLazy;
 
         #endregion
 

@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Web.PageService
     {
 
         public PageChangeSummary(
-            LazyInit<IBlockResourceExtractor> resourceExtractor,
-            LazyInit<RequirementsService> requirements
+            LazySvc<IBlockResourceExtractor> resourceExtractor,
+            LazySvc<RequirementsService> requirements
         ) : base(Constants.SxcLogName + "PgChSm")
         {
             ConnectServices(
@@ -31,8 +31,8 @@ namespace ToSic.Sxc.Web.PageService
             );
         }
 
-        private readonly LazyInit<IBlockResourceExtractor> _resourceExtractor;
-        private readonly LazyInit<RequirementsService> _requirements;
+        private readonly LazySvc<IBlockResourceExtractor> _resourceExtractor;
+        private readonly LazySvc<RequirementsService> _requirements;
 
         public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
         {

@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
         public ContentBlockBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
             IPagePublishing publishing, 
-            LazyInit<CmsManager> cmsManagerLazy, 
+            LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             ILazySvc<IBlockResourceExtractor> optimizerLazy,
             Generator<BlockEditorForModule> blkEdtForMod,

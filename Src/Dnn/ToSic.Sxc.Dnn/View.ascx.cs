@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Dnn
                 {
                     var block = Block; // get the block early, to see any errors
                     if (checkPortalIsReady)
-                        DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, GetService<LazyInit<AppFolderInitializer>>(), Log);
+                        DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, GetService<LazySvc<AppFolderInitializer>>(), Log);
                     DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : Block?.BlockBuilder, Log);
                     var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                     if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();

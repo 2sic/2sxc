@@ -21,16 +21,16 @@ namespace ToSic.Sxc.Dnn.Code
     {
         public new class ScopedDependencies: ServiceDependencies
         {
-            public LazyInit<PageServiceShared> PageServiceShared { get; }
-            public LazyInit<PageChangeSummary> PageChangeSummary { get; }
-            public LazyInit<DnnPageChanges> DnnPageChanges { get; }
-            public LazyInit<DnnClientResources> DnnClientResources { get; }
+            public LazySvc<PageServiceShared> PageServiceShared { get; }
+            public LazySvc<PageChangeSummary> PageChangeSummary { get; }
+            public LazySvc<DnnPageChanges> DnnPageChanges { get; }
+            public LazySvc<DnnClientResources> DnnClientResources { get; }
 
             public ScopedDependencies(
-                LazyInit<PageServiceShared> pageServiceShared,
-                LazyInit<PageChangeSummary> pageChangeSummary,
-                LazyInit<DnnPageChanges> dnnPageChanges,
-                LazyInit<DnnClientResources> dnnClientResources
+                LazySvc<PageServiceShared> pageServiceShared,
+                LazySvc<PageChangeSummary> pageChangeSummary,
+                LazySvc<DnnPageChanges> dnnPageChanges,
+                LazySvc<DnnClientResources> dnnClientResources
                 )
             {
                 AddToLogQueue(
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn.Code
         }
 
         private readonly ScopedDependencies _scopedDeps;
-        private readonly LazyInit<IUser> _user;
+        private readonly LazySvc<IUser> _user;
 
 
         private void Page_PreRender(object sender, EventArgs e)

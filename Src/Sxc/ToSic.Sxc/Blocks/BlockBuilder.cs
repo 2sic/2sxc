@@ -28,8 +28,8 @@ namespace ToSic.Sxc.Blocks
                 EngineFactory engineFactory,
                 Generator<IEnvironmentInstaller> envInstGen,
                 Generator<IRenderingHelper> renderHelpGen,
-                LazyInit<PageChangeSummary> pageChangeSummary,
-                LazyInit<ILicenseService> licenseService,
+                LazySvc<PageChangeSummary> pageChangeSummary,
+                LazySvc<ILicenseService> licenseService,
                 IModuleService moduleService
             ) => AddToLogQueue(
                 EngineFactory = engineFactory,
@@ -43,8 +43,8 @@ namespace ToSic.Sxc.Blocks
             public EngineFactory EngineFactory { get; }
             public Generator<IEnvironmentInstaller> EnvInstGen { get; }
             public Generator<IRenderingHelper> RenderHelpGen { get; }
-            public LazyInit<PageChangeSummary> PageChangeSummary { get; }
-            public LazyInit<ILicenseService> LicenseService { get; }
+            public LazySvc<PageChangeSummary> PageChangeSummary { get; }
+            public LazySvc<ILicenseService> LicenseService { get; }
             public IModuleService ModuleService { get; }
         }
 

@@ -20,10 +20,10 @@ namespace ToSic.Sxc.LookUp
     {
         #region Constructor / DI
 
-        private readonly LazyInit<ILookUpEngineResolver> _getEngineLazy;
-        private readonly LazyInit<IHttp> _httpLazy;
+        private readonly LazySvc<ILookUpEngineResolver> _getEngineLazy;
+        private readonly LazySvc<IHttp> _httpLazy;
 
-        public AppConfigDelegate(LazyInit<ILookUpEngineResolver> getEngineLazy, LazyInit<IHttp> httpLazy) : base("Sxc.CnfPrv")
+        public AppConfigDelegate(LazySvc<ILookUpEngineResolver> getEngineLazy, LazySvc<IHttp> httpLazy) : base("Sxc.CnfPrv")
         {
             ConnectServices(
                 _getEngineLazy = getEngineLazy,

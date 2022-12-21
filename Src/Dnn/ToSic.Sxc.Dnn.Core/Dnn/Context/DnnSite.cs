@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Context
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite(LazyInit<IZoneMapper> zoneMapperLazy, LazyInit<ILinkPaths> linkPathsLazy): base(DnnConstants.LogName)
+        public DnnSite(LazySvc<IZoneMapper> zoneMapperLazy, LazySvc<ILinkPaths> linkPathsLazy): base(DnnConstants.LogName)
         {
             this.ConnectServices(
                 _zoneMapperLazy = zoneMapperLazy,

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
     {
         private readonly ILazySvc<IUserRepository> _userRepository;
 
-        public OqtUserInformationService(LazyInit<IContextOfSite> context, ILazySvc<IUserRepository> userRepository) : base(context)
+        public OqtUserInformationService(LazySvc<IContextOfSite> context, ILazySvc<IUserRepository> userRepository) : base(context)
         {
             ConnectServices(
                 _userRepository = userRepository

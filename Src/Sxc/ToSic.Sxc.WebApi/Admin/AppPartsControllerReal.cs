@@ -15,8 +15,8 @@ namespace ToSic.Sxc.WebApi.Admin
         public const string LogSuffix = "AParts";
 
         public AppPartsControllerReal(
-            LazyInit<IContextOfSite> context,
-            LazyInit<ExportContent<THttpResponseType>> exportContent,
+            LazySvc<IContextOfSite> context,
+            LazySvc<ExportContent<THttpResponseType>> exportContent,
             Generator<ImportContent> importContent, 
             ILazySvc<IUser> user
             ): base("Api.APartsRl")
@@ -29,8 +29,8 @@ namespace ToSic.Sxc.WebApi.Admin
             );
             
         }
-        private readonly LazyInit<IContextOfSite> _context;
-        private readonly LazyInit<ExportContent<THttpResponseType>> _exportContent;
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<ExportContent<THttpResponseType>> _exportContent;
         private readonly Generator<ImportContent> _importContent;
         private readonly ILazySvc<IUser> _user;
 

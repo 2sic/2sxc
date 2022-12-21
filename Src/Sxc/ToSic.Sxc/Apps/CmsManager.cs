@@ -10,14 +10,14 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsManager: AppManager, IAppIdentityWithPublishingState
     {
-        private readonly LazyInit<CmsRuntime> _cmsRuntime;
+        private readonly LazySvc<CmsRuntime> _cmsRuntime;
 
         public CmsManager(AppRuntimeDependencies dependencies, 
-            LazyInit<AppRuntime> appRuntime,
-            LazyInit<DbDataController> dbDataController,
-            LazyInit<EntitiesManager> entitiesManager,
-            LazyInit<QueryManager> queryManager,
-            LazyInit<CmsRuntime> cmsRuntime
+            LazySvc<AppRuntime> appRuntime,
+            LazySvc<DbDataController> dbDataController,
+            LazySvc<EntitiesManager> entitiesManager,
+            LazySvc<QueryManager> queryManager,
+            LazySvc<CmsRuntime> cmsRuntime
             ) : base(dependencies, appRuntime, dbDataController, entitiesManager, queryManager, "Sxc.CmsMan")
         {
             _cmsRuntime = cmsRuntime.SetInit(r => r.Init(Log).InitWithState(AppState, ShowDrafts));

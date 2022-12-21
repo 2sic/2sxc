@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Apps
     {
         #region Constructor / DI
 
-        public AppsManager(LazyInit<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
+        public AppsManager(LazySvc<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
         {
             ConnectServices(
                 _zoneManagerLazy = zoneManagerLazy,
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Apps
                 _appPaths = appPaths
             );
         }
-        private readonly LazyInit<ZoneManager> _zoneManagerLazy;
+        private readonly LazySvc<ZoneManager> _zoneManagerLazy;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly AppPaths _appPaths;

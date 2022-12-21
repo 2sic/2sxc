@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Context
     {
         #region Constructors and DI
         
-        public DnnModule(IAppStates appStates, LazyInit<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
+        public DnnModule(IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
         {
             this.ConnectServices(
                 _appStates = appStates,
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.Context
         }
 
         private readonly IAppStates _appStates;
-        private readonly LazyInit<AppFinder> _appFinderLazy;
+        private readonly LazySvc<AppFinder> _appFinderLazy;
         private readonly ISite _site;
 
         /// <summary>

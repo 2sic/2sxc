@@ -19,10 +19,10 @@ namespace ToSic.Sxc.WebApi.Cms
         public const string LogSuffix = "Block";
 
         public BlockControllerReal(
-            LazyInit<IContextOfSite> context,
-            LazyInit<ContentBlockBackend> blockBackend,
-            LazyInit<AppViewPickerBackend> viewsBackend,
-            LazyInit<CmsZones> cmsZones
+            LazySvc<IContextOfSite> context,
+            LazySvc<ContentBlockBackend> blockBackend,
+            LazySvc<AppViewPickerBackend> viewsBackend,
+            LazySvc<CmsZones> cmsZones
             ): base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
@@ -33,10 +33,10 @@ namespace ToSic.Sxc.WebApi.Cms
             );
         }
 
-        private readonly LazyInit<IContextOfSite> _context;
-        private readonly LazyInit<ContentBlockBackend> _blockBackendLazy;
-        private readonly LazyInit<AppViewPickerBackend> _viewsBackendLazy;
-        private readonly LazyInit<CmsZones> _cmsZones;
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<ContentBlockBackend> _blockBackendLazy;
+        private readonly LazySvc<AppViewPickerBackend> _viewsBackendLazy;
+        private readonly LazySvc<CmsZones> _cmsZones;
 
 
         #region Block

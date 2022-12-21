@@ -21,10 +21,10 @@ namespace ToSic.Sxc.WebApi.Admin
         public const string LogSuffix = "Types";
 
         public TypeControllerReal(
-            LazyInit<IContextOfSite> context,
-            LazyInit<ContentTypeApi> ctApiLazy, 
-            LazyInit<ContentExportApi<THttpResponseType>> contentExportLazy, 
-            LazyInit<IUser> userLazy,
+            LazySvc<IContextOfSite> context,
+            LazySvc<ContentTypeApi> ctApiLazy, 
+            LazySvc<ContentExportApi<THttpResponseType>> contentExportLazy, 
+            LazySvc<IUser> userLazy,
             Generator<ImportContent> importContent
             ) : base("Api.TypesRl")
         {
@@ -37,10 +37,10 @@ namespace ToSic.Sxc.WebApi.Admin
             );
         }
 
-        private readonly LazyInit<IContextOfSite> _context;
-        private readonly LazyInit<ContentTypeApi> _ctApiLazy;
-        private readonly LazyInit<ContentExportApi<THttpResponseType>> _contentExportLazy;
-        private readonly LazyInit<IUser> _userLazy;
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<ContentTypeApi> _ctApiLazy;
+        private readonly LazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
+        private readonly LazySvc<IUser> _userLazy;
         private readonly Generator<ImportContent> _importContent;
 
 

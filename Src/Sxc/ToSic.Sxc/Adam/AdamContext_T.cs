@@ -10,9 +10,9 @@ namespace ToSic.Sxc.Adam
     public class AdamContext<TFolderId, TFileId>: AdamContext
     {
         internal AdamManager<TFolderId, TFileId> AdamManager => _adamManagerLazy.Value;
-        private readonly LazyInit<AdamManager<TFolderId, TFileId>> _adamManagerLazy;
+        private readonly LazySvc<AdamManager<TFolderId, TFileId>> _adamManagerLazy;
 
-        public AdamContext(LazyInit<AdamManager<TFolderId, TFileId>> adamManagerLazy, IServiceProvider serviceProvider, Dependencies dependencies): base(serviceProvider, dependencies, "Adm.CtxTT")
+        public AdamContext(LazySvc<AdamManager<TFolderId, TFileId>> adamManagerLazy, IServiceProvider serviceProvider, Dependencies dependencies): base(serviceProvider, dependencies, "Adm.CtxTT")
         {
             ConnectServices(
                 _adamManagerLazy = adamManagerLazy

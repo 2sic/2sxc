@@ -13,12 +13,12 @@ namespace ToSic.Sxc.Context
     {
         #region Constructor / DI
         
-        protected readonly LazyInit<AppIdResolver> AppIdResolver;
+        protected readonly LazySvc<AppIdResolver> AppIdResolver;
         private readonly Generator<IContextOfSite> _contextOfSite;
         private readonly Generator<IContextOfApp> _contextOfApp;
 
         public ContextResolver(
-            LazyInit<AppIdResolver> appIdResolverLazy,
+            LazySvc<AppIdResolver> appIdResolverLazy,
             Generator<IContextOfSite> contextOfSite,
             Generator<IContextOfApp> contextOfApp) : base("Sxc.CtxRes")
         {

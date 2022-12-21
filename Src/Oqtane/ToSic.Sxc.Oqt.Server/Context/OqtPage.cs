@@ -14,13 +14,13 @@ namespace ToSic.Sxc.Oqt.Server.Context
     public class OqtPage : Page, IWrapper<Oqtane.Models.Page>
     {
         private readonly SiteState _siteState;
-        private readonly LazyInit<IAliasRepository> _aliasRepository;
-        private readonly LazyInit<IPageRepository> _pages;
-        private readonly LazyInit<ILinkPaths> _linkPathsLazy;
+        private readonly LazySvc<IAliasRepository> _aliasRepository;
+        private readonly LazySvc<IPageRepository> _pages;
+        private readonly LazySvc<ILinkPaths> _linkPathsLazy;
 
         public Alias Alias { get; set; }
 
-        public OqtPage(LazyInit<IHttp> httpBlazor, SiteState siteState, LazyInit<IAliasRepository> aliasRepository, LazyInit<IPageRepository> pages, LazyInit<ILinkPaths> linkPathsLazy) : base(httpBlazor)
+        public OqtPage(LazySvc<IHttp> httpBlazor, SiteState siteState, LazySvc<IAliasRepository> aliasRepository, LazySvc<IPageRepository> pages, LazySvc<ILinkPaths> linkPathsLazy) : base(httpBlazor)
         {
             _siteState = siteState;
             _aliasRepository = aliasRepository;

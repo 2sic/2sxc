@@ -9,16 +9,16 @@ namespace ToSic.Sxc.Apps
 {
     public class CmsRuntime: AppRuntime
     {
-        private readonly LazyInit<BlocksRuntime> _blocksRuntime;
-        private readonly LazyInit<ViewsRuntime> _viewsRuntime;
+        private readonly LazySvc<BlocksRuntime> _blocksRuntime;
+        private readonly LazySvc<ViewsRuntime> _viewsRuntime;
 
         public CmsRuntime(AppRuntimeDependencies dependencies, 
-            LazyInit<EntityRuntime> entityRuntime,
-            LazyInit<MetadataRuntime> metadataRuntime,
-            LazyInit<ContentTypeRuntime> contentTypeRuntime,
-            LazyInit<QueryRuntime> queryRuntime, 
-            LazyInit<ViewsRuntime> viewsRuntime, 
-            LazyInit<BlocksRuntime> blocksRuntime) 
+            LazySvc<EntityRuntime> entityRuntime,
+            LazySvc<MetadataRuntime> metadataRuntime,
+            LazySvc<ContentTypeRuntime> contentTypeRuntime,
+            LazySvc<QueryRuntime> queryRuntime, 
+            LazySvc<ViewsRuntime> viewsRuntime, 
+            LazySvc<BlocksRuntime> blocksRuntime) 
             : base(dependencies, entityRuntime, metadataRuntime, contentTypeRuntime, queryRuntime, "Sxc.CmsRt")
         {
             _blocksRuntime = blocksRuntime.SetInit(r => r.Init(Log).ConnectTo(this));

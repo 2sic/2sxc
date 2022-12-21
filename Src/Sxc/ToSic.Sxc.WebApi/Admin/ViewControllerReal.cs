@@ -21,11 +21,11 @@ namespace ToSic.Sxc.WebApi.Admin
         public const string LogSuffix = "View";
 
         public ViewControllerReal(
-            LazyInit<IContextOfSite> context,
-            LazyInit<ViewsBackend> viewsBackend, 
-            LazyInit<ViewsExportImport<THttpResponseType>> viewExportImport, 
-            LazyInit<UsageBackend> usageBackend, 
-            LazyInit<PolymorphismBackend> polymorphismBackend
+            LazySvc<IContextOfSite> context,
+            LazySvc<ViewsBackend> viewsBackend, 
+            LazySvc<ViewsExportImport<THttpResponseType>> viewExportImport, 
+            LazySvc<UsageBackend> usageBackend, 
+            LazySvc<PolymorphismBackend> polymorphismBackend
             ) : base("Api.ViewRl")
         {
             ConnectServices(
@@ -36,11 +36,11 @@ namespace ToSic.Sxc.WebApi.Admin
                 _viewExportImport = viewExportImport
             );
         }
-        private readonly LazyInit<IContextOfSite> _context;
-        private readonly LazyInit<PolymorphismBackend> _polymorphismBackend;
-        private readonly LazyInit<UsageBackend> _usageBackend;
-        private readonly LazyInit<ViewsBackend> _viewsBackend;
-        private readonly LazyInit<ViewsExportImport<THttpResponseType>> _viewExportImport;
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<PolymorphismBackend> _polymorphismBackend;
+        private readonly LazySvc<UsageBackend> _usageBackend;
+        private readonly LazySvc<ViewsBackend> _viewsBackend;
+        private readonly LazySvc<ViewsExportImport<THttpResponseType>> _viewExportImport;
 
         /// <inheritdoc />
         public IEnumerable<ViewDetailsDto> All(int appId) => _viewsBackend.Value.GetAll(appId);

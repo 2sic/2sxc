@@ -20,15 +20,15 @@ namespace ToSic.Sxc.Apps.Assets
 
         private AssetEditInfo EditInfo { get; set; }
 
-        private readonly LazyInit<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
         private readonly IUser _user;
-        private readonly LazyInit<AppFolderInitializer> _appFolderInitializer;
+        private readonly LazySvc<AppFolderInitializer> _appFolderInitializer;
         private readonly ISite _site;
         private readonly AppPaths _appPaths;
         private CmsRuntime _cmsRuntime;
         private AppState _appState;
 
-        public AssetEditor(LazyInit<CmsRuntime> cmsRuntimeLazy, IUser user, LazyInit<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
+        public AssetEditor(LazySvc<CmsRuntime> cmsRuntimeLazy, IUser user, LazySvc<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
         {
             ConnectServices(
                 _cmsRuntimeLazy = cmsRuntimeLazy,

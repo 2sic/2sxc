@@ -24,10 +24,10 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         public DnnEnvironmentInstaller(ILogStore logStore, 
             DnnInstallLogger installLogger, 
-            LazyInit<IAppStates> appStatesLazy, 
-            LazyInit<CmsRuntime> cmsRuntimeLazy, 
-            LazyInit<RemoteRouterLink> remoteRouterLazy,
-            LazyInit<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
+            LazySvc<IAppStates> appStatesLazy, 
+            LazySvc<CmsRuntime> cmsRuntimeLazy, 
+            LazySvc<RemoteRouterLink> remoteRouterLazy,
+            LazySvc<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
         {
             logStore.Add(LogNames.LogHistoryGlobalInstallation, Log);
             ConnectServices(

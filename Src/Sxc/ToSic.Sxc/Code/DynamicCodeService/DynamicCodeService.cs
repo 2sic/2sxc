@@ -25,12 +25,12 @@ namespace ToSic.Sxc.Code
         {
             public Dependencies(
                 IServiceProvider serviceProvider,
-                LazyInit<ILogStore> logStore,
-                LazyInit<IUser> user,
+                LazySvc<ILogStore> logStore,
+                LazySvc<IUser> user,
                 // Dependencies to get primary app
-                LazyInit<ISite> site,
-                LazyInit<IZoneMapper> zoneMapper,
-                LazyInit<IAppStates> appStates
+                LazySvc<ISite> site,
+                LazySvc<IZoneMapper> zoneMapper,
+                LazySvc<IAppStates> appStates
             ) => AddToLogQueue(
                 ServiceProvider = serviceProvider,
                 LogStore = logStore,
@@ -41,11 +41,11 @@ namespace ToSic.Sxc.Code
             );
 
             internal IServiceProvider ServiceProvider { get; }
-            public LazyInit<ILogStore> LogStore { get; }
-            public LazyInit<IUser> User { get; }
-            public LazyInit<ISite> Site { get; }
-            public LazyInit<IZoneMapper> ZoneMapper { get; }
-            public LazyInit<IAppStates> AppStates { get; }
+            public LazySvc<ILogStore> LogStore { get; }
+            public LazySvc<IUser> User { get; }
+            public LazySvc<ISite> Site { get; }
+            public LazySvc<IZoneMapper> ZoneMapper { get; }
+            public LazySvc<IAppStates> AppStates { get; }
         }
 
         public class ScopedDependencies: ServiceDependencies
@@ -53,13 +53,13 @@ namespace ToSic.Sxc.Code
             public Generator<App> AppGenerator { get; }
             public Generator<DynamicCodeRoot> CodeRootGenerator { get; }
             public Generator<AppConfigDelegate> AppConfigDelegateGenerator { get; }
-            public LazyInit<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
+            public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
 
             public ScopedDependencies(
                 Generator<DynamicCodeRoot> codeRootGenerator,
                 Generator<App> appGenerator,
                 Generator<AppConfigDelegate> appConfigDelegateGenerator,
-                LazyInit<IModuleAndBlockBuilder> modAndBlockBuilder
+                LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder
             ) => AddToLogQueue(
                 CodeRootGenerator = codeRootGenerator,
                 AppGenerator = appGenerator,

@@ -28,14 +28,14 @@ namespace ToSic.Sxc.Blocks
         public class Dependencies: ServiceDependencies
         {
             public Generator<IEditService> EditGenerator { get; }
-            public LazyInit<IModuleAndBlockBuilder> Builder { get; }
+            public LazySvc<IModuleAndBlockBuilder> Builder { get; }
             public Generator<BlockFromEntity> BlkFrmEntGen { get; }
-            public LazyInit<ILogStore> LogStore { get; }
+            public LazySvc<ILogStore> LogStore { get; }
 
             public Dependencies(Generator<IEditService> editGenerator,
-                LazyInit<IModuleAndBlockBuilder> builder,
+                LazySvc<IModuleAndBlockBuilder> builder,
                 Generator<BlockFromEntity> blkFrmEntGen,
-                LazyInit<ILogStore> logStore
+                LazySvc<ILogStore> logStore
             ) => AddToLogQueue(
                 EditGenerator = editGenerator,
                 Builder = builder,

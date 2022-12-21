@@ -28,15 +28,15 @@ namespace ToSic.Sxc.WebApi.Sys
         #region System Installation
 
         public InstallControllerReal(
-            LazyInit<IContextOfSite> context,
-            LazyInit<IEnvironmentInstaller> envInstallerLazy, 
-            LazyInit<ImportFromRemote> impFromRemoteLazy, 
-            LazyInit<IUser> userLazy,
+            LazySvc<IContextOfSite> context,
+            LazySvc<IEnvironmentInstaller> envInstallerLazy, 
+            LazySvc<ImportFromRemote> impFromRemoteLazy, 
+            LazySvc<IUser> userLazy,
             ResponseMaker<THttpResponseType> responseMaker,
 
-            LazyInit<AppsBackend> appsBackend,
-            LazyInit<IAppStates> appStates,
-            LazyInit<AppSettingsStack> appSettingsStack) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            LazySvc<AppsBackend> appsBackend,
+            LazySvc<IAppStates> appStates,
+            LazySvc<AppSettingsStack> appSettingsStack) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _context = context,
@@ -50,14 +50,14 @@ namespace ToSic.Sxc.WebApi.Sys
             );
         }
 
-        private readonly LazyInit<IContextOfSite> _context;
-        private readonly LazyInit<IEnvironmentInstaller> _envInstallerLazy;
-        private readonly LazyInit<ImportFromRemote> _impFromRemoteLazy;
-        private readonly LazyInit<IUser> _userLazy;
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
+        private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
+        private readonly LazySvc<IUser> _userLazy;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
-        private readonly LazyInit<IAppStates> _appStates;
-        private readonly LazyInit<AppSettingsStack> _appSettingsStack;
-        private readonly LazyInit<AppsBackend> _appsBackendLazy;
+        private readonly LazySvc<IAppStates> _appStates;
+        private readonly LazySvc<AppSettingsStack> _appSettingsStack;
+        private readonly LazySvc<AppsBackend> _appsBackendLazy;
 
 
         /// <summary>
@@ -68,20 +68,7 @@ namespace ToSic.Sxc.WebApi.Sys
 
         #endregion
 
-
         #region App / Content Package Installation
-
-        ///// <summary>
-        ///// Before this was GET Module/RemoteInstallDialogUrl
-        ///// </summary>
-        ///// <param name="isContentApp"></param>
-        ///// <returns></returns>
-        //public THttpResponseType RemoteWizardUrl(bool isContentApp, IModule module) 
-        //    => _responseMaker.Json(_envInstallerLazy.Value.Init(Log)
-        //        .GetAutoInstallPackagesUiUrl(
-        //            _context.Ready.Site,
-        //            module,
-        //            isContentApp));
 
         public InstallAppsDto InstallSettings(bool isContentApp, IModule module)
         {

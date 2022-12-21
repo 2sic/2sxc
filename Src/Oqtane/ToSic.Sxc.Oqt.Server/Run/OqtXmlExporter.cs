@@ -21,10 +21,10 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtXmlExporter : XmlExporter
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly LazyInit<IFileRepository> _fileRepositoryLazy;
-        private readonly LazyInit<IFolderRepository> _folderRepositoryLazy;
-        private readonly LazyInit<ITenantResolver> _oqtTenantResolverLazy;
-        private readonly LazyInit<OqtAssetsFileHelper> _fileHelper;
+        private readonly LazySvc<IFileRepository> _fileRepositoryLazy;
+        private readonly LazySvc<IFolderRepository> _folderRepositoryLazy;
+        private readonly LazySvc<ITenantResolver> _oqtTenantResolverLazy;
+        private readonly LazySvc<OqtAssetsFileHelper> _fileHelper;
         private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
@@ -34,11 +34,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             IContextResolver ctxResolver,
             XmlSerializer xmlSerializer,
             IWebHostEnvironment hostingEnvironment,
-            LazyInit<IFileRepository> fileRepositoryLazy,
-            LazyInit<IFolderRepository> folderRepositoryLazy,
-            LazyInit<ITenantResolver> oqtTenantResolverLazy,
+            LazySvc<IFileRepository> fileRepositoryLazy,
+            LazySvc<IFolderRepository> folderRepositoryLazy,
+            LazySvc<ITenantResolver> oqtTenantResolverLazy,
             IAppStates appStates,
-            LazyInit<OqtAssetsFileHelper> fileHelper
+            LazySvc<OqtAssetsFileHelper> fileHelper
             ) : base(xmlSerializer, appStates, OqtConstants.OqtLogPrefix)
         {
             ConnectServices(

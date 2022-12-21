@@ -50,8 +50,8 @@ namespace ToSic.Sxc.Search
             Generator<CodeCompiler> codeCompiler,
             Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
             Generator<ISite> siteGenerator,
-            LazyInit<IModuleAndBlockBuilder> moduleAndBlockBuilder,
-            LazyInit<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
+            LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
+            LazySvc<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
             EngineFactory engineFactory,
             ILazySvc<IAppLoaderTools> loaderTools,
             ILazySvc<ILogStore> logStore) : base("DNN.Search")
@@ -75,8 +75,8 @@ namespace ToSic.Sxc.Search
         private readonly Generator<ISite> _siteGenerator;
         private readonly EngineFactory _engineFactory;
         private readonly ILazySvc<IAppLoaderTools> _loaderTools;
-        private readonly LazyInit<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
-        private readonly LazyInit<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
+        private readonly LazySvc<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
+        private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
 
         /// <summary>

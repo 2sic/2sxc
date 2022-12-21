@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Services
     public class DnnUserInformationService : UserInformationServiceBase
     {
 
-        public DnnUserInformationService(LazyInit<IContextOfSite> context) : base(context)
+        public DnnUserInformationService(LazySvc<IContextOfSite> context) : base(context)
         { }
 
         public override string PlatformIdentityTokenPrefix() => DnnConstants.UserTokenPrefix;

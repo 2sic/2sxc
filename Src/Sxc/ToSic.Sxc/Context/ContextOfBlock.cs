@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Context
         public ContextOfBlock(
             IPage page, 
             IModule module,
-            LazyInit<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
+            LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
             ContextOfSite.Dependencies siteCtxDeps,
             ContextOfApp.Dependencies appDependencies)
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Context
             //    _publishingResolver.SetLog(Log);
             Log.Rename("Sxc.CtxBlk");
         }
-        private readonly LazyInit<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
+        private readonly LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 
         #endregion
 

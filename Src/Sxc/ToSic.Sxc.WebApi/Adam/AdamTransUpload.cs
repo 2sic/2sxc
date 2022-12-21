@@ -12,10 +12,10 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public partial class AdamTransUpload<TFolderId, TFileId>: AdamTransactionBase<AdamTransUpload<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public LazyInit<AdamItemDtoMaker<TFolderId, TFileId>> DtoMaker { get; }
+        public LazySvc<AdamItemDtoMaker<TFolderId, TFileId>> DtoMaker { get; }
 
         public AdamTransUpload(ILazySvc<AdamContext<TFolderId, TFileId>> adamContext,
-            LazyInit<AdamItemDtoMaker<TFolderId, TFileId>> dtoMaker, IContextResolver ctxResolver)
+            LazySvc<AdamItemDtoMaker<TFolderId, TFileId>> dtoMaker, IContextResolver ctxResolver)
             : base(adamContext, ctxResolver, "Adm.TrnUpl")
         {
             DtoMaker = dtoMaker;

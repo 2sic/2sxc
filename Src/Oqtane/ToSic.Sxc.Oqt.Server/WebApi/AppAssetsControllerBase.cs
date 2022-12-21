@@ -20,16 +20,16 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 
         public class Dependencies : ServiceDependencies
         {
-            public LazyInit<OqtAssetsFileHelper> FileHelper { get; }
+            public LazySvc<OqtAssetsFileHelper> FileHelper { get; }
             public IWebHostEnvironment HostingEnvironment { get; }
-            public LazyInit<AppFolder> AppFolder { get; }
+            public LazySvc<AppFolder> AppFolder { get; }
             public SiteState SiteState { get; }
 
             public Dependencies(
                 IWebHostEnvironment hostingEnvironment,
-                LazyInit<AppFolder> appFolder,
+                LazySvc<AppFolder> appFolder,
                 SiteState siteState,
-                LazyInit<OqtAssetsFileHelper> fileHelper
+                LazySvc<OqtAssetsFileHelper> fileHelper
             ) => AddToLogQueue(
                 HostingEnvironment = hostingEnvironment,
                 AppFolder = appFolder,

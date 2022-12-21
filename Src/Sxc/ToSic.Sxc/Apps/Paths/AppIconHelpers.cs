@@ -17,13 +17,13 @@ namespace ToSic.Sxc.Apps.Paths
     {
         #region Constructor / DI
 
-        public AppIconHelpers(LazyInit<IValueConverter> iconConverterLazy): base("Viw.Help")
+        public AppIconHelpers(LazySvc<IValueConverter> iconConverterLazy): base("Viw.Help")
         {
             ConnectServices(
                 _iconConverterLazy = iconConverterLazy
             );
         }
-        private readonly LazyInit<IValueConverter> _iconConverterLazy;
+        private readonly LazySvc<IValueConverter> _iconConverterLazy;
 
         #endregion
         

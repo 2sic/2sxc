@@ -16,7 +16,7 @@ namespace ToSic.Sxc.WebApi.InPage
     public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
     {
         public AppViewPickerBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
-            LazyInit<CmsManager> cmsManagerLazy, 
+            LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt

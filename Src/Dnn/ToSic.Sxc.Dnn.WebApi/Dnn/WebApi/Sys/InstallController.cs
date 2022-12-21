@@ -26,17 +26,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool Resume() => Real.Resume();
 
-
-        ///// <inheritdoc />
-        //[HttpGet]
-        //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        //public HttpResponseMessage RemoteWizardUrl(bool isContentApp)
-        //{
-        //    PrepareResponseMaker();
-        //    return Real.RemoteWizardUrl(isContentApp,
-        //        ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
-        //}
-
         private void PrepareResponseMaker()
         {
             // Make sure the Scoped ResponseMaker has this controller context

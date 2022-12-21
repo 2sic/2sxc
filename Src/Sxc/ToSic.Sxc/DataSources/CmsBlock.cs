@@ -62,7 +62,7 @@ namespace ToSic.Sxc.DataSources
         }
 
 
-        public CmsBlock(LazyInit<CmsRuntime> lazyCmsRuntime, LazyInit<IModule> moduleLazy)
+        public CmsBlock(LazySvc<CmsRuntime> lazyCmsRuntime, LazySvc<IModule> moduleLazy)
         {
             ConnectServices(
                 _lazyCmsRuntime = lazyCmsRuntime,

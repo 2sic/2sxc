@@ -11,12 +11,12 @@ namespace ToSic.Sxc.Apps.ImportExport
 {
     public partial class XmlImportFull: XmlImportWithFiles
     {
-        private readonly LazyInit<CmsManager> _cmsManagerLazy;
+        private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private readonly IRepositoryLoader _repositoryLoader;
 
         public XmlImportFull(
             Dependencies dependencies,
-            LazyInit<CmsManager> cmsManagerLazy,
+            LazySvc<CmsManager> cmsManagerLazy,
             IRepositoryLoader repositoryLoader
             ) : base(dependencies, "Sxc.XmlImp")
         {

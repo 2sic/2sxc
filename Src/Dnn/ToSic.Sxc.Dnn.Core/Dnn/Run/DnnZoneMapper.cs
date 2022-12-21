@@ -24,14 +24,14 @@ namespace ToSic.Sxc.Dnn.Run
         private const string PortalSettingZoneId = "ToSIC_SexyContent_ZoneID";
 
         /// <inheritdoc />
-        public DnnZoneMapper(Generator<ISite> site, LazyInit<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
+        public DnnZoneMapper(Generator<ISite> site, LazySvc<ZoneCreator> zoneCreatorLazy, IAppStates appStates) : base(appStates, "DNN.ZoneMp")
         {
             ConnectServices(
                 _site = site,
                 _zoneCreatorLazy = zoneCreatorLazy
             );
         }
-        private readonly LazyInit<ZoneCreator> _zoneCreatorLazy;
+        private readonly LazySvc<ZoneCreator> _zoneCreatorLazy;
         private readonly Generator<ISite> _site;
 
 

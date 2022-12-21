@@ -17,11 +17,11 @@ namespace ToSic.Sxc.WebApi.Cms
         public const string LogSuffix = "Edit";
 
         public EditControllerReal(
-            LazyInit<EntityPickerBackend> entityBackend,
-                LazyInit<EditLoadBackend> loadBackend,
-                LazyInit<EditSaveBackend> saveBackendLazy,
-                LazyInit<HyperlinkBackend<int, int>> linkBackendLazy,
-                LazyInit<AppViewPickerBackend> appViewPickerBackendLazy
+            LazySvc<EntityPickerBackend> entityBackend,
+                LazySvc<EditLoadBackend> loadBackend,
+                LazySvc<EditSaveBackend> saveBackendLazy,
+                LazySvc<HyperlinkBackend<int, int>> linkBackendLazy,
+                LazySvc<AppViewPickerBackend> appViewPickerBackendLazy
             ) : base("Api.EditRl")
         {
             ConnectServices(
@@ -33,11 +33,11 @@ namespace ToSic.Sxc.WebApi.Cms
             );
 
         }
-        private readonly LazyInit<EntityPickerBackend> _entityBackend;
-        private readonly LazyInit<EditLoadBackend> _loadBackend;
-        private readonly LazyInit<EditSaveBackend> _saveBackendLazy;
-        private readonly LazyInit<AppViewPickerBackend> _appViewPickerBackendLazy;
-        private readonly LazyInit<HyperlinkBackend<int, int>> _linkBackendLazy;
+        private readonly LazySvc<EntityPickerBackend> _entityBackend;
+        private readonly LazySvc<EditLoadBackend> _loadBackend;
+        private readonly LazySvc<EditSaveBackend> _saveBackendLazy;
+        private readonly LazySvc<AppViewPickerBackend> _appViewPickerBackendLazy;
+        private readonly LazySvc<HyperlinkBackend<int, int>> _linkBackendLazy;
 
         public EditDto Load(List<ItemIdentifier> items, int appId) => _loadBackend.Value.Load(appId, items);
 

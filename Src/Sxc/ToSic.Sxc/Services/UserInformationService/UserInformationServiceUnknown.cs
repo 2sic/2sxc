@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Services
 {
     public class UserInformationServiceUnknown : UserInformationServiceBase, IIsUnknown
     {
-        public UserInformationServiceUnknown(WarnUseOfUnknown<UserInformationServiceUnknown> warn, LazyInit<IContextOfSite> context) : base(context)
+        public UserInformationServiceUnknown(WarnUseOfUnknown<UserInformationServiceUnknown> warn, LazySvc<IContextOfSite> context) : base(context)
         { }
 
         public override string PlatformIdentityTokenPrefix() => Unknown;

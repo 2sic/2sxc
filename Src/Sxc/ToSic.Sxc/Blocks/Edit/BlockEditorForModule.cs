@@ -9,12 +9,12 @@ namespace ToSic.Sxc.Blocks.Edit
     public class BlockEditorForModule : BlockEditorBase
     {
         public BlockEditorForModule(BlockEditorBaseDependencies dependencies,
-            LazyInit<IPlatformModuleUpdater> platformModuleUpdater) : base(dependencies)
+            LazySvc<IPlatformModuleUpdater> platformModuleUpdater) : base(dependencies)
         {
             ConnectServices(_platformModuleUpdater = platformModuleUpdater);
         }
 
-        private readonly LazyInit<IPlatformModuleUpdater> _platformModuleUpdater;
+        private readonly LazySvc<IPlatformModuleUpdater> _platformModuleUpdater;
 
         private IPlatformModuleUpdater PlatformModuleUpdater => _platformModuleUpdater.Value;
 

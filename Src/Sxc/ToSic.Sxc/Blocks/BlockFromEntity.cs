@@ -22,11 +22,11 @@ namespace ToSic.Sxc.Blocks
         
         #region Constructor and DI
 
-        public BlockFromEntity(Dependencies dependencies, LazyInit<AppFinder> appFinderLazy) : base(dependencies, "CB.Ent")
+        public BlockFromEntity(Dependencies dependencies, LazySvc<AppFinder> appFinderLazy) : base(dependencies, "CB.Ent")
         {
             ConnectServices(_appFinderLazy = appFinderLazy);
         }
-        private readonly LazyInit<AppFinder> _appFinderLazy;
+        private readonly LazySvc<AppFinder> _appFinderLazy;
 
         public BlockFromEntity Init(IBlock parent, IEntity blockEntity, ILog parentLog)
         {

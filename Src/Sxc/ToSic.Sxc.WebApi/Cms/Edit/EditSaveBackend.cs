@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public EditSaveBackend(
             SxcPagePublishing pagePublishing, 
-            LazyInit<AppManager> appManagerLazy,
+            LazySvc<AppManager> appManagerLazy,
             IContextResolver ctxResolver,
             JsonSerializer jsonSerializer,
             SaveSecurity saveSecurity
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.WebApi.Cms
             );
         }
         private readonly SxcPagePublishing _pagePublishing;
-        private readonly LazyInit<AppManager> _appManagerLazy;
+        private readonly LazySvc<AppManager> _appManagerLazy;
         private readonly IContextResolver _ctxResolver;
 
         public EditSaveBackend Init(int appId)

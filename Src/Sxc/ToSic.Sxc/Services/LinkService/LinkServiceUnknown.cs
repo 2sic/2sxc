@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Services
         internal static string CurrentPageUrl = NiceCurrentUrl;
         internal static string AnyPageUrl = NiceAnyPageUrl;
 
-        public LinkServiceUnknown(ImgResizeLinker imgLinker, LazyInit<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> warn) : base(imgLinker, linkPathsLazy)
+        public LinkServiceUnknown(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> warn) : base(imgLinker, linkPathsLazy)
         {
         }
 

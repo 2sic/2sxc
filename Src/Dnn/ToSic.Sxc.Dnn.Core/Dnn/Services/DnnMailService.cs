@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Services
 {
     public class DnnMailService : MailServiceBase
     {
-        public DnnMailService(LazyInit<IUser> userLazy) : base(userLazy)
+        public DnnMailService(LazySvc<IUser> userLazy) : base(userLazy)
         { }
         
         protected override SmtpClient SmtpClient()

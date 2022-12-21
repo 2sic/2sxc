@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(LazyInit<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(LazySvc<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
         {
             ConnectServices(
                 _cmsRuntimeLazy = cmsRuntimeLazy,
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Run
                 _zoneMapper = zoneMapper
             );
         }
-        private readonly LazyInit<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly IZoneMapper _zoneMapper;

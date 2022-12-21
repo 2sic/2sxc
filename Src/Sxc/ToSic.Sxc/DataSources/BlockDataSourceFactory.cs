@@ -14,15 +14,15 @@ namespace ToSic.Sxc.DataSources
     {
         #region Constructor
 
-        public BlockDataSourceFactory(LazyInit<DataSourceFactory> dataSourceFactory, LazyInit<Query> queryLazy): base("Sxc.BDsFct")
+        public BlockDataSourceFactory(LazySvc<DataSourceFactory> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
         {
             ConnectServices(
                 _dataSourceFactory = dataSourceFactory,
                 _queryLazy = queryLazy
             );
         }
-        private readonly LazyInit<DataSourceFactory> _dataSourceFactory;
-        private readonly LazyInit<Query> _queryLazy;
+        private readonly LazySvc<DataSourceFactory> _dataSourceFactory;
+        private readonly LazySvc<Query> _queryLazy;
 
         #endregion
 

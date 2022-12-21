@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         #region DI Constructor
 
-        public DnnValueConverter(ISite site, LazyInit<IFeaturesService> featuresLazy, LazyInit<PageScopedService<ISite>> siteFromPageLazy): base(
+        public DnnValueConverter(ISite site, LazySvc<IFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy): base(
             $"{DnnConstants.LogName}.ValCnv")
         {
             ConnectServices(
@@ -37,8 +37,8 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         private readonly ISite _site;
-        private readonly LazyInit<IFeaturesService> _featuresLazy;
-        private readonly LazyInit<PageScopedService<ISite>> _siteFromPageLazy;
+        private readonly LazySvc<IFeaturesService> _featuresLazy;
+        private readonly LazySvc<PageScopedService<ISite>> _siteFromPageLazy;
         private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
 
         #endregion

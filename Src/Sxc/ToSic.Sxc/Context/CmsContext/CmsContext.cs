@@ -27,9 +27,9 @@ namespace ToSic.Sxc.Context
         public CmsContext(
             IPlatform platform, 
             IContextOfSite initialContext, 
-            LazyInit<IPage> pageLazy,
+            LazySvc<IPage> pageLazy,
             IAppStates appStates,
-            LazyInit<ICmsSite> cmsSiteLazy
+            LazySvc<ICmsSite> cmsSiteLazy
         ) : base(Constants.SxcLogName + ".CmsCtx")
         {
             ConnectServices(
@@ -41,13 +41,13 @@ namespace ToSic.Sxc.Context
             );
         }
         private readonly IContextOfSite _initialContext;
-        private readonly LazyInit<IPage> _pageLazy;
+        private readonly LazySvc<IPage> _pageLazy;
 
         internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? _initialContext);
         private readonly GetOnce<IContextOfSite> _ctxSite = new GetOnce<IContextOfSite>();
 
         private readonly IAppStates _appStates;
-        private readonly LazyInit<ICmsSite> _cmsSiteLazy;
+        private readonly LazySvc<ICmsSite> _cmsSiteLazy;
 
         ///// <summary>
         ///// System to extend the known context by more information if we're running inside a block

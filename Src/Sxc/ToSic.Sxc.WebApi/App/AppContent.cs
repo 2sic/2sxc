@@ -37,12 +37,12 @@ namespace ToSic.Sxc.WebApi.App
 
         public AppContent(Generator<Apps.App> app,
             EntityApi entityApi,
-            LazyInit<IConvertToEavLight> entToDicLazy,
+            LazySvc<IConvertToEavLight> entToDicLazy,
             IContextResolver ctxResolver,
             Generator<MultiPermissionsTypes> typesPermissions,
             Generator<MultiPermissionsItems> itemsPermissions,
-            LazyInit<AppManager> appManagerLazy,
-            LazyInit<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
+            LazySvc<AppManager> appManagerLazy,
+            LazySvc<SimpleDataController> dataControllerLazy) : base("Sxc.ApiApC")
         {
             ConnectServices(
                 _app = app,
@@ -57,10 +57,10 @@ namespace ToSic.Sxc.WebApi.App
         }
 
         private readonly EntityApi _entityApi;
-        private readonly LazyInit<IConvertToEavLight> _entToDicLazy;
+        private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
         private readonly IContextResolver _ctxResolver;
-        private readonly LazyInit<AppManager> _appManagerLazy;
-        private readonly LazyInit<SimpleDataController> _dataControllerLazy;
+        private readonly LazySvc<AppManager> _appManagerLazy;
+        private readonly LazySvc<SimpleDataController> _dataControllerLazy;
         private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState, showDrafts: false));
         private readonly GetOnce<AppManager> _appManager = new GetOnce<AppManager>();
 

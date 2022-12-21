@@ -11,13 +11,13 @@ namespace ToSic.Sxc.Edit.EditService
     public partial class EditService : HasLog, IEditService
     {
 
-        public EditService(IJsonService jsonService, LazyInit<IRenderingHelper> renderHelper) : base("Sxc.Edit")
+        public EditService(IJsonService jsonService, LazySvc<IRenderingHelper> renderHelper) : base("Sxc.Edit")
         {
             _jsonService = jsonService;
             _renderHelper = renderHelper.SetInit(h => h.Init(Block, Log));
         }
         private readonly IJsonService _jsonService;
-        private readonly LazyInit<IRenderingHelper> _renderHelper;
+        private readonly LazySvc<IRenderingHelper> _renderHelper;
 
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {

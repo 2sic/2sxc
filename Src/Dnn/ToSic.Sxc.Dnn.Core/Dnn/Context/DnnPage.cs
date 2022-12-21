@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Context
     /// </summary>
     public class DnnPage: Page
     {
-        public DnnPage(LazyInit<IHttp> httpLazy) : base(httpLazy)
+        public DnnPage(LazySvc<IHttp> httpLazy) : base(httpLazy)
         {
             InitPageIdAndUrl(PortalSettings.Current?.ActiveTab, null);
         }

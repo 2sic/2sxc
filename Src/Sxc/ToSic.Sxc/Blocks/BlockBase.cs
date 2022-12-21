@@ -23,11 +23,11 @@ namespace ToSic.Sxc.Blocks
         public class Dependencies: ServiceDependencies
         {
             public Dependencies(
-                LazyInit<BlockDataSourceFactory> bdsFactoryLazy,
-                LazyInit<App> appLazy,
-                LazyInit<AppConfigDelegate> appConfigDelegateLazy,
-                LazyInit<CmsRuntime> cmsLazy,
-                LazyInit<BlockBuilder> blockBuilder
+                LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
+                LazySvc<App> appLazy,
+                LazySvc<AppConfigDelegate> appConfigDelegateLazy,
+                LazySvc<CmsRuntime> cmsLazy,
+                LazySvc<BlockBuilder> blockBuilder
             ) => AddToLogQueue(
                 BdsFactoryLazy = bdsFactoryLazy,
                 AppLazy = appLazy,
@@ -36,11 +36,11 @@ namespace ToSic.Sxc.Blocks
                 BlockBuilder = blockBuilder
             );
 
-            internal LazyInit<BlockDataSourceFactory> BdsFactoryLazy { get; }
-            internal LazyInit<App> AppLazy { get; }
-            internal LazyInit<AppConfigDelegate> AppConfigDelegateLazy { get; }
-            internal LazyInit<CmsRuntime> CmsLazy { get; }
-            public LazyInit<BlockBuilder> BlockBuilder { get; }
+            internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; }
+            internal LazySvc<App> AppLazy { get; }
+            internal LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
+            internal LazySvc<CmsRuntime> CmsLazy { get; }
+            public LazySvc<BlockBuilder> BlockBuilder { get; }
         }
 
         protected BlockBase(Dependencies dependencies, string logName) : base(logName)

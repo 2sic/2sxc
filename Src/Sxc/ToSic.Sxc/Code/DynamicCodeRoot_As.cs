@@ -7,7 +7,6 @@ using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
 using ToSic.Sxc.Adam;

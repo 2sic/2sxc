@@ -16,8 +16,8 @@ namespace ToSic.Sxc.Data
     public class DynamicEntityDependencies: ServiceDependencies
     {
         public DynamicEntityDependencies(
-            LazyInit<IDataBuilder> dataBuilderLazy,
-            LazyInit<IValueConverter> valueConverterLazy,
+            LazySvc<IDataBuilder> dataBuilderLazy,
+            LazySvc<IValueConverter> valueConverterLazy,
             Generator<IRenderService> renderServiceGenerator)
         {
             _dataBuilderLazy = dataBuilderLazy;
@@ -48,11 +48,11 @@ namespace ToSic.Sxc.Data
         /// </summary>
         [PrivateApi]
         internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
-        private readonly LazyInit<IValueConverter> _valueConverterLazy;
+        private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
 
         internal IDataBuilder DataBuilder => _dataBuilderLazy.Value;
-        private readonly LazyInit<IDataBuilder> _dataBuilderLazy;
+        private readonly LazySvc<IDataBuilder> _dataBuilderLazy;
 
 
         internal IRenderService RenderService => _renderServiceGenerator.New();

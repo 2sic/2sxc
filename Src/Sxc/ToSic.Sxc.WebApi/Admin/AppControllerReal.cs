@@ -27,16 +27,16 @@ namespace ToSic.Sxc.WebApi.Admin
         public const string LogSuffix = "AppCon";
 
         public AppControllerReal(
-            LazyInit<AppsBackend> appsBackendLazy,
-            LazyInit<CmsZones> cmsZonesLazy,
-            LazyInit<ExportApp> exportAppLazy,
-            LazyInit<ImportApp> importAppLazy,
-            LazyInit<AppCreator> appBuilderLazy,
-            LazyInit<ResetApp> resetAppLazy,
-            LazyInit<SystemManager> systemManagerLazy,
-            LazyInit<LanguagesBackend> languagesBackendLazy,
-            LazyInit<IAppStates> appStatesLazy,
-            LazyInit<AppStackBackend> appStackBackendLazy
+            LazySvc<AppsBackend> appsBackendLazy,
+            LazySvc<CmsZones> cmsZonesLazy,
+            LazySvc<ExportApp> exportAppLazy,
+            LazySvc<ImportApp> importAppLazy,
+            LazySvc<AppCreator> appBuilderLazy,
+            LazySvc<ResetApp> resetAppLazy,
+            LazySvc<SystemManager> systemManagerLazy,
+            LazySvc<LanguagesBackend> languagesBackendLazy,
+            LazySvc<IAppStates> appStatesLazy,
+            LazySvc<AppStackBackend> appStackBackendLazy
             ) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
@@ -53,16 +53,16 @@ namespace ToSic.Sxc.WebApi.Admin
             );
         }
 
-        private readonly LazyInit<AppsBackend> _appsBackendLazy;
-        private readonly LazyInit<CmsZones> _cmsZonesLazy;
-        private readonly LazyInit<ExportApp> _exportAppLazy;
-        private readonly LazyInit<ImportApp> _importAppLazy;
-        private readonly LazyInit<AppCreator> _appBuilderLazy;
-        private readonly LazyInit<ResetApp> _resetAppLazy;
-        private readonly LazyInit<SystemManager> _systemManagerLazy;
-        private readonly LazyInit<LanguagesBackend> _languagesBackendLazy;
-        private readonly LazyInit<IAppStates> _appStatesLazy;
-        private readonly LazyInit<AppStackBackend> _appStackBackendLazy;
+        private readonly LazySvc<AppsBackend> _appsBackendLazy;
+        private readonly LazySvc<CmsZones> _cmsZonesLazy;
+        private readonly LazySvc<ExportApp> _exportAppLazy;
+        private readonly LazySvc<ImportApp> _importAppLazy;
+        private readonly LazySvc<AppCreator> _appBuilderLazy;
+        private readonly LazySvc<ResetApp> _resetAppLazy;
+        private readonly LazySvc<SystemManager> _systemManagerLazy;
+        private readonly LazySvc<LanguagesBackend> _languagesBackendLazy;
+        private readonly LazySvc<IAppStates> _appStatesLazy;
+        private readonly LazySvc<AppStackBackend> _appStackBackendLazy;
 
 
         public List<AppDto> List(int zoneId) => _appsBackendLazy.Value.Apps();

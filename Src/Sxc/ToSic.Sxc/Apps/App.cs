@@ -28,9 +28,9 @@ namespace ToSic.Sxc.Apps
         #region DI Constructors
         [PrivateApi]
         public App(AppDependencies dependencies, 
-            LazyInit<GlobalPaths> globalPaths, 
-            LazyInit<AppPaths> appPathsLazy, 
-            LazyInit<DynamicEntityDependencies> dynamicEntityDependenciesLazy,
+            LazySvc<GlobalPaths> globalPaths, 
+            LazySvc<AppPaths> appPathsLazy, 
+            LazySvc<DynamicEntityDependencies> dynamicEntityDependenciesLazy,
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate) 
             : base(dependencies, "App.SxcApp")
@@ -45,9 +45,9 @@ namespace ToSic.Sxc.Apps
         }
 
         //private readonly IServiceProvider _serviceProvider;
-        private readonly LazyInit<GlobalPaths> _globalPaths;
-        private readonly LazyInit<AppPaths> _appPathsLazy;
-        private readonly LazyInit<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
+        private readonly LazySvc<GlobalPaths> _globalPaths;
+        private readonly LazySvc<AppPaths> _appPathsLazy;
+        private readonly LazySvc<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
