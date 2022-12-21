@@ -41,6 +41,12 @@ namespace ToSic.Sxc.Code
             var call = _contents.Fn<T>(parameters, message, useTimer, CodeRef.Create( cPath, cName, cLine));
             return (data, finalMsg) => call.Return(data, finalMsg);
         }
+
+        public bool Preserve
+        {
+            get => (_contents as Log)?.Preserve ?? false; // default to false if there is no log
+            set { if (_contents is Log log) log.Preserve = value; }
+        }
     }
 }
 

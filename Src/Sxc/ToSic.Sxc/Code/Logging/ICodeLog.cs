@@ -97,5 +97,17 @@ namespace ToSic.Sxc.Code
             [CallerMemberName] string cName = null,
             [CallerLineNumber] int cLine = 0
         );
+
+        /// <summary>
+        /// Determines if this log should be preserved in the short term.
+        /// Like for live-analytics / live-insights.
+        /// Default is true.
+        ///
+        /// In scenarios like search-indexing it will default to false.
+        /// You can then do `Log.Preserve = true;` to temporarily activate it while debugging.
+        /// </summary>
+        [PrivateApi]
+        bool Preserve { get; set; }
+
     }
 }

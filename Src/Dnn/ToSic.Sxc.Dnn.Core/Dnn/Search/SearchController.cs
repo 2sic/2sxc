@@ -143,7 +143,8 @@ namespace ToSic.Sxc.Search
         public IList<SearchDocument> GetModifiedSearchDocuments(IModule module, DateTime beginDate)
         {
             // Turn off logging into history by default - the template code can reactivate this if desired
-            Log.Preserve = false;
+            var logWithPreserve = Log as Log;
+            if (logWithPreserve != null) logWithPreserve.Preserve = false;
             
             // Log with infos, to ensure errors are caught
             var wrapLog = Log.Fn<IList<SearchDocument>>();
@@ -192,7 +193,7 @@ namespace ToSic.Sxc.Search
 
             // At the of the code, add it to insights / history. This must happen at the end.
             // It will only be preserved, if the inner code ran a Log.Preserve = true;
-            if (Log.Preserve)
+            if (logWithPreserve?.Preserve ?? false)
                 _logStore.Value.Add("dnn-search", Log);
 
             // reduce load by only keeping recently modified items
