@@ -5,22 +5,25 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppsManager: ZonePartRuntimeBase //</*ZoneRuntime,*/ AppsManager>
+    public class AppsManager: ZonePartRuntimeBase 
     {
         #region Constructor / DI
 
-        public AppsManager(Lazy<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
+        public AppsManager(LazyInit<ZoneManager> zoneManagerLazy, IAppStates appStates, ISite site, AppPaths appPaths) : base("Cms.AppsRt")
         {
-            _zoneManagerLazy = zoneManagerLazy;
-            _appStates = appStates;
-            _site = site;
-            _appPaths = appPaths;
+            ConnectServices(
+                _zoneManagerLazy = zoneManagerLazy,
+                _appStates = appStates,
+                _site = site,
+                _appPaths = appPaths
+            );
         }
-        private readonly Lazy<ZoneManager> _zoneManagerLazy;
+        private readonly LazyInit<ZoneManager> _zoneManagerLazy;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly AppPaths _appPaths;

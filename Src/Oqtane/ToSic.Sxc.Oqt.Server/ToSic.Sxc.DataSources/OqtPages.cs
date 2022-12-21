@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
@@ -32,9 +33,9 @@ namespace ToSic.Sxc.DataSources
         private readonly SiteState _siteState;
         private readonly IUserPermissions _userPermissions;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+        private readonly ILazyLike<ILinkPaths> _linkPathsLazy;
 
-        public OqtPages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, Lazy<ILinkPaths> linkPathsLazy)
+        public OqtPages(IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, LazyInit<ILinkPaths> linkPathsLazy)
         {
             _pages = pages;
             _siteState = siteState;

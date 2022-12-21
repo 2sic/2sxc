@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <param name="block"></param>
         /// <param name="appFolderInitializerLazy"></param>
         /// <param name="log"></param>
-        public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy, ILog log)
+        public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, ILazyLike<AppFolderInitializer> appFolderInitializerLazy, ILog log)
         {
             var wrapLog = log.Fn(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
             if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Verify that the portal is ready, otherwise show a good error
         /// </summary>
-        private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
+        private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block, ILazyLike<AppFolderInitializer> appFolderInitializerLazy)
         {
             var timerWrap = Log.Fn<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", startTimer: true);
 
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block, Lazy<AppFolderInitializer> appFolderInitializerLazy)
+        private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block, ILazyLike<AppFolderInitializer> appFolderInitializerLazy)
         {
             var wrapLog = Log.Fn<bool>($"AppId: {block.AppId}");
 

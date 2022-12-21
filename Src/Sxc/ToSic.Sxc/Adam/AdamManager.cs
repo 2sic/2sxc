@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Adam
     {
         #region Constructor for inheritance
 
-        protected AdamManager(LazyInit<AppRuntime> appRuntimeLazy, Lazy<AdamMetadataMaker> metadataMakerLazy, AdamConfiguration adamConfiguration, string logName) : base(logName ?? "Adm.Managr")
+        protected AdamManager(LazyInit<AppRuntime> appRuntimeLazy, LazyInit<AdamMetadataMaker> metadataMakerLazy, AdamConfiguration adamConfiguration, string logName) : base(logName ?? "Adm.Managr")
         {
             ConnectServices(
                 _appRuntimeLazy = appRuntimeLazy,
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Adam
         }
         
         public AdamMetadataMaker MetadataMaker => _metadataMakerLazy.Value;
-        private readonly Lazy<AdamMetadataMaker> _metadataMakerLazy;
+        private readonly LazyInit<AdamMetadataMaker> _metadataMakerLazy;
         private readonly AdamConfiguration _adamConfiguration;
 
         public AppRuntime AppRuntime => _appRuntimeLazy.Value;

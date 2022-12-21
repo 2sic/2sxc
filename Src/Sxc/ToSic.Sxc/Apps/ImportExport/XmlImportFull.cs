@@ -5,22 +5,25 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.ImportExport;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Repositories;
+using ToSic.Lib.DI;
 
 namespace ToSic.Sxc.Apps.ImportExport
 {
     public partial class XmlImportFull: XmlImportWithFiles
     {
-        private readonly Lazy<CmsManager> _cmsManagerLazy;
+        private readonly LazyInit<CmsManager> _cmsManagerLazy;
         private readonly IRepositoryLoader _repositoryLoader;
 
         public XmlImportFull(
             Dependencies dependencies,
-            Lazy<CmsManager> cmsManagerLazy,
+            LazyInit<CmsManager> cmsManagerLazy,
             IRepositoryLoader repositoryLoader
             ) : base(dependencies, "Sxc.XmlImp")
         {
-            _cmsManagerLazy = cmsManagerLazy;
-            _repositoryLoader = repositoryLoader.Init(Log);
+            ConnectServices(
+                _cmsManagerLazy = cmsManagerLazy,
+                _repositoryLoader = repositoryLoader
+            );
         }
 
         public new bool ImportXml(int zoneId, int appId, XDocument doc, bool leaveExistingValuesUntouched = true)

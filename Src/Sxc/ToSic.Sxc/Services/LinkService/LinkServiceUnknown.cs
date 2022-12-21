@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.Run;
@@ -34,7 +35,7 @@ namespace ToSic.Sxc.Services
         internal static string CurrentPageUrl = NiceCurrentUrl;
         internal static string AnyPageUrl = NiceAnyPageUrl;
 
-        public LinkServiceUnknown(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> warn) : base(imgLinker, linkPathsLazy)
+        public LinkServiceUnknown(ImgResizeLinker imgLinker, LazyInit<ILinkPaths> linkPathsLazy, WarnUseOfUnknown<LinkServiceUnknown> warn) : base(imgLinker, linkPathsLazy)
         {
         }
 

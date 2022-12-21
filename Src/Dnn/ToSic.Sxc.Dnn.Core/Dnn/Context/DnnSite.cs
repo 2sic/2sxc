@@ -9,6 +9,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 
@@ -26,14 +27,16 @@ namespace ToSic.Sxc.Dnn.Context
         /// DI Constructor, will get the current portal settings
         /// #TodoDI not ideal yet, as PortalSettings.current is still retrieved from global
         /// </summary>
-        public DnnSite(Lazy<IZoneMapper> zoneMapperLazy, Lazy<ILinkPaths> linkPathsLazy): base(DnnConstants.LogName)
+        public DnnSite(LazyInit<IZoneMapper> zoneMapperLazy, LazyInit<ILinkPaths> linkPathsLazy): base(DnnConstants.LogName)
         {
-            _zoneMapperLazy = zoneMapperLazy;
-            _linkPathsLazy = linkPathsLazy;
+            this.ConnectServices(
+                _zoneMapperLazy = zoneMapperLazy,
+                _linkPathsLazy = linkPathsLazy
+            );
             Swap(null, null);
         }
-        private readonly Lazy<IZoneMapper> _zoneMapperLazy;
-        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+        private readonly ILazyLike<IZoneMapper> _zoneMapperLazy;
+        private readonly ILazyLike<ILinkPaths> _linkPathsLazy;
         private ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         /// <inheritdoc />

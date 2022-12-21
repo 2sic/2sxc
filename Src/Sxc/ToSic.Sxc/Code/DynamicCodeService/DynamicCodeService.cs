@@ -25,12 +25,12 @@ namespace ToSic.Sxc.Code
         {
             public Dependencies(
                 IServiceProvider serviceProvider,
-                Lazy<ILogStore> logStore,
-                Lazy<IUser> user,
+                LazyInit<ILogStore> logStore,
+                LazyInit<IUser> user,
                 // Dependencies to get primary app
-                Lazy<ISite> site,
-                Lazy<IZoneMapper> zoneMapper,
-                Lazy<IAppStates> appStates
+                LazyInit<ISite> site,
+                LazyInit<IZoneMapper> zoneMapper,
+                LazyInit<IAppStates> appStates
             ) => AddToLogQueue(
                 ServiceProvider = serviceProvider,
                 LogStore = logStore,
@@ -41,11 +41,11 @@ namespace ToSic.Sxc.Code
             );
 
             internal IServiceProvider ServiceProvider { get; }
-            public Lazy<ILogStore> LogStore { get; }
-            public Lazy<IUser> User { get; }
-            public Lazy<ISite> Site { get; }
-            public Lazy<IZoneMapper> ZoneMapper { get; }
-            public Lazy<IAppStates> AppStates { get; }
+            public LazyInit<ILogStore> LogStore { get; }
+            public LazyInit<IUser> User { get; }
+            public LazyInit<ISite> Site { get; }
+            public LazyInit<IZoneMapper> ZoneMapper { get; }
+            public LazyInit<IAppStates> AppStates { get; }
         }
 
         public class ScopedDependencies: ServiceDependencies

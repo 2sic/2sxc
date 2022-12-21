@@ -4,6 +4,8 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using static System.StringComparison;
 using static ToSic.Eav.Apps.AppConstants;
@@ -11,12 +13,17 @@ using static ToSic.Eav.Apps.AppConstants;
 namespace ToSic.Sxc.Apps.Paths
 {
 
-    public class AppIconHelpers : HasLog
+    public class AppIconHelpers : ServiceBase
     {
         #region Constructor / DI
 
-        public AppIconHelpers(Lazy<IValueConverter> iconConverterLazy): base("Viw.Help") => _iconConverterLazy = iconConverterLazy;
-        private readonly Lazy<IValueConverter> _iconConverterLazy;
+        public AppIconHelpers(LazyInit<IValueConverter> iconConverterLazy): base("Viw.Help")
+        {
+            ConnectServices(
+                _iconConverterLazy = iconConverterLazy
+            );
+        }
+        private readonly LazyInit<IValueConverter> _iconConverterLazy;
 
         #endregion
         

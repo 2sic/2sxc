@@ -1,9 +1,8 @@
-﻿using System;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
 
@@ -14,9 +13,12 @@ namespace ToSic.Sxc.Data
     /// They are needed for language lookups and creating inner lists of other entities
     /// </summary>
     [PrivateApi("this should all stay internal and never be public")]
-    public class DynamicEntityDependencies
+    public class DynamicEntityDependencies: ServiceDependencies
     {
-        public DynamicEntityDependencies(Lazy<IDataBuilder> dataBuilderLazy, Lazy<IValueConverter> valueConverterLazy, Generator<Services.IRenderService> renderServiceGenerator)
+        public DynamicEntityDependencies(
+            LazyInit<IDataBuilder> dataBuilderLazy,
+            LazyInit<IValueConverter> valueConverterLazy,
+            Generator<IRenderService> renderServiceGenerator)
         {
             _dataBuilderLazy = dataBuilderLazy;
             _valueConverterLazy = valueConverterLazy;
@@ -46,11 +48,11 @@ namespace ToSic.Sxc.Data
         /// </summary>
         [PrivateApi]
         internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
-        private readonly Lazy<IValueConverter> _valueConverterLazy;
+        private readonly LazyInit<IValueConverter> _valueConverterLazy;
 
 
         internal IDataBuilder DataBuilder => _dataBuilderLazy.Value;
-        private readonly Lazy<IDataBuilder> _dataBuilderLazy;
+        private readonly LazyInit<IDataBuilder> _dataBuilderLazy;
 
 
         internal IRenderService RenderService => _renderServiceGenerator.New();

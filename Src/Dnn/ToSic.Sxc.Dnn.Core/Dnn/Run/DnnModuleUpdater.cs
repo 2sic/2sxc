@@ -9,6 +9,8 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -17,7 +19,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public class DnnModuleUpdater : HasLog, IPlatformModuleUpdater
+    public class DnnModuleUpdater : ServiceBase, IPlatformModuleUpdater
     {
         #region Constructor and DI
 
@@ -25,14 +27,16 @@ namespace ToSic.Sxc.Dnn.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public DnnModuleUpdater(Lazy<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
+        public DnnModuleUpdater(LazyInit<CmsRuntime> cmsRuntimeLazy, IZoneMapper zoneMapper, IAppStates appStates, ISite site) : base("Dnn.MapA2I")
         {
-            _cmsRuntimeLazy = cmsRuntimeLazy;
-            _appStates = appStates;
-            _site = site;
-            _zoneMapper = zoneMapper.Init(Log);
+            ConnectServices(
+                _cmsRuntimeLazy = cmsRuntimeLazy,
+                _appStates = appStates,
+                _site = site,
+                _zoneMapper = zoneMapper
+            );
         }
-        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazyInit<CmsRuntime> _cmsRuntimeLazy;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
         private readonly IZoneMapper _zoneMapper;

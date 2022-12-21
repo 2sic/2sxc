@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -30,8 +31,8 @@ namespace ToSic.Sxc.DataSources
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSourceBase
     {
-        private readonly Lazy<CmsRuntime> _lazyCmsRuntime;
-        private readonly Lazy<IModule> _moduleLazy;
+        private readonly ILazyLike<CmsRuntime> _lazyCmsRuntime;
+        private readonly ILazyLike<IModule> _moduleLazy;
 
         /// <inheritdoc />
         public override string LogId => "Sxc.CmsBDs";
@@ -61,10 +62,12 @@ namespace ToSic.Sxc.DataSources
         }
 
 
-        public CmsBlock(Lazy<CmsRuntime> lazyCmsRuntime, Lazy<IModule> moduleLazy)
+        public CmsBlock(LazyInit<CmsRuntime> lazyCmsRuntime, LazyInit<IModule> moduleLazy)
         {
-            _lazyCmsRuntime = lazyCmsRuntime;
-            _moduleLazy = moduleLazy;
+            ConnectServices(
+                _lazyCmsRuntime = lazyCmsRuntime,
+                _moduleLazy = moduleLazy
+            );
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);

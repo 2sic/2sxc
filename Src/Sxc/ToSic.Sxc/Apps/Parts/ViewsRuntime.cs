@@ -22,13 +22,13 @@ namespace ToSic.Sxc.Apps
 
         #region Constructor / DI
 
-        private readonly Lazy<IValueConverter> _valConverterLazy;
+        private readonly LazyInit<IValueConverter> _valConverterLazy;
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
         private readonly LazyInit<AppIconHelpers> _appIconHelpers;
         private readonly DataSourceFactory _dataSourceFactory;
 
-        public ViewsRuntime(Lazy<IValueConverter> valConverterLazy,
+        public ViewsRuntime(LazyInit<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
             IConvertToEavLight dataToFormatLight,
             LazyInit<AppIconHelpers> appIconHelpers,

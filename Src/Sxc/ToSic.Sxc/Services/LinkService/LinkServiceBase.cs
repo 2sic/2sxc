@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
@@ -14,14 +15,14 @@ namespace ToSic.Sxc.Services
     [PrivateApi]
     public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     {
-        protected LinkServiceBase(ImgResizeLinker imgLinker, Lazy<ILinkPaths> linkPathsLazy) : base(
+        protected LinkServiceBase(ImgResizeLinker imgLinker, LazyInit<ILinkPaths> linkPathsLazy) : base(
             $"{Constants.SxcLogName}.LnkHlp")
             => ConnectServices(
                 _linkPathsLazy = linkPathsLazy,
                 ImgLinker = imgLinker
             );
         private ImgResizeLinker ImgLinker { get; }
-        private readonly Lazy<ILinkPaths> _linkPathsLazy;
+        private readonly LazyInit<ILinkPaths> _linkPathsLazy;
         public ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         [PrivateApi] protected IApp App => _DynCodeRoot.App;

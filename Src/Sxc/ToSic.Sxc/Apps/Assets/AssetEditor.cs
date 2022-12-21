@@ -5,34 +5,38 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps.Assets
 {
-    public class AssetEditor : HasLog
+    public class AssetEditor : ServiceBase
     {
         #region Constructor / DI
 
         private AssetEditInfo EditInfo { get; set; }
 
-        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazyInit<CmsRuntime> _cmsRuntimeLazy;
         private readonly IUser _user;
-        private readonly Lazy<AppFolderInitializer> _appFolderInitializer;
+        private readonly LazyInit<AppFolderInitializer> _appFolderInitializer;
         private readonly ISite _site;
         private readonly AppPaths _appPaths;
         private CmsRuntime _cmsRuntime;
         private AppState _appState;
 
-        public AssetEditor(Lazy<CmsRuntime> cmsRuntimeLazy, IUser user, Lazy<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
+        public AssetEditor(LazyInit<CmsRuntime> cmsRuntimeLazy, IUser user, LazyInit<AppFolderInitializer> appFolderInitializer, ISite site, AppPaths appPaths) : base("Sxc.AstEdt")
         {
-            _cmsRuntimeLazy = cmsRuntimeLazy;
-            _user = user;
-            _appFolderInitializer = appFolderInitializer;
-            _site = site;
-            _appPaths = appPaths;
+            ConnectServices(
+                _cmsRuntimeLazy = cmsRuntimeLazy,
+                _user = user,
+                _appFolderInitializer = appFolderInitializer,
+                _site = site,
+                _appPaths = appPaths
+            );
         }
 
         // TODO: REMOVE THIS once we release v13 #cleanUp EOY 2021

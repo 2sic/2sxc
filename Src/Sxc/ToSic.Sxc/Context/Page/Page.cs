@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Context.Query;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.Parameters;
@@ -12,8 +13,8 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public Page(Lazy<IHttp> httpLazy) => _httpLazy = httpLazy;
-        private readonly Lazy<IHttp> _httpLazy;
+        public Page(LazyInit<IHttp> httpLazy) => _httpLazy = httpLazy;
+        private readonly LazyInit<IHttp> _httpLazy;
 
         #endregion
 

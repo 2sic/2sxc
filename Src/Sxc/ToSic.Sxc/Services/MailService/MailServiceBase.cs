@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
@@ -21,11 +22,13 @@ namespace ToSic.Sxc.Services
 
         [PrivateApi] protected IApp App;
 
-        private readonly Lazy<IUser> _userLazy;
+        private readonly LazyInit<IUser> _userLazy;
 
-        protected MailServiceBase(Lazy<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
-        { 
-            _userLazy = userLazy;
+        protected MailServiceBase(LazyInit<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
+        {
+            ConnectServices(
+                _userLazy = userLazy
+            );
         }
 
         /// <inheritdoc />

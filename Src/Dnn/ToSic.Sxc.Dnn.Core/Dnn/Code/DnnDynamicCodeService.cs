@@ -21,13 +21,13 @@ namespace ToSic.Sxc.Dnn.Code
     {
         public new class ScopedDependencies: ServiceDependencies
         {
-            public Lazy<PageServiceShared> PageServiceShared { get; }
+            public LazyInit<PageServiceShared> PageServiceShared { get; }
             public LazyInit<PageChangeSummary> PageChangeSummary { get; }
             public LazyInit<DnnPageChanges> DnnPageChanges { get; }
             public LazyInit<DnnClientResources> DnnClientResources { get; }
 
             public ScopedDependencies(
-                Lazy<PageServiceShared> pageServiceShared,
+                LazyInit<PageServiceShared> pageServiceShared,
                 LazyInit<PageChangeSummary> pageChangeSummary,
                 LazyInit<DnnPageChanges> dnnPageChanges,
                 LazyInit<DnnClientResources> dnnClientResources
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn.Code
         }
 
         private readonly ScopedDependencies _scopedDeps;
-        private readonly Lazy<IUser> _user;
+        private readonly LazyInit<IUser> _user;
 
 
         private void Page_PreRender(object sender, EventArgs e)

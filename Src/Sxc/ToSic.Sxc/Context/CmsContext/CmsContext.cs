@@ -1,7 +1,6 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
 using ToSic.Sxc.Blocks;
@@ -28,25 +27,27 @@ namespace ToSic.Sxc.Context
         public CmsContext(
             IPlatform platform, 
             IContextOfSite initialContext, 
-            Lazy<IPage> pageLazy,
+            LazyInit<IPage> pageLazy,
             IAppStates appStates,
-            Lazy<ICmsSite> cmsSiteLazy
+            LazyInit<ICmsSite> cmsSiteLazy
         ) : base(Constants.SxcLogName + ".CmsCtx")
         {
-            _initialContext = initialContext;
-            _pageLazy = pageLazy;
-            _appStates = appStates;
-            _cmsSiteLazy = cmsSiteLazy;
-            Platform = platform;
+            ConnectServices(
+                _initialContext = initialContext,
+                _pageLazy = pageLazy,
+                _appStates = appStates,
+                _cmsSiteLazy = cmsSiteLazy,
+                Platform = platform
+            );
         }
         private readonly IContextOfSite _initialContext;
-        private readonly Lazy<IPage> _pageLazy;
+        private readonly LazyInit<IPage> _pageLazy;
 
         internal IContextOfSite CtxSite => _ctxSite.Get(() => CtxBlockOrNull ?? _initialContext);
         private readonly GetOnce<IContextOfSite> _ctxSite = new GetOnce<IContextOfSite>();
 
         private readonly IAppStates _appStates;
-        private readonly Lazy<ICmsSite> _cmsSiteLazy;
+        private readonly LazyInit<ICmsSite> _cmsSiteLazy;
 
         ///// <summary>
         ///// System to extend the known context by more information if we're running inside a block

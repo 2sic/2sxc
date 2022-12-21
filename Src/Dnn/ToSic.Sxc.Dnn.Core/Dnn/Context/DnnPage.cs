@@ -2,6 +2,7 @@
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Helpers;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Web;
 
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Context
     /// </summary>
     public class DnnPage: Page
     {
-        public DnnPage(Lazy<IHttp> httpLazy) : base(httpLazy)
+        public DnnPage(LazyInit<IHttp> httpLazy) : base(httpLazy)
         {
             InitPageIdAndUrl(PortalSettings.Current?.ActiveTab, null);
         }

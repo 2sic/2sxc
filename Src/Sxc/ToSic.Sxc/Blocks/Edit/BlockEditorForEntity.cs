@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Lib.Logging;
 
@@ -9,11 +10,13 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     public class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(BlockEditorBaseDependencies dependencies, Lazy<CmsManager> parentBlockManagerLazy, IAppStates appStates) 
+        public BlockEditorForEntity(BlockEditorBaseDependencies dependencies, LazyInit<CmsManager> parentBlockManagerLazy, IAppStates appStates) 
             : base(dependencies)
         {
-            _parentBlockManagerLazy = parentBlockManagerLazy;
-            _appStates = appStates;
+            ConnectServices(
+                _parentBlockManagerLazy = parentBlockManagerLazy,
+                _appStates = appStates
+            );
         }
 
         #region methods which the entity-implementation must customize 
@@ -60,7 +63,7 @@ namespace ToSic.Sxc.Blocks.Edit
         protected AppManager ParentBlockAppManager() =>
             _appManager ?? (_appManager = _parentBlockManagerLazy.Value.Init(Log).Init(((BlockBase)Block).Parent.App));
         private AppManager _appManager;
-        private readonly Lazy<CmsManager> _parentBlockManagerLazy;
+        private readonly LazyInit<CmsManager> _parentBlockManagerLazy;
         private readonly IAppStates _appStates;
 
         #endregion

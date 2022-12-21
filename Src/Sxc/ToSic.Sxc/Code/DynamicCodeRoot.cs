@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Code
         {
             public Dependencies(
                 IServiceProvider serviceProvider,
-                Lazy<CodeCompiler> codeCompilerLazy,
+                LazyInit<CodeCompiler> codeCompilerLazy,
                 AppSettingsStack settingsStack
             ) => AddToLogQueue(
                 ServiceProvider = serviceProvider,
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Code
             );
 
             internal IServiceProvider ServiceProvider { get; }
-            public Lazy<CodeCompiler> CodeCompilerLazy { get; }
+            public LazyInit<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
 
         }

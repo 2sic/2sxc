@@ -30,12 +30,12 @@ namespace ToSic.Sxc.Blocks
             public Generator<IEditService> EditGenerator { get; }
             public LazyInit<IModuleAndBlockBuilder> Builder { get; }
             public Generator<BlockFromEntity> BlkFrmEntGen { get; }
-            public Lazy<ILogStore> LogStore { get; }
+            public LazyInit<ILogStore> LogStore { get; }
 
             public Dependencies(Generator<IEditService> editGenerator,
                 LazyInit<IModuleAndBlockBuilder> builder,
                 Generator<BlockFromEntity> blkFrmEntGen,
-                Lazy<ILogStore> logStore
+                LazyInit<ILogStore> logStore
             ) => AddToLogQueue(
                 EditGenerator = editGenerator,
                 Builder = builder,

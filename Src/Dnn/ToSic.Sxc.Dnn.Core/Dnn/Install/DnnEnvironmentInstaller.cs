@@ -6,14 +6,16 @@ using System.IO;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Run;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install
 {
-    public partial class DnnEnvironmentInstaller: HasLog, IEnvironmentInstaller
+    public partial class DnnEnvironmentInstaller: ServiceBase, IEnvironmentInstaller
     {
         public static bool SaveUnimportantDetails = true;
 
@@ -22,23 +24,25 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         public DnnEnvironmentInstaller(ILogStore logStore, 
             DnnInstallLogger installLogger, 
-            Lazy<IAppStates> appStatesLazy, 
-            Lazy<CmsRuntime> cmsRuntimeLazy, 
-            Lazy<RemoteRouterLink> remoteRouterLazy,
-            Lazy<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
+            LazyInit<IAppStates> appStatesLazy, 
+            LazyInit<CmsRuntime> cmsRuntimeLazy, 
+            LazyInit<RemoteRouterLink> remoteRouterLazy,
+            LazyInit<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
         {
             logStore.Add(LogNames.LogHistoryGlobalInstallation, Log);
-            _installLogger = installLogger;
-            _appStatesLazy = appStatesLazy;
-            _cmsRuntimeLazy = cmsRuntimeLazy;
-            _remoteRouterLazy = remoteRouterLazy;
-            _globalConfiguration = globalConfiguration;
+            ConnectServices(
+                _installLogger = installLogger,
+                _appStatesLazy = appStatesLazy,
+                _cmsRuntimeLazy = cmsRuntimeLazy,
+                _remoteRouterLazy = remoteRouterLazy,
+                _globalConfiguration = globalConfiguration
+            );
         }
         private readonly DnnInstallLogger _installLogger;
-        private readonly Lazy<IAppStates> _appStatesLazy;
-        private readonly Lazy<CmsRuntime> _cmsRuntimeLazy;
-        private readonly Lazy<RemoteRouterLink> _remoteRouterLazy;
-        private readonly Lazy<IGlobalConfiguration> _globalConfiguration;
+        private readonly ILazyLike<IAppStates> _appStatesLazy;
+        private readonly ILazyLike<CmsRuntime> _cmsRuntimeLazy;
+        private readonly ILazyLike<RemoteRouterLink> _remoteRouterLazy;
+        private readonly ILazyLike<IGlobalConfiguration> _globalConfiguration;
 
         internal string UpgradeModule(string version)
         {

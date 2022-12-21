@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
@@ -9,11 +10,13 @@ namespace ToSic.Sxc.Adam
     public class AdamContext<TFolderId, TFileId>: AdamContext
     {
         internal AdamManager<TFolderId, TFileId> AdamManager => _adamManagerLazy.Value;
-        private readonly Lazy<AdamManager<TFolderId, TFileId>> _adamManagerLazy;
+        private readonly LazyInit<AdamManager<TFolderId, TFileId>> _adamManagerLazy;
 
-        public AdamContext(Lazy<AdamManager<TFolderId, TFileId>> adamManagerLazy, IServiceProvider serviceProvider, Dependencies dependencies): base(serviceProvider, dependencies, "Adm.CtxTT")
+        public AdamContext(LazyInit<AdamManager<TFolderId, TFileId>> adamManagerLazy, IServiceProvider serviceProvider, Dependencies dependencies): base(serviceProvider, dependencies, "Adm.CtxTT")
         {
-            _adamManagerLazy = adamManagerLazy;
+            ConnectServices(
+                _adamManagerLazy = adamManagerLazy
+            );
         }
 
         internal AdamStorage<TFolderId, TFileId> AdamRoot;

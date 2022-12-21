@@ -175,13 +175,19 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
         private static void AddToInsightsHistory(IServiceProvider sp, string url, ILog log)
         {
-            var addToHistory = true;
+            // 2022-12-21 ATM we seem to have an error adding this - must review later
+            // TODO:
+            try
+            {
+                var addToHistory = true;
 #pragma warning disable CS0162
-            if (InsightsController.InsightsLoggingEnabled)
-                addToHistory = (url?.Contains(InsightsController.InsightsUrlFragment) ?? false);
+                if (InsightsController.InsightsLoggingEnabled)
+                    addToHistory = (url?.Contains(InsightsController.InsightsUrlFragment) ?? false);
 #pragma warning restore CS0162
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (addToHistory) sp.Build<ILogStore>().Add("http-request", log);
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (addToHistory) sp.Build<ILogStore>().Add("http-request", log);
+            }
+            catch { /* ignore */ }
         }
     }
 }

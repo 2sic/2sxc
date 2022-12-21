@@ -10,6 +10,7 @@ using DotNetNuke.Services.Localization;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Plumbing;
 
@@ -25,16 +26,19 @@ namespace ToSic.Sxc.Dnn.Run
 
         #region DI Constructor
 
-        public DnnValueConverter(ISite site, Lazy<IFeaturesService> featuresLazy, Lazy<PageScopedService<ISite>> siteFromPageLazy)
+        public DnnValueConverter(ISite site, LazyInit<IFeaturesService> featuresLazy, LazyInit<PageScopedService<ISite>> siteFromPageLazy): base(
+            $"{DnnConstants.LogName}.ValCnv")
         {
-            _site = site;
-            _featuresLazy = featuresLazy;
-            _siteFromPageLazy = siteFromPageLazy;
+            ConnectServices(
+                _site = site,
+                _featuresLazy = featuresLazy,
+                _siteFromPageLazy = siteFromPageLazy
+            );
         }
 
         private readonly ISite _site;
-        private readonly Lazy<IFeaturesService> _featuresLazy;
-        private readonly Lazy<PageScopedService<ISite>> _siteFromPageLazy;
+        private readonly LazyInit<IFeaturesService> _featuresLazy;
+        private readonly LazyInit<PageScopedService<ISite>> _siteFromPageLazy;
         private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
 
         #endregion

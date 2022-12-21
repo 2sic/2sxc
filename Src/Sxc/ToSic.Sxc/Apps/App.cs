@@ -28,24 +28,26 @@ namespace ToSic.Sxc.Apps
         #region DI Constructors
         [PrivateApi]
         public App(AppDependencies dependencies, 
-            Lazy<GlobalPaths> globalPaths, 
-            Lazy<AppPaths> appPathsLazy, 
-            Lazy<DynamicEntityDependencies> dynamicEntityDependenciesLazy,
+            LazyInit<GlobalPaths> globalPaths, 
+            LazyInit<AppPaths> appPathsLazy, 
+            LazyInit<DynamicEntityDependencies> dynamicEntityDependenciesLazy,
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate) 
             : base(dependencies, "App.SxcApp")
         {
-            _globalPaths = globalPaths;
-            _appPathsLazy = appPathsLazy;
-            _dynamicEntityDependenciesLazy = dynamicEntityDependenciesLazy;
-            _appStates = appStates;
-            _appConfigDelegate = appConfigDelegate.Init(Log);
+            this.ConnectServices(
+                _globalPaths = globalPaths,
+                _appPathsLazy = appPathsLazy,
+                _dynamicEntityDependenciesLazy = dynamicEntityDependenciesLazy,
+                _appStates = appStates,
+                _appConfigDelegate = appConfigDelegate
+            );
         }
 
         //private readonly IServiceProvider _serviceProvider;
-        private readonly Lazy<GlobalPaths> _globalPaths;
-        private readonly Lazy<AppPaths> _appPathsLazy;
-        private readonly Lazy<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
+        private readonly LazyInit<GlobalPaths> _globalPaths;
+        private readonly LazyInit<AppPaths> _appPathsLazy;
+        private readonly LazyInit<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
