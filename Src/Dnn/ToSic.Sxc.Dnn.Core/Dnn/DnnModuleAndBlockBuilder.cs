@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Dnn
             Log.A($"Module: {dnnModule.ModuleID}");
 
             var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule, pageId);
-            var result = _blockGenerator.New().Init(initializedCtx, ParentLog);
+            var result = _blockGenerator.New().Init(initializedCtx);
             return wrapLog.ReturnAsOk(result);
         }
 

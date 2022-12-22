@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             Log.A($"Module: {oqtModule.ModuleId}");
             var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule, pageId);
-            var result = _blockGenerator.New().Init(initializedCtx, ParentLog);
+            var result = _blockGenerator.New().Init(initializedCtx);
             return wrapLog.ReturnAsOk(result);
         }
 

@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Blocks
         /// <param name="ctx"></param>
         /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         ///// <param name="overrideParams">optional override parameters</param>
-        public BlockFromModule Init(IContextOfBlock ctx, ILog parentLog)
+        public BlockFromModule Init(IContextOfBlock ctx)
         {
-            Init(ctx, ctx.Module.BlockIdentifier, parentLog);
+            Init(ctx, ctx.Module.BlockIdentifier);
             var wrapLog = Log.Fn<BlockFromModule>(startTimer: true);
             IsContentApp = ctx.Module.IsContent;
             CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
@@ -28,13 +27,16 @@ namespace ToSic.Sxc.Blocks
                 LazySvc<AppConfigDelegate> appConfigDelegateLazy,
                 LazySvc<CmsRuntime> cmsLazy,
                 LazySvc<BlockBuilder> blockBuilder
-            ) => AddToLogQueue(
-                BdsFactoryLazy = bdsFactoryLazy,
-                AppLazy = appLazy,
-                AppConfigDelegateLazy = appConfigDelegateLazy,
-                CmsLazy = cmsLazy,
-                BlockBuilder = blockBuilder
-            );
+            )
+            {
+                AddToLogQueue(
+                    BdsFactoryLazy = bdsFactoryLazy,
+                    AppLazy = appLazy,
+                    AppConfigDelegateLazy = appConfigDelegateLazy,
+                    CmsLazy = cmsLazy,
+                    BlockBuilder = blockBuilder
+                );
+            }
 
             internal LazySvc<BlockDataSourceFactory> BdsFactoryLazy { get; }
             internal LazySvc<App> AppLazy { get; }
@@ -50,9 +52,8 @@ namespace ToSic.Sxc.Blocks
 
         private readonly Dependencies _deps;
 
-        protected void Init(IContextOfBlock context, IAppIdentity appId, ILog parentLog)
+        protected void Init(IContextOfBlock context, IAppIdentity appId)
         {
-            this.Init(parentLog);
             Context = context;
             ZoneId = appId.ZoneId;
             AppId = appId.AppId;

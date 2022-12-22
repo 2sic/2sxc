@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
@@ -16,7 +17,7 @@ using Page = Oqtane.Models.Page;
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     [PrivateApi]
-    public class OqtSxcViewBuilder : HasLog
+    public class OqtSxcViewBuilder : ServiceBase
     {
 
         #region Constructor and DI
@@ -31,12 +32,14 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             IOutputCache outputCache
         ) : base($"{OqtConstants.OqtLogPrefix}.Buildr")
         {
-            _contextOfBlockEmpty = contextOfBlockEmpty;
-            _blockModuleEmpty = blockModuleEmpty;
-            _contextResolverForLookUps = contextResolverForLookUps;
-            _globalTypesCheck = globalTypesCheck;
-            _outputCache = outputCache;
-            PageOutput = pageOutput;
+            ConnectServices(
+                _contextOfBlockEmpty = contextOfBlockEmpty,
+                _blockModuleEmpty = blockModuleEmpty,
+                _contextResolverForLookUps = contextResolverForLookUps,
+                _globalTypesCheck = globalTypesCheck,
+                _outputCache = outputCache,
+                PageOutput = pageOutput
+            );
             logStore.Add("oqt-view", Log);
         }
 
@@ -114,7 +117,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         internal IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
         {
             var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module, Log);
-            var block = _blockModuleEmpty.Init(ctx, Log);
+            var block = _blockModuleEmpty.Init(ctx);
             // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
             // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
             // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis

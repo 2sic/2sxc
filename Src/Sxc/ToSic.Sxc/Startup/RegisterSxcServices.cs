@@ -8,6 +8,7 @@ using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -69,6 +70,8 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<BlockBase.Dependencies>();
             services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
             services.TryAddTransient<RenderService.Dependencies>();
+            services.TryAddTransient<SimpleRenderer>();
+            services.TryAddTransient<InTextContentBlockRenderer>();
 #pragma warning disable CS0618
             services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618

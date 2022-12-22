@@ -27,25 +27,30 @@ namespace ToSic.Sxc.Blocks
 
         public class Dependencies: ServiceDependencies
         {
+            public Generator<InTextContentBlockRenderer> InTextRenderer { get; }
+            public Generator<SimpleRenderer> SimpleRenderer { get; }
             public Generator<IEditService> EditGenerator { get; }
             public LazySvc<IModuleAndBlockBuilder> Builder { get; }
-            public Generator<BlockFromEntity> BlkFrmEntGen { get; }
             public LazySvc<ILogStore> LogStore { get; }
 
             public Dependencies(Generator<IEditService> editGenerator,
                 LazySvc<IModuleAndBlockBuilder> builder,
-                Generator<BlockFromEntity> blkFrmEntGen,
+                Generator<SimpleRenderer> simpleRenderer,
+                Generator<InTextContentBlockRenderer> inTextRenderer,
                 LazySvc<ILogStore> logStore
-            ) => AddToLogQueue(
-                EditGenerator = editGenerator,
-                Builder = builder,
-                BlkFrmEntGen = blkFrmEntGen,
-                LogStore = logStore
-            );
+            )
+            {
+                AddToLogQueue(
+                    EditGenerator = editGenerator,
+                    Builder = builder,
+                    SimpleRenderer = simpleRenderer,
+                    InTextRenderer = inTextRenderer,
+                    LogStore = logStore
+                );
+            }
         }
 
-        public RenderService(
-            Dependencies dependencies) : base("Sxc.RndSvc")
+        public RenderService(Dependencies dependencies) : base("Sxc.RndSvc")
         {
             _Deps = dependencies.SetLog(Log);
         }
@@ -94,9 +99,10 @@ namespace ToSic.Sxc.Blocks
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             item = item ?? parent;
             MakeSureLogIsInHistory();
+            var simpleRenderer = _Deps.SimpleRenderer.New();
             return new HybridHtmlString(field == null
-                ? Simple.Render(parent._Dependencies.BlockOrNull, item.Entity, _Deps.BlkFrmEntGen) // without field edit-context
-                : Simple.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), _Deps.BlkFrmEntGen)); // with field-edit-context data-list-context
+                ? simpleRenderer.Render(parent._Dependencies.BlockOrNull, item.Entity) // without field edit-context
+                : simpleRenderer.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent))); // with field-edit-context data-list-context
         }
 
         /// <summary>
@@ -121,8 +127,8 @@ namespace ToSic.Sxc.Blocks
 
             MakeSureLogIsInHistory();
             return new HybridHtmlString(merge == null
-                    ? Simple.RenderListWithContext(parent, field, apps, max, GetEdit(parent), _Deps.BlkFrmEntGen)
-                    : InTextContentBlocks.Render(parent, field, merge, GetEdit(parent), _Deps.BlkFrmEntGen));
+                    ? _Deps.SimpleRenderer.New().RenderListWithContext(parent, field, apps, max, GetEdit(parent))
+                    : _Deps.InTextRenderer.New().RenderMerge(parent, field, merge, GetEdit(parent)));
         }
 
 
@@ -142,6 +148,10 @@ namespace ToSic.Sxc.Blocks
         /// </summary>
         private IEditService GetEdit(DynamicEntity parent)
         {
+            // If we have a dyn-code, use that
+            if (_DynCodeRoot?.Edit != null) return _DynCodeRoot.Edit;
+
+            // Otherwise create a new one - even though it's not clear if this would have any real effect
             var newEdit = _Deps.EditGenerator.New();
             newEdit.ConnectToRoot(_DynCodeRoot);
             return newEdit.SetBlock(_DynCodeRoot, parent._Dependencies.BlockOrNull);

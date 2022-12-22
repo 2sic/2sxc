@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                         var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');
                         block = FindInnerContentParentBlock(block, blockId, blockIds, log);
                     }
-                    block = _blockFromEntity.New().Init(block, blockId, log);
+                    block = _blockFromEntity.New().Init(block, blockId);
                 }
             }
 
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                     var id = int.Parse(parentIds[0]);
                     if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
                     if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
-                    parent = _blockFromEntity.New().Init(parent, cbid, log);
+                    parent = _blockFromEntity.New().Init(parent, cbid);
                 }
             }
 
