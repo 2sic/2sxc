@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 throw permissionException;
 
             // try to see if we can get into the subfolder - will throw error if missing
-            var parent = AdamContext.AdamRoot.Folder(parentSubfolder, false); // as IFolder<TFolderId, TFileId>;
+            var parent = AdamContext.AdamRoot.Folder(parentSubfolder, false);
 
             var fs = AdamContext.AdamManager.AdamFs;
             if (isFolder)

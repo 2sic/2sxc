@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Web
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             _DynCodeRoot = codeRoot;
-            (this as IHasLog).Init(codeRoot?.Log, "Rzr.Comp");
+            (this as IHasLog).Init(codeRoot?.Log);
             _codeLog.Reset();   // Reset inner log, so it will reconnect
             Log15.Fn().Done("connected");
         }

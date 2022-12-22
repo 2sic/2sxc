@@ -10,7 +10,6 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
@@ -24,6 +23,7 @@ using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 using ToSic.Lib.Services;
+using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
