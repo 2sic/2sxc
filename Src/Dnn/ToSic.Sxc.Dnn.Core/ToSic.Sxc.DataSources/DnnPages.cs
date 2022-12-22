@@ -22,6 +22,10 @@ namespace ToSic.Sxc.DataSources
         UiHint = VqUiHint)]
     public class DnnPages: Pages
     {
+        public DnnPages(Dependencies dependencies) : base(dependencies)
+        {
+        }
+
 
         protected override List<TempPageInfo> GetPagesInternal()
         {
@@ -69,6 +73,6 @@ namespace ToSic.Sxc.DataSources
                 return wrapLog.Return(new List<TempPageInfo>(), "error");
             }
         }
-        
+
     }
 }

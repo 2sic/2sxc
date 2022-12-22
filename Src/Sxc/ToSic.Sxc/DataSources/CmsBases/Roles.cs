@@ -84,7 +84,7 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        protected Roles()
+        protected Roles(Dependencies dependencies): base(dependencies, $"SDS.Roles")
         {
             Provide(GetList); // default out, if accessed, will deliver GetList
 

@@ -28,6 +28,7 @@ using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
+using CmsBlock = ToSic.Sxc.Context.CmsBlock;
 
 namespace ToSic.Sxc.Startup
 {
@@ -62,6 +63,7 @@ namespace ToSic.Sxc.Startup
 
             // Block functionality
             services.TryAddTransient<BlockDataSourceFactory>();
+            services.TryAddTransient<DataSources.CmsBlock.Dependencies>(); // new v15
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
             services.TryAddTransient<BlockBase.Dependencies>();

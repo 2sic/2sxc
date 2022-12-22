@@ -10,7 +10,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.Run;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.DataSources
 {
@@ -80,12 +80,29 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 		#endregion
 
-		public DnnUserProfile(ISite site, IZoneMapper zoneMapper)
-		{
-            ConnectServices(
-                _site = site,
-                _zoneMapper = zoneMapper
-            );
+        #region Constructor / DI
+
+        public new class Dependencies: ServiceDependencies<DataSource.Dependencies>
+        {
+            public ISite Site { get; }
+            public IZoneMapper ZoneMapper { get; }
+
+            public Dependencies(
+                DataSource.Dependencies rootDependencies,
+                ISite site,
+                IZoneMapper zoneMapper
+            ) : base(rootDependencies)
+            {
+                AddToLogQueue(
+                    Site = site,
+                    ZoneMapper = zoneMapper
+                );
+            }
+        }
+
+		public DnnUserProfile(Dependencies dependencies): base(dependencies.RootDependencies, "Dnn.Profile")
+        {
+            _deps = dependencies.SetLog(Log);
 
 			Provide(GetList);
 			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
@@ -94,13 +111,14 @@ namespace ToSic.Sxc.Dnn.DataSources
 			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
         }
 
-        private readonly ISite _site;
-        private readonly IZoneMapper _zoneMapper;
+        private readonly Dependencies _deps;
+
+        #endregion
 
         private ImmutableArray<IEntity> GetList()
 		{
             Configuration.Parse();
-			var realTenant = _site.Id != Eav.Constants.NullId ? _site : _zoneMapper.SiteOfApp(AppId);
+			var realTenant = _deps.Site.Id != Eav.Constants.NullId ? _deps.Site : _deps.ZoneMapper.SiteOfApp(AppId);
 
 			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
             var portalId = realTenant.Id;

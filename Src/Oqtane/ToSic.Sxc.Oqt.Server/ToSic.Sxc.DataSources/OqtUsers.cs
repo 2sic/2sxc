@@ -33,11 +33,13 @@ namespace ToSic.Sxc.DataSources
         private readonly SiteState _siteState;
         private readonly UserManager<IdentityUser> _identityUserManager;
 
-        public OqtUsers(IUserRoleRepository userRoles, SiteState siteState, UserManager<IdentityUser> identityUserManager)
+        public OqtUsers(Dependencies dependencies, IUserRoleRepository userRoles, SiteState siteState, UserManager<IdentityUser> identityUserManager):base(dependencies)
         {
-            _userRoles = userRoles;
-            _siteState = siteState;
-            _identityUserManager = identityUserManager;
+            ConnectServices(
+                _userRoles = userRoles,
+                _siteState = siteState,
+                _identityUserManager = identityUserManager
+            );
         }
         
         protected override IEnumerable<UserDataSourceInfo> GetUsersInternal()

@@ -29,10 +29,12 @@ namespace ToSic.Sxc.DataSources
         private readonly IRoleRepository _roles;
         private readonly SiteState _siteState;
 
-        public OqtRoles(IRoleRepository roles, SiteState siteState)
+        public OqtRoles(Dependencies dependencies, IRoleRepository roles, SiteState siteState): base(dependencies)
         {
-            _roles = roles;
-            _siteState = siteState;
+            ConnectServices(
+                _roles = roles,
+                _siteState = siteState
+            );
         }
         protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
         {

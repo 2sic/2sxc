@@ -26,6 +26,10 @@ namespace ToSic.Sxc.DataSources
     )]
     public class DnnRoles : Roles
     {
+        public DnnRoles(Dependencies dependencies) : base(dependencies)
+        {
+        }
+
         [PrivateApi]
         protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
         {

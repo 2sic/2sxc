@@ -53,7 +53,7 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        protected Pages()
+        protected Pages(Dependencies dependencies): base(dependencies, $"SDS.Pages")
         {
             Provide(GetPages);
         }

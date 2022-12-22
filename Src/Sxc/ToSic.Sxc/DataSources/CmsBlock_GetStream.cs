@@ -114,14 +114,14 @@ namespace ToSic.Sxc.DataSources
             {
                 var showDrafts = Block?.Context?.UserMayEdit ?? false;
                 Log.A($"In not attached, will auto-attach with showDrafts: {showDrafts}");
-                var publishing = DataSourceFactory.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
+                var publishing = _deps.DataSourceFactory.Value.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
                 Attach(publishing);
             }
 
             return callLog.Return(In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
         }
 
-        private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, /*IEntity demo,*/ int entityId)
+        private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, int entityId)
         {
             try
             {

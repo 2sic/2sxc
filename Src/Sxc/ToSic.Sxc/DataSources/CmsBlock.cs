@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -29,14 +29,8 @@ namespace ToSic.Sxc.DataSources
         In = new []{Eav.Constants.DefaultStreamName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
-    public sealed partial class CmsBlock : DataSourceBase
+    public sealed partial class CmsBlock : DataSource
     {
-        private readonly ILazySvc<CmsRuntime> _lazyCmsRuntime;
-        private readonly ILazySvc<IModule> _moduleLazy;
-
-        /// <inheritdoc />
-        public override string LogId => "Sxc.CmsBDs";
-
         public const string InstanceLookupName = "module";
         public const string InstanceIdKey = "Id"; // 2021-10-07 2dm changed from "ModuleId" because that's doesn't work in Oqtane
 
@@ -61,18 +55,39 @@ namespace ToSic.Sxc.DataSources
             set => Configuration[InstanceIdKey] = value.ToString();
         }
 
+        #region Constructor
 
-        public CmsBlock(LazySvc<CmsRuntime> lazyCmsRuntime, LazySvc<IModule> moduleLazy)
+        public new class Dependencies: ServiceDependencies<DataSource.Dependencies>
         {
-            ConnectServices(
-                _lazyCmsRuntime = lazyCmsRuntime,
-                _moduleLazy = moduleLazy
-            );
+            public ILazySvc<CmsRuntime> LazyCmsRuntime { get; }
+            public ILazySvc<IModule> ModuleLazy { get; }
+            public ILazySvc<DataSourceFactory> DataSourceFactory { get; }
+
+            public Dependencies(DataSource.Dependencies rootDependencies,
+                ILazySvc<CmsRuntime> lazyCmsRuntime,
+                ILazySvc<IModule> moduleLazy,
+                ILazySvc<DataSourceFactory> dataSourceFactory) : base(rootDependencies)
+            {
+                AddToLogQueue(
+                    LazyCmsRuntime = lazyCmsRuntime,
+                    ModuleLazy = moduleLazy,
+                    DataSourceFactory = dataSourceFactory
+                );
+            }
+        }
+
+        public CmsBlock(Dependencies dependencies): base(dependencies.RootDependencies, $"SDS.CmsBks")
+        {
+            _deps = dependencies.SetLog(Log);
+
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);
 			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
+        private readonly Dependencies _deps;
+        #endregion
+
 
         private ImmutableArray<IEntity> GetContent()
         {

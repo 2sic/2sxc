@@ -27,6 +27,10 @@ namespace ToSic.Sxc.DataSources
     )]
     public class DnnUsers : Users
     {
+        public DnnUsers(Dependencies dependencies) : base(dependencies)
+        {
+        }
+
         protected override IEnumerable<UserDataSourceInfo> GetUsersInternal()
         {
             var wrapLog = Log.Fn<List<UserDataSourceInfo>>();
