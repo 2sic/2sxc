@@ -15,15 +15,17 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<BlocksManager> _blocksManager;
         private readonly LazySvc<CmsRuntime> _cmsRuntime;
 
-        public CmsManager(AppRuntimeDependencies dependencies, 
-            LazySvc<AppRuntime> appRuntime,
-            LazySvc<DbDataController> dbDataController,
-            LazySvc<EntitiesManager> entitiesManager,
-            LazySvc<QueryManager> queryManager,
+        public CmsManager(
+            Dependencies dependencies,
+            //AppRuntimeDependencies dependencies, 
+            //LazySvc<AppRuntime> appRuntime,
+            //LazySvc<DbDataController> dbDataController,
+            //LazySvc<EntitiesManager> entitiesManager,
+            //LazySvc<QueryManager> queryManager,
             LazySvc<CmsRuntime> cmsRuntime,
             LazySvc<ViewsManager> viewsManager,
             LazySvc<BlocksManager> blocksManager
-            ) : base(dependencies, appRuntime, dbDataController, entitiesManager, queryManager, "Sxc.CmsMan")
+            ) : base(dependencies/*, appRuntime, dbDataController, entitiesManager, queryManager*/, "Sxc.CmsMan")
         {
             ConnectServices(
                 _cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts)),
