@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Context
         
         public DnnModule(IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site): base("Dnn.Contnr")
         {
-            this.ConnectServices(
+            ConnectServices(
                 _appStates = appStates,
                 _appFinderLazy = appFinderLazy
             );
