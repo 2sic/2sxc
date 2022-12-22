@@ -7,7 +7,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
         private string ResolveAppPath(int appId, bool global) =>
             (_appPaths.InitDone
                 ? _appPaths
-                : _appPaths.Init(_site, _appStates.Get(appId), Log))
+                : _appPaths.Init(_site, _appStates.Get(appId)))
             .PhysicalPathSwitch(global);
     }
 }

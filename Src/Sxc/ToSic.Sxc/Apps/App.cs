@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Apps
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
-        private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState, Log));
+        private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));
         private readonly GetOnce<AppPaths> _appPaths = new GetOnce<AppPaths>();
 
         [PrivateApi]

@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Apps
 
             // Prepare to Delete folder in dnn - this must be done, before deleting the app in the DB
             var appState = _appStates.Get(new AppIdentity(zoneId, appId));
-            var paths = _appPaths.Init(_site, appState, Log);
+            var paths = _appPaths.Init(_site, appState);
             var folder = appState.Folder;
             var physPath = paths.PhysicalPath;
 

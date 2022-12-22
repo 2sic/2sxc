@@ -3,34 +3,14 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public class AdamDependencies<TFolderId, TFileId>: ServiceDependencies
-    {
-        public ILazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
-        public IContextResolver CtxResolver { get; }
-        public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; }
-
-        public AdamDependencies(
-            Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
-            ILazySvc<AdamContext<TFolderId, TFileId>> adamState,
-            IContextResolver ctxResolver)
-        {
-            AddToLogQueue(
-                AdamDtoMaker = adamDtoMaker,
-                AdamState = adamState,
-                CtxResolver = ctxResolver
-            );
-        }
-    }
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: ServiceBase, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
     {
 
@@ -43,18 +23,17 @@ namespace ToSic.Sxc.WebApi.Adam
 
         protected readonly AdamDependencies<TFolderId, TFileId> _Deps;
 
-        public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog)
+        public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
         {
-            this.Init(parentLog);
             var context = appId > 0 ? _Deps.CtxResolver.BlockOrApp(appId) : _Deps.CtxResolver.AppNameRouteBlock(null);
             var logCall = Log.Fn<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
-            AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot, Log);
+            AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot);
             return logCall.Return(this as T);
         }
 
-        void IAdamTransactionBase.Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot, ILog parentLog)
+        void IAdamTransactionBase.Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
         {
-            Init(appId, contentType, itemGuid, field, usePortalRoot, parentLog);
+            Init(appId, contentType, itemGuid, field, usePortalRoot);
         }
 
 

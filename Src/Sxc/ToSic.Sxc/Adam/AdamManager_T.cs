@@ -10,14 +10,21 @@ namespace ToSic.Sxc.Adam
 {
     public class AdamManager<TFolderId, TFileId>: AdamManager
     {
+        private readonly Generator<AdamStorageOfField<TFolderId, TFileId>> _fieldStorageGenerator;
         private readonly LazySvc<IAdamFileSystem<TFolderId, TFileId>> _adamFsLazy;
 
         #region Constructor / DI
-        public AdamManager(LazySvc<AppRuntime> appRuntime, LazySvc<AdamMetadataMaker> metadataMaker, AdamConfiguration adamConfiguration, LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy)
+        public AdamManager(
+            LazySvc<AppRuntime> appRuntime,
+            LazySvc<AdamMetadataMaker> metadataMaker,
+            AdamConfiguration adamConfiguration,
+            LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy,
+            Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
             : base(appRuntime, metadataMaker, adamConfiguration, "Adm.MngrTT")
         {
             ConnectServices(
-                _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this))
+                _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this)),
+                _fieldStorageGenerator = fieldStorageGenerator
             );
         }
 
@@ -79,9 +86,12 @@ namespace ToSic.Sxc.Adam
 
         public Export<TFolderId, TFileId> Export => new Export<TFolderId, TFileId>(this);
 
-        public override IFolder Folder(Guid entityGuid, string fieldName) 
-            => new FolderOfField<TFolderId, TFileId>(this, entityGuid, fieldName);
-        
+        public override IFolder Folder(Guid entityGuid, string fieldName)
+        {
+            var folderStorage = _fieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
+            return new FolderOfField<TFolderId, TFileId>(this, folderStorage);
+        }
+
         public override IFolder Folder(IEntity entity, string fieldName) => Folder(entity.EntityGuid, fieldName);
 
         // Note: Signature isn't great yet, as it's int, but theoretically it could be another type.

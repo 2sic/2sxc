@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Logging;
 
@@ -98,7 +97,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private IEnumerable</*AdamItemDto*/object> GetAdamListOfItems(int appId, BundleWithLinkField set, string key)
         {
             var adamListMaker = _adamTransGetItems.New();
-            adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false, Log);
+            adamListMaker.Init(appId, set.ContentTypeName, set.Guid, key, false);
             var dic = adamListMaker.ItemsInField(string.Empty, false) as IEnumerable<AdamItemDto>;
             return dic;
         }

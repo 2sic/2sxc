@@ -118,7 +118,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             var paths = new List<string>();
             foreach (var appState in appStates)
             {
-                var appPaths = _appPathsLazy.Value.Init(app.Site, appState, Log);
+                var appPaths = _appPathsLazy.Value.Init(app.Site, appState);
                 if (Directory.Exists(appPaths.PhysicalPath)) paths.Add(appPaths.PhysicalPath);
                 if (Directory.Exists(appPaths.PhysicalPathShared)) paths.Add(appPaths.PhysicalPathShared);
             }

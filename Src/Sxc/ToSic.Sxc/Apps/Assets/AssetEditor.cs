@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Apps.Assets
         {
             this.Init(parentLog);
             _appState = app;
-            _appPaths.Init(_site, _appState, Log);
+            _appPaths.Init(_site, _appState);
 
             // todo: 2dm Views - see if we can get logger to flow
             _cmsRuntime = _cmsRuntimeLazy.Value.Init(Log).InitQ(_appState, true);

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Adam
                 FullName = f.Name,
                 Extension = f.Extension.TrimStart('.'),
                 Size = Convert.ToInt32(f.Length),
-                SysId = relativeUrl,// f.Name,
+                SysId = relativeUrl,
                 Folder = directoryName,
                 ParentSysId = relativeUrl.Replace(f.Name, ""),
                 Path = relativePath,

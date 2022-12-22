@@ -6,12 +6,8 @@
     /// </summary>
     public class AdamStorageOfSite<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
     {
-        public AdamStorageOfSite(AdamManager<TFolderId, TFileId> manager) : base(manager)
-        {
-        }
 
         protected override string GeneratePath(string subFolder) => (subFolder ?? "").Replace("//", "/");
-
 
     }
 }

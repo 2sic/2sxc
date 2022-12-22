@@ -52,7 +52,8 @@ namespace ToSic.Sxc.WebApi
                 .Init(Log)
                 .BuildDynamicCodeRoot(this)
                 .InitDynCodeRoot(block, Log, compatibilityLevel);
-            _AdamCode = GetService<AdamCode>().Init(_DynCodeRoot, Log);
+            _AdamCode = GetService<AdamCode>();
+            _AdamCode.Init(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)

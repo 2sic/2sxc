@@ -20,12 +20,12 @@ namespace ToSic.Sxc.Dnn.Adam
         public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamManager)
         {
             var wrapLog = Log.Fn<IAdamFileSystem<int, int>>();
-            AdamContext = adamManager;
+            AdamManager = adamManager;
             return wrapLog.ReturnAsOk(this);
         }
 
 
-        protected AdamManager<int, int> AdamContext;
+        protected AdamManager<int, int> AdamManager;
 
         #endregion
 
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.Dnn.Adam
         
         private readonly IFolderManager _dnnFolders = FolderManager.Instance;
 
-        public bool FolderExists(string path) => _dnnFolders.FolderExists(AdamContext.Site.Id, path);
+        public bool FolderExists(string path) => _dnnFolders.FolderExists(AdamManager.Site.Id, path);
 
 
 
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Dnn.Adam
             var callLog = Log.Fn(path);
             try
             {
-                _dnnFolders.AddFolder(AdamContext.Site.Id, path);
+                _dnnFolders.AddFolder(AdamManager.Site.Id, path);
                 callLog.Done("ok");
             }
             catch (SqlException)
@@ -152,7 +152,7 @@ namespace ToSic.Sxc.Dnn.Adam
         public Folder<int, int> Get(string path)
         {
             var callLog = Log.Fn<Folder<int, int>>(path);
-            return callLog.Return(DnnToAdam(_dnnFolders.GetFolder(AdamContext.Site.Id, path)));
+            return callLog.Return(DnnToAdam(_dnnFolders.GetFolder(AdamManager.Site.Id, path)));
         }
         
         public List<Folder<int, int>> GetFolders(IFolder folder)
@@ -207,7 +207,7 @@ namespace ToSic.Sxc.Dnn.Adam
             
             if (dnnFolderInfo == null) throw new ArgumentNullException(nameof(dnnFolderInfo), ErrorDnnObjectNull);
 
-            return callLog.Return(new Folder<int, int>(AdamContext)
+            var folder = new Folder<int, int>(AdamManager)
             {
                 Path = dnnFolderInfo.FolderPath,
                 SysId = dnnFolderInfo.FolderID,
@@ -217,9 +217,10 @@ namespace ToSic.Sxc.Dnn.Adam
                 Name = dnnFolderInfo.DisplayName,
                 Created = dnnFolderInfo.CreatedOnDate,
                 Modified = dnnFolderInfo.LastModifiedOnDate,
-                Url = AdamContext.Site.ContentPath + dnnFolderInfo.FolderPath,
+                Url = AdamManager.Site.ContentPath + dnnFolderInfo.FolderPath,
                 PhysicalPath = dnnFolderInfo.PhysicalPath,
-            });
+            };
+            return callLog.Return(folder);
         }
 
 
@@ -229,7 +230,7 @@ namespace ToSic.Sxc.Dnn.Adam
             
             if (dnnFileInfo == null) throw new ArgumentNullException(nameof(dnnFileInfo), ErrorDnnObjectNull);
 
-            return callLog.Return(new File<int, int>(AdamContext)
+            return callLog.Return(new File<int, int>(AdamManager)
             {
                 FullName = dnnFileInfo.FileName,
                 Extension = dnnFileInfo.Extension,
@@ -244,7 +245,7 @@ namespace ToSic.Sxc.Dnn.Adam
                 Modified = dnnFileInfo.LastModifiedOnDate,
                 Name = Path.GetFileNameWithoutExtension(dnnFileInfo.FileName),
                 Url = dnnFileInfo.StorageLocation == 0
-                    ? AdamContext.Site.ContentPath + dnnFileInfo.Folder + dnnFileInfo.FileName
+                    ? AdamManager.Site.ContentPath + dnnFileInfo.Folder + dnnFileInfo.FileName
                     : FileLinkClickController.Instance.GetFileLinkClick(dnnFileInfo),
                 PhysicalPath = dnnFileInfo.PhysicalPath,
             });

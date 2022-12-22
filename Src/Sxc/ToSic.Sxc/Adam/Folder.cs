@@ -12,7 +12,8 @@ namespace ToSic.Sxc.Adam
     public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
     {
         public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;
-        protected AdamManager<TFolderId, TFileId> AdamManager { get; set; }
+
+        protected AdamManager<TFolderId, TFileId> AdamManager { get; }
 
         /// <inheritdoc />
         [JsonIgnore]

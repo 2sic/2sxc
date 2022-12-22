@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
@@ -9,14 +10,11 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class FolderOfField<TFolderId, TFileId> : Folder<TFolderId, TFileId>
     {
-        public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, Guid entityGuid, string fieldName): base(adamManager)
+        public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField<TFolderId, TFileId> adamStorageOfField) : base(adamManager)
         {
-            var rootOfField = new AdamStorageOfField<TFolderId, TFileId>(AdamManager, entityGuid, fieldName);
-            rootOfField.Init(adamManager.Log);
+            if (!AdamManager.Exists(adamStorageOfField.Root)) return;
 
-            if (!AdamManager.Exists(rootOfField.Root)) return;
-
-            var f = AdamManager.Folder(rootOfField.Root);
+            var f = AdamManager.Folder(adamStorageOfField.Root);
             if (f == null) return;
 
             Path = f.Path;

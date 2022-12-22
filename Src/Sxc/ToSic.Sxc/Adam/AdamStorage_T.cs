@@ -4,11 +4,13 @@ namespace ToSic.Sxc.Adam
 {
     public abstract class AdamStorage<TFolderId, TFileId>: AdamStorage
     {
-        protected AdamStorage(AdamManager<TFolderId, TFileId> manager): base("Adm.Base")
+        protected AdamStorage(): base("Adm.Base")
         {
-            Manager = manager;
         }
-        public readonly AdamManager<TFolderId, TFileId> Manager;
+
+        public void Init(AdamManager<TFolderId, TFileId> manager) => Manager = manager;
+
+        public AdamManager<TFolderId, TFileId> Manager { get; private set; }
 
 
         /// <summary>

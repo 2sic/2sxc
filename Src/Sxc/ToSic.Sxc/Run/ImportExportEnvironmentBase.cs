@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Lib.Services;
 using App = ToSic.Sxc.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Run
     {
         #region constructor / DI
 
-        public class Dependencies
+        public class Dependencies: ServiceDependencies
         {
             internal readonly AppPaths AppPaths;
             internal readonly IAppStates AppStates;
@@ -20,10 +21,12 @@ namespace ToSic.Sxc.Run
 
             public Dependencies(ISite site, App newApp, IAppStates appStates, AppPaths appPaths)
             {
-                AppPaths = appPaths;
-                AppStates = appStates;
-                Site = site;
-                NewApp = newApp;
+                AddToLogQueue(
+                    AppPaths = appPaths,
+                    AppStates = appStates,
+                    Site = site,
+                    NewApp = newApp
+                );
             }
         }
 
@@ -31,8 +34,10 @@ namespace ToSic.Sxc.Run
         /// <summary>
         /// DI Constructor
         /// </summary>
-        protected ImportExportEnvironmentBase(Dependencies dependencies, string logName) : base(dependencies.Site, dependencies.AppStates, logName) 
-            => _dependencies = dependencies;
+        protected ImportExportEnvironmentBase(Dependencies dependencies, string logName) : base(dependencies.Site, dependencies.AppStates, logName)
+        {
+            _dependencies = dependencies.SetLog(Log);
+        }
 
         private readonly Dependencies _dependencies;
 
@@ -48,7 +53,7 @@ namespace ToSic.Sxc.Run
 
         private AppPaths AppPaths(int zoneId, int appId) =>
             _appPaths ?? (_appPaths =_dependencies.AppPaths.Init(_dependencies.Site,
-                _dependencies.AppStates.Get(new AppIdentity(zoneId, appId)), Log));
+                _dependencies.AppStates.Get(new AppIdentity(zoneId, appId))));
         private AppPaths _appPaths;
 
 

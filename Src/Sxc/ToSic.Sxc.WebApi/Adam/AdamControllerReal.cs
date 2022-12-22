@@ -51,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Adam
                 }
 
                 var (fileName, stream) = uploadInfo.GetStream();
-                var uploader = _adamUpload.Value.Init(appId, contentType, guid, field, usePortalRoot, Log);
+                var uploader = _adamUpload.Value.Init(appId, contentType, guid, field, usePortalRoot);
                 return uploader.UploadOne(stream, subFolder, fileName);
             }
             catch (HttpExceptionAbstraction he)
@@ -70,24 +70,24 @@ namespace ToSic.Sxc.WebApi.Adam
         {
             var callLog = Log.Fn<IEnumerable<AdamItemDto>>($"adam items a:{appId}, i:{guid}, field:{field}, subfolder:{subfolder}, useRoot:{usePortalRoot}");
             var results = _adamItems.Value
-                .Init(appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(appId, contentType, guid, field, usePortalRoot)
                 .ItemsInField(subfolder);
             return callLog.ReturnAsOk(results);
         }
 
         public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
             => _adamFolders.Value
-                .Init(appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(appId, contentType, guid, field, usePortalRoot)
                 .Folder(subfolder, newFolder);
         
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, bool usePortalRoot)
             => _adamDelete.Value
-                .Init(appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(appId, contentType, guid, field, usePortalRoot)
                 .Delete(subfolder, isFolder, id, id);
 
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, TIdentifier id, string newName, bool usePortalRoot)
             => _adamRename.Value
-                .Init(appId, contentType, guid, field, usePortalRoot, Log)
+                .Init(appId, contentType, guid, field, usePortalRoot)
                 .Rename(subfolder, isFolder, id, id, newName);
 
     }

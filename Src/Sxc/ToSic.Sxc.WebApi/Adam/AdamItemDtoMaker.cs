@@ -55,11 +55,9 @@ namespace ToSic.Sxc.WebApi.Adam
                 Url = url,
                 ReferenceId = (file as IHasMetadata).Metadata.Target.KeyString,
                 AllowEdit = CanEditFolder(file),
-                //MetadataId = (int)file.Metadata.EntityId,
                 Metadata = GetMetadataOf(file.Metadata),
                 Type = Classification.TypeName(file.Extension),
             };
-            // (original.StorageLocation == 0) ? original.Path : FileLinkClickController.Instance.GetFileLinkClick(original);
             return item;
         }
 

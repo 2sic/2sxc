@@ -11,13 +11,14 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class AdamStorageOfField<TFolderId, TFileId>: AdamStorage<TFolderId, TFileId>
     {
-        private readonly Guid _entityGuid;
-        private readonly string _fieldName;
+        private Guid _entityGuid;
+        private string _fieldName;
 
-        public AdamStorageOfField(AdamManager<TFolderId, TFileId> manager, Guid eGuid, string fName) : base(manager)
+        public AdamStorageOfField<TFolderId, TFileId> InitItemAndField(Guid entityGuid, string fieldName)
         {
-            _entityGuid = eGuid;
-            _fieldName = fName;
+            _entityGuid = entityGuid;
+            _fieldName = fieldName;
+            return this;
         }
 
 

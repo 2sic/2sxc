@@ -8,7 +8,6 @@ namespace ToSic.Sxc.WebApi.Adam
     /// </summary>
     public class AdamTransGetItems<TFolderId, TFileId> : AdamTransactionBase<AdamTransGetItems<TFolderId, TFileId>, TFolderId, TFileId>, IAdamTransGetItems
     {
-        public AdamTransGetItems(AdamDependencies<TFolderId, TFileId> dependencies) 
-            : base(dependencies, "Adm.TrnItm") { }
+        public AdamTransGetItems(AdamDependencies<TFolderId, TFileId> dependencies) : base(dependencies, "Adm.TrnItm") { }
     }
 }

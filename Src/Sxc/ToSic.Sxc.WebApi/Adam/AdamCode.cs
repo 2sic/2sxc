@@ -19,25 +19,16 @@ namespace ToSic.Sxc.WebApi.Adam
     [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
     public class AdamCode: ServiceForDynamicCode
     {
-
-        //// ReSharper disable once InconsistentNaming
-        //public IDynamicCodeRoot _DynCodeRoot { get; private set; }
-
-        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, ILazySvc<IFeaturesInternal> featuresLazy) : base("AdamCode") =>
+        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, ILazySvc<IFeaturesInternal> featuresLazy) : base("AdamCode")
+        {
             ConnectServices(
                 _adamUploadGenerator = adamUploadGenerator,
                 _featuresLazy = featuresLazy
             );
+        }
+
         private readonly Generator<AdamTransUpload<int, int>> _adamUploadGenerator;
         private readonly ILazySvc<IFeaturesInternal> _featuresLazy;
-
-        public AdamCode Init(IDynamicCodeRoot dynCodeRoot, ILog parentLog)
-        {
-            ConnectToRoot(dynCodeRoot, parentLog);
-            //this.Init(parentLog);
-            //_DynCodeRoot = dynCodeRoot;
-            return this;
-        }
 
         public IFile SaveInAdam(string noParamOrder = Parameters.Protector,
             Stream stream = null,
@@ -60,7 +51,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
             var appId = _DynCodeRoot?.Block?.AppId ?? _DynCodeRoot?.App?.AppId ?? throw new Exception("Error, SaveInAdam needs an App-Context to work, but the App is not known.");
             return _adamUploadGenerator.New()
-                .Init(appId, contentType, guid.Value, field, false, Log)
+                .Init(appId, contentType, guid.Value, field, false)
                 .UploadOne(stream, fileName, subFolder, true);
         }
     }
