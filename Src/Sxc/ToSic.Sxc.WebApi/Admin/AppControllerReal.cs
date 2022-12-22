@@ -70,10 +70,10 @@ namespace ToSic.Sxc.WebApi.Admin
         public List<AppDto> InheritableApps() => _appsBackendLazy.Value.GetInheritableApps();
 
         public void App(int zoneId, int appId, bool fullDelete = true)
-            => _cmsZonesLazy.Value.Init(Log).SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
+            => _cmsZonesLazy.Value.SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, fullDelete);
 
         public void App(int zoneId, string name, int? inheritAppId = null)
-            => _appBuilderLazy.Value.Init(Log).Init(zoneId).Create(name, null, inheritAppId);
+            => _appBuilderLazy.Value.Init(zoneId).Create(name, null, inheritAppId);
 
         public List<SiteLanguageDto> Languages(int appId)
             => _languagesBackendLazy.Value.GetLanguagesOfApp(_appStatesLazy.Value.Get(appId), true);

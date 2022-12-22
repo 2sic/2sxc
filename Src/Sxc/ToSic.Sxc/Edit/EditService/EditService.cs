@@ -13,8 +13,10 @@ namespace ToSic.Sxc.Edit.EditService
 
         public EditService(IJsonService jsonService, LazySvc<IRenderingHelper> renderHelper) : base("Sxc.Edit")
         {
-            _jsonService = jsonService;
-            _renderHelper = renderHelper.SetInit(h => h.Init(Block, Log));
+            ConnectServices(
+                _jsonService = jsonService,
+                _renderHelper = renderHelper.SetInit(h => h.Init(Block))
+            );
         }
         private readonly IJsonService _jsonService;
         private readonly LazySvc<IRenderingHelper> _renderHelper;
@@ -30,8 +32,6 @@ namespace ToSic.Sxc.Edit.EditService
             Block = block;
             var user = codeRoot?.CmsContext?.User;
             Enabled = Block?.Context.UserMayEdit ?? (user?.IsSiteAdmin ?? false) || (user?.IsSystemAdmin ?? false);
-            if ((Log as Log)?.Parent == null && block != null)
-                this.Init(block.Log);
             return this;
         }
 

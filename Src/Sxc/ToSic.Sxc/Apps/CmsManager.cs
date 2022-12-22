@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Eav.Repository.Efc;
 using ToSic.Lib.Helper;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -16,16 +15,10 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<CmsRuntime> _cmsRuntime;
 
         public CmsManager(
-            Dependencies dependencies,
-            //AppRuntimeDependencies dependencies, 
-            //LazySvc<AppRuntime> appRuntime,
-            //LazySvc<DbDataController> dbDataController,
-            //LazySvc<EntitiesManager> entitiesManager,
-            //LazySvc<QueryManager> queryManager,
-            LazySvc<CmsRuntime> cmsRuntime,
+            Dependencies dependencies, LazySvc<CmsRuntime> cmsRuntime,
             LazySvc<ViewsManager> viewsManager,
             LazySvc<BlocksManager> blocksManager
-            ) : base(dependencies/*, appRuntime, dbDataController, entitiesManager, queryManager*/, "Sxc.CmsMan")
+            ) : base(dependencies, "Sxc.CmsMan")
         {
             ConnectServices(
                 _cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts)),

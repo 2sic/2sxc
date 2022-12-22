@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Dnn
         {
             Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             var wrapLog = parentLog.Fn<IBlockBuilder>($"{pageId}, {modId}");
-            var builder = StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(pageId, modId).BlockBuilder;
+            var builder = StaticBuild<IModuleAndBlockBuilder>().LinkLog(parentLog).GetBlock(pageId, modId).BlockBuilder;
             return wrapLog.ReturnAsOk(builder);
         }
 
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Dnn
             Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             parentLog = parentLog ?? NewLog();
             var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
-            return StaticBuild<IModuleAndBlockBuilder>().Init(parentLog).GetBlock(dnnModule, null).BlockBuilder;
+            return StaticBuild<IModuleAndBlockBuilder>().LinkLog(parentLog).GetBlock(dnnModule, null).BlockBuilder;
         }
 
         /// <summary>
@@ -165,9 +165,9 @@ namespace ToSic.Sxc.Dnn
             Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             var log = new Log("Dnn.Factry", parentLog ?? NewLog());
             log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
-            var app = StaticBuild<App>().Init(log);
+            var app = StaticBuild<App>().LinkLog(log);
             if (site != null) app.PreInit(site);
-            var appStuff = app.Init(new AppIdentity(zoneId, appId), StaticBuild<AppConfigDelegate>().Init(log).Build(showDrafts));
+            var appStuff = app.Init(new AppIdentity(zoneId, appId), StaticBuild<AppConfigDelegate>().LinkLog(log).Build(showDrafts));
             return appStuff;
         }
 

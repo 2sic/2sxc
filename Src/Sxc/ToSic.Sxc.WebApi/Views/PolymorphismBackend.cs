@@ -9,8 +9,10 @@ namespace ToSic.Sxc.WebApi.Views
     {
         public PolymorphismBackend(Polymorphism.Polymorphism polymorphism, IAppStates appStates) : base("Bck.Views")
         {
-            _polymorphism = polymorphism;
-            _appStates = appStates;
+            ConnectServices(
+                _polymorphism = polymorphism,
+                _appStates = appStates
+            );
         }
 
         private readonly Polymorphism.Polymorphism _polymorphism;
@@ -20,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Views
         {
             var callLog = Log.Fn<dynamic>($"a#{appId}");
             var appState = _appStates.Get(appId);
-            var poly = _polymorphism.Init(appState.List, Log);
+            var poly = _polymorphism.Init(appState.List);
             var result = new PolymorphismDto
             {
                 Id = poly.Entity?.EntityId, 

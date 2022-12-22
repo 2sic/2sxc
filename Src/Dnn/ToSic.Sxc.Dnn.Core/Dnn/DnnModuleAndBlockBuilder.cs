@@ -57,7 +57,6 @@ namespace ToSic.Sxc.Dnn
         {
             var wrapLog = Log.Fn<IContextOfBlock>();
             var context = _contextGenerator.New();
-            context.Init(ParentLog);
             Log.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
             Log.A("Will init module");

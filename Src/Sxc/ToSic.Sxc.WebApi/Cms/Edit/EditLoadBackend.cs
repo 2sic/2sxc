@@ -99,7 +99,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = _appStates.IdentityOfApp(appId);
-            items = _contentGroupList.Init(appIdentity, Log, showDrafts)
+            items = _contentGroupList.Init(appIdentity, showDrafts)
                 .ConvertGroup(items)
                 .ConvertListIndexToId(items);
             TryToAutoFindMetadataSingleton(items, context.AppState);
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.WebApi.Cms
             var entityApi = _entityApi.Init(appId, permCheck.EnsureAny(GrantSets.ReadDraft));
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
-            var jsonSerializer = _jsonSerializerGenerator.New().Init(Log).SetApp(entityApi.AppRead.AppState);
+            var jsonSerializer = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
@@ -137,7 +137,7 @@ namespace ToSic.Sxc.WebApi.Cms
                     throw HttpException.PermissionDenied(error);
 
             // load content-types
-            var serializerForTypes = _jsonSerializerGenerator.New().Init(Log).SetApp(entityApi.AppRead.AppState);
+            var serializerForTypes = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
             serializerForTypes.ValueConvertHyperlinks = true;
             var types = UsedTypes(list, typeRead);
             var jsonTypes = types.Select(t => serializerForTypes.ToPackage(t, true)).ToList();

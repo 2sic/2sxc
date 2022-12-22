@@ -74,7 +74,7 @@ namespace ToSic.Sxc.WebApi.Sys
         {
             // Get Remote Install URL
             var site = _context.Value.Site;
-            var url = _envInstallerLazy.Value.Init(Log)
+            var url = _envInstallerLazy.Value
                 .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
 
             // Get list of already installed Apps

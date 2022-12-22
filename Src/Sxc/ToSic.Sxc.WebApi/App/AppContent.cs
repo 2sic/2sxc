@@ -64,13 +64,10 @@ namespace ToSic.Sxc.WebApi.App
         private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState, showDrafts: false));
         private readonly GetOnce<AppManager> _appManager = new GetOnce<AppManager>();
 
-        public AppContent Init(string appName, ILog parentLog)
+        public AppContent Init(string appName)
         {
-            this.Init(parentLog);
-
             // if app-path specified, use that app, otherwise use from context
             Context = _ctxResolver.AppNameRouteBlock(appName);
-
             return this;
         }
         protected IContextOfApp Context;

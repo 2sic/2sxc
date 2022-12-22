@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
-            var cms = CmsRuntime.Init(Log).InitQ(currentApp, true);
+            var cms = CmsRuntime.InitQ(currentApp, true);
             var contentTypes = cms.ContentTypes.All.OfScope(scope);
             var entities = cms.Entities.All;
             var templates = cms.Views.GetAll();
@@ -92,13 +92,12 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
-            var appRuntime = CmsRuntime.Init(Log).InitQ(currentApp, true);
+            var appRuntime = CmsRuntime.InitQ(currentApp, true);
 
             var fileName = $"2sxcContentExport_{currentApp.NameWithoutSpecialChars()}_{currentApp.VersionSafe()}.xml";
             var fileXml = _xmlExporter.Init(zoneId, appId, appRuntime, false,
                 contentTypeIdsString?.Split(';') ?? Array.Empty<string>(),
-                entityIdsString?.Split(';') ?? Array.Empty<string>(),
-                Log
+                entityIdsString?.Split(';') ?? Array.Empty<string>()
             ).GenerateNiceXml();
 
             return _responseMaker.File(fileXml, fileName, "text/xml");

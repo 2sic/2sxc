@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         private ToolbarBuilder(ToolbarBuilder parent): this(parent._deps)
         {
-            this.Init(parent.Log);
+            this.LinkLog(parent.Log);
             _currentAppIdentity = parent._currentAppIdentity;
             _codeRoot = parent._codeRoot;
             _configuration = parent._configuration;

@@ -44,9 +44,8 @@ namespace ToSic.Sxc.Adam
 
         #region Init
 
-        public virtual AdamManager Init(IContextOfApp ctx, int compatibility, ILog parentLog)
+        public virtual AdamManager Init(IContextOfApp ctx, int compatibility)
         {
-            this.Init(parentLog);
             AppContext = ctx;
 
             var callLog = Log.Fn<AdamManager>();

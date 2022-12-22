@@ -71,7 +71,7 @@ namespace ToSic.Sxc.WebApi.Views
             var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
             SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin);
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(Log).Init(app);
+            var cms = _cmsManagerLazy.Value.Init(app);
             var bundle = new BundleEntityWithAssets
             {
                 Entity = app.Data[Eav.ImportExport.Settings.TemplateContentType].One(viewId)
@@ -80,7 +80,6 @@ namespace ToSic.Sxc.WebApi.Views
             // Attach files
             var view = new View(bundle.Entity, _site.CurrentCultureCode, Log);
 
-            _appIconHelpers.Init(Log);
             if (!string.IsNullOrEmpty(view.Path))
             {
                 TryAddAsset(bundle, app.ViewPath(view, PathTypes.PhysRelative), view.Path);
@@ -89,8 +88,7 @@ namespace ToSic.Sxc.WebApi.Views
                     TryAddAsset(bundle, thumb, thumb);
             }
 
-            var serializer = _jsonBundleLazy.Value;
-            serializer.Init(Log).SetApp(cms.AppState);
+            var serializer = _jsonBundleLazy.Value.SetApp(cms.AppState);
             var serialized = serializer.Serialize(bundle, 0);
 
             return logCall.ReturnAsOk(_responseMaker.File(serialized,
@@ -123,8 +121,7 @@ namespace ToSic.Sxc.WebApi.Views
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the views
-                var serializer = _jsonBundleLazy.Value;
-                serializer.Init(Log).SetApp(_appStates.Get(app));
+                var serializer = _jsonBundleLazy.Value.SetApp(_appStates.Get(app));
 
                 var bundles = files.Select(f => serializer.Deserialize(f.Contents)).ToList();
 
@@ -138,7 +135,7 @@ namespace ToSic.Sxc.WebApi.Views
 
                 // 2. Import the views
                 // todo: construction of this should go into init
-                _cmsManagerLazy.Value.Init(Log).Init(app.AppId).Entities.Import(bundles.Select(v => v.Entity).ToList());
+                _cmsManagerLazy.Value.Init(app.AppId).Entities.Import(bundles.Select(v => v.Entity).ToList());
 
                 // 3. Import the attachments
                 var assets = bundles.SelectMany(b => b.Assets);

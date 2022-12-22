@@ -20,14 +20,17 @@ namespace ToSic.Sxc.WebApi.Views
     {
         public ViewsBackend(ILazySvc<CmsManager> cmsManagerLazy, IContextOfSite context, IAppStates appStates,
             ILazySvc<IConvertToEavLight> convertToEavLight, Generator<ImpExpHelpers> impExpHelpers)
-            : base("Bck.Views") => ConnectServices(
-            _cmsManagerLazy = cmsManagerLazy,
-            _appStates = appStates,
-            _convertToEavLight = convertToEavLight,
-            _impExpHelpers = impExpHelpers,
-            _site = context.Site,
-            _user = context.User
-        );
+            : base("Bck.Views")
+        {
+            ConnectServices(
+                _cmsManagerLazy = cmsManagerLazy,
+                _appStates = appStates,
+                _convertToEavLight = convertToEavLight,
+                _impExpHelpers = impExpHelpers,
+                _site = context.Site,
+                _user = context.User
+            );
+        }
 
         private readonly ILazySvc<CmsManager> _cmsManagerLazy;
         private readonly IAppStates _appStates;
@@ -40,7 +43,7 @@ namespace ToSic.Sxc.WebApi.Views
         public IEnumerable<ViewDetailsDto> GetAll(int appId)
         {
             Log.A($"get all a#{appId}");
-            var cms = _cmsManagerLazy.Value.Init(Log).InitQ(_appStates.IdentityOfApp(appId), true).Read;
+            var cms = _cmsManagerLazy.Value.InitQ(_appStates.IdentityOfApp(appId), true).Read;
 
             var attributeSetList = cms.ContentTypes.All.OfScope(Scopes.Default).ToList();
             var viewList = cms.Views.GetAll().ToList();
@@ -91,7 +94,7 @@ namespace ToSic.Sxc.WebApi.Views
             // todo: extra security to only allow zone change if host user
             Log.A($"delete a{appId}, t:{id}");
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
-            var cms = _cmsManagerLazy.Value.Init(Log).Init(app);
+            var cms = _cmsManagerLazy.Value.Init(app);
             cms.Views.DeleteView(id);
             return true;
         }

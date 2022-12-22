@@ -10,11 +10,11 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     public class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(BlockEditorBaseDependencies dependencies, LazySvc<CmsManager> parentBlockManagerLazy, IAppStates appStates) 
+        public BlockEditorForEntity(BlockEditorBaseDependencies dependencies, LazySvc<CmsManager> parentCmsManager, IAppStates appStates) 
             : base(dependencies)
         {
             ConnectServices(
-                _parentBlockManagerLazy = parentBlockManagerLazy,
+                _parentCmsManager = parentCmsManager.SetInit(p => p.Init(((BlockBase)Block).Parent.App)),
                 _appStates = appStates
             );
         }
@@ -60,10 +60,8 @@ namespace ToSic.Sxc.Blocks.Edit
         private void Update(Dictionary<string, object> newValues) 
             => ParentBlockAppManager().Entities.UpdateParts(Math.Abs(Block.ContentBlockId), newValues);
 
-        protected AppManager ParentBlockAppManager() =>
-            _appManager ?? (_appManager = _parentBlockManagerLazy.Value.Init(Log).Init(((BlockBase)Block).Parent.App));
-        private AppManager _appManager;
-        private readonly LazySvc<CmsManager> _parentBlockManagerLazy;
+        protected AppManager ParentBlockAppManager() => _parentCmsManager.Value;
+        private readonly LazySvc<CmsManager> _parentCmsManager;
         private readonly IAppStates _appStates;
 
         #endregion

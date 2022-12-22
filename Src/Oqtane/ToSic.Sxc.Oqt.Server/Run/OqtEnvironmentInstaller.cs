@@ -56,7 +56,6 @@ namespace ToSic.Sxc.Oqt.Server.Run
                     var contentAppId = _appStates.IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                     var contentViews = _cmsRuntimeLazy.Value
-                        .Init(Log)
                         .InitQ(contentAppId, false)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;

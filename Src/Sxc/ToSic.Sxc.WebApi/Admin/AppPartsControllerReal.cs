@@ -17,22 +17,19 @@ namespace ToSic.Sxc.WebApi.Admin
         public AppPartsControllerReal(
             LazySvc<IContextOfSite> context,
             LazySvc<ExportContent<THttpResponseType>> exportContent,
-            Generator<ImportContent> importContent, 
-            ILazySvc<IUser> user
+            Generator<ImportContent> importContent
             ): base("Api.APartsRl")
         {
             ConnectServices(
                 _context = context,
                 _exportContent = exportContent,
-                _importContent = importContent,
-                _user = user
+                _importContent = importContent
             );
             
         }
         private readonly LazySvc<IContextOfSite> _context;
         private readonly LazySvc<ExportContent<THttpResponseType>> _exportContent;
         private readonly Generator<ImportContent> _importContent;
-        private readonly ILazySvc<IUser> _user;
 
 
         #region Parts Export/Import
@@ -76,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
             var (fileName, stream) = uploadInfo.GetStream(0);
 
-            var result = _importContent.New().Init(_user.Value, Log)
+            var result = _importContent.New()
                 .Import(zoneId: zoneId, appId: appId, fileName: fileName, stream: stream, defaultLanguage: _context.Value.Site.DefaultCultureCode);
 
             return wrapLog.ReturnAsOk(result);

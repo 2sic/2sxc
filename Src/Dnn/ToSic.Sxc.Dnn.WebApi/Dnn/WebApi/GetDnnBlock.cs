@@ -23,16 +23,16 @@ namespace ToSic.Sxc.Dnn.WebApi
             );
         }
 
-        internal IBlock GetCmsBlock(HttpRequestMessage request, ILog log)
+        internal IBlock GetCmsBlock(HttpRequestMessage request)
         {
-            var wrapLog = log.Fn<IBlock>(startTimer: true);
+            var wrapLog = Log.Fn<IBlock>(startTimer: true);
 
             var moduleInfo = request.FindModuleInfo();
 
             if (moduleInfo == null)
                 return wrapLog.ReturnNull("request ModuleInfo not found");
 
-            var block = _moduleAndBlockBuilder.New().Init(log).GetBlock(moduleInfo, null);
+            var block = _moduleAndBlockBuilder.New().GetBlock(moduleInfo, null);
 
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
@@ -40,11 +40,11 @@ namespace ToSic.Sxc.Dnn.WebApi
                 int.TryParse(blockHeaderId, out var blockId);
                 if (blockId < 0)   // negative id, so it's an inner block
                 {
-                    log.A($"Inner Content: {blockId}");
+                    Log.A($"Inner Content: {blockId}");
                     if (request.Headers.Contains("BlockIds"))
                     {
                         var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');
-                        block = FindInnerContentParentBlock(block, blockId, blockIds, log);
+                        block = FindInnerContentParentBlock(block, blockId, blockIds);
                     }
                     block = _blockFromEntity.New().Init(block, blockId);
                 }
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn.WebApi
             return wrapLog.ReturnAsOk(block);
         }
 
-        private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, string[] blockIds, ILog log)
+        private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, string[] blockIds)
         {
             if (blockIds != null && blockIds.Length >= 2)
             {

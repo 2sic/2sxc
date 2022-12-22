@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
                 return wrapLog.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), Eav.Constants.AppNameIdEmpty);
 
             var guid = _settings[Settings.ModuleSettingApp] ?? "";
-            var appId = _appFinderLazy.Value.Init(Log).FindAppId(zoneId, guid);
+            var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
             return wrapLog.ReturnAsOk((appId, guid));
 
         }

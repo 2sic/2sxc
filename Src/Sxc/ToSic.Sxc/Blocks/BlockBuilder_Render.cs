@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         [PrivateApi]
-        public IRenderingHelper RenderingHelper => _rendHelp.Get(() => _deps.RenderHelpGen.New().Init(Block, Log));
+        public IRenderingHelper RenderingHelper => _rendHelp.Get(() => _deps.RenderHelpGen.New().Init(Block));
         private readonly GetOnce<IRenderingHelper> _rendHelp = new GetOnce<IRenderingHelper>();
 
         public IRenderResult Run(bool topLevel)

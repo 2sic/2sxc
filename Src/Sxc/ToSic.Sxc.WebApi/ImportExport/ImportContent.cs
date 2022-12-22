@@ -24,10 +24,11 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ImportContent: ServiceBase
     {
+        private readonly ILazySvc<IUser> _userLazy;
 
         #region DI Constructor
 
-        public ImportContent(IZoneMapper zoneMapper, 
+        public ImportContent(
             IEnvironmentLogger envLogger,
             ILazySvc<Import> importerLazy,
             ILazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
@@ -35,10 +36,11 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ILazySvc<JsonSerializer> jsonSerializerLazy, 
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
+            ILazySvc<IUser> userLazy,
             SystemManager systemManager) : base("Bck.Export")
         {
+            
             ConnectServices(
-                _zoneMapper = zoneMapper.Init(Log),
                 _envLogger = envLogger,
                 _importerLazy = importerLazy,
                 _xmlImportWithFilesLazy = xmlImportWithFilesLazy,
@@ -46,11 +48,11 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 _jsonSerializerLazy = jsonSerializerLazy,
                 _globalConfiguration = globalConfiguration,
                 _appStates = appStates,
-                SystemManager = systemManager
+                SystemManager = systemManager,
+                _userLazy = userLazy
             );
         }
 
-        private readonly IZoneMapper _zoneMapper;
         private readonly IEnvironmentLogger _envLogger;
         private readonly ILazySvc<Import> _importerLazy;
         private readonly ILazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
@@ -59,14 +61,6 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IAppStates _appStates;
         protected readonly SystemManager SystemManager;
-        private IUser _user;
-
-        public ImportContent Init(IUser user, ILog parentLog)
-        {
-            this.Init(parentLog);
-            _user = user;
-            return this;
-        }
 
         #endregion
 
@@ -75,18 +69,16 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.A("import content start");
             var result = new ImportResultDto();
 
-            var allowSystemChanges = _user.IsSystemAdmin;
+            var allowSystemChanges = _userLazy.Value.IsSystemAdmin;
             if (fileName.EndsWith(".zip"))
             {   // ZIP
                 try
                 {
-                    var zipImport = _zipImport;
-
-                    zipImport.Init(zoneId, appId, _user.IsSystemAdmin, Log);
+                    _zipImport.Init(zoneId, appId, _userLazy.Value.IsSystemAdmin);
                     var temporaryDirectory = Path.Combine(_globalConfiguration.TemporaryFolder, Mapper.GuidCompress(Guid.NewGuid()).Substring(0, 8));
 
-                    result.Success = zipImport.ImportZip(stream, temporaryDirectory);
-                    result.Messages.AddRange(zipImport.Messages);
+                    result.Success = _zipImport.ImportZip(stream, temporaryDirectory);
+                    result.Messages.AddRange(_zipImport.Messages);
                 }
                 catch (Exception ex)
                 {
@@ -97,7 +89,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             {   // XML
                 using (var fileStreamReader = new StreamReader(stream))
                 {
-                    var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges, Log);
+                    var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
                     var xmlDocument = XDocument.Parse(fileStreamReader.ReadToEnd());
                     result.Success = xmlImport.ImportXml(zoneId, appId, xmlDocument);
                     result.Messages.AddRange(xmlImport.Messages);
@@ -118,7 +110,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the content type
-                var serializer = _jsonSerializerLazy.Value.Init(Log).SetApp(_appStates.Get(new AppIdentity(zoneId, appId)));
+                var serializer = _jsonSerializerLazy.Value.SetApp(_appStates.Get(new AppIdentity(zoneId, appId)));
 
                 var types = files.Select(f => serializer.DeserializeContentType(f.Contents)).ToList();
 
@@ -126,7 +118,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     throw new NullReferenceException("One ContentType is null, something is wrong");
 
                 // 2. Import the type
-                var import = _importerLazy.Value.Init(Log).Init(zoneId, appId, true, true);
+                var import = _importerLazy.Value.Init(zoneId, appId, true, true);
                 import.ImportIntoDb(types, null);
 
                 Log.A($"Purging {zoneId}/{appId}");

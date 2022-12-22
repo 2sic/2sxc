@@ -40,9 +40,8 @@ namespace ToSic.Sxc.WebApi.Save
             );
         }
 
-        public ContentGroupList Init(IAppIdentity appIdentity, ILog parentLog, bool withDraftsTemp)
+        public ContentGroupList Init(IAppIdentity appIdentity, bool withDraftsTemp)
         {
-            this.Init(parentLog);
             _appIdentity = appIdentity;
             _withDrafts = withDraftsTemp;
             return this;

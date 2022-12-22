@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.App
 
         /// <inheritdoc />
         public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = null)
-            => _appContentLazy.Value.Init(appPath, Log).GetItems(contentType, appPath);
+            => _appContentLazy.Value.Init(appPath).GetItems(contentType, appPath);
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.WebApi.App
         /// <param name="appPath"></param>
         /// <returns></returns>
         private IDictionary<string, object> GetAndSerializeOneAfterSecurityChecks(string contentType, Func<IEnumerable<IEntity>, IEntity> getOne, string appPath)
-            => _appContentLazy.Value.Init(appPath, Log).GetOne(contentType, getOne, appPath);
+            => _appContentLazy.Value.Init(appPath).GetOne(contentType, getOne, appPath);
 
         #endregion
 
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi.App
         /// <inheritdoc />
         public IDictionary<string, object> CreateOrUpdate(string contentType, Dictionary<string, object> newContentItem, int? id = null,
             string appPath = null)
-            => _appContentLazy.Value.Init(appPath, Log)
+            => _appContentLazy.Value.Init(appPath)
                 .CreateOrUpdate(contentType, newContentItem, id, appPath);
 
         #endregion
@@ -80,13 +80,13 @@ namespace ToSic.Sxc.WebApi.App
         {
             if (int.TryParse(id, out var intId))
             {
-                _appContentLazy.Value.Init(appPath, Log).Delete(contentType, intId, appPath);
+                _appContentLazy.Value.Init(appPath).Delete(contentType, intId, appPath);
                 return;
             }
 
             if (Guid.TryParse(id, out var guid))
             {
-                _appContentLazy.Value.Init(appPath, Log).Delete(contentType, guid, appPath);
+                _appContentLazy.Value.Init(appPath).Delete(contentType, guid, appPath);
                 return;
             }
 

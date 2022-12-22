@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Images
                     new ResponsiveParams(nameof(Img), link, noParamOrder,
                         Settings(settings, factor: factor, width: width, recipe: recipe),
                         imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
-                .Init(Log);
+                .LinkLog(Log);
 
 
         /// <inheritdoc />
@@ -96,8 +96,8 @@ namespace ToSic.Sxc.Images
             var path = respParams.Link.Url;
             var format = GetFormat(path);
             return format.ResizeFormats.Any()
-                ? (IResponsiveImage)new ResponsivePicture(this, respParams).Init(Log)
-                : new ResponsiveImage(this, respParams).Init(Log);
+                ? (IResponsiveImage)new ResponsivePicture(this, respParams).LinkLog(Log)
+                : new ResponsiveImage(this, respParams).LinkLog(Log);
         }
 
 
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.Images
                     new ResponsiveParams(nameof(Picture), link, noParamOrder,
                         Settings(settings, factor: factor, width: width, recipe: recipe),
                         imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
-                .Init(Log);
+                .LinkLog(Log);
 
         /// <inheritdoc />
         public bool Debug

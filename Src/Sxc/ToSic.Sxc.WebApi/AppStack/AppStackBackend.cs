@@ -22,8 +22,10 @@ namespace ToSic.Sxc.WebApi.AppStack
 
         public AppStackBackend(IContextResolver ctxResolver, AppSettingsStack settingsStack) : base("Sxc.ApiApQ")
         {
-            _ctxResolver = ctxResolver;
-            _settingsStack = settingsStack;
+            ConnectServices(
+                _ctxResolver = ctxResolver,
+                _settingsStack = settingsStack
+            );
         }
 
         private readonly IContextResolver _ctxResolver;
@@ -82,7 +84,7 @@ namespace ToSic.Sxc.WebApi.AppStack
             // Build Sources List
             //var partId = part == RootNameSettings ? ConfigurationConstants.Settings : ConfigurationConstants.Resources;
             //var sources = _settingsStack.Init(Log).Init(appState).GetStack(partId, viewStackPart);
-            var settings = _settingsStack.Init(Log).Init(appState).GetStack(RootNameSettings, viewStackPart);
+            var settings = _settingsStack.Init(appState).GetStack(RootNameSettings, viewStackPart);
             // new PropertyStack().Init(part, sources);
 
             // Dump results

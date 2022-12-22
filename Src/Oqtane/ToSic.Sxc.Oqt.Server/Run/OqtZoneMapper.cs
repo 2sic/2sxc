@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
             // Create new zone automatically
             var portalSettings = _siteRepository.GetSite(tenantId);
-            var zoneId = _zoneCreatorLazy.Value.Init(Log).Create(portalSettings.Name + " (Site " + tenantId + ")");
+            var zoneId = _zoneCreatorLazy.Value.Create(portalSettings.Name + " (Site " + tenantId + ")");
             _settingRepository.AddSetting(new()
             {
                 CreatedBy = "2sxc", 

@@ -5,9 +5,9 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.Blocks.Output
 {
     [PrivateApi("Internal only")]
-    public interface IRenderingHelper
+    public interface IRenderingHelper: IHasLog
     {
-        IRenderingHelper Init(IBlock block, ILog parentLog);
+        IRenderingHelper Init(IBlock block);
 
         string WrapInContext(string content,
             string noParamOrder = Eav.Parameters.Protector,

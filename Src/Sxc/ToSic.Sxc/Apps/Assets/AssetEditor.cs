@@ -6,7 +6,6 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
@@ -40,19 +39,20 @@ namespace ToSic.Sxc.Apps.Assets
         }
 
         // TODO: REMOVE THIS once we release v13 #cleanUp EOY 2021
-        public AssetEditor Init(AppState app, int templateId, ILog parentLog)
-        {
-            InitShared(app, parentLog);
-            var view = _cmsRuntime.Views.Get(templateId);
-            var t = new AssetEditInfo(_appState.AppId, _appState.Name, view.Path, view.IsShared);
-            EditInfo = AddViewDetailsAndTypes(t, view);
+        // Commented out 2022-12-21 / 2dm
+        //public AssetEditor Init(AppState app, int templateId, ILog parentLog)
+        //{
+        //    InitShared(app, parentLog);
+        //    var view = _cmsRuntime.Views.Get(templateId);
+        //    var t = new AssetEditInfo(_appState.AppId, _appState.Name, view.Path, view.IsShared);
+        //    EditInfo = AddViewDetailsAndTypes(t, view);
 
-            return this;
-        }
+        //    return this;
+        //}
 
-        public AssetEditor Init(AppState app, string path, bool global, int viewId, ILog parentLog)
+        public AssetEditor Init(AppState app, string path, bool global, int viewId)
         {
-            InitShared(app, parentLog);
+            InitShared(app);
             EditInfo = new AssetEditInfo(_appState.AppId, _appState.Name, path, global);
             if (viewId == 0) return this;
 
@@ -62,14 +62,13 @@ namespace ToSic.Sxc.Apps.Assets
         }
 
 
-        private void InitShared(AppState app, ILog parentLog)
+        private void InitShared(AppState app)
         {
-            this.Init(parentLog);
             _appState = app;
             _appPaths.Init(_site, _appState);
 
             // todo: 2dm Views - see if we can get logger to flow
-            _cmsRuntime = _cmsRuntimeLazy.Value.Init(Log).InitQ(_appState, true);
+            _cmsRuntime = _cmsRuntimeLazy.Value.InitQ(_appState, true);
         }
 
         #endregion
@@ -166,7 +165,7 @@ namespace ToSic.Sxc.Apps.Assets
             if (SanitizeFileNameAndCheckIfAssetAlreadyExists()) return false;
 
             // ensure the web.config exists (usually missing in the global area)
-            _appFolderInitializer.Value.Init(Log).EnsureTemplateFolderExists(_appState, EditInfo.IsShared);
+            _appFolderInitializer.Value.EnsureTemplateFolderExists(_appState, EditInfo.IsShared);
 
             var absolutePath = InternalPath;
 

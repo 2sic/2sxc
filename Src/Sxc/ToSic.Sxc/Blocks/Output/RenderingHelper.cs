@@ -30,9 +30,8 @@ namespace ToSic.Sxc.Blocks.Output
         private readonly IEnvironmentLogger _errorLogger;
         private readonly Generator<JsContextAll> _jsContextAllGen;
 
-        public IRenderingHelper Init(IBlock block, ILog parentLog)
+        public IRenderingHelper Init(IBlock block)
         {
-            this.Init(parentLog);
             Block = block;
             Context = block.Context;
             AppRootPath = _linkPaths.AsSeenFromTheDomainRoot("~/");

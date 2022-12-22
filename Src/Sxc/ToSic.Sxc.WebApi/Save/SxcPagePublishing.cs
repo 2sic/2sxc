@@ -17,9 +17,11 @@ namespace ToSic.Sxc.WebApi.Save
         #region Constructor / DI
         public SxcPagePublishing(ContentGroupList contentGroupList, IPagePublishing pagePublishing, IAppStates appStates) : base("Sxc.PgPubl")
         {
-            _contentGroupList = contentGroupList;
-            _pagePublishing = pagePublishing;
-            _appStates = appStates;
+            ConnectServices(
+                _contentGroupList = contentGroupList,
+                _pagePublishing = pagePublishing,
+                _appStates = appStates
+            );
         }
         private readonly ContentGroupList _contentGroupList;
         private readonly IPagePublishing _pagePublishing;
@@ -45,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Save
 
             // The internal call which will be used further down
             var appIdentity = _appStates.IdentityOfApp(appId);
-            var groupList = _contentGroupList.Init(appIdentity, Log, Context.UserMayEdit);
+            var groupList = _contentGroupList.Init(appIdentity, Context.UserMayEdit);
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)
             {
@@ -60,7 +62,7 @@ namespace ToSic.Sxc.WebApi.Save
             if (partOfPage)
             {
                 Log.A("partOfPage - save with publishing");
-                var versioning = _pagePublishing.Init(Log);
+                var versioning = _pagePublishing;
                 versioning.DoInsidePublishing(Context,
                     args => postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft));
             }

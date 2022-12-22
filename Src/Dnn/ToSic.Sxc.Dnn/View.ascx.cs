@@ -24,7 +24,12 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.CreateModuleScopedServiceProvider());
         private IServiceProvider _serviceProvider;
-        private TService GetService<TService>() => ServiceProvider.Build<TService>();
+        private TService GetService<TService>()
+        {
+            var service = ServiceProvider.Build<TService>();
+            if (service is IHasLog withLog) withLog.LinkLog(Log);
+            return service;
+        }
 
         #endregion
 
@@ -32,7 +37,7 @@ namespace ToSic.Sxc.Dnn
         /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
         /// which runs before page-load
         /// </summary>
-        private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().Init(Log).GetBlock(ModuleConfiguration, null)));
+        private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetBlock(ModuleConfiguration, null)));
         private readonly GetOnce<IBlock> _blockGetOnce = new GetOnce<IBlock>();
 
         #region Logging
@@ -94,7 +99,7 @@ namespace ToSic.Sxc.Dnn
                     var block = Block; // get the block early, to see any errors
                     if (checkPortalIsReady)
                         DnnReadyCheckTurbo.EnsureSiteAndAppFoldersAreReady(this, Block, GetService<LazySvc<AppFolderInitializer>>(), Log);
-                    DnnClientResources = GetService<DnnClientResources>().Init(Log).Init(Page, null, requiresPre1025Behavior == false ? null : Block?.BlockBuilder);
+                    DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : Block?.BlockBuilder);
                     var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
                     if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
                     // #lightspeed
@@ -189,7 +194,7 @@ namespace ToSic.Sxc.Dnn
 
 
 
-        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(Log).Init(ModuleId, TabId, Block));
+        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(ModuleId, TabId, Block));
         private readonly GetOnce<IOutputCache> _oc = new GetOnce<IOutputCache>();
     }
 }

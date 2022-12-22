@@ -20,9 +20,8 @@ namespace ToSic.Sxc.Polymorphism
             _serviceProvider = serviceProvider;
         }
 
-        public Polymorphism Init(IEnumerable<IEntity> list, ILog parentLog)
+        public Polymorphism Init(IEnumerable<IEntity> list)
         {
-            this.Init(parentLog);
             Entity = list?.FirstOrDefaultOfType(PolymorphismConstants.Name);
             if (Entity == null) return this;
 

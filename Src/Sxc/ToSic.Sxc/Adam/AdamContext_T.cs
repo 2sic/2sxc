@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Adam
         public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot)
         {
             var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
-            AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
+            AdamManager.Init(context, Constants.CompatibilityLevel10);
             AdamRoot = usePortalRoot
                 ? _siteStoreGenerator.New() as AdamStorage<TFolderId, TFileId>
                 : _fieldStoreGenerator.New().InitItemAndField(entityGuid, fieldName);

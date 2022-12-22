@@ -79,7 +79,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             // Note: we must get the zone-id from the tenant, since the app may not yet exist when inserted the first time
             var tenant = _context.Value.Site;
-            return _cmsZones.Value.Init(Log).SetId(tenant.ZoneId).AppsRt.GetSelectableApps(tenant, apps)
+            return _cmsZones.Value.SetId(tenant.ZoneId).AppsRt.GetSelectableApps(tenant, apps)
                 .ToList();
         }
 

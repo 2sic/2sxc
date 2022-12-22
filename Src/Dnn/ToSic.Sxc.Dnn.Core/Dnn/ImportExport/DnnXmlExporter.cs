@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
@@ -32,12 +31,12 @@ namespace ToSic.Sxc.Dnn.ImportExport
         private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager<int, int> AdamManager { get; }
 
-        public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds, ILog parentLog)
+        public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds)
         {
             var context = _ctxResolver.App(appId);
             var appState = AppStates.Get(new AppIdentity(zoneId, appId));
-            AdamManager.Init(context, Constants.CompatibilityLevel10, Log);
-            Constructor(zoneId, appRuntime, appState.NameId, appExport, attrSetIds, entityIds, parentLog);
+            AdamManager.Init(context, Constants.CompatibilityLevel10);
+            Constructor(zoneId, appRuntime, appState.NameId, appExport, attrSetIds, entityIds);
 
             // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
             InitExportXDocument(_site.DefaultCultureCode, EavSystemInfo.VersionString);

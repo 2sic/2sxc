@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (appId.HasValue)
             {
                 var appIdentity = new AppIdentity(_site.ZoneId, appId.Value);
-                var cms = _lazyCmsRuntime.Value.Init(Log).InitQ(appIdentity, true);
+                var cms = _lazyCmsRuntime.Value.InitQ(appIdentity, true);
                 var templateGuid = cms.Views.GetAll().FirstOrDefault(t => !t.IsHidden)?.Guid;
                 if (templateGuid.HasValue) SetPreview(instance.Id, templateGuid.Value);
             }

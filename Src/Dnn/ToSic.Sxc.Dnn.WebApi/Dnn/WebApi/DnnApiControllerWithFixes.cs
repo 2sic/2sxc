@@ -62,7 +62,13 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
         /// <inheritdoc />
-        public virtual TService GetService<TService>() => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>();
+        public virtual TService GetService<TService>()
+        {
+            var service = _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>();
+            if (service is IHasLog withLog) withLog.LinkLog(Log);
+            return service;
+        }
+
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
         private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
 
@@ -71,7 +77,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
         /// </summary>
         protected virtual TRealController Real
-            => _real.Get(() => GetService<TRealController>().Init(Log) 
+            => _real.Get(() => GetService<TRealController>()
                                ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
         private readonly GetOnce<TRealController> _real = new GetOnce<TRealController>();
 

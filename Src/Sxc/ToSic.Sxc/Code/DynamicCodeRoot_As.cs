@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Code
                 contextOfApp.ResetApp(App);
             }
 
-            return Deps.AdamManager.Value.Init(contextOfApp, CompatibilityLevel, Log);
+            return Deps.AdamManager.Value.Init(contextOfApp, CompatibilityLevel);
         }
 
         #endregion

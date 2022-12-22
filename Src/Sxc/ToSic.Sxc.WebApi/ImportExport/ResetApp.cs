@@ -69,7 +69,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
 
             var contextZoneId = _site.ZoneId;
-            var currentApp = _impExpHelpers.Init(Log).GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
+            var currentApp = _impExpHelpers.GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);
 
             // migrate old .data/app.xml to App_Data
             ZipImport.MigrateOldAppDataFile(currentApp.PhysicalPath);
@@ -93,7 +93,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             }
 
             // 2. Now we can delete the app before we prepare the import
-            _cmsZones.Init(Log).SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, false);
+            _cmsZones.SetId(zoneId).AppsMan.RemoveAppInSiteAndEav(appId, false);
 
             // 3. Optional reset SiteFiles
             if (withSiteFiles)
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 var globalTemplatesStateFolder = Path.Combine(appDataFolder, Eav.Constants.ZipFolderForGlobalAppStuff);
                 if (Directory.Exists(globalTemplatesStateFolder))
                 {
-                    _zipImport.Init(zoneId, appId, allowCode: true, Log);
+                    _zipImport.Init(zoneId, appId, allowCode: true);
                     var discard = new List<Message>();
                     _zipImport.CopyAppGlobalFiles(discard, appId, sourcePath, deleteGlobalTemplates: true, overwriteFiles: true);
                 }
@@ -115,7 +115,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
             // 4. Now import the App.xml
             var allowSystemChanges = _user.IsSystemAdmin;
-            var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges, Log);
+            var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
             var imp = new ImportXmlReader(filePath, xmlImport, Log);
             result.Success = xmlImport.ImportXml(zoneId, appId, imp.XmlDoc);
             result.Messages.AddRange(xmlImport.Messages);

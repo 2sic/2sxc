@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Blocks
             Log.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = _deps.CmsLazy.Value.Init(Log).InitQ(App, Context.UserMayEdit);
+            var cms = _deps.CmsLazy.Value.InitQ(App, Context.UserMayEdit);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 

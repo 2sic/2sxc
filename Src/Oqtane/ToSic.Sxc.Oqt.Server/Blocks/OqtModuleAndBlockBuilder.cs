@@ -74,9 +74,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         {
             var wrapLog = Log.Fn<IContextOfBlock>();
             var context = _contextGenerator.New();
-            context.Init(ParentLog);
-            //Log.Add($"Will try-swap module info of {oqtModule.ModuleId} into site");
-            //((OqtSite)context.Site).TrySwap(oqtModule, ParentLog);
             Log.A("Will init module");
             ((OqtModule) context.Module).Init(oqtModule, ParentLog);
             return wrapLog.Return(InitPageOnly(context, pageId));

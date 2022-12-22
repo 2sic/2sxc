@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Edit;
@@ -13,14 +14,16 @@ using ToSic.Sxc.Web.PageFeatures;
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 {
     [PrivateApi]
-    public partial class OqtPageOutput : HasLog
+    public partial class OqtPageOutput : ServiceBase
     {
         #region Constructor and DI
 
         public OqtPageOutput(SiteState siteState, IBlockResourceExtractor oqtBlockResourceExtractor) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
-            _siteState = siteState;
-            _oqtBlockResourceExtractor = oqtBlockResourceExtractor.Init(Log);
+            ConnectServices(
+                _siteState = siteState,
+                _oqtBlockResourceExtractor = oqtBlockResourceExtractor
+            );
         }
 
         private readonly SiteState _siteState;

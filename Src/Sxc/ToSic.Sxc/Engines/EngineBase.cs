@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Engines
         {
             var wrapLog = Log.Fn<string>($"{root}, {subPath}");
             view.EditionPath = subPath.ToAbsolutePathForwardSlash();
-            var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List, Log);
+            var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List);
             var edition = polymorph.Edition();
             if (edition == null) return wrapLog.ReturnNull("no edition detected");
             Log.A($"edition {edition} detected");
