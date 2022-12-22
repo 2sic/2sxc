@@ -1,12 +1,15 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -33,19 +36,34 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies: ServiceDependencies
         {
-            public Dependencies(
-                IServiceProvider serviceProvider,
-                LazySvc<CodeCompiler> codeCompilerLazy,
-                AppSettingsStack settingsStack
-            ) => AddToLogQueue(
-                ServiceProvider = serviceProvider,
-                CodeCompilerLazy = codeCompilerLazy,
-                SettingsStack = settingsStack
-            );
-
+            public ILazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
+            public ILazySvc<DynamicEntityDependencies> DynamicEntityDependencies { get; }
+            public ILazySvc<IContextOfApp> ContextOfApp { get; }
+            public ILazySvc<AdamManager> AdamManager { get; }
+
+            public Dependencies(
+                IServiceProvider serviceProvider,
+                LazySvc<CodeCompiler> codeCompilerLazy,
+                AppSettingsStack settingsStack,
+                ILazySvc<DynamicEntityDependencies> dynamicEntityDependencies,
+                ILazySvc<IContextOfApp> contextOfApp,
+                ILazySvc<AdamManager> adamManager,
+                ILazySvc<IConvertService> convertService)
+            {
+                AddToLogQueue(
+                    ServiceProvider = serviceProvider,
+                    CodeCompilerLazy = codeCompilerLazy,
+                    SettingsStack = settingsStack,
+                    DynamicEntityDependencies = dynamicEntityDependencies,
+                    ContextOfApp = contextOfApp,
+                    AdamManager = adamManager,
+                    ConvertService = convertService
+                );
+            }
+
 
         }
 

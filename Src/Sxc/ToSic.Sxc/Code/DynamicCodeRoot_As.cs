@@ -6,7 +6,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
 using ToSic.Sxc.Adam;
@@ -31,11 +30,9 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityDependencies);
 
-        internal DynamicEntityDependencies DynamicEntityDependencies =>
-            _dynamicEntityDependencies
-            ?? (_dynamicEntityDependencies = _serviceProvider.Build<DynamicEntityDependencies>().Init(Block, 
-                CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
-        private DynamicEntityDependencies _dynamicEntityDependencies;
+        internal DynamicEntityDependencies DynamicEntityDependencies => _dynEntDependencies.Get(() => 
+            Deps.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
+        private readonly GetOnce<DynamicEntityDependencies> _dynEntDependencies = new GetOnce<DynamicEntityDependencies>();
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => AsDynamicInternal(dynamicEntity);
@@ -123,7 +120,7 @@ namespace ToSic.Sxc.Code
         #region Convert
 
         /// <inheritdoc />
-        public IConvertService Convert => _convert ?? (_convert = _serviceProvider.Build<IConvertService>());
+        public IConvertService Convert => _convert ?? (_convert = Deps.ConvertService.Value);
         private IConvertService _convert;
 
         #endregion
@@ -137,8 +134,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => AdamManager.Folder(entity, fieldName);
 
-        internal AdamManager AdamManager => _admMng.Get(() => GetService<AdamManager>()
-            .Init(ContextForAdamManager(), CompatibilityLevel, Log));
+        internal AdamManager AdamManager => _admMng.Get(GetAdamManager);
         private readonly GetOnce<AdamManager> _admMng = new GetOnce<AdamManager>();
 
         /// <summary>
@@ -146,17 +142,20 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        private IContextOfApp ContextForAdamManager()
+        private AdamManager GetAdamManager()
         {
-            if(_contextOfApp != null) return _contextOfApp;
-            if (Block?.Context != null) return _contextOfApp = Block.Context;
-            if (App == null) throw new Exception("Can't create App Context for ADAM - no block, no App");
-            _contextOfApp = GetService<IContextOfApp>();
-            _contextOfApp.Init(Log);
-            _contextOfApp.ResetApp(App);
-            return _contextOfApp;
+            //if(_contextOfApp != null) return _contextOfApp;
+            IContextOfApp contextOfApp = Block?.Context;
+            if (contextOfApp == null)
+            {
+                if (App == null)
+                    throw new Exception("Can't create App Context for ADAM - no block, no App");
+                contextOfApp = Deps.ContextOfApp.Value;
+                contextOfApp.ResetApp(App);
+            }
+
+            return Deps.AdamManager.Value.Init(contextOfApp, CompatibilityLevel, Log);
         }
-        private IContextOfApp _contextOfApp;
 
         #endregion
     }

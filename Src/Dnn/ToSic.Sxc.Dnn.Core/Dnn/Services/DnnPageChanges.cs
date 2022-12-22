@@ -24,13 +24,16 @@ namespace ToSic.Sxc.Dnn.Services
     [PrivateApi]
     public class DnnPageChanges : ServiceBase
     {
-        public DnnPageChanges(ILazySvc<IFeaturesService> featuresService): base($"{DnnConstants.LogName}.PgeCng")
+        private readonly Generator<CspOfPage> _pageCspGenerator;
+        private readonly ILazySvc<IFeaturesService> _featuresService;
+
+        public DnnPageChanges(ILazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator): base($"{DnnConstants.LogName}.PgeCng")
         {
             ConnectServices(
-                _featuresService = featuresService
+                _featuresService = featuresService,
+                _pageCspGenerator = pageCspGenerator
             );
         }
-        private readonly ILazySvc<IFeaturesService> _featuresService;
 
         public int Apply(Page page, IRenderResult renderResult)
         {
@@ -145,7 +148,7 @@ namespace ToSic.Sxc.Dnn.Services
                 return (CspOfPage)HttpContext.Current.Items[key];
 
             // Not yet registered. Create, and register for on-end of request
-            var pageLevelCsp = new CspOfPage();
+            var pageLevelCsp = _pageCspGenerator.New();// new CspOfPage();
             HttpContext.Current.Items[key] = pageLevelCsp;
 
             // Register event to attach headers once the request is done and all Apps have registered their Csp

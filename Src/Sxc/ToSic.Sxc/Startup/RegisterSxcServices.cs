@@ -130,6 +130,8 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
             services.TryAddTransient<CspOfApp>();   // must be transient
             services.TryAddScoped<CspOfModule>();   // important: must be scoped!
+            services.TryAddTransient<CspOfPage>();
+            services.TryAddTransient<CspParameterFinalizer>();
             //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
             //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 

@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Oqt.App
                 && (HttpContextAccessor?.HttpContext?.Request?.Path.HasValue == true)
                 && !HttpContextAccessor.HttpContext.Request.Path.Value.Contains("/_blazor"))
                 if (ViewResults?.CspParameters?.Any() ?? false)
-                    PageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor, this);
+                    OqtPageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor, this);
 
             ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
         }
@@ -158,13 +158,13 @@ namespace ToSic.Sxc.Oqt.App
                 if (ViewResults.TemplateResources != null)
                 {
                     Log($"2.5: AttachScriptsAndStyles");
-                    await PageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
+                    await OqtPageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
                 }
 
                 if (ViewResults.PageProperties?.Any() ?? false)
                 {
                     Log($"2.6: UpdatePageProperties");
-                    await PageChangesHelper.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
+                    await OqtPageChangesHelper.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
                 }
 
                 StateHasChanged();

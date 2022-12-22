@@ -14,8 +14,10 @@ using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Oqt.Client
 {
-    internal class PageChangesHelper
+    public class OqtPageChangesHelper
     {
+
+
         internal static async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
         {
             var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";

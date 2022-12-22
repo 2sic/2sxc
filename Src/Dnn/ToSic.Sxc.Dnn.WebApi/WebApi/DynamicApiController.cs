@@ -4,11 +4,15 @@ using System.Web.Http.Controllers;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
+using ToSic.Lib.DI;
+using ToSic.Lib.Helper;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi
@@ -24,11 +28,45 @@ namespace ToSic.Sxc.WebApi
     [DnnLogExceptions]
     public abstract class DynamicApiController : SxcApiControllerBase<DummyControllerReal>, ICreateInstance, IHasDynamicCodeRoot
     {
+        #region Constructor & DI
+
+        /// <summary>
+        /// Note: normally dependencies are Constructor injected.
+        /// This doesn't work in DNN.
+        /// But for consistency, we're building a comparable structure here.
+        /// </summary>
+        public class Dependencies: ServiceDependencies
+        {
+            public ILazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
+            public ILazySvc<Apps.App> AppOverrideLazy { get; }
+            public DnnCodeRootFactory DnnCodeRootFactory { get; }
+            public DnnAppFolderUtilities AppFolderUtilities { get; }
+
+            public Dependencies(
+                DnnCodeRootFactory dnnCodeRootFactory,
+                DnnAppFolderUtilities appFolderUtilities,
+                ILazySvc<Apps.App> appOverrideLazy,
+                ILazySvc<AppConfigDelegate> appConfigDelegateLazy)
+            {
+                AddToLogQueue(
+                    DnnCodeRootFactory = dnnCodeRootFactory,
+                    AppFolderUtilities = appFolderUtilities,
+                    AppOverrideLazy = appOverrideLazy,
+                    AppConfigDelegateLazy = appConfigDelegateLazy
+                );
+            }
+        }
+
         /// <summary>
         /// Empty constructor is important for inheriting classes
         /// </summary>
         protected DynamicApiController() : base("DynApi") { }
         protected DynamicApiController(string logSuffix): base(logSuffix) { }
+
+        protected Dependencies _Deps => _depsGetter.Get(() => GetService<Dependencies>().SetLog(Log));
+        private readonly GetOnce<Dependencies> _depsGetter = new GetOnce<Dependencies>();
+
+        #endregion
 
         /// <summary>
         /// The name of the logger in insights.
@@ -48,8 +86,7 @@ namespace ToSic.Sxc.WebApi
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
             var compatibilityLevel = this is ICompatibleToCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
-            _DynCodeRoot = GetService<DnnCodeRootFactory>()
-                .Init(Log)
+            _DynCodeRoot = _Deps.DnnCodeRootFactory
                 .BuildDynamicCodeRoot(this)
                 .InitDynCodeRoot(block, Log, compatibilityLevel);
             _AdamCode = GetService<AdamCode>();
@@ -99,15 +136,17 @@ namespace ToSic.Sxc.WebApi
             var found = false;
             try
             {
-                var routeAppPath = GetService<DnnAppFolderUtilities>().Init(Log)
-                    .GetAppFolder(Request, false);
-                var appId = SharedContextResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? Eav.Constants.NullId;
-
-                if (appId != Eav.Constants.NullId)
+                var routeAppPath = _Deps.AppFolderUtilities.GetAppFolder(Request, false);
+                var siteCtx = SharedContextResolver.Site();
+                var appState = SharedContextResolver.AppOrNull(routeAppPath)?.AppState;
+                
+                if (appState != default)
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
-                    Log.A($"AppId: {appId}");
-                    var app = Factory.App(appId, false, parentLog: Log);
+                    Log.A($"AppId: {appState.AppId}");
+                    var app = _Deps.AppOverrideLazy.Value
+                        .PreInit(siteCtx.Site)
+                        .Init(appState, _Deps.AppConfigDelegateLazy.Value.Build(siteCtx.UserMayEdit));
                     _DynCodeRoot.AttachApp(app);
                     found = true;
                 }

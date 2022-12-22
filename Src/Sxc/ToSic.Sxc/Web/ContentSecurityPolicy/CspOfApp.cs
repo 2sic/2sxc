@@ -1,9 +1,9 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helper;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 using static ToSic.Eav.Configuration.ConfigurationStack;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
@@ -12,9 +12,9 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// This object reads the CSP settings of an app and passes it to the <see cref="CspOfModule"/>.
     /// This is important because a module can have multiple apps in it, so it must merge the Csp Settings
     /// </summary>
-    public class CspOfApp : HasLog, INeedsDynamicCodeRoot
+    public class CspOfApp : ServiceForDynamicCode
     {
-        public int AppId => _codeRoot?.Block?.AppId ?? 0;
+        public int AppId => _DynCodeRoot?.Block?.AppId ?? 0;
 
         #region Constructor
 
@@ -33,18 +33,14 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
         /// </summary>
         /// <param name="codeRoot"></param>
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
-            this.Init(codeRoot.Log);
+            base.ConnectToRoot(codeRoot);
             var wrapLog = Log.Fn();
-            _codeRoot = codeRoot;
-
             // Also connect upstream CspOfModule in case it's not yet connected
             _moduleCsp.ConnectToRoot(codeRoot);
             wrapLog.Done();
         }
-
-        private IDynamicCodeRoot _codeRoot;
 
         #endregion
 
@@ -58,14 +54,14 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             var cLog = Log.Fn<string>(AppId.ToString());
 
             // Get Stack
-            if (!(_codeRoot?.Settings is DynamicStack stack)) 
+            if (!(_DynCodeRoot?.Settings is DynamicStack stack)) 
                 return cLog.ReturnNull("no stack");
 
             // Enable this for detailed debugging
             //stack.Debug = true;
 
             // Dynamic Stack of the App Settings
-            var appSettings = stack?.GetStack(PartAppSystem) as DynamicStack;
+            var appSettings = stack.GetStack(PartAppSystem) as DynamicStack;
             Log.A($"has {nameof(appSettings)}: {appSettings != null}");
 
             // CSP Settings Reader from Dynamic Entity for the App

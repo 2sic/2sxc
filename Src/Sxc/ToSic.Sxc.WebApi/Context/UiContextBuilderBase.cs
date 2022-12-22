@@ -93,8 +93,7 @@ namespace ToSic.Sxc.WebApi.Context
             // 3. This also means if the switch is off, it's off
             if (flags.HasFlag(Ctx.AppBasic) | flags.HasFlag(Ctx.AppAdvanced))
                 ctx.App = GetApp(flags);
-            //if (flags.HasFlag(Ctx.Enable)) 
-            if(enableFlags != CtxEnable.None) ctx.Enable = GetEnable(enableFlags);
+            if (enableFlags != CtxEnable.None) ctx.Enable = GetEnable(enableFlags);
             if (flags.HasFlag(Ctx.Language)) ctx.Language = GetLanguage();
             if (flags.HasFlag(Ctx.Page)) ctx.Page = GetPage();
             if (flags.HasFlag(Ctx.Site)) ctx.Site = GetSite(flags);

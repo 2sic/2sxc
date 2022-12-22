@@ -113,6 +113,7 @@
     <Compile Include="Dnn\WebApi\HttpJson\JsonOnlyResponseAttribute.cs" />
     <Compile Include="Dnn\WebApi\HttpJson\UseOldNewtonsoftForHttpJsonAttribute.cs" />
     <Compile Include="JsonFormatters.cs" />
+    <Compile Include="Dnn\StartUpDnnWebApi.cs" />
     <Compile Include="System.Text.Json.Formatter.cs" />
     <Compile Include="WebApi\ApiCoreShim.cs" />
     <Compile Include="Custom\Hybrid\Api12_Api.cs" />

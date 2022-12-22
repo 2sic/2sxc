@@ -13,8 +13,6 @@ using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
-using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Eav.WebApi.Context;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
@@ -32,9 +30,6 @@ using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Dnn.Web;
-using ToSic.Sxc.Dnn.WebApi;
-using ToSic.Sxc.Dnn.WebApi.Admin;
-using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
@@ -62,6 +57,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.AddDnn()
                 .AddDnnSxcDataSources()
+                .AddDnnWebApi()
                 .AddAdamWebApi<int, int>()
                 .AddSxcWebApi()
                 .AddSxcCore()
@@ -130,12 +126,12 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IAdamFileSystem<int, int>, DnnAdamFileSystem>();
             services.TryAddTransient<AdamManager, AdamManager<int, int>>();
 
-            // Settings / WebApi stuff
-            services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
-            services.TryAddTransient<IApiInspector, DnnApiInspector>();
+            //// Settings / WebApi stuff
+            //services.TryAddTransient<IUiContextBuilder, DnnUiContextBuilder>();
+            //services.TryAddTransient<IApiInspector, DnnApiInspector>();
 
-            // new #2160
-            services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
+            //// new #2160
+            //services.TryAddTransient<AdamSecurityChecksBase, DnnAdamSecurityChecks>();
 
             services.TryAddTransient<ILookUpEngineResolver, DnnLookUpEngineResolver>();
             services.TryAddTransient<DnnLookUpEngineResolver>();
@@ -191,7 +187,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12
 #pragma warning restore CS0618
 
-            services.TryAddTransient<DnnGetBlock>();
+            //services.TryAddTransient<DnnGetBlock>();
             services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
 
             // v14.12.03/04 Hack with ModuleId in Lookups
