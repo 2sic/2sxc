@@ -19,6 +19,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         public FeatureController(): base(FeatureControllerReal.LogSuffix) { }
 
+        [HttpGet]
+        [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
+        public FeatureState Details(string nameId) => Real.Details(nameId);
 
         /// <summary>
         /// POST updated features JSON configuration.
