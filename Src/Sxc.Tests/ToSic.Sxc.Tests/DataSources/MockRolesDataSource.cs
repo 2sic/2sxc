@@ -31,5 +31,9 @@ namespace ToSic.Sxc.Tests.DataSources
 
             return wrapLog.Return(result, "found");
         }
+
+        public MockRolesDataSource(Dependencies dependencies) : base(dependencies)
+        {
+        }
     }
 }

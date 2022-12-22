@@ -86,5 +86,9 @@ namespace ToSic.Sxc.DataSources
 
             return wrapLog.Return(result, "found");
         }
+
+        public MockUsersDataSource(Dependencies dependencies) : base(dependencies)
+        {
+        }
     }
 }
