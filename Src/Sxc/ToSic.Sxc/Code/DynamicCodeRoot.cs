@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Eav.DataSources;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -36,6 +37,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies: ServiceDependencies
         {
+            public ILazySvc<DataSourceFactory> DataSourceFactory { get; }
             public ILazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
@@ -51,7 +53,8 @@ namespace ToSic.Sxc.Code
                 ILazySvc<DynamicEntityDependencies> dynamicEntityDependencies,
                 ILazySvc<IContextOfApp> contextOfApp,
                 ILazySvc<AdamManager> adamManager,
-                ILazySvc<IConvertService> convertService)
+                ILazySvc<IConvertService> convertService,
+                ILazySvc<DataSourceFactory> dataSourceFactory)
             {
                 AddToLogQueue(
                     ServiceProvider = serviceProvider,
@@ -60,7 +63,8 @@ namespace ToSic.Sxc.Code
                     DynamicEntityDependencies = dynamicEntityDependencies,
                     ContextOfApp = contextOfApp,
                     AdamManager = adamManager,
-                    ConvertService = convertService
+                    ConvertService = convertService,
+                    DataSourceFactory = dataSourceFactory
                 );
             }
 

@@ -2,6 +2,7 @@
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helper;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 
@@ -34,9 +35,8 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public DataSourceFactory DataSourceFactory => _dataSourceFactory ??
-                                                        (_dataSourceFactory = GetService<DataSourceFactory>().Init(Log));
-        private DataSourceFactory _dataSourceFactory;
+        public DataSourceFactory DataSourceFactory => _dataSourceFactory.Get(() => Deps.DataSourceFactory.Value);
+        private readonly GetOnce<DataSourceFactory> _dataSourceFactory = new GetOnce<DataSourceFactory>();
 
 
 

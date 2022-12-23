@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Admin
             // if we have an appid (we don't have it in an install-new-apps-scenario) check permissions
             if (appContext != null)
             {
-                var appAndPerms = _appPermissions.New().Init(appContext, appContext.AppState, Log);
+                var appAndPerms = _appPermissions.New().Init(appContext, appContext.AppState);
                 if (!appAndPerms.ZoneIsOfCurrentContextOrUserIsSuper(out var error))
                     throw HttpException.PermissionDenied(error);
             }

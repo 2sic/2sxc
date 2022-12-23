@@ -71,6 +71,6 @@ namespace ToSic.Sxc.Context
 
         /// <inheritdoc />
         public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, SiteDeps, Deps)
-            .Init(parentLog);
+            .LinkLog(parentLog);
     }
 }

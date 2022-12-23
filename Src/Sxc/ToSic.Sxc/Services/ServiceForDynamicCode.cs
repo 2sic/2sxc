@@ -1,5 +1,4 @@
-﻿using ToSic.Lib.DI;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
@@ -37,10 +36,10 @@ namespace ToSic.Sxc.Services
             if (_alreadyConnected) return;
             _alreadyConnected = true;
 
-            // Link the logs
-            this.Init(parentLog ?? codeRoot?.Log);
             // Remember the parent
             _DynCodeRoot = codeRoot;
+            // Link the logs
+            this.LinkLog(parentLog ?? codeRoot?.Log);
             // report connection in log
             Log.Fn(message: "Linked to Root").Done();
         }
