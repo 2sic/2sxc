@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
 
         // TODO: Why do we need the IServiceProvider? this should probably get Generators or something
         public OqtaneBlobService(IServiceProvider serviceProvider)
-            => _serviceProvider = serviceProvider;
+            => _serviceProvider = serviceProvider; // service provider is need to create new scope on each image request
 
         public IEnumerable<string> GetPrefixes() 
             => Enumerable.Repeat(Prefix, 1);
@@ -43,18 +43,18 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
                 // Get route.
                 var route = GetRoute(virtualPath);
 
+                // We need new scope on each request to avoid sharing the same instance of services.
                 using var scope = _serviceProvider.CreateScope();
 
                 var webHostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
                 if (ExistUnderWebRootPath(webHostEnvironment, virtualPath, out var webRootFilePath)) BlobData(webRootFilePath);
 
                 // Get alias.
-                //siteStateInitializer.InitIfEmpty();
                 var siteStateInitializer = scope.ServiceProvider.GetRequiredService<SiteStateInitializer>();
-                var alias = siteStateInitializer.InitializedState.Alias; // siteStateInitializer.SiteState.Alias;
+                var alias = siteStateInitializer.InitializedState.Alias;
 
                 // Build physicalPath.
-                var fileHelper = scope.ServiceProvider.GetService<OqtAssetsFileHelper>();
+                var fileHelper = scope.ServiceProvider.GetService<OqtAssetsFileHelper>(); // this service sometimes was not working when was lazy and not scoped
                 var physicalPath = fileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
                 if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
 
