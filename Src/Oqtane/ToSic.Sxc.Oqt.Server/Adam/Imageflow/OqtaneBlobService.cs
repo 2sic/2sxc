@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Imazen.Common.Storage;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Imazen.Common.Storage;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 
 namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
@@ -21,26 +20,19 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
         private const string SharedPath = "/shared/";
 
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILazySvc<OqtAssetsFileHelper> _fileHelper;
 
         // TODO: Why do we need the IServiceProvider? this should probably get Generators or something
         public OqtaneBlobService(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-            _fileHelper = serviceProvider.GetService<ILazySvc<OqtAssetsFileHelper>>();
-        }
+            => _serviceProvider = serviceProvider;
 
-        public IEnumerable<string> GetPrefixes()
-        {
-            return Enumerable.Repeat(Prefix, 1);
-        }
+        public IEnumerable<string> GetPrefixes() 
+            => Enumerable.Repeat(Prefix, 1);
 
         public bool SupportsPath(string virtualPath)
             => ContainsSharedPath(virtualPath) || ContainsAdamPath(virtualPath) || ContainsSxcPath(virtualPath);
 
-        public async Task<IBlobData> Fetch(string virtualPath)
-        {
-            return await Task.Run(() =>
+        public async Task<IBlobData> Fetch(string virtualPath) 
+            => await Task.Run(() =>
             {
                 if (!SupportsPath(virtualPath)) return null;
 
@@ -62,22 +54,20 @@ namespace ToSic.Sxc.Oqt.Server.Adam.Imageflow
                 var alias = siteStateInitializer.InitializedState.Alias; // siteStateInitializer.SiteState.Alias;
 
                 // Build physicalPath.
-                var physicalPath = _fileHelper.Value.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
+                var fileHelper = scope.ServiceProvider.GetService<OqtAssetsFileHelper>();
+                var physicalPath = fileHelper.GetFilePath(webHostEnvironment.ContentRootPath, alias, route, appName, filePath);
                 if (string.IsNullOrEmpty(physicalPath)) throw new BlobMissingException($"Oqtane blob \"{virtualPath}\" not found.");
 
                 return BlobData(physicalPath);
             });
-        }
 
-        private static IBlobData BlobData(string physicalPath)
-        {
-            return new BlobProviderFile
+        private static IBlobData BlobData(string physicalPath) 
+            => new BlobProviderFile
             {
                 Path = physicalPath,
                 Exists = true,
                 LastModifiedDateUtc = File.GetLastWriteTimeUtc(physicalPath)
             };
-        }
 
         public static bool GetAppNameAndFilePath(string virtualPath, out string appName, out string filePath)
         {
