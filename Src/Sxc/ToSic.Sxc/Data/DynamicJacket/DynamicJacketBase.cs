@@ -19,13 +19,6 @@ namespace ToSic.Sxc.Data
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
     public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
     {
-        // 2022-12-23 2dm Removed - use GetContents
-        ///// <summary>
-        ///// The underlying data, in case it's needed for various internal operations.
-        ///// </summary>
-        //[PrivateApi]
-        //public T UnwrappedContents => _contents;
-
         [PrivateApi]
         protected T UnwrappedContents;
         public T GetContents() => UnwrappedContents;

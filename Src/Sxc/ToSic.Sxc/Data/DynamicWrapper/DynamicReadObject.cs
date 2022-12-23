@@ -21,8 +21,6 @@ namespace ToSic.Sxc.Data
     [JsonConverter(typeof(DynamicJsonConverter))]
     public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
     {
-        // 2022-12-23 2dm Removed - use GetContents
-        //public object UnwrappedContents => _contents;
         public object GetContents() => UnwrappedObject;
         private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
 

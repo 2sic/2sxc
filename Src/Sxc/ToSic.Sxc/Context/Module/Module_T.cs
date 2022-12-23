@@ -15,10 +15,6 @@ namespace ToSic.Sxc.Context
     {
         #region Constructors and DI
 
-        // 2022-12-23 2dm Removed - use GetContents
-        ///// <inheritdoc />
-        //public T UnwrappedContents => _contents;
-
         public T GetContents() => UnwrappedModule;
         [PrivateApi] protected T UnwrappedModule;
 

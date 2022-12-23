@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+// ReSharper disable ExplicitCallerInfoArgument
 
 namespace ToSic.Sxc.Code
 {
