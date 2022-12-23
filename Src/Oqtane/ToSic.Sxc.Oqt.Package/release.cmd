@@ -11,5 +11,5 @@ robocopy /mir "%Dev2sxcAssets%\dist\ " "%BuildTarget%\dist\ "
 robocopy /mir "%Dev2sxcAssets%\system\ " "%BuildTarget%\system\ "
 
 
-.nuget\nuget.exe pack %PackageName%.nuspec
+.nuget\nuget.exe pack %PackageName%.Install.nuspec
 XCOPY "*.nupkg" "c:\Projects\2sxc\2sxc\InstallPackages\OqtaneModule\" /Y

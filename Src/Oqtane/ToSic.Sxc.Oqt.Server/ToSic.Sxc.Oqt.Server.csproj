@@ -34,28 +34,24 @@
     <Compile Remove="Content\**" />
     <Compile Remove="Engines\**" />
     <Compile Remove="RazorPartialToString\**" />
-    <Compile Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <Compile Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <Content Remove="Apps\**" />
     <Content Remove="Contents\**" />
     <Content Remove="Content\**" />
     <Content Remove="Engines\**" />
     <Content Remove="RazorPartialToString\**" />
-    <Content Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <Content Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <EmbeddedResource Remove="Apps\**" />
     <EmbeddedResource Remove="Contents\**" />
     <EmbeddedResource Remove="Content\**" />
     <EmbeddedResource Remove="Engines\**" />
     <EmbeddedResource Remove="RazorPartialToString\**" />
-    <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <EmbeddedResource Remove="wwwroot\Modules\ToSic.Sxc\**" />
     <None Remove="Apps\**" />
     <None Remove="Contents\**" />
     <None Remove="Content\**" />
     <None Remove="Engines\**" />
     <None Remove="RazorPartialToString\**" />
-    <None Remove="wwwroot\Modules\ToSic.Sxc.Oqtane\**" />
     <None Remove="wwwroot\Modules\ToSic.Sxc\**" />
   </ItemGroup>
   <ItemGroup>
@@ -68,10 +64,6 @@
 
   <ItemGroup>
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-      <Content Include="wwwroot\Modules\ToSic.Sxc.Oqtane\Module.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -121,8 +113,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane\NativeModule.js" />
-    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane\Module.js" />
+    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\NativeModule.js" />
+    <None Include="wwwroot\Modules\ToSic.Sxc.Oqtane.Install\Module.js" />
   </ItemGroup>
 
 </Project>
