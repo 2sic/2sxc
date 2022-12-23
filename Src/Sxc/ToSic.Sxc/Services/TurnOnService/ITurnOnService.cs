@@ -5,7 +5,10 @@ using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Services
 {
-    [PrivateApi("WIP")]
+    /// <summary>
+    /// turnOn Service helps initialize / boot JavaScripts when all requirements (usually dependencies) are ready.
+    /// </summary>
+    [PrivateApi("Don't publish yet - the functionality is surfaced on the PageService!")]
     public interface ITurnOnService: IHasLog
     {
 

@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// Get a property using the string name. Only needed in special situations, as most cases can use the object.name directly
         /// </summary>
-        /// <param name="name">the property name. </param>
+        /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="language">Optional language code - like "de-ch" to prioritize that language</param>
         /// <param name="convertLinks">Optionally turn off if links like file:72 are looked up to a real link. Default is true.</param>
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Data
         /// For example to get an int even though it's stored as decimal.
         /// </summary>
         /// <typeparam name="TValue">The expected type, like `string`, `int`, etc.</typeparam>
-        /// <param name="name">The name of the property, like `Title`</param>
+        /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
         TValue Get<TValue>(string name);
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Data
         /// The expected type, like `string`, `int`, etc.
         /// Note that you don't need to specify it, if you specify the `fallback` property.
         /// </typeparam>
-        /// <param name="name">The name of the property, like `Title`</param>
+        /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
         /// <param name="noParamOrder"></param>
         /// <param name="fallback">the fallback value to provide if not found</param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>

@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Images
         string Alt { get; }
 
         /// <summary>
-        /// The Class of the image. Usually created from these sources (WIP)
+        /// The Class of the image. Usually created from these sources
         /// - The initial call creating this image tag
         /// - Resize-Settings which may add classes
         /// - Rule which determines if the image should crop or not, which may add a class
@@ -35,6 +35,7 @@ namespace ToSic.Sxc.Images
 
         /// <summary>
         /// Image description from the image Metadata.
+        /// See also <see cref="Alt"/>.
         /// </summary>
         /// <returns>
         /// * `null` if no metadata exists
