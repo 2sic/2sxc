@@ -89,6 +89,7 @@ namespace ToSic.Sxc.Adam
         public override IFolder Folder(Guid entityGuid, string fieldName)
         {
             var folderStorage = _fieldStorageGenerator.New().InitItemAndField(entityGuid, fieldName);
+            folderStorage.Init(this);
             return new FolderOfField<TFolderId, TFileId>(this, folderStorage);
         }
 
