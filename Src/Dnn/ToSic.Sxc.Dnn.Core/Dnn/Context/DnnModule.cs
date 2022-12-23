@@ -59,11 +59,11 @@ namespace ToSic.Sxc.Dnn.Context
 
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents?.ModuleID ?? Eav.Constants.NullId;
+        public override int Id => UnwrappedModule?.ModuleID ?? Eav.Constants.NullId;
 
 
         /// <inheritdoc />
-        public override bool IsContent => (UnwrappedContents?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
+        public override bool IsContent => (UnwrappedModule?.DesktopModule.ModuleName ?? "2sxc") == "2sxc";
 
 
         /// <inheritdoc />
@@ -72,13 +72,13 @@ namespace ToSic.Sxc.Dnn.Context
             get
             {
                 if (_blockIdentifier != null) return _blockIdentifier;
-                if (UnwrappedContents == null) return null;
+                if (UnwrappedModule == null) return null;
 
                 // find ZoneId, AppId and prepare settings for next values
                 // note: this is the correct zone, even if the module is shared from another portal, because the Site is prepared correctly
                 var zoneId = _site.ZoneId;
                 var (appId, appNameId) = GetInstanceAppIdAndName(zoneId);
-                var settings = UnwrappedContents.ModuleSettings;
+                var settings = UnwrappedModule.ModuleSettings;
 
                 // find block identifier
                 Guid.TryParse(settings[Settings.ModuleSettingContentGroup]?.ToString(), out var blockGuid);
@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Dnn.Context
         {
             var wrapLog = Log.Fn<(int, string)>($"{zoneId}");
 
-            var module = UnwrappedContents ?? throw new Exception("instance is not ModuleInfo");
+            var module = UnwrappedModule ?? throw new Exception("instance is not ModuleInfo");
 
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
             if (IsContent)

@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Dnn
         {
             var wrapLog = Log.Fn<IContextOfBlock>();
             // Collect / assemble page information
-            var activeTab = (context.Site as Site<PortalSettings>)?.UnwrappedContents?.ActiveTab;
+            var activeTab = (context.Site as Site<PortalSettings>)?.GetContents()?.ActiveTab;
 
             var page = (DnnPage)context.Page;
             var url = page.InitPageIdAndUrl(activeTab, pageId);

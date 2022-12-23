@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Search
         private string InitAllAndVerifyIfOk(IModule module)
         {
             // Start by getting the module info
-            DnnModule = (module as Module<ModuleInfo>)?.UnwrappedContents;
+            DnnModule = (module as Module<ModuleInfo>)?.GetContents();
             var wrapLog = Log.Fn<string>($"start search for mod#{DnnModule?.ModuleID}");
             if (DnnModule == null) return wrapLog.ReturnAndLog("no module");
             
@@ -285,7 +285,7 @@ namespace ToSic.Sxc.Search
                 try
                 {
                     var getLookups = _dnnLookUpEngineResolver.Value;
-                    var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.UnwrappedContents, dnnModule.ModuleID);
+                    var dnnLookUps = getLookups.GenerateDnnBasedLookupEngine(site.GetContents(), dnnModule.ModuleID);
                     ((LookUpEngine) dataSource.Configuration.LookUpEngine).Link(dnnLookUps);
                 }
                 catch (Exception e)

@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
 using ToSic.Lib.Logging;
@@ -45,11 +44,12 @@ namespace ToSic.Sxc.Code
             base.Log.Fn().Done();
         }
 
-        /// <inheritdoc />
-        /// <remarks>
-        /// The parent of this object. It's not called Parent but uses an exotic name to ensure that your code won't accidentally create a property with the same name.
-        /// </remarks>
-        public IDynamicCode UnwrappedContents => _DynCodeRoot;
+        // 2022-12-23 2dm Removed - use GetContents
+        ///// <inheritdoc />
+        ///// <remarks>
+        ///// The parent of this object. It's not called Parent but uses an exotic name to ensure that your code won't accidentally create a property with the same name.
+        ///// </remarks>
+        //public IDynamicCode UnwrappedContents => _DynCodeRoot;
 
         public IDynamicCode GetContents() => _DynCodeRoot;
 

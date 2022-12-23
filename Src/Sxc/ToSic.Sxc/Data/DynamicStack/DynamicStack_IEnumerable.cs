@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicStack : IEnumerable<IDynamicEntity>
     {
-        private List<IDynamicEntity> List => _list ?? (_list = UnwrappedContents.Sources
+        private List<IDynamicEntity> List => _list ?? (_list = UnwrappedStack.Sources
             .Select(src => SourceToDynamicEntity(src.Value))
             .Where(e => e != null)
             .ToList());

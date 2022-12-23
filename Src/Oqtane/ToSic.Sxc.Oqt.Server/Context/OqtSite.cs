@@ -1,5 +1,4 @@
-﻿using System;
-using Oqtane.Models;
+﻿using Oqtane.Models;
 using Oqtane.Repository;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
@@ -54,18 +53,19 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public OqtSite Init(Site site)
         {
-            _contents = site;
+            UnwrappedSite = site;
             return this;
         }
 
         public override ISite Init(int siteId, ILog parentLog)
         {
-            _contents = _siteRepository.Value.GetSite(siteId);
+            UnwrappedSite = _siteRepository.Value.GetSite(siteId);
             return this;
         }
 
-        public override Site UnwrappedContents => _contents ??= _siteRepository.Value.GetSite(Alias.SiteId);
+        protected override Site UnwrappedSite => base.UnwrappedSite ??= _siteRepository.Value.GetSite(Alias.SiteId);
         private Alias Alias => _siteStateInitializer.InitializedState.Alias;
+        public override Site GetContents() => UnwrappedSite;
 
         /// <inheritdoc />
         public override string DefaultCultureCode => _defaultCultureCode ??= _oqtCulture.Value.DefaultCultureCode;
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private string _currentCultureCode;
 
         /// <inheritdoc />
-        public override int Id => UnwrappedContents.SiteId;
+        public override int Id => UnwrappedSite.SiteId;
 
         public override string Url
         {
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public override string UrlRoot => Alias.Name;
 
         /// <inheritdoc />
-        public override string Name => _contents.Name;
+        public override string Name => UnwrappedSite.Name;
 
         [PrivateApi]
         public override string AppsRootPhysical => string.Format(OqtConstants.AppRootPublicBase, Id);
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
 
         /// <inheritdoc />
-        public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, _contents.TenantId, Id);
+        public override string ContentPath => string.Format(OqtConstants.ContentRootPublicBase, UnwrappedSite.TenantId, Id);
 
         public override int ZoneId
         {

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Context
             _block = block;
         }
 
-        public int Id => _contents?.Id ?? 0;
+        public int Id => UnwrappedContents?.Id ?? 0;
 
         public ICmsBlock Block => _cmsBlock ?? (_cmsBlock = new CmsBlock(_block.BlockBuilder.RootBuilder.Block));
         private ICmsBlock _cmsBlock;

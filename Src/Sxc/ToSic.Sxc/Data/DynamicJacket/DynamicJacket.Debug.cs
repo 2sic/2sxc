@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Data
         [PrivateApi("internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
         {
-            if (_contents == null || !_contents.Any()) return new List<PropertyDumpItem>();
+            if (UnwrappedContents == null || !UnwrappedContents.Any()) return new List<PropertyDumpItem>();
 
             if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 
-            var allProperties = _contents.ToList();
+            var allProperties = UnwrappedContents.ToList();
 
             var simpleProps = allProperties.Where(p => !(p.Value is JsonObject));
             var resultDynChildren = simpleProps.Select(p => new PropertyDumpItem

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         private readonly RemoteRouterLink _remoteRouterLink;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
-        private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.UnwrappedContents;
+        private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.GetContents();
 
         public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
         {

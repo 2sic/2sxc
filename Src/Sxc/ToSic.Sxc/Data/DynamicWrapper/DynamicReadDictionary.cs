@@ -17,13 +17,13 @@ namespace ToSic.Sxc.Data
     /// </remarks>
     public class DynamicReadDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>
     {
-        public IDictionary<TKey, TVal> UnwrappedContents { get; }
-        public IDictionary<TKey, TVal> GetContents() => UnwrappedContents;
+        protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;
+        public IDictionary<TKey, TVal> GetContents() => UnwrappedDictionary;
         private readonly Dictionary<string, object> _ignoreCaseLookup = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
         public DynamicReadDictionary(IDictionary<TKey, TVal> dictionary)
         {
-            UnwrappedContents = dictionary;
+            UnwrappedDictionary = dictionary;
             if (dictionary == null) return;
 
             foreach (var de in dictionary) 

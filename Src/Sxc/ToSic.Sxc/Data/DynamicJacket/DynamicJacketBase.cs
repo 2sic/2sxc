@@ -19,15 +19,16 @@ namespace ToSic.Sxc.Data
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
     public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
     {
-        /// <summary>
-        /// The underlying data, in case it's needed for various internal operations.
-        /// </summary>
-        [PrivateApi]
-        public T UnwrappedContents => _contents;
+        // 2022-12-23 2dm Removed - use GetContents
+        ///// <summary>
+        ///// The underlying data, in case it's needed for various internal operations.
+        ///// </summary>
+        //[PrivateApi]
+        //public T UnwrappedContents => _contents;
 
         [PrivateApi]
-        protected T _contents;
-        public T GetContents() => _contents;
+        protected T UnwrappedContents;
+        public T GetContents() => UnwrappedContents;
 
         /// <summary>
         /// Check if it's an array.
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="originalData">the original data we're wrapping</param>
         [PrivateApi]
-        protected DynamicJacketBase(T originalData) => _contents = originalData;
+        protected DynamicJacketBase(T originalData) => UnwrappedContents = originalData;
 
         /// <summary>
         /// Enable enumeration. When going through objects (properties) it will return the keys, not the values. <br/>
@@ -59,15 +60,15 @@ namespace ToSic.Sxc.Data
         /// If the object is just output, it should show the underlying json string
         /// </summary>
         /// <returns>the inner json string</returns>
-        public override string ToString() => _contents.ToString();
+        public override string ToString() => UnwrappedContents.ToString();
 
         /// <inheritdoc />
         public dynamic Get(string name) => FindValueOrNull(name, StringComparison.InvariantCultureIgnoreCase, null);
 
         /// <inheritdoc />
-        public int Count => _contents is IList<JsonNode> jArray
+        public int Count => UnwrappedContents is IList<JsonNode> jArray
             ? jArray.Count
-            : _contents is JsonObject jObject ? jObject.Count : 0;
+            : UnwrappedContents is JsonObject jObject ? jObject.Count : 0;
 
         /// <summary>
         /// Not yet implemented accessor - must be implemented by the inheriting class.

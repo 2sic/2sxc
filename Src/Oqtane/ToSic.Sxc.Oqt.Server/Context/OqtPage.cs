@@ -28,15 +28,15 @@ namespace ToSic.Sxc.Oqt.Server.Context
             _linkPathsLazy = linkPathsLazy;
         }
 
-        public Oqtane.Models.Page UnwrappedContents { get; set; }
-        public Oqtane.Models.Page GetContents() => UnwrappedContents;
+        protected Oqtane.Models.Page UnwrappedPage;
+        public Oqtane.Models.Page GetContents() => UnwrappedPage;
         public new OqtPage Init(int id)
         {
             base.Init(id);
 
-            UnwrappedContents = _pages.Value.GetPage(id);
+            UnwrappedPage = _pages.Value.GetPage(id);
 
-            Url = GetUrl(GetAlias(UnwrappedContents.SiteId));
+            Url = GetUrl(GetAlias(UnwrappedPage.SiteId));
             return this;
         }
 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
             // Page url in Oqtane is without protocol, so we need to add it from current request for consistency
             // also without trailing slash
             var parts = new UrlParts(LinkPaths.GetCurrentRequestUrl());
-            return $"{parts.Protocol}{alias.Name}/{UnwrappedContents.Path}".TrimLastSlash();
+            return $"{parts.Protocol}{alias.Name}/{UnwrappedPage.Path}".TrimLastSlash();
         }
 
         private Alias GetAlias(int siteId)

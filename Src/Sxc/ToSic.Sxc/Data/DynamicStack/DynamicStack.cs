@@ -16,18 +16,18 @@ namespace ToSic.Sxc.Data
         public DynamicStack(string name, DynamicEntityDependencies dependencies, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources) : base(dependencies)
         {
             var stack = new PropertyStack().Init(name, sources);
-            UnwrappedContents = stack;
+            UnwrappedStack = stack;
         }
-        
-        public IPropertyStack UnwrappedContents { get; }
+
+        protected readonly IPropertyStack UnwrappedStack;
 
         /// <inheritdoc />
-        public IPropertyStack GetContents() => UnwrappedContents;
+        public IPropertyStack GetContents() => UnwrappedStack;
 
         /// <inheritdoc />
         public dynamic GetSource(string name)
         {
-            var source = UnwrappedContents.GetSource(name)
+            var source = UnwrappedStack.GetSource(name)
                          // If not found, create a fake one
                          ?? _Dependencies.DataBuilder.FakeEntity(_Dependencies.BlockOrNull?.AppId ?? 0);
 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
         public dynamic GetStack(params string[] names)
         {
             var wrapLog = LogOrNull.Fn<dynamic>();
-            var newStack = UnwrappedContents.GetStack(LogOrNull, names);
+            var newStack = UnwrappedStack.GetStack(LogOrNull, names);
             var newDynStack = new DynamicStack("New", _Dependencies, newStack.Sources);
             return wrapLog.Return(newDynStack);
         }
@@ -64,15 +64,15 @@ namespace ToSic.Sxc.Data
 
             var hasPath = specs.Field.Contains(".");
             var r = hasPath
-                ? UnwrappedContents.InternalGetPath(specs, path)
-                : UnwrappedContents.FindPropertyInternal(specs, path);
+                ? UnwrappedStack.InternalGetPath(specs, path)
+                : UnwrappedStack.FindPropertyInternal(specs, path);
 
             return l.Return(r, $"{(r == null ? "null" : "ok")} using {(hasPath ? "Path" : "Property")}");
         }
 
         [PrivateApi("Internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) =>
-            UnwrappedContents?._Dump(specs, path)
+            UnwrappedStack?._Dump(specs, path)
             ?? new List<PropertyDumpItem>();
 
         public override bool TrySetMember(SetMemberBinder binder, object value)

@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Engines
             // also call old signature
             if (!(Webpage is SexyContentWebPage asWebPage)) return;
             var oldSignature = searchInfos.ToDictionary(si => si.Key, si => si.Value.Cast<ISearchInfo>().ToList());
-            asWebPage.CustomizeSearch(oldSignature,
-                ((Module<ModuleInfo>)moduleInfo).UnwrappedContents, beginDate);
+            asWebPage.CustomizeSearch(oldSignature, ((Module<ModuleInfo>)moduleInfo).GetContents(), beginDate);
             searchInfos.Clear();
             foreach (var item in oldSignature)
                 searchInfos.Add(item.Key, item.Value.Cast<ISearchItem>().ToList());

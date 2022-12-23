@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Data
         /// Use the [key] accessor to get the values as <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/>
         /// </summary>
         /// <returns>the string names of the keys</returns>
-        public override IEnumerator<object> GetEnumerator() => _contents.Select(p => p.Key).GetEnumerator();
+        public override IEnumerator<object> GetEnumerator() => UnwrappedContents.Select(p => p.Key).GetEnumerator();
 
 
         /// <summary>
@@ -78,10 +78,10 @@ namespace ToSic.Sxc.Data
 
         protected override object FindValueOrNull(string name, StringComparison comparison, ILog parentLogOrNull)
         {
-            if (_contents == null || !_contents.Any())
+            if (UnwrappedContents == null || !UnwrappedContents.Any())
                 return null;
 
-            var found = _contents.FirstOrDefault(
+            var found = UnwrappedContents.FirstOrDefault(
                     p => string.Equals(p.Key, name, comparison));
 
             return WrapIfJObjectUnwrapIfJValue(found.IsNullOrDefault() ? null : found.Value);
@@ -91,11 +91,11 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
-        public override object this[int index] => (_propertyArray ?? (_propertyArray = _contents.Select(p => p.Value).ToArray()))[index];
+        public override object this[int index] => (_propertyArray ?? (_propertyArray = UnwrappedContents.Select(p => p.Value).ToArray()))[index];
 
         private JsonNode[] _propertyArray;
 
         /// <inheritdoc />
-        object IHasJsonSource.JsonSource => _contents;
+        object IHasJsonSource.JsonSource => UnwrappedContents;
     }
 }

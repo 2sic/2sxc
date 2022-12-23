@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         public List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path)
         {
-            if (_contents == null) return new List<PropertyDumpItem>();
+            if (UnwrappedObject == null) return new List<PropertyDumpItem>();
 
             if (string.IsNullOrEmpty(path)) path = DumpSourceName;
 

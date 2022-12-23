@@ -10,6 +10,7 @@ using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helper;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 
@@ -41,13 +42,9 @@ namespace ToSic.Sxc.Oqt.Server.Context
             );
         }
 
-        public User UnwrappedContents
-        {
-            get => _unwrappedUser ??= GetUser();
-            set => _unwrappedUser = value;
-        }
-        private User _unwrappedUser;
-        public User GetContents() => UnwrappedContents;
+        protected User UnwrappedUser => _unwrappedUser.Get(GetUser);
+        private readonly GetOnce<User> _unwrappedUser = new();
+        public User GetContents() => UnwrappedUser;
 
         private User GetUser()
         {
@@ -60,23 +57,23 @@ namespace ToSic.Sxc.Oqt.Server.Context
             return user;
         }
 
-        public int Id => UnwrappedContents?.UserId ?? -1;
+        public int Id => UnwrappedUser?.UserId ?? -1;
 
-        public string Username => UnwrappedContents?.Username;
+        public string Username => UnwrappedUser?.Username;
 
-        public string Name => UnwrappedContents?.DisplayName;
+        public string Name => UnwrappedUser?.DisplayName;
 
-        public string Email => UnwrappedContents?.Email;
+        public string Email => UnwrappedUser?.Email;
 
         public string IdentityToken => $"{OqtConstants.UserTokenPrefix}:{Id}";
 
         public Guid? Guid { get; private set; }
 
-        public List<int> Roles => _roles ??= _userRoleRepository.Value.GetUserRoles(Id, UnwrappedContents.SiteId).Select(r => r.RoleId).ToList();
+        public List<int> Roles => _roles ??= _userRoleRepository.Value.GetUserRoles(Id, UnwrappedUser.SiteId).Select(r => r.RoleId).ToList();
         private List<int> _roles;
 
 
-        public bool IsSystemAdmin => _isSystemAdmin ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Host);
+        public bool IsSystemAdmin => _isSystemAdmin ??= UserSecurity.IsAuthorized(UnwrappedUser, RoleNames.Host);
         private bool? _isSystemAdmin;
 
         [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
@@ -84,7 +81,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
         public bool IsAdmin => IsSiteAdmin;
-        public bool IsSiteAdmin => _isSiteAdmin ??= UserSecurity.IsAuthorized(UnwrappedContents, RoleNames.Admin);
+        public bool IsSiteAdmin => _isSiteAdmin ??= UserSecurity.IsAuthorized(UnwrappedUser, RoleNames.Admin);
         private bool? _isSiteAdmin;
 
         public bool IsContentAdmin => IsSiteAdmin;

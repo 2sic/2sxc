@@ -21,8 +21,9 @@ namespace ToSic.Sxc.Data
     [JsonConverter(typeof(DynamicJsonConverter))]
     public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
     {
-        public object UnwrappedContents => _contents;
-        public object GetContents() => _contents;
+        // 2022-12-23 2dm Removed - use GetContents
+        //public object UnwrappedContents => _contents;
+        public object GetContents() => UnwrappedObject;
         private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace ToSic.Sxc.Data
         {
             _wrapChildren = wrapChildren;
             _wrapRealChildren = wrapRealChildren;
-            _contents = item;
+            UnwrappedObject = item;
             if (item == null) return;
             
             var itemType = item.GetType();
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Data
         }
         private readonly bool _wrapChildren;
         private readonly bool _wrapRealChildren;
-        private readonly object _contents;
+        protected readonly object UnwrappedObject;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
@@ -70,13 +71,13 @@ namespace ToSic.Sxc.Data
 
         private object FindValueOrNull(string name)
         {
-            if (_contents == null)
+            if (UnwrappedObject == null)
                 return null;
 
             if(!_ignoreCaseLookup.TryGetValue(name, out var lookup))
                 return null;
 
-            var result = lookup.GetValue(_contents);
+            var result = lookup.GetValue(UnwrappedObject);
 
             // Probably re-wrap for further dynamic navigation!
             return _wrapChildren 
@@ -85,7 +86,7 @@ namespace ToSic.Sxc.Data
         }
 
 
-        object IHasJsonSource.JsonSource => _contents;
+        object IHasJsonSource.JsonSource => UnwrappedObject;
         public dynamic Get(string name) => FindValueOrNull(name);
     }
 }

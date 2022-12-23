@@ -43,8 +43,8 @@ namespace ToSic.Sxc.Dnn.Install
 
         public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
         {
-            var moduleInfo = (module as DnnModule)?.UnwrappedContents;
-            var portal = (site as DnnSite)?.UnwrappedContents;
+            var moduleInfo = (module as DnnModule)?.GetContents();
+            var portal = (site as DnnSite)?.GetContents();
             if(moduleInfo == null || portal == null)
                 throw new ArgumentException("missing portal/module");
 

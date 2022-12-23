@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Context
 
         private readonly AppState _appState;
 
-        public int Id => _contents?.Id ?? 0;
-        public IParameters Parameters => _contents?.Parameters;
-        public string Url => _contents.Url ?? string.Empty;
+        public int Id => UnwrappedContents?.Id ?? 0;
+        public IParameters Parameters => UnwrappedContents?.Parameters;
+        public string Url => UnwrappedContents.Url ?? string.Empty;
 
         protected override IMetadataOf GetMetadataOf()
         {

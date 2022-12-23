@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Dnn.Context
         public DnnSite Swap(PortalSettings settings, ILog extLogOrNull)
         {
             var wrapLog = extLogOrNull.Fn<DnnSite>();
-            _contents = KeepBestPortalSettings(settings);
+            UnwrappedSite = KeepBestPortalSettings(settings);
 
             // reset language info to be sure to get it from the latest source
             _currentCulture = null;
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Dnn.Context
         #region Culture / Languages
 
         /// <inheritdoc />
-        public override string DefaultCultureCode => _defaultLanguage ?? (_defaultLanguage = UnwrappedContents?.DefaultLanguage?.ToLowerInvariant());
+        public override string DefaultCultureCode => _defaultLanguage ?? (_defaultLanguage = UnwrappedSite?.DefaultLanguage?.ToLowerInvariant());
         private string _defaultLanguage;
 
 
@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Dnn.Context
                 if (_currentCulture != null) return _currentCulture;
 
                 // First check if we know more about the site
-                var portal = UnwrappedContents;
+                var portal = UnwrappedSite;
                 var aliasCulture = portal?.PortalAlias?.CultureCode;
                 if (!string.IsNullOrWhiteSpace(aliasCulture)) return _currentCulture = aliasCulture.ToLowerInvariant();
 
@@ -127,10 +127,10 @@ namespace ToSic.Sxc.Dnn.Context
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public override int Id => UnwrappedContents?.PortalId ?? Eav.Constants.NullId;
+        public override int Id => UnwrappedSite?.PortalId ?? Eav.Constants.NullId;
 
         /// <inheritdoc />
-        public override string Name => UnwrappedContents.PortalName;
+        public override string Name => UnwrappedSite.PortalName;
 
         public override string Url
         {
@@ -158,7 +158,7 @@ namespace ToSic.Sxc.Dnn.Context
         /// but the current one. Just keep this in mind in case anything ever breaks.
         /// </remarks>
         public override string UrlRoot
-            => _urlRoot ?? (_urlRoot = UnwrappedContents?.PortalAlias?.HTTPAlias
+            => _urlRoot ?? (_urlRoot = UnwrappedSite?.PortalAlias?.HTTPAlias
                                        ?? PortalSettings.Current?.PortalAlias?.HTTPAlias
                                        ?? "err-portal-alias-not-loaded");
         private string _urlRoot;
@@ -170,14 +170,14 @@ namespace ToSic.Sxc.Dnn.Context
         [PrivateApi]
         public override string AppAssetsLinkTemplate => AppsRootPhysical + "/" + AppConstants.AppFolderPlaceholder;
         
-        internal string AppsRootRelative => Path.Combine(UnwrappedContents.HomeDirectory, AppConstants.AppsRootFolder);
+        internal string AppsRootRelative => Path.Combine(UnwrappedSite.HomeDirectory, AppConstants.AppsRootFolder);
         internal string SharedAppsRootRelative => Path.Combine(Globals.HostPath, AppConstants.AppsRootFolder);
 
         [PrivateApi]
         public override string AppsRootPhysicalFull => HostingEnvironment.MapPath(AppsRootRelative);
 
         /// <inheritdoc />
-        public override string ContentPath => UnwrappedContents.HomeDirectory;
+        public override string ContentPath => UnwrappedSite.HomeDirectory;
 
         public override int ZoneId
         {

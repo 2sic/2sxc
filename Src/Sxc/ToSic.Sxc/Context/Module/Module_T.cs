@@ -15,18 +15,19 @@ namespace ToSic.Sxc.Context
     {
         #region Constructors and DI
 
-        /// <inheritdoc />
-        public T UnwrappedContents => _contents;
+        // 2022-12-23 2dm Removed - use GetContents
+        ///// <inheritdoc />
+        //public T UnwrappedContents => _contents;
 
-        public T GetContents() => _contents;
-        [PrivateApi] private T _contents;
+        public T GetContents() => UnwrappedModule;
+        [PrivateApi] protected T UnwrappedModule;
 
         protected Module(string logName) : base(logName) { }
 
         public IModule Init(T item, ILog parentLog)
         {
             this.Init(parentLog);
-            _contents = item;
+            UnwrappedModule = item;
             return this;
         }
 
