@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
+using ToSic.Lib.Data;
 using ToSic.Lib.Helper;
 using ToSic.Sxc.Data;
 
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Context
 
         protected void Init(CmsContext parent, T contents)
         {
-            base.Init(contents);
+            Wrap(contents);
             _parent = parent;
         }
 

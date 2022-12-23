@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
 using ToSic.Lib.Logging;
@@ -44,6 +45,7 @@ namespace ToSic.Sxc.Code
             base.Log.Fn().Done();
         }
 
+        [PrivateApi]
         public IDynamicCode GetContents() => _DynCodeRoot;
 
         #endregion

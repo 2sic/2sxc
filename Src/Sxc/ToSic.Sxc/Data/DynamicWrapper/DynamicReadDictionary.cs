@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Data;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
@@ -18,6 +20,7 @@ namespace ToSic.Sxc.Data
     public class DynamicReadDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>
     {
         protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;
+        [PrivateApi]
         public IDictionary<TKey, TVal> GetContents() => UnwrappedDictionary;
         private readonly Dictionary<string, object> _ignoreCaseLookup = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 

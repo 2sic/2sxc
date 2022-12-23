@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -21,6 +22,7 @@ namespace ToSic.Sxc.Data
     [JsonConverter(typeof(DynamicJsonConverter))]
     public partial class DynamicReadObject: DynamicObject, IWrapper<object>, IPropertyLookup, IHasJsonSource, ICanGetByName
     {
+        [PrivateApi]
         public object GetContents() => UnwrappedObject;
         private readonly Dictionary<string, PropertyInfo> _ignoreCaseLookup = new Dictionary<string, PropertyInfo>(StringComparer.InvariantCultureIgnoreCase);
 
