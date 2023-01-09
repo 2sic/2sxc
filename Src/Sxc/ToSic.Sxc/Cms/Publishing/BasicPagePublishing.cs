@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Cms.Publishing
 {
     internal class BasicPagePublishing : HasLog, IPagePublishing
     {
-        public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> warn) : base($"{LogNames.NotImplemented}.Publsh") { }
+        public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> warn) : base($"{LogScopes.NotImplemented}.Publsh") { }
 
         public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
         {

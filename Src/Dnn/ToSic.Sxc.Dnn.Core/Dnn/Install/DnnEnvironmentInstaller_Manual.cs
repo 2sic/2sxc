@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn.Install
 
         public bool ResumeAbortedUpgrade()
         {
-            var callLog = Log.Fn<bool>();
+            var l = Log.Fn<bool>();
             if (IsUpgradeRunning)
             {
                 Log.A("Upgrade is still running");
@@ -37,12 +37,13 @@ namespace ToSic.Sxc.Dnn.Install
 
             // Restart application
             HttpRuntime.UnloadAppDomain();
-            return callLog.ReturnTrue("ok");
+            return l.ReturnTrue("ok");
         }
 
 
         public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
         {
+            var l = Log.Fn<string>();
             var moduleInfo = (module as DnnModule)?.GetContents();
             var portal = (site as DnnSite)?.GetContents();
             if(moduleInfo == null || portal == null)
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.Dnn.Install
                 forContentApp);
 
             // Set src to iframe
-            return gettingStartedSrc;
+            return l.Return(gettingStartedSrc);
         }
     }
 }

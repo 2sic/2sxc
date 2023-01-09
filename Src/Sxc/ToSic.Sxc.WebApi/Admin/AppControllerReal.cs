@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
@@ -37,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Admin
             LazySvc<LanguagesBackend> languagesBackendLazy,
             LazySvc<IAppStates> appStatesLazy,
             LazySvc<AppStackBackend> appStackBackendLazy
-            ) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            ) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _appsBackendLazy = appsBackendLazy,

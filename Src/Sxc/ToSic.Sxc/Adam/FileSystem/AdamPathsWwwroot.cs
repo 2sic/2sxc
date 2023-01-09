@@ -1,5 +1,5 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Run;
+﻿using ToSic.Eav.Run;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {
@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class AdamPathsWwwroot: AdamPathsBase
     {
-        public AdamPathsWwwroot(IServerPaths serverPaths) : base(serverPaths, LogNames.Basic)
+        public AdamPathsWwwroot(IServerPaths serverPaths) : base(serverPaths, LogScopes.Base)
         {
         }
 

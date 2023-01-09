@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
     {
         private readonly SiteStateInitializer _siteStateInitializer;
 
-        public OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteStateInitializer) : base(serverPaths, LogNames.Basic)
+        public OqtAdamPaths(IServerPaths serverPaths, SiteStateInitializer siteStateInitializer) : base(serverPaths, OqtConstants.OqtLogPrefix)
         {
             _siteStateInitializer = siteStateInitializer;
         }

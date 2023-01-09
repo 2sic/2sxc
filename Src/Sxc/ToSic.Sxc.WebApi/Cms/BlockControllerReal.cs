@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Cms
             LazySvc<ContentBlockBackend> blockBackend,
             LazySvc<AppViewPickerBackend> viewsBackend,
             LazySvc<CmsZones> cmsZones
-            ): base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            ): base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _context = context,

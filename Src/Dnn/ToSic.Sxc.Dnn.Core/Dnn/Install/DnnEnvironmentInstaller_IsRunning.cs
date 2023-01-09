@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Web.Hosting;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Dnn.Install
 {
@@ -7,11 +8,12 @@ namespace ToSic.Sxc.Dnn.Install
     {
         internal bool IsUpgradeComplete(string version, string note = "")
         {
+            var l = Log.Fn<bool>(startTimer: true);
             _installLogger.LogStep(version, "IsUgradeComplete checking " + note, false);
             var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");
             var complete = File.Exists(logFilePath);
             _installLogger.LogStep(version, "IsUgradeComplete: " + complete, false);
-            return complete;
+            return l.Return(complete);
         }
 
         // cache the status

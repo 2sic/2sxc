@@ -1,5 +1,4 @@
-﻿using ToSic.Eav;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Run
 {
     public class BasicEnvironmentInstaller: HasLog, IEnvironmentInstaller, IIsUnknown
     {
-        public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> warn) : base($"{LogNames.NotImplemented}.Instll")
+        public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> warn) : base($"{LogScopes.NotImplemented}.Instll")
         {
         }
 

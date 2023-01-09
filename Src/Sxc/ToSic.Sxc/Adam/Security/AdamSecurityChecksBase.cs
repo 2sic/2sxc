@@ -100,7 +100,9 @@ namespace ToSic.Sxc.Adam
             var itm = AdamContext.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
-            exp = HttpException.PermissionDenied(Log.AddAndReuse("user is restricted and may not see published, but item exists and is published - not allowed"));
+            const string msg = "User is restricted and may not see published, but item exists and is published - not allowed";
+            Log.A(msg);
+            exp = HttpException.PermissionDenied(msg);
             return false;
         }
 

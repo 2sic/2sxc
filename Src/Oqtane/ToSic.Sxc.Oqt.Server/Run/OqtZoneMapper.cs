@@ -75,7 +75,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (zoneSetting != null)
             {
                 if (!int.TryParse(zoneSetting.SettingValue, out var zId))
-                    throw new(Log.AddAndReuse($"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int"));
+                {
+                    var msg = $"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int";
+                    Log.A(msg);
+                    throw new(msg);
+                }
                 i = zId;
                 return true;
             }

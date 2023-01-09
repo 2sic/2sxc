@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using ToSic.Eav.Data;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -16,7 +15,10 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public string Add(string message, [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
-            => UnwrappedContents.AddAndReuse(message, cPath, cName, cLine);
+        {
+            UnwrappedContents.A(message, cPath, cName, cLine);
+            return message;
+        }
 
         /// <inheritdoc />
         public void Warn(string message, [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0) 

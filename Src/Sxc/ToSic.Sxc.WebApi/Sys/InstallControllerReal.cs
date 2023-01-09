@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
@@ -36,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Sys
 
             LazySvc<AppsBackend> appsBackend,
             LazySvc<IAppStates> appStates,
-            LazySvc<AppSettingsStack> appSettingsStack) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            LazySvc<AppSettingsStack> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _context = context,
