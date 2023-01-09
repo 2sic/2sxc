@@ -65,6 +65,9 @@
     <PackageReference Include="Dnn.ClientDependency" Version="1.9.2">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="DotNetNuke.Abstractions" Version="9.6.1">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>

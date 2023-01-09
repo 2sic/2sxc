@@ -1,7 +1,8 @@
-﻿using System;
-using ToSic.Lib.Documentation;
+﻿using DotNetNuke.Abstractions;
+using System;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.DI;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Images;
@@ -17,11 +18,16 @@ namespace ToSic.Sxc.Dnn.Services
     public class DnnLinkService : LinkServiceBase
     {
         public DnnLinkService(ImgResizeLinker imgLinker, LazySvc<DnnValueConverter> dnnValueConverterLazy,
-            LazySvc<ILinkPaths> linkPathsLazy) : base(imgLinker, linkPathsLazy)
-            => ConnectServices(
-                _dnnValueConverterLazy = dnnValueConverterLazy
+            LazySvc<ILinkPaths> linkPathsLazy, LazySvc<INavigationManager> navigationManager) : base(imgLinker, linkPathsLazy)
+        {
+            ConnectServices(
+                _dnnValueConverterLazy = dnnValueConverterLazy,
+                _navigationManager = navigationManager
             );
+        }
+
         private readonly LazySvc<DnnValueConverter> _dnnValueConverterLazy;
+        private readonly LazySvc<INavigationManager> _navigationManager;
 
         [PrivateApi] private IDnnContext Dnn => _dnn ?? (_dnn = _DynCodeRoot.GetService<IDnnContext>());
         private IDnnContext _dnn;
@@ -41,7 +47,7 @@ namespace ToSic.Sxc.Dnn.Services
             
             var currentPageUrl = parameters == null
                 ? Dnn.Tab.FullUrl
-                : DotNetNuke.Common.Globals.NavigateURL(Dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
+                : _navigationManager.Value.NavigateURL(Dnn.Tab.TabID, "", parameters); // NavigateURL returns absolute links
 
             return CurrentPageUrlWithEventualHashError(pageId, currentPageUrl);
         }
