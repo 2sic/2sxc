@@ -57,6 +57,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.AddDnn()
                 .AddDnnSxcDataSources()
+                .AddDnnDataSources()
                 .AddDnnWebApi()
                 .AddAdamWebApi<int, int>()
                 .AddSxcWebApi()
