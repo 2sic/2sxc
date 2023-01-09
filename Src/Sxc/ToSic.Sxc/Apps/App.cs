@@ -44,7 +44,6 @@ namespace ToSic.Sxc.Apps
             );
         }
 
-        //private readonly IServiceProvider _serviceProvider;
         private readonly LazySvc<GlobalPaths> _globalPaths;
         private readonly LazySvc<AppPaths> _appPathsLazy;
         private readonly LazySvc<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
@@ -69,7 +68,6 @@ namespace ToSic.Sxc.Apps
         {
             base.Init(appIdentity, buildConfig);
             if (buildConfig != null) return this;
-            Log.Rename("App.SxcLgt");
             Log.A("App only initialized for light use - .Data shouldn't be used");
             return this;
         }

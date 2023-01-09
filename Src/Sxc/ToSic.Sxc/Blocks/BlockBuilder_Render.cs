@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Blocks
         {
             // Cache Result on multiple runs
             if (_result != null) return _result;
-            var wrapLog = Log.Fn<IRenderResult>(startTimer: true);
+            var wrapLog = Log.Fn<IRenderResult>(timer: true);
             try
             {
                 var (html, err) = RenderInternal();
@@ -227,7 +227,7 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IEngine GetEngine()
         {
-            var wrapLog = Log.Fn<IEngine>(startTimer: true);
+            var wrapLog = Log.Fn<IEngine>(timer: true);
             if (_engine != null) return wrapLog.Return(_engine, "cached");
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return wrapLog.ReturnNull("no view");

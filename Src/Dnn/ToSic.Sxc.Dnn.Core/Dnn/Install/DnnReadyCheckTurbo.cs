@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block, ILazySvc<AppFolderInitializer> appFolderInitializerLazy)
         {
-            var timerWrap = Log.Fn<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", startTimer: true);
+            var timerWrap = Log.Fn<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", timer: true);
 
             if (CachedModuleResults.TryGetValue(_module.ModuleId, out var exists) && exists)
                 return timerWrap.ReturnTrue("Previous check completed, will skip");

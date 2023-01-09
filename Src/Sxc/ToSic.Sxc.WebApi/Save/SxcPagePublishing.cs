@@ -72,7 +72,7 @@ namespace ToSic.Sxc.WebApi.Save
                 postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
             }
 
-            Log.A(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");
+            Log.A(Log.Try(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}"));
             return postSaveIds;
         }
 

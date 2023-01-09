@@ -68,7 +68,8 @@ namespace ToSic.Sxc.Code
             );
         }
 
-        public DynamicCodeService(Dependencies dependencies): base($"{Constants.SxcLogName}.DCS")
+        public DynamicCodeService(Dependencies dependencies): this(dependencies, $"{Constants.SxcLogName}.DCS") { }
+        protected DynamicCodeService(Dependencies dependencies, string logName): base(logName)
         {
             _dependencies = dependencies.SetLog(Log);
             ScopedServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
@@ -76,6 +77,7 @@ namespace ToSic.Sxc.Code
             // and NOT come from the constructor injection
             _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
         }
+
         /// <summary>
         /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects
         /// </summary>

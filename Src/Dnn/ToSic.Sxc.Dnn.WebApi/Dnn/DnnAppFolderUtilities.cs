@@ -81,7 +81,7 @@ namespace ToSic.Sxc.Dnn
             return l.ReturnAndLog(appFolder);
         }
 
-        internal static HttpResponseException ReportToLogAndThrow<T>(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, LogCall<T> logCallToClose)
+        internal static HttpResponseException ReportToLogAndThrow<T>(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, ILogCall<T> logCallToClose)
         {
             var helpText = ErrorHelp.HelpText(e);
             var exception = new Exception(msg + helpText, e);

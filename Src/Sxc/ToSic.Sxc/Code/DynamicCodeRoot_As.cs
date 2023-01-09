@@ -39,13 +39,13 @@ namespace ToSic.Sxc.Code
 
         private dynamic AsDynamicInternal(object dynObject)
         {
-            var wrapLog = Log.Fn<dynamic>();
+            var wrapLog = Log.Fn<object>();
             switch (dynObject)
             {
                 case null:
-                    return wrapLog.Return(AsDynamic(null as string), "null");
+                    return wrapLog.Return((object)AsDynamic(null as string), "null");
                 case string strObject:
-                    return wrapLog.Return(AsDynamic(strObject), "string");
+                    return wrapLog.Return((object)AsDynamic(strObject), "string");
                 case IDynamicEntity dynEnt:
                     return wrapLog.Return(dynEnt, "DynamicEntity");
                 // New case - should avoid re-converting dynamic json, DynamicStack etc.

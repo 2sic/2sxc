@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Dnn
 
         public override IBlock GetBlock<TPlatformModule>(TPlatformModule module, int? pageId)
         {
-            var wrapLog = Log.Fn<BlockFromModule>(startTimer: true);
+            var wrapLog = Log.Fn<BlockFromModule>(timer: true);
             if (module == null) throw new ArgumentNullException(nameof(module));
             if (!(module is ModuleInfo dnnModule)) throw new ArgumentException("Given data is not a module");
             Log.A($"Module: {dnnModule.ModuleID}");

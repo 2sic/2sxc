@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Code
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrap = Log.Fn<dynamic>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
+            var wrap = Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "CreateInstance",
                 $"{nameof(name)},{nameof(throwOnError)}");
 

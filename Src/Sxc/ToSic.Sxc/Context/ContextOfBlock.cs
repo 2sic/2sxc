@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Context
             PageServiceShared pageServiceShared,
             ContextOfSite.Dependencies siteCtxDeps,
             ContextOfApp.Dependencies appDependencies)
-            : base(siteCtxDeps, appDependencies)
+            : base(siteCtxDeps, appDependencies, "Sxc.CtxBlk")
         {
             Page = page;
             Module = module;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Context
             // special check to prevent duplicate SetLog, because it could be cloned and already initialized
             //if (!_publishingResolver.HasInitCall)
             //    _publishingResolver.SetLog(Log);
-            Log.Rename("Sxc.CtxBlk");
+            //Log.Rename("Sxc.CtxBlk");
         }
         private readonly LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 

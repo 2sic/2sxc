@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
 
         private dynamic TryToBuildFirstOfStream(string sourceStream)
         {
-            var wrapLog = Log.Fn<dynamic>(sourceStream);
+            var wrapLog = Log.Fn<object>(sourceStream);
             if (Data == null || Block.View == null) return wrapLog.ReturnNull("no data/block");
             if (!Data.Out.ContainsKey(sourceStream)) return wrapLog.ReturnNull("stream not found");
 

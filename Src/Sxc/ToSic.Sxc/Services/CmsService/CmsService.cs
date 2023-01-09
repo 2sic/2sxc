@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Services.CmsService
                 // ...wysiwyg
                 if (attribute.InputType() == InputTypes.InputTypeWysiwyg)
                 {
-                    var html = field.Raw;
+                    var html = field.Raw as string;
                     if (string.IsNullOrWhiteSpace(html))
                         return l.Return(realContainer.Wrap(thing), "no html, treat as value");
 

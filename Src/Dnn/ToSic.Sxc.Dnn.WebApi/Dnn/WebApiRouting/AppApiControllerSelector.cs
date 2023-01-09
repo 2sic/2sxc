@@ -161,7 +161,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
         private HttpControllerDescriptor HttpControllerDescriptor(HttpRequestMessage request, 
             string controllerFolder, string controllerPath, string controllerTypeName,
-            LogCall<HttpControllerDescriptor> wrapLog)
+            ILogCall<HttpControllerDescriptor> wrapLog)
         {
             var assembly = BuildManager.GetCompiledAssembly(controllerPath);
             var type = assembly.GetType(controllerTypeName, true, true);

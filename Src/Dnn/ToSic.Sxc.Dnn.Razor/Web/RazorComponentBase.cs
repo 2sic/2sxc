@@ -70,13 +70,13 @@ namespace ToSic.Sxc.Web
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrapLog = Log15.Fn<dynamic>($"{virtualPath}, ..., {name}");
+            var wrapLog = Log15.Fn<object>($"{virtualPath}, ..., {name}");
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             var result = path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
-            return wrapLog.Return(result, "ok");
+            return wrapLog.Return((object)result, "ok");
         }
 
         [PrivateApi]

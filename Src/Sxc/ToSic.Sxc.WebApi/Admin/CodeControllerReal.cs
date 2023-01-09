@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
         public IEnumerable<HelpItem> InlineHelp(string language)
         {
-            var wrapLog = Log.Fn<IEnumerable<HelpItem>>(startTimer: true);
+            var wrapLog = Log.Fn<IEnumerable<HelpItem>>(timer: true);
 
             if (_inlineHelp != null) return wrapLog.ReturnAsOk(_inlineHelp);
 

@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 
         internal IBlock GetCmsBlock(HttpRequestMessage request)
         {
-            var wrapLog = Log.Fn<IBlock>(startTimer: true);
+            var wrapLog = Log.Fn<IBlock>(timer: true);
 
             var moduleInfo = request.FindModuleInfo();
 

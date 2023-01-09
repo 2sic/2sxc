@@ -36,10 +36,10 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Fn<object>(Debug);
             if (settings == null || settings is bool boolSettings && boolSettings)
-                return wrapLog.Return(GetCodeRootSettingsByName("Content"), "null/default");
+                return wrapLog.Return((object)GetCodeRootSettingsByName("Content"), "null/default");
 
             if (settings is string strName && !string.IsNullOrWhiteSpace(strName))
-                return wrapLog.Return(GetCodeRootSettingsByName(strName), $"name: {strName}");
+                return wrapLog.Return((object)GetCodeRootSettingsByName(strName), $"name: {strName}");
 
             return wrapLog.Return(settings, "unchanged");
         }
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Images
         {
             var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {_DynCodeRoot != null}");
             var result = (_DynCodeRoot?.Settings?.Images as ICanGetByName)?.Get(strName);
-            return wrapLog.Return(result, $"found: {result != null}");
+            return wrapLog.Return((object)result, $"found: {result != null}");
         }
 
         /// <summary>

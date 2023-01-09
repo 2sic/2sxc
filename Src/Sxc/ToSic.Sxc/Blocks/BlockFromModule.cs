@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Blocks
         public BlockFromModule Init(IContextOfBlock ctx)
         {
             Init(ctx, ctx.Module.BlockIdentifier);
-            var wrapLog = Log.Fn<BlockFromModule>(startTimer: true);
+            var wrapLog = Log.Fn<BlockFromModule>(timer: true);
             IsContentApp = ctx.Module.IsContent;
             CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
             return wrapLog.ReturnAsOk(this);

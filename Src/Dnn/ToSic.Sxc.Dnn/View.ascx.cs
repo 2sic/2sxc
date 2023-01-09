@@ -44,8 +44,8 @@ namespace ToSic.Sxc.Dnn
 
         private ILog Log { get; } = new Log("Sxc.View");
 
-        protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
-        private readonly GetOnce<LogCall> _logTimer = new GetOnce<LogCall>();
+        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
+        private readonly GetOnce<ILogCall> _logTimer = new GetOnce<ILogCall>();
 
         #endregion
 
@@ -66,9 +66,9 @@ namespace ToSic.Sxc.Dnn
 
                 // add to insights-history for analytic
                 GetService<ILogStore>().Add("module", Log);
-                LogTimer.Stopwatch.Start();
+                LogTimer.Timer.Start();
 
-                var callLog = Log.Fn(startTimer: true);
+                var callLog = Log.Fn(timer: true);
 
                 // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
                 var checkPortalIsReady = true;
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Dnn
         {
             var finalMessage = "";
             LogTimer.DoInTimer(() => { 
-                var callLog = Log.Fn(startTimer: true);
+                var callLog = Log.Fn(timer: true);
 
                 // #lightspeed
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
@@ -171,7 +171,7 @@ namespace ToSic.Sxc.Dnn
 
         private IRenderResult RenderViewAndGatherJsCssSpecs()
         {
-            var callLog = Log.Fn(message: $"module {ModuleId} on page {TabId}", startTimer: true);
+            var callLog = Log.Fn(message: $"module {ModuleId} on page {TabId}", timer: true);
             var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
             {

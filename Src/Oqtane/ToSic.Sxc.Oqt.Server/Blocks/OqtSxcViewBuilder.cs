@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             LogTimer.DoInTimer(() =>
             {
                 #region Lightspeed output caching
-                var callLog = Log.Fn(startTimer: true);
+                var callLog = Log.Fn(timer: true);
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
                 var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
                 finalMessage = OutputCache?.IsEnabled != true ? "" : OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
@@ -126,8 +126,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         }));
         private readonly GetOnce<IBlock> _blockGetOnce = new();
 
-        protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
-        private readonly GetOnce<LogCall> _logTimer = new();
+        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
+        private readonly GetOnce<ILogCall> _logTimer = new();
 
 
         protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Module.ModuleId, Page?.PageId ?? 0, Block));

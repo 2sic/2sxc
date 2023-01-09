@@ -90,12 +90,12 @@ namespace ToSic.Sxc.Code
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrapLog = base.Log.Fn<dynamic>();
+            var wrapLog = base.Log.Fn<object>();
             // usually we don't have a relative path, so we use the preset path from when this class was instantiated
             relativePath = relativePath ?? CreateInstancePath;
             var instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name,
                 relativePath ?? CreateInstancePath, throwOnError);
-            return wrapLog.Return(instance, (instance != null).ToString());
+            return wrapLog.ReturnAndLog((object)instance);
         }
 
         #endregion

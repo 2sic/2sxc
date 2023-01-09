@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Views
 
         public PolymorphismDto Polymorphism(int appId)
         {
-            var callLog = Log.Fn<dynamic>($"a#{appId}");
+            var callLog = Log.Fn<PolymorphismDto>($"a#{appId}");
             var appState = _appStates.Get(appId);
             var poly = _polymorphism.Init(appState.List);
             var result = new PolymorphismDto

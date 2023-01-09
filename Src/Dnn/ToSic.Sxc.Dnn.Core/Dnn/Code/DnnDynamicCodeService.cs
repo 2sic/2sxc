@@ -42,9 +42,8 @@ namespace ToSic.Sxc.Dnn.Code
             }
         }
 
-        public DnnDynamicCodeService(Dependencies dependencies) : base(dependencies)
+        public DnnDynamicCodeService(Dependencies dependencies) : base(dependencies, $"{DnnConstants.LogName}.DynCdS")
         {
-            Log.Rename(DnnConstants.LogName + ".DynCdS");
             _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
             _user = dependencies.User;
             Page = HttpContext.Current?.Handler as Page;

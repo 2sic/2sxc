@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="action"></param>
         /// <param name="timerWrap"></param>
-        private void TryCatchAndLogToDnn(Action action, LogCall timerWrap = null)
+        private void TryCatchAndLogToDnn(Action action, ILogCall timerWrap = null)
         {
             try
             {
