@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Web.Client.ClientResourceManagement;
+﻿using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Controllers;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -173,8 +174,10 @@ namespace ToSic.Sxc.Dnn.Install
                 if (version == EavSystemInfo.VersionString)
                 {
                     _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
-
-                    ClientResourceManager.UpdateVersion();
+                    
+                    HostController.Instance.IncrementCrmVersion(true);
+                    DataCache.ClearCache();
+                    
                     _installLogger.LogStep(version, "ClientResourceManager- done clearing");
 
                     UpgradeComplete = IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
