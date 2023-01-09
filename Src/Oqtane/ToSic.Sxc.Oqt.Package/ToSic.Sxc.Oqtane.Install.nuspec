@@ -17,7 +17,7 @@
     <tags>oqtane module</tags>
     <readme>docs\README.md</readme>
     <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
-    <summary>2sxc 14 - CMS &amp; App-Engine for Oqtane</summary>
+    <summary>2sxc 15 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
       <dependency id="Oqtane.Framework" version="3.2.0" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.0.4" />
