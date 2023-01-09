@@ -76,6 +76,9 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
@@ -125,7 +128,7 @@
     <Reference Include="ToSic.Imageflow.Dnn, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\Imageflow\Dnn\ToSic.Imageflow.Dnn.dll</HintPath>
-      <Private>False</Private>
+      <Private>False</Private><!-- this is important, otherwise it will be copied to the bin folder -->
     </Reference>
     <Reference Include="ToSic.Razor, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -305,6 +308,19 @@
     <Content Include="DnnPackageBuilder\SqlDataProvider\13.04.00.SqlDataProvider" />
     <Content Include="DnnPackageBuilder\SqlDataProvider\15.00.00.SqlDataProvider" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.DebugDnn.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.DebugOqtane.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MSBuildTasks">
