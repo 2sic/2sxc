@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 
@@ -13,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Install
     /// Helper class to ensure that the an app is ready.
     /// It will have to do various file accesses - so once it knows a module is ready, it will cache the result.
     /// </summary>
-    public class DnnReadyCheckTurbo : HasLog
+    public class DnnReadyCheckTurbo : ServiceBase
     {
         /// <summary>
         /// Fast static check to see if the check had previously completed. 
@@ -32,11 +33,11 @@ namespace ToSic.Sxc.Dnn.Install
                 return;
             }
 
-            new DnnReadyCheckTurbo(module, log).EnsureSiteAndAppFoldersAreReadyInternal(block, appFolderInitializerLazy);
+            new DnnReadyCheckTurbo(module).Init(log).EnsureSiteAndAppFoldersAreReadyInternal(block, appFolderInitializerLazy);
             wrapLog.Done("deep-check: ready");
         }
 
-        private DnnReadyCheckTurbo(PortalModuleBase module, ILog parentLog) : base("Dnn.PreChk", parentLog) => _module = module;
+        private DnnReadyCheckTurbo(PortalModuleBase module) : base("Dnn.PreChk") => _module = module;
         private readonly PortalModuleBase _module;
 
         /// <summary>

@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
         public ILookUpEngine GetLookUpEngine(int instanceId)
         {
-            var providers = new LookUpEngine(Log);
+            var providers = new LookUpEngine().Init(Log);
 
             providers.Add(_queryStringLookUp.Value);
             providers.Add(new DateTimeLookUp());

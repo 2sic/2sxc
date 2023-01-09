@@ -2,12 +2,13 @@
 using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class CspPolicyTextProcessor: HasLog
+    public class CspPolicyTextProcessor: ServiceBase
     {
-        public CspPolicyTextProcessor(ILog parentLog) : base(CspConstants.LogPrefix + ".TxtPrc", parentLog)
+        public CspPolicyTextProcessor() : base(CspConstants.LogPrefix + ".TxtPrc")
         {
         }
 

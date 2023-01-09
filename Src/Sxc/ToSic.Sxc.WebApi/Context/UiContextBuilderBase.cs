@@ -20,7 +20,7 @@ using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public class UiContextBuilderBase: HasLog, IUiContextBuilder
+    public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.Dependencies>, IUiContextBuilder
     {
 
         #region Dependencies 
@@ -62,16 +62,12 @@ namespace ToSic.Sxc.WebApi.Context
 
         #region Constructor / DI
 
-        protected UiContextBuilderBase(Dependencies dependencies): base(Constants.SxcLogName + ".UiCtx")
+        protected UiContextBuilderBase(Dependencies dependencies): base(dependencies, Constants.SxcLogName + ".UiCtx")
         {
-            Deps = dependencies.SetLog(Log);
-            _appToLaterInitialize = dependencies.AppToLaterInitialize;
         }
-        protected Dependencies Deps;
 
         protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
         protected Sxc.Apps.IApp App;
-        private readonly Apps.IApp _appToLaterInitialize;
         protected AppState AppState;
 
         #endregion
@@ -79,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Context
         public IUiContextBuilder InitApp(AppState appState)
         {
             AppState = appState;
-            App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null) : null;
+            App = appState != null ? (Deps.AppToLaterInitialize as Apps.App)?.Init(appState, null) : null;
             return this;
         }
 

@@ -7,11 +7,12 @@ using System.Linq;
 using System.Web.Configuration;
 using DotNetNuke.Services.FileSystem;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Dnn.Adam
 {
-    public class DnnAdamFileSystem : HasLog, IAdamFileSystem<int, int>
+    public class DnnAdamFileSystem : ServiceBase, IAdamFileSystem<int, int>
     {
         #region Constructor / DI / Init
 

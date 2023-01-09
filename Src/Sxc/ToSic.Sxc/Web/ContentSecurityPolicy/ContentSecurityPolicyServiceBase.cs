@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// Very experimental, do not use
     /// </summary>
     [PrivateApi]
-    public class ContentSecurityPolicyServiceBase : HasLog, IContentSecurityPolicyService
+    public class ContentSecurityPolicyServiceBase : ServiceBase, IContentSecurityPolicyService
     {
         public ContentSecurityPolicyServiceBase(): base($"{Constants.SxcLogName}.CspSvc") { }
 

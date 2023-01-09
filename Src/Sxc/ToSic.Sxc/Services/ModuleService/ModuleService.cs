@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Services
 {
     [PrivateApi]
-    public class ModuleService: HasLog, IModuleService
+    public class ModuleService: ServiceBase, IModuleService
     {
         public ModuleService() : base(Constants.SxcLogName + ".ModSvc") { }
 

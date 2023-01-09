@@ -4,7 +4,6 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 #else
 using System.Web.Hosting;
-using System;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 #endif

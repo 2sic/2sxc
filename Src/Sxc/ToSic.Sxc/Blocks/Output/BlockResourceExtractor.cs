@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
@@ -13,7 +14,7 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Blocks.Output
 {
-    public abstract partial class BlockResourceExtractor: HasLog, IBlockResourceExtractor
+    public abstract partial class BlockResourceExtractor: ServiceBase, IBlockResourceExtractor
     {
         #region Construction / DI
 

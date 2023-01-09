@@ -1,15 +1,16 @@
 ﻿using DotNetNuke.Common;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    public class DnnJsApiHeader: HasLog
+    public class DnnJsApiHeader: ServiceBase
     {
-        public DnnJsApiHeader(ILog parentLog) : base("Dnn.JsApiH", parentLog)
+        public DnnJsApiHeader() : base("Dnn.JsApiH")
         {
         }
 

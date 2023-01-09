@@ -2,6 +2,7 @@
 using ToSic.Eav.Security.Encryption;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Services
     /// To encrypt other values, use the SecureDataTest.DumpEncryptedValue() code and get the encrypted value from the Trace
     /// </summary>
     [PrivateApi("Hide implementation")]
-    public class SecureDataService: HasLog, ISecureDataService
+    public class SecureDataService: ServiceBase, ISecureDataService
     {
         public SecureDataService() : base(Constants.SxcLogName + ".SecDtS") { }
 

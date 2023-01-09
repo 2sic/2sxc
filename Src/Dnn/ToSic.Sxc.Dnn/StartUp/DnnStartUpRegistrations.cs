@@ -1,16 +1,18 @@
 ﻿using ToSic.Eav.Configuration;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.StartUp
 {
-    public class DnnStartUpRegistrations: HasLog, IStartUpRegistrations
+    public class DnnStartUpRegistrations: ServiceBase, IStartUpRegistrations
     {
         public string NameId => Log.NameId;
 
         public DnnStartUpRegistrations(FeaturesCatalog featuresCatalog): base($"{DnnConstants.LogName}.SUpReg")
         {
-            _featuresCatalog = featuresCatalog;
+            ConnectServices(
+                _featuresCatalog = featuresCatalog
+            );
         }
         private readonly FeaturesCatalog _featuresCatalog;
 

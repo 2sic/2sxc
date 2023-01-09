@@ -9,6 +9,7 @@ using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
 using ToSic.Eav;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
@@ -16,7 +17,7 @@ using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Dnn.Web
 {
-    public class DnnClientResources: HasLog
+    public class DnnClientResources: ServiceBase
     {
         /// <summary>
         /// DI Constructor
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Web
             _forcePre1025Behavior = forcePre1025Behavior;
             Page = page;
             BlockBuilder = blockBuilder as BlockBuilder;
-            Header = new DnnJsApiHeader(Log);
+            Header = new DnnJsApiHeader().Init(Log);
             return this;
         }
         protected BlockBuilder BlockBuilder;

@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helper;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
@@ -9,14 +9,14 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// <summary>
     /// Helper class to read the dynamic settings for the current site or global to be used in CSP
     /// </summary>
-    public class CspSettingsReader: HasLog
+    public class CspSettingsReader: ServiceBase
     {
         private const string FieldIsEnabled = "IsEnabled";
         private const string FieldIsEnforced = "IsEnforced";
         private const string FieldPolicies = "Policies";
         private const string FieldCSPs = "ContentSecurityPolicies";
 
-        public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode, ILog parentLog): base(CspConstants.LogPrefix + ".Setting", parentLog)
+        public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode): base($"{CspConstants.LogPrefix}.Setting")
         {
             _user = user;
             _devMode = devMode;

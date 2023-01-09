@@ -5,18 +5,21 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Apps.Paths
 {
-    public class AppFolderInitializer : HasLog
+    public class AppFolderInitializer : ServiceBase
     {
         #region Constructor / DI
 
         public AppFolderInitializer(IServerPaths serverPaths, IGlobalConfiguration globalConfiguration, ISite site): base("Viw.Help")
         {
-            ServerPaths = serverPaths;
-            _globalConfiguration = globalConfiguration;
-            _site = site;
+            ConnectServices(
+                ServerPaths = serverPaths,
+                _globalConfiguration = globalConfiguration,
+                _site = site
+            );
         }
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly ISite _site;

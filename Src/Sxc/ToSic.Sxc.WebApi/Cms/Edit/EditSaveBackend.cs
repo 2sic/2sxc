@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.A($"save started with a#{_appId}, i⋮{package.Items.Count}, partOfPage:{partOfPage}");
 
-            var validator = new SaveDataValidator(package, Log);
+            var validator = new SaveDataValidator(package).Init(Log);
             // perform some basic validation checks
             if (!validator.ContainsOnlyExpectedNodes(out var exp))
                 throw exp;
@@ -149,7 +149,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
                 .ToList();
 
-            var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
+            var save = new Eav.WebApi.SaveHelpers.SaveEntities().Init(Log);
             save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
 
             return save.GenerateIdList(appMan.Read.Entities, items);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 
 namespace ToSic.Sxc.Apps.Assets
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Apps.Assets
     }
 
     [PrivateApi]
-    public partial class AssetTemplates : HasLog
+    public partial class AssetTemplates : ServiceBase
     {
         #region Constants
 

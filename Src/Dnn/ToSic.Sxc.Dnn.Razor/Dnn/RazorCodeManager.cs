@@ -2,15 +2,15 @@
 using System.IO;
 using System.Web;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Code;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class RazorCodeManager: HasLog
+    public class RazorCodeManager: ServiceBase
     {
         public RazorComponentBase Parent;
-        public RazorCodeManager(RazorComponentBase parent): base("Rzr.Code", (parent?.Log as CodeLog)?.GetContents())
+        public RazorCodeManager(RazorComponentBase parent): base("Rzr.Code")
         {
             Parent = parent;
         }

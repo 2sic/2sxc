@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
             if (enabled)
             {
-                var moduleVersionSettings = new ModuleVersions(instanceId, Log);
+                var moduleVersionSettings = new ModuleVersions(instanceId).Init(Log);
                 
                 // Get an new version number and submit it to DNN
                 // The submission must be made every time something changes, because a "discard" could have happened
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public int GetLatestVersion(int instanceId)
         {
-            var moduleVersionSettings = new ModuleVersions(instanceId, Log);
+            var moduleVersionSettings = new ModuleVersions(instanceId).Init(Log);
             var ver = moduleVersionSettings.GetLatestVersion();
             Log.A($"GetLatestVersion(m:{instanceId}) = ver:{ver}");
             return ver;
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         public int GetPublishedVersion(int instanceId)
         {
-            var moduleVersionSettings = new ModuleVersions(instanceId, Log);
+            var moduleVersionSettings = new ModuleVersions(instanceId).Init(Log);
             var pubVersion = moduleVersionSettings.GetPublishedVersion();
             Log.A($"GetPublishedVersion(m:{instanceId}) = pub:{pubVersion}");
             return pubVersion;
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 }
 
                 // Set published version
-                new ModuleVersions(instanceId, Log).PublishLatestVersion();
+                new ModuleVersions(instanceId).Init(Log).PublishLatestVersion();
                 Log.A("publish completed");
             }
             catch (Exception ex)

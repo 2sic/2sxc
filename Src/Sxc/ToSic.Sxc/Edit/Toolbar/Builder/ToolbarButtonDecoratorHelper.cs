@@ -1,11 +1,11 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Lib.Logging;
 using System.Linq;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarButtonDecoratorHelper: HasLog
+    public class ToolbarButtonDecoratorHelper: ServiceBase
     {
 
         public ToolbarButtonDecoratorHelper(IAppStates appStates): base($"{Constants.SxcLogName}.TbdHlp")

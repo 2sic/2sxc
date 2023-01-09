@@ -2,12 +2,13 @@
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Run.Unknown;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 
 
 namespace ToSic.Sxc.Run
 {
-    public class BasicEnvironmentInstaller: HasLog, IEnvironmentInstaller, IIsUnknown
+    public class BasicEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IIsUnknown
     {
         public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> warn) : base($"{LogScopes.NotImplemented}.Instll")
         {

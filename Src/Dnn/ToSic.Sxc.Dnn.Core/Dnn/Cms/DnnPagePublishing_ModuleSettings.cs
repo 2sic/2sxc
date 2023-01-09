@@ -1,12 +1,13 @@
 ﻿using DotNetNuke.Entities.Modules;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.SexyContent.Environment.Dnn7;
 
 namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class DnnPagePublishing
     {
-        internal class ModuleVersions: HasLog
+        internal class ModuleVersions: ServiceBase
         {
             private const string LatestVersionSettingsKey = "LatestVersion";
 
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Cms
             public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
 
 
-            public ModuleVersions(int instanceId, ILog parentLog): base("Dnn.ModVer", parentLog, "()")
+            public ModuleVersions(int instanceId): base("Dnn.ModVer")
             {
                 _settingsHelper = new ModuleSettingsHelper(instanceId);
             }

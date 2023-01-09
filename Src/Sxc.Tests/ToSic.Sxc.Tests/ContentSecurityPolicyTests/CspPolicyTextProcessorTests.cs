@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
@@ -8,7 +7,7 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
     [TestClass]
     public class CspPolicyTextProcessorTests
     {
-        private readonly CspPolicyTextProcessor _processor = new CspPolicyTextProcessor(null);
+        private readonly CspPolicyTextProcessor _processor = new CspPolicyTextProcessor();
 
         [TestMethod]
         public void EmptyWhenNull() => Assert.AreEqual(0, _processor.Parse(null).Count);

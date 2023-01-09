@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Code
     /// Special helper which will create the code-root based on the parent class requesting it.
     /// If the parent is generic supporting IDynamicModel[Model, Kit] it will create the generic root
     /// </summary>
-    public class DnnCodeRootFactory: HasLog
+    public class DnnCodeRootFactory: ServiceBase
     {
         public DnnCodeRootFactory(IServiceProvider serviceProvider): base(DnnConstants.LogName + ".CDRFac")
         {

@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public IEnumerable<ViewDto> Usage(int appId, Guid guid) => Real.UsagePreparations((views, blocks) =>
         {
             // create array with all 2sxc modules in this portal
-            var allMods = new Pages.Pages(Log).AllModulesWithContent(PortalSettings.PortalId);
+            var allMods = new Pages.Pages().Init(Log).AllModulesWithContent(PortalSettings.PortalId);
             Log.A($"Found {allMods.Count} modules");
 
             return views.Select(vwb => new ViewDto().Init(vwb, blocks, allMods));

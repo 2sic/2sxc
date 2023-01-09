@@ -6,10 +6,11 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
-    public class DnnApiInspector: HasLog, IApiInspector
+    public class DnnApiInspector: ServiceBase, IApiInspector
     {
         public DnnApiInspector(): base(DnnConstants.LogName)
         {

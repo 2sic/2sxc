@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class CspParameterFinalizer: HasLog
+    public class CspParameterFinalizer: ServiceBase
     {
         public CspParameterFinalizer(): base(CspConstants.LogPrefix + ".ParFin")
         {

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
-    public abstract class PagePublishingGetSettingsBase: HasLog, IPagePublishingGetSettings
+    public abstract class PagePublishingGetSettingsBase: ServiceBase, IPagePublishingGetSettings
     {
         protected PagePublishingGetSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }
 

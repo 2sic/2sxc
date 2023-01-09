@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Configuration.Licenses;
+﻿using ToSic.Eav.Configuration.Licenses;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -20,7 +19,7 @@ namespace ToSic.Sxc.Blocks
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
     [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
-    public partial class BlockBuilder : HasLog, IBlockBuilder
+    public partial class BlockBuilder : ServiceBase<BlockBuilder.Dependencies>, IBlockBuilder
     {
         public class Dependencies: ServiceDependencies
         {
@@ -49,9 +48,7 @@ namespace ToSic.Sxc.Blocks
         }
 
         #region Constructor
-        public BlockBuilder(Dependencies dependencies) : base("Sxc.BlkBld") 
-            => _deps = dependencies.SetLog(Log);
-        private readonly Dependencies _deps;
+        public BlockBuilder(Dependencies dependencies) : base(dependencies, "Sxc.BlkBld") { }
 
         public BlockBuilder Init(IBlockBuilder rootBlockBuilder, IBlock cb)
         {

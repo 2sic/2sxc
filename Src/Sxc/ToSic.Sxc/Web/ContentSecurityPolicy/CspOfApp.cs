@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             Log.A($"has {nameof(appSettings)}: {appSettings != null}");
 
             // CSP Settings Reader from Dynamic Entity for the App
-            var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode, Log);
+            var cspReader = new CspSettingsReader(appSettings, _user, _moduleCsp.UrlIsDevMode).Init(Log);
             var policies = cspReader.Policies;
             return cLog.ReturnAndLog(policies);
         }

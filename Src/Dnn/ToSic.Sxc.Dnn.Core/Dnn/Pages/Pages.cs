@@ -4,12 +4,13 @@ using System.Linq;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.Pages
 {
-    public class Pages: HasLog
+    public class Pages: ServiceBase
     {
-        public Pages(ILog parentLog = null) : base("Dnn.Pages", parentLog)
+        public Pages() : base("Dnn.Pages")
         {
         }
 

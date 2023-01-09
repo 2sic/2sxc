@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private CspSettingsReader SiteCspSettings => _siteCspSettings.Get(() =>
         {
             var pageSettings = CodeRootSettings()?.GetStack(PartSiteSystem, PartGlobalSystem, PartPresetSystem);
-            return new CspSettingsReader(pageSettings, _user, UrlIsDevMode, Log);
+            return new CspSettingsReader(pageSettings, _user, UrlIsDevMode).Init(Log);
         }, Log, nameof(SiteCspSettings));
         private readonly GetOnce<CspSettingsReader> _siteCspSettings = new GetOnce<CspSettingsReader>();
 
@@ -149,7 +149,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             var appPolicies = GetAppPolicies();
             var merged = $"{sitePolicies}\n{appPolicies}";
             Log.A($"Merged: {merged}");
-            return new CspPolicyTextProcessor(Log).Parse(merged);
+            return new CspPolicyTextProcessor().Init(Log).Parse(merged);
         }, Log, nameof(Policies));
         private readonly GetOnce<List<KeyValuePair<string, string>>> _policies = new GetOnce<List<KeyValuePair<string, string>>>();
 

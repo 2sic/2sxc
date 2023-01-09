@@ -2,13 +2,14 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run.Unknown;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
 
 namespace ToSic.Sxc.Run
 {
-    internal class BasicModuleUpdater: HasLog, IPlatformModuleUpdater
+    internal class BasicModuleUpdater: ServiceBase, IPlatformModuleUpdater
     {
         /// <summary>
         /// Empty constructor for DI

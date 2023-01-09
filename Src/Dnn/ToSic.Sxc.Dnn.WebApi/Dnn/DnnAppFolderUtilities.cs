@@ -7,6 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
@@ -15,15 +16,17 @@ using ToSic.Sxc.Dnn.WebApiRouting;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class DnnAppFolderUtilities: HasLog
+    public class DnnAppFolderUtilities: ServiceBase
     {
         private readonly Generator<AppFolder> _appFolder;
         private readonly Generator<DnnGetBlock> _dnnGetBlock;
 
         public DnnAppFolderUtilities(Generator<AppFolder> appFolder, Generator<DnnGetBlock> dnnGetBlock) : base($"{DnnConstants.LogName}.AppFld")
         {
-            _appFolder = appFolder;
-            _dnnGetBlock = dnnGetBlock;
+            ConnectServices(
+                _appFolder = appFolder,
+                _dnnGetBlock = dnnGetBlock
+            );
         }
 
         internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site)

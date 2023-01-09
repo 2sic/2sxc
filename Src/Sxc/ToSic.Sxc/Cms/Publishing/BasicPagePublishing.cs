@@ -3,11 +3,12 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run.Unknown;
+using ToSic.Lib.Services;
 
 
 namespace ToSic.Sxc.Cms.Publishing
 {
-    internal class BasicPagePublishing : HasLog, IPagePublishing
+    internal class BasicPagePublishing : ServiceBase, IPagePublishing
     {
         public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> warn) : base($"{LogScopes.NotImplemented}.Publsh") { }
 

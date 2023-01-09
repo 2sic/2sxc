@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
     /// </summary>
-    internal class ResizeParamMerger: HasLog
+    internal class ResizeParamMerger: ServiceBase
     {
         private const string ResizeModeField = "ResizeMode";
         private const string ScaleModeField = "ScaleMode";

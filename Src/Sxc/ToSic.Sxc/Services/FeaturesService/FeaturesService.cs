@@ -1,9 +1,10 @@
 ﻿using System;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Services
 {
-    public class FeaturesService: HasLog, IFeaturesService, ICanDebug
+    public class FeaturesService: ServiceBase, IFeaturesService, ICanDebug
     {
         public FeaturesService(Eav.Configuration.IFeaturesInternal root) : base($"{Constants.SxcLogName}.FeatSv")
             => _root = root;
@@ -17,8 +18,6 @@ namespace ToSic.Sxc.Services
             var wrapLog = Log.Fn<bool>(string.Join(",", nameIds ?? Array.Empty<string>()));
             return wrapLog.Return(result, $"{result}");
         }
-
-        //public bool Valid => _root.Valid;
 
         public bool Debug { get; set; }
     }

@@ -116,7 +116,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             // 4. Now import the App.xml
             var allowSystemChanges = _user.IsSystemAdmin;
             var xmlImport = _xmlImportWithFilesLazy.Value.Init(defaultLanguage, allowSystemChanges);
-            var imp = new ImportXmlReader(filePath, xmlImport, Log);
+            var imp = new ImportXmlReader(filePath, xmlImport).Init(Log);
             result.Success = xmlImport.ImportXml(zoneId, appId, imp.XmlDoc);
             result.Messages.AddRange(xmlImport.Messages);
             return result;

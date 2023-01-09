@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Code
 {
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Code
     // Code is based on DynamicRun by Laurent Kempé
     // https://github.com/laurentkempe/DynamicRun
     // https://laurentkempe.com/2019/02/18/dynamically-compile-and-run-code-using-dotNET-Core-3.0/
-    public class Compiler : HasLog
+    public class Compiler : ServiceBase
     {
         private static List<MetadataReference> References => _references ??= GetMetadataReferences();
         private static List<MetadataReference> _references;

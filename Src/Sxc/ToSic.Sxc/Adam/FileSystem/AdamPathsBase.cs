@@ -3,10 +3,11 @@ using System.IO;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
-    public class AdamPathsBase : HasLog, IAdamPaths
+    public class AdamPathsBase : ServiceBase, IAdamPaths
     {
         #region DI Constructor & Init
 
@@ -17,7 +18,9 @@ namespace ToSic.Sxc.Adam
 
         protected AdamPathsBase(IServerPaths serverPaths, string logPrefix) : base($"{logPrefix}.AdmPth")
         {
-            _serverPaths = serverPaths;
+            ConnectServices(
+                _serverPaths = serverPaths
+            );
         }
         private readonly IServerPaths _serverPaths;
 

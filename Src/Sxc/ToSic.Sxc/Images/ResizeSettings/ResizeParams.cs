@@ -1,5 +1,5 @@
 ﻿using System.Collections.Specialized;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// Helper to process optional parameters and figure out if they should be used or not
     /// </summary>
-    internal class ResizeParams: HasLog
+    internal class ResizeParams: ServiceBase
     {
         public ResizeParams() : base(Sxc.Constants.SxcLogName + ".ResPar") { }
 
