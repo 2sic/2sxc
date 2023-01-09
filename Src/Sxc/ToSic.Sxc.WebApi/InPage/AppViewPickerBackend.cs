@@ -13,7 +13,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.InPage
 {
-    public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
+    public class AppViewPickerBackend: BlockWebApiBackendBase
     {
         public AppViewPickerBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
             LazySvc<CmsManager> cmsManagerLazy, 

@@ -12,7 +12,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class ListControllerReal: BlockWebApiBackendBase<ListControllerReal>, IHasLog, IListController
+    public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListController
     {
         public const string LogSuffix = "Lst";
 

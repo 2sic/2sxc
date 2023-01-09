@@ -8,11 +8,11 @@ namespace ToSic.Sxc.Dnn.Install
     {
         internal bool IsUpgradeComplete(string version, string note = "")
         {
-            var l = Log.Fn<bool>(startTimer: true);
-            _installLogger.LogStep(version, "IsUgradeComplete checking " + note, false);
+            var l = Log.Fn<bool>(message: note, startTimer: true);
+            _installLogger.LogStep(version, "IsUpgradeComplete checking " + note, false);
             var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");
             var complete = File.Exists(logFilePath);
-            _installLogger.LogStep(version, "IsUgradeComplete: " + complete, false);
+            _installLogger.LogStep(version, "IsUpgradeComplete: " + complete, false);
             return l.Return(complete);
         }
 

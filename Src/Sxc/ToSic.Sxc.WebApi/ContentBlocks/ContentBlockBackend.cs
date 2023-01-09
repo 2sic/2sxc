@@ -20,7 +20,7 @@ using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
-    public class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
+    public class ContentBlockBackend : BlockWebApiBackendBase
     {
         private readonly Generator<BlockFromEntity> _entityBlockGenerator;
 
