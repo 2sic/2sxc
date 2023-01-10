@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Services
         /// See [](xref:ToSic.Razor.Blade.IHtmlTagService).
         ///
         /// > [!IMPORTANT]
-        /// > This is _similar but different_ to the [](xref:ToSic.Razor.Blade.Tag].
+        /// > This is _similar but different_ to the [](xref:ToSic.Razor.Blade.Tag).
         /// > The [](xref:ToSic.Razor.Blade.IHtmlTag) objects returned here are _immutable_.
         /// > This means that chained commands like `...HtmlTag.Div().Id(...).Class(...)`
         /// > all return new objects and don't modify the previous one.
