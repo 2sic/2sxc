@@ -36,9 +36,9 @@ namespace ToSic.Sxc.Dnn.Context
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public new DnnModule Init(ModuleInfo item, ILog parentLog)
+        public new DnnModule Init(ModuleInfo item)
         {
-            base.Init(item, parentLog);
+            base.Init(item);
             var warpLog = Log.Fn<DnnModule>($"{item?.ModuleID}");
             return warpLog.Return(this);
         }
@@ -47,10 +47,10 @@ namespace ToSic.Sxc.Dnn.Context
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public override IModule Init(int moduleId, ILog parentLog)
+        public override IModule Init(int moduleId)
         {
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
-            Init(mod, parentLog);
+            Init(mod);
             var wrapLog = Log.Fn<IModule>($"{moduleId}");
             return wrapLog.Return(this);
         }

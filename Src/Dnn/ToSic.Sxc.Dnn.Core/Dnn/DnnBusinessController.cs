@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = ServiceProvider.Build<IPagePublishing>().LinkLog(Log);
+                _publishing = ServiceProvider.Build<IPagePublishing>(Log);
                 ServiceProvider.Build<ILogStore>().Add("dnn-publishing", Log);
                 return _publishing;
             }
@@ -116,8 +116,8 @@ namespace ToSic.Sxc.Dnn
         {
             try
             {
-                return ServiceProvider.Build<SearchController>().LinkLog(Log)
-                    .GetModifiedSearchDocuments(((DnnModule)ServiceProvider.Build<IModule>()).Init(moduleInfo, Log), beginDate);
+                return ServiceProvider.Build<SearchController>(Log)
+                    .GetModifiedSearchDocuments(((DnnModule)ServiceProvider.Build<IModule>(Log)).Init(moduleInfo), beginDate);
             }
             catch (Exception e)
             {

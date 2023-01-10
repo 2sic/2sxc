@@ -199,7 +199,7 @@ namespace ToSic.Sxc.Startup
             // V15
             services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
             services.TryAddTransient<ITurnOnService, TurnOnService>();
-
+            services.TryAddTransient<BlockEditorSelector>();
 
             // Sxc StartUp Routines
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();    // must be Add, not TryAdd

@@ -6,9 +6,9 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class CspPolicyTextProcessor: ServiceBase
+    public class CspPolicyTextProcessor: HelperBase
     {
-        public CspPolicyTextProcessor() : base(CspConstants.LogPrefix + ".TxtPrc")
+        public CspPolicyTextProcessor(ILog parentLog) : base(parentLog, $"{CspConstants.LogPrefix}.TxtPrc")
         {
         }
 

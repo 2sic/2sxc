@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helper;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Images
 {
     public class ResponsivePicture: ResponsiveBase, IResponsivePicture
     {
-        internal ResponsivePicture(ImageService imgService, ResponsiveParams callParams) : base(imgService, callParams, "Picture")
+        internal ResponsivePicture(ImageService imgService, ResponsiveParams callParams, ILog parentLog) : base(imgService, callParams, parentLog, "Picture")
         {
         }
 

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             base.OnActionExecuting(context);
 
-            var getBlock = GetService<OqtGetBlock>().Init(Log);
+            var getBlock = GetService<OqtGetBlock>();
             CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
             BlockOptional = CtxResolver.RealBlockOrNull();
             wrapLog.Done();
@@ -32,6 +32,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         protected IBlock BlockOptional { get; private set; }
 
         protected IApp GetApp(int appId)
-            => GetService<Apps.App>().Init(Log).Init(appId, BlockOptional);
+            => GetService<Apps.App>().Init(appId, BlockOptional);
     }
 }

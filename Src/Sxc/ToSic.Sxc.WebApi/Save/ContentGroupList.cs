@@ -19,24 +19,28 @@ namespace ToSic.Sxc.WebApi.Save
 {
     public class ContentGroupList: ServiceBase
     {
+
         #region Constructor / DI
 
+        private readonly ILazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
-        private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
+        //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
+        //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity, _withDrafts));
         private CmsManager _cmsManager;
         private bool _withDrafts = false;
 
-        public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy, 
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt
+        public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy,
+            ILazySvc<BlockEditorSelector> blockEditorSelectorLazy
+            //Generator<BlockEditorForModule> blkEdtForMod,
+            //Generator<BlockEditorForEntity> blkEdtForEnt
             ) : base("Api.GrpPrc")
         {
             ConnectServices(
-                _cmsManagerLazy = cmsManagerLazy,
-                _blkEdtForMod = blkEdtForMod,
-                _blkEdtForEnt = blkEdtForEnt
+                _blockEditorSelectorLazy = blockEditorSelectorLazy,
+                _cmsManagerLazy = cmsManagerLazy
+                //_blkEdtForMod = blkEdtForMod,
+                //_blkEdtForEnt = blkEdtForEnt
             );
         }
 
@@ -118,7 +122,8 @@ namespace ToSic.Sxc.WebApi.Save
             }
 
             // update-module-title
-            BlockEditorBase.GetEditor(block, _blkEdtForMod, _blkEdtForEnt).UpdateTitle();
+            _blockEditorSelectorLazy.Value.GetEditor(block)
+            /*BlockEditorBase.GetEditor(block, _blkEdtForMod, _blkEdtForEnt)*/.UpdateTitle();
             return wrapLog.ReturnTrue("ok");
         }
 

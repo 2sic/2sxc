@@ -64,8 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// <inheritdoc />
         public virtual TService GetService<TService>()
         {
-            var service = _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>();
-            if (service is IHasLog withLog) withLog.LinkLog(Log);
+            var service = _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
             return service;
         }
 

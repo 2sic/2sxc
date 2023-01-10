@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
+using ToSic.Lib.Logging;
 using ToSic.Razor.Html5;
 
 namespace ToSic.Sxc.Images
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Images
     public class ResponsiveImage: ResponsiveBase
     {
         [PrivateApi("don't show")]
-        internal ResponsiveImage(ImageService imgService, ResponsiveParams callParams) : base(imgService, callParams, "Img")
+        internal ResponsiveImage(ImageService imgService, ResponsiveParams callParams, ILog parentLog) : base(imgService, callParams, parentLog, "Img")
         {
         }
 

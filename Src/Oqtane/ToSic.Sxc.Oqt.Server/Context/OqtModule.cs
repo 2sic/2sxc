@@ -35,9 +35,9 @@ namespace ToSic.Sxc.Oqt.Server.Context
             );
         }
 
-        public new OqtModule Init(Module module, ILog parentLog)
+        public OqtModule Init(Module module)
         {
-            base.Init(module, parentLog);
+            base.Init(module);
             var wrapLog = Log.Fn<OqtModule>($"id:{module.ModuleId}", timer: true);
 
             InitializeIsPrimary(module);
@@ -61,10 +61,10 @@ namespace ToSic.Sxc.Oqt.Server.Context
         }
 
         // Temp implementation, don't support im MVC
-        public override IModule Init(int id, ILog parentLog)
+        public override IModule Init(int id)
         {
             var module = _moduleRepository.GetModule(id);
-            return Init(module, parentLog);
+            return Init(module);
         }
 
         /// <inheritdoc />

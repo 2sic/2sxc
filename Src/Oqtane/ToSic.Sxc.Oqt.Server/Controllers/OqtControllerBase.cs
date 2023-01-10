@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             _helper.OnActionExecuted(context);
         }
 
-        protected TService GetService<TService>() => _helper.GetService<TService>();
+        protected TService GetService<TService>() where TService : class => _helper.GetService<TService>();
 
         /// <summary>
         /// The RealController which is the full backend of this controller.

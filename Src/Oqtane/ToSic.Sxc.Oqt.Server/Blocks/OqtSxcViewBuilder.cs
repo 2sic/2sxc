@@ -116,7 +116,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         internal IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
         {
-            var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module, Log);
+            var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
             var block = _blockModuleEmpty.Init(ctx);
             // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
             // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now

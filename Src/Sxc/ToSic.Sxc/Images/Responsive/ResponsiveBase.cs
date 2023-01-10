@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Images
     public abstract class ResponsiveBase: HybridHtmlStringLog, IResponsiveImage
     {
 
-        protected ResponsiveBase(ImageService imgService, ResponsiveParams callParams, string logName)
-            : base($"Img.{logName}")
+        protected ResponsiveBase(ImageService imgService, ResponsiveParams callParams, ILog parentLog, string logName)
+            : base(parentLog, $"Img.{logName}")
         {
             Call = callParams;
             ImgService = imgService;

@@ -23,12 +23,7 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.CreateModuleScopedServiceProvider());
         private IServiceProvider _serviceProvider;
-        private TService GetService<TService>()
-        {
-            var service = ServiceProvider.Build<TService>();
-            if (service is IHasLog withLog) withLog.LinkLog(Log);
-            return service;
-        }
+        private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
         #endregion
 

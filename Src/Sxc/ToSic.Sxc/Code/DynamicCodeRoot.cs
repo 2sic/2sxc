@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Code
             var newService = _serviceProvider.Build<TService>();
             if (newService is INeedsDynamicCodeRoot newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
-
+            
             return newService;
         }
 

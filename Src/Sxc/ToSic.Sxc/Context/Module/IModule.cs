@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Context
 #endif
     {
         [PrivateApi("Workaround till we have DI to inject the current container")]
-        IModule Init(int id, ILog parentLog);
+        IModule Init(int id);
 
         /// <summary>
         /// The module id on the page. 

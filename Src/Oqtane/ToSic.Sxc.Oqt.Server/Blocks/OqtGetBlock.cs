@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 return wrapLog.ReturnNull("missing block because PageId not found in request");
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
-            var ctx = _cntOfBlkGen.New().Init(pageId, module, Log);
+            var ctx = _cntOfBlkGen.New().Init(pageId, module);
             var block = _blkFromModGen.New().Init(ctx);
 
             // only if it's negative, do we load the inner block

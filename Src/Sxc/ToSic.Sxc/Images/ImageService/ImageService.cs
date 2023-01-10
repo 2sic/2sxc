@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helper;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -72,10 +71,10 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsiveImage(this,
-                    new ResponsiveParams(nameof(Img), link, noParamOrder,
-                        Settings(settings, factor: factor, width: width, recipe: recipe),
-                        imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
-                .LinkLog(Log);
+                new ResponsiveParams(nameof(Img), link, noParamOrder,
+                    Settings(settings, factor: factor, width: width, recipe: recipe),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass),
+                Log);
 
 
         /// <inheritdoc />
@@ -96,8 +95,8 @@ namespace ToSic.Sxc.Images
             var path = respParams.Link.Url;
             var format = GetFormat(path);
             return format.ResizeFormats.Any()
-                ? (IResponsiveImage)new ResponsivePicture(this, respParams).LinkLog(Log)
-                : new ResponsiveImage(this, respParams).LinkLog(Log);
+                ? (IResponsiveImage)new ResponsivePicture(this, respParams, Log)
+                : new ResponsiveImage(this, respParams, Log);
         }
 
 
@@ -113,10 +112,10 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsivePicture(this,
-                    new ResponsiveParams(nameof(Picture), link, noParamOrder,
-                        Settings(settings, factor: factor, width: width, recipe: recipe),
-                        imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
-                .LinkLog(Log);
+                new ResponsiveParams(nameof(Picture), link, noParamOrder,
+                    Settings(settings, factor: factor, width: width, recipe: recipe),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass),
+                Log);
 
         /// <inheritdoc />
         public bool Debug

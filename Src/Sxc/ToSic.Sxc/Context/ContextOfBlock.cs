@@ -24,8 +24,8 @@ namespace ToSic.Sxc.Context
             : base(siteCtxDeps, appDependencies, "Sxc.CtxBlk")
         {
             Page = page;
-            Module = module;
             ConnectServices(
+                Module = module,
                 PageServiceShared = pageServiceShared,
                 _publishingResolver = publishingResolver
             );

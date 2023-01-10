@@ -37,13 +37,13 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Public constructor for DI
         /// </summary>
         /// <param name="deps"></param>
-        public ToolbarBuilder(Dependencies deps) => _deps = deps.SetLog(Log);
-        private readonly Dependencies _deps;
+        public ToolbarBuilder(Dependencies deps) => Deps = deps.SetLog(Log);
+        protected readonly Dependencies Deps;
 
         /// <summary>
         /// Clone-constructor
         /// </summary>
-        private ToolbarBuilder(ToolbarBuilder parent): this(parent._deps)
+        private ToolbarBuilder(ToolbarBuilder parent): this(parent.Deps)
         {
             this.LinkLog(parent.Log);
             _currentAppIdentity = parent._currentAppIdentity;
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (codeRoot == null) return;
             _codeRoot = codeRoot;
             _currentAppIdentity = codeRoot.App;
-            _deps.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
+            Deps.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
         }
         private IDynamicCodeRoot _codeRoot;
 

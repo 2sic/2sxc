@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn
             wrapLog.A($"Page Id on DNN Module: {moduleInfo.TabID} - should be {pageId}");
 
             ThrowIfModuleIsNull(pageId, moduleId, moduleInfo);
-            var module = ((DnnModule)_moduleGenerator.New()).Init(moduleInfo, Log);
+            var module = ((DnnModule)_moduleGenerator.New()).Init(moduleInfo);
             wrapLog.A($"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
             return wrapLog.Return(module);
         }
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn
             Log.A($"Will try-swap module info of {dnnModule.ModuleID} into site");
             ((DnnSite)context.Site).TrySwap(dnnModule, ParentLog);
             Log.A("Will init module");
-            ((DnnModule)context.Module).Init(dnnModule, ParentLog);
+            ((DnnModule)context.Module).Init(dnnModule);
             return wrapLog.Return(InitPageOnly(context, pageId));
         }
 

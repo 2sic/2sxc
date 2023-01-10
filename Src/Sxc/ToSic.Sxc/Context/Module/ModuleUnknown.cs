@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Context
         // ReSharper disable once UnusedParameter.Local
         public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> warn) { }
 
-        public IModule Init(int id, ILog parentLog)
+        public IModule Init(int id)
         {
             // don't do anything
             return this;

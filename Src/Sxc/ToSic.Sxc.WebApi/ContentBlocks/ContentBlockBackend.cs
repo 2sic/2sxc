@@ -22,6 +22,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 {
     public class ContentBlockBackend : BlockWebApiBackendBase
     {
+        private readonly ILazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly Generator<BlockFromEntity> _entityBlockGenerator;
 
         #region constructor / DI
@@ -31,24 +32,25 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
             ILazySvc<IBlockResourceExtractor> optimizerLazy,
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt,
+            ILazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+            //Generator<BlockEditorForModule> blkEdtForMod,
+            //Generator<BlockEditorForEntity> blkEdtForEnt,
             Generator<BlockFromEntity> entityBlockGenerator)
             : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
-            ;
             ConnectServices(
                 _optimizer = optimizerLazy,
-                _blkEdtForMod = blkEdtForMod,
-                _blkEdtForEnt = blkEdtForEnt,
+                //_blkEdtForMod = blkEdtForMod,
+                //_blkEdtForEnt = blkEdtForEnt,
                 _publishing = publishing,
-                _entityBlockGenerator = entityBlockGenerator
+                _entityBlockGenerator = entityBlockGenerator,
+                _blockEditorSelectorLazy = blockEditorSelectorLazy
             );
         }
 
         private readonly ILazySvc<IBlockResourceExtractor> _optimizer;
-        private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
-        private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
+        //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
+        //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private readonly IPagePublishing _publishing;
 
         #endregion
@@ -80,7 +82,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.A($"try to publish #{index} on '{part}'");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            return BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).Publish(part, index);
+            return _blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.Publish(part, index);
         }
 
         public AjaxRenderDto RenderV2(int templateId, string lang, string root)

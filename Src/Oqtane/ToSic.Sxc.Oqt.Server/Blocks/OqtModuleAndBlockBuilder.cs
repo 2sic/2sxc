@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         {
             var oqtModule = (_moduleRepositoryGenerator.New()).GetModule(moduleId);
             ThrowIfModuleIsNull(pageId, moduleId, oqtModule);
-            var module = ((OqtModule) _moduleGenerator.New()).Init(oqtModule, Log);
+            var module = ((OqtModule) _moduleGenerator.New()).Init(oqtModule);
             return module;
         }
 
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             var wrapLog = Log.Fn<IContextOfBlock>();
             var context = _contextGenerator.New();
             Log.A("Will init module");
-            ((OqtModule) context.Module).Init(oqtModule, ParentLog);
+            ((OqtModule) context.Module).Init(oqtModule);
             return wrapLog.Return(InitPageOnly(context, pageId));
         }
 

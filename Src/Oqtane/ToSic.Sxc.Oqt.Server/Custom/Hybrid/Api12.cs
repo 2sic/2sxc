@@ -97,8 +97,8 @@ namespace Custom.Hybrid
             var showDrafts = false;
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
-            var appStuff = app.LinkLog(base.Log).Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                GetService<AppConfigDelegate>().LinkLog(base.Log).Build(showDrafts));
+            var appStuff = app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
+                GetService<AppConfigDelegate>().Build(showDrafts));
             return wrapLog.Return(appStuff);
         }
 
