@@ -55,13 +55,12 @@ namespace ToSic.Sxc.Services
         public IFeaturesService Feature => _features.Get(GetService<IFeaturesService>);
         private readonly GetOnce<IFeaturesService> _features = new GetOnce<IFeaturesService>();
 
-
         /// <summary>
         /// The Razor Blade 4 HtmlTag service, to fluidly create Tags.
         /// See [](xref:ToSic.Razor.Blade.IHtmlTagService).
         ///
         /// > [!IMPORTANT]
-        /// > This is _similar but different_ to the [](xref:ToSic.Razor.Blade.Tag).
+        /// > This is _similar but different_ to the [Razor.Blade.Tag](https://razor-blade.net/api/ToSic.Razor.Blade.Tag.html).
         /// > The [](xref:ToSic.Razor.Blade.IHtmlTag) objects returned here are _immutable_.
         /// > This means that chained commands like `...HtmlTag.Div().Id(...).Class(...)`
         /// > all return new objects and don't modify the previous one.
