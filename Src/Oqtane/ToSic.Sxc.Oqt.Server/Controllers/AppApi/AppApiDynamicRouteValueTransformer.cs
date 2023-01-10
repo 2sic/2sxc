@@ -70,6 +70,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 else
                 {
                     var serviceProvider = httpContext.RequestServices;
+                    // TODO: @STV - pls check if we can put this into the normal dependencies as lazy...
                     var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
                     alias = siteStateInitializer.InitializedState.Alias
                             ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
@@ -88,6 +89,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 if (appFolder == WebApiConstants.Auto)
                 {
                     // Before trying to get the AppFolder, we must init the ICmsContext as this will
+                    // TODO: @STV - pls check if we can put this into the normal dependencies as lazy...
                     var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
                     blockInitializer.TryToLoadBlockAndAttachToResolver();
                     appFolder = _appFolder.Value.GetAppFolder();
