@@ -154,7 +154,7 @@
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Messages.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Statics.cs" />
     <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
-    <Compile Include="Dnn\Pages\Pages.cs" />
+    <Compile Include="Dnn\Pages\DnnPages.cs" />
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
     <Compile Include="Dnn\Context\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />

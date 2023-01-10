@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages
         [TestMethod]
         public void TestMethod1()
         {
-            var merger = new ResizeParamMerger();
+            var merger = new ResizeParamMerger(null);
 
 
         }

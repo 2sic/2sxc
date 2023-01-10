@@ -8,9 +8,9 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Dnn.Pages
 {
-    public class Pages: ServiceBase
+    public class DnnPages: HelperBase
     {
-        public Pages() : base("Dnn.Pages")
+        public DnnPages(ILog parentLog) : base(parentLog, "Dnn.Pages")
         {
         }
 

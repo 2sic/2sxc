@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn.LookUp
             var wrapLog = Log.Fn<ILookUpEngine>("" + moduleId);
             var portalSettings = PortalSettings.Current;
             return portalSettings == null 
-                ? wrapLog.Return(new LookUpEngine().Init(Log), "no context") 
+                ? wrapLog.Return(new LookUpEngine(Log), "no context") 
                 : wrapLog.Return(GenerateDnnBasedLookupEngine(portalSettings, moduleId), "with site");
         }
 
@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Dnn.LookUp
             var wrapLog = Log.Fn<LookUpEngine>($"..., {moduleId}");
             // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
             //if (moduleId < 1) moduleId = _viewModuleIdProvider.ModuleId;
-            var providers = new LookUpEngine().Init(Log);
+            var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = _cultureResolver.SafeCurrentCultureInfo();
             var dnn = new DnnTokenReplace(moduleId, portalSettings, dnnUsr);

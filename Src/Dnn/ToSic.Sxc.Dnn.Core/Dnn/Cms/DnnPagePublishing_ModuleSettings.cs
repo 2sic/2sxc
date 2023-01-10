@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Dnn.Cms
 {
     public partial class DnnPagePublishing
     {
-        internal class ModuleVersions: ServiceBase
+        internal class ModuleVersions: HelperBase
         {
             private const string LatestVersionSettingsKey = "LatestVersion";
 
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Dnn.Cms
             public ModuleInfo ModuleInfo => _settingsHelper.ModuleInfo;
 
 
-            public ModuleVersions(int instanceId): base("Dnn.ModVer")
+            public ModuleVersions(int instanceId, ILog parentLog): base(parentLog, "Dnn.ModVer")
             {
                 _settingsHelper = new ModuleSettingsHelper(instanceId);
             }

@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn.Web
             _forcePre1025Behavior = forcePre1025Behavior;
             Page = page;
             BlockBuilder = blockBuilder as BlockBuilder;
-            Header = new DnnJsApiHeader().Init(Log);
+            Header = new DnnJsApiHeader(Log);
             return this;
         }
         protected BlockBuilder BlockBuilder;

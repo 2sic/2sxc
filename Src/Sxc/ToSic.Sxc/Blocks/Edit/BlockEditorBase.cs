@@ -17,11 +17,11 @@ namespace ToSic.Sxc.Blocks.Edit
         internal BlockEditorBase(BlockEditorBaseDependencies dependencies) : base("CG.RefMan")
         {
             Dependencies = dependencies.SetLog(Log);
-            ConnectServices(
-                Dependencies.CmsRuntime.SetInit(r => r.InitQ(Block?.App, true)),
-                Dependencies.CmsManager.SetInit(r => r.Init(Block?.App)),
-                Dependencies.AppManager.SetInit(r => r.Init(Block?.App))
-            );
+            // ConnectServices(
+            Dependencies.CmsRuntime.SetInit(r => r.InitQ(Block?.App, true));
+            Dependencies.CmsManager.SetInit(r => r.Init(Block?.App));
+            Dependencies.AppManager.SetInit(r => r.Init(Block?.App));
+            //);
         }
         public BlockEditorBaseDependencies Dependencies { get; }
 

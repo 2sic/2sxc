@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 if (!relevant.Any()) return wrapLog.ReturnNull("none relevant");
                 var mergedPolicy = relevant.First();
 
-                var finalizer = new CspParameterFinalizer().Init(Log);
+                var finalizer = new CspParameterFinalizer(Log);
 
                 if (relevant.Count == 1)
                     return wrapLog.Return(finalizer.Finalize(mergedPolicy).ToString(), "found 1");

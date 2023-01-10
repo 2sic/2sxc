@@ -1,10 +1,8 @@
 ﻿#if NETFRAMEWORK
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
@@ -22,8 +20,10 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public void Init(IBlock block, Purpose purpose)
         {
+            var l = Log.Fn($"{nameof(purpose)}:{purpose}");
             Purpose = purpose;
             Init(block);
+            l.Done();
         }
 #pragma warning restore CS0612
 

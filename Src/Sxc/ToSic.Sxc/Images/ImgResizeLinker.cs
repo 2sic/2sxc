@@ -170,7 +170,7 @@ namespace ToSic.Sxc.Images
             get
             {
                 if (_resizeParamMerger != null) return _resizeParamMerger;
-                _resizeParamMerger = new ResizeParamMerger().Init(Log);
+                _resizeParamMerger = new ResizeParamMerger(Log);
                 if (Debug) _resizeParamMerger.Debug = true;
                 return _resizeParamMerger;
             }

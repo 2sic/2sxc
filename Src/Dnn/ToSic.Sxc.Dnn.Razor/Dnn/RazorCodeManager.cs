@@ -7,10 +7,10 @@ using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Dnn
 {
-    public class RazorCodeManager: ServiceBase
+    public class RazorCodeManager: HelperBase
     {
         public RazorComponentBase Parent;
-        public RazorCodeManager(RazorComponentBase parent): base("Rzr.Code")
+        public RazorCodeManager(RazorComponentBase parent, ILog parentLog): base(parentLog, "Rzr.Code")
         {
             Parent = parent;
         }

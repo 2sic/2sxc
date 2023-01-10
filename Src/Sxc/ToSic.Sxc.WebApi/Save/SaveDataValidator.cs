@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Save
         public EditDto Package;
         internal AppRuntime AppRead;
 
-        public SaveDataValidator(EditDto package) : base("Val.Save")
+        public SaveDataValidator(EditDto package, ILog parentLog = null) : base(parentLog, "Val.Save")
         {
             Package = package;
         }

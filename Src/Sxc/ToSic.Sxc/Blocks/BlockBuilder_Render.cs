@@ -232,7 +232,7 @@ namespace ToSic.Sxc.Blocks
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return wrapLog.ReturnNull("no view");
             _engine = Deps.EngineFactory.CreateEngine(Block.View);
-            _engine.Init(Log).Init(Block);
+            _engine.Init(Block);
             return wrapLog.Return(_engine, "created");
         }
         private IEngine _engine;

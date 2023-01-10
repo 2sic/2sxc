@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Images.ImageConstants;
@@ -9,9 +10,9 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// Helper to process optional parameters and figure out if they should be used or not
     /// </summary>
-    internal class ResizeParams: ServiceBase
+    internal class ResizeParams: HelperBase
     {
-        public ResizeParams() : base(Sxc.Constants.SxcLogName + ".ResPar") { }
+        public ResizeParams(ILog parentLog) : base(parentLog, $"{Constants.SxcLogName}.ResPar") { }
 
         public double? AspectRatioOrNull(object aspectRatio) 
             => DoubleOrNullWithCalculation(aspectRatio);

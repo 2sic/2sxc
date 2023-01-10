@@ -5,7 +5,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -87,7 +86,7 @@ namespace ToSic.Sxc.LookUp
             var envLookups = _getEngineLazy.Value.GetLookUpEngine(modId);
             Log.A($"Environment provided {envLookups.Sources.Count} sources");
 
-            var provider = new LookUpEngine(envLookups).Init(Log);
+            var provider = new LookUpEngine(envLookups, Log);
 
             // Add QueryString etc. when running inside an http-context. Otherwise leave them away!
             var http = _httpLazy.Value;

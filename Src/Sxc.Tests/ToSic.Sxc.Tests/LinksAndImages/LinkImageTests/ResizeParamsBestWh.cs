@@ -97,10 +97,10 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
         internal static bool TestBestWH(int expW, int expH, object width = null, object height = null, object factor = null, object ar = null, ICanGetByName settings = null)
         {
             // Get a new linker for each test run
-            var paramMerger = new ResizeParamMerger();
+            var paramMerger = new ResizeParamMerger(null);
             var dimGen = new ResizeDimensionGenerator();
 
-            var resizeSettings = paramMerger.BuildCoreSettings(new ResizeParams(), width, height, factor, ar, null, settings);
+            var resizeSettings = paramMerger.BuildCoreSettings(new ResizeParams(null), width, height, factor, ar, null, settings);
             var t1 = dimGen.ResizeDimensions(resizeSettings, resizeSettings.Find(SrcSetType.Img, true, null));
             var okW = expW.Equals(t1.Width);
             var okH = expH.Equals(t1.Height);

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
     [TestClass]
     public class CspParameterFinalizerTests
     {
-        private readonly CspParameterFinalizer _finalizer = new CspParameterFinalizer();
+        private readonly CspParameterFinalizer _finalizer = new CspParameterFinalizer(null);
 
         [TestMethod]
         public void NothingHasNoDefault()

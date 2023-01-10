@@ -8,9 +8,9 @@ using ToSic.Sxc.Edit;
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    public class DnnJsApiHeader: ServiceBase
+    public class DnnJsApiHeader: HelperBase
     {
-        public DnnJsApiHeader() : base("Dnn.JsApiH")
+        public DnnJsApiHeader(ILog parentLog = null) : base(parentLog, "Dnn.JsApiH")
         {
         }
 

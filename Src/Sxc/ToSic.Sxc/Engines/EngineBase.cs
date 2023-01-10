@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(EngineBaseDependencies helpers) : base("Sxc.EngBas") =>
+        protected EngineBase(EngineBaseDependencies helpers) : base($"{Constants.SxcLogName}.EngBas") =>
             ConnectServices(
                 Helpers = helpers
             );

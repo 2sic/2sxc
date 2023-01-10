@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
-            View = new BlockViewLoader().Init(Log).PickView(this, Configuration.View, Context, cms);
+            View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
             return wrapLog.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
 

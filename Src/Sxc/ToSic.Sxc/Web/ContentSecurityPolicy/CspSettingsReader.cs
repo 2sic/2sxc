@@ -9,14 +9,14 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
     /// <summary>
     /// Helper class to read the dynamic settings for the current site or global to be used in CSP
     /// </summary>
-    public class CspSettingsReader: ServiceBase
+    public class CspSettingsReader: HelperBase
     {
         private const string FieldIsEnabled = "IsEnabled";
         private const string FieldIsEnforced = "IsEnforced";
         private const string FieldPolicies = "Policies";
         private const string FieldCSPs = "ContentSecurityPolicies";
 
-        public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode): base($"{CspConstants.LogPrefix}.Setting")
+        public CspSettingsReader(DynamicStack settingsOrNull, IUser user, bool devMode, ILog parentLog): base(parentLog, $"{CspConstants.LogPrefix}.Setting")
         {
             _user = user;
             _devMode = devMode;

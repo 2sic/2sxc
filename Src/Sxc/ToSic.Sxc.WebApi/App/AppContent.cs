@@ -144,8 +144,7 @@ namespace ToSic.Sxc.WebApi.App
             var newContentItemCaseInsensitive = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
 
             // Now create the cleaned up import-dictionary so we can create a new entity
-            var cleanedNewItem = new AppContentEntityBuilder()
-                .Init(Log)
+            var cleanedNewItem = new AppContentEntityBuilder(Log)
                 .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, AppState);
 
             // add owner

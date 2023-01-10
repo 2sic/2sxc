@@ -10,9 +10,9 @@ namespace ToSic.Sxc.Blocks
     /// This contains the logic to decide which view a block will have
     /// Basically the one which is configured, or a replacement based on the url
     /// </summary>
-    internal class BlockViewLoader: ServiceBase
+    internal class BlockViewLoader: HelperBase
     {
-        public BlockViewLoader() : base("Blk.ViewLd") { }
+        public BlockViewLoader(ILog parentLog) : base(parentLog, "Blk.ViewLd") { }
 
         internal IView PickView(IBlock block, IView configView, IContextOfBlock context, CmsRuntime cms)
         {

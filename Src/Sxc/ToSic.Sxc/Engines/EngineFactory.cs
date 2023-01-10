@@ -1,16 +1,19 @@
 ﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Engines
 {
-    public class EngineFactory
+    public class EngineFactory: ServiceBase
     {
 
-        public EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen)
+        public EngineFactory(Generator<IRazorEngine> razorEngineGen, Generator<TokenEngine> tokenEngineGen): base($"{Constants.SxcLogName}.EngFct")
         {
-            _razorEngineGen = razorEngineGen;
-            _tokenEngineGen = tokenEngineGen;
+            ConnectServices(
+                _razorEngineGen = razorEngineGen,
+                _tokenEngineGen = tokenEngineGen
+            );
         }
         private readonly Generator<IRazorEngine> _razorEngineGen;
         private readonly Generator<TokenEngine> _tokenEngineGen;

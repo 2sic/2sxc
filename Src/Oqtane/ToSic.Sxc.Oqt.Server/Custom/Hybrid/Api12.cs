@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
@@ -98,8 +97,8 @@ namespace Custom.Hybrid
             var showDrafts = false;
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
-            var appStuff = app.Init(base.Log).Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                GetService<AppConfigDelegate>().Init(base.Log).Build(showDrafts));
+            var appStuff = app.LinkLog(base.Log).Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
+                GetService<AppConfigDelegate>().LinkLog(base.Log).Build(showDrafts));
             return wrapLog.Return(appStuff);
         }
 
