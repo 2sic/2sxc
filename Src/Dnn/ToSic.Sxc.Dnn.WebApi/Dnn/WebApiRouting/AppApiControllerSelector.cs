@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 var edition = GetEdition(routeData);
                 log.A($"Edition: {edition}");
 
-                var site = (DnnSite)sp.Build<ISite>();
+                var site = (DnnSite)sp.Build<ISite>(log);
 
                 var controllerFolder = GetControllerFolder(site, appFolder, edition, shared: false);
                 log.A($"Controller Folder: {controllerFolder}");

@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Dnn
         public string UpgradeModule(string version)
         {
             Log.A($"upgrade module - start for v:{version}");
-            var res = ServiceProvider.Build<DnnEnvironmentInstaller>().UpgradeModule(version);
+            var res = ServiceProvider.Build<DnnEnvironmentInstaller>(Log).UpgradeModule(version);
             Log.A($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
             return res;

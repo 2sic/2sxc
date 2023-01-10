@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.Code
             var codeRoot = BuildGenericCodeRoot(customCode.GetType());
 
             // Default case / old case - just a non-generic DnnDynamicCodeRoot
-            return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>();
+            return codeRoot ?? _serviceProvider.Build<DnnDynamicCodeRoot>(Log);
         }
 
         /// <summary>

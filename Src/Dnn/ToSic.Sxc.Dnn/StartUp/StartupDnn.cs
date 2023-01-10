@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             // Getting the service provider in Configure is tricky business, because
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
-            var transientSp = DnnStaticDi.GetGlobalServiceProvider();// .GetPageScopedServiceProvider();
+            var transientSp = DnnStaticDi.GetGlobalServiceProvider();
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;

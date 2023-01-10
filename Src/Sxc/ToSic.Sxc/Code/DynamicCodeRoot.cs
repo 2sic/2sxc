@@ -95,10 +95,9 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public TService GetService<TService>()
         {
-            var newService = _serviceProvider.Build<TService>();
+            var newService = _serviceProvider.Build<TService>(Log);
             if (newService is INeedsDynamicCodeRoot newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
-            
             return newService;
         }
 
