@@ -29,22 +29,19 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     {
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly LazySvc<AppFolder> _appFolder;
 
         public const string HttpContextKeyForAppFolder = "SxcAppFolderName";
 
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
             IWebHostEnvironment hostingEnvironment,
-            LazySvc<AppFolder> appFolder,
             ILogStore logStore)
         {
             Log = new Log(HistoryLogName, null, nameof(AppApiDynamicRouteValueTransformer));
             logStore.Add(HistoryLogGroup, Log);
             this.ConnectServices(
                 _tenantResolver = tenantResolver,
-                _hostingEnvironment = hostingEnvironment,
-                _appFolder = appFolder
+                _hostingEnvironment = hostingEnvironment
             );
         }
 
@@ -70,7 +67,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 else
                 {
                     var serviceProvider = httpContext.RequestServices;
-                    // TODO: @STV - pls check if we can put this into the normal dependencies as lazy...
+                    // this transient dependency is not provided as usual constructor provided lazy/generator dependency (from root service provider)
+                    // but as a transient dependency from the request service provider
                     var siteStateInitializer = serviceProvider.Build<SiteStateInitializer>();
                     alias = siteStateInitializer.InitializedState.Alias
                             ?? throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
@@ -88,13 +86,13 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 var appFolder = (string) values["appFolder"];
                 if (appFolder == WebApiConstants.Auto)
                 {
-                    // Before trying to get the AppFolder, we must init the ICmsContext as this will
-                    // TODO: @STV - pls check if we can put this into the normal dependencies as lazy...
+                    // before trying to get the AppFolder, we must init the ICmsContext as this will
+                    // this transient dependencies are not provided as usual constructor provided lazy/generator dependencies (from root service provider)
+                    // but as a transient dependencies from the request service provider
                     var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
                     blockInitializer.TryToLoadBlockAndAttachToResolver();
-                    appFolder = _appFolder.Value.GetAppFolder();
+                    appFolder = httpContext.RequestServices.Build<AppFolder>().GetAppFolder();
                 }
-
 
                 if (!values.ContainsKey("controller"))
                     throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
