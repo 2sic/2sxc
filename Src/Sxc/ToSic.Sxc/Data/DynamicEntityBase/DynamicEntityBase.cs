@@ -5,17 +5,16 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helper;
 
 namespace ToSic.Sxc.Data
 {
+    [PrivateApi]
     public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug
     {
         protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
 
-        [PrivateApi]
         // ReSharper disable once InconsistentNaming
         public DynamicEntityDependencies _Dependencies { get; }
 
@@ -23,7 +22,6 @@ namespace ToSic.Sxc.Data
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
 
-        [PrivateApi]
         public abstract PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path);
 
         /// <summary>
@@ -32,7 +30,6 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        [PrivateApi]
         protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Dependencies, Debug);
 
         internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntityDependencies dependencies, bool? debug)
