@@ -152,7 +152,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return urlParams;
         }
 
-        private string CacheKey => _key.Get(() => Log.Return(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
+        private string CacheKey => _key.Get(() => Log.Func(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
         private readonly GetOnce<string> _key = new GetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);

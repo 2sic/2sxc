@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="action"></param>
         /// <param name="timerWrap"></param>
-        private void TryCatchAndLogToDnn(Action action, ILogCall timerWrap = null)
+        private TResult TryCatchAndLogToDnn<TResult>(Func<TResult> action, ILogCall timerWrap = null)
         {
             try
             {
-                action.Invoke();
+                return action();
             }
             catch (Exception ex)
             {
@@ -52,6 +52,7 @@ namespace ToSic.Sxc.Dnn
                 {
                     phOutput.Controls.Add(new LiteralControl("Something went really wrong in view.ascx - check error logs"));
                 }
+                return default;
             }
             finally
             {

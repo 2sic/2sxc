@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Services.GoogleMaps
 
         public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates);
 
-        private MapsCoordinates GetMapsCoordinates() => Log.WrpFn<MapsCoordinates>(action: _ =>
+        private MapsCoordinates GetMapsCoordinates() => Log.Func<MapsCoordinates>(func: _ =>
         {
             var json = Get(nameof(DefaultCoordinates), "");
             if (!json.HasValue()) return (MapsCoordinates.Defaults, "no json");

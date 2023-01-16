@@ -13,7 +13,6 @@ using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using static System.StringComparison;
-using BlockEditorBase = ToSic.Sxc.Blocks.Edit.BlockEditorBase;
 
 namespace ToSic.Sxc.WebApi.Save
 {
@@ -24,23 +23,15 @@ namespace ToSic.Sxc.WebApi.Save
 
         private readonly ILazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
-        //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity, _withDrafts));
         private CmsManager _cmsManager;
         private bool _withDrafts = false;
 
-        public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy,
-            ILazySvc<BlockEditorSelector> blockEditorSelectorLazy
-            //Generator<BlockEditorForModule> blkEdtForMod,
-            //Generator<BlockEditorForEntity> blkEdtForEnt
-            ) : base("Api.GrpPrc")
+        public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy, ILazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
         {
             ConnectServices(
                 _blockEditorSelectorLazy = blockEditorSelectorLazy,
                 _cmsManagerLazy = cmsManagerLazy
-                //_blkEdtForMod = blkEdtForMod,
-                //_blkEdtForEnt = blkEdtForEnt
             );
         }
 
@@ -54,9 +45,9 @@ namespace ToSic.Sxc.WebApi.Save
         private IAppIdentity _appIdentity;
         #endregion
 
-        internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items, Dictionary<Guid, int> ids)
+        internal bool IfChangesAffectListUpdateIt(IBlock block, List<BundleWithHeader<IEntity>> items,
+            Dictionary<Guid, int> ids) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<bool>();
             var groupItems = items
                 .Where(i => i.Header.Parent != null)
                 .GroupBy(i => i.Header.Parent.Value.ToString() + i.Header.IndexSafeOrFallback() + i.Header.AddSafe)
@@ -64,10 +55,10 @@ namespace ToSic.Sxc.WebApi.Save
 
             // if it's new, it has to be added to a group
             // only add if the header wants it, AND we started with ID unknown
-            return groupItems.Any() 
-                ? wrapLog.Return(PostSaveUpdateIdsInParent(block, ids, groupItems)) 
-                : wrapLog.ReturnTrue("no additional group processing necessary");
-        }
+            return groupItems.Any()
+                ? (PostSaveUpdateIdsInParent(block, ids, groupItems), "post save ids")
+                : (true, "no additional group processing necessary");
+        });
 
         private bool PostSaveUpdateIdsInParent(IBlock block,
             Dictionary<Guid, int> postSaveIds,
@@ -122,8 +113,7 @@ namespace ToSic.Sxc.WebApi.Save
             }
 
             // update-module-title
-            _blockEditorSelectorLazy.Value.GetEditor(block)
-            /*BlockEditorBase.GetEditor(block, _blkEdtForMod, _blkEdtForEnt)*/.UpdateTitle();
+            _blockEditorSelectorLazy.Value.GetEditor(block).UpdateTitle();
             return wrapLog.ReturnTrue("ok");
         }
 
@@ -142,7 +132,7 @@ namespace ToSic.Sxc.WebApi.Save
         /// <summary>
         /// Get saved entity (to get its ID)
         /// </summary>
-        private static int GetIdFromGuidOrError(Dictionary<Guid, int> postSaveIds, Guid guid)
+        private static int GetIdFromGuidOrError(IReadOnlyDictionary<Guid, int> postSaveIds, Guid guid)
         {
             if (!postSaveIds.ContainsKey(guid))
                 throw new Exception("Saved entity not found - not able to update BlockConfiguration");
@@ -150,7 +140,8 @@ namespace ToSic.Sxc.WebApi.Save
             return postSaveIds[guid];
         }
 
-        private static int? FindPresentationItem(Dictionary<Guid, int> postSaveIds, IGrouping<string, BundleWithHeader<IEntity>> bundle)
+        private int? FindPresentationItem(IReadOnlyDictionary<Guid, int> postSaveIds,
+            IGrouping<string, BundleWithHeader<IEntity>> bundle) => Log.Func(() =>
         {
             int? presentationId = null;
             var presItem =
@@ -158,27 +149,25 @@ namespace ToSic.Sxc.WebApi.Save
                 ?? bundle.FirstOrDefault(e =>
                     string.Equals(e.Header.Field, ViewParts.ListPresentation, OrdinalIgnoreCase));
 
-            if (presItem == null) return null;
+            if (presItem == null) return (null, "no presentation");
+            // use null if it shouldn't have one
+            if (presItem.Header.IsEmpty) return (null, "header is empty");
 
             if (postSaveIds.ContainsKey(presItem.Entity.EntityGuid))
                 presentationId = postSaveIds[presItem.Entity.EntityGuid];
 
-            presentationId = presItem.Header.IsEmpty ? null : presentationId;
-            // use null if it shouldn't have one
+            return (presentationId, "found");
+        });
 
-            return presentationId;
-        }
-
-        internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers)
+        internal ContentGroupList ConvertGroup(List<ItemIdentifier> identifiers) => Log.Func(() =>
         {
             foreach (var identifier in identifiers.Where(identifier => identifier != null))
                 identifier.IsContentBlockMode = DetectContentBlockMode(identifier);
             return this;
-        }
+        });
 
-        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers)
+        internal List<ItemIdentifier> ConvertListIndexToId(List<ItemIdentifier> identifiers) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<List<ItemIdentifier>>();
             var newItems = new List<ItemIdentifier>();
             foreach (var identifier in identifiers)
             {
@@ -215,8 +204,9 @@ namespace ToSic.Sxc.WebApi.Save
                 // Default case - just a normal identifier
                 newItems.Add(identifier);
             }
-            return wrapLog.Return(newItems);
-        }
+
+            return newItems;
+        });
 
 
         /// <summary>
@@ -224,43 +214,45 @@ namespace ToSic.Sxc.WebApi.Save
         /// If it's a simple entity-edit or edit of item inside a normal field list, it returns false
         /// </summary>
         /// <returns></returns>
-        private bool DetectContentBlockMode(ItemIdentifier identifier)
+        private bool DetectContentBlockMode(ItemIdentifier identifier) => Log.Func(() =>
         {
-            if (!identifier.Parent.HasValue) return false;
+            if (!identifier.Parent.HasValue) return (false, "no parent");
 
             // get the entity and determine if it's a content-block. If yes, that should affect the differences in load/save
             var entity = CmsManager.Read.AppState.List.One(identifier.Parent.Value);
-            return entity.Type.Name == BlocksRuntime.BlockTypeName;
-        }
+            return (entity.Type.Name == BlocksRuntime.BlockTypeName, "type name should match");
+        });
 
 
-        private static void ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration)
-        {
-            var part = blockConfiguration[identifier.Field];
-            if (!identifier.AddSafe) // not in add-mode
+        private void ConvertListIndexToEntityIds(ItemIdentifier identifier, BlockConfiguration blockConfiguration) =>
+            Log.Do(() =>
             {
-                var idx = identifier.IndexSafeOrFallback(part.Count - 1);
-                if(idx >= 0 && part.Count > idx && // has as many items as desired
-                   part[idx] != null) // and the slot has something
-                    identifier.EntityId = part[idx].EntityId;
-            }
+                var part = blockConfiguration[identifier.Field];
+                if (!identifier.AddSafe) // not in add-mode
+                {
+                    var idx = identifier.IndexSafeOrFallback(part.Count - 1);
+                    if (idx >= 0 && part.Count > idx && // has as many items as desired
+                        part[idx] != null) // and the slot has something
+                        identifier.EntityId = part[idx].EntityId;
+                }
 
-            // tell the UI that it should not actually use this data yet, keep it locked
-            if (!identifier.Field.ToLowerInvariant().Contains(ViewParts.PresentationLower))
-                return;
+                // tell the UI that it should not actually use this data yet, keep it locked
+                if (!identifier.Field.ToLowerInvariant().Contains(ViewParts.PresentationLower))
+                    return "no presentation";
 
-            // the following steps are only for presentation items
-            identifier.IsEmptyAllowed = true;
+                // the following steps are only for presentation items
+                identifier.IsEmptyAllowed = true;
 
-            if (identifier.EntityId != 0)
-                return;
+                if (identifier.EntityId != 0)
+                    return "id != 0";
 
-            identifier.IsEmpty = true;
+                identifier.IsEmpty = true;
 
-            identifier.DuplicateEntity = identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
-                ? blockConfiguration.View.PresentationItem?.EntityId
-                : blockConfiguration.View.HeaderPresentationItem?.EntityId;
-        }
+                identifier.DuplicateEntity = identifier.Field.ToLowerInvariant() == ViewParts.PresentationLower
+                    ? blockConfiguration.View.PresentationItem?.EntityId
+                    : blockConfiguration.View.HeaderPresentationItem?.EntityId;
 
+                return "ok";
+            });
     }
 }

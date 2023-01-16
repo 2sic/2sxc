@@ -3,6 +3,7 @@ using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Context;
 
 namespace ToSic.Sxc.Dnn
@@ -15,27 +16,25 @@ namespace ToSic.Sxc.Dnn
         /// Causes DNN to create the menu with all actions like edit entity, new, etc.
         /// </summary>
         private ModuleActionCollection _moduleActions;
-        public ModuleActionCollection ModuleActions
+
+        public ModuleActionCollection ModuleActions => Log.Getter(() =>
         {
-            get
+            try
             {
-                try
-                {
-                    if (_moduleActions != null) return _moduleActions;
+                if (_moduleActions != null) return _moduleActions;
 
-                    // Don't offer options if it's from another portal
-                    if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
-                        _moduleActions = new ModuleActionCollection();
+                // Don't offer options if it's from another portal
+                if (ModuleConfiguration.PortalID != ModuleConfiguration.OwnerPortalID)
+                    _moduleActions = new ModuleActionCollection();
 
-                    return _moduleActions = InitModuleActions();
-                }
-                catch (Exception e)
-                {
-                    Exceptions.LogException(e);
-                    return new ModuleActionCollection();
-                }
+                return _moduleActions = InitModuleActions();
             }
-        }
+            catch (Exception e)
+            {
+                Exceptions.LogException(e);
+                return new ModuleActionCollection();
+            }
+        });
 
         private ModuleActionCollection InitModuleActions()
         {

@@ -20,7 +20,6 @@ namespace ToSic.Sxc.Blocks
         /// Create a module-content block
         /// </summary>
         /// <param name="ctx"></param>
-        /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         ///// <param name="overrideParams">optional override parameters</param>
         public BlockFromModule Init(IContextOfBlock ctx)
         {

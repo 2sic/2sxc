@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn
         /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
         /// which runs before page-load
         /// </summary>
-        private IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetBlock(ModuleConfiguration, null)));
+        private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetBlock(ModuleConfiguration, null)), timer: true);
         private readonly GetOnce<IBlock> _blockGetOnce = new GetOnce<IBlock>();
 
         #region Logging
@@ -68,6 +68,9 @@ namespace ToSic.Sxc.Dnn
                 var checkPortalIsReady = true;
                 bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
 
+                // get the block early, to see any errors separately - before accessing cache (which also uses the block)
+                var block = TryCatchAndLogToDnn(() => Block);
+
                 #region Lightspeed
 
                 try
@@ -90,7 +93,6 @@ namespace ToSic.Sxc.Dnn
                 // ensure everything is ready and that we know if we should activate the client-dependency
                 TryCatchAndLogToDnn(() =>
                 {
-                    var block = Block; // get the block early, to see any errors
                     if (checkPortalIsReady)
                         if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
                             GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
@@ -100,6 +102,7 @@ namespace ToSic.Sxc.Dnn
                     // #lightspeed
                     if (OutputCache?.Existing != null)
                         OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
+                    return true; // dummy result
                 }, callLog);
             });
         }
@@ -153,6 +156,7 @@ namespace ToSic.Sxc.Dnn
 
                         // #Lightspeed
                         OutputCache?.Save(data);
+                        return true; // dummy result
                     });
 
                 // if we had an error before, or have one now, re-check assets
@@ -182,6 +186,7 @@ namespace ToSic.Sxc.Dnn
                 }
 
                 result.Html += GetOptionalDetailedLogToAttach();
+                return true; // dummy result
             }, callLog);
 
             return result;
@@ -189,7 +194,7 @@ namespace ToSic.Sxc.Dnn
 
 
 
-        protected IOutputCache OutputCache => _oc.Get(() => GetService<IOutputCache>().Init(ModuleId, TabId, Block));
+        protected IOutputCache OutputCache => _oc.Get(Log, () => GetService<IOutputCache>().Init(ModuleId, TabId, Block));
         private readonly GetOnce<IOutputCache> _oc = new GetOnce<IOutputCache>();
     }
 }

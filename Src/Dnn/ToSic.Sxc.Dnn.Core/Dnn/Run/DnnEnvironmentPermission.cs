@@ -52,10 +52,10 @@ namespace ToSic.Sxc.Dnn.Run
         }
 
         protected override bool UserIsModuleAdmin() 
-            => Log.Return(() => Module != null && ModulePermissionController.CanAdminModule(Module));
+            => Log.Func(() => Module != null && ModulePermissionController.CanAdminModule(Module));
 
         protected override bool UserIsModuleEditor()
-            => Log.Return(() =>
+            => Log.Func(() =>
             {
                 if (Module == null) return false;
 

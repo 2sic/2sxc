@@ -61,22 +61,21 @@ namespace ToSic.Sxc.Oqt.Server.Run
             return false;
         }
 
-        protected override bool UserIsModuleAdmin() => Log.Return(UserIsModuleEditor);
+        protected override bool UserIsModuleAdmin() => Log.Func(UserIsModuleEditor);
 
-        protected override bool UserIsModuleEditor()
-            => _userIsModuleEditor ??= Log.Return(() =>
+        protected override bool UserIsModuleEditor() => _userIsModuleEditor ??= Log.Func(() =>
+        {
+            if (Module == null) return false;
+            try
             {
-                if (Module == null) return false;
-                try
-                {
-                    return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id,
-                        PermissionNames.Edit);
-                }
-                catch
-                {
-                    return false;
-                }
-            });
+                return _userPermissions.Value.IsAuthorized(ClaimsPrincipal, EntityNames.Module, Module.Id,
+                    PermissionNames.Edit);
+            }
+            catch
+            {
+                return false;
+            }
+        });
         private bool? _userIsModuleEditor;
     }
 }

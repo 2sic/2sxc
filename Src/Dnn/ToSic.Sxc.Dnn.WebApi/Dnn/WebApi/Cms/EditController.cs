@@ -25,14 +25,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId) 
-            => Log.Return(() => Real.Load(items, appId));
+            => Log.Func(() => Real.Load(items, appId));
 
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => Log.Return(() => Real.Save(package, appId, partOfPage));
+            => Log.Func(() => Real.Save(package, appId, partOfPage));
 
 
         /// <inheritdoc />
