@@ -50,14 +50,6 @@ namespace ToSic.Sxc.Dnn
         {
             LogTimer.DoInTimer(() =>
             {
-                // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-                //// Hack to pass ModuleId into other systems which need it, and ATM can't get it
-                //try
-                //{
-                //    GetService<ViewModuleIdHack>().ModuleId = ModuleId;
-                //}
-                //catch {/* ignore */}
-
                 // add to insights-history for analytic
                 GetService<ILogStore>().Add("module", Log);
                 LogTimer.Timer.Start();

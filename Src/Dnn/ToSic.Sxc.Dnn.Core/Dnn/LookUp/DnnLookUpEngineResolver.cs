@@ -16,20 +16,15 @@ namespace ToSic.Sxc.Dnn.LookUp
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public class DnnLookUpEngineResolver : ServiceBase, ILookUpEngineResolver
     {
-
         #region Constructor / Dependency Injection
 
-        public DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver/*, ViewModuleIdHack viewModuleIdProvider*/) : base("Dnn.LookUp")
+        public DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver) : base("Dnn.LookUp")
         {
             ConnectServices(
                 _cultureResolver = cultureResolver
             );
-            // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-            //_viewModuleIdProvider = viewModuleIdProvider;
         }
         private readonly IZoneCultureResolver _cultureResolver;
-        // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-        // private readonly ViewModuleIdHack _viewModuleIdProvider;
 
         #endregion
 
@@ -47,8 +42,6 @@ namespace ToSic.Sxc.Dnn.LookUp
         public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
         {
             var wrapLog = Log.Fn<LookUpEngine>($"..., {moduleId}");
-            // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-            //if (moduleId < 1) moduleId = _viewModuleIdProvider.ModuleId;
             var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = _cultureResolver.SafeCurrentCultureInfo();

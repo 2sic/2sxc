@@ -142,7 +142,6 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
-    <Compile Include="Dnn\LookUp\ViewModuleIdHack.cs" />
     <Compile Include="Dnn\Services\DnnRenderService.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
