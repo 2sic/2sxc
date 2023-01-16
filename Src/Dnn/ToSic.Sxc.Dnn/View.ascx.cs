@@ -103,7 +103,8 @@ namespace ToSic.Sxc.Dnn
                     if (OutputCache?.Existing != null)
                         OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
                     return true; // dummy result
-                }, callLog);
+                });
+                callLog.Done();
             });
         }
 
@@ -115,12 +116,11 @@ namespace ToSic.Sxc.Dnn
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Page_PreRender(object sender, EventArgs e)
+        protected void Page_PreRender(object sender, EventArgs e) => Log.Do(() =>
         {
             var finalMessage = "";
-            LogTimer.DoInTimer(() => { 
-                var callLog = Log.Fn(timer: true);
-
+            LogTimer.DoInTimer(() =>
+            {
                 // #lightspeed
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
 
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Dnn
                         // Try to build the html and everything
                         data = OutputCache?.Existing?.Data;
 
-                        finalMessage = OutputCache?.IsEnabled != true ? "" :  data != null ? "⚡⚡" : "⚡⏳";
+                        finalMessage = OutputCache?.IsEnabled != true ? "" : data != null ? "⚡⚡" : "⚡⏳";
 
                         data = data ?? RenderViewAndGatherJsCssSpecs();
                         // in this case assets & page settings were not applied
@@ -143,7 +143,10 @@ namespace ToSic.Sxc.Dnn
                             var pageChanges = GetService<DnnPageChanges>();
                             pageChanges.Apply(Page, data);
                         }
-                        catch{ /* ignore */ }
+                        catch
+                        {
+                            /* ignore */
+                        }
 
                         // call this after rendering templates, because the template may change what resources are registered
                         DnnClientResources.AddEverything(data.Features);
@@ -162,11 +165,9 @@ namespace ToSic.Sxc.Dnn
                 // if we had an error before, or have one now, re-check assets
                 if (IsError && !headersAndScriptsAdded)
                     DnnClientResources?.AddEverything(data?.Features);
-
-                callLog.Done();
             });
             LogTimer.Done(IsError ? "⚠️" : finalMessage);
-        }
+        });
 
         private IRenderResult RenderViewAndGatherJsCssSpecs()
         {

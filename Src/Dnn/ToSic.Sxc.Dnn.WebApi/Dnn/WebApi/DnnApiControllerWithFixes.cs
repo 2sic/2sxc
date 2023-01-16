@@ -32,14 +32,12 @@ namespace ToSic.Sxc.Dnn.WebApi
         // ReSharper disable once InconsistentNaming
         private readonly ILogCall TimerWrapLog;
 
-        protected override void Initialize(HttpControllerContext controllerContext)
+        protected override void Initialize(HttpControllerContext controllerContext) => Log.Do(() =>
         {
-            var callLog = Log.Fn();
             // Add the logger to the request, in case it's needed in error-reporting
-	        controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
-	        base.Initialize(controllerContext);
-            callLog.Done();
-        }
+            controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
+            base.Initialize(controllerContext);
+        });
 
         protected override void Dispose(bool disposing)
         {

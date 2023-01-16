@@ -78,14 +78,11 @@ namespace ToSic.Sxc.Dnn.Web
         /// but older razor templates might still expect it
         /// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
         /// </summary>
-        public void EnforcePre1025Behavior()
+        public void EnforcePre1025Behavior() => Log.Do(() =>
         {
-            // If we got this far, we want the old behavior which always enables headers etc.
-            var l = Log.Fn(message: "Activate Anti-Forgery for compatibility with old behavior");
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             MustAddHeaders = true;
-            l.Done();
-        }
+        }, message: "Activate Anti-Forgery for compatibility with old behavior");
 
         /// <summary>
         /// new in 10.25 - by default now jQuery isn't loaded!
@@ -97,44 +94,41 @@ namespace ToSic.Sxc.Dnn.Web
                                               ?? true;
 
 
-        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null)
-        {
-            var wrapLog = Log.Fn($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}");
-
-            var features = overrideFeatures ?? Features;
-
-            var root = DnnConstants.SysFolderRootVirtual;
-            root = page.ResolveUrl(root);
-            var ver = EavSystemInfo.VersionWithStartUpBuild;// Settings.Version.ToString();
-            var priority = (int) FileOrder.Js.DefaultPriority - 2;
-
-            // add edit-mode CSS
-            if (editCss) RegisterCss(page, root + InpageCms.EditCss);
-
-            // add read-js
-            if (readJs || editJs)
+        public void RegisterClientDependencies(Page page, bool readJs, bool editJs, bool editCss, IList<IPageFeature> overrideFeatures = null) =>
+            Log.Do($"-, {nameof(readJs)}:{readJs}, {nameof(editJs)}:{editJs}, {nameof(editCss)}:{editCss}", l =>
             {
-                Log.A("add $2sxc api and headers");
-                RegisterJs(page, ver, root + InpageCms.CoreJs, true, priority);
-                MustAddHeaders = true;
-            }
+                var features = overrideFeatures ?? Features;
 
-            // add edit-js (commands, manage, etc.)
-            if (editJs)
-            {
-                Log.A("add 2sxc edit api; also request jQuery and anti-forgery");
-                // note: the inpage only works if it's not in the head, so we're adding it below
-                RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
-            }
+                var root = DnnConstants.SysFolderRootVirtual;
+                root = page.ResolveUrl(root);
+                var ver = EavSystemInfo.VersionWithStartUpBuild;
+                var priority = (int)FileOrder.Js.DefaultPriority - 2;
 
-            if (features.Contains(BuiltInFeatures.JQuery))
-                JavaScript.RequestRegistration(CommonJs.jQuery);
-            
-            if (features.Contains(BuiltInFeatures.TurnOn))
-                RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
+                // add edit-mode CSS
+                if (editCss) RegisterCss(page, root + InpageCms.EditCss);
 
-            wrapLog.Done("ok");
-        }
+                // add read-js
+                if (readJs || editJs)
+                {
+                    Log.A("add $2sxc api and headers");
+                    RegisterJs(page, ver, root + InpageCms.CoreJs, true, priority);
+                    MustAddHeaders = true;
+                }
+
+                // add edit-js (commands, manage, etc.)
+                if (editJs)
+                {
+                    Log.A("add 2sxc edit api; also request jQuery and anti-forgery");
+                    // note: the inpage only works if it's not in the head, so we're adding it below
+                    RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
+                }
+
+                if (features.Contains(BuiltInFeatures.JQuery))
+                    JavaScript.RequestRegistration(CommonJs.jQuery);
+
+                if (features.Contains(BuiltInFeatures.TurnOn))
+                    RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
+            });
 
 
         #region DNN Bug with Current Culture

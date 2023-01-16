@@ -58,15 +58,14 @@ namespace ToSic.Sxc.Dnn
         /// <summary>
         /// Try to build the code. If something fails, remember the exception in case we need it later.
         /// </summary>
-        private void TryToBuildCode()
+        private void TryToBuildCode() => Log.Do(() =>
         {
             if (BuildComplete) return;
-            var wrapLog = Log.Fn();
             var codeFile = Parent.VirtualPath.Replace(".cshtml", ".code.cshtml");
             Log.A($"Will try to load code from '{codeFile}");
             try
             {
-                var compiled  = Parent.CreateInstance(codeFile);
+                var compiled = Parent.CreateInstance(codeFile);
                 if (compiled != null && !(compiled is RazorComponentCode))
                 {
                     throw new Exception(
@@ -83,8 +82,7 @@ namespace ToSic.Sxc.Dnn
             }
 
             BuildComplete = true;
-            wrapLog.Done(null);
-        }
+        });
 
         private static Exception ImproveExceptionMessage(Exception innerException)
         {
