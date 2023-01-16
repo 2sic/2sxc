@@ -15,43 +15,45 @@ namespace ToSic.Sxc.Data
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
             var logOrNull = _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
-            var l = logOrNull.Fn<object>(Debug,
-                    $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
-                    "Debug: true");
+            return logOrNull.Func<object>(
+                $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
+                l =>
+                {
+                    if (!field.HasValue())
+                        return (null, "field null/empty");
 
-            if (!field.HasValue())
-                return l.ReturnNull("field null/empty");
+                    // This determines if we should access & store in cache
+                    // check if we already have it in the cache - but only in default case (no language, lookup=true)
+                    var useCache = language == null && lookup;
+                    if (useCache && _ValueCache.ContainsKey(field))
+                        return (_ValueCache[field], "cached");
 
-            // This determines if we should access & store in cache
-            // check if we already have it in the cache - but only in default case (no language, lookup=true)
-            var useCache = language == null && lookup;
-            if (useCache && _ValueCache.ContainsKey(field))
-                return l.Return(_ValueCache[field], "cached");
+                    // use the standard dimensions or overload
+                    var languages = language == null ? _Dependencies.Dimensions : new[] { language };
+                    l.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
 
-            // use the standard dimensions or overload
-            var languages = language == null ? _Dependencies.Dimensions : new[] { language };
-            l.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
+                    // Get the field or the path if it has one
+                    // Classic field case
+                    var specs = new PropReqSpecs(field, languages, logOrNull);
+                    var path = new PropertyLookupPath().Add("DynEntStart", field);
+                    var resultSet = FindPropertyInternal(specs, path);
 
-            // Get the field or the path if it has one
-            // Classic field case
-            var specs = new PropReqSpecs(field, languages, logOrNull);
-            var path = new PropertyLookupPath().Add("DynEntStart", field);
-            var resultSet = FindPropertyInternal(specs, path);
+                    // check Entity is null (in cases where null-objects are asked for properties)
+                    if (resultSet == null) return (null, "result null");
 
-            // check Entity is null (in cases where null-objects are asked for properties)
-            if (resultSet == null) return l.ReturnNull("result null");
+                    l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
 
-            l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
+                    var result = ValueAutoConverted(resultSet, lookup, field, logOrNull);
 
-            var result = ValueAutoConverted(resultSet, lookup, field, logOrNull);
+                    // cache result, but only if using default languages
+                    if (useCache)
+                    {
+                        l.A("add to cache");
+                        _ValueCache.Add(field, result);
+                    }
 
-            // cache result, but only if using default languages
-            if (useCache)
-            {
-                l.A("add to cache");
-                _ValueCache.Add(field, result);
-            }
-            return l.ReturnAsOk(result);
+                    return (result, "ok");
+                });
         }
 
 

@@ -43,37 +43,31 @@ namespace ToSic.Sxc.Images
         public override string ToString() => Tag.ToString();
 
         /// <inheritdoc />
-        public virtual Img Img
+        public virtual Img Img => _imgTag.Get(Log, () =>
         {
-            get
+            var imgTag = Razor.Blade.Tag.Img().Src(Src);
+
+            // Add all kind of attributes if specified
+            var tag = ThisResize.Recipe;
+            var dic = tag?.Attributes?
+                .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key))
+                .ToDictionary(p => p.Key, p => p.Value);
+            if (dic != null)
             {
-                if (_imgTag != null) return _imgTag;
-
-                var wrapLog = Log.Fn<Img>(ImgService.Debug);
-                _imgTag = Razor.Blade.Tag.Img().Src(Src);
-
-                // Add all kind of attributes if specified
-                var tag = ThisResize.Recipe;
-                var dic = tag?.Attributes?
-                    .Where(pair => !Recipe.SpecialProperties.Contains(pair.Key))
-                    .ToDictionary(p => p.Key, p => p.Value);
-                if (dic != null)
-                {
-                    Log.A(ImgService.Debug, "will add properties from attributes");
-                    foreach (var a in dic)
-                        _imgTag = _imgTag.Attr(a.Key, a.Value);
-                }
-
-                // Only add these if they were really specified / known
-                if (Alt != null) _imgTag = _imgTag.Alt(Alt);
-                if (Class != null) _imgTag = _imgTag.Class(Class);
-                if (Width != null) _imgTag = _imgTag.Width(Width);
-                if (Height != null) _imgTag = _imgTag.Height(Height);
-
-                return wrapLog.ReturnAsOk(_imgTag);
+                Log.A(ImgService.Debug, "will add properties from attributes");
+                foreach (var a in dic)
+                    imgTag = imgTag.Attr(a.Key, a.Value);
             }
-        }
-        private Img _imgTag;
+
+            // Only add these if they were really specified / known
+            if (Alt != null) imgTag = imgTag.Alt(Alt);
+            if (Class != null) imgTag = imgTag.Class(Class);
+            if (Width != null) imgTag = imgTag.Width(Width);
+            if (Height != null) imgTag = imgTag.Height(Height);
+
+            return imgTag;
+        }, enabled: ImgService.Debug);
+        private readonly GetOnce<Img> _imgTag = new GetOnce<Img>();
 
         public IHtmlTag Tag => _tag.Get(GetTagWithToolbar);
         private readonly GetOnce<IHtmlTag> _tag = new GetOnce<IHtmlTag>();
@@ -126,9 +120,9 @@ namespace ToSic.Sxc.Images
         /// <inheritdoc />
         public string Class => _imgClass.Get(ClassGenerator);
         private readonly GetOnce<string> _imgClass = new GetOnce<string>();
-        private string ClassGenerator()
+
+        private string ClassGenerator() => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>(ImgService.Debug);
             var part1 = Call.ImgClass;
             object attrClass = null;
             ThisResize.Recipe?.Attributes?.TryGetValue(Recipe.SpecialPropertyClass, out attrClass);
@@ -137,10 +131,10 @@ namespace ToSic.Sxc.Images
             var hasOnImgClass = !string.IsNullOrWhiteSpace(Call.ImgClass);
 
             // Must use null if neither are useful
-            if (!hasOnAttrs && !hasOnImgClass) return wrapLog.ReturnNull("null/nothing");
+            if (!hasOnAttrs && !hasOnImgClass) return (null, "null/nothing");
             var result = part1 + (hasOnImgClass && hasOnAttrs ? " " : "") + attrClass;
-            return wrapLog.ReturnAndLog(result);
-        }
+            return (result, "");
+        }, enabled: ImgService.Debug);
 
 
 
@@ -154,11 +148,11 @@ namespace ToSic.Sxc.Images
         {
             var isEnabled = ImgService.Features.IsEnabled(ImageServiceMultipleSizes.NameId);
             var hasVariants = !string.IsNullOrWhiteSpace(ThisResize?.Recipe?.Variants);
-            var wrapLog = Log.Fn<string>(ImgService.Debug, $"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}");
-            var result = isEnabled && hasVariants
-                ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.Field)
-                : null;
-            return wrapLog.ReturnAndLog(result);
+            return Log.Func($"{nameof(isEnabled)}: {isEnabled}, {nameof(hasVariants)}: {hasVariants}",
+                () => isEnabled && hasVariants
+                    ? ImgLinker.SrcSet(Call.Link.Url, Settings as ResizeSettings, SrcSetType.Img, Call.Field)
+                    : null,
+                enabled: ImgService.Debug);
         }
 
 
@@ -169,11 +163,11 @@ namespace ToSic.Sxc.Images
         private string WidthGenerator()
         {
             var setWidth = ThisResize.Recipe?.SetWidth;
-            var wrapLog = Log.Fn<string>(ImgService.Debug, $"setWidth: {setWidth}, Width: {ThisResize.Width}");
-            var result = setWidth == true && ThisResize.Width != 0
-                ? ThisResize.Width.ToString()
-                : null;
-            return wrapLog.ReturnAndLog(result);
+            return Log.Func($"setWidth: {setWidth}, Width: {ThisResize.Width}",
+                () => setWidth == true && ThisResize.Width != 0
+                    ? ThisResize.Width.ToString()
+                    : null,
+                enabled: ImgService.Debug);
         }
 
 
@@ -184,24 +178,24 @@ namespace ToSic.Sxc.Images
         private string HeightGenerator()
         {
             var setHeight = ThisResize.Recipe?.SetHeight;
-            var wrapLog = Log.Fn<string>(ImgService.Debug, $"setHeight: {setHeight}, Height: {ThisResize.Height}");
-            var result = setHeight == true && ThisResize.Height != 0
-                ? ThisResize.Height.ToString()
-                : null;
-            return wrapLog.ReturnAndLog(result);
+            return Log.Func($"setHeight: {setHeight}, Height: {ThisResize.Height}",
+                () => setHeight == true && ThisResize.Height != 0
+                    ? ThisResize.Height.ToString()
+                    : null,
+                enabled: ImgService.Debug);
         }
 
 
         public string Sizes => _sizes.Get(SizesGenerator);
         private readonly GetOnce<string> _sizes = new GetOnce<string>();
-        private string SizesGenerator()
+
+        private string SizesGenerator() => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>(ImgService.Debug);
             if (!ImgService.Features.IsEnabled(ImageServiceSetSizes.NameId))
-                return wrapLog.ReturnNull("disabled");
+                return (null, "disabled");
             var sizes = ThisResize.Recipe?.Sizes;
-            return wrapLog.ReturnAndLog(sizes);
-        }
+            return (sizes, "");
+        }, enabled: ImgService.Debug);
 
         ///// <inheritdoc />
         //[PrivateApi]

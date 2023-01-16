@@ -31,24 +31,22 @@ namespace ToSic.Sxc.Images
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        private object GetBestSettings(object settings)
+        private object GetBestSettings(object settings) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<object>(Debug);
             if (settings == null || settings is bool boolSettings && boolSettings)
-                return wrapLog.Return((object)GetCodeRootSettingsByName("Content"), "null/default");
+                return ((object)GetCodeRootSettingsByName("Content"), "null/default");
 
             if (settings is string strName && !string.IsNullOrWhiteSpace(strName))
-                return wrapLog.Return((object)GetCodeRootSettingsByName(strName), $"name: {strName}");
+                return ((object)GetCodeRootSettingsByName(strName), $"name: {strName}");
 
-            return wrapLog.Return(settings, "unchanged");
-        }
+            return (settings, "unchanged");
+        }, enabled: Debug);
 
-        private dynamic GetCodeRootSettingsByName(string strName)
+        private dynamic GetCodeRootSettingsByName(string strName) => Log.Func($"{strName}", () =>
         {
-            var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {_DynCodeRoot != null}");
             var result = (_DynCodeRoot?.Settings?.Images as ICanGetByName)?.Get(strName);
-            return wrapLog.Return((object)result, $"found: {result != null}");
-        }
+            return ((object)result, $"found: {result != null}");
+        }, enabled: Debug, message: $"code root: {_DynCodeRoot != null}");
 
         /// <summary>
         /// Convert to Multi-Resize Settings
