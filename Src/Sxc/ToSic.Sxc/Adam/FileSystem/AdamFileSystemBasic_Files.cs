@@ -23,20 +23,10 @@ namespace ToSic.Sxc.Adam
         }
 
         /// <inheritdoc />
-        public void Rename(IFile file, string newName)
-        {
-            var callLog = Log.Fn();
-            TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName);
-            callLog.Done();
-        }
+        public void Rename(IFile file, string newName) => Log.Do(() => TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName));
 
         /// <inheritdoc />
-        public void Delete(IFile file)
-        {
-            var callLog = Log.Fn();
-            File.Delete(_adamPaths.PhysicalPath(file.Path));
-            callLog.Done();
-        }
+        public void Delete(IFile file) => Log.Do(() => File.Delete(_adamPaths.PhysicalPath(file.Path)));
 
         /// <inheritdoc />
         public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)

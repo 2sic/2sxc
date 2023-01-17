@@ -32,9 +32,8 @@ namespace ToSic.Sxc.Apps.Paths
         /// Creates a directory and copies the needed web.config for razor files
         /// if the directory does not exist.
         /// </summary>
-        public void EnsureTemplateFolderExists(AppState appState, bool isShared)
+        public void EnsureTemplateFolderExists(AppState appState, bool isShared) => Log.Do($"{isShared}", () =>
         {
-            var wrapLog = Log.Fn($"{isShared}");
             var portalPath = isShared
                 ? ServerPaths.FullAppPath(_globalConfiguration.SharedAppsFolder)
                 : _site.AppsRootPhysicalFull ?? "";
@@ -47,29 +46,29 @@ namespace ToSic.Sxc.Apps.Paths
             // Create web.config (copy from DesktopModules folder, but only if is there, and for Oqtane is not)
             // Note that DNN needs it because many razor file don't use @inherits and the web.config contains the default class
             // but in Oqtane we'll require that to work
-            var webConfigTemplateFilePath = Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile);
+            var webConfigTemplateFilePath =
+                Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile);
             if (File.Exists(webConfigTemplateFilePath) && !sxcFolder.GetFiles(Settings.WebConfigFileName).Any())
                 File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, Settings.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(appState.Folder))
-            {
-                wrapLog.Done("Folder name not given, won't create");
-                return;
-            }
+                return "Folder name not given, won't create";
 
             var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, appState.Folder));
             contentFolder.Create();
 
-            var appDataProtectedFolder = new DirectoryInfo(Path.Combine(contentFolder.FullName, Eav.Constants.AppDataProtectedFolder));
+            var appDataProtectedFolder =
+                new DirectoryInfo(Path.Combine(contentFolder.FullName, Eav.Constants.AppDataProtectedFolder));
             appDataProtectedFolder.Create();
 
-            var appJsonTemplateFilePath = Path.Combine(_globalConfiguration.AppDataTemplateFolder, Eav.Constants.AppJson);
+            var appJsonTemplateFilePath =
+                Path.Combine(_globalConfiguration.AppDataTemplateFolder, Eav.Constants.AppJson);
             if (File.Exists(appJsonTemplateFilePath) && !appDataProtectedFolder.GetFiles(Eav.Constants.AppJson).Any())
-                File.Copy(appJsonTemplateFilePath, Path.Combine(appDataProtectedFolder.FullName, Eav.Constants.AppJson));
+                File.Copy(appJsonTemplateFilePath,
+                    Path.Combine(appDataProtectedFolder.FullName, Eav.Constants.AppJson));
+            return "ok";
+        });
 
-            wrapLog.Done("ok");
-        }
-        
     }
 }

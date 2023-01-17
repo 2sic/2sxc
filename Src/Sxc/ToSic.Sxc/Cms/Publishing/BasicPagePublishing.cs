@@ -12,13 +12,11 @@ namespace ToSic.Sxc.Cms.Publishing
     {
         public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> warn) : base($"{LogScopes.NotImplemented}.Publsh") { }
 
-        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action)
+        public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
             var versioningActionInfo = new VersioningActionInfo();
             action.Invoke(versioningActionInfo);
-            wrapLog.Done();
-        }
+        });
 
 
 

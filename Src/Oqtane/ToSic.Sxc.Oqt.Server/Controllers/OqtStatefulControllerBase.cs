@@ -14,17 +14,14 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         protected IContextResolver CtxResolver;
 
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
-
             base.OnActionExecuting(context);
 
             var getBlock = GetService<OqtGetBlock>();
             CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
             BlockOptional = CtxResolver.RealBlockOrNull();
-            wrapLog.Done();
-        }
+        });
 
         // TODO: 2021-09-20 2dm this should probably be removed - I don't think the context should be available on this class, but I'm not sure 
         protected IContextOfBlock GetContext() => BlockOptional?.Context;

@@ -70,15 +70,17 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             OqtViewResultsDto ret = null;
             var finalMessage = "";
-            LogTimer.DoInTimer(() =>
+            LogTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
             {
                 #region Lightspeed output caching
-                var callLog = Log.Fn(timer: true);
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
                 var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
-                finalMessage = OutputCache?.IsEnabled != true ? "" : OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
+                finalMessage = OutputCache?.IsEnabled != true ? "" :
+                    OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
                 OutputCache?.Save(renderResult);
+
                 #endregion
+
                 PageOutput.Init(this, renderResult);
 
                 ret = new()
@@ -93,10 +95,10 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     HttpHeaders = renderResult.HttpHeaders,
                     CspEnabled = renderResult.CspEnabled,
                     CspEnforced = renderResult.CspEnforced,
-                    CspParameters = renderResult.CspParameters.Select(c => c.NvcToString()).ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
+                    CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
+                        .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
                 };
-                callLog.Done();
-            });
+            }));
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 
             // Check if there is less than 50 global types and warn user to restart application
