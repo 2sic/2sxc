@@ -8,6 +8,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Lib.DI;
 using ToSic.Eav.Run;
 using ToSic.Eav.Serialization;
+using ToSic.Eav.WebApi.Serialization;
 using ToSic.Sxc.Images.ImageflowRewrite;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
@@ -49,6 +50,12 @@ namespace ToSic.Sxc.Dnn.StartUp
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
             var transientSp = DnnStaticDi.GetGlobalServiceProvider();
+
+            // Configure Eav to Json converters for api v15
+            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EavJsonConverter>());
+            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EavCollectionJsonConverter>());
+            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EntityWrapperJsonConverter>());
+            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EntityWrapperCollectionJsonConverter>());
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
