@@ -38,12 +38,11 @@ namespace ToSic.Sxc.Code
         #region Dynamic Code Coupling
 
         [PrivateApi]
-        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot) => base.Log.Do(() =>
         {
             base.ConnectToRoot(codeRoot);
             _codeLog.Reset(); // reset in case it was already used before
-            base.Log.Fn().Done();
-        }
+        });
 
         [PrivateApi]
         public IDynamicCode GetContents() => _DynCodeRoot;

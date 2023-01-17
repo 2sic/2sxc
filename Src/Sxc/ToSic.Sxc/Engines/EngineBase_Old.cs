@@ -18,13 +18,11 @@ namespace ToSic.Sxc.Engines
 
 #pragma warning disable CS0612
         /// <inheritdoc />
-        public void Init(IBlock block, Purpose purpose)
+        public void Init(IBlock block, Purpose purpose) => Log.Do($"{nameof(purpose)}:{purpose}", () =>
         {
-            var l = Log.Fn($"{nameof(purpose)}:{purpose}");
             Purpose = purpose;
             Init(block);
-            l.Done();
-        }
+        });
 #pragma warning restore CS0612
 
 

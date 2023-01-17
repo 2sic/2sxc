@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn
                 GetService<ILogStore>().Add("module", Log);
                 //LogTimer.Timer.Start();
 
-                Log.Do(() =>
+                Log.DoTimed(() =>
                 {
                     // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
                     var checkPortalIsReady = true;
@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Dnn
                             OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
                         return true; // dummy result
                     });
-                }, timer: true);
+                });
             });
         }
 
