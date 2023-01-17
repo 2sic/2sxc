@@ -53,9 +53,6 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             // Configure Eav to Json converters for api v15
             JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EavJsonConverter>());
-            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EavCollectionJsonConverter>());
-            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EntityWrapperJsonConverter>());
-            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EntityWrapperCollectionJsonConverter>());
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;

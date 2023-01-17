@@ -10,6 +10,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
 using ToSic.Eav.WebApi;
+using ToSic.Eav.WebApi.Serialization;
 using ToSic.Lib.DI;
 using ToSic.Razor.StartUp;
 using ToSic.Sxc.DataSources;
@@ -20,6 +21,7 @@ using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.WebApi;
+using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
@@ -71,6 +73,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             var serviceProvider = app.ApplicationServices;
+
+            // Configure Eav to Json converters for api v15 (must be configured before first serialization)
+            JsonOptions.UnsafeJsonWithoutEncodingHtml.Converters.Add(serviceProvider.Build<EavJsonConverter>());
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
             
