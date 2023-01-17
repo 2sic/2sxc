@@ -9,10 +9,8 @@ namespace ToSic.Sxc.Dnn.Web
     {
         public DnnBlockResourceExtractor(PageServiceShared pageServiceShared): base(pageServiceShared) { }
 
-        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
+        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<(string, bool)>();
-
             // Set priority for later processing?
             JsDefaultPriority = (int)FileOrder.Js.DefaultPriority;
             CssDefaultPriority = (int)FileOrder.Css.DefaultPriority;
@@ -26,7 +24,7 @@ namespace ToSic.Sxc.Dnn.Web
             // Handle Scripts
             renderedTemplate = ExtractStyles(renderedTemplate);
 
-            return wrapLog.Return((renderedTemplate, include2SxcJs), "ok");
-        }
+            return ((renderedTemplate, include2SxcJs), "ok");
+        });
     }
 }

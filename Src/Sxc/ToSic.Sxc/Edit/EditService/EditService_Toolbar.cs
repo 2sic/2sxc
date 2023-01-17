@@ -44,11 +44,10 @@ namespace ToSic.Sxc.Edit.EditService
             object condition,
             object prefill,
             object settings,
-            object toolbar)
+            object toolbar) => Log.Func($"enabled:{Enabled}; inline{inTag}", l =>
         {
-            var wrapLog = Log.Fn<IHybridHtmlString>($"enabled:{Enabled}; inline{inTag}");
-            if (!Enabled) return wrapLog.ReturnNull("not enabled");
-            if (!IsConditionOk(condition)) return wrapLog.ReturnNull("condition false");
+            if (!Enabled) return (null, "not enabled");
+            if (!IsConditionOk(condition)) return (null, "condition false");
 
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
                 $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
@@ -74,40 +73,38 @@ namespace ToSic.Sxc.Edit.EditService
                 else
                 {
                     Log.A("Using classic mode, with all parameters.");
-                    itmToolbar = ItemToolbarPicker.ItemToolbar(eTarget, actions, contentType, prefill: prefill, settings: settings,
-                        toolbar: toolbar);
+                    itmToolbar = ItemToolbarPicker.ItemToolbar(eTarget, actions, contentType,
+                        prefill: prefill, settings: settings, toolbar: toolbar);
                 }
             }
 
             var result = inTag
                 ? new HybridHtmlString(itmToolbar.ToolbarAsAttributes())
                 : new HybridHtmlString(itmToolbar.ToolbarAsTag);
-            return wrapLog.ReturnAsOk(result);
-        }
+            return (result, "ok");
+        });
 
-        private bool IsConditionOk(object condition)
+        private bool IsConditionOk(object condition) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<bool>();
-
             // Null = no condition and certainly not false, say ok
-            if (condition == null) return wrapLog.ReturnTrue("null,true");
+            if (condition == null) return (true, "null,true");
 
             // Bool (non-null) and nullable
-            if (condition is bool b && b == false) return wrapLog.ReturnFalse();
-            if (condition as bool? == false) return wrapLog.ReturnFalse("null false");
+            if (condition is bool b && b == false) return (false, "bool false");
+            if (condition as bool? == false) return (false, "null false");
 
             // Int are only false if exactly 0
-            if (condition is int i && i == 0) return wrapLog.ReturnFalse("int 0");
-            if (condition as int? == 0) return wrapLog.ReturnFalse("int nullable 0");
+            if (condition is int i && i == 0) return (false, "int 0");
+            if (condition as int? == 0) return (false, "int nullable 0");
 
             // String
             if (condition is string s &&
                 string.Equals(s, false.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                return wrapLog.ReturnFalse("string false");
+                return (false, "string false");
 
             // Anything else: true
-            return wrapLog.ReturnTrue("default,true");
-        }
+            return (true, "default,true");
+        });
 
     }
 }

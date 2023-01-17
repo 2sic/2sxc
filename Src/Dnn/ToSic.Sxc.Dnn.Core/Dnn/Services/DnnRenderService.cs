@@ -28,9 +28,8 @@ namespace ToSic.Sxc.Dnn.Services
             );
         }
 
-        public override IRenderResult Module(int pageId, int moduleId)
+        public override IRenderResult Module(int pageId, int moduleId) => Log.Func($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}", () =>
         {
-            var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
             var result = base.Module(pageId, moduleId);
 
             // this code should be executed in PreRender of page (ensure when calling) or it is too late
@@ -38,8 +37,8 @@ namespace ToSic.Sxc.Dnn.Services
                 if (_context.New().Module.BlockIdentifier == null) // find if is in module (because in module it's already handled)
                     DnnPageProcess(dnnHandler, result);
 
-            return wrapLog.ReturnAsOk(result);
-        }
+            return (result, "ok");
+        });
 
         private void DnnPageProcess(Page dnnPage, IRenderResult result)
         {
