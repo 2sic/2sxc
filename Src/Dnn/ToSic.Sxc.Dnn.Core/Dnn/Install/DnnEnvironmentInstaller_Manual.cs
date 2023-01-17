@@ -13,12 +13,11 @@ namespace ToSic.Sxc.Dnn.Install
     public partial class DnnEnvironmentInstaller
     {
 
-        public bool ResumeAbortedUpgrade()
+        public bool ResumeAbortedUpgrade() => Log.Func(l =>
         {
-            var l = Log.Fn<bool>();
             if (IsUpgradeRunning)
             {
-                Log.A("Upgrade is still running");
+                l.A("Upgrade is still running");
                 throw new Exception("There seems to be an upgrade running - please wait. If you still see this message after 3-4 minutes, please restart the web application.");
             }
 
@@ -37,16 +36,15 @@ namespace ToSic.Sxc.Dnn.Install
 
             // Restart application
             HttpRuntime.UnloadAppDomain();
-            return l.ReturnTrue("ok");
-        }
+            return (true, "ok");
+        });
 
 
-        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp)
+        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp) => Log.Func(() =>
         {
-            var l = Log.Fn<string>();
             var moduleInfo = (module as DnnModule)?.GetContents();
             var portal = (site as DnnSite)?.GetContents();
-            if(moduleInfo == null || portal == null)
+            if (moduleInfo == null || portal == null)
                 throw new ArgumentException("missing portal/module");
 
             // new: check if it should allow this
@@ -63,17 +61,20 @@ namespace ToSic.Sxc.Dnn.Install
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }
-                catch { /* ignore */ }
-            
+                catch
+                {
+                    /* ignore */
+                }
+
             var gettingStartedSrc = _remoteRouterLazy.Value.LinkToRemoteRouter(
-                RemoteDestinations.AutoConfigure, 
+                RemoteDestinations.AutoConfigure,
                 site,
                 module.Id,
                 app: null,
                 forContentApp);
 
             // Set src to iframe
-            return l.Return(gettingStartedSrc);
-        }
+            return gettingStartedSrc;
+        });
     }
 }

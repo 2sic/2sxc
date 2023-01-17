@@ -27,9 +27,8 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// </summary>
         /// <param name="sourceFolder"></param>
         /// <param name="destinationFolder">The portal-relative path where the files should be copied to</param>
-        public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder)
+        public override List<Message> TransferFilesToSite(string sourceFolder, string destinationFolder) => Log.Func($"{sourceFolder}, {destinationFolder}", l =>
         {
-            var wrapLog = Log.Fn<List<Message>>($"{sourceFolder}, {destinationFolder}");
             var messages = new List<Message>();
             var files = Directory.GetFiles(sourceFolder, "*.*");
 
@@ -39,14 +38,14 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
             if (!dnnFolderManager.FolderExists(siteId, destinationFolder))
             {
-                Log.A($"Must create {destinationFolder} in site {siteId}");
+                l.A($"Must create {destinationFolder} in site {siteId}");
                 dnnFolderManager.AddFolder(siteId, destinationFolder);
             }
             var folderInfo = dnnFolderManager.GetFolder(siteId, destinationFolder);
 
             void MassLog(string msg, Exception exception)
             {
-                Log.A(msg);
+                l.A(msg);
                 if (exception == null) return;
                 messages.Add(exception is InvalidFileExtensionException
                     ? new Message(msg, Message.MessageTypes.Error)
@@ -58,7 +57,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
             foreach (var sourceFilePath in files)
             {
                 var destinationFileName = Path.GetFileName(sourceFilePath);
-                Log.A($"Try to copy '{sourceFilePath}' to '{destinationFileName}'");
+                l.A($"Try to copy '{sourceFilePath}' to '{destinationFileName}'");
 
                 if (!dnnFileManager.FileExists(folderInfo, destinationFileName))
                 {
@@ -87,15 +86,15 @@ namespace ToSic.Sxc.Dnn.ImportExport
             // Call the method recursively to handle subdirectories
             foreach (var sourceFolderPath in Directory.GetDirectories(sourceFolder))
             {
-                Log.A($"subfolder:{sourceFolderPath}");
+                l.A($"subfolder:{sourceFolderPath}");
                 var newDestinationFolder = Path.Combine(destinationFolder, sourceFolderPath.Replace(sourceFolder, "")
                     .TrimStart('\\'))
                     .Replace('\\', '/');
                 TransferFilesToSite(sourceFolderPath, newDestinationFolder);
             }
 
-            return wrapLog.Return(messages);
-        }
+            return messages;
+        });
 
         public override Version TenantVersion => typeof(PortalSettings).Assembly.GetName().Version;
 

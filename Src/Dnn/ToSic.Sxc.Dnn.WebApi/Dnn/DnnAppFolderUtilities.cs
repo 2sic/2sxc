@@ -29,23 +29,17 @@ namespace ToSic.Sxc.Dnn
             );
         }
 
-        internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site)
+        internal string GetAppFolderVirtualPath(HttpRequestMessage request, ISite site) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>();
-
             var appFolder = GetAppFolder(request, true);
-
             var appFolderVirtualPath = Path.Combine(((DnnSite)site).AppsRootRelative, appFolder).ForwardSlash();
+            return (appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
+        });
 
-            return wrapLog.Return(appFolderVirtualPath, $"Ok, AppFolder Virtual Path: {appFolderVirtualPath}");
-        }
-
-        internal string GetAppFolder(HttpRequestMessage request, bool errorIfNotFound)
+        internal string GetAppFolder(HttpRequestMessage request, bool errorIfNotFound) => Log.Func(l =>
         {
             const string errPrefix = "Api Controller Finder Error: ";
             const string errSuffix = "Check event-log, code and inner exception. ";
-
-            var l = Log.Fn<string>();
 
             var routeData = request.GetRouteData();
 
@@ -70,26 +64,25 @@ namespace ToSic.Sxc.Dnn
             {
                 const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
                 if (errorIfNotFound)
-                    throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, l);
-                return l.Return(null, "not found, maybe error");
+                    throw l.Ex(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg));
+                return (null, "not found, maybe error");
             }
 
             if (string.IsNullOrWhiteSpace(appFolder) && errorIfNotFound)
             {
                 const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
                                    "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-                throw ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg, l);
+                throw l.Ex(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg));
             }
 
-            return l.ReturnAndLog(appFolder);
-        }
+            return (appFolder, "ok");
+        });
 
-        internal static HttpResponseException ReportToLogAndThrow<T>(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, ILogCall<T> logCallToClose)
+        internal static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg)
         {
             var helpText = ErrorHelp.HelpText(e);
             var exception = new Exception(msg + helpText, e);
             DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
-            logCallToClose.Return(default, "error");
             return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
         }
     }

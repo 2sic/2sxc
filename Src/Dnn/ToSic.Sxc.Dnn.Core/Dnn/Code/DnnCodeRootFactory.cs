@@ -34,9 +34,8 @@ namespace ToSic.Sxc.Dnn.Code
         /// Special helper for new Kit-based Razor templates in v14
         /// </summary>
         /// <returns>`null` if not applicable, otherwise the typed DynamicRoot</returns>
-        private DynamicCodeRoot BuildGenericCodeRoot(Type customCode)
+        private DynamicCodeRoot BuildGenericCodeRoot(Type customCode) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<DynamicCodeRoot>();
             try
             {
                 var requiredDynCode = typeof(IDynamicCode<,>);
@@ -46,13 +45,13 @@ namespace ToSic.Sxc.Dnn.Code
                     .GetInterfaces()
                     .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == requiredDynCode);
 
-                if (interfaceOnCode == null) return wrapLog.ReturnNull();
+                if (interfaceOnCode == null) return null;
 
                 var typesArgs = interfaceOnCode.GetGenericArguments();
-                if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return wrapLog.ReturnNull();
+                if (typesArgs.Length != requiredDynCode.GetGenericArguments().Length) return null;
 
                 var kitType = typesArgs[1];
-                if (!kitType.IsSubclassOf(typeof(ServiceKit))) return wrapLog.ReturnNull();
+                if (!kitType.IsSubclassOf(typeof(ServiceKit))) return null;
 
                 // 2. If yes, generate a DnnDynamicCodeRoot<TModel, TServiceKit> using the same types
                 var genType = typeof(DnnDynamicCodeRoot<,>);
@@ -60,13 +59,13 @@ namespace ToSic.Sxc.Dnn.Code
 
                 // 3. return that
                 var codeRoot = _serviceProvider.GetService(finalType) as DynamicCodeRoot;
-                return wrapLog.Return(codeRoot);
+                return codeRoot;
             }
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                return wrapLog.ReturnNull();
+                return null;
             }
-        }
+        });
     }
 }

@@ -6,15 +6,14 @@ namespace ToSic.Sxc.Dnn.Install
 {
     public partial class DnnEnvironmentInstaller
     {
-        internal bool IsUpgradeComplete(string version, string note = "")
+        internal bool IsUpgradeComplete(string version, string note = "") => Log.Func(timer: true, message: note, func: () =>
         {
-            var l = Log.Fn<bool>(message: note, timer: true);
             _installLogger.LogStep(version, "IsUpgradeComplete checking " + note, false);
             var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");
             var complete = File.Exists(logFilePath);
             _installLogger.LogStep(version, "IsUpgradeComplete: " + complete, false);
-            return l.Return(complete);
-        }
+            return complete;
+        });
 
         // cache the status
         private static bool? _running;
