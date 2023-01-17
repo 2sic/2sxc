@@ -78,11 +78,11 @@ namespace ToSic.Sxc.Dnn.Web
         /// but older razor templates might still expect it
         /// and any other old behaviour, incl. no-view defined, etc. should activate compatibility
         /// </summary>
-        public void EnforcePre1025Behavior() => Log.Do(() =>
+        public void EnforcePre1025Behavior() => Log.Do(message: "Activate Anti-Forgery for compatibility with old behavior", action: () =>
         {
             ServicesFramework.Instance.RequestAjaxAntiForgerySupport();
             MustAddHeaders = true;
-        }, message: "Activate Anti-Forgery for compatibility with old behavior");
+        });
 
         /// <summary>
         /// new in 10.25 - by default now jQuery isn't loaded!

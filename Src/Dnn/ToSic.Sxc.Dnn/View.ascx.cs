@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Dnn
                 GetService<ILogStore>().Add("module", Log);
                 //LogTimer.Timer.Start();
 
-                Log.DoTimed(() =>
+                Log.Do(timer: true, action: () =>
                 {
                     // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
                     var checkPortalIsReady = true;
@@ -161,7 +161,7 @@ namespace ToSic.Sxc.Dnn
             LogTimer.Done(IsError ? "⚠️" : finalMessage);
         });
 
-        private IRenderResult RenderViewAndGatherJsCssSpecs() => Log.Func("", () =>
+        private IRenderResult RenderViewAndGatherJsCssSpecs() => Log.Func(timer: true, message: $"module {ModuleId} on page {TabId}", func: () =>
         {
             var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
@@ -182,7 +182,7 @@ namespace ToSic.Sxc.Dnn
             });
 
             return result;
-        }, timer: true, message: $"module {ModuleId} on page {TabId}");
+        });
 
 
 

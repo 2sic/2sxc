@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Engines
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
         [PrivateApi]
-        public void Render(TextWriter writer) => Log.Do(l =>
+        public void Render(TextWriter writer) => Log.Do(message: "will render into TextWriter", action: l =>
         {
             try
             {
@@ -114,8 +114,7 @@ namespace ToSic.Sxc.Engines
                 ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
-
-        }, message: "will render into TextWriter");
+        });
 
         [PrivateApi]
         protected override string RenderTemplate()
