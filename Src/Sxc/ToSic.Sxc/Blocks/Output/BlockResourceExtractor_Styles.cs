@@ -8,9 +8,8 @@ namespace ToSic.Sxc.Blocks.Output
 {
     public abstract partial class BlockResourceExtractor
     {
-        protected string ExtractStyles(string renderedTemplate)
+        protected string ExtractStyles(string renderedTemplate) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>();
             var styleMatches = RegexUtil.StyleDetection.Matches(renderedTemplate);
             var styleMatchesToRemove = new List<Match>();
 
@@ -44,8 +43,8 @@ namespace ToSic.Sxc.Blocks.Output
 
             styleMatchesToRemove.Reverse();
             styleMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog.Return(renderedTemplate);
-        }
+            return renderedTemplate;
+        });
 
 
     }

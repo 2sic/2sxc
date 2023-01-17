@@ -21,13 +21,12 @@ namespace ToSic.Sxc.Blocks.Edit
             );
         }
 
-        public BlockEditorBase GetEditor(IBlock block)
+        public BlockEditorBase GetEditor(IBlock block) => Log.Func(() =>
         {
-            var l = Log.Fn<BlockEditorBase>();
             var editor = GetEditorInternal(block);
             editor.Init(block);
-            return l.Return(editor);
-        }
+            return editor;
+        });
 
         private BlockEditorBase GetEditorInternal(IBlock block)
         {

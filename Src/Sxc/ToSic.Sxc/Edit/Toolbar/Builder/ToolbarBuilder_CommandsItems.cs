@@ -122,11 +122,10 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = null,
             object prefill = null,
             string operation = null,
-            string context = null)
+            string context = null) => Log.Func(() =>
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
 
-            var callLog = Log.Fn<IToolbarBuilder>();
             // Note: DO NOT check the target, as here an IAsset is absolutely valid
             // TargetCheck(target);
 
@@ -140,12 +139,12 @@ namespace ToSic.Sxc.Edit.Toolbar
                 .Select(type => new ToolbarRuleMetadata(target, type,
                     operation: pars.Operation,
                     ui: pars.Ui,
-                    parameters: pars.Parameters, 
+                    parameters: pars.Parameters,
                     context: realContext,
                     decoHelper: Deps.ToolbarButtonHelper.Value));
 
-            return callLog.Return(builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
-        }
+            return (builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
+        });
 
         /// <inheritdoc />
         public IToolbarBuilder Copy(

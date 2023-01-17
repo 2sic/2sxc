@@ -94,16 +94,13 @@ namespace Custom.Hybrid
         /// <param name="appId"></param>
         /// <param name="site"></param>
         /// <returns></returns>
-        private IApp LoadAppOnly(int appId, ISite site)
+        private IApp LoadAppOnly(int appId, ISite site) => base.Log.Func($"{appId}", () =>
         {
-            var wrapLog = base.Log.Fn<IApp>($"{appId}");
-            var showDrafts = false;
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
-            var appStuff = app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                GetService<AppConfigDelegate>().Build(showDrafts));
-            return wrapLog.Return(appStuff);
-        }
+            return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
+                GetService<AppConfigDelegate>().Build(false));
+        });
 
         #region IHasLog
 

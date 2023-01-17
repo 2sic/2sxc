@@ -43,9 +43,8 @@ namespace ToSic.Sxc.Dnn.Web
         internal IList<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true)?.Features ?? new List<IPageFeature>());
         private IList<IPageFeature> _features;
 
-        public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null)
+        public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<IList<IPageFeature>>();
             // temporary solution, till the features are correctly activated in the block
             // auto-detect Blockbuilder params
             features = features ?? Features;
@@ -56,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Web
             var editCss = features.Contains(BuiltInFeatures.ToolbarsInternal);
 
             if (!readJs && !editJs && !editCss && !features.Any())
-                return wrapLog.Return(features, "nothing to add");
+                return (features, "nothing to add");
 
             Log.A("user is editor, or template requested js/css, will add client material");
 
@@ -69,8 +68,8 @@ namespace ToSic.Sxc.Dnn.Web
             Log.A($"{nameof(MustAddHeaders)}={MustAddHeaders}");
             if (MustAddHeaders) Header.AddHeaders();
 
-            return wrapLog.ReturnAsOk(features);
-        }
+            return (features, "ok");
+        });
 
 
         /// <summary>
