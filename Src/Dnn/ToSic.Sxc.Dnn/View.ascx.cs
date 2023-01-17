@@ -52,51 +52,51 @@ namespace ToSic.Sxc.Dnn
             {
                 // add to insights-history for analytic
                 GetService<ILogStore>().Add("module", Log);
-                LogTimer.Timer.Start();
+                //LogTimer.Timer.Start();
 
-                var callLog = Log.Fn(timer: true);
-
-                // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
-                var checkPortalIsReady = true;
-                bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
-
-                // get the block early, to see any errors separately - before accessing cache (which also uses the block)
-                var block = TryCatchAndLogToDnn(() => Block);
-
-                #region Lightspeed
-
-                try
+                Log.Do(() =>
                 {
-                    if (OutputCache?.Existing != null)
+                    // todo: this should be dynamic at some future time, because normally once it's been checked, it wouldn't need checking again
+                    var checkPortalIsReady = true;
+                    bool? requiresPre1025Behavior = null; // null = auto-detect, true/false
+
+                    // get the block early, to see any errors separately - before accessing cache (which also uses the block)
+                    var block = TryCatchAndLogToDnn(() => Block);
+
+                    #region Lightspeed
+
+                    try
                     {
-                        checkPortalIsReady = false;
-                        requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
+                        if (OutputCache?.Existing != null)
+                        {
+                            checkPortalIsReady = false;
+                            requiresPre1025Behavior = OutputCache.Existing.EnforcePre1025;
+                        }
                     }
-                }
-                catch { /* ignore */ }
+                    catch { /* ignore */ }
 
-                #endregion
+                    #endregion
 
-                // Always do this, part of the guarantee that everything will work
-                // new mechanism in 10.25
-                // this must happen in Page-Load, so we know what supporting scripts to add
-                // at this stage of the lifecycle
-                // We moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events
-                // ensure everything is ready and that we know if we should activate the client-dependency
-                TryCatchAndLogToDnn(() =>
-                {
-                    if (checkPortalIsReady)
-                        if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
-                            GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
-                    DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
-                    var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
-                    if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
-                    // #lightspeed
-                    if (OutputCache?.Existing != null)
-                        OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
-                    return true; // dummy result
-                });
-                callLog.Done();
+                    // Always do this, part of the guarantee that everything will work
+                    // new mechanism in 10.25
+                    // this must happen in Page-Load, so we know what supporting scripts to add
+                    // at this stage of the lifecycle
+                    // We moved this to Page_Load because RequestAjaxAntiForgerySupport didn't work in later events
+                    // ensure everything is ready and that we know if we should activate the client-dependency
+                    TryCatchAndLogToDnn(() =>
+                    {
+                        if (checkPortalIsReady)
+                            if (!DnnReadyCheckTurbo.QuickCheckSiteAndAppFoldersAreReady(this, Log))
+                                GetService<DnnReadyCheckTurbo>().EnsureSiteAndAppFoldersAreReady(this, block);
+                        DnnClientResources = GetService<DnnClientResources>().Init(Page, null, requiresPre1025Behavior == false ? null : block?.BlockBuilder);
+                        var needsPre1025Behavior = requiresPre1025Behavior ?? DnnClientResources.NeedsPre1025Behavior();
+                        if (needsPre1025Behavior) DnnClientResources.EnforcePre1025Behavior();
+                        // #lightspeed
+                        if (OutputCache?.Existing != null)
+                            OutputCache.Fresh.EnforcePre1025 = needsPre1025Behavior;
+                        return true; // dummy result
+                    });
+                }, timer: true);
             });
         }
 
@@ -161,9 +161,8 @@ namespace ToSic.Sxc.Dnn
             LogTimer.Done(IsError ? "⚠️" : finalMessage);
         });
 
-        private IRenderResult RenderViewAndGatherJsCssSpecs()
+        private IRenderResult RenderViewAndGatherJsCssSpecs() => Log.Func("", () =>
         {
-            var callLog = Log.Fn(message: $"module {ModuleId} on page {TabId}", timer: true);
             var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
             {
@@ -180,10 +179,10 @@ namespace ToSic.Sxc.Dnn
 
                 result.Html += GetOptionalDetailedLogToAttach();
                 return true; // dummy result
-            }, callLog);
+            });
 
             return result;
-        }
+        }, timer: true, message: $"module {ModuleId} on page {TabId}");
 
 
 

@@ -130,16 +130,15 @@ namespace ToSic.Sxc.WebApi
 
         public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
 
-        private void TryToAttachAppFromUrlParams()
+        private void TryToAttachAppFromUrlParams() => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
             var found = false;
             try
             {
                 var routeAppPath = _Deps.AppFolderUtilities.GetAppFolder(Request, false);
                 var siteCtx = SharedContextResolver.Site();
                 var appState = SharedContextResolver.AppOrNull(routeAppPath)?.AppState;
-                
+
                 if (appState != default)
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
@@ -150,10 +149,14 @@ namespace ToSic.Sxc.WebApi
                     _DynCodeRoot.AttachApp(app);
                     found = true;
                 }
-            } catch { /* ignore */ }
+            }
+            catch
+            {
+                /* ignore */
+            }
 
-            wrapLog.Done(found.ToString());
-        }
+            return found.ToString();
+        });
 
 
         #region Adam - Shared Code Across the APIs

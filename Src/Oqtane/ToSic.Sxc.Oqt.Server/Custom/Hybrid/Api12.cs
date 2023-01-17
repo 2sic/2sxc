@@ -58,17 +58,17 @@ namespace Custom.Hybrid
                 CreateInstancePath = createInstancePath as string;
         }
 
-        private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
+        private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => base.Log.Do(() =>
         {
-            var wrapLog = base.Log.Fn();
             var found = false;
             try
             {
                 // Handed in from the App-API Transformer
-                context.HttpContext.Items.TryGetValue(AppApiDynamicRouteValueTransformer.HttpContextKeyForAppFolder, out var routeAppPathObj);
-                if (routeAppPathObj == null) return;
+                context.HttpContext.Items.TryGetValue(AppApiDynamicRouteValueTransformer.HttpContextKeyForAppFolder,
+                    out var routeAppPathObj);
+                if (routeAppPathObj == null) return "";
                 var routeAppPath = routeAppPathObj.ToString();
-                
+
                 var appId = CtxResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? ToSic.Eav.Constants.NullId;
 
                 if (appId != ToSic.Eav.Constants.NullId)
@@ -80,10 +80,13 @@ namespace Custom.Hybrid
                     found = true;
                 }
             }
-            catch { /* ignore */ }
+            catch
+            {
+                /* ignore */
+            }
 
-            wrapLog.Done(found.ToString());
-        }
+            return found.ToString();
+        });
 
         /// <summary>
         /// Only load the app in case we don't have a module context

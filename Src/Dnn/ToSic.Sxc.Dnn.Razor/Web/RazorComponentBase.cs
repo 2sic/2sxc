@@ -116,13 +116,12 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log15.Do(() =>
         {
             _DynCodeRoot = codeRoot;
             this.LinkLog(codeRoot?.Log);
-            _codeLog.Reset();   // Reset inner log, so it will reconnect
-            Log15.Fn().Done("connected");
-        }
+            _codeLog.Reset(); // Reset inner log, so it will reconnect
+        }, message: "connected");
 
     }
 }

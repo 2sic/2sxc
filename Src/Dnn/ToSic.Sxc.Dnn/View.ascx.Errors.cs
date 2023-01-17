@@ -14,8 +14,7 @@ namespace ToSic.Sxc.Dnn
         /// Run some code in a try/catch, and output it nicely if an error is thrown
         /// </summary>
         /// <param name="action"></param>
-        /// <param name="timerWrap"></param>
-        private TResult TryCatchAndLogToDnn<TResult>(Func<TResult> action, ILogCall timerWrap = null)
+        private TResult TryCatchAndLogToDnn<TResult>(Func<TResult> action)
         {
             try
             {
@@ -53,10 +52,6 @@ namespace ToSic.Sxc.Dnn
                     phOutput.Controls.Add(new LiteralControl("Something went really wrong in view.ascx - check error logs"));
                 }
                 return default;
-            }
-            finally
-            {
-                timerWrap?.Done();
             }
         }
 
