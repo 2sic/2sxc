@@ -27,7 +27,6 @@ namespace ToSic.Sxc.WebApi.Sys
         private readonly LazySvc<IContextOfSite> _context;
         private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
         private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
-        private readonly LazySvc<IUser> _userLazy;
         private readonly ResponseMaker<THttpResponseType> _responseMaker;
         private readonly LazySvc<IAppStates> _appStates;
         private readonly LazySvc<AppSettingsStack> _appSettingsStack;
@@ -40,8 +39,7 @@ namespace ToSic.Sxc.WebApi.Sys
         public InstallControllerReal(
             LazySvc<IContextOfSite> context,
             LazySvc<IEnvironmentInstaller> envInstallerLazy, 
-            LazySvc<ImportFromRemote> impFromRemoteLazy, 
-            LazySvc<IUser> userLazy,
+            LazySvc<ImportFromRemote> impFromRemoteLazy,
             ResponseMaker<THttpResponseType> responseMaker,
             ILazySvc<IFeaturesService> featureService,
             LazySvc<AppsBackend> appsBackend,
@@ -52,7 +50,6 @@ namespace ToSic.Sxc.WebApi.Sys
                 _context = context,
                 _envInstallerLazy = envInstallerLazy,
                 _impFromRemoteLazy = impFromRemoteLazy,
-                _userLazy = userLazy,
                 _responseMaker = responseMaker,
                 _featureService = featureService,
                 _appStates = appStates,
@@ -129,7 +126,7 @@ namespace ToSic.Sxc.WebApi.Sys
             Log.A("install package:" + packageUrl);
 
             var block = container.BlockIdentifier;
-            var (success, messages) = _impFromRemoteLazy.Value.Init(_userLazy.Value)
+            var (success, messages) = _impFromRemoteLazy.Value
                 .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
             Log.A("install completed with success:" + success);
