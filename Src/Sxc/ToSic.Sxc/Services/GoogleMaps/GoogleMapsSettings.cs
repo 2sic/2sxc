@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Services.GoogleMaps
 
         public string SettingsIdentifier => "GoogleMaps";
 
-        public int Zoom => Get(nameof(Zoom), 14); // 14 is a kind of neutral default
+        public int Zoom => GetThis(14); // 14 is a kind of neutral default
 
-        public string ApiKey => Get(nameof(ApiKey), "");
+        public string ApiKey => GetThis("");
 
-        public string Icon => Get(nameof(Icon), "");
+        public string Icon => GetThis("");
 
         public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates);
 

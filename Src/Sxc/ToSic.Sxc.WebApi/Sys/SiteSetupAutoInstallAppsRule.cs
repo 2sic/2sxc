@@ -17,13 +17,13 @@ namespace ToSic.Sxc.WebApi.Sys
         {
         }
 
-        public string Target => Get("Target", TargetGuid);
+        public string Target => GetThis(TargetGuid);
 
-        public string Mode => Get("Mode", ModeAllow);
+        public string Mode => GetThis(ModeAllow);
 
-        public string AppGuid => Get("AppGuid", "");
+        public string AppGuid => GetThis("");
 
-        public string Url => Get("Url", "");
+        public string Url => GetThis("");
 
         public AppInstallRuleDto GetRuleDto() => new AppInstallRuleDto
         {
