@@ -103,13 +103,13 @@ namespace ToSic.Sxc.Oqt.Client
                         var keywords = await sxcInterop.GetMetaTagContentByName("KEYWORDS");
                         page?.Log($"{logPrefix}Keywords:", keywords);
                         await sxcInterop.IncludeMeta("MetaKeywords", "name", "KEYWORDS",
-                            UpdateProperty(keywords, p.InjectOriginalInValue(keywords), page), "id");
+                            UpdateProperty(keywords, p.InjectOriginalInValue(keywords), page)/*, "id"*/);// Oqtane.client 3.3.1
                         break;
                     case OqtPageProperties.Description:
                         var description = await sxcInterop.GetMetaTagContentByName("DESCRIPTION");
                         page?.Log($"{logPrefix}Description:", description);
                         await sxcInterop.IncludeMeta("MetaDescription", "name", "DESCRIPTION",
-                            UpdateProperty(description, p.InjectOriginalInValue(description), page), "id");
+                            UpdateProperty(description, p.InjectOriginalInValue(description), page)/*, "id"*/);// Oqtane.client 3.3.1
                         break;
                     case OqtPageProperties.Base:
                         // For base - ignore for now as we don't know what side-effects this could have
