@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCodeRoot : ServiceBase, IDynamicCodeRoot, IDynamicCode
+    public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.Dependencies>, IDynamicCodeRoot, IDynamicCode
     {
         #region Constructor
 
@@ -72,9 +72,8 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        protected internal DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
+        protected internal DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(dependencies, logPrefix + ".DynCdR")
         {
-            Deps = dependencies.SetLog(Log);
             _serviceProvider = dependencies.ServiceProvider;
 
             // Prepare services which need to be attached to this dynamic code root
@@ -84,7 +83,6 @@ namespace ToSic.Sxc.Code
             GetService<CspOfApp>();
         }
 
-        private readonly Dependencies Deps;
         private readonly IServiceProvider _serviceProvider;
 
         [PrivateApi] public ICmsContext CmsContext { get; }
