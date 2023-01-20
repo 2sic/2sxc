@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 
@@ -34,7 +35,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         #endregion
 
-        public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName)
+        public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName) => Log.Func(() =>
         {
             var context = _ctxResolver.BlockOrApp(appId);
             // do security check
@@ -48,6 +49,6 @@ namespace ToSic.Sxc.WebApi.Cms
             var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
 
             return _entityPickerApi.GetAvailableEntities(appId, items, contentTypeName, withDrafts);
-        }
+        });
     }
 }
