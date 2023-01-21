@@ -47,8 +47,11 @@ namespace ToSic.Sxc.WebApi.Cms
         public IEnumerable<EntityForPickerDto> EntityPicker(
             int appId,
             string[] items,
-            string contentTypeName = null)
-            => _entityBackend.Value.GetAvailableEntities(appId, items, contentTypeName);
+            string contentTypeName = null
+        // 2dm 2023-01-22 #maybeSupportIncludeParentApps
+            //bool? includeParentApps = null
+            )
+            => _entityBackend.Value.GetForEntityPicker(appId, items, contentTypeName/*, includeParentApps == true*/);
 
 
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default, string field = default)

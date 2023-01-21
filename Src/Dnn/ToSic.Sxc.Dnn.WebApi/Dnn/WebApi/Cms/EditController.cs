@@ -42,8 +42,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public IEnumerable<EntityForPickerDto> EntityPicker(
             [FromUri] int appId,
             [FromBody] string[] items,
-            [FromUri] string contentTypeName = null)
-            => Real.EntityPicker(appId, items, contentTypeName);
+            [FromUri] string contentTypeName = null
+            // 2dm 2023-01-22 #maybeSupportIncludeParentApps
+            //[FromUri] bool? includeParentApps = null
+            )
+            => Real.EntityPicker(appId, items, contentTypeName/*, includeParentApps*/);
 
         /// <inheritdoc />
         [HttpGet]
