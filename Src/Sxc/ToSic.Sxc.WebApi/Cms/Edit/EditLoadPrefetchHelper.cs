@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
+using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
@@ -12,34 +14,35 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadPrefetchHelper: ServiceBase
     {
+        //private readonly ILazySvc<JsonSerializer> _jsonSerializerGenerator;
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly Generator<HyperlinkBackend<int, int>> _hyperlinkBackendGenerator;
         private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
 
         public EditLoadPrefetchHelper(
+            //ILazySvc<JsonSerializer> jsonSerializerGenerator,
             Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
             Generator<IAdamTransGetItems> adamTransGetItems,
             EntityPickerApi entityPickerBackend
             ) : base(Constants.SxcLogName + ".Prefetch")
         {
             ConnectServices(
+                //_jsonSerializerGenerator = jsonSerializerGenerator,
                 _adamTransGetItems = adamTransGetItems,
                 _hyperlinkBackendGenerator = hyperlinkBackend,
                 _entityPickerBackend = entityPickerBackend
             );
         }
 
-        public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData) => Log.Func(() =>
+        public EditPrefetchDto TryToPrefectAdditionalData(int appId, EditDto editData, AppRuntime appRuntime) => Log.Func(() =>
             new EditPrefetchDto
             {
                 Links = PrefetchLinks(appId, editData),
                 Entities = PrefetchEntities(appId, editData),
                 Adam = PrefetchAdam(appId, editData),
-                SettingsEntities = PrefetchSettingsEntities(),
             });
 
 
-        // TODO: MAKE PRIVATE WHEN ALL HAS MOVED
         private List<EntityForPickerDto> PrefetchEntities(int appId, EditDto editData) => Log.Func(() =>
         {
             try

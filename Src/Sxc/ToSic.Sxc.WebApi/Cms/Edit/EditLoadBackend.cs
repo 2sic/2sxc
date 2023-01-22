@@ -28,6 +28,18 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: ServiceBase
     {
+        private readonly EditLoadSettingsHelper _loadSettings;
+        private readonly EntityApi _entityApi;
+        private readonly ContentGroupList _contentGroupList;
+        private readonly EntityBuilder _entityBuilder;
+        private readonly IUiContextBuilder _contextBuilder;
+        private readonly IContextResolver _ctxResolver;
+        private readonly ITargetTypes _mdTargetTypes;
+        private readonly IAppStates _appStates;
+        private readonly IUiData _uiData;
+        private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
+        //private readonly LazySvc<IFeaturesService> _features;
+        //private readonly GoogleMapsSettings _googleMapsSettings;
         private readonly EditLoadPrefetchHelper _prefetch;
         private readonly Generator<MultiPermissionsTypes> _typesPermissions;
 
@@ -42,10 +54,11 @@ namespace ToSic.Sxc.WebApi.Cms
             IAppStates appStates,
             IUiData uiData,
             Generator<JsonSerializer> jsonSerializerGenerator,
-            GoogleMapsSettings googleMapsSettings,
+            //GoogleMapsSettings googleMapsSettings,
+            //LazySvc<IFeaturesService> features,
             Generator<MultiPermissionsTypes> typesPermissions,
-            LazySvc<IFeaturesService> features,
-            EditLoadPrefetchHelper prefetch
+            EditLoadPrefetchHelper prefetch,
+            EditLoadSettingsHelper loadSettings
             ) : base("Cms.LoadBk")
         {
             ConnectServices(
@@ -58,24 +71,13 @@ namespace ToSic.Sxc.WebApi.Cms
                 _appStates = appStates,
                 _uiData = uiData,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
-                _features = features,
-                _googleMapsSettings = googleMapsSettings,
+                //_features = features,
+                //_googleMapsSettings = googleMapsSettings,
                 _typesPermissions = typesPermissions,
-                _prefetch = prefetch
+                _prefetch = prefetch,
+                _loadSettings = loadSettings
             );
         }
-
-        private readonly EntityApi _entityApi;
-        private readonly ContentGroupList _contentGroupList;
-        private readonly EntityBuilder _entityBuilder;
-        private readonly IUiContextBuilder _contextBuilder;
-        private readonly IContextResolver _ctxResolver;
-        private readonly ITargetTypes _mdTargetTypes;
-        private readonly IAppStates _appStates;
-        private readonly IUiData _uiData;
-        private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
-        private readonly LazySvc<IFeaturesService> _features;
-        private readonly GoogleMapsSettings _googleMapsSettings;
 
         #endregion
 
@@ -105,10 +107,11 @@ namespace ToSic.Sxc.WebApi.Cms
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
             var jsonSerializer = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
+            var appState = _appStates.Get(appIdentity);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead, _appStates.Get(appIdentity))
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead, appState)
             }).ToList();
 
             // set published if some data already exists
@@ -151,11 +154,11 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
                     CtxEnable.EditUi);
 
-            result.Settings = GetSettings(context);
+            result.Settings = _loadSettings.GetSettings(context, result, entityApi.AppRead);
 
             try
             {
-                result.Prefetch = _prefetch.TryToPrefectAdditionalData(appId, result);
+                result.Prefetch = _prefetch.TryToPrefectAdditionalData(appId, result, entityApi.AppRead);
             }
             catch (Exception ex)
             {

@@ -54,6 +54,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EntityBackend>();
             services.TryAddTransient<EditLoadBackend>();
             services.TryAddTransient<EditLoadPrefetchHelper>();
+            services.TryAddTransient<EditLoadSettingsHelper>();
             services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<SaveSecurity>();
             services.TryAddTransient<AppViewPickerBackend>();
