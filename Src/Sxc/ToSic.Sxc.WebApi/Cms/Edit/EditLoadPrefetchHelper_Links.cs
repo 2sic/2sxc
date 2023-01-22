@@ -4,13 +4,11 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.Helper;
-using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class EditLoadBackend
+    public partial class EditLoadPrefetchHelper
     {
-
         private Dictionary<string, LinkInfoDto> PrefetchLinks(int appId, EditDto editData)
         {
             try
@@ -53,16 +51,16 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             try
             {
-                var hlnkBackend = _hyperlinkBackend.Get(() => HyperlinkBackend.New());
+                var hlnkBackend = _hyperlinkBackend.Get(() => _hyperlinkBackendGenerator.New());
                 var result = hlnkBackend.LookupHyperlink(appId, value, contentType, entityGuid, field);
                 return result;
             }
             catch
             {
-                return new LinkInfoDto  { Value = "error" };
+                return new LinkInfoDto { Value = "error" };
             }
         }
-        private GetOnce<HyperlinkBackend<int, int>> _hyperlinkBackend = new GetOnce<HyperlinkBackend<int, int>>();
+        private readonly GetOnce<HyperlinkBackend<int, int>> _hyperlinkBackend = new GetOnce<HyperlinkBackend<int, int>>();
 
 
         private static List<BundleWithLinkField> BundleWithLinkFields(EditDto editData, bool includeStringFields = false)
@@ -93,10 +91,5 @@ namespace ToSic.Sxc.WebApi.Cms
             public Dictionary<string, Dictionary<string, string>> StringFields;
             public string ContentTypeName;
         }
-
     }
-    
-    
-    
-
 }

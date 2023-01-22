@@ -23,14 +23,12 @@ using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 using ToSic.Lib.Services;
-using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: ServiceBase
     {
-        public Generator<HyperlinkBackend<int, int>> HyperlinkBackend { get; }
-        private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
+        private readonly EditLoadPrefetchHelper _prefetch;
         private readonly Generator<MultiPermissionsTypes> _typesPermissions;
 
         #region DI Constructor
@@ -41,17 +39,15 @@ namespace ToSic.Sxc.WebApi.Cms
             IUiContextBuilder contextBuilder,
             IContextResolver ctxResolver,
             ITargetTypes mdTargetTypes,
-            EntityPickerApi entityPickerBackend,
             IAppStates appStates,
             IUiData uiData,
             Generator<JsonSerializer> jsonSerializerGenerator,
             GoogleMapsSettings googleMapsSettings,
             Generator<MultiPermissionsTypes> typesPermissions,
             LazySvc<IFeaturesService> features,
-            Generator<IAdamTransGetItems> adamTransGetItems,
-            Generator<HyperlinkBackend<int, int>> hyperlinkBackend) : base("Cms.LoadBk")
+            EditLoadPrefetchHelper prefetch
+            ) : base("Cms.LoadBk")
         {
-
             ConnectServices(
                 _entityApi = entityApi,
                 _contentGroupList = contentGroupList,
@@ -59,15 +55,13 @@ namespace ToSic.Sxc.WebApi.Cms
                 _contextBuilder = contextBuilder,
                 _ctxResolver = ctxResolver,
                 _mdTargetTypes = mdTargetTypes,
-                _entityPickerBackend = entityPickerBackend,
                 _appStates = appStates,
                 _uiData = uiData,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
                 _features = features,
                 _googleMapsSettings = googleMapsSettings,
                 _typesPermissions = typesPermissions,
-                _adamTransGetItems = adamTransGetItems,
-                HyperlinkBackend = hyperlinkBackend
+                _prefetch = prefetch
             );
         }
 
@@ -77,7 +71,6 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IUiContextBuilder _contextBuilder;
         private readonly IContextResolver _ctxResolver;
         private readonly ITargetTypes _mdTargetTypes;
-        private readonly EntityPickerApi _entityPickerBackend;
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
@@ -87,13 +80,10 @@ namespace ToSic.Sxc.WebApi.Cms
         #endregion
 
 
-        public EditDto Load(int appId, List<ItemIdentifier> items)
+        public EditDto Load(int appId, List<ItemIdentifier> items) => Log.Func($"load many a#{appId}, items⋮{items.Count}", l =>
         {
             // Security check
-            var l = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
-
             var context = _ctxResolver.BlockOrApp(appId);
-
             var showDrafts = context.UserMayEdit;
 
             // do early permission check - but at this time it may be that we don't have the types yet
@@ -165,23 +155,21 @@ namespace ToSic.Sxc.WebApi.Cms
 
             try
             {
-                result.Prefetch = TryToPrefectAdditionalData(appId, result);
+                result.Prefetch = _prefetch.TryToPrefectAdditionalData(appId, result);
             }
             catch (Exception ex)
             {
-                Log.A("Ran into an error during Prefetch");
-                Log.Ex(ex);
+                l.A("Ran into an error during Prefetch");
+                l.Ex(ex);
                 /* ignore */
             }
-
-
-
+            
             // done
-            return l.Return(result, $"ready, sending items:{result.Items.Count}, " +
+            return (result, $"ready, sending items:{result.Items.Count}, " +
                                    $"types:{result.ContentTypes.Count}, " +
                                    $"inputs:{result.InputTypes.Count}, " +
                                    $"feats:{result.Features.Count}");
-        }
+        });
         
 
         /// <summary>

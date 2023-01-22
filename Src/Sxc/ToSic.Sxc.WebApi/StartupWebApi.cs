@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Sxc.Adam;
@@ -54,6 +53,7 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EntityPickerBackend>();
             services.TryAddTransient<EntityBackend>();
             services.TryAddTransient<EditLoadBackend>();
+            services.TryAddTransient<EditLoadPrefetchHelper>();
             services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<SaveSecurity>();
             services.TryAddTransient<AppViewPickerBackend>();
