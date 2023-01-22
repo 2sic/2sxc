@@ -18,15 +18,19 @@ namespace ToSic.Sxc.WebApi.Admin
 {
     public class TypeControllerReal<THttpResponseType> : ServiceBase, ITypeController<THttpResponseType>
     {
+        private readonly ILazySvc<IContextOfSite> _context;
+        private readonly ILazySvc<ContentTypeApi> _ctApiLazy;
+        private readonly ILazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
+        private readonly ILazySvc<IUser> _userLazy;
+        private readonly Generator<ImportContent> _importContent;
         public const string LogSuffix = "Types";
 
         public TypeControllerReal(
-            LazySvc<IContextOfSite> context,
-            LazySvc<ContentTypeApi> ctApiLazy, 
-            LazySvc<ContentExportApi<THttpResponseType>> contentExportLazy, 
-            LazySvc<IUser> userLazy,
-            Generator<ImportContent> importContent
-            ) : base("Api.TypesRl")
+            ILazySvc<IContextOfSite> context,
+            ILazySvc<ContentTypeApi> ctApiLazy, 
+            ILazySvc<ContentExportApi<THttpResponseType>> contentExportLazy, 
+            ILazySvc<IUser> userLazy,
+            Generator<ImportContent> importContent) : base("Api.TypesRl")
         {
             ConnectServices(
                 _context = context,
@@ -37,11 +41,6 @@ namespace ToSic.Sxc.WebApi.Admin
             );
         }
 
-        private readonly LazySvc<IContextOfSite> _context;
-        private readonly LazySvc<ContentTypeApi> _ctApiLazy;
-        private readonly LazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
-        private readonly LazySvc<IUser> _userLazy;
-        private readonly Generator<ImportContent> _importContent;
 
 
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
@@ -96,8 +95,8 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <param name="zoneId"></param>
         /// <param name="appId"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public ImportResultDto Import(int zoneId, int appId) => throw new NotImplementedException();
+        /// <exception cref="NotSupportedException"></exception>
+        public ImportResultDto Import(int zoneId, int appId) => throw new NotSupportedException("This is not supported on ControllerReal, use overload.");
 
         /// <summary>
         /// This implementation is special ControllerReal, instead of ImportResultDto Import(int zoneId, int appId) that is not implemented.
