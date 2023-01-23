@@ -44,7 +44,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// - later get from settings
         /// </summary>
         /// <returns></returns>
-        public EditSettingsDto GetSettings(IContextOfApp contextOfApp, EditDto editData, AppRuntime appRuntime) => Log.Func(() =>
+        public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(() =>
         {
             var coordinates = MapsCoordinates.Defaults;
 
@@ -56,21 +56,20 @@ namespace ToSic.Sxc.WebApi.Cms
                     : MapsCoordinates.Defaults;
             }
 
-            var valueSettings = new Dictionary<string, object>
-            {
-                { "gps-default-coordinates", coordinates }
-            };
             var settings = new EditSettingsDto
             {
-                Values = valueSettings,
-                Entities = SettingsEntities(editData, appRuntime)
+                Values = new Dictionary<string, object>
+                {
+                    { "gps-default-coordinates", coordinates }
+                },
+                Entities = SettingsEntities(jsonTypes, appRuntime),
             };
             return settings;
         });
 
-        public List<JsonEntity> SettingsEntities(EditDto editData, AppRuntime appRuntime) => Log.Func(l =>
+        public List<JsonEntity> SettingsEntities(List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(l =>
         {
-            var hasWysiwyg = editData.ContentTypes.SelectMany(
+            var hasWysiwyg = jsonTypes.SelectMany(
                 ct => ct.Attributes.Where(at => at.InputType.ContainsInsensitive("wysiwyg"))
             ).ToList();
 
@@ -84,8 +83,8 @@ namespace ToSic.Sxc.WebApi.Cms
             var result = entities.Select(e => jsonSerializer.ToJson(e)).ToList();
 
             return (result, $"{result.Count}");
-
         });
+        
 
     }
 }

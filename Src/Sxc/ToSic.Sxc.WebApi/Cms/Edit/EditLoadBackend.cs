@@ -18,11 +18,10 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 using ToSic.Lib.Services;
+using static System.String;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
@@ -38,8 +37,6 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly IAppStates _appStates;
         private readonly IUiData _uiData;
         private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
-        //private readonly LazySvc<IFeaturesService> _features;
-        //private readonly GoogleMapsSettings _googleMapsSettings;
         private readonly EditLoadPrefetchHelper _prefetch;
         private readonly Generator<MultiPermissionsTypes> _typesPermissions;
 
@@ -54,8 +51,6 @@ namespace ToSic.Sxc.WebApi.Cms
             IAppStates appStates,
             IUiData uiData,
             Generator<JsonSerializer> jsonSerializerGenerator,
-            //GoogleMapsSettings googleMapsSettings,
-            //LazySvc<IFeaturesService> features,
             Generator<MultiPermissionsTypes> typesPermissions,
             EditLoadPrefetchHelper prefetch,
             EditLoadSettingsHelper loadSettings
@@ -71,8 +66,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 _appStates = appStates,
                 _uiData = uiData,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
-                //_features = features,
-                //_googleMapsSettings = googleMapsSettings,
                 _typesPermissions = typesPermissions,
                 _prefetch = prefetch,
                 _loadSettings = loadSettings
@@ -137,6 +130,8 @@ namespace ToSic.Sxc.WebApi.Cms
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
 
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
+            //var settingsEntities = _loadSettings.SettingsEntities(result.ContentTypes, entityApi.AppRead);
+            //result.ContentTypeItems.AddRange(settingsEntities);
 
             // Fix not-supported input-type names; map to correct name
             result.ContentTypes
@@ -154,17 +149,16 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
                     CtxEnable.EditUi);
 
-            result.Settings = _loadSettings.GetSettings(context, result, entityApi.AppRead);
+            result.Settings = _loadSettings.GetSettings(context, result.ContentTypes, entityApi.AppRead);
 
             try
             {
                 result.Prefetch = _prefetch.TryToPrefectAdditionalData(appId, result, entityApi.AppRead);
             }
-            catch (Exception ex)
+            catch (Exception ex) // Log and Ignore
             {
                 l.A("Ran into an error during Prefetch");
                 l.Ex(ex);
-                /* ignore */
             }
             
             // done
@@ -178,14 +172,12 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <summary>
         /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
         /// </summary>
-        private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
+        private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState) => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<bool>();
-
             foreach (var header in list
-                .Where(header => header.For?.Singleton == true && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
+                .Where(header => header.For?.Singleton == true && !IsNullOrWhiteSpace(header.ContentTypeName)))
             {
-                Log.A("Found an entity with the auto-lookup marker");
+                l.A("Found an entity with the auto-lookup marker");
                 // try to find metadata for this
                 var mdFor = header.For;
                 // #TargetTypeIdInsteadOfTarget
@@ -199,15 +191,15 @@ namespace ToSic.Sxc.WebApi.Cms
                 var mdList = mds.ToArray();
                 if (mdList.Length > 1)
                 {
-                    Log.A($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
+                    l.A($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
                     // must now sort by ID otherwise the order may be different after a few save operations
                     mdList = mdList.OrderBy(e => e.EntityId).ToArray();
                 }
                 header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
             }
 
-            return wrapLog.ReturnTrue("ok");
-        }
+            return true;
+        });
     }
 }
 
