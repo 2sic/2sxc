@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks
     public sealed class BlockFromEntity: BlockBase
     {
         internal const string CbPropertyApp = "App";
-        internal const string CbPropertyTitle = "Title";
+        internal const string CbPropertyTitle = DataConstants.TitleField;
         internal const string CbPropertyContentGroup = "ContentGroup";
 
         /// <summary>

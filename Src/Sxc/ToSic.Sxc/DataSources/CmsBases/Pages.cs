@@ -98,7 +98,7 @@ namespace ToSic.Sxc.DataSources
                     DataBuilder.Entity(new Dictionary<string, object>
                         {
                             //{"Id", p.Id},
-                            {"Title", p.Title},
+                            {DataConstants.TitleField, p.Title},
                             {"Name", p.Name},
                             {"ParentId", p.ParentId},
                             //{"Guid", p.Guid},
