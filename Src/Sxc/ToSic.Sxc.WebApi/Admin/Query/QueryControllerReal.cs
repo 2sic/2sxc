@@ -34,7 +34,6 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         /// </summary>
         public bool DeleteIfUnused(int appId, int id)
             => _cmsManagerLazy.Value
-                //.Init(Log)
                 .InitQ(_appStates.IdentityOfApp(appId), true)
                 .DeleteQueryIfNotUsedByView(id, Log);
 
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
         {
             var block = _contextResolver.RealBlockRequired();
-            var lookUps = _appConfigMaker//.Init(Log)
+            var lookUps = _appConfigMaker
                 .GetLookupEngineForContext(block.Context, block.App, block);
             return DebugStream(appId, id, top, lookUps, @from, @out);
         }
@@ -54,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         public QueryRunDto RunDev(int appId, int id, int top)
         {
             var block = _contextResolver.RealBlockRequired();
-            var lookUps = _appConfigMaker//.Init(Log)
+            var lookUps = _appConfigMaker
                 .GetLookupEngineForContext(block.Context, block.App, block);
 
             return RunDevInternal(appId, id, lookUps, top, builtQuery => builtQuery.Item1);

@@ -32,14 +32,14 @@ namespace ToSic.Sxc.WebApi.App
         #region Constructor / DI
 
         public AppQueryControllerReal(IContextResolver ctxResolver, 
-            IConvertToEavLight dataToFormatLight, 
+            IConvertToEavLight dataConverter, 
             Generator<AppPermissionCheck> appPermissionCheck,
             Generator<AppConfigDelegate> appConfigDelegate,
             Generator<Apps.App> app) : base("Sxc.ApiApQ")
         {
             ConnectServices(
                 _ctxResolver = ctxResolver,
-                _dataToFormatLight = dataToFormatLight,
+                _dataConverter = dataConverter,
                 _appPermissionCheck = appPermissionCheck,
                 _appConfigDelegate = appConfigDelegate,
                 _app = app
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.App
         }
         
         private readonly IContextResolver _ctxResolver;
-        private readonly IConvertToEavLight _dataToFormatLight;
+        private readonly IConvertToEavLight _dataConverter;
         private readonly Generator<AppPermissionCheck> _appPermissionCheck;
 
         #endregion
@@ -60,10 +60,8 @@ namespace ToSic.Sxc.WebApi.App
 
         public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost(string name, QueryParameters more,
             int? appId, string stream = null,
-            bool includeGuid = false)
+            bool includeGuid = false) => Log.Func($"'{name}', inclGuid: {includeGuid}, stream: {stream}", l =>
         {
-            var wrapLog = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"'{name}', inclGuid: {includeGuid}, stream: {stream}");
-
             var appCtx = appId != null ? _ctxResolver.BlockOrApp(appId.Value) : _ctxResolver.BlockRequired();
 
             // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
@@ -75,8 +73,8 @@ namespace ToSic.Sxc.WebApi.App
             var app = _app.New().Init(appCtx.AppState.AppId, maybeBlock, appCtx.UserMayEdit);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
-            return wrapLog.Return(result);
-        }
+            return result;
+        });
 
         #endregion
 
@@ -86,9 +84,9 @@ namespace ToSic.Sxc.WebApi.App
             => PublicQueryPost(appPath, name, null, stream);
 
 
-        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name, QueryParameters more, string stream)
+        public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(string appPath, string name,
+            QueryParameters more, string stream) => Log.Func($"path:{appPath}, name:{name}, stream: {stream}", l =>
         {
-            var wrapLog = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"path:{appPath}, name:{name}, stream: {stream}");
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
 
@@ -98,30 +96,29 @@ namespace ToSic.Sxc.WebApi.App
 
             // now just run the default query check and serializer
             var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, appCtx.UserMayEdit, more);
-            return wrapLog.Return(result);
-        }
+            return result;
+        });
 
 
         #endregion
 
 
         private IDictionary<string, IEnumerable<EavLightEntity>> BuildQueryAndRun(
-                IApp app, 
-                string name, 
-                string stream, 
-                bool includeGuid, 
-                IContextOfSite context, 
-                bool userMayEdit,
-                QueryParameters more)
+            IApp app,
+            string name,
+            string stream,
+            bool includeGuid,
+            IContextOfSite context,
+            bool userMayEdit,
+            QueryParameters more
+        ) => Log.Func($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}", l =>
         {
-            var wrapLog = Log.Fn<IDictionary<string, IEnumerable<EavLightEntity>>>($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}");
             var query = app.GetQuery(name);
 
             if (query == null)
             {
                 var msg = $"query '{name}' not found";
-                wrapLog.ReturnNull(msg);
-                throw new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found");
+                throw l.Ex(new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found"));
             }
 
             var permissionChecker = _appPermissionCheck.New()
@@ -134,17 +131,15 @@ namespace ToSic.Sxc.WebApi.App
             if (!(readExplicitlyAllowed || isAdmin))
             {
                 var msg = $"Request not allowed. User does not have read permissions for query '{name}'";
-                wrapLog.ReturnNull(msg);
-                throw new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed");
+                throw l.Ex(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed"));
             }
 
-            //var serializer = new DataToDictionary(userMayEdit) { WithGuid = includeGuid };
-            var serializer = _dataToFormatLight;
-            if (serializer is ConvertToEavLightWithCmsInfo serializerWithEdit) serializerWithEdit.WithEdit = userMayEdit;
-            serializer.WithGuid = includeGuid;
+            _dataConverter.WithGuid = includeGuid;
+            if (_dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
+                serializerWithEdit.WithEdit = userMayEdit;
             if (stream == AllStreams) stream = null;
-            var result = serializer.Convert(query, stream?.Split(','), more?.Guids);
-            return wrapLog.Return(result);
-        }
+            var result = _dataConverter.Convert(query, stream?.Split(','), more?.Guids);
+            return result;
+        });
     }
 }
