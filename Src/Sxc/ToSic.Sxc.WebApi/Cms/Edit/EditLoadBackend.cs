@@ -128,10 +128,8 @@ namespace ToSic.Sxc.WebApi.Cms
             var types = UsedTypes(list, typeRead);
             var jsonTypes = types.Select(t => serializerForTypes.ToPackage(t, true)).ToList();
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
-
+            // Also add global Entities like Formulas which would not be included otherwise
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
-            //var settingsEntities = _loadSettings.SettingsEntities(result.ContentTypes, entityApi.AppRead);
-            //result.ContentTypeItems.AddRange(settingsEntities);
 
             // Fix not-supported input-type names; map to correct name
             result.ContentTypes

@@ -123,7 +123,7 @@ namespace ToSic.Sxc.WebApi.Views
                 // 1. create the views
                 var serializer = _jsonSerializerLazy.Value.SetApp(_appStates.Get(app));
 
-                var bundles = files.Select(f => serializer.DeserializeBundle(f.Contents)).ToList();
+                var bundles = files.Select(f => serializer.DeserializeEntityWithAssets(f.Contents)).ToList();
 
                 if (bundles.Any(t => t == null))
                     throw new NullReferenceException("At least one file returned a null-item, something is wrong");
