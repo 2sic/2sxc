@@ -97,11 +97,9 @@ namespace ToSic.Sxc.DataSources
                 .Select(p =>
                     DataBuilder.Entity(new Dictionary<string, object>
                         {
-                            //{"Id", p.Id},
-                            {DataConstants.TitleField, p.Title},
+                            {Attributes.TitleNiceName, p.Title},
                             {"Name", p.Name},
                             {"ParentId", p.ParentId},
-                            //{"Guid", p.Guid},
                             {"Visible", p.Visible},
                             {"Path", p.Path},
                             {"Url", p.Url},
