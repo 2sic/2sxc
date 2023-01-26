@@ -3,8 +3,8 @@ using DotNetNuke.Security;
 using DotNetNuke.Security.Permissions;
 using System;
 using ToSic.Eav.Apps.Security;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Lib.Helper;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Dnn.Run

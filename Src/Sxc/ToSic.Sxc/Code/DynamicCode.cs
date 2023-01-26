@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Lib;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;

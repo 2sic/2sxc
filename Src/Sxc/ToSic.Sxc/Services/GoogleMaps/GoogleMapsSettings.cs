@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Services.GoogleMaps

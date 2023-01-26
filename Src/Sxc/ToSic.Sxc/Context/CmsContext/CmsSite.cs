@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
+using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 

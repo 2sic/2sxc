@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Helper;
+using ToSic.Lib;
+using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
 using ToSic.Sxc.Web;

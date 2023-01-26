@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Lib;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;

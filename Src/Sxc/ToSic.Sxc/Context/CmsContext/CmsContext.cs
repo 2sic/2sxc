@@ -1,8 +1,9 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
+using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;

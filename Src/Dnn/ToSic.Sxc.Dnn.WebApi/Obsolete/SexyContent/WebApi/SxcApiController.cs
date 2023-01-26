@@ -6,7 +6,7 @@ using System.Linq;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;

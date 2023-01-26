@@ -9,8 +9,9 @@ using Oqtane.Repository;
 using Oqtane.Security;
 using Oqtane.Shared;
 using ToSic.Eav.Context;
+using ToSic.Lib;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 

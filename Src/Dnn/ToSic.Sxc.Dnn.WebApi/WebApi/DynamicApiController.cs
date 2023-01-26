@@ -5,7 +5,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;

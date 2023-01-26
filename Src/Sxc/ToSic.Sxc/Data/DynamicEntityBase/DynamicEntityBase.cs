@@ -4,9 +4,10 @@ using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Lib;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.Data
 {

@@ -5,7 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
