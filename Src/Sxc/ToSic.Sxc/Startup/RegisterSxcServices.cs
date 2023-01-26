@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -76,10 +75,6 @@ namespace ToSic.Sxc.Startup
 
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
-            // TODO: Move to Eav
-            services.TryAddTransient<IContextOfApp, ContextOfApp>();
-            services.TryAddTransient<ContextOfApp.Dependencies>();
-            services.TryAddTransient<ContextOfSite.Dependencies>();
 
             // Context stuff for the page (not EAV)
             services.TryAddTransient<IPage, Page>();
@@ -153,7 +148,7 @@ namespace ToSic.Sxc.Startup
 
             services.TryAddTransient<BlockEditorSelector>();
 
-            // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient
+            // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
 
             // Add possibly missing fallback services
