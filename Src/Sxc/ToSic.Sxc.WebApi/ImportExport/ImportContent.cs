@@ -13,7 +13,6 @@ using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Validation;
@@ -64,9 +63,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         #endregion
 
-        public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
+        public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage) => Log.Func(l =>
         {
-            Log.A("import content start");
             var result = new ImportResultDto();
 
             var allowSystemChanges = _userLazy.Value.IsSystemAdmin;
@@ -82,6 +80,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
                 catch (Exception ex)
                 {
+                    l.Ex(ex);
                     _envLogger.LogException(ex);
                 }
             }
@@ -96,13 +95,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
             }
             return result;
-        }
+        });
 
 
-        public ImportResultDto ImportContentType(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
+        public ImportResultDto ImportContentType(int zoneId, int appId, List<FileUploadDto> files,
+            string defaultLanguage
+        ) => Log.Func($"{zoneId}, {appId}, {defaultLanguage}", l =>
         {
-            var callLog = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
-
             try
             {
                 // 0. Verify it's json etc.
@@ -121,17 +120,18 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 var import = _importerLazy.Value.Init(zoneId, appId, true, true);
                 import.ImportIntoDb(types, null);
 
-                Log.A($"Purging {zoneId}/{appId}");
+                l.A($"Purging {zoneId}/{appId}");
                 SystemManager.Purge(zoneId, appId);
 
                 // 3. possibly show messages / issues
-                return callLog.ReturnAsOk(new ImportResultDto(true));
+                return (new ImportResultDto(true), "ok");
             }
             catch (Exception ex)
             {
+                l.Ex(ex);
                 _envLogger.LogException(ex);
-                return callLog.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
+                return (new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
             }
-        }
+        });
     }
 }
