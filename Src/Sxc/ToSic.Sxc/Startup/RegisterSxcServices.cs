@@ -8,20 +8,16 @@ using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
-using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.DotNet;
-using ToSic.Sxc.Edit.EditService;
-using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Images;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Plumbing;
 using ToSic.Sxc.Run;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -29,7 +25,6 @@ using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
-using CmsBlock = ToSic.Sxc.Context.CmsBlock;
 
 namespace ToSic.Sxc.Startup
 {
@@ -68,13 +63,6 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
             services.TryAddTransient<BlockBase.Dependencies>();
-            services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
-            services.TryAddTransient<RenderService.Dependencies>();
-            services.TryAddTransient<SimpleRenderer>();
-            services.TryAddTransient<InTextContentBlockRenderer>();
-#pragma warning disable CS0618
-            services.TryAddTransient<Blocks.IRenderService, RenderService>();  // Obsolete, but keep for the few apps we already released in v12
-#pragma warning restore CS0618
 
             // Configuration Provider WIP
             services.TryAddTransient<QueryStringLookUp>();
@@ -88,12 +76,14 @@ namespace ToSic.Sxc.Startup
 
             // Context stuff in general
             services.TryAddTransient<IContextOfBlock, ContextOfBlock>();
+            // TODO: Move to Eav
             services.TryAddTransient<IContextOfApp, ContextOfApp>();
             services.TryAddTransient<ContextOfApp.Dependencies>();
             services.TryAddTransient<ContextOfSite.Dependencies>();
+
+            // Context stuff for the page (not EAV)
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
-            services.TryAddTransient<ICmsContext, CmsContext>();
 
             // Context stuff, which is explicitly scoped
             services.TryAddScoped<IContextResolver, ContextResolver>();
@@ -115,29 +105,24 @@ namespace ToSic.Sxc.Startup
             // Polymorphism
             services.TryAddTransient<Polymorphism.Polymorphism>();
 
-            // new in v12.02 - PageService & Page Features
-            services.TryAddTransient<Services.IPageService, PageService>();  // must be unique per module where it's used
-#pragma warning disable CS0618
-            services.TryAddTransient<Web.IPageService, PageService>();  // Obsolete version, needed to keep old Apps working which used this
-#pragma warning restore CS0618
 
             // 2022-02-07 2dm experimental
             // The PageServiceShared must always be generated from the PageScope
-            // I thought that the PageServiceShared must be scoped at page level, but I believe this is wrong
+            // I previously thought the PageServiceShared must be scoped at page level, but this is wrong
             // Reason is that it seems to collect specs per module, and then actually only flushes it
             // Because it shouldn't remain in the list for the second module
             // So it actually looks like it's very module-scoped already, but had workarounds for it.
             // So I think it really doesn't need to be have workarounds for it
             services.TryAddScoped<PageServiceShared>();
             services.TryAddTransient<PageChangeSummary>();
-            services.TryAddTransient<IContentSecurityPolicyService, ContentSecurityPolicyService>();
+
+            // CSP
             services.TryAddTransient<CspOfApp>();   // must be transient
             services.TryAddScoped<CspOfModule>();   // important: must be scoped!
             services.TryAddTransient<CspOfPage>();
             services.TryAddTransient<CspParameterFinalizer>();
-            //services.TryAddTransient<PageServiceShared>(); // this is only used for the next line where we create the scoped version
-            //services.TryAddScoped<IPageServiceShared>(sp => sp.Build<PageScopedService<PageServiceShared>>().Value);             // must be scoped / shared across all modules
 
+            // Page Features
             services.TryAddTransient<IPageFeatures, PageFeatures>();
             services.TryAddTransient<IPageFeaturesManager, PageFeaturesManager>();
             services.TryAddSingleton<PageFeaturesCatalog>();
@@ -148,26 +133,11 @@ namespace ToSic.Sxc.Startup
             // WIP - objects which are not really final
             services.TryAddTransient<RemoteRouterLink>();
 
-            // WIP 12.05 - json converter
-            services.TryAddTransient<IJsonService, JsonService>();
-            services.TryAddTransient<IConvertService, ConvertService>();
-
-            // New 12.05: SecureData
-            services.TryAddTransient<ISecureDataService, SecureDataService>();
 
             // 12.06.01 moved here from WebApi, but it should probably be in Dnn as it's probably just used there
             services.TryAddTransient<IServerPaths, ServerPaths>();
 
-            // 13 - ToolbarService & IFeaturesService
-            services.TryAddTransient<IToolbarService, ToolbarService>();    // New 13.00
-            services.TryAddTransient<IFeaturesService, FeaturesService>();  // New 13.01
-            services.TryAddTransient<IImageService, ImageService>();
             
-            // v14
-            services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
-            services.TryAddTransient<ToolbarBuilder.Dependencies>();
-            services.TryAddTransient<ToolbarButtonDecoratorHelper>();
-
             // 13 - cleaning up handling of app paths
             services.TryAddTransient<AppFolderInitializer>();
             services.TryAddTransient<AppIconHelpers>();
@@ -177,40 +147,33 @@ namespace ToSic.Sxc.Startup
             services.TryAddScoped<PageScopeAccessor>();
             services.TryAddScoped(typeof(PageScopedService<>));
 
-            // v13 DynamicCodeService
-            services.TryAddTransient<IEditService, EditService>();
-            services.TryAddTransient<DynamicCodeService.Dependencies>();
-            services.TryAddTransient<DynamicCodeService.ScopedDependencies>();  // new v15
-            services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
             // v13 LightSpeed
             services.TryAddTransient<IOutputCache, LightSpeed>();
 
-            // v13 Site
-            services.TryAddTransient<ICmsSite, CmsSite>();
-
-            // v14 Kits
-            services.TryAddTransient<ServiceKit>();
-            services.TryAddTransient<ServiceKit14>();
-
-            // WIP v14
-            services.TryAddTransient<IAdamService, AdamService>();
-
-            // V15
-            services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
-            services.TryAddTransient<ITurnOnService, TurnOnService>();
             services.TryAddTransient<BlockEditorSelector>();
 
-            // Sxc StartUp Routines
-            services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();    // must be Add, not TryAdd
+            // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient
+            services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services
+                .AddServicesAndKits()
+                .AddCmsContext()
                 .ExternalConfig()
                 .AddKoi()
-                .AddImageflowCustomization()
                 .AddSxcCoreFallbackServices();
+
+            return services;
+        }
+
+        public static IServiceCollection AddCmsContext(this IServiceCollection services)
+        {
+            services.TryAddTransient<ICmsContext, CmsContext>();
+
+            // v13 Site
+            services.TryAddTransient<ICmsSite, CmsSite>();
 
             return services;
         }
@@ -229,12 +192,7 @@ namespace ToSic.Sxc.Startup
 
             return services;
         }
-        public static IServiceCollection AddImageflowCustomization(this IServiceCollection services)
-        {
-            //services.AddTransient<IImageflowRewrite, ImageflowRewrite> ();
 
-            return services;
-        }
         
         public static IServiceCollection AddNetVariations(this IServiceCollection services)
         {
