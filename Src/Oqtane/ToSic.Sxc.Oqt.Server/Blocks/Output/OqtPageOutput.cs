@@ -43,7 +43,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
 
         private bool AddJsCore => Features.Contains(BuiltInFeatures.JsCore);
         private bool AddJsEdit => Features.Contains(BuiltInFeatures.JsCmsInternal);
-        private bool AddCssEdit => Features.Contains(BuiltInFeatures.ToolbarsInternal);
 
 
         /// <summary>
@@ -59,14 +58,15 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
             if (Features.Contains(BuiltInFeatures.JQuery)) 
                 list.Add("//code.jquery.com/jquery-3.5.1.min.js");
 
-            if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{InpageCms.CoreJs}");
+            if (AddJsCore) list.Add($"{OqtConstants.UiRoot}/{BuiltInFeatures.JsCore.UrlWip}");
 
-            if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{InpageCms.EditJs}");
+            if (AddJsEdit) list.Add($"{OqtConstants.UiRoot}/{BuiltInFeatures.JsCmsInternal.UrlWip}");
 
             // New in 12.02
             if (Features.Contains(BuiltInFeatures.TurnOn))
-                list.Add($"{OqtConstants.UiRoot}/{InpageCms.TurnOnJs}");
+                list.Add($"{OqtConstants.UiRoot}/{BuiltInFeatures.TurnOn.UrlWip}");
 
+            
             return list;
         }
 
@@ -76,8 +76,14 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
         /// <returns></returns>
         public IEnumerable<string> Styles()
         {
-            if (!AddCssEdit) return Array.Empty<string>();
-            return new List<string> { $"{OqtConstants.UiRoot}/{InpageCms.EditCss}" };
+            var list = new List<string>();
+            if (Features.Contains(BuiltInFeatures.ToolbarsInternal))
+                list.Add($"{OqtConstants.UiRoot}/{BuiltInFeatures.ToolbarsInternal.UrlWip}");
+
+            // New 15.01
+            if (Features.Contains(BuiltInFeatures.CmsWysiwyg))
+                list.Add($"{OqtConstants.UiRoot}/{BuiltInFeatures.CmsWysiwyg.UrlWip}");
+            return list;
         }
 
         [PrivateApi]

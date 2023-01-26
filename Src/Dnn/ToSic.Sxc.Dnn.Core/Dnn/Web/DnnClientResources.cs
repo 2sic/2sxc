@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
-using DotNetNuke.Application;
 using DotNetNuke.Framework;
 using DotNetNuke.Framework.JavaScriptLibraries;
 using DotNetNuke.Web.Client;
@@ -11,7 +10,6 @@ using ToSic.Eav;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.Url;
 
@@ -37,13 +35,13 @@ namespace ToSic.Sxc.Dnn.Web
         protected BlockBuilder BlockBuilder;
         protected Page Page;
         protected DnnJsApiHeader Header;
-        protected bool? _forcePre1025Behavior;
+        private bool? _forcePre1025Behavior;
 
 
         internal IList<IPageFeature> Features => _features ?? (_features = BlockBuilder?.Run(true)?.Features ?? new List<IPageFeature>());
         private IList<IPageFeature> _features;
 
-        public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null) => Log.Func(() =>
+        public IList<IPageFeature> AddEverything(IList<IPageFeature> features = null) => Log.Func(l =>
         {
             // temporary solution, till the features are correctly activated in the block
             // auto-detect Blockbuilder params
@@ -57,7 +55,7 @@ namespace ToSic.Sxc.Dnn.Web
             if (!readJs && !editJs && !editCss && !features.Any())
                 return (features, "nothing to add");
 
-            Log.A("user is editor, or template requested js/css, will add client material");
+            l.A("user is editor, or template requested js/css, will add client material");
 
             // register scripts and css
             RegisterClientDependencies(Page, readJs, editJs, editCss, features);
@@ -65,7 +63,7 @@ namespace ToSic.Sxc.Dnn.Web
             // New in 11.11.02 - DNN has a strange behavior where the current language isn't known till PreRender
             // so we have to move adding the header to here.
             // MustAddHeaders may have been set earlier by the engine, or now by the various js added
-            Log.A($"{nameof(MustAddHeaders)}={MustAddHeaders}");
+            l.A($"{nameof(MustAddHeaders)}={MustAddHeaders}");
             if (MustAddHeaders) Header.AddHeaders();
 
             return (features, "ok");
@@ -104,29 +102,32 @@ namespace ToSic.Sxc.Dnn.Web
                 var priority = (int)FileOrder.Js.DefaultPriority - 2;
 
                 // add edit-mode CSS
-                if (editCss) RegisterCss(page, root + InpageCms.EditCss);
+                if (editCss) RegisterCss(page, $"{root}{BuiltInFeatures.ToolbarsInternal.UrlWip}");
 
                 // add read-js
                 if (readJs || editJs)
                 {
-                    Log.A("add $2sxc api and headers");
-                    RegisterJs(page, ver, root + InpageCms.CoreJs, true, priority);
+                    l.A("add $2sxc api and headers");
+                    RegisterJs(page, ver, $"{root}{BuiltInFeatures.JsCore.UrlWip}", true, priority);
                     MustAddHeaders = true;
                 }
 
                 // add edit-js (commands, manage, etc.)
                 if (editJs)
                 {
-                    Log.A("add 2sxc edit api; also request jQuery and anti-forgery");
+                    l.A("add 2sxc edit api; also needs anti-forgery");
                     // note: the inpage only works if it's not in the head, so we're adding it below
-                    RegisterJs(page, ver, root + InpageCms.EditJs, false, priority + 1);
+                    RegisterJs(page, ver, $"{root}{BuiltInFeatures.JsCmsInternal.UrlWip}", false, priority + 1);
                 }
 
                 if (features.Contains(BuiltInFeatures.JQuery))
                     JavaScript.RequestRegistration(CommonJs.jQuery);
 
                 if (features.Contains(BuiltInFeatures.TurnOn))
-                    RegisterJs(page, ver, root + InpageCms.TurnOnJs, true, priority + 10);
+                    RegisterJs(page, ver, $"{root}{BuiltInFeatures.TurnOn.UrlWip}", true, priority + 10);
+
+                if (features.Contains(BuiltInFeatures.CmsWysiwyg))
+                    RegisterCss(page, $"{root}{BuiltInFeatures.CmsWysiwyg.UrlWip}");
             });
 
 
@@ -150,11 +151,7 @@ namespace ToSic.Sxc.Dnn.Web
 
             var url = UrlHelpers.QuickAddUrlParameter(path, "v", version);
             if (toHead)
-            {
-                // don't add version in DNN 7 and probably 8, because it breaks the client-dependency - but only in the head
-                if (DotNetNukeContext.Current.Application.Version.Major < 9) url = path;
                 ClientResourceManager.RegisterScript(page, url, priority, DnnPageHeaderProvider.DefaultName);
-            }
             else
                 page.ClientScript.RegisterClientScriptInclude(typeof(Page), path, url);
         }

@@ -27,7 +27,7 @@ namespace ToSic.Sxc.WebApi.InPage
 
             // 1. Check if the features includes turnOn
             if (renderResult.Features.Contains(BuiltInFeatures.TurnOn)) 
-                addOn += Js(ver, root + InpageCms.TurnOnJs);
+                addOn += Js(ver, root + BuiltInFeatures.TurnOn.UrlWip);
 
             // 2. Add JS & CSS which was stripped before
             renderResult.Assets.ToList().ForEach(a => addOn += "\n" + (a.IsJs ? Js(ver, a.Url) : Css(a.Url)));

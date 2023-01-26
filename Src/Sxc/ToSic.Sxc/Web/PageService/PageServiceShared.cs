@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Lib;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.ContentSecurityPolicy;

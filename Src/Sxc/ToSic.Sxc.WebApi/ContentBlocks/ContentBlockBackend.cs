@@ -93,10 +93,10 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
             Log.A("2.1. Build Resources");
             var resources = new List<AjaxResourceDtoWIP>();
-            var ver = EavSystemInfo.VersionWithStartUpBuild;// Settings.Version.ToString();
+            var ver = EavSystemInfo.VersionWithStartUpBuild;
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
                 resources.Add(new AjaxResourceDtoWIP
-                    { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + InpageCms.TurnOnJs, "v", ver) });
+                    { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + BuiltInFeatures.TurnOn.UrlWip, "v", ver) });
 
             Log.A("2.2. Add JS & CSS which were stripped before");
             resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP
