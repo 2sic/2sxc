@@ -129,7 +129,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// Used to be GET ContentExport/DownloadTypeAsJson
         /// </summary>
 
-        public THttpResponseType JsonBundleExport(int appId, Guid exportConfiguration)
-            => _contentExportLazy.Value.Init(appId).JsonBundleExport(_userLazy.Value, exportConfiguration);
+        public THttpResponseType JsonBundleExport(int appId, Guid exportConfiguration, int indentation)
+            => _contentExportLazy.Value.Init(appId).JsonBundleExport(_userLazy.Value, exportConfiguration, indentation);
     }
 }
