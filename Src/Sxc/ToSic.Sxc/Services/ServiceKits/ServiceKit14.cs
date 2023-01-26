@@ -1,6 +1,4 @@
 ﻿using Connect.Koi;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
@@ -21,6 +19,13 @@ namespace ToSic.Sxc.Services
         /// </summary>
         public IAdamService Adam => _adam.Get(GetService<IAdamService>);
         private readonly GetOnce<IAdamService> _adam = new GetOnce<IAdamService>();
+
+        /// <summary>
+        /// The CMS Service - WIP
+        /// </summary>
+        [PrivateApi("Still WIP v15")]
+        public ICmsService Cms => _cms.Get(GetService<ICmsService>);
+        private readonly GetOnce<ICmsService> _cms = new GetOnce<ICmsService>();
 
         /// <summary>
         /// The Convert Service, used to convert any kind of data type to another data type
