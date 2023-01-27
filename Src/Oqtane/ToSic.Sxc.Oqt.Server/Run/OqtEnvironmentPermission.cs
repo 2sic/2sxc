@@ -16,12 +16,12 @@ namespace ToSic.Sxc.Oqt.Server.Run
     public class OqtEnvironmentPermission : EnvironmentPermission
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILazySvc<IUserPermissions> _userPermissions;
-        private readonly ILazySvc<IUser> _oqtUser;
+        private readonly LazySvc<IUserPermissions> _userPermissions;
+        private readonly LazySvc<IUser> _oqtUser;
 
         public OqtEnvironmentPermission(IHttpContextAccessor httpContextAccessor,
-            ILazySvc<IUserPermissions> userPermissions,
-            ILazySvc<IUser> oqtUser) : base(OqtConstants.OqtLogPrefix)
+            LazySvc<IUserPermissions> userPermissions,
+            LazySvc<IUser> oqtUser) : base(OqtConstants.OqtLogPrefix)
         {
             ConnectServices(
                 _httpContextAccessor = httpContextAccessor,

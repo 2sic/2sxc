@@ -7,12 +7,12 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     public class BlockEditorSelector: ServiceBase
     {
-        private readonly ILazySvc<BlockEditorForModule> _blkEdtForMod;
-        private readonly ILazySvc<BlockEditorForEntity> _blkEdtForEnt;
+        private readonly LazySvc<BlockEditorForModule> _blkEdtForMod;
+        private readonly LazySvc<BlockEditorForEntity> _blkEdtForEnt;
 
         public BlockEditorSelector(
-            ILazySvc<BlockEditorForModule> blkEdtForMod,
-            ILazySvc<BlockEditorForEntity> blkEdtForEnt
+            LazySvc<BlockEditorForModule> blkEdtForMod,
+            LazySvc<BlockEditorForEntity> blkEdtForEnt
             ) : base($"{Constants.SxcLogName}.BlEdSl")
         {
             ConnectServices(

@@ -15,10 +15,10 @@ namespace ToSic.Sxc.Blocks.Renderers
     [PrivateApi]
     public class SimpleRenderer: ServiceBase
     {
-        private readonly IGenerator<BlockFromEntity> _blkFrmEntGen;
+        private readonly Generator<BlockFromEntity> _blkFrmEntGen;
         private static string EmptyMessage = "<!-- auto-render of item {0} -->";
 
-        public SimpleRenderer(IGenerator<BlockFromEntity> blkFrmEntGen): base(Constants.SxcLogName + "RndSmp")
+        public SimpleRenderer(Generator<BlockFromEntity> blkFrmEntGen): base(Constants.SxcLogName + "RndSmp")
         {
             ConnectServices(
                 _blkFrmEntGen = blkFrmEntGen

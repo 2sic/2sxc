@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Sys
 {
     public class InstallControllerReal<THttpResponseType> : ServiceBase
     {
-        private readonly ILazySvc<IFeaturesService> _featureService;
+        private readonly LazySvc<IFeaturesService> _featureService;
         private readonly LazySvc<IContextOfSite> _context;
         private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
         private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi.Sys
             LazySvc<IEnvironmentInstaller> envInstallerLazy, 
             LazySvc<ImportFromRemote> impFromRemoteLazy,
             ResponseMaker<THttpResponseType> responseMaker,
-            ILazySvc<IFeaturesService> featureService,
+            LazySvc<IFeaturesService> featureService,
             LazySvc<AppsBackend> appsBackend,
             LazySvc<IAppStates> appStates,
             LazySvc<AppSettingsStack> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")

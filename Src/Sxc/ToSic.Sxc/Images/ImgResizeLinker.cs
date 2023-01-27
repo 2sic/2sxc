@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Images
     [PrivateApi("Internal stuff")]
     public class ImgResizeLinker : ServiceBase, ICanDebug
     {
-        public ImgResizeLinker(ILazySvc<IFeaturesInternal> features, ILazySvc<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
+        public ImgResizeLinker(LazySvc<IFeaturesInternal> features, LazySvc<ICss> koi) : base($"{Constants.SxcLogName}.ImgRes")
         {
             ConnectServices(
                 _features = features,
@@ -27,8 +27,8 @@ namespace ToSic.Sxc.Images
                 DimGen = new ResizeDimensionGenerator()
             );
         }
-        private readonly ILazySvc<IFeaturesInternal> _features;
-        private readonly ILazySvc<ICss> _koi;
+        private readonly LazySvc<IFeaturesInternal> _features;
+        private readonly LazySvc<ICss> _koi;
 
         public bool Debug { get; set; }
 

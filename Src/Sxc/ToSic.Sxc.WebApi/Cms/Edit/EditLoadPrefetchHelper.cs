@@ -14,13 +14,13 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadPrefetchHelper: ServiceBase
     {
-        //private readonly ILazySvc<JsonSerializer> _jsonSerializerGenerator;
+        //private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
         private readonly EntityPickerApi _entityPickerBackend;
         private readonly Generator<HyperlinkBackend<int, int>> _hyperlinkBackendGenerator;
         private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
 
         public EditLoadPrefetchHelper(
-            //ILazySvc<JsonSerializer> jsonSerializerGenerator,
+            //LazySvc<JsonSerializer> jsonSerializerGenerator,
             Generator<HyperlinkBackend<int, int>> hyperlinkBackend,
             Generator<IAdamTransGetItems> adamTransGetItems,
             EntityPickerApi entityPickerBackend

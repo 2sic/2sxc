@@ -25,9 +25,9 @@ namespace ToSic.Sxc.Dnn.Services
     public class DnnPageChanges : ServiceBase
     {
         private readonly Generator<CspOfPage> _pageCspGenerator;
-        private readonly ILazySvc<IFeaturesService> _featuresService;
+        private readonly LazySvc<IFeaturesService> _featuresService;
 
-        public DnnPageChanges(ILazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator): base($"{DnnConstants.LogName}.PgeCng")
+        public DnnPageChanges(LazySvc<IFeaturesService> featuresService, Generator<CspOfPage> pageCspGenerator): base($"{DnnConstants.LogName}.PgeCng")
         {
             ConnectServices(
                 _featuresService = featuresService,

@@ -37,24 +37,24 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies: ServiceDependencies
         {
-            public ILazySvc<DataSourceFactory> DataSourceFactory { get; }
-            public ILazySvc<IConvertService> ConvertService { get; }
+            public LazySvc<DataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
-            public ILazySvc<DynamicEntityDependencies> DynamicEntityDependencies { get; }
-            public ILazySvc<IContextOfApp> ContextOfApp { get; }
-            public ILazySvc<AdamManager> AdamManager { get; }
+            public LazySvc<DynamicEntityDependencies> DynamicEntityDependencies { get; }
+            public LazySvc<IContextOfApp> ContextOfApp { get; }
+            public LazySvc<AdamManager> AdamManager { get; }
 
             public Dependencies(
                 IServiceProvider serviceProvider,
                 LazySvc<CodeCompiler> codeCompilerLazy,
                 AppSettingsStack settingsStack,
-                ILazySvc<DynamicEntityDependencies> dynamicEntityDependencies,
-                ILazySvc<IContextOfApp> contextOfApp,
-                ILazySvc<AdamManager> adamManager,
-                ILazySvc<IConvertService> convertService,
-                ILazySvc<DataSourceFactory> dataSourceFactory)
+                LazySvc<DynamicEntityDependencies> dynamicEntityDependencies,
+                LazySvc<IContextOfApp> contextOfApp,
+                LazySvc<AdamManager> adamManager,
+                LazySvc<IConvertService> convertService,
+                LazySvc<DataSourceFactory> dataSourceFactory)
             {
                 AddToLogQueue(
                     ServiceProvider = serviceProvider,

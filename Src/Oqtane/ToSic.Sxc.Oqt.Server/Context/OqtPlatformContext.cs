@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Oqt.Server.Context
 {
     public class OqtPlatformContext: Platform, IPlatformInfo
     {
-        public OqtPlatformContext(ILazySvc<IConfigManager> configManager) => _configManager = configManager;
-        private readonly ILazySvc<IConfigManager> _configManager;
+        public OqtPlatformContext(LazySvc<IConfigManager> configManager) => _configManager = configManager;
+        private readonly LazySvc<IConfigManager> _configManager;
 
         public override PlatformType Type => PlatformType.Oqtane;
 

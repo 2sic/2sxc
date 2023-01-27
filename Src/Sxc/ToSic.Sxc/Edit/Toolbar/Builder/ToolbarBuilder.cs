@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         public class Dependencies: ServiceDependencies
         {
             public Dependencies(
-                ILazySvc<IAppStates> appStatesLazy,
+                LazySvc<IAppStates> appStatesLazy,
                 LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper
             )
             {
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 );
             }
 
-            internal readonly ILazySvc<IAppStates> AppStatesLazy;
+            internal readonly LazySvc<IAppStates> AppStatesLazy;
             public LazySvc<ToolbarButtonDecoratorHelper> ToolbarButtonHelper { get; }
         }
 

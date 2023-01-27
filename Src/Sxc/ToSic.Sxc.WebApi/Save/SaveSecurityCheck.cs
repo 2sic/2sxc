@@ -14,8 +14,8 @@ namespace ToSic.Sxc.WebApi.Save
 {
     public class SaveSecurity: SaveHelperBase
     {
-        private readonly IGenerator<Apps.App> _appGen;
-        private readonly IGenerator<MultiPermissionsTypes> _multiPermissionsTypesGen;
+        private readonly Generator<Apps.App> _appGen;
+        private readonly Generator<MultiPermissionsTypes> _multiPermissionsTypesGen;
 
         public SaveSecurity(Generator<Apps.App> appGen, Generator<MultiPermissionsTypes> multiPermissionsTypesGen) : base("Api.SavSec") =>
             ConnectServices(

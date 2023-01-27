@@ -25,7 +25,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         #region Constructor / DI
 
         public ResetApp(
-            ILazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
+            LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ImpExpHelpers impExpHelpers,
             CmsZones cmsZones,
             ISite site,
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             );
         }
 
-        private readonly ILazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
+        private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ImpExpHelpers _impExpHelpers;
         private readonly CmsZones _cmsZones;
         private readonly ISite _site;

@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Search
     /// </remarks>
     public class SearchController : ServiceBase
     {
-        private readonly ILazySvc<ILogStore> _logStore;
+        private readonly LazySvc<ILogStore> _logStore;
 
         public SearchController(
             AppsCacheSwitch appsCache,
@@ -53,8 +53,8 @@ namespace ToSic.Sxc.Search
             LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
             LazySvc<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
             EngineFactory engineFactory,
-            ILazySvc<IAppLoaderTools> loaderTools,
-            ILazySvc<ILogStore> logStore) : base("DNN.Search")
+            LazySvc<IAppLoaderTools> loaderTools,
+            LazySvc<ILogStore> logStore) : base("DNN.Search")
         {
             ConnectServices(
                 _appsCache = appsCache,
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Search
         private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
         private readonly Generator<ISite> _siteGenerator;
         private readonly EngineFactory _engineFactory;
-        private readonly ILazySvc<IAppLoaderTools> _loaderTools;
+        private readonly LazySvc<IAppLoaderTools> _loaderTools;
         private readonly LazySvc<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
         private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 

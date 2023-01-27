@@ -22,7 +22,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 {
     public class ContentBlockBackend : BlockWebApiBackendBase
     {
-        private readonly ILazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
+        private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly Generator<BlockFromEntity> _entityBlockGenerator;
 
         #region constructor / DI
@@ -31,8 +31,8 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             IPagePublishing publishing, 
             LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            ILazySvc<IBlockResourceExtractor> optimizerLazy,
-            ILazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+            LazySvc<IBlockResourceExtractor> optimizerLazy,
+            LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
             //Generator<BlockEditorForModule> blkEdtForMod,
             //Generator<BlockEditorForEntity> blkEdtForEnt,
             Generator<BlockFromEntity> entityBlockGenerator)
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             );
         }
 
-        private readonly ILazySvc<IBlockResourceExtractor> _optimizer;
+        private readonly LazySvc<IBlockResourceExtractor> _optimizer;
         //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
         //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private readonly IPagePublishing _publishing;

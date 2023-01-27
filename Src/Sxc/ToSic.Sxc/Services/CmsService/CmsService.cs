@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Services.CmsService
     [PrivateApi("WIP")]
     public partial class CmsService: ServiceBase, ICmsService
     {
-        private readonly ILazySvc<IPageService> _pageService;
-        private readonly ILazySvc<IImageService> _imgService;
-        private readonly ILazySvc<IValueConverter> _valueConverter;
+        private readonly LazySvc<IPageService> _pageService;
+        private readonly LazySvc<IImageService> _imgService;
+        private readonly LazySvc<IValueConverter> _valueConverter;
 
-        public CmsService(ILazySvc<IImageService> imgService, ILazySvc<IValueConverter> valueConverter, ILazySvc<IPageService> pageService) : base(Constants.SxcLogName + ".CmsSrv")
+        public CmsService(LazySvc<IImageService> imgService, LazySvc<IValueConverter> valueConverter, LazySvc<IPageService> pageService) : base(Constants.SxcLogName + ".CmsSrv")
         {
             ConnectServices(
                 _imgService = imgService,

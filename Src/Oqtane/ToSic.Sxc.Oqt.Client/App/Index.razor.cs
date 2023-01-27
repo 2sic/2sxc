@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.App
 
         [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
-        [Inject] public ILazySvc<IFeaturesService> FeaturesService { get; set; }
+        [Inject] public LazySvc<IFeaturesService> FeaturesService { get; set; }
 
         #endregion
 

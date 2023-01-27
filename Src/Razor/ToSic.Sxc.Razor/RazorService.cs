@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Razor
     public class RazorService : IRazorService
     {
 
-        private readonly ILazySvc<IRazorRenderer> _razorRendererLazy;
+        private readonly LazySvc<IRazorRenderer> _razorRendererLazy;
 
-        public RazorService(ILazySvc<IRazorRenderer> razorRendererLazy)
+        public RazorService(LazySvc<IRazorRenderer> razorRendererLazy)
         {
             _razorRendererLazy = razorRendererLazy;
         }

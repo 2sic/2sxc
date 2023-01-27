@@ -18,12 +18,12 @@ namespace ToSic.Sxc.Razor
 
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
-        private readonly ILazySvc<DynamicCodeRoot> _dynCodeRootLazy;
+        private readonly LazySvc<DynamicCodeRoot> _dynCodeRootLazy;
         public IRazorRenderer RazorRenderer { get; }
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseDependencies helpers, IRazorRenderer razorRenderer, ILazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
+        public RazorEngine(EngineBaseDependencies helpers, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
         {
             ConnectServices(
                 _dynCodeRootLazy = dynCodeRootLazy,

@@ -21,13 +21,13 @@ namespace ToSic.Sxc.WebApi.Save
 
         #region Constructor / DI
 
-        private readonly ILazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
+        private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly LazySvc<CmsManager> _cmsManagerLazy;
         private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity, _withDrafts));
         private CmsManager _cmsManager;
         private bool _withDrafts = false;
 
-        public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy, ILazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
+        public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
         {
             ConnectServices(
                 _blockEditorSelectorLazy = blockEditorSelectorLazy,

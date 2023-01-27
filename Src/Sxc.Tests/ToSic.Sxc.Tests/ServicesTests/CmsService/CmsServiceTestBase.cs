@@ -60,8 +60,8 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var entity = TstDataEntity(someTextValue, someHtmlValue, TstDataContentType);
             var dynamicEntity = DynEntity(entity);
             var dynamicField = dynamicEntity.Field(SomeHtmlField);
-            var imgService = Build<ILazySvc<IImageService>>();
-            var valueConverter = Build<ILazySvc<IValueConverter>>();
+            var imgService = Build<LazySvc<IImageService>>();
+            var valueConverter = Build<LazySvc<IValueConverter>>();
             var cmsService = new Services.CmsService.CmsService(imgService, valueConverter);
             return cmsService.Show(dynamicField);
         }

@@ -7,13 +7,13 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamDependencies<TFolderId, TFileId>: ServiceDependencies
     {
-        public ILazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
+        public LazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
         public IContextResolver CtxResolver { get; }
         public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; }
 
         public AdamDependencies(
             Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
-            ILazySvc<AdamContext<TFolderId, TFileId>> adamState,
+            LazySvc<AdamContext<TFolderId, TFileId>> adamState,
             IContextResolver ctxResolver)
         {
             AddToLogQueue(

@@ -19,12 +19,12 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private readonly SettingsHelper _settingsHelper;
         private readonly IModuleRepository _moduleRepository;
         private readonly IAppStates _appStates;
-        private readonly ILazySvc<AppFinder> _appFinderLazy;
+        private readonly LazySvc<AppFinder> _appFinderLazy;
         private readonly ISite _site;
         private Dictionary<string, string> _settings;
 
         public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository, 
-            IAppStates appStates, ILazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+            IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
             ConnectServices(
                 _settingsHelper = settingsHelper,

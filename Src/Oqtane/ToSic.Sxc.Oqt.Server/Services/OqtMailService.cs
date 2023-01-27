@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Oqt.Server.Services
 {
     public class OqtMailService : MailServiceBase
     {
-        private readonly ILazySvc<ISiteRepository> _siteRepositoryLazy;
-        private readonly ILazySvc<ISettingRepository> _settingRepositoryLazy;
+        private readonly LazySvc<ISiteRepository> _siteRepositoryLazy;
+        private readonly LazySvc<ISettingRepository> _settingRepositoryLazy;
 
-        public OqtMailService(ILazySvc<ISiteRepository> siteRepositoryLazy, ILazySvc<ISettingRepository> settingRepositoryLazy, ILazySvc<IUser> userLazy) : base(userLazy)
+        public OqtMailService(LazySvc<ISiteRepository> siteRepositoryLazy, LazySvc<ISettingRepository> settingRepositoryLazy, LazySvc<IUser> userLazy) : base(userLazy)
         {
             ConnectServices(
                 _siteRepositoryLazy = siteRepositoryLazy,

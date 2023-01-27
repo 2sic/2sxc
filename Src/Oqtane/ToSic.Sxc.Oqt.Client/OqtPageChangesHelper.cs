@@ -163,7 +163,7 @@ namespace ToSic.Sxc.Oqt.Client
             return result3;
         }
 
-        public static int ApplyHttpHeaders(OqtViewResultsDto result, ILazySvc<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
+        public static int ApplyHttpHeaders(OqtViewResultsDto result, LazySvc<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
         {
             var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
 

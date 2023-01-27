@@ -33,9 +33,9 @@ namespace ToSic.Sxc.DataSources
         private readonly SiteState _siteState;
         private readonly IUserPermissions _userPermissions;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILazySvc<ILinkPaths> _linkPathsLazy;
+        private readonly LazySvc<ILinkPaths> _linkPathsLazy;
 
-        public OqtPages(Dependencies dependencies, IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, ILazySvc<ILinkPaths> linkPathsLazy)
+        public OqtPages(Dependencies dependencies, IPageRepository pages, SiteState siteState, IUserPermissions userPermissions, IHttpContextAccessor httpContextAccessor, LazySvc<ILinkPaths> linkPathsLazy)
         :base(dependencies)
         {
             ConnectServices(

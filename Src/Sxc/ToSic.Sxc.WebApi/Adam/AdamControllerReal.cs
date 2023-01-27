@@ -14,11 +14,11 @@ namespace ToSic.Sxc.WebApi.Adam
     public class AdamControllerReal<TIdentifier>: ServiceBase
     {
         public AdamControllerReal(
-            ILazySvc<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,
-            ILazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> adamItems,
-            ILazySvc<AdamTransFolder<TIdentifier, TIdentifier>> adamFolders,
-            ILazySvc<AdamTransDelete<TIdentifier, TIdentifier>> adamDelete,
-            ILazySvc<AdamTransRename<TIdentifier, TIdentifier>> adamRename
+            LazySvc<AdamTransUpload<TIdentifier, TIdentifier>> adamUpload,
+            LazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> adamItems,
+            LazySvc<AdamTransFolder<TIdentifier, TIdentifier>> adamFolders,
+            LazySvc<AdamTransDelete<TIdentifier, TIdentifier>> adamDelete,
+            LazySvc<AdamTransRename<TIdentifier, TIdentifier>> adamRename
             ) : base("Api.Adam")
         {
             ConnectServices(
@@ -29,11 +29,11 @@ namespace ToSic.Sxc.WebApi.Adam
                 _adamRename = adamRename
             );
         }
-        private readonly ILazySvc<AdamTransUpload<TIdentifier, TIdentifier>> _adamUpload;
-        private readonly ILazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> _adamItems;
-        private readonly ILazySvc<AdamTransFolder<TIdentifier, TIdentifier>> _adamFolders;
-        private readonly ILazySvc<AdamTransDelete<TIdentifier, TIdentifier>> _adamDelete;
-        private readonly ILazySvc<AdamTransRename<TIdentifier, TIdentifier>> _adamRename;
+        private readonly LazySvc<AdamTransUpload<TIdentifier, TIdentifier>> _adamUpload;
+        private readonly LazySvc<AdamTransGetItems<TIdentifier, TIdentifier>> _adamItems;
+        private readonly LazySvc<AdamTransFolder<TIdentifier, TIdentifier>> _adamFolders;
+        private readonly LazySvc<AdamTransDelete<TIdentifier, TIdentifier>> _adamDelete;
+        private readonly LazySvc<AdamTransRename<TIdentifier, TIdentifier>> _adamRename;
 
         public AdamItemDto Upload(HttpUploadedFile uploadInfo, int appId, string contentType, Guid guid, string field, string subFolder = "", bool usePortalRoot = false)
         {

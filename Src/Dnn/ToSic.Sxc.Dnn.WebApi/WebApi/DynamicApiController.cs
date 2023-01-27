@@ -37,16 +37,16 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         public class Dependencies: ServiceDependencies
         {
-            public ILazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
-            public ILazySvc<Apps.App> AppOverrideLazy { get; }
+            public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
+            public LazySvc<Apps.App> AppOverrideLazy { get; }
             public DnnCodeRootFactory DnnCodeRootFactory { get; }
             public DnnAppFolderUtilities AppFolderUtilities { get; }
 
             public Dependencies(
                 DnnCodeRootFactory dnnCodeRootFactory,
                 DnnAppFolderUtilities appFolderUtilities,
-                ILazySvc<Apps.App> appOverrideLazy,
-                ILazySvc<AppConfigDelegate> appConfigDelegateLazy)
+                LazySvc<Apps.App> appOverrideLazy,
+                LazySvc<AppConfigDelegate> appConfigDelegateLazy)
             {
                 AddToLogQueue(
                     DnnCodeRootFactory = dnnCodeRootFactory,

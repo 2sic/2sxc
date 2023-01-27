@@ -31,8 +31,8 @@ namespace ToSic.Sxc.WebApi.Context
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
             public LazySvc<LanguagesBackend> LanguagesBackend { get; }
-            public ILazySvc<IFeaturesInternal> Features { get; }
-            public ILazySvc<IUiData> UiDataLazy { get; }
+            public LazySvc<IFeaturesInternal> Features { get; }
+            public LazySvc<IUiData> UiDataLazy { get; }
             public LazySvc<AppSettingsStack> SettingsStack { get; }
             public LazySvc<ISecureDataService> SecureDataService { get; }
 
@@ -40,8 +40,8 @@ namespace ToSic.Sxc.WebApi.Context
                 IContextOfSite siteCtx,
                 Apps.App appToLaterInitialize,
                 IAppStates appStates,
-                ILazySvc<IFeaturesInternal> features,
-                ILazySvc<IUiData> uiDataLazy,
+                LazySvc<IFeaturesInternal> features,
+                LazySvc<IUiData> uiDataLazy,
                 LazySvc<LanguagesBackend> languagesBackend,
                 LazySvc<AppSettingsStack> settingsStack,
                 LazySvc<ISecureDataService> secureDataService

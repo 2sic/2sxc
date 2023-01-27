@@ -10,14 +10,14 @@ namespace ToSic.Sxc.Dnn.Services
 {
     public class DnnRenderService : RenderService
     {
-        private readonly ILazySvc<DnnPageChanges> _dnnPageChanges;
-        private readonly ILazySvc<DnnClientResources> _dnnClientResources;
+        private readonly LazySvc<DnnPageChanges> _dnnPageChanges;
+        private readonly LazySvc<DnnClientResources> _dnnClientResources;
         private readonly Generator<IContextOfBlock> _context;
 
         public DnnRenderService(
             Dependencies dependencies,
-            ILazySvc<DnnPageChanges> dnnPageChanges,
-            ILazySvc<DnnClientResources> dnnClientResources,
+            LazySvc<DnnPageChanges> dnnPageChanges,
+            LazySvc<DnnClientResources> dnnClientResources,
             Generator<IContextOfBlock> context
         ) : base(dependencies)
         {

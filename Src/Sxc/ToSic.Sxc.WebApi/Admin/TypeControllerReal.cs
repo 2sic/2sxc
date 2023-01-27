@@ -18,18 +18,18 @@ namespace ToSic.Sxc.WebApi.Admin
 {
     public class TypeControllerReal<THttpResponseType> : ServiceBase, ITypeController<THttpResponseType>
     {
-        private readonly ILazySvc<IContextOfSite> _context;
-        private readonly ILazySvc<ContentTypeApi> _ctApiLazy;
-        private readonly ILazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
-        private readonly ILazySvc<IUser> _userLazy;
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<ContentTypeApi> _ctApiLazy;
+        private readonly LazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
+        private readonly LazySvc<IUser> _userLazy;
         private readonly Generator<ImportContent> _importContent;
         public const string LogSuffix = "Types";
 
         public TypeControllerReal(
-            ILazySvc<IContextOfSite> context,
-            ILazySvc<ContentTypeApi> ctApiLazy, 
-            ILazySvc<ContentExportApi<THttpResponseType>> contentExportLazy, 
-            ILazySvc<IUser> userLazy,
+            LazySvc<IContextOfSite> context,
+            LazySvc<ContentTypeApi> ctApiLazy, 
+            LazySvc<ContentExportApi<THttpResponseType>> contentExportLazy, 
+            LazySvc<IUser> userLazy,
             Generator<ImportContent> importContent) : base("Api.TypesRl")
         {
             ConnectServices(

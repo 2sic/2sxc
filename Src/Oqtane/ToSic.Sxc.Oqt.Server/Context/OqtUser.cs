@@ -19,18 +19,18 @@ namespace ToSic.Sxc.Oqt.Server.Context
 {
     public class OqtUser: ServiceBase, IUser<User>
     {
-        private readonly ILazySvc<IUserRepository> _userRepository;
-        private readonly ILazySvc<IUserRoleRepository> _userRoleRepository;
-        private readonly ILazySvc<UserManager<IdentityUser>> _identityUserManager;
+        private readonly LazySvc<IUserRepository> _userRepository;
+        private readonly LazySvc<IUserRoleRepository> _userRoleRepository;
+        private readonly LazySvc<UserManager<IdentityUser>> _identityUserManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SiteState _siteState;
 
         /// <summary>
         /// Constructor for DI
         /// </summary>
-        public OqtUser(ILazySvc<IUserRepository> userRepository,
-            ILazySvc<IUserRoleRepository> userRoleRepository,
-            ILazySvc<UserManager<IdentityUser>> identityUserManager,
+        public OqtUser(LazySvc<IUserRepository> userRepository,
+            LazySvc<IUserRoleRepository> userRoleRepository,
+            LazySvc<UserManager<IdentityUser>> identityUserManager,
             IHttpContextAccessor httpContextAccessor,
             SiteState siteState): base(OqtConstants.OqtLogPrefix + ".User")
         {

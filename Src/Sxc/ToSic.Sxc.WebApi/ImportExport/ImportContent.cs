@@ -23,19 +23,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ImportContent: ServiceBase
     {
-        private readonly ILazySvc<IUser> _userLazy;
+        private readonly LazySvc<IUser> _userLazy;
 
         #region DI Constructor
 
         public ImportContent(
             IEnvironmentLogger envLogger,
-            ILazySvc<Import> importerLazy,
-            ILazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
+            LazySvc<Import> importerLazy,
+            LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
-            ILazySvc<JsonSerializer> jsonSerializerLazy, 
+            LazySvc<JsonSerializer> jsonSerializerLazy, 
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
-            ILazySvc<IUser> userLazy,
+            LazySvc<IUser> userLazy,
             SystemManager systemManager) : base("Bck.Export")
         {
             
@@ -53,10 +53,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
         private readonly IEnvironmentLogger _envLogger;
-        private readonly ILazySvc<Import> _importerLazy;
-        private readonly ILazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
+        private readonly LazySvc<Import> _importerLazy;
+        private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
-        private readonly ILazySvc<JsonSerializer> _jsonSerializerLazy;
+        private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IAppStates _appStates;
         protected readonly SystemManager SystemManager;

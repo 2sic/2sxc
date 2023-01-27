@@ -32,8 +32,8 @@ namespace ToSic.Sxc.WebApi.Views
     {
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
-        private readonly ILazySvc<CmsManager> _cmsManagerLazy;
-        private readonly ILazySvc<JsonSerializer> _jsonSerializerLazy;
+        private readonly LazySvc<CmsManager> _cmsManagerLazy;
+        private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
@@ -43,8 +43,8 @@ namespace ToSic.Sxc.WebApi.Views
 
         public ViewsExportImport(IServerPaths serverPaths,
             IEnvironmentLogger envLogger,
-            ILazySvc<CmsManager> cmsManagerLazy, 
-            ILazySvc<JsonSerializer> jsonSerializerLazy, 
+            LazySvc<CmsManager> cmsManagerLazy, 
+            LazySvc<JsonSerializer> jsonSerializerLazy, 
             IContextOfSite context,
             IAppStates appStates,
             AppIconHelpers appIconHelpers,

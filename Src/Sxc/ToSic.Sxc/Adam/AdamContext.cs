@@ -24,14 +24,14 @@ namespace ToSic.Sxc.Adam
 
         public class Dependencies: ServiceDependencies
         {
-            public ILazySvc<IFeaturesInternal> FeaturesSvc { get; }
+            public LazySvc<IFeaturesInternal> FeaturesSvc { get; }
             public Generator<AdamSecurityChecksBase> AdamSecurityGenerator { get; }
             public Generator<MultiPermissionsTypes> TypesPermissions { get; }
 
             public Dependencies(
                 Generator<MultiPermissionsTypes> typesPermissions,
                 Generator<AdamSecurityChecksBase> adamSecurityGenerator,
-                ILazySvc<IFeaturesInternal> featuresSvc)
+                LazySvc<IFeaturesInternal> featuresSvc)
             {
                 AddToLogQueue(
                     TypesPermissions = typesPermissions,

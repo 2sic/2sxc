@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
     public class OqtGetBlock: ServiceBase
     {
         public OqtGetBlock(
-            ILazySvc<IModuleRepository> modRepoLazy,
+            LazySvc<IModuleRepository> modRepoLazy,
             RequestHelper requestHelper,
             IContextResolver contextResolverToInit,
             Generator<IContextOfBlock> cntOfBlkGen,
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             );
         }
 
-        private readonly ILazySvc<IModuleRepository> _modRepoLazy;
+        private readonly LazySvc<IModuleRepository> _modRepoLazy;
         private readonly RequestHelper requestHelper;
         private readonly IContextResolver _contextResolverToInit;
         private readonly Generator<IContextOfBlock> _cntOfBlkGen;

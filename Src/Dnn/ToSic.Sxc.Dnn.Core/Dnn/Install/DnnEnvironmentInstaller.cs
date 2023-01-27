@@ -20,12 +20,12 @@ namespace ToSic.Sxc.Dnn.Install
     {
         public static bool SaveUnimportantDetails = true;
 
-        private readonly ILazySvc<DnnEnvironmentInstaller> _dnnEnvInstaller;
+        private readonly LazySvc<DnnEnvironmentInstaller> _dnnEnvInstaller;
         private readonly DnnInstallLogger _installLogger;
-        private readonly ILazySvc<IAppStates> _appStatesLazy;
-        private readonly ILazySvc<CmsRuntime> _cmsRuntimeLazy;
-        private readonly ILazySvc<RemoteRouterLink> _remoteRouterLazy;
-        private readonly ILazySvc<IGlobalConfiguration> _globalConfiguration;
+        private readonly LazySvc<IAppStates> _appStatesLazy;
+        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazySvc<RemoteRouterLink> _remoteRouterLazy;
+        private readonly LazySvc<IGlobalConfiguration> _globalConfiguration;
 
         /// <summary>
         /// Instance initializers...
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Install
             LazySvc<CmsRuntime> cmsRuntimeLazy, 
             LazySvc<RemoteRouterLink> remoteRouterLazy,
             LazySvc<IGlobalConfiguration> globalConfiguration,
-            ILazySvc<DnnEnvironmentInstaller> dnnEnvInstaller) : base("Dnn.InstCo")
+            LazySvc<DnnEnvironmentInstaller> dnnEnvInstaller) : base("Dnn.InstCo")
         {
             logStore.Add(LogNames.LogStoreStartUp, Log);
             ConnectServices(

@@ -25,10 +25,10 @@ namespace ToSic.Sxc.WebApi.Cms
     {
         private readonly GoogleMapsSettings _googleMapsSettings;
         private readonly LazySvc<IFeaturesService> _features;
-        private readonly ILazySvc<JsonSerializer> _jsonSerializerGenerator;
+        private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
 
         public EditLoadSettingsHelper(
-            ILazySvc<JsonSerializer> jsonSerializerGenerator,
+            LazySvc<JsonSerializer> jsonSerializerGenerator,
             GoogleMapsSettings googleMapsSettings,
             LazySvc<IFeaturesService> features
             ) : base(Constants.SxcLogName + ".LodSet")
@@ -50,8 +50,8 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes,
             List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(() =>
         {
-            var values = SettingsValues(contextOfApp);
-            var parameters = FormulaSettings(contextOfApp, contentTypes);
+            var values = SettingsValuesCustom(contextOfApp);
+            var parameters = SettingsValuesFromContentType(contextOfApp, contentTypes);
 
             foreach (var p in parameters) 
                 values[p.Key] = p.Value;
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.WebApi.Cms
             return settings;
         });
 
-        private Dictionary<string, object> SettingsValues(IContextOfApp contextOfApp) => Log.Func(l =>
+        private Dictionary<string, object> SettingsValuesCustom(IContextOfApp contextOfApp) => Log.Func(l =>
         {
             var coordinates = MapsCoordinates.Defaults;
             try
@@ -79,7 +79,6 @@ namespace ToSic.Sxc.WebApi.Cms
 
                 return new Dictionary<string, object>(InvariantCultureIgnoreCase)
                 {
-                    { "gps-default-coordinates", coordinates },
                     { _googleMapsSettings.SettingsIdentifier + "." + nameof(_googleMapsSettings.DefaultCoordinates), coordinates }
                 };
             }
@@ -116,7 +115,7 @@ namespace ToSic.Sxc.WebApi.Cms
             }
         });
 
-        public IDictionary<string, object> FormulaSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes) => Log.Func(l =>
+        private IDictionary<string, object> SettingsValuesFromContentType(IContextOfApp contextOfApp, List<IContentType> contentTypes) => Log.Func(l =>
         {
             try
             {
@@ -129,25 +128,10 @@ namespace ToSic.Sxc.WebApi.Cms
                         .Select(s => s.Trim())
                     )
                     .Where(c => !IsNullOrWhiteSpace(c))
+                    // Only include settings which have the full path
+                    // so in future we can add other roots like resources
+                    .Where(s => s.StartsWith($"{ConfigurationConstants.RootNameSettings}."))
                     .ToList();
-
-                // try to extract keys from formulas
-                // NOTE: this can't work, because formulas are edited and can try to look 
-                // up new keys as they go - must reconsider...
-                //const string UiFormulaTypeName = "UiFormula";
-                //const string UiFormulaNameId = "772dfff1-b236-4aa9-8359-5f53c08ff7bf";
-                //const string FormulaField = "Formula";
-                //var attributeMetadata = contentTypes
-                //    .SelectMany(ct => ct.Attributes
-                //        .SelectMany(a => a.Metadata
-                //            .OfType(UiFormulaTypeName)
-                //            .Select(e => e.GetBestValue<string>(FormulaField, Array.Empty<string>()))
-                //            .Where(str => !IsNullOrWhiteSpace(str)
-                //            )
-                //        )
-                //    );
-
-
 
                 // Try to find each setting
                 var settings = SettingsByKeys(contextOfApp.AppSettings, settingsKeys);

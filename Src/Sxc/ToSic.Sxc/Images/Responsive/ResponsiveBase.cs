@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Images
         public override string ToString() => Tag.ToString();
 
         /// <inheritdoc />
-        public virtual Img Img => _imgTag.Get(Log, () =>
+        public virtual Img Img => _imgTag.Get(Log, l =>
         {
             var imgTag = Razor.Blade.Tag.Img().Src(Src);
 
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Images
                 .ToDictionary(p => p.Key, p => p.Value);
             if (dic != null)
             {
-                Log.A(ImgService.Debug, "will add properties from attributes");
+                l.A(ImgService.Debug, "will add properties from attributes");
                 foreach (var a in dic)
                     imgTag = imgTag.Attr(a.Key, a.Value);
             }

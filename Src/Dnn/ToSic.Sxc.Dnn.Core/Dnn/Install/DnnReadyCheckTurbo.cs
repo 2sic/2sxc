@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.Install
     /// </summary>
     public class DnnReadyCheckTurbo : ServiceBase
     {
-        private readonly ILazySvc<AppFolderInitializer> _appFolderInitializerLazy;
+        private readonly LazySvc<AppFolderInitializer> _appFolderInitializerLazy;
 
         /// <summary>
         /// Fast static check to see if the check had previously completed. 
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// Constructor for DI
         /// </summary>
         /// <param name="appFolderInitializerLazy"></param>
-        public DnnReadyCheckTurbo(ILazySvc<AppFolderInitializer> appFolderInitializerLazy) : base("Dnn.PreChk")
+        public DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitializerLazy) : base("Dnn.PreChk")
         {
             _appFolderInitializerLazy = appFolderInitializerLazy;
         }

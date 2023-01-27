@@ -12,13 +12,13 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
 {
     public class SiteStateInitializer: ServiceBase
     {
-        public ILazySvc<SiteState> SiteStateLazy { get; }
-        public ILazySvc<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; }
+        public LazySvc<SiteState> SiteStateLazy { get; }
+        public LazySvc<Oqtane.Infrastructure.SiteState> SiteState2Lazy { get; }
         public IHttpContextAccessor HttpContextAccessor { get; }
-        public ILazySvc<IAliasRepository> AliasRepositoryLazy { get; }
+        public LazySvc<IAliasRepository> AliasRepositoryLazy { get; }
 
-        public SiteStateInitializer(ILazySvc<SiteState> siteStateLazy, ILazySvc<Oqtane.Infrastructure.SiteState> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
-            ILazySvc<IAliasRepository> aliasRepositoryLazy): base($"{OqtConstants.OqtLogPrefix}.SSInit")
+        public SiteStateInitializer(LazySvc<SiteState> siteStateLazy, LazySvc<Oqtane.Infrastructure.SiteState> siteState2Lazy, IHttpContextAccessor httpContextAccessor,
+            LazySvc<IAliasRepository> aliasRepositoryLazy): base($"{OqtConstants.OqtLogPrefix}.SSInit")
         {
             ConnectServices(
                 SiteStateLazy = siteStateLazy,

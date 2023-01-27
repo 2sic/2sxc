@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Lib;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -50,7 +49,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
 
         public string Policies => GetFromPreferredOrDefaultSource(FieldPolicies) as string;
 
-        private (string Name, DynamicEntity Setting) SettingPreferred => _preferred.Get(() =>
+        private (string Name, DynamicEntity Setting) SettingPreferred => _preferred.Get(Log, () =>
         {
             Log.A($"Dev: {_devMode}; Super: {_user.IsSystemAdmin}; Admin: {_user.IsSiteAdmin}; Anon: {_user.IsAnonymous}");
             (string, DynamicEntity) GetName(string theName) => (theName, SettingsRoot?.Get(theName) as DynamicEntity);
@@ -60,7 +59,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             if (_user.IsSiteAdmin) return GetName("SiteAdmin");
             if (_user.IsAnonymous) return GetName("Anonymous");
             return ("none", null);
-        }, Log, nameof(SettingPreferred));
+        });
         private readonly GetOnce<(string Name, DynamicEntity Settings)> _preferred = new GetOnce<(string, DynamicEntity)>();
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         private DynamicEntity SettingsDefault => _devMode ? null : _default.Get(() => SettingsRoot?.Get("Default") as DynamicEntity);
         private readonly GetOnce<DynamicEntity> _default = new GetOnce<DynamicEntity>();
 
-        private DynamicEntity SettingsRoot => _settingsRoot.Get(() => _settingsOrNull?.Get(FieldCSPs) as DynamicEntity, Log, nameof(SettingsRoot));
+        private DynamicEntity SettingsRoot => _settingsRoot.Get(Log, () => _settingsOrNull?.Get(FieldCSPs) as DynamicEntity);
         private readonly GetOnce<DynamicEntity> _settingsRoot = new GetOnce<DynamicEntity>();
 
     }

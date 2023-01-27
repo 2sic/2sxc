@@ -11,14 +11,14 @@ namespace ToSic.Sxc.Services
         private const string TagName = "turnOn";
         private const string AttributeName = "turn-on";
 
-        public TurnOnService(ILazySvc<IHtmlTagService> htmlTagService) : base(Constants.SxcLogName + ".TrnOnS")
+        public TurnOnService(LazySvc<IHtmlTagService> htmlTagService) : base(Constants.SxcLogName + ".TrnOnS")
         {
             ConnectServices(
                 _htmlTagService = htmlTagService
             );
         }
 
-        private readonly ILazySvc<IHtmlTagService> _htmlTagService;
+        private readonly LazySvc<IHtmlTagService> _htmlTagService;
 
         // TODO:
         // - TEST

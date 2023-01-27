@@ -24,15 +24,15 @@ namespace ToSic.Sxc.Oqt.Server.Services
         public Razor12 RazorPage { get; set; }
         private readonly IPageRepository _pageRepository;
         private readonly SiteStateInitializer _siteStateInitializer;
-        private readonly ILazySvc<IAliasRepository> _aliasRepositoryLazy;
+        private readonly LazySvc<IAliasRepository> _aliasRepositoryLazy;
         private Sxc.Context.IContextOfBlock _context;
 
         public OqtLinkService(
             IPageRepository pageRepository,
             SiteStateInitializer siteStateInitializer,
             ImgResizeLinker imgLinker,
-            ILazySvc<ILinkPaths> linkPathsLazy,
-            ILazySvc<IAliasRepository> aliasRepositoryLazy
+            LazySvc<ILinkPaths> linkPathsLazy,
+            LazySvc<IAliasRepository> aliasRepositoryLazy
         ) : base(imgLinker, linkPathsLazy)
         {
             _pageRepository = pageRepository;

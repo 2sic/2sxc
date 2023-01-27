@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
-using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -159,10 +158,10 @@ namespace ToSic.Sxc.Blocks
 
 
 
-        public IBlockDataSource Data => _data.Get(Log, () =>
+        public IBlockDataSource Data => _data.Get(Log, l =>
         {
             if (_dataSource != null) return _dataSource;
-            Log.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
+            l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
             _dataSource = Deps.BdsFactoryLazy.Value.GetBlockDataSource(this, App?.ConfigurationProvider);
             return _dataSource;
         });
