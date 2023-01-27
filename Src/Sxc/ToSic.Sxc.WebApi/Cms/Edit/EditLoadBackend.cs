@@ -125,8 +125,8 @@ namespace ToSic.Sxc.WebApi.Cms
             // load content-types
             var serializerForTypes = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
             serializerForTypes.ValueConvertHyperlinks = true;
-            var types = UsedTypes(list, typeRead);
-            var jsonTypes = types.Select(t => serializerForTypes.ToPackage(t, true)).ToList();
+            var usedTypes = UsedTypes(list, typeRead);
+            var jsonTypes = usedTypes.Select(t => serializerForTypes.ToPackage(t, true)).ToList();
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
             // Also add global Entities like Formulas which would not be included otherwise
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
@@ -147,7 +147,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
                     CtxEnable.EditUi);
 
-            result.Settings = _loadSettings.GetSettings(context, result.ContentTypes, entityApi.AppRead);
+            result.Settings = _loadSettings.GetSettings(context, usedTypes, result.ContentTypes, entityApi.AppRead);
 
             try
             {
