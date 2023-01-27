@@ -16,6 +16,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Services.GoogleMaps;
 using static System.String;
+using static System.StringComparer;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -49,11 +50,16 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes,
             List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(() =>
         {
+            var values = SettingsValues(contextOfApp);
+            var parameters = FormulaSettings(contextOfApp, contentTypes);
+
+            foreach (var p in parameters) 
+                values[p.Key] = p.Value;
+
             var settings = new EditSettingsDto
             {
-                Values = SettingsValues(contextOfApp),
+                Values = values,
                 Entities = SettingsEntities(jsonTypes, appRuntime),
-                Parameters = FormulaSettings(contextOfApp, contentTypes),
             };
             return settings;
         });
@@ -71,9 +77,10 @@ namespace ToSic.Sxc.WebApi.Cms
                         : MapsCoordinates.Defaults;
                 }
 
-                return new Dictionary<string, object>
+                return new Dictionary<string, object>(InvariantCultureIgnoreCase)
                 {
-                    { "gps-default-coordinates", coordinates }
+                    { "gps-default-coordinates", coordinates },
+                    { _googleMapsSettings.SettingsIdentifier + "." + nameof(_googleMapsSettings.DefaultCoordinates), coordinates }
                 };
             }
             catch (Exception ex)
@@ -116,7 +123,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 // TODO: maybe check for feature?
 
                 // find all keys which may be necessary
-                var settingKeysRaw = contentTypes
+                var settingsKeys = contentTypes
                     .SelectMany(ct => (ct.Metadata.DetailsOrNull?.AdditionalSettings ?? "")
                         .Split(',')
                         .Select(s => s.Trim())
@@ -124,11 +131,26 @@ namespace ToSic.Sxc.WebApi.Cms
                     .Where(c => !IsNullOrWhiteSpace(c))
                     .ToList();
 
+                // try to extract keys from formulas
+                // NOTE: this can't work, because formulas are edited and can try to look 
+                // up new keys as they go - must reconsider...
+                //const string UiFormulaTypeName = "UiFormula";
+                //const string UiFormulaNameId = "772dfff1-b236-4aa9-8359-5f53c08ff7bf";
+                //const string FormulaField = "Formula";
+                //var attributeMetadata = contentTypes
+                //    .SelectMany(ct => ct.Attributes
+                //        .SelectMany(a => a.Metadata
+                //            .OfType(UiFormulaTypeName)
+                //            .Select(e => e.GetBestValue<string>(FormulaField, Array.Empty<string>()))
+                //            .Where(str => !IsNullOrWhiteSpace(str)
+                //            )
+                //        )
+                //    );
+
+
+
                 // Try to find each setting
-                var settings = settingKeysRaw.ToDictionary(
-                    key => key,
-                    skey => contextOfApp.AppSettings.InternalGetPath(skey).Result
-                );
+                var settings = SettingsByKeys(contextOfApp.AppSettings, settingsKeys);
 
                 return (settings, $"{settings.Count}");
             }
@@ -137,6 +159,17 @@ namespace ToSic.Sxc.WebApi.Cms
                 l.Ex(ex);
                 return (new Dictionary<string, object>(), "error");
             }
+        });
+
+        private IDictionary<string, object> SettingsByKeys(PropertyStack appSettings, List<string> keys) => Log.Func(l => 
+        {
+            // Try to find each setting
+            var settings = keys.ToDictionary(
+                key => key,
+                key => appSettings.InternalGetPath(key).Result
+            );
+
+            return (settings, $"{settings.Count}");
         });
     }
 }

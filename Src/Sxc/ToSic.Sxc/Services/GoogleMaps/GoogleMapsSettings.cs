@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Services.GoogleMaps
         }
         private readonly IJsonService _jsonService;
 
-        public string SettingsIdentifier => "GoogleMaps";
+        public string SettingsIdentifier => "Settings.GoogleMaps";
 
         public int Zoom => GetThis(14); // 14 is a kind of neutral default
 
