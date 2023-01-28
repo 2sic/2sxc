@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests

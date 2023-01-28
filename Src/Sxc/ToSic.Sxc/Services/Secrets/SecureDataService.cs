@@ -1,9 +1,9 @@
-﻿using System;
-using ToSic.Eav.Security.Encryption;
+﻿using ToSic.Eav.Security.Encryption;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Services
 {
@@ -18,33 +18,33 @@ namespace ToSic.Sxc.Services
     [PrivateApi("Hide implementation")]
     public class SecureDataService: ServiceBase, ISecureDataService
     {
-        public SecureDataService() : base(Constants.SxcLogName + ".SecDtS") { }
+        public SecureDataService() : base($"{Constants.SxcLogName}.SecDtS") { }
 
         public const string PrefixSecure = "Secure:";
 
-        public ISecureData<string> Parse(string value)
+        public ISecureData<string> Parse(string value) => Log.Func(value, () =>
         {
-            var l = Log.Fn<ISecureData<string>>(value);
-            if (value == null)
-                return l.Return(new SecureData<string>(null, false), "null");
             if (string.IsNullOrWhiteSpace(value))
-                return l.Return(new SecureData<string>(value, false), "empty");
+                return (new SecureData<string>(value, false), "null/empty");
 
             var optimized = value;
-            if (optimized.StartsWith(PrefixSecure, StringComparison.InvariantCultureIgnoreCase))
+
+            // remove prefix which should be required, but ATM not enforced
+            // TODO: should probably enforce this...
+            if (optimized.StartsWith(PrefixSecure, InvariantCultureIgnoreCase))
                 optimized = optimized.Substring(PrefixSecure.Length);
 
             try
             {
                 // will return null if it fails
-                var decrypted = BasicAesCryptography.Decrypt(optimized);
+                var decrypted = BasicAesCryptography.DecryptAesCrypto(optimized);
                 if (decrypted != null)
-                    return l.Return(new SecureData<string>(decrypted, true), "decrypted");
+                    return (new SecureData<string>(decrypted, true), "decrypted");
             }
             catch { /* ignore */ }
 
             // if all fails, return the original
-            return l.Return(new SecureData<string>(value, false), "unchanged");
-        }
+            return (new SecureData<string>(value, false), "unchanged");
+        });
     }
 }

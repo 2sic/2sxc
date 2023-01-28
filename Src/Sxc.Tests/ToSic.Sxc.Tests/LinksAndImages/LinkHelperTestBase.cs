@@ -1,6 +1,4 @@
-﻿using ToSic.Sxc.Run;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
+﻿using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Tests.LinksAndImages
 {
