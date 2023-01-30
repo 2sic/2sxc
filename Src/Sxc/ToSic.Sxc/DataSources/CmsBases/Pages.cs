@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -32,6 +33,7 @@ namespace ToSic.Sxc.DataSources
         UiHint = VqUiHint)]
     public class Pages: ExternalData
     {
+        private readonly MultiBuilder _multiBuilder;
         private readonly PagesDataSourceProvider _provider;
 
         #region Public Consts for inheriting implementations
@@ -56,10 +58,11 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Pages(Dependencies dependencies, PagesDataSourceProvider provider): base(dependencies, "CDS.Pages")
+        public Pages(Dependencies dependencies, PagesDataSourceProvider provider, MultiBuilder multiBuilder) : base(dependencies, "CDS.Pages")
         {
             ConnectServices(
-                _provider = provider
+                _provider = provider,
+                _multiBuilder = multiBuilder
             );
             Provide(GetPages);
         }
@@ -68,16 +71,22 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi]
         public IImmutableList<IEntity> GetPages() => Log.Func<IImmutableList<IEntity>>(l =>
         {
-            var pages = _provider.GetPagesInternal();
+            // Get pages from underlying system/provider
+            var pagesFromSystem = _provider.GetPagesInternal();
+            if (pagesFromSystem == null || !pagesFromSystem.Any())
+                return (new ImmutableArray<IEntity>(), "null/empty");
 
-            if (pages == null || !pages.Any()) return (new ImmutableArray<IEntity>(), "null/empty");
-
+            // Convert to Entity-Stream
             var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Page", titleField: nameof(CmsPageInfo.Name));
-            var result = pages
+            var pages = pagesFromSystem
                 .Select(p => builder.Create(p.DataForBuilder, p.Id, p.Guid, created: p.Created, modified: p.Modified))
                 .ToImmutableList();
 
-            return (result, $"found {result.Count}");
+            // Add Navigation properties
+            var treeMapper = new TreeMapper<int>(_multiBuilder, Log);
+            var asTree = treeMapper.GetEntitiesWithRelationships(pages, "EntityId", "ParentId", "Children", "Parent");
+
+            return (asTree, $"found {asTree.Count}");
         });
     }
 }
