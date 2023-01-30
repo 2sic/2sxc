@@ -116,6 +116,7 @@ namespace ToSic.Sxc.WebApi
         {
             services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
             services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
+            services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
             return services;
         }
 

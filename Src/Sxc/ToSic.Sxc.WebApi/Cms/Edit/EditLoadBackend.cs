@@ -144,8 +144,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.InitApp(context.AppState)
-                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
-                    CtxEnable.EditUi);
+                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
 
             result.Settings = _loadSettings.GetSettings(context, usedTypes, result.ContentTypes, entityApi.AppRead);
 
