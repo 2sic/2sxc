@@ -10,7 +10,7 @@ namespace ToSic.Sxc.DataSources
     {
         public static IServiceCollection AddDnnSxcDataSources(this IServiceCollection services)
         {
-            services.TryAddTransient<Pages, DnnPages>();
+            // TODO: Change to use the DataSourceProvider model
             services.TryAddTransient<Roles, DnnRoles>();
             services.TryAddTransient<Users, DnnUsers>();
 
@@ -21,6 +21,8 @@ namespace ToSic.Sxc.DataSources
             services.TryAddTransient<DnnSql>();
             services.TryAddTransient<DnnUserProfile>();
             services.TryAddTransient<DnnUserProfile.Dependencies>();
+
+            services.TryAddTransient<PagesDataSourceProvider, DnnPagesDsProvider>();
 
             return services;
         }

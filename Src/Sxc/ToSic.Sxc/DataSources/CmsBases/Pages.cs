@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
@@ -29,8 +28,10 @@ namespace ToSic.Sxc.DataSources
         NiceName = VqNiceName,
         Type = VqType,
         UiHint = VqUiHint)]
-    public abstract class Pages: ExternalData
+    public class Pages: ExternalData
     {
+        private readonly PagesDataSourceProvider _provider;
+
         #region Public Consts for inheriting implementations
 
         // ReSharper disable UnusedMember.Global
@@ -53,65 +54,28 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        protected Pages(Dependencies dependencies): base(dependencies, $"SDS.Pages")
+        public Pages(Dependencies dependencies, PagesDataSourceProvider provider): base(dependencies, $"SDS.Pages")
         {
+            ConnectServices(
+                _provider = provider
+            );
             Provide(GetPages);
         }
         #endregion
 
-        #region Inner Class Just For Processing
-
-        /// <summary>
-        /// The inner list retrieving the pages and doing security checks etc. 
-        /// </summary>
-        /// <returns></returns>
         [PrivateApi]
-        protected abstract List<TempPageInfo> GetPagesInternal();
-
-        [PrivateApi]
-        protected class TempPageInfo
+        public IImmutableList<IEntity> GetPages() => Log.Func<IImmutableList<IEntity>>(l =>
         {
-            public int Id;
-            public int ParentId;
-            public Guid? Guid;
-            public string Title;
-            public string Name;
-            public bool Visible;
-            public string Path;
-            public string Url;
-            public DateTime Created;
-            public DateTime Modified;
-        }
+            var pages = _provider.GetPagesInternal();
 
-        #endregion
+            if (pages == null || !pages.Any()) return (new ImmutableArray<IEntity>(), "null/empty");
 
-        [PrivateApi]
-        public IImmutableList<IEntity> GetPages()
-        {
-            var wrapLog = Log.Fn<IImmutableList<IEntity>>();
-            var pages = GetPagesInternal();
-
-            if (pages == null || !pages.Any()) return wrapLog.Return(new ImmutableArray<IEntity>(), "null/empty");
-
+            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Page", titleField: nameof(CmsPageInfo.Name));
             var result = pages
-                .Select(p =>
-                    DataBuilder.Entity(new Dictionary<string, object>
-                        {
-                            {Attributes.TitleNiceName, p.Title},
-                            {"Name", p.Name},
-                            {"ParentId", p.ParentId},
-                            {"Visible", p.Visible},
-                            {"Path", p.Path},
-                            {"Url", p.Url},
-                        },
-                        id: p.Id,
-                        guid: p.Guid,
-                        created: p.Created,
-                        modified: p.Modified,
-                        titleField: "Name"))
+                .Select(p => builder.Create(p.DataForBuilder, p.Id, p.Guid, created: p.Created, modified: p.Modified))
                 .ToImmutableList();
 
-            return wrapLog.Return(result, "found");
-        }
+            return (result, $"found {result.Count}");
+        });
     }
 }

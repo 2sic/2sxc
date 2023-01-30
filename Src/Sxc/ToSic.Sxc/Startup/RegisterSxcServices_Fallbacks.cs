@@ -6,6 +6,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Polymorphism;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
@@ -72,6 +73,9 @@ namespace ToSic.Sxc.Startup
 
             // Koi, mainly so tests don't fail
             services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
+
+            // v15 Pages DataSource
+            services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
 
             return services;
         }
