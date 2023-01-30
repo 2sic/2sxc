@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -22,22 +20,15 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var stack = parameters.ContextOfApp.AppSettings;
 
-            //var parts = new Dictionary<string, string>
-            //{
-            //    { "Settings.GoogleMaps.ApiKey", "google-maps" },
-            //    { "Settings.GoogleTranslate.ApiKey", "google-translate" }
-            //};
-            var keys = new []
+            var apiKeyNames = new List<string>
             {
                 "Settings.GoogleMaps.ApiKey",
                 "Settings.GoogleTranslate.ApiKey"
             };
 
-            var result = keys.Select(key =>
+            var result = apiKeyNames.Select(key =>
                 {
-                    var prop = stack.InternalGetPath(new PropReqSpecs(key, Array.Empty<string>(), Log),
-                        new PropertyLookupPath());
-
+                    var prop = stack.InternalGetPath(key, Log);
                     if (!(prop.Result is string strResult))
                         return null;
 
