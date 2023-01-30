@@ -107,6 +107,15 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<BlockControllerReal>();
             services.TryAddTransient<CodeControllerReal>();
 
+            services.AddLoadSettingsProviders();
+
+            return services;
+        }
+
+        public static IServiceCollection AddLoadSettingsProviders(this IServiceCollection services)
+        {
+            services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
+            services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
             return services;
         }
 

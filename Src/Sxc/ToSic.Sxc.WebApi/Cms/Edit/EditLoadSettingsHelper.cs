@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Serialization;
@@ -14,31 +12,29 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Services.GoogleMaps;
-using static System.String;
 using static System.StringComparer;
-using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditLoadSettingsHelper: ServiceBase
     {
-        private readonly GoogleMapsSettings _googleMapsSettings;
-        private readonly LazySvc<IFeaturesService> _features;
+        #region Constructor / DI
+
+        private readonly IEnumerable<ILoadSettingsProvider> _loadSettingsProviders;
         private readonly LazySvc<JsonSerializer> _jsonSerializerGenerator;
 
         public EditLoadSettingsHelper(
             LazySvc<JsonSerializer> jsonSerializerGenerator,
-            GoogleMapsSettings googleMapsSettings,
-            LazySvc<IFeaturesService> features
+            IEnumerable<ILoadSettingsProvider> loadSettingsProviders
             ) : base(Constants.SxcLogName + ".LodSet")
         {
             ConnectServices(
                 _jsonSerializerGenerator = jsonSerializerGenerator,
-                _googleMapsSettings = googleMapsSettings,
-                _features = features
+                _loadSettingsProviders = loadSettingsProviders
             );
         }
+
+        #endregion
 
         /// <summary>
         /// WIP v15.
@@ -48,56 +44,55 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         /// <returns></returns>
         public EditSettingsDto GetSettings(IContextOfApp contextOfApp, List<IContentType> contentTypes,
-            List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(() =>
+            List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(l =>
         {
-            var values = SettingsValuesCustom(contextOfApp);
-            var parameters = SettingsValuesFromContentType(contextOfApp, contentTypes);
+            var allInputTypes = jsonTypes
+                .SelectMany(ct => ct.Attributes.Select(at => at.InputType))
+                .Distinct()
+                .ToList();
 
-            foreach (var p in parameters) 
-                values[p.Key] = p.Value;
+            var lspParameters = new LoadSettingsProviderParameters
+            {
+                ContextOfApp = contextOfApp,
+                ContentTypes = contentTypes,
+                InputTypes = allInputTypes
+            };
+
+            var settingsFromProviders = _loadSettingsProviders.Select(lsp =>
+                {
+                    try
+                    {
+                        return lsp.LinkLog(Log).GetSettings(lspParameters);
+                    }
+                    catch (Exception e)
+                    {
+                        l.E($"Error on {lsp.GetType().Name}");
+                        l.Ex(e);
+                        return new Dictionary<string, object>();
+                    }
+                })
+                .ToList();
+
+            var finalSettings = new Dictionary<string, object>(InvariantCultureIgnoreCase);
+            foreach (var pair in settingsFromProviders.SelectMany(sfp => sfp))
+                finalSettings[pair.Key] = pair.Value;
 
             var settings = new EditSettingsDto
             {
-                Values = values,
-                Entities = SettingsEntities(jsonTypes, appRuntime),
+                Values = finalSettings,
+                Entities = SettingsEntities(appRuntime, allInputTypes),
             };
             return settings;
         });
+        
 
-        private Dictionary<string, object> SettingsValuesCustom(IContextOfApp contextOfApp) => Log.Func(l =>
-        {
-            var coordinates = MapsCoordinates.Defaults;
-            try
-            {
-                if (_features.Value.IsEnabled(BuiltInFeatures.EditUiGpsCustomDefaults.NameId))
-                {
-                    var getMaps = contextOfApp.AppSettings.InternalGetPath(_googleMapsSettings.SettingsIdentifier);
-                    coordinates = getMaps.GetFirstResultEntity() is IEntity mapsEntity
-                        ? _googleMapsSettings.Init(mapsEntity).DefaultCoordinates
-                        : MapsCoordinates.Defaults;
-                }
-
-                return new Dictionary<string, object>(InvariantCultureIgnoreCase)
-                {
-                    { _googleMapsSettings.SettingsIdentifier + "." + nameof(_googleMapsSettings.DefaultCoordinates), coordinates }
-                };
-            }
-            catch (Exception ex)
-            {
-                l.Ex(ex);
-                return new Dictionary<string, object>();
-            }
-        });
-
-        public List<JsonEntity> SettingsEntities(List<JsonContentType> jsonTypes, AppRuntime appRuntime) => Log.Func(l =>
+        public List<JsonEntity> SettingsEntities(AppRuntime appRuntime, List<string> allInputTypes) => Log.Func(l =>
         {
             try
             {
-                var hasWysiwyg = jsonTypes.SelectMany(
-                    ct => ct.Attributes.Where(at => at.InputType.ContainsInsensitive("wysiwyg"))
-                ).ToList();
-
-                if (!hasWysiwyg.Any()) return (new List<JsonEntity>(), "no wysiwyg");
+                var hasWysiwyg = allInputTypes.Any(it => it.ContainsInsensitive("wysiwyg"));
+                if (!hasWysiwyg)
+                    return (new List<JsonEntity>(), "no wysiwyg field");
 
                 var entities = appRuntime.Entities
                     .GetWithParentAppsExperimental("StringWysiwygConfiguration")
@@ -114,46 +109,6 @@ namespace ToSic.Sxc.WebApi.Cms
                 return (new List<JsonEntity>(), "error");
             }
         });
-
-        private IDictionary<string, object> SettingsValuesFromContentType(IContextOfApp contextOfApp, List<IContentType> contentTypes) => Log.Func(l =>
-        {
-            try
-            {
-                // TODO: maybe check for feature?
-
-                // find all keys which may be necessary
-                var settingsKeys = contentTypes
-                    .SelectMany(ct => (ct.Metadata.DetailsOrNull?.AdditionalSettings ?? "")
-                        .Split(',')
-                        .Select(s => s.Trim())
-                    )
-                    .Where(c => !IsNullOrWhiteSpace(c))
-                    // Only include settings which have the full path
-                    // so in future we can add other roots like resources
-                    .Where(s => s.StartsWith($"{ConfigurationConstants.RootNameSettings}."))
-                    .ToList();
-
-                // Try to find each setting
-                var settings = SettingsByKeys(contextOfApp.AppSettings, settingsKeys);
-
-                return (settings, $"{settings.Count}");
-            }
-            catch (Exception ex)
-            {
-                l.Ex(ex);
-                return (new Dictionary<string, object>(), "error");
-            }
-        });
-
-        private IDictionary<string, object> SettingsByKeys(PropertyStack appSettings, List<string> keys) => Log.Func(l => 
-        {
-            // Try to find each setting
-            var settings = keys.ToDictionary(
-                key => key,
-                key => appSettings.InternalGetPath(key).Result
-            );
-
-            return (settings, $"{settings.Count}");
-        });
+        
     }
 }
