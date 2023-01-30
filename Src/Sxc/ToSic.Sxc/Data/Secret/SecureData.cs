@@ -1,4 +1,4 @@
-﻿using System;
+﻿using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Data
 
 
         public bool IsSecuredBy(string authorityName) 
-            => IsSecure && "preset".Equals(authorityName, StringComparison.InvariantCultureIgnoreCase);
+            => IsSecure && "preset".EqualsInsensitive(authorityName);
 
         public override string ToString() => Value.ToString();
     }

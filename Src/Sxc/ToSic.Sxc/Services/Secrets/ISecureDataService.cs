@@ -15,5 +15,8 @@ namespace ToSic.Sxc.Services
     public interface ISecureDataService: IHasLog
     {
         ISecureData<string> Parse(string value);
+
+        [PrivateApi("WIP v15.01")]
+        string Create(string value);
     }
 }
