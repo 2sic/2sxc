@@ -1,14 +1,13 @@
 ﻿using DotNetNuke.Web.Api;
-using Newtonsoft.Json;
 using System.Configuration;
 using System.Net.Http.Formatting;
 using System.Web.Hosting;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.Lib.DI;
 using ToSic.Eav.Run;
 using ToSic.Eav.Serialization;
-using ToSic.Eav.WebApi.Serialization;
+using ToSic.Lib.DI;
+using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Images.ImageflowRewrite;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
@@ -41,8 +40,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             if (_alreadyConfigured) return;
 
             // Configure Newtonsoft Time zone handling
-            // Moved here in v12.05 - previously it was in the Pre-Serialization converter
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings =
+                SystemTextJsonUtilities.ConvertJsonOptionsToNewtonsoftSettings(JsonOptions.UnsafeJsonWithoutEncodingHtml);
 
             // System.Text.Json supports ISO 8601-1:2019, including the RFC 3339 profile
             GlobalConfiguration.Configuration.Formatters.Add(JsonFormatters.SystemTextJsonMediaTypeFormatter);
@@ -50,9 +49,6 @@ namespace ToSic.Sxc.Dnn.StartUp
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
             var transientSp = DnnStaticDi.GetGlobalServiceProvider();
-
-            // Configure Eav to Json converters for api v15
-            JsonFormatters.SystemTextJsonMediaTypeFormatter.JsonSerializerOptions.Converters.Add(transientSp.Build<EavJsonConverter>());
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;
