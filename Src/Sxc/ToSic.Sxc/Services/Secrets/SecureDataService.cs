@@ -20,19 +20,18 @@ namespace ToSic.Sxc.Services
     [PrivateApi("Hide implementation")]
     public class SecureDataService: ServiceBase, ISecureDataService
     {
+        public readonly AesCryptographyService Aes;
 
-
-        private readonly LazySvc<AesCryptographyService> _aesLazy;
-        public SecureDataService(LazySvc<AesCryptographyService> aesLazy) : base($"{Constants.SxcLogName}.SecDtS")
+        public SecureDataService(AesCryptographyService aes) : base($"{Constants.SxcLogName}.SecDtS")
         {
-            _aesLazy = aesLazy;
+            Aes = aes;
         }
 
         public const string PrefixSecure = "secure:";
         public const string PrefixIv = "iv:";
         public const char ValueSeparator = ';';
 
-        public ISecureData<string> Parse(string value) => Log.Func(value, l =>
+        public ISecureData<string> Parse(string value) => Log.Func(value, enabled: Debug, func: l =>
         {
             if (string.IsNullOrWhiteSpace(value))
                 return (new SecureData<string>(value, false), $"{nameof(value)} null/empty");
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.Services
             try
             {
                 // will return null if it fails
-                var decrypted = _aesLazy.Value.DecryptFromBase64(toDecrypt, vector64: iv);
+                var decrypted = Aes.DecryptFromBase64(toDecrypt, new AesConfiguration(true) { InitializationVector64 = iv });
                 return decrypted == null 
                     ? (new SecureData<string>(value, false), $"{nameof(decrypted)} null/empty")
                     : (new SecureData<string>(decrypted, true), "decrypted");
@@ -68,7 +67,7 @@ namespace ToSic.Sxc.Services
             }
         });
 
-        public string Create(string value) => Log.Func(l =>
+        public string Create(string value) => Log.Func(enabled: Debug, func: l =>
         {
             if (string.IsNullOrWhiteSpace(value))
                 return (null, "null/empty");
@@ -76,7 +75,7 @@ namespace ToSic.Sxc.Services
             try
             {
                 // will return null if it fails
-                var encrypt64 = _aesLazy.Value.EncryptToBase64(value);
+                var encrypt64 = Aes.EncryptToBase64(value);
                 if (encrypt64.Value != null)
                 {
                     var final = PrefixSecure + encrypt64.Value + ValueSeparator + PrefixIv + encrypt64.Iv;
@@ -90,5 +89,7 @@ namespace ToSic.Sxc.Services
                 throw l.Ex(ex);
             }
         });
+
+        public bool Debug { get; set; }
     }
 }
