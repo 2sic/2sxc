@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Run
         /// Empty constructor for DI
         /// </summary>
         // ReSharper disable once UnusedMember.Global
-        public BasicModuleUpdater(WarnUseOfUnknown<BasicModuleUpdater> warn) : base($"{LogScopes.NotImplemented}.MapA2I") { }
+        public BasicModuleUpdater(WarnUseOfUnknown<BasicModuleUpdater> _) : base($"{LogScopes.NotImplemented}.MapA2I") { }
 
 
         public void SetAppId(IModule instance, int? appId)

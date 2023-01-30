@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Cms.Publishing
 {
     internal class BasicPagePublishing : ServiceBase, IPagePublishing
     {
-        public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> warn) : base($"{LogScopes.NotImplemented}.Publsh") { }
+        public BasicPagePublishing(WarnUseOfUnknown<BasicPagePublishing> _) : base($"{LogScopes.NotImplemented}.Publsh") { }
 
         public void DoInsidePublishing(IContextOfSite context, Action<VersioningActionInfo> action) => Log.Do(() =>
         {

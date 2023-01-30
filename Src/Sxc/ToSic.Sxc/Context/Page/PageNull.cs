@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context
     [PrivateApi]
     public class PageUnknown: IPage, IIsUnknown
     {
-        public PageUnknown(WarnUseOfUnknown<PageUnknown> warn) { }
+        public PageUnknown(WarnUseOfUnknown<PageUnknown> _) { }
 
         public IPage Init(int id)
         {

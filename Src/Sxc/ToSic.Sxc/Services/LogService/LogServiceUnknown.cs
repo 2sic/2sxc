@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Services
     [PrivateApi("Mock / Unknown implementation")]
     public class LogServiceUnknown : ILogService
     {
-        public LogServiceUnknown(WarnUseOfUnknown<LogServiceUnknown> warn)
+        public LogServiceUnknown(WarnUseOfUnknown<LogServiceUnknown> _)
         {
             
         }

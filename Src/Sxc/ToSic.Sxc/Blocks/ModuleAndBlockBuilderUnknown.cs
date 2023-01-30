@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Blocks
 {
     public class ModuleAndBlockBuilderUnknown: ModuleAndBlockBuilder
     {
-        public ModuleAndBlockBuilderUnknown(WarnUseOfUnknown<ModuleAndBlockBuilderUnknown> warn) : base("Unk")
+        public ModuleAndBlockBuilderUnknown(WarnUseOfUnknown<ModuleAndBlockBuilderUnknown> _) : base("Unk")
         {
         }
 

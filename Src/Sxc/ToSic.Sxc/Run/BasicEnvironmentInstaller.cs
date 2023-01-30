@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Run
 {
     public class BasicEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IIsUnknown
     {
-        public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> warn) : base($"{LogScopes.NotImplemented}.Instll")
+        public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> _) : base($"{LogScopes.NotImplemented}.Instll")
         {
         }
 

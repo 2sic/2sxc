@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Web
 {
     public class RazorServiceUnknown : IRazorService
     {
-        public RazorServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> warn) { }
+        public RazorServiceUnknown(WarnUseOfUnknown<RazorServiceUnknown> _) { }
 
         public string Render(string partialName, object model) => "";
 

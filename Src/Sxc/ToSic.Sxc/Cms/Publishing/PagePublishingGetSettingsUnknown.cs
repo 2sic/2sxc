@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Cms.Publishing
 {
     public class PagePublishingGetSettingsUnknown : PagePublishingGetSettingsBase
     {
-        public PagePublishingGetSettingsUnknown(WarnUseOfUnknown<PagePublishingGetSettingsUnknown> warn) : base(LogScopes.NotImplemented) { }
+        public PagePublishingGetSettingsUnknown(WarnUseOfUnknown<PagePublishingGetSettingsUnknown> _) : base(LogScopes.NotImplemented) { }
 
         protected override PublishingMode LookupRequirements(int moduleId) 
             => PublishingMode.DraftOptional;

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Context
     public class ModuleUnknown: IModule, IIsUnknown
     {
         // ReSharper disable once UnusedParameter.Local
-        public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> warn) { }
+        public ModuleUnknown(WarnUseOfUnknown<ModuleUnknown> _) { }
 
         public IModule Init(int id)
         {

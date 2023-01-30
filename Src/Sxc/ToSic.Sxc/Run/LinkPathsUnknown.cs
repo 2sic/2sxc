@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Run
 {
     internal class LinkPathsUnknown : ILinkPaths, IIsUnknown
     {
-        public LinkPathsUnknown(WarnUseOfUnknown<LinkServiceUnknown> warn)
+        public LinkPathsUnknown(WarnUseOfUnknown<LinkServiceUnknown> _)
         {
             
         }
