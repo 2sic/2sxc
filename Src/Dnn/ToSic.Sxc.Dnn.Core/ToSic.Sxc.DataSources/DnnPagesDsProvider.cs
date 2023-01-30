@@ -45,11 +45,11 @@ namespace ToSic.Sxc.DataSources
                     .Where(TabPermissionController.CanViewPage)
                     .Select(p => new CmsPageInfo
                     {
-                        Id = p.TabID == DnnNoParent ? NoParent : p.TabID,
+                        Id = p.TabID,
                         Guid = p.UniqueId,
                         Title = p.Title,
                         Name = p.TabName,
-                        ParentId = p.ParentId,
+                        ParentId = p.ParentId == DnnNoParent ? NoParent : p.ParentId,
                         Path = p.TabPath,
                         Url = p.FullUrl.TrimLastSlash(),
                         Created = p.CreatedOnDate,

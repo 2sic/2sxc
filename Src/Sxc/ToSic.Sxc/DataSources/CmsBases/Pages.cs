@@ -18,6 +18,8 @@ namespace ToSic.Sxc.DataSources
     /// Deliver a list of pages from the current platform (Dnn or Oqtane).
     ///
     /// As of now there are no parameters to set.
+    ///
+    /// To figure out the properties returned and what they match up to, see <see cref="CmsPageInfo"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -54,7 +56,7 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Pages(Dependencies dependencies, PagesDataSourceProvider provider): base(dependencies, $"SDS.Pages")
+        public Pages(Dependencies dependencies, PagesDataSourceProvider provider): base(dependencies, "CDS.Pages")
         {
             ConnectServices(
                 _provider = provider
