@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using System.Buffers;
 using System.Linq;
 using ToSic.Eav.Serialization;
+using ToSic.Eav.WebApi.Serialization;
+using ToSic.Lib.DI;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
 
@@ -20,7 +22,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     // https://blogs.taiga.nl/martijn/2020/05/28/system-text-json-and-newtonsoft-json-side-by-side-in-asp-net-core/
     public class SystemTestJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
     {
-        private static readonly SystemTextJsonOutputFormatter SystemTextJsonOutputFormatter = new(JsonOptions.UnsafeJsonWithoutEncodingHtml);
+        public SystemTestJsonFormatterAttribute()
+        {
+            Order = -3001;
+        }
 
         public void Apply(ControllerModel controller)
         {
@@ -44,7 +49,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             if (context.Result is ObjectResult objectResult)
             {
-                objectResult.Formatters.Add(SystemTextJsonOutputFormatter);
+                // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
+                // instead of using global, static, singleton version because this is for API only
+                var eavJsonConverterFactory = context.HttpContext.RequestServices.Build<EavJsonConverterFactory>();
+                var systemTextJsonOutputFormatter = new SystemTextJsonOutputFormatter(JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory));
+                objectResult.Formatters.Add(systemTextJsonOutputFormatter);
 
                 // Oqtane 3.2.0 and older had NewtonsoftJsonOutputFormatter that we need to remove for our endpoints
                 var newtonsoftJsonOutputFormatterType = Type.GetType("NewtonsoftJsonOutputFormatter");
@@ -66,8 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             ObjectPoolProvider objectPoolProvider,
             IOptions<MvcOptions> mvcOptions)
             : base(GetInputFormatters(loggerFactory, charPool, objectPoolProvider, mvcOptions), readerFactory)
-        {
-        }
+        { }
 
         private static IInputFormatter[] GetInputFormatters(
             ILoggerFactory loggerFactory,
@@ -77,11 +85,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             return new IInputFormatter[]
             {
-            new SystemTextJsonInputFormatter(SxcJsonOptions,
-                loggerFactory.CreateLogger<SystemTextJsonInputFormatter>())
+                new SystemTextJsonInputFormatter(SxcJsonOptions, loggerFactory.CreateLogger<SystemTextJsonInputFormatter>())
             };
         }
-
 
         public static Microsoft.AspNetCore.Mvc.JsonOptions SxcJsonOptions
         {
