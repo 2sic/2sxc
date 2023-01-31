@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
@@ -24,31 +23,17 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        ExpectsDataOfType = VqExpectsDataOfType,
-        GlobalName = VqGlobalName,
-        HelpLink = VqHelpLink,
-        Icon = VqIcon,
-        NiceName = VqNiceName,
-        Type = VqType,
-        UiHint = VqUiHint)]
+        ExpectsDataOfType = "",
+        GlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800",
+        HelpLink = "https://r.2sxc.org/ds-pages",
+        Icon = Icons.PageFind,
+        NiceName = "Pages",
+        Type = DataSourceType.Source,
+        UiHint = "Pages in this site")]
     public class Pages: ExternalData
     {
         private readonly MultiBuilder _multiBuilder;
         private readonly PagesDataSourceProvider _provider;
-
-        #region Public Consts for inheriting implementations
-
-        // ReSharper disable UnusedMember.Global
-        [PrivateApi] public const string VqGlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800";
-        [PrivateApi] public const string VqExpectsDataOfType = "";
-        [PrivateApi] public const string VqNiceName = "Pages";
-        [PrivateApi] public const string VqUiHint = "Pages in this site";
-        [PrivateApi] public const DataSourceType VqType = DataSourceType.Source;
-        [PrivateApi] public const string VqIcon = Icons.PageFind;
-        [PrivateApi] public const string VqHelpLink = "https://r.2sxc.org/ds-pages";
-        // ReSharper restore UnusedMember.Global
-
-        #endregion
 
         #region Configuration properties - As of now no properties ATM
 
