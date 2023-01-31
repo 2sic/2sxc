@@ -121,6 +121,16 @@ namespace ToSic.Sxc.DataSources
         /// </remarks>
         public int Level { get; set; }
 
+        /// <summary>
+        /// WIP
+        /// * In Dnn it's from `TabInfo.TabSettings["LinkNewWindow"]`and will be either `_blank` or `` (empty string)
+        /// * In Oqtane it's _not implemented_ an will be an empty string
+        /// </summary>
+        /// <remarks>
+        /// Added in v15.02
+        /// </remarks>
+        public string LinkTarget { get; set; }
+
 
         /// <summary>
         /// The path with slashes to this page.
@@ -179,12 +189,14 @@ namespace ToSic.Sxc.DataSources
             { nameof(Visible), Visible },
             { nameof(Path), Path },
             { nameof(Url), Url },
-            // New in v15
+            // New in v15.01
             { nameof(Clickable), Clickable },
             { nameof(Order), Order },
-            { nameof(IsDeleted) , IsDeleted },
-            { nameof(Level) , Level },
-            { nameof(HasChildren) , HasChildren },
+            { nameof(IsDeleted), IsDeleted },
+            { nameof(Level), Level },
+            { nameof(HasChildren), HasChildren },
+            // New in v15.02
+            { nameof(LinkTarget), LinkTarget }
         };
     }
 }

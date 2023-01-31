@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
@@ -35,8 +36,43 @@ namespace ToSic.Sxc.DataSources
         private readonly MultiBuilder _multiBuilder;
         private readonly PagesDataSourceProvider _provider;
 
-        #region Configuration properties - As of now no properties ATM
+        #region Configuration properties
 
+        public bool IncludeHidden
+        {
+            get => Configuration.GetThis(false);
+            set => Configuration.SetThis(value);
+        }
+        public bool IncludeDeleted
+        {
+            get => Configuration.GetThis(false);
+            set => Configuration.SetThis(value);
+        }
+        public bool IncludeAdmin
+        {
+            get => Configuration.GetThis(false);
+            set => Configuration.SetThis(value);
+        }
+        public bool IncludeSystem
+        {
+            get => Configuration.GetThis(false);
+            set => Configuration.SetThis(value);
+        }
+        public bool IncludeLinks
+        {
+            get => Configuration.GetThis(true);
+            set => Configuration.SetThis(value);
+        }
+        public bool RequireViewPermissions
+        {
+            get => Configuration.GetThis(true);
+            set => Configuration.SetThis(value);
+        }
+        public bool RequireEditPermissions
+        {
+            get => Configuration.GetThis(false);
+            set => Configuration.SetThis(value);
+        }
 
         #endregion
 
@@ -50,14 +86,31 @@ namespace ToSic.Sxc.DataSources
                 _multiBuilder = multiBuilder
             );
             Provide(GetPages);
+            ConfigMask(nameof(IncludeHidden));
+            ConfigMask(nameof(IncludeDeleted));
+            ConfigMask(nameof(IncludeAdmin));
+            ConfigMask(nameof(IncludeSystem));
+            ConfigMask(nameof(IncludeLinks));
+            ConfigMask(nameof(RequireViewPermissions));
+            ConfigMask(nameof(RequireEditPermissions));
         }
         #endregion
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetPages() => Log.Func<IImmutableList<IEntity>>(l =>
+        public IImmutableList<IEntity> GetPages() => Log.Func(l =>
         {
+            Configuration.Parse();
+
             // Get pages from underlying system/provider
-            var pagesFromSystem = _provider.GetPagesInternal();
+            var pagesFromSystem = _provider.GetPagesInternal(
+                includeHidden: IncludeHidden,
+                includeDeleted: IncludeDeleted,
+                includeAdmin: IncludeAdmin,
+                includeSystem: IncludeSystem,
+                includeLinks: IncludeLinks,
+                requireViewPermissions: RequireViewPermissions,
+                requireEditPermissions: RequireEditPermissions
+            );
             if (pagesFromSystem == null || !pagesFromSystem.Any())
                 return (new ImmutableArray<IEntity>(), "null/empty");
 
@@ -67,11 +120,19 @@ namespace ToSic.Sxc.DataSources
                 .Select(p => builder.Create(p.DataForBuilder, p.Id, p.Guid, created: p.Created, modified: p.Modified))
                 .ToImmutableList();
 
-            // Add Navigation properties
-            var treeMapper = new TreeMapper<int>(_multiBuilder, Log);
-            var asTree = treeMapper.GetEntitiesWithRelationships(pages, "EntityId", "ParentId", "Children", "Parent");
-
-            return (asTree, $"found {asTree.Count}");
+            // Try to add Navigation properties
+            try
+            {
+                var treeMapper = new TreeMapper<int>(_multiBuilder, Log);
+                var asTree =
+                    treeMapper.GetEntitiesWithRelationships(pages, "EntityId", "ParentId", "Children", "Parent");
+                return (asTree, $"As Tree: {asTree.Count}");
+            }
+            catch (Exception ex)
+            {
+                l.Ex(ex);
+                return (pages, $"Just pages (tree had error): {pages.Count}");
+            }
         });
     }
 }
