@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Context
     [PrivateApi("hide implementation")]
     public class CmsPage: CmsContextPartBase<IPage>, ICmsPage
     {
-        public CmsPage(CmsContext parent, AppState appState, ILazySvc<IPage> fallbackPage)
+        public CmsPage(CmsContext parent, AppState appState, LazySvc<IPage> fallbackPage)
             : base(parent, parent?.CtxBlockOrNull?.Page ?? fallbackPage.Value)
         {
             _appState = appState;

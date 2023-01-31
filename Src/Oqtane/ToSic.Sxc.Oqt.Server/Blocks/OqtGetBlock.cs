@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
     public class OqtGetBlock: ServiceBase
     {
         public OqtGetBlock(
-            ILazySvc<IModuleRepository> modRepoLazy,
+            LazySvc<IModuleRepository> modRepoLazy,
             RequestHelper requestHelper,
             IContextResolver contextResolverToInit,
             Generator<IContextOfBlock> cntOfBlkGen,
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             );
         }
 
-        private readonly ILazySvc<IModuleRepository> _modRepoLazy;
+        private readonly LazySvc<IModuleRepository> _modRepoLazy;
         private readonly RequestHelper requestHelper;
         private readonly IContextResolver _contextResolverToInit;
         private readonly Generator<IContextOfBlock> _cntOfBlkGen;
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 return wrapLog.ReturnNull("missing block because PageId not found in request");
 
             var module = _modRepoLazy.Value.GetModule(moduleId);
-            var ctx = _cntOfBlkGen.New().Init(pageId, module, Log);
+            var ctx = _cntOfBlkGen.New().Init(pageId, module);
             var block = _blkFromModGen.New().Init(ctx);
 
             // only if it's negative, do we load the inner block

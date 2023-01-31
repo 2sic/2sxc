@@ -58,8 +58,14 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dnn.ClientDependency" Version="1.9.2">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="DotNetNuke.Abstractions" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="DotNetNuke.Core" Version="9.6.1">
@@ -136,9 +142,9 @@
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
-    <Compile Include="Dnn\LookUp\ViewModuleIdHack.cs" />
     <Compile Include="Dnn\Services\DnnRenderService.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnPagesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnUsers.cs" />
@@ -148,7 +154,7 @@
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Messages.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Statics.cs" />
     <Compile Include="Dnn\Pages\ModuleWithContent.cs" />
-    <Compile Include="Dnn\Pages\Pages.cs" />
+    <Compile Include="Dnn\Pages\DnnPages.cs" />
     <Compile Include="Dnn\Run\DnnAppFileSystemLoader.cs" />
     <Compile Include="Dnn\Context\DnnContext.cs" />
     <Compile Include="Dnn\Factory.cs" />
@@ -199,7 +205,6 @@
     <Compile Include="Dnn\Install\DnnReadyCheckTurbo.cs" />
     <Compile Include="Dnn\Search\SearchItem.cs" />
     <Compile Include="ToSic.Sxc.Code\CodeCompilerNetFull.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\DnnPages.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">

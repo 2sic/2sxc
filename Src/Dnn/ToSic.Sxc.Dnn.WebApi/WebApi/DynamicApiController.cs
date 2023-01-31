@@ -5,7 +5,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -37,16 +37,16 @@ namespace ToSic.Sxc.WebApi
         /// </summary>
         public class Dependencies: ServiceDependencies
         {
-            public ILazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
-            public ILazySvc<Apps.App> AppOverrideLazy { get; }
+            public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
+            public LazySvc<Apps.App> AppOverrideLazy { get; }
             public DnnCodeRootFactory DnnCodeRootFactory { get; }
             public DnnAppFolderUtilities AppFolderUtilities { get; }
 
             public Dependencies(
                 DnnCodeRootFactory dnnCodeRootFactory,
                 DnnAppFolderUtilities appFolderUtilities,
-                ILazySvc<Apps.App> appOverrideLazy,
-                ILazySvc<AppConfigDelegate> appConfigDelegateLazy)
+                LazySvc<Apps.App> appOverrideLazy,
+                LazySvc<AppConfigDelegate> appConfigDelegateLazy)
             {
                 AddToLogQueue(
                     DnnCodeRootFactory = dnnCodeRootFactory,
@@ -130,16 +130,15 @@ namespace ToSic.Sxc.WebApi
 
         public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
 
-        private void TryToAttachAppFromUrlParams()
+        private void TryToAttachAppFromUrlParams() => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
             var found = false;
             try
             {
                 var routeAppPath = _Deps.AppFolderUtilities.GetAppFolder(Request, false);
                 var siteCtx = SharedContextResolver.Site();
                 var appState = SharedContextResolver.AppOrNull(routeAppPath)?.AppState;
-                
+
                 if (appState != default)
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
@@ -150,10 +149,14 @@ namespace ToSic.Sxc.WebApi
                     _DynCodeRoot.AttachApp(app);
                     found = true;
                 }
-            } catch { /* ignore */ }
+            }
+            catch
+            {
+                /* ignore */
+            }
 
-            wrapLog.Done(found.ToString());
-        }
+            return found.ToString();
+        });
 
 
         #region Adam - Shared Code Across the APIs

@@ -25,14 +25,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId) 
-            => Log.Return(() => Real.Load(items, appId));
+            => Log.Func(() => Real.Load(items, appId));
 
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => Log.Return(() => Real.Save(package, appId, partOfPage));
+            => Log.Func(() => Real.Save(package, appId, partOfPage));
 
 
         /// <inheritdoc />
@@ -42,8 +42,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public IEnumerable<EntityForPickerDto> EntityPicker(
             [FromUri] int appId,
             [FromBody] string[] items,
-            [FromUri] string contentTypeName = null)
-            => Real.EntityPicker(appId, items, contentTypeName);
+            [FromUri] string contentTypeName = null
+            // 2dm 2023-01-22 #maybeSupportIncludeParentApps
+            //[FromUri] bool? includeParentApps = null
+            )
+            => Real.EntityPicker(appId, items, contentTypeName/*, includeParentApps*/);
 
         /// <inheritdoc />
         [HttpGet]

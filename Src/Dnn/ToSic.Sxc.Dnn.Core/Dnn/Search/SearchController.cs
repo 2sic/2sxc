@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Search
     /// </remarks>
     public class SearchController : ServiceBase
     {
-        private readonly ILazySvc<ILogStore> _logStore;
+        private readonly LazySvc<ILogStore> _logStore;
 
         public SearchController(
             AppsCacheSwitch appsCache,
@@ -53,8 +53,8 @@ namespace ToSic.Sxc.Search
             LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
             LazySvc<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
             EngineFactory engineFactory,
-            ILazySvc<IAppLoaderTools> loaderTools,
-            ILazySvc<ILogStore> logStore) : base("DNN.Search")
+            LazySvc<IAppLoaderTools> loaderTools,
+            LazySvc<ILogStore> logStore) : base("DNN.Search")
         {
             ConnectServices(
                 _appsCache = appsCache,
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Search
         private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
         private readonly Generator<ISite> _siteGenerator;
         private readonly EngineFactory _engineFactory;
-        private readonly ILazySvc<IAppLoaderTools> _loaderTools;
+        private readonly LazySvc<IAppLoaderTools> _loaderTools;
         private readonly LazySvc<DnnLookUpEngineResolver> _dnnLookUpEngineResolver;
         private readonly LazySvc<IModuleAndBlockBuilder> _moduleAndBlockBuilder;
 
@@ -172,7 +172,7 @@ namespace ToSic.Sxc.Search
                     /* Old mode v06.02 - 12.01 using the Engine or Razor which customizes */
                     // Build the engine, as that's responsible for calling inner search stuff
                     var engine = _engineFactory.CreateEngine(Block.View);
-                    engine.Init(Log).Init(Block, Purpose.IndexingForSearch);
+                    engine.Init(Block, Purpose.IndexingForSearch);
 
 #pragma warning disable CS0618
                     // Only run CustomizeData() if we're in the older, classic model of search-indexing

@@ -10,12 +10,28 @@ namespace ToSic.Sxc.DataSources
     {
         public static IServiceCollection AddDnnSxcDataSources(this IServiceCollection services)
         {
-            services.TryAddTransient<Pages, DnnPages>();
+            // TODO: Change to use the DataSourceProvider model
             services.TryAddTransient<Roles, DnnRoles>();
             services.TryAddTransient<Users, DnnUsers>();
 
             // info class to ensure SQL knows about default connections
             services.TryAddTransient<SqlPlatformInfo, DnnSqlPlatformInfo>();
+
+            // General data sources
+            services.TryAddTransient<DnnSql>();
+            services.TryAddTransient<DnnUserProfile>();
+            services.TryAddTransient<DnnUserProfile.Dependencies>();
+
+            services.TryAddTransient<PagesDataSourceProvider, DnnPagesDsProvider>();
+
+            return services;
+        }
+        public static IServiceCollection AddDnnDataSources(this IServiceCollection services)
+        {
+            // General data sources
+            services.TryAddTransient<DnnSql>();
+            services.TryAddTransient<DnnUserProfile>();
+            services.TryAddTransient<DnnUserProfile.Dependencies>();
 
             return services;
         }

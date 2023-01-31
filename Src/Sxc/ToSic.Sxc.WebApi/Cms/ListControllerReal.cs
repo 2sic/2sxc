@@ -12,7 +12,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    public partial class ListControllerReal: BlockWebApiBackendBase<ListControllerReal>, IHasLog, IListController
+    public partial class ListControllerReal: BlockWebApiBackendBase, IHasLog, IListController
     {
         public const string LogSuffix = "Lst";
 
@@ -41,24 +41,21 @@ namespace ToSic.Sxc.WebApi.Cms
         #endregion
 
 
-        public void Move(Guid? parent, string fields, int index, int toIndex)
+        public void Move(Guid? parent, string fields, int index, int toIndex
+        ) => Log.Do($"change order sort:{index}, dest:{toIndex}", () =>
         {
-            var wrapLog = Log.Fn($"change order sort:{index}, dest:{toIndex}");
             var entMan = CmsManagerOfBlock.Entities;
-            ModifyList(FindOrThrow(parent), fields, 
+            ModifyList(FindOrThrow(parent), fields,
                 (entity, fieldList, versioning) => entMan.FieldListMove(entity, fieldList, index, toIndex, versioning));
-            wrapLog.Done();
-        }
-        
+        });
 
-        public void Delete(Guid? parent, string fields, int index)
+
+        public void Delete(Guid? parent, string fields, int index) => Log.Do($"remove from index:{index}", () =>
         {
-            var wrapLog = Log.Fn($"remove from index:{index}");
             var entMan = CmsManagerOfBlock.Entities;
-            ModifyList(FindOrThrow(parent), fields, 
+            ModifyList(FindOrThrow(parent), fields,
                 (entity, fieldList, versioning) => entMan.FieldListRemove(entity, fieldList, index, versioning));
-            wrapLog.Done();
-        }
+        });
 
 
 

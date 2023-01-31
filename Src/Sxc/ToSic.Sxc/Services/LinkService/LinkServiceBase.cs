@@ -15,14 +15,14 @@ namespace ToSic.Sxc.Services
     [PrivateApi]
     public abstract class LinkServiceBase : ServiceForDynamicCode, ILinkService
     {
-        protected LinkServiceBase(ImgResizeLinker imgLinker, ILazySvc<ILinkPaths> linkPathsLazy) : base(
+        protected LinkServiceBase(ImgResizeLinker imgLinker, LazySvc<ILinkPaths> linkPathsLazy) : base(
             $"{Constants.SxcLogName}.LnkHlp")
             => ConnectServices(
                 _linkPathsLazy = linkPathsLazy,
                 ImgLinker = imgLinker
             );
         private ImgResizeLinker ImgLinker { get; }
-        private readonly ILazySvc<ILinkPaths> _linkPathsLazy;
+        private readonly LazySvc<ILinkPaths> _linkPathsLazy;
         public ILinkPaths LinkPaths => _linkPathsLazy.Value;
 
         [PrivateApi] protected IApp App => _DynCodeRoot.App;

@@ -6,18 +6,19 @@ using Oqtane.Models;
 using Oqtane.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Context;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Oqt.Server.Pages
 {
-    public class Pages: HasLog
+    public class Pages: ServiceBase
     {
         private readonly IPageModuleRepository _pageModuleRepository;
         private readonly IPageRepository _pageRepository;
         private readonly ISettingRepository _settingRepository;
 
-        public Pages(IPageModuleRepository pageModuleRepository, IPageRepository pageRepository, ISettingRepository settingRepository, ILog parentLog = null) : base("Oqt.Pages", parentLog)
+        public Pages(IPageModuleRepository pageModuleRepository, IPageRepository pageRepository, ISettingRepository settingRepository) : base("Oqt.Pages")
         {
             _pageModuleRepository = pageModuleRepository;
             _pageRepository = pageRepository;

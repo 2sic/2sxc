@@ -26,19 +26,18 @@ namespace ToSic.Sxc.Apps.Paths
         private readonly LazySvc<IValueConverter> _iconConverterLazy;
 
         #endregion
-        
 
-        public string IconPathOrNull(IApp app, IView view, PathTypes type)
+
+        public string IconPathOrNull(IApp app, IView view, PathTypes type) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>();
             // 1. Check if the file actually exists or is a file:... reference
             var iconFile = IconPath(app, view, PathTypes.PhysFull);
             var assumeExists = ValueConverterBase.CouldBeReference(iconFile) || File.Exists(iconFile);
 
             // 2. Return as needed
             var result = assumeExists ? IconPath(app, view, type) : null;
-            return wrapLog.Return(result, result ?? "not found");
-        }
+            return (result, result ?? "not found");
+        });
 
         private string IconPath(IApp app, IView view, PathTypes type)
         {

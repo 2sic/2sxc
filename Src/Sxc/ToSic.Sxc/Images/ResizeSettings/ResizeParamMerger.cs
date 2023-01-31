@@ -2,6 +2,7 @@
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using static ToSic.Sxc.Images.ImageConstants;
 using static ToSic.Sxc.Plumbing.ParseObject;
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Images
     /// <summary>
     /// This merges predefined settings with custom specified parameters to create a stable resize-Parameters object for further use
     /// </summary>
-    internal class ResizeParamMerger: HasLog
+    internal class ResizeParamMerger: HelperBase
     {
         private const string ResizeModeField = "ResizeMode";
         private const string ScaleModeField = "ScaleMode";
@@ -21,7 +22,7 @@ namespace ToSic.Sxc.Images
         private const string AspectRatioField = "AspectRatio";
         private const string AdvancedField = "Advanced";
 
-        public ResizeParamMerger() : base(Constants.SxcLogName + ".ImgRPM") { }
+        public ResizeParamMerger(ILog parentLog) : base(parentLog, $"{Constants.SxcLogName}.ImgRPM") { }
 
         public bool Debug = false;
 
@@ -38,26 +39,24 @@ namespace ToSic.Sxc.Images
             object aspectRatio = null,
             string parameters = null,
             AdvancedSettings advanced = default
-        )
+        ) => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<ResizeSettings>(Debug);
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}", $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
+            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}",
+                $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes
             if (aspectRatio != null && height != null)
             {
-                wrapLog.ReturnNull("error");
+                (l as ILogCall<ResizeSettings>)?.ReturnNull("error");
                 const string messageOnlyOneOrNone = "only one or none of these should be provided, other can be zero";
                 throw new ArgumentOutOfRangeException($"{nameof(aspectRatio)},{nameof(height)}", messageOnlyOneOrNone);
             }
 
             // Helper for resize parameters
-            var resP = new ResizeParams().Init(Log);
+            var resP = new ResizeParams(Log);
 
             if (settings is IResizeSettings typeSettings)
-            {
-                wrapLog.A(Debug, $"Is {nameof(ResizeSettings)}, will clone/init");
-                return new ResizeSettings(
+                return (new ResizeSettings(
                     typeSettings,
                     format: resP.FormatOrNull(format),
                     width: resP.WidthOrNull(width),
@@ -69,13 +68,11 @@ namespace ToSic.Sxc.Images
                     scaleMode: resP.ScaleModeOrNull(scaleMode),
                     parameters: resP.ParametersOrNull(parameters),
                     advanced: advanced
-                );
-            }
+                ), $"Is {nameof(ResizeSettings)}, will clone/init");
 
             // Check if the settings is the expected type or null/other type
             var getSettings = settings as ICanGetByName;
-            wrapLog.A(Debug, $"Has Settings:{getSettings != null}");
-
+            l.A(Debug, $"Has Settings:{getSettings != null}");
 
             var formatValue = resP.FormatOrNull(format);
 
@@ -87,13 +84,14 @@ namespace ToSic.Sxc.Images
             // Aspects which aren't affected by scale
             var qParamInt2 = resP.QualityOrNull(quality);
             resizeParams.Quality = qParamInt2 ?? IntOrZeroAsNull(getSettings?.Get(QualityField)) ?? IntIgnore;
-            resizeParams.ResizeMode = resP.ResizeModeOrNull(KeepBestString(resizeMode, getSettings?.Get(ResizeModeField)));
+            resizeParams.ResizeMode =
+                resP.ResizeModeOrNull(KeepBestString(resizeMode, getSettings?.Get(ResizeModeField)));
             resizeParams.ScaleMode = resP.ScaleModeOrNull(KeepBestString(scaleMode, getSettings?.Get(ScaleModeField)));
 
             resizeParams.Advanced = GetMultiResizeSettings(advanced, getSettings);
 
-            return wrapLog.ReturnAsOk(resizeParams);
-        }
+            return (resizeParams, "");
+        }, enabled: Debug);
 
         private AdvancedSettings GetMultiResizeSettings(AdvancedSettings advanced, ICanGetByName getSettings)
         {

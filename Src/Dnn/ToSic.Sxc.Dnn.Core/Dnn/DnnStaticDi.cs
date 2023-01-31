@@ -3,7 +3,8 @@ using System;
 using System.Web;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Plumbing;
 
 namespace ToSic.Sxc.Dnn
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Dnn
         /// <returns></returns>
         [PrivateApi]
         [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
-        public static T StaticBuild<T>() => GetPageScopedServiceProvider().Build<T>();
+        public static T StaticBuild<T>(ILog parentLog = null) => GetPageScopedServiceProvider().Build<T>(parentLog);
 
         /// <summary>
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context

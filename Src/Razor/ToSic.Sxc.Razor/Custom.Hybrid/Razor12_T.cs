@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Plumbing;
+using ToSic.Lib;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using IHasLog = ToSic.Lib.Logging.IHasLog;

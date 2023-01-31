@@ -1,11 +1,11 @@
 ﻿using System;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Apps
 {
-    public class AppFolder: HasLog
+    public class AppFolder: ServiceBase
     {
         public AppFolder(IContextResolver ctxResolver) : base("AppFolder") 
             => _ctxResolver = ctxResolver;

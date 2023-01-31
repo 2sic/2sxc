@@ -1,7 +1,7 @@
 ﻿using System.Linq;
+using ToSic.Lib;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
-using ToSic.Lib.Helper;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
@@ -32,24 +32,22 @@ namespace ToSic.Sxc.Images
         /// </summary>
         /// <param name="settings"></param>
         /// <returns></returns>
-        private object GetBestSettings(object settings)
+        private object GetBestSettings(object settings) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<object>(Debug);
             if (settings == null || settings is bool boolSettings && boolSettings)
-                return wrapLog.Return(GetCodeRootSettingsByName("Content"), "null/default");
+                return ((object)GetCodeRootSettingsByName("Content"), "null/default");
 
             if (settings is string strName && !string.IsNullOrWhiteSpace(strName))
-                return wrapLog.Return(GetCodeRootSettingsByName(strName), $"name: {strName}");
+                return ((object)GetCodeRootSettingsByName(strName), $"name: {strName}");
 
-            return wrapLog.Return(settings, "unchanged");
-        }
+            return (settings, "unchanged");
+        }, enabled: Debug);
 
-        private dynamic GetCodeRootSettingsByName(string strName)
+        private dynamic GetCodeRootSettingsByName(string strName) => Log.Func($"{strName}", () =>
         {
-            var wrapLog = Log.Fn<object>(Debug, strName, message: $"code root: {_DynCodeRoot != null}");
             var result = (_DynCodeRoot?.Settings?.Images as ICanGetByName)?.Get(strName);
-            return wrapLog.Return(result, $"found: {result != null}");
-        }
+            return ((object)result, $"found: {result != null}");
+        }, enabled: Debug, message: $"code root: {_DynCodeRoot != null}");
 
         /// <summary>
         /// Convert to Multi-Resize Settings
@@ -72,10 +70,10 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsiveImage(this,
-                    new ResponsiveParams(nameof(Img), link, noParamOrder,
-                        Settings(settings, factor: factor, width: width, recipe: recipe),
-                        imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
-                .LinkLog(Log);
+                new ResponsiveParams(nameof(Img), link, noParamOrder,
+                    Settings(settings, factor: factor, width: width, recipe: recipe),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass),
+                Log);
 
 
         /// <inheritdoc />
@@ -96,8 +94,8 @@ namespace ToSic.Sxc.Images
             var path = respParams.Link.Url;
             var format = GetFormat(path);
             return format.ResizeFormats.Any()
-                ? (IResponsiveImage)new ResponsivePicture(this, respParams).LinkLog(Log)
-                : new ResponsiveImage(this, respParams).LinkLog(Log);
+                ? (IResponsiveImage)new ResponsivePicture(this, respParams, Log)
+                : new ResponsiveImage(this, respParams, Log);
         }
 
 
@@ -113,10 +111,10 @@ namespace ToSic.Sxc.Images
             string imgClass = null,
             object recipe = null)
             => new ResponsivePicture(this,
-                    new ResponsiveParams(nameof(Picture), link, noParamOrder,
-                        Settings(settings, factor: factor, width: width, recipe: recipe),
-                        imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass))
-                .LinkLog(Log);
+                new ResponsiveParams(nameof(Picture), link, noParamOrder,
+                    Settings(settings, factor: factor, width: width, recipe: recipe),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass),
+                Log);
 
         /// <inheritdoc />
         public bool Debug

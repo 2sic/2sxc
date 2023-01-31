@@ -46,34 +46,34 @@ namespace ToSic.Sxc.Apps
         /// </summary>
         /// <param name="contentGroupGuid"></param>
         /// <returns>Will always return an object, even if the group doesn't exist yet. The .Entity would be null then</returns>
-        public BlockConfiguration GetBlockConfig(Guid contentGroupGuid)
+        public BlockConfiguration GetBlockConfig(Guid contentGroupGuid) => Log.Func($"get CG#{contentGroupGuid}", () =>
         {
-            var wrapLog = Log.Fn<BlockConfiguration>($"get CG#{contentGroupGuid}");
             var groupEntity = ContentGroups().One(contentGroupGuid);
             var found = groupEntity != null;
-            return wrapLog.Return(found
-                ? new BlockConfiguration(groupEntity, Parent, _cultureResolver.CurrentCultureCode, Log).WarnIfMissingData()
-                : new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log)
-                {
-                    PreviewTemplateId = Guid.Empty,
-                    DataIsMissing = true
-                }, 
+            return (found
+                    ? new BlockConfiguration(groupEntity, Parent, _cultureResolver.CurrentCultureCode, Log)
+                        .WarnIfMissingData()
+                    : new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log)
+                    {
+                        PreviewTemplateId = Guid.Empty,
+                        DataIsMissing = true
+                    },
                 found ? "found" : "missing");
-        }
+        });
         
 
-        internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId)
+        internal BlockConfiguration GetOrGeneratePreviewConfig(IBlockIdentifier blockId
+        ) => Log.Func($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}", l =>
         {
-            var wrapLog = Log.Fn<BlockConfiguration>($"get CG or gen preview for grp#{blockId.Guid}, preview#{blockId.PreviewView}");
             // Return a "faked" ContentGroup if it does not exist yet (with the preview templateId)
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
-            Log.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
+            l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
                 ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) { PreviewTemplateId = blockId.PreviewView }
                 : GetBlockConfig(blockId.Guid);
             result.BlockIdentifierOrNull = blockId;
-            return wrapLog.Return(result);
-        }
+            return result;
+        });
 
     }
 }

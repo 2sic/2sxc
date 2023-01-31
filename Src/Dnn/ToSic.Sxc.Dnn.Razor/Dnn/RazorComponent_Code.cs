@@ -1,4 +1,5 @@
 ﻿using ToSic.Lib.Documentation;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -7,7 +8,7 @@ namespace ToSic.Sxc.Dnn
         #region Code Behind - a Dnn feature which probably won't exist in Oqtane
 
         [PrivateApi]
-        internal RazorCodeManager CodeManager => _codeManager ?? (_codeManager = new RazorCodeManager(this));
+        internal RazorCodeManager CodeManager => _codeManager ?? (_codeManager = new RazorCodeManager(this, (Log as CodeLog)?.GetContents()));
         private RazorCodeManager _codeManager;
 
         /// <inheritdoc />

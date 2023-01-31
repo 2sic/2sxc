@@ -4,7 +4,7 @@ using System.Web.Hosting;
 using System.Web.WebPages;
 using Custom.Hybrid;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -70,13 +70,13 @@ namespace ToSic.Sxc.Web
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrapLog = Log15.Fn<dynamic>($"{virtualPath}, ..., {name}");
+            var wrapLog = Log15.Fn<object>($"{virtualPath}, ..., {name}");
             var path = NormalizePath(virtualPath);
             VerifyFileExists(path);
             var result = path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
-            return wrapLog.Return(result, "ok");
+            return wrapLog.Return((object)result, "ok");
         }
 
         [PrivateApi]
@@ -116,13 +116,12 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log15.Do(message: "connected", action: () =>
         {
             _DynCodeRoot = codeRoot;
             this.LinkLog(codeRoot?.Log);
-            _codeLog.Reset();   // Reset inner log, so it will reconnect
-            Log15.Fn().Done("connected");
-        }
+            _codeLog.Reset(); // Reset inner log, so it will reconnect
+        });
 
     }
 }

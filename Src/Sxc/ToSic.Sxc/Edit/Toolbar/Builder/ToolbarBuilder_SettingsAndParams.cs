@@ -49,7 +49,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 PrepareUi(previous?.Ui, ui),
                 Utils.Prefill2Url.SerializeWithChild(parsString, prefill, PrefixPrefill),
                 GenerateContext(target, context) ?? previous?.Context,
-                _deps.ToolbarButtonHelper.Value);
+                Deps.ToolbarButtonHelper.Value);
 
             clone.Rules.Add(newParamsRule);
 

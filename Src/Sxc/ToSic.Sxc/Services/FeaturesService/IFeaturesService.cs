@@ -31,7 +31,5 @@ namespace ToSic.Sxc.Services
         /// Added in v13.01
         /// </remarks>
         bool IsEnabled(params string[] nameIds);
-
-        //bool IsEnabled(params featur[] nameIds);
     }
 }

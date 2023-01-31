@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Images;
-
-namespace ToSic.Sxc.Tests.ServicesTests
+﻿namespace ToSic.Sxc.Tests.ServicesTests
 {
     // 2022-03-15 2dm disabled - factor maps don't work like this, will probably stick to json format
     //[TestClass]

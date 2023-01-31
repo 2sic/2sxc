@@ -5,7 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi
 	    {
             // Create log - but set first message separately, so timer is in the first line in the log
             Log = new Log("Api." + logSuffix);
-            TimerWrapLog = Log.Fn(message: $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", startTimer: true);
+            TimerWrapLog = Log.Fn(message: $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
 	        
             // ReSharper disable VirtualMemberCallInConstructor
             GetService<ILogStore>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
@@ -30,16 +30,14 @@ namespace ToSic.Sxc.Dnn.WebApi
         }
 
         // ReSharper disable once InconsistentNaming
-        private readonly LogCall TimerWrapLog;
+        private readonly ILogCall TimerWrapLog;
 
-        protected override void Initialize(HttpControllerContext controllerContext)
+        protected override void Initialize(HttpControllerContext controllerContext) => Log.Do(() =>
         {
-            var callLog = Log.Fn();
             // Add the logger to the request, in case it's needed in error-reporting
-	        controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
-	        base.Initialize(controllerContext);
-            callLog.Done();
-        }
+            controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
+            base.Initialize(controllerContext);
+        });
 
         protected override void Dispose(bool disposing)
         {
@@ -64,8 +62,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// <inheritdoc />
         public virtual TService GetService<TService>()
         {
-            var service = _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>();
-            if (service is IHasLog withLog) withLog.LinkLog(Log);
+            var service = _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
             return service;
         }
 

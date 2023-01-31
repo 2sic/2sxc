@@ -2,13 +2,14 @@
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.JsContext
 {
-    public class JsContextAll : HasLog
+    public class JsContextAll : ServiceBase
     {
         public JsContextEnvironment Environment;
         public JsContextUser User;

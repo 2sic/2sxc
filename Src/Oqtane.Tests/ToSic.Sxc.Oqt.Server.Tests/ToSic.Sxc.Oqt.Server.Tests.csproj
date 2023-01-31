@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\Oqtane\ToSic.Sxc.Oqt.Server\ToSic.Sxc.Oqt.Server.csproj" />
   </ItemGroup>
 

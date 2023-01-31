@@ -11,10 +11,8 @@ namespace ToSic.Sxc.WebApi.Cms
     public partial class ListControllerReal
     {
 
-        public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
+        public void Replace(Guid guid, string part, int index, int entityId, bool add = false) => Log.Do($"target:{guid}, part:{part}, index:{index}, id:{entityId}", ()=>
         {
-            var wrapLog = Log.Fn($"target:{guid}, part:{part}, index:{index}, id:{entityId}");
-
             void InternalSave(VersioningActionInfo _)
             {
                 var entity = CmsManagerOfBlock.AppState.List.One(guid);
@@ -33,8 +31,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // use dnn versioning - this is always part of page
             _versioning.New().DoInsidePublishing(Context, InternalSave);
-            wrapLog.Done();
-        }
+        });
 
 
         internal ReplacementListDto BuildReplaceList(Guid guid, string part, int index, string typeName)

@@ -19,12 +19,12 @@ namespace ToSic.Sxc.Oqt.Server.Context
         private readonly SettingsHelper _settingsHelper;
         private readonly IModuleRepository _moduleRepository;
         private readonly IAppStates _appStates;
-        private readonly ILazySvc<AppFinder> _appFinderLazy;
+        private readonly LazySvc<AppFinder> _appFinderLazy;
         private readonly ISite _site;
         private Dictionary<string, string> _settings;
 
         public OqtModule(SettingsHelper settingsHelper, IModuleRepository moduleRepository, 
-            IAppStates appStates, ILazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
+            IAppStates appStates, LazySvc<AppFinder> appFinderLazy, ISite site) : base ($"{OqtConstants.OqtLogPrefix}.Cont")
         {
             ConnectServices(
                 _settingsHelper = settingsHelper,
@@ -35,10 +35,10 @@ namespace ToSic.Sxc.Oqt.Server.Context
             );
         }
 
-        public new OqtModule Init(Module module, ILog parentLog)
+        public OqtModule Init(Module module)
         {
-            base.Init(module, parentLog);
-            var wrapLog = Log.Fn<OqtModule>($"id:{module.ModuleId}", startTimer: true);
+            base.Init(module);
+            var wrapLog = Log.Fn<OqtModule>($"id:{module.ModuleId}", timer: true);
 
             InitializeIsPrimary(module);
 
@@ -61,10 +61,10 @@ namespace ToSic.Sxc.Oqt.Server.Context
         }
 
         // Temp implementation, don't support im MVC
-        public override IModule Init(int id, ILog parentLog)
+        public override IModule Init(int id)
         {
             var module = _moduleRepository.GetModule(id);
-            return Init(module, parentLog);
+            return Init(module);
         }
 
         /// <inheritdoc />
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         private (int AppId, string AppNameId) GetInstanceAppId(int zoneId)
         {
-            var wrapLog = Log.Fn<(int, string)>($"{zoneId}", startTimer: true);
+            var wrapLog = Log.Fn<(int, string)>($"{zoneId}", timer: true);
 
             if (IsContent) 
                 return wrapLog.Return((_appStates.DefaultAppId(zoneId), "Content"), "Content");

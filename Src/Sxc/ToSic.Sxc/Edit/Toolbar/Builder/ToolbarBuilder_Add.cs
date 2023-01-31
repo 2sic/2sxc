@@ -6,15 +6,12 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
         /// <inheritdoc />
-        public IToolbarBuilder AddInternal(params object[] newRules)
+        public IToolbarBuilder AddInternal(params object[] newRules) => Log.Func(() =>
         {
             // Create clone before starting to log so it's in there too
             var clone = new ToolbarBuilder(this);
-
-            var callLog = Log.Fn<IToolbarBuilder>();
-            //clone.Rules.AddRange(Rules);
             if (newRules == null || !newRules.Any())
-                return callLog.Return(clone, "no new rules");
+                return (clone, "no new rules");
 
             foreach (var rule in newRules)
             {
@@ -23,8 +20,9 @@ namespace ToSic.Sxc.Edit.Toolbar
                 else if (rule is string stringRule)
                     clone.Rules.Add(new ToolbarRuleGeneric(stringRule));
             }
-            return callLog.Return(clone);
-        }
+
+            return (clone, "clone");
+        });
 
     }
 }

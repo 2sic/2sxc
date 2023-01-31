@@ -59,14 +59,14 @@ namespace ToSic.Sxc.DataSources
 
         public new class Dependencies: ServiceDependencies<DataSource.Dependencies>
         {
-            public ILazySvc<CmsRuntime> LazyCmsRuntime { get; }
-            public ILazySvc<IModule> ModuleLazy { get; }
-            public ILazySvc<DataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
+            public LazySvc<IModule> ModuleLazy { get; }
+            public LazySvc<DataSourceFactory> DataSourceFactory { get; }
 
             public Dependencies(DataSource.Dependencies rootDependencies,
-                ILazySvc<CmsRuntime> lazyCmsRuntime,
-                ILazySvc<IModule> moduleLazy,
-                ILazySvc<DataSourceFactory> dataSourceFactory) : base(rootDependencies)
+                LazySvc<CmsRuntime> lazyCmsRuntime,
+                LazySvc<IModule> moduleLazy,
+                LazySvc<DataSourceFactory> dataSourceFactory) : base(rootDependencies)
             {
                 AddToLogQueue(
                     LazyCmsRuntime = lazyCmsRuntime,

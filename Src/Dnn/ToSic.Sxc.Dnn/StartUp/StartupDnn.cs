@@ -5,9 +5,8 @@ using System.Net.Http.Formatting;
 using System.Web.Hosting;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
-using ToSic.Lib.DI;
 using ToSic.Eav.Run;
-using ToSic.Eav.Serialization;
+using ToSic.Lib.DI;
 using ToSic.Sxc.Images.ImageflowRewrite;
 using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
@@ -40,15 +39,15 @@ namespace ToSic.Sxc.Dnn.StartUp
             if (_alreadyConfigured) return;
 
             // Configure Newtonsoft Time zone handling
-            // Moved here in v12.05 - previously it was in the Pre-Serialization converter
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
 
             // System.Text.Json supports ISO 8601-1:2019, including the RFC 3339 profile
             GlobalConfiguration.Configuration.Formatters.Add(JsonFormatters.SystemTextJsonMediaTypeFormatter);
+            
             // Getting the service provider in Configure is tricky business, because
             // of .net core 2.1 bugs
             // ATM it appears that the service provider will get destroyed after startup, so we MUST get an additional one to use here
-            var transientSp = DnnStaticDi.GetGlobalServiceProvider();// .GetPageScopedServiceProvider();
+            var transientSp = DnnStaticDi.GetGlobalServiceProvider();
 
             // now we should be able to instantiate registration of DB
             transientSp.Build<IDbConfiguration>().ConnectionString = ConfigurationManager.ConnectionStrings["SiteSqlServer"].ConnectionString;

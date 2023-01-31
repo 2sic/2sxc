@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public dynamic GetStack(params string[] names)
         {
-            var wrapLog = LogOrNull.Fn<dynamic>();
+            var wrapLog = LogOrNull.Fn<object>();
             var newStack = UnwrappedStack.GetStack(LogOrNull, names);
             var newDynStack = new DynamicStack("New", _Dependencies, newStack.Sources);
             return wrapLog.Return(newDynStack);

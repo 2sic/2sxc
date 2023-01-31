@@ -7,7 +7,6 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.LookUp;
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.WebApi.App
         private static AppDto CreateAppDto(IApp a)
         {
             AppMetadataDto lightspeed = null;
-            var lsEntity = a.AppState.Metadata.FirstOrDefaultOfType(LightSpeedDecorator.TypeName);
+            var lsEntity = a.AppState.Metadata.FirstOrDefaultOfType(LightSpeedDecorator.TypeNameId);
             if (lsEntity != null)
             {
                 var lsd = new LightSpeedDecorator(lsEntity);

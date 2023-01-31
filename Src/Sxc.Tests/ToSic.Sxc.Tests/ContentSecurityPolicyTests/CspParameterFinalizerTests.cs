@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 
 namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
@@ -7,7 +6,7 @@ namespace ToSic.Sxc.Tests.ContentSecurityPolicyTests
     [TestClass]
     public class CspParameterFinalizerTests
     {
-        private readonly CspParameterFinalizer _finalizer = new CspParameterFinalizer();
+        private readonly CspParameterFinalizer _finalizer = new CspParameterFinalizer(null);
 
         [TestMethod]
         public void NothingHasNoDefault()

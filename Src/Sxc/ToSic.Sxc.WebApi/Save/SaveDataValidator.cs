@@ -19,8 +19,7 @@ namespace ToSic.Sxc.WebApi.Save
         public EditDto Package;
         internal AppRuntime AppRead;
 
-        public SaveDataValidator(EditDto package, ILog parentLog) 
-            : base("Val.Save", parentLog, "start save validator", nameof(SaveDataValidator))
+        public SaveDataValidator(EditDto package, ILog parentLog = null) : base(parentLog, "Val.Save")
         {
             Package = package;
         }
@@ -50,59 +49,54 @@ namespace ToSic.Sxc.WebApi.Save
                 ValidateEachItemInBundle(Package.Items);
             }
 
-            var ok= BuildExceptionIfHasIssues(out preparedException, "ContainsOnlyExpectedNodes() done");
+            var ok = BuildExceptionIfHasIssues(out preparedException, "ContainsOnlyExpectedNodes() done");
             return wrapLog.ReturnAndLog(ok);
         }
 
         /// <summary>
         /// Do various validity checks on each item
         /// </summary>
-        private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list)
+        private void ValidateEachItemInBundle(IList<BundleWithHeader<JsonEntity>> list) => Log.Do($"{list.Count}", () =>
         {
-            var wrapLog = Log.Fn($"{list.Count}");
             foreach (var item in list)
             {
                 if (item.Header == null || item.Entity == null)
                     Add($"item {list.IndexOf(item)} header or entity is missing");
-                else if(item.Header.Guid != item.Entity.Guid) // check this first (because .Group may not exist)
+                else if (item.Header.Guid != item.Entity.Guid) // check this first (because .Group may not exist)
                 {
                     if (!item.Header.IsContentBlockMode)
-                        Add($"item {list.IndexOf(item)} has guid mismatch on header/entity, and doesn't have a group");
+                        Add(
+                            $"item {list.IndexOf(item)} has guid mismatch on header/entity, and doesn't have a group");
                     else if (!item.Header.IsEmpty)
                         Add($"item {list.IndexOf(item)} header / entity guid miss match");
                     // otherwise we're fine
                 }
             }
-
-            wrapLog.Done("done");
-        }
+        });
 
         /// <summary>
         /// ensure all want to save to the same assignment type - either in group or not!
         /// </summary>
         private void VerifyAllGroupAssignmentsValid(IReadOnlyCollection<BundleWithHeader<JsonEntity>> list)
-        {
-            var wrapLog = Log.Fn($"{list.Count}");
-            var groupAssignments = list.Select(i => i.Header.ContentBlockAppId).Where(g => g != null).ToList();
-            if (groupAssignments.Count == 0)
+            => Log.Do($"{list.Count}", () =>
             {
-                wrapLog.Done("none of the items is part of a list/group");
-                return;
-            }
+                var groupAssignments = list.Select(i => i.Header.ContentBlockAppId).Where(g => g != null).ToList();
+                if (groupAssignments.Count == 0)
+                    return "none of the items is part of a list/group";
 
-            if (groupAssignments.Count != list.Count)
-                Add($"Items in package with group: {groupAssignments} " +
-                    $"- should be 0 or {list.Count} (items in list) " +
-                    "- must stop, never expect items to come from different sources");
-            else
-            {
-                var firstInnerContentAppId = groupAssignments.First();
-                if (list.Any(i => i.Header.ContentBlockAppId != firstInnerContentAppId))
-                    Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
-            }
+                if (groupAssignments.Count != list.Count)
+                    Add($"Items in package with group: {groupAssignments} " +
+                        $"- should be 0 or {list.Count} (items in list) " +
+                        "- must stop, never expect items to come from different sources");
+                else
+                {
+                    var firstInnerContentAppId = groupAssignments.First();
+                    if (list.Any(i => i.Header.ContentBlockAppId != firstInnerContentAppId))
+                        Add("not all items have the same Group.ContentBlockAppId - this is required when using groups");
+                }
 
-            wrapLog.Done("done");
-        }
+                return "done";
+            });
 
 
         internal bool EntityIsOk(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)
@@ -153,30 +147,26 @@ namespace ToSic.Sxc.WebApi.Save
         }
 
 
-        private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity)
+        private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity) =>
+            Log.Do($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}", () =>
+            {
+                if (originalEntity.Type.NameId != newEntity.Type.NameId)
+                    Add($"entity type mismatch on {count}");
+            });
+
+        private void CompareIdentities(int count, IEntityLight originalEntity, IEntityLight newEntity) =>
+            Log.Do($"ids:{newEntity.EntityId}/{originalEntity.EntityId}", () =>
+            {
+                if (originalEntity.EntityId != newEntity.EntityId)
+                    Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
+
+                Log.A($"Guids:{newEntity.EntityGuid}/{originalEntity.EntityGuid}");
+                if (originalEntity.EntityGuid != newEntity.EntityGuid)
+                    Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
+            });
+
+        private void CompareAttributes(int count, IEntity original, IEntity ent) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn($"ids:{newEntity.Type.NameId}/{originalEntity.Type.NameId}");
-            if(originalEntity.Type.NameId != newEntity.Type.NameId)
-                Add($"entity type mismatch on {count}");
-            wrapLog.Done("done");
-        }
-
-        private void CompareIdentities(int count, IEntityLight originalEntity, IEntityLight newEntity)
-        {
-            var wrapLog = Log.Fn($"ids:{newEntity.EntityId}/{originalEntity.EntityId}");
-            if(originalEntity.EntityId != newEntity.EntityId)
-                Add($"entity ID mismatch on {count} - {newEntity.EntityId}/{originalEntity.EntityId}");
-
-            Log.A($"Guids:{newEntity.EntityGuid}/{originalEntity.EntityGuid}");
-            if(originalEntity.EntityGuid != newEntity.EntityGuid)
-                Add($"entity GUID mismatch on {count} - {newEntity.EntityGuid}/{originalEntity.EntityGuid}");
-            wrapLog.Done("done");
-        }
-
-        private void CompareAttributes(int count, IEntity original, IEntity ent)
-        {
-            var wrapLog = Log.Fn();
-
             if (original.Attributes.Count != ent.Attributes.Count)
                 Add($"entity {count} has different amount " +
                     $"of attributes {ent.Attributes.Count} " +
@@ -191,8 +181,6 @@ namespace ToSic.Sxc.WebApi.Save
                         Add($"found different type on attribute {origAttr.Key} " +
                             $"- '{origAttr.Value.Type}'/'{newAttr.Value.Type}'");
                 }
-
-            wrapLog.Done("done");
-        }
+        });
     }
 }

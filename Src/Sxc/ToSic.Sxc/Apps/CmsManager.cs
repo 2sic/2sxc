@@ -2,7 +2,7 @@
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 

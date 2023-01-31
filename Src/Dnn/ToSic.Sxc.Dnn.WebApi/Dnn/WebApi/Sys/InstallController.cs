@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public InstallAppsDto InstallSettings(bool isContentApp) 
-            => Real.InstallSettings(isContentApp, ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo(), Log));
+            => Real.InstallSettings(isContentApp, ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo()));
 
 
         /// <inheritdoc />
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         {
             PreventServerTimeout300();
             PrepareResponseMaker();
-            return Real.RemotePackage(packageUrl, ((DnnModule)GetService<IModule>()).Init(ActiveModule, Log));
+            return Real.RemotePackage(packageUrl, ((DnnModule)GetService<IModule>()).Init(ActiveModule));
         }
     }
 }

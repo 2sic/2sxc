@@ -32,8 +32,8 @@ namespace ToSic.Sxc.WebApi.Views
     {
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
-        private readonly ILazySvc<CmsManager> _cmsManagerLazy;
-        private readonly ILazySvc<JsonBundleSerializer> _jsonBundleLazy;
+        private readonly LazySvc<CmsManager> _cmsManagerLazy;
+        private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
@@ -43,8 +43,8 @@ namespace ToSic.Sxc.WebApi.Views
 
         public ViewsExportImport(IServerPaths serverPaths,
             IEnvironmentLogger envLogger,
-            ILazySvc<CmsManager> cmsManagerLazy, 
-            ILazySvc<JsonBundleSerializer> jsonBundleLazy, 
+            LazySvc<CmsManager> cmsManagerLazy, 
+            LazySvc<JsonSerializer> jsonSerializerLazy, 
             IContextOfSite context,
             IAppStates appStates,
             AppIconHelpers appIconHelpers,
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.WebApi.Views
                 _serverPaths = serverPaths,
                 _envLogger = envLogger,
                 _cmsManagerLazy = cmsManagerLazy,
-                _jsonBundleLazy = jsonBundleLazy,
+                _jsonSerializerLazy = jsonSerializerLazy,
                 _appStates = appStates,
                 _appIconHelpers = appIconHelpers,
                 _impExpHelpers = impExpHelpers,
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.WebApi.Views
                     TryAddAsset(bundle, thumb, thumb);
             }
 
-            var serializer = _jsonBundleLazy.Value.SetApp(cms.AppState);
+            var serializer = _jsonSerializerLazy.Value.SetApp(cms.AppState);
             var serialized = serializer.Serialize(bundle, 0);
 
             return logCall.ReturnAsOk(_responseMaker.File(serialized,
@@ -121,9 +121,9 @@ namespace ToSic.Sxc.WebApi.Views
                     throw new ArgumentException("a file is not json");
 
                 // 1. create the views
-                var serializer = _jsonBundleLazy.Value.SetApp(_appStates.Get(app));
+                var serializer = _jsonSerializerLazy.Value.SetApp(_appStates.Get(app));
 
-                var bundles = files.Select(f => serializer.Deserialize(f.Contents)).ToList();
+                var bundles = files.Select(f => serializer.DeserializeEntityWithAssets(f.Contents)).ToList();
 
                 if (bundles.Any(t => t == null))
                     throw new NullReferenceException("At least one file returned a null-item, something is wrong");

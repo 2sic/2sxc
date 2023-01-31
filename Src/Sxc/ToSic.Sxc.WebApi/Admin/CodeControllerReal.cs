@@ -4,11 +4,12 @@ using System.Linq;
 using System.Reflection;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Code.Documentation;
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class CodeControllerReal : HasLog
+    public class CodeControllerReal : ServiceBase
     {
         public const string LogSuffix = "Code";
 
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.WebApi.Admin
 
         public IEnumerable<HelpItem> InlineHelp(string language)
         {
-            var wrapLog = Log.Fn<IEnumerable<HelpItem>>(startTimer: true);
+            var wrapLog = Log.Fn<IEnumerable<HelpItem>>(timer: true);
 
             if (_inlineHelp != null) return wrapLog.ReturnAsOk(_inlineHelp);
 

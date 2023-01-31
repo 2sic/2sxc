@@ -5,7 +5,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -37,33 +36,29 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal Func<App, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block)
+        internal Func<App, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block
+        ) => Log.Func<Func<App, IAppDataConfiguration>>($"showDrafts: {context.UserMayEdit}", () =>
         {
             var showDrafts = context.UserMayEdit;
-
-            var wrapLog = Log.Fn<Func<App, IAppDataConfiguration>>($"showDrafts: {showDrafts}");
-
-            return wrapLog.ReturnAsOk(appToUse =>
+            return appToUse =>
             {
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var lookUpEngine = GetLookupEngineForContext(context, appToUse as IApp, block);
 
                 // return results
                 return new AppDataConfiguration(showDrafts, lookUpEngine);
-            });
-        }
+            };
+        });
 
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal Func<App, IAppDataConfiguration> Build(IBlock block)
+        internal Func<App, IAppDataConfiguration> Build(IBlock block) => block.Log.Func< Func<App, IAppDataConfiguration>>(() =>
         {
-            var log = new Log("Sxc.CnfPrv", block.Log);
-            var wrapLog = log.Fn<Func<App, IAppDataConfiguration>>();
             var showDrafts = block.Context.UserMayEdit;
             var existingLookups = block.Data.Configuration.LookUpEngine;
-            return wrapLog.ReturnAsOk(appToUse => new AppDataConfiguration(showDrafts, existingLookups));
-        }
+            return appToUse => new AppDataConfiguration(showDrafts, existingLookups);
+        });
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context

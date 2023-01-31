@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
-using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Languages;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.JsContext;
 using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public class UiContextBuilderBase: HasLog, IUiContextBuilder
+    public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.Dependencies>, IUiContextBuilder
     {
 
         #region Dependencies 
@@ -31,47 +27,38 @@ namespace ToSic.Sxc.WebApi.Context
             public Apps.IApp AppToLaterInitialize { get; }
             public IAppStates AppStates { get; }
             public LazySvc<LanguagesBackend> LanguagesBackend { get; }
-            public ILazySvc<IFeaturesInternal> Features { get; }
-            public ILazySvc<IUiData> UiDataLazy { get; }
-            public LazySvc<AppSettingsStack> SettingsStack { get; }
-            public LazySvc<ISecureDataService> SecureDataService { get; }
+            public LazySvc<IFeaturesInternal> Features { get; }
+            public LazySvc<IUiData> UiDataLazy { get; }
 
             public Dependencies(
                 IContextOfSite siteCtx,
                 Apps.App appToLaterInitialize,
                 IAppStates appStates,
-                ILazySvc<IFeaturesInternal> features,
-                ILazySvc<IUiData> uiDataLazy,
-                LazySvc<LanguagesBackend> languagesBackend,
-                LazySvc<AppSettingsStack> settingsStack,
-                LazySvc<ISecureDataService> secureDataService
-            ) => AddToLogQueue(
-                SiteCtx = siteCtx,
-                AppToLaterInitialize = appToLaterInitialize,
-                AppStates = appStates,
-                Features = features,
-                UiDataLazy = uiDataLazy,
-
-                LanguagesBackend = languagesBackend,
-                SettingsStack = settingsStack,
-                SecureDataService = secureDataService
-            );
+                LazySvc<IFeaturesInternal> features,
+                LazySvc<IUiData> uiDataLazy,
+                LazySvc<LanguagesBackend> languagesBackend
+                )
+            {
+                AddToLogQueue(
+                    SiteCtx = siteCtx,
+                    AppToLaterInitialize = appToLaterInitialize,
+                    AppStates = appStates,
+                    Features = features,
+                    UiDataLazy = uiDataLazy,
+                    LanguagesBackend = languagesBackend);
+            }
         }
 
         #endregion
 
         #region Constructor / DI
 
-        protected UiContextBuilderBase(Dependencies dependencies): base(Constants.SxcLogName + ".UiCtx")
+        protected UiContextBuilderBase(Dependencies dependencies): base(dependencies, Constants.SxcLogName + ".UiCtx")
         {
-            Deps = dependencies.SetLog(Log);
-            _appToLaterInitialize = dependencies.AppToLaterInitialize;
         }
-        protected Dependencies Deps;
 
         protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
         protected Sxc.Apps.IApp App;
-        private readonly Apps.IApp _appToLaterInitialize;
         protected AppState AppState;
 
         #endregion
@@ -79,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Context
         public IUiContextBuilder InitApp(AppState appState)
         {
             AppState = appState;
-            App = appState != null ? (_appToLaterInitialize as Apps.App)?.Init(appState, null) : null;
+            App = appState != null ? (Deps.AppToLaterInitialize as Apps.App)?.Init(appState, null) : null;
             return this;
         }
 
@@ -100,7 +87,6 @@ namespace ToSic.Sxc.WebApi.Context
             if (flags.HasFlag(Ctx.System)) ctx.System = GetSystem(flags);
             if (flags.HasFlag(Ctx.User)) ctx.User = GetUser(flags);
             if (flags.HasFlag(Ctx.Features)) ctx.Features = GetFeatures();
-            if (flags.HasFlag(Ctx.ApiKeys)) ctx.ApiKeys = GetApiKeys();
             return ctx;
         }
 
@@ -232,41 +218,5 @@ namespace ToSic.Sxc.WebApi.Context
         }
 
         protected virtual IList<FeatureDto> GetFeatures() => Deps.UiDataLazy.Value.FeaturesDto(Deps.SiteCtx.UserMayEdit);
-
-
-        private List<ContextApiKeyDto> GetApiKeys()
-        {
-            var l = Log.Fn<List<ContextApiKeyDto>>();
-            if (this.AppState == null) return l.ReturnNull("no AppState");
-
-            var stack = Deps.SettingsStack.Value.Init(AppState).GetStack(ConfigurationConstants.RootNameSettings);
-
-            var parts = new Dictionary<string, string>
-            {
-                { "GoogleMaps.ApiKey", "google-maps" },
-                { "GoogleTranslate.ApiKey", "google-translate" }
-            };
-
-            var result = parts.Select(pair =>
-                {
-                    var prop = stack.InternalGetPath(new PropReqSpecs(pair.Key, Array.Empty<string>(), Log),
-                        new PropertyLookupPath());
-
-                    if (!(prop.Result is string strResult))
-                        return null;
-
-                    var decrypted = Deps.SecureDataService.Value.Parse(strResult);
-                    return new ContextApiKeyDto
-                    {
-                        NameId = pair.Value,
-                        ApiKey = decrypted.Value,
-                        IsDemo = decrypted.IsSecure
-                    };
-                })
-                .Where(v => v != null)
-                .ToList();
-
-            return result.Any() ? l.Return(result) : l.ReturnNull("no useful keys found");
-        }
     }
 }

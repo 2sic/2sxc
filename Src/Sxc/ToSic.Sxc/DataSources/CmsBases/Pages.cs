@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -19,6 +19,8 @@ namespace ToSic.Sxc.DataSources
     /// Deliver a list of pages from the current platform (Dnn or Oqtane).
     ///
     /// As of now there are no parameters to set.
+    ///
+    /// To figure out the properties returned and what they match up to, see <see cref="CmsPageInfo"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -29,8 +31,11 @@ namespace ToSic.Sxc.DataSources
         NiceName = VqNiceName,
         Type = VqType,
         UiHint = VqUiHint)]
-    public abstract class Pages: ExternalData
+    public class Pages: ExternalData
     {
+        private readonly MultiBuilder _multiBuilder;
+        private readonly PagesDataSourceProvider _provider;
+
         #region Public Consts for inheriting implementations
 
         // ReSharper disable UnusedMember.Global
@@ -53,67 +58,35 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        protected Pages(Dependencies dependencies): base(dependencies, $"SDS.Pages")
+        public Pages(Dependencies dependencies, PagesDataSourceProvider provider, MultiBuilder multiBuilder) : base(dependencies, "CDS.Pages")
         {
+            ConnectServices(
+                _provider = provider,
+                _multiBuilder = multiBuilder
+            );
             Provide(GetPages);
         }
         #endregion
 
-        #region Inner Class Just For Processing
-
-        /// <summary>
-        /// The inner list retrieving the pages and doing security checks etc. 
-        /// </summary>
-        /// <returns></returns>
         [PrivateApi]
-        protected abstract List<TempPageInfo> GetPagesInternal();
-
-        [PrivateApi]
-        protected class TempPageInfo
+        public IImmutableList<IEntity> GetPages() => Log.Func<IImmutableList<IEntity>>(l =>
         {
-            public int Id;
-            public int ParentId;
-            public Guid? Guid;
-            public string Title;
-            public string Name;
-            public bool Visible;
-            public string Path;
-            public string Url;
-            public DateTime Created;
-            public DateTime Modified;
-        }
+            // Get pages from underlying system/provider
+            var pagesFromSystem = _provider.GetPagesInternal();
+            if (pagesFromSystem == null || !pagesFromSystem.Any())
+                return (new ImmutableArray<IEntity>(), "null/empty");
 
-        #endregion
-
-        [PrivateApi]
-        public IImmutableList<IEntity> GetPages()
-        {
-            var wrapLog = Log.Fn<IImmutableList<IEntity>>();
-            var pages = GetPagesInternal();
-
-            if (pages == null || !pages.Any()) return wrapLog.Return(new ImmutableArray<IEntity>(), "null/empty");
-
-            var result = pages
-                .Select(p =>
-                    DataBuilder.Entity(new Dictionary<string, object>
-                        {
-                            //{"Id", p.Id},
-                            {"Title", p.Title},
-                            {"Name", p.Name},
-                            {"ParentId", p.ParentId},
-                            //{"Guid", p.Guid},
-                            {"Visible", p.Visible},
-                            {"Path", p.Path},
-                            {"Url", p.Url},
-                        },
-                        id: p.Id,
-                        guid: p.Guid,
-                        created: p.Created,
-                        modified: p.Modified,
-                        titleField: "Name"))
+            // Convert to Entity-Stream
+            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Page", titleField: nameof(CmsPageInfo.Name));
+            var pages = pagesFromSystem
+                .Select(p => builder.Create(p.DataForBuilder, p.Id, p.Guid, created: p.Created, modified: p.Modified))
                 .ToImmutableList();
 
-            return wrapLog.Return(result, "found");
-        }
+            // Add Navigation properties
+            var treeMapper = new TreeMapper<int>(_multiBuilder, Log);
+            var asTree = treeMapper.GetEntitiesWithRelationships(pages, "EntityId", "ParentId", "Children", "Parent");
+
+            return (asTree, $"found {asTree.Count}");
+        });
     }
 }

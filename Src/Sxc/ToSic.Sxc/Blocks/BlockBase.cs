@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
@@ -15,7 +16,7 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    public abstract partial class BlockBase : ServiceBase, IBlock
+    public abstract partial class BlockBase : ServiceBase<BlockBase.Dependencies>, IBlock
     {
         #region Constructor and DI
 
@@ -45,12 +46,9 @@ namespace ToSic.Sxc.Blocks
             public LazySvc<BlockBuilder> BlockBuilder { get; }
         }
 
-        protected BlockBase(Dependencies dependencies, string logName) : base(logName)
+        protected BlockBase(Dependencies dependencies, string logName) : base(dependencies, logName)
         {
-            _deps = dependencies.SetLog(Log);
         }
-
-        private readonly Dependencies _deps;
 
         protected void Init(IContextOfBlock context, IAppIdentity appId)
         {
@@ -70,7 +68,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = _deps.BlockBuilder.Value.Init(rootBuilderOrNull, this);
+            BlockBuilder = Deps.BlockBuilder.Value.Init(rootBuilderOrNull, this);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
@@ -88,13 +86,13 @@ namespace ToSic.Sxc.Blocks
 
             // Get App for this block
             Log.A("About to create app");
-            App = _deps.AppLazy.Value
+            App = Deps.AppLazy.Value
                 .PreInit(Context.Site)
-                .Init(this, _deps.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
+                .Init(this, Deps.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
             Log.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = _deps.CmsLazy.Value.InitQ(App, Context.UserMayEdit);
+            var cms = Deps.CmsLazy.Value.InitQ(App, Context.UserMayEdit);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
@@ -133,7 +131,6 @@ namespace ToSic.Sxc.Blocks
         public int ContentBlockId { get; protected set; }
         
         #region Template and extensive template-choice initialization
-        private IView _view;
 
         // ensure the data is also set correctly...
         // Sequence of determining template
@@ -145,12 +142,13 @@ namespace ToSic.Sxc.Blocks
         public IView View
         {
             get => _view;
-            set
+            set => Log.Setter(() =>
             {
                 _view = value;
                 _dataSource = null; // reset this if the view changed...
-            }
+            });
         }
+        private IView _view;
 
         #endregion
 
@@ -160,17 +158,14 @@ namespace ToSic.Sxc.Blocks
 
 
 
-        public IBlockDataSource Data
+        public IBlockDataSource Data => _data.Get(Log, l =>
         {
-            get
-            {
-                if (_dataSource != null) return _dataSource;
-                Log.A(
-                    $"About to load data source with possible app configuration provider. App is probably null: {App}");
-                _dataSource = _deps.BdsFactoryLazy.Value.GetBlockDataSource(this, App?.ConfigurationProvider);
-                return _dataSource;
-            }
-        }
+            if (_dataSource != null) return _dataSource;
+            l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
+            _dataSource = Deps.BdsFactoryLazy.Value.GetBlockDataSource(this, App?.ConfigurationProvider);
+            return _dataSource;
+        });
+        private readonly GetOnce<IBlockDataSource> _data = new GetOnce<IBlockDataSource>();
 
         // ReSharper disable once InconsistentNaming
         protected IBlockDataSource _dataSource;

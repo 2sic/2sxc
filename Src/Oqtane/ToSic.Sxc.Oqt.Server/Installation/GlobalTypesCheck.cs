@@ -14,14 +14,14 @@ namespace ToSic.Sxc.Oqt.Server.Installation
     public class GlobalTypesCheck: ServiceBase
     {
 
-        public GlobalTypesCheck(ILazySvc<IAppStates> appStates): base($"{OqtConstants.OqtLogPrefix}.GlbTCh")
+        public GlobalTypesCheck(LazySvc<IAppStates> appStates): base($"{OqtConstants.OqtLogPrefix}.GlbTCh")
         {
             ConnectServices(
                 _appStates = appStates
             );
         }
 
-        private readonly ILazySvc<IAppStates> _appStates;
+        private readonly LazySvc<IAppStates> _appStates;
 
         private static bool? _globalTypesCheckedAndError;
 

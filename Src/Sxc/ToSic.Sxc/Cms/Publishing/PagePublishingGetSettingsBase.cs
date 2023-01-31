@@ -1,23 +1,23 @@
 ﻿using System.Collections.Concurrent;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Cms.Publishing
 {
-    public abstract class PagePublishingGetSettingsBase: HasLog, IPagePublishingGetSettings
+    public abstract class PagePublishingGetSettingsBase: ServiceBase, IPagePublishingGetSettings
     {
         protected PagePublishingGetSettingsBase(string logPrefix) : base(logPrefix + ".PubRes") { }
 
-        private PublishingMode Requirements(int instanceId)
+        private PublishingMode Requirements(int instanceId) => Log.Func($"{instanceId}", () =>
         {
-            var wrapLog = Log.Fn<PublishingMode>($"{instanceId}");
-            if (instanceId < 0) return wrapLog.Return(PublishingMode.DraftOptional, "no instance");
-            if (Cache.ContainsKey(instanceId)) return wrapLog.Return(Cache[instanceId], "in cache");
+            if (instanceId < 0) return (PublishingMode.DraftOptional, "no instance");
+            if (Cache.ContainsKey(instanceId)) return (Cache[instanceId], "in cache");
 
             var decision = LookupRequirements(instanceId);
             Cache.TryAdd(instanceId, decision);
-            return wrapLog.Return(decision, $"decision:{decision}");
-        }
+            return (decision, $"decision:{decision}");
+        });
         protected static readonly ConcurrentDictionary<int, PublishingMode> Cache = new ConcurrentDictionary<int, PublishingMode>();
 
         /// <summary>

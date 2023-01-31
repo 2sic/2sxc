@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Services.GoogleMaps
@@ -17,17 +18,17 @@ namespace ToSic.Sxc.Services.GoogleMaps
         }
         private readonly IJsonService _jsonService;
 
-        public string SettingsIdentifier => "GoogleMaps";
+        public string SettingsIdentifier => "Settings.GoogleMaps";
 
-        public int Zoom => Get(nameof(Zoom), 14); // 14 is a kind of neutral default
+        public int Zoom => GetThis(14); // 14 is a kind of neutral default
 
-        public string ApiKey => Get(nameof(ApiKey), "");
+        public string ApiKey => GetThis("");
 
-        public string Icon => Get(nameof(Icon), "");
+        public string Icon => GetThis("");
 
         public MapsCoordinates DefaultCoordinates => _defCoords.Get(GetMapsCoordinates);
 
-        private MapsCoordinates GetMapsCoordinates() => Log.WrpFn<MapsCoordinates>(action: _ =>
+        private MapsCoordinates GetMapsCoordinates() => Log.Func(() =>
         {
             var json = Get(nameof(DefaultCoordinates), "");
             if (!json.HasValue()) return (MapsCoordinates.Defaults, "no json");

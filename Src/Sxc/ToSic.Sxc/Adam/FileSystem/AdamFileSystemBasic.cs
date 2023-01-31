@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ToSic.Eav;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Adam
     {
         #region Constructor / DI / Init
 
-        public AdamFileSystemBasic(IAdamPaths adamPaths) : base(LogNames.Basic)
+        public AdamFileSystemBasic(IAdamPaths adamPaths) : base(LogScopes.Base)
         {
             ConnectServices(
                 _adamPaths = adamPaths

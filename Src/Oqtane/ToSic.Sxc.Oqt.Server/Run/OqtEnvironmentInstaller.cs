@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller
     {
-        private readonly ILazySvc<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
         private readonly RemoteRouterLink _remoteRouterLink;
         private readonly IAppStates _appStates;
 
-        public OqtEnvironmentInstaller(ILazySvc<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
+        public OqtEnvironmentInstaller(LazySvc<CmsRuntime> cmsRuntimeLazy, RemoteRouterLink remoteRouterLink, IAppStates appStates) : base($"{OqtConstants.OqtLogPrefix}.Instll")
         {
             ConnectServices(
                 _cmsRuntimeLazy = cmsRuntimeLazy,

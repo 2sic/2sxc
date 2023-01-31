@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using DotNetNuke.Common;
+﻿using DotNetNuke.Abstractions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.FileSystem;
 using DotNetNuke.Services.Localization;
+using System;
+using System.IO;
+using System.Linq;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
@@ -26,19 +26,21 @@ namespace ToSic.Sxc.Dnn.Run
 
         #region DI Constructor
 
-        public DnnValueConverter(ISite site, LazySvc<IFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy): base(
+        public DnnValueConverter(ISite site, LazySvc<IFeaturesService> featuresLazy, LazySvc<PageScopedService<ISite>> siteFromPageLazy, LazySvc<INavigationManager> navigationManager) : base(
             $"{DnnConstants.LogName}.ValCnv")
         {
             ConnectServices(
                 _site = site,
                 _featuresLazy = featuresLazy,
-                _siteFromPageLazy = siteFromPageLazy
+                _siteFromPageLazy = siteFromPageLazy,
+                _navigationManager = navigationManager
             );
         }
 
         private readonly ISite _site;
         private readonly LazySvc<IFeaturesService> _featuresLazy;
         private readonly LazySvc<PageScopedService<ISite>> _siteFromPageLazy;
+        private readonly LazySvc<INavigationManager> _navigationManager;
         private int PageSiteId => _siteFromPageLazy.Value.Value.Id; // PortalId from page di scope
 
         #endregion
@@ -122,7 +124,7 @@ namespace ToSic.Sxc.Dnn.Run
                 var result = fileInfo.StorageLocation == 0 ? filePath : FileLinkClickController.Instance.GetFileLinkClick(fileInfo);
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(BuiltInFeatures.BlockFileResolveOutsideOfEntityAdam.Guid)) return result;
+                if (!_featuresLazy.Value.Enabled(BuiltInFeatures.AdamRestrictLookupToEntity.Guid)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", filePath)
@@ -176,7 +178,7 @@ namespace ToSic.Sxc.Dnn.Run
             }
 
             // Exception in AdvancedURLProvider because ownerPortalSettings.PortalAlias is null
-            return Globals.NavigateURL(tabInfo.TabID, psPage, "", additionalParameters);
+            return _navigationManager.Value.NavigateURL(tabInfo.TabID, psPage, "", additionalParameters);
 
         }
 

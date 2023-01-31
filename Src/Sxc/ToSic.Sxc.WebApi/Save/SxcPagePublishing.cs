@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.Save
             bool partOfPage,
             Func<bool, Dictionary<Guid, int>> internalSaveMethod,
             IMultiPermissionCheck permCheck
-        )
+        ) => Log.Func<Dictionary<Guid, int>>(() =>
         {
             var allowWriteLive = permCheck.UserMayOnAll(GrantSets.WritePublished);
             var forceDraft = !allowWriteLive;
@@ -48,6 +48,7 @@ namespace ToSic.Sxc.WebApi.Save
             // The internal call which will be used further down
             var appIdentity = _appStates.IdentityOfApp(appId);
             var groupList = _contentGroupList.Init(appIdentity, Context.UserMayEdit);
+
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)
             {
@@ -72,9 +73,9 @@ namespace ToSic.Sxc.WebApi.Save
                 postSaveIds = SaveAndSaveGroupsInnerCall(internalSaveMethod, forceDraft);
             }
 
-            Log.A(() => $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}");
+            Log.A(Log.Try(() =>
+                $"post save IDs: {string.Join(",", postSaveIds.Select(psi => psi.Key + "(" + psi.Value + ")"))}"));
             return postSaveIds;
-        }
-
+        });
     }
 }

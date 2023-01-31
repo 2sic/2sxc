@@ -8,7 +8,6 @@
         {
             Body = @"@inherits Custom.Hybrid.Razor14
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
-@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
 
 <div @Edit.TagToolbar(Content)>
     Put your content here

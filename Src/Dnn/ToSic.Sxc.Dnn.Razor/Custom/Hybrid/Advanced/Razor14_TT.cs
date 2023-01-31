@@ -1,5 +1,5 @@
 ﻿using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;

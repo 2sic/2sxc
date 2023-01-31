@@ -1,9 +1,10 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
+using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 
@@ -14,8 +15,8 @@ namespace ToSic.Sxc.Context
     [PrivateApi("Hide implementation")]
     public class CmsSite: CmsContextPartBase<ISite>, ICmsSite
     {
-        public CmsSite(ILazySvc<App> siteAppLazy) => _siteAppLazy = siteAppLazy;
-        private readonly ILazySvc<App> _siteAppLazy;
+        public CmsSite(LazySvc<App> siteAppLazy) => _siteAppLazy = siteAppLazy;
+        private readonly LazySvc<App> _siteAppLazy;
 
         public ICmsSite Init(CmsContext parent, AppState appState)
         {

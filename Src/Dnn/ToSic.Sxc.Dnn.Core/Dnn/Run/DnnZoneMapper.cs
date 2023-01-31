@@ -56,15 +56,14 @@ namespace ToSic.Sxc.Dnn.Run
             if (c.ContainsKey(PortalSettingZoneId)) return int.Parse(c[PortalSettingZoneId]);
 
             var portalSettings = new PortalSettings(siteId);
-            var zoneId = _zoneCreatorLazy.Value/*.Init(Log)*/.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
+            var zoneId = _zoneCreatorLazy.Value.Create(portalSettings.PortalName + " (Portal " + siteId + ")");
             PortalController.UpdatePortalSetting(siteId, PortalSettingZoneId, zoneId.ToString());
             return zoneId;
 
         }
 
-        public override ISite SiteOfZone(int zoneId)
+        public override ISite SiteOfZone(int zoneId) => Log.Func($"{zoneId}", () =>
         {
-            var wrapLog = Log.Fn<ISite>($"{zoneId}");
             var pinst = PortalController.Instance;
             var portals = pinst.GetPortals();
             Log.A($"Sites/Portals Count: {portals.Count}");
@@ -76,11 +75,11 @@ namespace ToSic.Sxc.Dnn.Run
                     return zid == zoneId ? new PortalSettings(p) : null;
                 })
                 .FirstOrDefault(f => f != null);
-            
-            return found == null 
-                ? wrapLog.Return((DnnSite)null, "not found") 
-                : wrapLog.Return(((DnnSite)_site.New()).Swap(found, Log), $"found {found.PortalId}");
-        }
+
+            return found == null
+                ? ((DnnSite)null, "not found")
+                : (((DnnSite)_site.New()).Swap(found, Log), $"found {found.PortalId}");
+        });
 
         /// <inheritdoc />
         public override List<ISiteLanguageState> CulturesWithState(ISite site)

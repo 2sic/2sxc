@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCodeRoot : ServiceBase, IDynamicCodeRoot, IDynamicCode
+    public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.Dependencies>, IDynamicCodeRoot, IDynamicCode
     {
         #region Constructor
 
@@ -37,24 +37,24 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class Dependencies: ServiceDependencies
         {
-            public ILazySvc<DataSourceFactory> DataSourceFactory { get; }
-            public ILazySvc<IConvertService> ConvertService { get; }
+            public LazySvc<DataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
-            public ILazySvc<DynamicEntityDependencies> DynamicEntityDependencies { get; }
-            public ILazySvc<IContextOfApp> ContextOfApp { get; }
-            public ILazySvc<AdamManager> AdamManager { get; }
+            public LazySvc<DynamicEntityDependencies> DynamicEntityDependencies { get; }
+            public LazySvc<IContextOfApp> ContextOfApp { get; }
+            public LazySvc<AdamManager> AdamManager { get; }
 
             public Dependencies(
                 IServiceProvider serviceProvider,
                 LazySvc<CodeCompiler> codeCompilerLazy,
                 AppSettingsStack settingsStack,
-                ILazySvc<DynamicEntityDependencies> dynamicEntityDependencies,
-                ILazySvc<IContextOfApp> contextOfApp,
-                ILazySvc<AdamManager> adamManager,
-                ILazySvc<IConvertService> convertService,
-                ILazySvc<DataSourceFactory> dataSourceFactory)
+                LazySvc<DynamicEntityDependencies> dynamicEntityDependencies,
+                LazySvc<IContextOfApp> contextOfApp,
+                LazySvc<AdamManager> adamManager,
+                LazySvc<IConvertService> convertService,
+                LazySvc<DataSourceFactory> dataSourceFactory)
             {
                 AddToLogQueue(
                     ServiceProvider = serviceProvider,
@@ -72,9 +72,8 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        protected internal DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(logPrefix + ".DynCdR")
+        protected internal DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(dependencies, logPrefix + ".DynCdR")
         {
-            Deps = dependencies.SetLog(Log);
             _serviceProvider = dependencies.ServiceProvider;
 
             // Prepare services which need to be attached to this dynamic code root
@@ -84,7 +83,6 @@ namespace ToSic.Sxc.Code
             GetService<CspOfApp>();
         }
 
-        private readonly Dependencies Deps;
         private readonly IServiceProvider _serviceProvider;
 
         [PrivateApi] public ICmsContext CmsContext { get; }
@@ -95,10 +93,9 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public TService GetService<TService>()
         {
-            var newService = _serviceProvider.Build<TService>();
+            var newService = _serviceProvider.Build<TService>(Log);
             if (newService is INeedsDynamicCodeRoot newWithNeeds)
                 newWithNeeds.ConnectToRoot(this);
-
             return newService;
         }
 
@@ -109,7 +106,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)
         {
-            this.Init(parentLog ?? block?.Log);
+            this.LinkLog(parentLog ?? block?.Log);
             var cLog = Log.Fn<IDynamicCodeRoot>();
 
             CompatibilityLevel = compatibility;

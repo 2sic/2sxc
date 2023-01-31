@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 
@@ -13,41 +14,38 @@ namespace ToSic.Sxc.Dnn.Install
     /// Helper class to ensure that the an app is ready.
     /// It will have to do various file accesses - so once it knows a module is ready, it will cache the result.
     /// </summary>
-    public class DnnReadyCheckTurbo : HasLog
+    public class DnnReadyCheckTurbo : ServiceBase
     {
+        private readonly LazySvc<AppFolderInitializer> _appFolderInitializerLazy;
+
         /// <summary>
         /// Fast static check to see if the check had previously completed. 
         /// </summary>
         /// <param name="module"></param>
-        /// <param name="block"></param>
-        /// <param name="appFolderInitializerLazy"></param>
         /// <param name="log"></param>
-        public static void EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block, ILazySvc<AppFolderInitializer> appFolderInitializerLazy, ILog log)
+        public static bool QuickCheckSiteAndAppFoldersAreReady(PortalModuleBase module, ILog log) =>
+            log.Func($"module: {module.ModuleId}; page: {module.TabId}", () =>
+                CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists
+                    ? (true, "quick-check: ready")
+                    : (false, "deep-check: not ready, must do extensive check"));
+
+        /// <summary>
+        /// Constructor for DI
+        /// </summary>
+        /// <param name="appFolderInitializerLazy"></param>
+        public DnnReadyCheckTurbo(LazySvc<AppFolderInitializer> appFolderInitializerLazy) : base("Dnn.PreChk")
         {
-            var wrapLog = log.Fn(message: $"Turbo Ready Check: module {module.ModuleId} on page {module.TabId}");
-            if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
-            {
-                // all ok, skip
-                wrapLog.Done("quick-check: ready");
-                return;
-            }
-
-            new DnnReadyCheckTurbo(module, log).EnsureSiteAndAppFoldersAreReadyInternal(block, appFolderInitializerLazy);
-            wrapLog.Done("deep-check: ready");
+            _appFolderInitializerLazy = appFolderInitializerLazy;
         }
-
-        private DnnReadyCheckTurbo(PortalModuleBase module, ILog parentLog) : base("Dnn.PreChk", parentLog) => _module = module;
-        private readonly PortalModuleBase _module;
 
         /// <summary>
         /// Verify that the portal is ready, otherwise show a good error
         /// </summary>
-        private bool EnsureSiteAndAppFoldersAreReadyInternal(IBlock block, ILazySvc<AppFolderInitializer> appFolderInitializerLazy)
+        public bool EnsureSiteAndAppFoldersAreReady(PortalModuleBase module, IBlock block
+        ) => Log.Func(timer: true, message: $"module {module.ModuleId} on page {module.TabId}", func: l =>
         {
-            var timerWrap = Log.Fn<bool>(message: $"module {_module.ModuleId} on page {_module.TabId}", startTimer: true);
-
-            if (CachedModuleResults.TryGetValue(_module.ModuleId, out var exists) && exists)
-                return timerWrap.ReturnTrue("Previous check completed, will skip");
+            if (CachedModuleResults.TryGetValue(module.ModuleId, out var exists) && exists)
+                return (true, "Previous check completed, will skip");
 
             // throw better error if SxcInstance isn't available
             // not sure if this doesn't have side-effects...
@@ -57,42 +55,40 @@ namespace ToSic.Sxc.Dnn.Install
                                     "You may also have EnterpriseCMS features enabled but are missing the license activation (but this is super rare). ");
 
             // check things if it's a module of this portal (ensure everything is ok, etc.)
-            var isSharedModule = _module.ModuleConfiguration.PortalID != _module.ModuleConfiguration.OwnerPortalID;
-            if (isSharedModule) return timerWrap.ReturnFalse("skip, shared");
+            var isSharedModule = module.ModuleConfiguration.PortalID != module.ModuleConfiguration.OwnerPortalID;
+            if (isSharedModule) return (false, "skip, shared");
 
             if (block.App != null)
             {
-                Log.A("Will check if site is ready and template folder exists");
-                EnsureSiteIsConfiguredAndTemplateFolderExists(block, appFolderInitializerLazy);
+                l.A("Will check if site is ready and template folder exists");
+                EnsureSiteIsConfiguredAndTemplateFolderExists(module, block);
 
                 // If no exception was raised inside, everything is fine - must cache
-                CachedModuleResults.AddOrUpdate(_module.ModuleId, true, (id, value) => true);
+                CachedModuleResults.AddOrUpdate(module.ModuleId, true, (id, value) => true);
             }
             else
-                Log.A("skip, content-block not ready");
+                l.A("skip, content-block not ready");
 
-            return timerWrap.ReturnTrue("ok");
-        }
+            return (true, "ok");
+        });
 
         /// <summary>
         /// Returns true if the Portal HomeDirectory Contains the 2sxc Folder and this folder contains the web.config and a Content folder
         /// </summary>
-        private bool EnsureSiteIsConfiguredAndTemplateFolderExists(IBlock block, ILazySvc<AppFolderInitializer> appFolderInitializerLazy)
+        private void EnsureSiteIsConfiguredAndTemplateFolderExists(PortalModuleBase module, IBlock block) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn<bool>($"AppId: {block.AppId}");
-
             var sexyFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
             var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppFolder));
             var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
             if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
-                var tm = appFolderInitializerLazy.Value.Init(Log);
+                var tm = _appFolderInitializerLazy.Value;
                 tm.EnsureTemplateFolderExists(block.Context.AppState, false);
             }
 
-            return wrapLog.ReturnTrue($"Completed init for module {_module.ModuleId} showing {block.AppId}");
-        }
+            return $"Completed init for module {module.ModuleId} showing {block.AppId}";
+        });
 
         internal static ConcurrentDictionary<int, bool> CachedModuleResults = new ConcurrentDictionary<int, bool>();
     }

@@ -36,24 +36,22 @@ namespace ToSic.Sxc.Dnn.Context
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public new DnnModule Init(ModuleInfo item, ILog parentLog)
+        public new DnnModule Init(ModuleInfo item) => Log.Func($"{item?.ModuleID}", () =>
         {
-            base.Init(item, parentLog);
-            var warpLog = Log.Fn<DnnModule>($"{item?.ModuleID}");
-            return warpLog.Return(this);
-        }
+            base.Init(item);
+            return this;
+        });
 
         /// <summary>
         /// We don't use a Constructor because of DI
         /// So you must always call Init
         /// </summary>
-        public override IModule Init(int moduleId, ILog parentLog)
+        public override IModule Init(int moduleId) => Log.Func($"{moduleId}", () =>
         {
             var mod = ModuleController.Instance.GetModule(moduleId, Null.NullInteger, false);
-            Init(mod, parentLog);
-            var wrapLog = Log.Fn<IModule>($"{moduleId}");
-            return wrapLog.Return(this);
-        }
+            Init(mod);
+            return this;
+        });
 
         #endregion
 
@@ -95,28 +93,25 @@ namespace ToSic.Sxc.Dnn.Context
         }
         private IBlockIdentifier _blockIdentifier;
 
-        private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId)
+        private (int AppId, string AppNameId) GetInstanceAppIdAndName(int zoneId) => Log.Func($"{zoneId}", () =>
         {
-            var wrapLog = Log.Fn<(int, string)>($"{zoneId}");
-
             var module = UnwrappedModule ?? throw new Exception("instance is not ModuleInfo");
-
             var msg = $"get appid from instance for Z:{zoneId} Mod:{module.ModuleID}";
             if (IsContent)
             {
                 var appId = _appStates.DefaultAppId(zoneId);
-                return wrapLog.Return((appId, "Content"), $"{msg} - use Default app: {appId}");
+                return ((appId, "Content"), $"{msg} - use Default app: {appId}");
             }
 
             if (module.ModuleSettings.ContainsKey(Settings.ModuleSettingApp))
             {
                 var guid = module.ModuleSettings[Settings.ModuleSettingApp].ToString();
                 var appId = _appFinderLazy.Value.FindAppId(zoneId, guid);
-                return wrapLog.Return((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
+                return ((appId, guid), $"{msg} AppG:{guid} = app:{appId}");
             }
 
             Log.A($"{msg} not found = null");
-            return wrapLog.Return((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
-        }
+            return ((Eav.Constants.AppIdEmpty, Eav.Constants.AppNameIdEmpty), "not found");
+        });
     }
 }

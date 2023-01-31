@@ -57,6 +57,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.AddDnn()
                 .AddDnnSxcDataSources()
+                .AddDnnDataSources()
                 .AddDnnWebApi()
                 .AddAdamWebApi<int, int>()
                 .AddSxcWebApi()
@@ -190,9 +191,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             //services.TryAddTransient<DnnGetBlock>();
             services.TryAddTransient<DnnAppFolderUtilities>(); // v14.12-01
 
-            // v14.12.03/04 Hack with ModuleId in Lookups
-            // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-            //services.TryAddScoped<ViewModuleIdHack>();
+            // v15 - move ready check turbo into a service
+            services.TryAddTransient<DnnReadyCheckTurbo>();
 
             return services;
         }

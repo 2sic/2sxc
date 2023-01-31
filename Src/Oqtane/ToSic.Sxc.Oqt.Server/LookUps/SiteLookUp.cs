@@ -12,10 +12,10 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
     {
         public SiteState SiteState { get; }
         protected Oqtane.Models.Site Site { get; set; }
-        private readonly ILazySvc<SiteStateInitializer> _siteStateInitializer;
-        private readonly ILazySvc<SiteRepository> _siteRepository;
+        private readonly LazySvc<SiteStateInitializer> _siteStateInitializer;
+        private readonly LazySvc<SiteRepository> _siteRepository;
 
-        public SiteLookUp(ILazySvc<SiteStateInitializer> siteStateInitializer, SiteState siteState, ILazySvc<SiteRepository> siteRepository)
+        public SiteLookUp(LazySvc<SiteStateInitializer> siteStateInitializer, SiteState siteState, LazySvc<SiteRepository> siteRepository)
         {
             Name = SourceSite;
             SiteState = siteState;

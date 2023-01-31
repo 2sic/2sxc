@@ -4,10 +4,11 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Polymorphism
 {
-    public class Polymorphism: HasLog
+    public class Polymorphism: ServiceBase
     {
         private readonly IServiceProvider _serviceProvider;
         public string Resolver;

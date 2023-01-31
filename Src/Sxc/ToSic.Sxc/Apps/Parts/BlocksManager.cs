@@ -68,9 +68,9 @@ namespace ToSic.Sxc.Apps
             return entityId;
         }
 
-        private int CreateItemAndAddToList(int parentId, string field, int index, string typeName, Dictionary<string, object> values, Guid newGuid)
+        private int CreateItemAndAddToList(int parentId, string field, int index, string typeName, Dictionary<string, object> values, Guid newGuid
+        ) => Log.Func($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}", () =>
         {
-            var callLog = Log.Fn<int>($"{nameof(parentId)}:{parentId}, {nameof(field)}:{field}, {nameof(index)}, {index}, {nameof(typeName)}:{typeName}");
             // create the new entity 
             var entityId = Parent.Entities.GetOrCreate(newGuid, typeName, values);
 
@@ -90,8 +90,8 @@ namespace ToSic.Sxc.Apps
             Parent.Entities.UpdateParts(cbEnt.EntityId, updateDic);
             #endregion
 
-            return callLog.ReturnAndLog(entityId);
-        }
+            return entityId;
+        });
 
 
     }

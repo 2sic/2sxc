@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 
@@ -34,7 +34,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
         #endregion
 
-        public IEnumerable<EntityForPickerDto> GetAvailableEntities(int appId, string[] items, string contentTypeName)
+        // 2dm 2023-01-22 #maybeSupportIncludeParentApps
+        public IEnumerable<EntityForPickerDto> GetForEntityPicker(int appId, string[] items, string contentTypeName/*, bool includeParentApps*/) => Log.Func(() =>
         {
             var context = _ctxResolver.BlockOrApp(appId);
             // do security check
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Cms
             // maybe in the future, ATM not relevant
             var withDrafts = permCheck.EnsureAny(GrantSets.ReadDraft);
 
-            return _entityPickerApi.GetAvailableEntities(appId, items, contentTypeName, withDrafts);
-        }
+            return _entityPickerApi.GetForEntityPicker(appId, items, contentTypeName, withDrafts/*, includeParentApps*/);
+        });
     }
 }

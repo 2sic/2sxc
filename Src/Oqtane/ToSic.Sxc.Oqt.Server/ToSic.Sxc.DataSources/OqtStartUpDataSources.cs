@@ -10,13 +10,14 @@ namespace ToSic.Sxc.DataSources
     {
         public static IServiceCollection AddOqtSxcDataSources(this IServiceCollection services)
         {
-            services.TryAddTransient<Pages, OqtPages>();
+            // TODO: Change to use the DataSourceProvider model
             services.TryAddTransient<Roles, OqtRoles>();
             services.TryAddTransient<Users, OqtUsers>();
 
             // info class to ensure SQL knows about default connections
             services.TryAddTransient<SqlPlatformInfo, OqtSqlPlatformInfo>();
 
+            services.TryAddTransient<PagesDataSourceProvider, OqtPagesDsProvider>();
             return services;
         }
     }

@@ -1,4 +1,5 @@
-﻿using DotNetNuke.Web.Client.ClientResourceManagement;
+﻿using DotNetNuke.Common.Utilities;
+using DotNetNuke.Entities.Controllers;
 using System;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -19,6 +20,13 @@ namespace ToSic.Sxc.Dnn.Install
     {
         public static bool SaveUnimportantDetails = true;
 
+        private readonly LazySvc<DnnEnvironmentInstaller> _dnnEnvInstaller;
+        private readonly DnnInstallLogger _installLogger;
+        private readonly LazySvc<IAppStates> _appStatesLazy;
+        private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
+        private readonly LazySvc<RemoteRouterLink> _remoteRouterLazy;
+        private readonly LazySvc<IGlobalConfiguration> _globalConfiguration;
+
         /// <summary>
         /// Instance initializers...
         /// </summary>
@@ -27,22 +35,19 @@ namespace ToSic.Sxc.Dnn.Install
             LazySvc<IAppStates> appStatesLazy, 
             LazySvc<CmsRuntime> cmsRuntimeLazy, 
             LazySvc<RemoteRouterLink> remoteRouterLazy,
-            LazySvc<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
+            LazySvc<IGlobalConfiguration> globalConfiguration,
+            LazySvc<DnnEnvironmentInstaller> dnnEnvInstaller) : base("Dnn.InstCo")
         {
-            logStore.Add(LogNames.LogHistoryGlobalInstallation, Log);
+            logStore.Add(LogNames.LogStoreStartUp, Log);
             ConnectServices(
                 _installLogger = installLogger,
                 _appStatesLazy = appStatesLazy,
                 _cmsRuntimeLazy = cmsRuntimeLazy,
                 _remoteRouterLazy = remoteRouterLazy,
-                _globalConfiguration = globalConfiguration
+                _globalConfiguration = globalConfiguration,
+                _dnnEnvInstaller = dnnEnvInstaller
             );
         }
-        private readonly DnnInstallLogger _installLogger;
-        private readonly ILazySvc<IAppStates> _appStatesLazy;
-        private readonly ILazySvc<CmsRuntime> _cmsRuntimeLazy;
-        private readonly ILazySvc<RemoteRouterLink> _remoteRouterLazy;
-        private readonly ILazySvc<IGlobalConfiguration> _globalConfiguration;
 
         internal string UpgradeModule(string version)
         {
@@ -169,8 +174,10 @@ namespace ToSic.Sxc.Dnn.Install
                 if (version == EavSystemInfo.VersionString)
                 {
                     _installLogger.LogStep(version, "ClientResourceManager- seems to be last item in version-list, will clear");
-
-                    ClientResourceManager.UpdateVersion();
+                    
+                    HostController.Instance.IncrementCrmVersion(true);
+                    DataCache.ClearCache();
+                    
                     _installLogger.LogStep(version, "ClientResourceManager- done clearing");
 
                     UpgradeComplete = IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
@@ -193,29 +200,7 @@ namespace ToSic.Sxc.Dnn.Install
             _installLogger.LogStep(version, "UpgradeModule done / returning");
             return version;
         }
-
-        // Note 2dm 2021-08-30
-        // I'm not sure what this actually does - I believe it was old code which captured some special issues when upgrading from pre-7 to 7
-        // I'm pretty sure we could just remove this, but when we do it we must test it, so don't just delete it
-        // 2021-12-08 v13 turned this off now - believe not used since 2sxc 7 - hope everything works - #cleanUp 2022 Q2
-        // IMPORTANT Notes 2021-12-08 2dm
-        // I believe this was meant to check if the DB was created, but was missing something 
-        // Which should have been added in v7. 
-        // But as of now, all the changes up until v9 or something are added in one slide, so there is no step-by-step to do
-        // We may need to re-activate this some time in the future, if some install-sequences would need to run again. 
-
-        //private void MaybeResetUpgradeLogsToStartAgainFromV1()
-        //{
-        //    _installLogger.LogStep("", "Maybe reset logs start");
-        //    // this condition only applies, if 2sxc upgrade 7 didn't happen yet
-        //    var appState = Eav.Factory.StaticBuild<IAppStates>().Get(new AppIdentity(Eav.Constants.DefaultZoneId, Eav.Constants.MetaDataAppId));
-        //    if (appState.GetContentType(Eav.ImportExport.Settings.TemplateContentType) != null) return;
-
-        //    _installLogger.LogStep("", "Will reset all logs now");
-        //    _installLogger.DeleteAllLogFiles();
-        //    _installLogger.LogStep("", "Maybe Reset logs done");
-        //}
-
+        
 
     }
 }

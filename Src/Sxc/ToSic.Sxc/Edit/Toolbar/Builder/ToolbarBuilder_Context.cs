@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             // Get context, specify "true" to force it to be added
             var context = GenerateContext(target, true.ToString());
-            var rule = new ToolbarRuleContext(null, context, _deps.ToolbarButtonHelper.Value);
+            var rule = new ToolbarRuleContext(null, context, Deps.ToolbarButtonHelper.Value);
             return AddInternal(rule);
         }
 
@@ -32,29 +32,28 @@ namespace ToSic.Sxc.Edit.Toolbar
                ?? Rules.FirstOrDefault(r => r.Context != null)?.Context;
 
 
-        private ToolbarContext GenerateContext(object target, string context)
+        private ToolbarContext GenerateContext(object target, string context) => Log.Func($"{nameof(context)}:{context}", () =>
         {
-            var callLog = Log.Fn<ToolbarContext>($"{nameof(context)}:{context}");
             // Check if context had already been prepared
-            if (context.ContainsInsensitive("context:")) return callLog.ReturnAndLog(new ToolbarContext(context));
+            if (context.ContainsInsensitive("context:")) return (new ToolbarContext(context), "contains context:");
 
-            if (target == null) return callLog.ReturnNull("no target");
-            if (context.EqualsInsensitive(false.ToString())) return callLog.ReturnNull("context=false");
-            var appStates = _deps.AppStatesLazy.Value;
-            if (appStates == null) return callLog.ReturnNull("no AppStates");
+            if (target == null) return (null, "no target");
+            if (context.EqualsInsensitive(false.ToString())) return (null, "context=false");
+            var appStates = Deps.AppStatesLazy.Value;
+            if (appStates == null) return (null, "no AppStates");
 
             // Try to find the context
             var appId = FindContextAppId(target);
 
             // If nothing found
-            if (appId == 0 
-                || appId == NoAppId 
+            if (appId == 0
+                || appId == NoAppId
                 || appId == Eav.Constants.TransientAppId
                 || appId < 1
-                ) return callLog.ReturnNull("no app identified");
+               ) return (null, "no app identified");
 
             var identity = appStates.IdentityOfApp(appId);
-            if (identity == null) return callLog.ReturnNull("app not found");
+            if (identity == null) return (null, "app not found");
 
             // If we're not forcing the context "true" then check cases where it's not needed
             if (!context.EqualsInsensitive(true.ToString()))
@@ -64,28 +63,28 @@ namespace ToSic.Sxc.Edit.Toolbar
                     // ensure we're not in a global context where the current-context is already special
                     var globalId = appStates.GetPrimaryAppOfAppId(appId, Log);
                     if (globalId.AppId != identity.AppId)
-                        return callLog.ReturnNull($"same app and not Global, context not forced: {identity.Show()}");
+                        return (null, $"same app and not Global, context not forced: {identity.Show()}");
                 }
 
             var result = new ToolbarContext(identity);
-            return callLog.ReturnAndLog(result);
-        }
+            return (result, "ok");
+        });
 
-        private int FindContextAppId(object target)
+        private int FindContextAppId(object target) => Log.Func(() =>
         {
-            var l = Log.Fn<int>();
-            if (target is IEntity entity) 
-                return l.Return(entity.AppId, "entity-appid");
+            if (target is IEntity entity)
+                return (entity.AppId, "entity-appid");
             if (target is IDynamicEntity dynEntity)
-                return l.Return(dynEntity.Entity?.AppId ?? NoAppId, "dyn entity");
+                return (dynEntity.Entity?.AppId ?? NoAppId, "dyn entity");
             if (target is IHasMetadata md)
             {
-                if (md.Metadata.Any()) 
-                    return l.Return(md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata");
+                if (md.Metadata.Any())
+                    return (md.Metadata.FirstOrDefault()?.AppId ?? NoAppId, "metadata");
                 if (md.Metadata is IMetadataInternals mdInternal)
-                    return l.Return(mdInternal.Context("todo")?.AppId ?? NoAppId);
+                    return (mdInternal.Context("todo")?.AppId ?? NoAppId, "metadata internal");
             }
-            return l.Return(NoAppId, "no app id");
-        }
+
+            return (NoAppId, "no app id");
+        });
     }
 }

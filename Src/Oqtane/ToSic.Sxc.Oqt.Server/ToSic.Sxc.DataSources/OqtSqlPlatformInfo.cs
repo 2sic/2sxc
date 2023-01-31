@@ -9,10 +9,10 @@ namespace ToSic.Sxc.Oqt.Server.ToSic.Sxc.DataSources
 {
     public class OqtSqlPlatformInfo: SqlPlatformInfo
     {
-        private readonly ILazySvc<IConfigManager> _configManager;
+        private readonly LazySvc<IConfigManager> _configManager;
         public override string DefaultConnectionStringName => SettingKeys.ConnectionStringKey;
 
-        public OqtSqlPlatformInfo(ILazySvc<IConfigManager> configManager)
+        public OqtSqlPlatformInfo(LazySvc<IConfigManager> configManager)
         {
             _configManager = configManager;
         }

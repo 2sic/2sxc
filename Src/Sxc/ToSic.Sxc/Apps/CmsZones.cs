@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Lib.DI;
 
@@ -13,16 +12,14 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<AppsManager> _appsManagerLazy;
         public CmsZones(LazySvc<AppsRuntime> appsRuntimeLazy, LazySvc<AppsManager> appsManagerLazy) : base("Sxc.ZoneRt") =>
             ConnectServices(
-                _appsRuntimeLazy = appsRuntimeLazy,
-                _appsManagerLazy = appsManagerLazy
+                _appsRuntimeLazy = appsRuntimeLazy.SetInit(x => x.ConnectTo(this)),
+                _appsManagerLazy = appsManagerLazy.SetInit(x => x.ConnectTo(this))
             );
 
         #endregion
 
-        public AppsRuntime AppsRt => _apps ?? (_apps = _appsRuntimeLazy.Value.ConnectTo(this));
-        private AppsRuntime _apps;
+        public AppsRuntime AppsRt => _appsRuntimeLazy.Value;
 
-        public AppsManager AppsMan => _appsMan ?? (_appsMan = _appsManagerLazy.Value.ConnectTo(this));
-        private AppsManager _appsMan;
+        public AppsManager AppsMan => _appsManagerLazy.Value;
     }
 }

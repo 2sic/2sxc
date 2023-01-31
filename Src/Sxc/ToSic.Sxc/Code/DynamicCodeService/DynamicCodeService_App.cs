@@ -44,9 +44,9 @@ namespace ToSic.Sxc.Code
 
         private AppState GetPrimaryApp(int? siteId, ISite site)
         {
-            siteId = siteId ?? site?.Id ?? _dependencies.Site.Value.Id;
-            var zoneId = _dependencies.ZoneMapper.Value.GetZoneId(siteId.Value);
-            var primaryApp = _dependencies.AppStates.Value.GetPrimaryApp(zoneId, Log);
+            siteId = siteId ?? site?.Id ?? Deps.Site.Value.Id;
+            var zoneId = Deps.ZoneMapper.Value.GetZoneId(siteId.Value);
+            var primaryApp = Deps.AppStates.Value.GetPrimaryApp(zoneId, Log);
             return primaryApp;
         }
 
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Fn<IApp>($"{appIdentity.LogState()}, site:{site != null}, showDrafts: {withUnpublished}");
             var app = _scopedDeps.AppGenerator.New();
             if (site != null) app.PreInit(site);
-            var appStuff = app.Init(appIdentity, _scopedDeps.AppConfigDelegateGenerator.New().Build(withUnpublished ?? _dependencies.User.Value.IsContentAdmin));
+            var appStuff = app.Init(appIdentity, _scopedDeps.AppConfigDelegateGenerator.New().Build(withUnpublished ?? Deps.User.Value.IsContentAdmin));
             return wrapLog.Return(appStuff);
         }
 

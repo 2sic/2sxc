@@ -166,13 +166,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </remarks>
         [HttpGet]
         [AllowAnonymous] // will do security check internally
-        public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration)
+        public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
         {
             // Make sure the Scoped ResponseMaker has this controller context
             var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
             responseMaker.Init(this);
 
-            return Real.JsonBundleExport(appId, exportConfiguration);
+            return Real.JsonBundleExport(appId, exportConfiguration, indentation);
         }
     }
 }

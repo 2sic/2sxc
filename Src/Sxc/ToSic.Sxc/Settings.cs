@@ -27,7 +27,6 @@ namespace ToSic.Sxc
                 "12.00.00",
                 "13.00.00",
                 "15.00.00",
-                // 13.01.00
                 EavSystemInfo.VersionString,
             };
 

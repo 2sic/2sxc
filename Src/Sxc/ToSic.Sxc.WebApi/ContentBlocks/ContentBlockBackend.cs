@@ -20,8 +20,9 @@ using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.ContentBlocks
 {
-    public class ContentBlockBackend : BlockWebApiBackendBase<ContentBlockBackend>
+    public class ContentBlockBackend : BlockWebApiBackendBase
     {
+        private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly Generator<BlockFromEntity> _entityBlockGenerator;
 
         #region constructor / DI
@@ -30,25 +31,26 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             IPagePublishing publishing, 
             LazySvc<CmsManager> cmsManagerLazy, 
             IContextResolver ctxResolver, 
-            ILazySvc<IBlockResourceExtractor> optimizerLazy,
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt,
+            LazySvc<IBlockResourceExtractor> optimizerLazy,
+            LazySvc<BlockEditorSelector> blockEditorSelectorLazy,
+            //Generator<BlockEditorForModule> blkEdtForMod,
+            //Generator<BlockEditorForEntity> blkEdtForEnt,
             Generator<BlockFromEntity> entityBlockGenerator)
             : base(multiPermissionsApp, cmsManagerLazy, ctxResolver, "Bck.FldLst")
         {
-            ;
             ConnectServices(
                 _optimizer = optimizerLazy,
-                _blkEdtForMod = blkEdtForMod,
-                _blkEdtForEnt = blkEdtForEnt,
+                //_blkEdtForMod = blkEdtForMod,
+                //_blkEdtForEnt = blkEdtForEnt,
                 _publishing = publishing,
-                _entityBlockGenerator = entityBlockGenerator
+                _entityBlockGenerator = entityBlockGenerator,
+                _blockEditorSelectorLazy = blockEditorSelectorLazy
             );
         }
 
-        private readonly ILazySvc<IBlockResourceExtractor> _optimizer;
-        private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
-        private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
+        private readonly LazySvc<IBlockResourceExtractor> _optimizer;
+        //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
+        //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
         private readonly IPagePublishing _publishing;
 
         #endregion
@@ -80,7 +82,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.A($"try to publish #{index} on '{part}'");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            return BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).Publish(part, index);
+            return _blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.Publish(part, index);
         }
 
         public AjaxRenderDto RenderV2(int templateId, string lang, string root)
@@ -91,10 +93,10 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
             Log.A("2.1. Build Resources");
             var resources = new List<AjaxResourceDtoWIP>();
-            var ver = EavSystemInfo.VersionWithStartUpBuild;// Settings.Version.ToString();
+            var ver = EavSystemInfo.VersionWithStartUpBuild;
             if (result.Features.Contains(BuiltInFeatures.TurnOn))
                 resources.Add(new AjaxResourceDtoWIP
-                    { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + InpageCms.TurnOnJs, "v", ver) });
+                    { Url = UrlHelpers.QuickAddUrlParameter(root.SuffixSlash() + BuiltInFeatures.TurnOn.UrlWip, "v", ver) });
 
             Log.A("2.2. Add JS & CSS which were stripped before");
             resources.AddRange(result.Assets.Select(asset => new AjaxResourceDtoWIP

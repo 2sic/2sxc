@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Context;
+using ToSic.Lib;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Lib.Helper;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -33,14 +34,12 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
         /// Important: page-parameters etc. are not available at this time, so don't try to get them until needed
         /// </summary>
         /// <param name="codeRoot"></param>
-        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot) => Log.Do(() =>
         {
             base.ConnectToRoot(codeRoot);
-            var wrapLog = Log.Fn();
             // Also connect upstream CspOfModule in case it's not yet connected
             _moduleCsp.ConnectToRoot(codeRoot);
-            wrapLog.Done();
-        }
+        });
 
         #endregion
 

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         public OqtZoneMapper(ISiteRepository siteRepository, 
             ISettingRepository settingRepository,
             Generator<ISite> site,
-            ILazySvc<ZoneCreator> zoneCreatorLazy,
+            LazySvc<ZoneCreator> zoneCreatorLazy,
             OqtCulture oqtCulture, 
             IAppStates appStates) : base(appStates, $"{OqtConstants.OqtLogPrefix}.ZoneMp")
         {
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly ISiteRepository _siteRepository;
         private readonly ISettingRepository _settingRepository;
         private readonly Generator<ISite> _site;
-        private readonly ILazySvc<ZoneCreator> _zoneCreatorLazy;
+        private readonly LazySvc<ZoneCreator> _zoneCreatorLazy;
         private readonly OqtCulture _oqtCulture;
 
 
@@ -75,7 +75,11 @@ namespace ToSic.Sxc.Oqt.Server.Run
             if (zoneSetting != null)
             {
                 if (!int.TryParse(zoneSetting.SettingValue, out var zId))
-                    throw new(Log.AddAndReuse($"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int"));
+                {
+                    var msg = $"Got value '{zoneSetting.SettingValue}' for ZoneId but can't convert to int";
+                    Log.A(msg);
+                    throw new(msg);
+                }
                 i = zId;
                 return true;
             }

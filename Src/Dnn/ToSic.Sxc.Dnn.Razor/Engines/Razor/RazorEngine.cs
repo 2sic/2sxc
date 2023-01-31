@@ -102,22 +102,19 @@ namespace ToSic.Sxc.Engines
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
         [PrivateApi]
-        public void Render(TextWriter writer)
+        public void Render(TextWriter writer) => Log.Do(message: "will render into TextWriter", action: l =>
         {
-            var wrapLog = Log.Fn(message: "will render into TextWriter");
             try
             {
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
-                wrapLog.Done("ok");
             }
             catch (Exception maybeIEntityCast)
             {
-                Log.Ex(maybeIEntityCast);
+                l.Ex(maybeIEntityCast);
                 ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
-
-        }
+        });
 
         [PrivateApi]
         protected override string RenderTemplate()
@@ -183,9 +180,8 @@ namespace ToSic.Sxc.Engines
             return wrapLog.ReturnTrue("ok");
         }
 
-        private void InitHelpers(RazorComponentBase webPage, int compatibility)
+        private void InitHelpers(RazorComponentBase webPage, int compatibility) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
             var dynCode = _codeRootFactory.BuildDynamicCodeRoot(webPage);
             // only do this if not already initialized
             //if (dynCode.Block != null)
@@ -194,8 +190,7 @@ namespace ToSic.Sxc.Engines
 
             // New in 10.25 - ensure jquery is not included by default
             if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;
-            wrapLog.Done();
-        }
-        
+        });
+
     }
 }

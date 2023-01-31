@@ -21,24 +21,24 @@ namespace ToSic.Sxc.Oqt.Server.Data
     [PrivateApi]
     public class OqtValueConverter : ValueConverterBase
     {
-        private readonly ILazySvc<IFeaturesService> _featuresLazy;
-        public ILazySvc<IFileRepository> FileRepository { get; }
-        public ILazySvc<IFolderRepository> FolderRepository { get; }
-        public ILazySvc<ITenantResolver> TenantResolver { get; }
-        public ILazySvc<IPageRepository> PageRepository { get; }
-        public ILazySvc<IServerPaths> ServerPaths { get; }
-        public ILazySvc<SiteStateInitializer> SiteStateInitializerLazy { get; }
+        private readonly LazySvc<IFeaturesService> _featuresLazy;
+        public LazySvc<IFileRepository> FileRepository { get; }
+        public LazySvc<IFolderRepository> FolderRepository { get; }
+        public LazySvc<ITenantResolver> TenantResolver { get; }
+        public LazySvc<IPageRepository> PageRepository { get; }
+        public LazySvc<IServerPaths> ServerPaths { get; }
+        public LazySvc<SiteStateInitializer> SiteStateInitializerLazy { get; }
 
         #region DI Constructor
 
         public OqtValueConverter(
-            ILazySvc<IFileRepository> fileRepository,
-            ILazySvc<IFolderRepository> folderRepository,
-            ILazySvc<ITenantResolver> tenantResolver,
-            ILazySvc<IPageRepository> pageRepository,
-            ILazySvc<IServerPaths> serverPaths,
-            ILazySvc<SiteStateInitializer> siteStateInitializerLazy,
-            ILazySvc<IFeaturesService> featuresLazy) : base("Oqt.ValCn")
+            LazySvc<IFileRepository> fileRepository,
+            LazySvc<IFolderRepository> folderRepository,
+            LazySvc<ITenantResolver> tenantResolver,
+            LazySvc<IPageRepository> pageRepository,
+            LazySvc<IServerPaths> serverPaths,
+            LazySvc<SiteStateInitializer> siteStateInitializerLazy,
+            LazySvc<IFeaturesService> featuresLazy) : base("Oqt.ValCn")
         {
             ConnectServices(
                 _featuresLazy = featuresLazy,
@@ -159,7 +159,7 @@ namespace ToSic.Sxc.Oqt.Server.Data
                 var result = $"{Alias.Path}/app/{appName}/adam/{filePath}".PrefixSlash();
 
                 // optionally do extra security checks (new in 10.02)
-                if (!_featuresLazy.Value.Enabled(BlockFileResolveOutsideOfEntityAdam.Guid)) return result;
+                if (!_featuresLazy.Value.Enabled(AdamRestrictLookupToEntity.Guid)) return result;
 
                 // check if it's in this item. We won't check the field, just the item, so the field is ""
                 return !Sxc.Adam.Security.PathIsInItemAdam(itemGuid, "", pathInAdam)

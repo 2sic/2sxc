@@ -13,12 +13,12 @@ namespace ToSic.Sxc.LookUp
         /// Constructor for DI
         /// </summary>
 
-        public QueryStringLookUp(ILazySvc<IHttp> httpLazy)
+        public QueryStringLookUp(LazySvc<IHttp> httpLazy)
         {
             Name = "QueryString";
             _httpLazy = httpLazy;
         }
-        private readonly ILazySvc<IHttp> _httpLazy;
+        private readonly LazySvc<IHttp> _httpLazy;
         private NameValueCollection _source;
         private NameValueCollection _originalParams;
 

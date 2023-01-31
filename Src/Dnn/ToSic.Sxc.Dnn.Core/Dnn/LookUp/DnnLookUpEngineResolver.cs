@@ -4,6 +4,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Services;
 using static ToSic.Sxc.LookUp.LookUpConstants;
 
 namespace ToSic.Sxc.Dnn.LookUp
@@ -13,39 +14,29 @@ namespace ToSic.Sxc.Dnn.LookUp
     /// Internally it asks DNN for the current Property-Access objects and prepares them for use in EAV.
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public class DnnLookUpEngineResolver : HasLog, ILookUpEngineResolver
+    public class DnnLookUpEngineResolver : ServiceBase, ILookUpEngineResolver
     {
-
         #region Constructor / Dependency Injection
 
-        public DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver/*, ViewModuleIdHack viewModuleIdProvider*/) : base("Dnn.LookUp")
+        public DnnLookUpEngineResolver(IZoneCultureResolver cultureResolver) : base("Dnn.LookUp")
         {
-            _cultureResolver = cultureResolver;
-            // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-            //_viewModuleIdProvider = viewModuleIdProvider;
+            ConnectServices(
+                _cultureResolver = cultureResolver
+            );
         }
         private readonly IZoneCultureResolver _cultureResolver;
-        // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-        // private readonly ViewModuleIdHack _viewModuleIdProvider;
 
         #endregion
 
         /// <inheritdoc />
-        public ILookUpEngine GetLookUpEngine(int moduleId)
-        {
-            var wrapLog = Log.Fn<ILookUpEngine>("" + moduleId);
-            var portalSettings = PortalSettings.Current;
-            return portalSettings == null 
-                ? wrapLog.Return(new LookUpEngine(Log), "no context") 
-                : wrapLog.Return(GenerateDnnBasedLookupEngine(portalSettings, moduleId), "with site");
-        }
+        public ILookUpEngine GetLookUpEngine(int moduleId) => Log.Func($"{nameof(moduleId)}:{moduleId}", () =>
+            PortalSettings.Current == null
+                ? (new LookUpEngine(Log), "no context")
+                : (GenerateDnnBasedLookupEngine(PortalSettings.Current, moduleId), "with site"));
 
         [PrivateApi]
-        public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId)
+        public LookUpEngine GenerateDnnBasedLookupEngine(PortalSettings portalSettings, int moduleId) => Log.Func($"..., {moduleId}", () =>
         {
-            var wrapLog = Log.Fn<LookUpEngine>($"..., {moduleId}");
-            // 2022-12-21 this was a bug in DNN installations, but it appears it was because updates were done wrong - disable for now #viewModuleHack
-            //if (moduleId < 1) moduleId = _viewModuleIdProvider.ModuleId;
             var providers = new LookUpEngine(Log);
             var dnnUsr = portalSettings.UserInfo;
             var dnnCult = _cultureResolver.SafeCurrentCultureInfo();
@@ -85,7 +76,7 @@ namespace ToSic.Sxc.Dnn.LookUp
 
             // Not implemented in Dnn: "Tenant" source
 
-            return wrapLog.Return(providers);
-        }
+            return providers;
+        });
     }
 }

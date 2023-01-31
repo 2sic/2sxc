@@ -1,12 +1,13 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
-    public class CspParameterFinalizer: HasLog
+    public class CspParameterFinalizer: HelperBase
     {
-        public CspParameterFinalizer(): base(CspConstants.LogPrefix + ".ParFin")
+        public CspParameterFinalizer(ILog parentLog): base(parentLog, $"{CspConstants.LogPrefix}.ParFin")
         {
 
         }

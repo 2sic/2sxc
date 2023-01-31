@@ -6,11 +6,12 @@ using Oqtane.Shared;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
-    public class OqtAssetsFileHelper: HasLog
+    public class OqtAssetsFileHelper: ServiceBase
     {
         public const string RouteAdam = "adam";
         public const string RouteAssets = "assets";

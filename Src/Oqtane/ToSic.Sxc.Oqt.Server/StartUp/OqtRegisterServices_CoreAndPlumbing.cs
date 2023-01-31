@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Run;
+using ToSic.Eav.Security.Encryption;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Installation;
@@ -47,6 +48,9 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // Views / Templates / Razor: Get url params in the request
             services.TryAddTransient<IHttp, HttpBlazor>();
+
+            // Special Key generator for security implementation, which doesn't exist in .net standard
+            services.TryAddTransient<Rfc2898Generator, Rfc2898NetCoreGenerator>();
 
             return services;
         }

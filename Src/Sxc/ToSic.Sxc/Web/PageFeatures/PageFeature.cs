@@ -19,10 +19,11 @@ namespace ToSic.Sxc.Web.PageFeatures
         public PageFeature(
             string key, 
             string name, 
-            string description = null,
-            string[] needs = null,
-            string html = null,
-            List<Condition> requirements = null)
+            string description = default,
+            string[] needs = default,
+            string html = default,
+            List<Condition> requirements = default,
+            string urlWip = default)
         {
             NameId = key ?? throw new Exception("key is required");
             Name = name ?? throw new Exception("name is required");
@@ -31,6 +32,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             Needs = needs ?? Array.Empty<string>();
             Condition = new Condition(ConditionIsPageFeature, key);
             Requirements = requirements ?? new List<Condition>();
+            UrlWip = urlWip;
         }
 
         #endregion
@@ -60,5 +62,12 @@ namespace ToSic.Sxc.Web.PageFeatures
         public Condition Condition { get; }
 
         public List<Condition> Requirements { get; }
+
+        /// <summary>
+        /// Temporary URL for internal features which need to store the URL someplace
+        /// This is not a final solution, in future it should probably
+        /// be more sophisticated, like contain a list of configuration objects to construct the url.
+        /// </summary>
+        public string UrlWip { get; }
     }
 }

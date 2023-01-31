@@ -18,6 +18,11 @@ namespace ToSic.Sxc.WebApi.Admin
 {
     public class TypeControllerReal<THttpResponseType> : ServiceBase, ITypeController<THttpResponseType>
     {
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<ContentTypeApi> _ctApiLazy;
+        private readonly LazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
+        private readonly LazySvc<IUser> _userLazy;
+        private readonly Generator<ImportContent> _importContent;
         public const string LogSuffix = "Types";
 
         public TypeControllerReal(
@@ -25,8 +30,7 @@ namespace ToSic.Sxc.WebApi.Admin
             LazySvc<ContentTypeApi> ctApiLazy, 
             LazySvc<ContentExportApi<THttpResponseType>> contentExportLazy, 
             LazySvc<IUser> userLazy,
-            Generator<ImportContent> importContent
-            ) : base("Api.TypesRl")
+            Generator<ImportContent> importContent) : base("Api.TypesRl")
         {
             ConnectServices(
                 _context = context,
@@ -37,11 +41,6 @@ namespace ToSic.Sxc.WebApi.Admin
             );
         }
 
-        private readonly LazySvc<IContextOfSite> _context;
-        private readonly LazySvc<ContentTypeApi> _ctApiLazy;
-        private readonly LazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
-        private readonly LazySvc<IUser> _userLazy;
-        private readonly Generator<ImportContent> _importContent;
 
 
         public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false)
@@ -96,8 +95,8 @@ namespace ToSic.Sxc.WebApi.Admin
         /// <param name="zoneId"></param>
         /// <param name="appId"></param>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public ImportResultDto Import(int zoneId, int appId) => throw new NotImplementedException();
+        /// <exception cref="NotSupportedException"></exception>
+        public ImportResultDto Import(int zoneId, int appId) => throw new NotSupportedException("This is not supported on ControllerReal, use overload.");
 
         /// <summary>
         /// This implementation is special ControllerReal, instead of ImportResultDto Import(int zoneId, int appId) that is not implemented.
@@ -130,7 +129,7 @@ namespace ToSic.Sxc.WebApi.Admin
         /// Used to be GET ContentExport/DownloadTypeAsJson
         /// </summary>
 
-        public THttpResponseType JsonBundleExport(int appId, Guid exportConfiguration)
-            => _contentExportLazy.Value.Init(appId).JsonBundleExport(_userLazy.Value, exportConfiguration);
+        public THttpResponseType JsonBundleExport(int appId, Guid exportConfiguration, int indentation)
+            => _contentExportLazy.Value.Init(appId).JsonBundleExport(_userLazy.Value, exportConfiguration, indentation);
     }
 }

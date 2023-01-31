@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
 {
     // TODO: @STV - must become a DI class
     // But ATM Oqtane is using some static code for this, which has to be change first
     // But I (2dm) can't find where services are registered in the client...?
-    public class CspOfPage: HasLog
+    public class CspOfPage: ServiceBase
     {
         public CspOfPage(): base(CspConstants.LogPrefix + ".Page")
         {
@@ -33,7 +34,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
                 if (!relevant.Any()) return wrapLog.ReturnNull("none relevant");
                 var mergedPolicy = relevant.First();
 
-                var finalizer = new CspParameterFinalizer().Init(Log);
+                var finalizer = new CspParameterFinalizer(Log);
 
                 if (relevant.Count == 1)
                     return wrapLog.Return(finalizer.Finalize(mergedPolicy).ToString(), "found 1");

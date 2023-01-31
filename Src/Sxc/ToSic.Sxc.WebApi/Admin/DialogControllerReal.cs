@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public DialogControllerReal(
             IContextResolver ctxResolver,
             IUiContextBuilder uiContextBuilder,
-            Generator<MultiPermissionsApp> appPermissions) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            Generator<MultiPermissionsApp> appPermissions) : base($"{EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _ctxResolver = ctxResolver,

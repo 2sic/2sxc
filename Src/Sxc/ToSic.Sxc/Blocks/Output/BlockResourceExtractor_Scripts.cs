@@ -71,10 +71,8 @@ namespace ToSic.Sxc.Blocks.Output
         }
 
 
-        protected string ExtractInlineScripts(string renderedTemplate)
+        protected string ExtractInlineScripts(string renderedTemplate) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>();
-
             var scriptMatches = RegexUtil.ScriptContentDetection.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
@@ -83,15 +81,19 @@ namespace ToSic.Sxc.Blocks.Output
             foreach (Match match in scriptMatches)
             {
                 // Register, then add to remove-queue
-                Assets.Add(new ClientAsset { IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value, IsExternal = false });
+                Assets.Add(new ClientAsset
+                {
+                    IsJs = true, Priority = order++, PosInPage = "inline", Content = match.Groups["Content"]?.Value,
+                    IsExternal = false
+                });
                 scriptMatchesToRemove.Add(match);
             }
 
             // remove in reverse order, so that the indexes don't change
             scriptMatchesToRemove.Reverse();
             scriptMatchesToRemove.ForEach(p => renderedTemplate = renderedTemplate.Remove(p.Index, p.Length));
-            return wrapLog.Return(renderedTemplate);
-        }
+            return renderedTemplate;
+        });
 
     }
 }

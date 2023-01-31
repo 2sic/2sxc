@@ -5,9 +5,13 @@ namespace ToSic.Sxc.Web
 {
     public abstract class HybridHtmlStringLog: HybridHtmlString, IHasLog
     {
-        protected HybridHtmlStringLog(string logName) : base()
+        protected HybridHtmlStringLog(string logName)
         {
             Log = new Log(logName);
+        }
+        protected HybridHtmlStringLog(ILog parentLog, string logName)
+        {
+            Log = new Log(logName, parentLog);
         }
 
 

@@ -30,7 +30,8 @@ namespace ToSic.Sxc.Web.PageFeatures
                 ToolbarsInternal,
                 ToolbarsAuto,
                 ToolbarsAutoInternal,
-                TurnOn
+                TurnOn,
+                CmsWysiwyg
             );
         }
     }

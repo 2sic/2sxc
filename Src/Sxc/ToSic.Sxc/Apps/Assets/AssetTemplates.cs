@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 
 
 namespace ToSic.Sxc.Apps.Assets
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Apps.Assets
     }
 
     [PrivateApi]
-    public partial class AssetTemplates : HasLog
+    public partial class AssetTemplates : ServiceBase
     {
         #region Constants
 
@@ -40,26 +41,20 @@ namespace ToSic.Sxc.Apps.Assets
         {
         }
 
-        public List<TemplateInfo> GetTemplates()
+        // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
+        public List<TemplateInfo> GetTemplates() => Log.Func(()=> _templates ?? (_templates = new List<TemplateInfo>
         {
-            var callLog = Log.Fn<List<TemplateInfo>>(nameof(GetTemplates));
-
-            if (_templates == null) _templates = new List<TemplateInfo>
-            {
-                RazorHybrid,
-                RazorDnn,
-                DnnCsCode,
-                CsHybrid,
-                ApiHybrid,
-                Token,
-                DnnSearch,
-                Markdown,
-                EmptyTextFile,
-                EmptyFile,
-            };
-
-            return callLog.Return(_templates);
-        }
+            RazorHybrid,
+            RazorDnn,
+            DnnCsCode,
+            CsHybrid,
+            ApiHybrid,
+            Token,
+            DnnSearch,
+            Markdown,
+            EmptyTextFile,
+            EmptyFile,
+        }));
 
         private static List<TemplateInfo> _templates;
 

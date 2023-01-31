@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Context
     ///
     /// Has a special ToString() implementation, which gives you the parameters for re-use in other scenarios...?
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    [PublicApi]
     public interface IParameters: IReadOnlyDictionary<string, string>
     {
         /// <summary>

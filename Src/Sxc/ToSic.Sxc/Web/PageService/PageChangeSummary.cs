@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Web.PageService
 
         public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
         {
-            var callLog = Log.Fn<IRenderResult>(startTimer: true);
+            var callLog = Log.Fn<IRenderResult>(timer: true);
 
             if (enableEdit)
             {

@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Services
 
         [PrivateApi] protected IApp App;
 
-        private readonly ILazySvc<IUser> _userLazy;
+        private readonly LazySvc<IUser> _userLazy;
 
-        protected MailServiceBase(ILazySvc<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
+        protected MailServiceBase(LazySvc<IUser> userLazy) : base($"{Constants.SxcLogName}.MailSrv")
         {
             ConnectServices(
                 _userLazy = userLazy
@@ -41,25 +41,21 @@ namespace ToSic.Sxc.Services
         protected abstract SmtpClient SmtpClient();
 
         /// <inheritdoc />
-        public void Send(MailMessage message)
+        public void Send(MailMessage message) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
             try
             {
-                using (var client = SmtpClient()) 
+                using (var client = SmtpClient())
                     client.Send(message);
-                wrapLog.Done("ok");
             }
             catch (Exception ex)
             {
                 Log.Ex(ex);
-                wrapLog.Done("error");
                 if (_userLazy.Value.IsSystemAdmin)
                     throw;
-                else
-                    throw new Exception("SMTP configuration problem."); 
+                throw new Exception("SMTP configuration problem.");
             }
-        }
+        });
 
         /// <inheritdoc />
         public MailMessage Create(
@@ -122,10 +118,9 @@ namespace ToSic.Sxc.Services
             string body = null,
             bool? isHtml = null,
             Encoding encoding = null,
-            object attachments = null)
+            object attachments = null) => Log.Do(() =>
         {
             // Note: don't log all the parameters here, because we'll do it again on the Create-call
-            var wrapLog = Log.Fn();
             // prevent incorrect use without named parameters
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Send)}",
                 $"{nameof(from)}, {nameof(to)}, {nameof(cc)}, {nameof(bcc)}, {nameof(replyTo)}, " +
@@ -142,8 +137,7 @@ namespace ToSic.Sxc.Services
                 isHtml: isHtml, encoding: encoding, attachments: attachments);
 
             Send(mailMessage);
-            wrapLog.Done("done");
-        }
+        });
 
         public MailAddress MailAddress(string addressType, object mailAddress)
         {

@@ -25,12 +25,12 @@ namespace ToSic.Eav.Core.Tests.LogTests
         {
             var log = L("Test");
             var call = log.Fn($"something: {7}", "start msg", true);
-            Assert.IsTrue(call.Stopwatch.ElapsedMilliseconds < 1);
+            Assert.IsTrue(call.Timer.ElapsedMilliseconds < 1);
             Assert.AreEqual(1, log.Entries.Count);
             System.Threading.Thread.Sleep(10); // wait 10 ms
             call.Done("ok");
 
-            Assert.IsTrue(call.Stopwatch.ElapsedMilliseconds > 9);
+            Assert.IsTrue(call.Timer.ElapsedMilliseconds > 9);
             
             Assert.AreEqual(2, log.Entries.Count); // Another for results
             var resultEntry = log.Entries.First();

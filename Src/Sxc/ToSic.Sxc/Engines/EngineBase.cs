@@ -39,23 +39,23 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(EngineBaseDependencies helpers) : base("Sxc.EngBas") =>
+        protected EngineBase(EngineBaseDependencies helpers) : base($"{Constants.SxcLogName}.EngBas") =>
             ConnectServices(
                 Helpers = helpers
             );
 
         #endregion
 
-        public void Init(IBlock block)
+        public void Init(IBlock block) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
             Block = block;
             var view = Block.View;
 
             var appPathRootInInstallation = Block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
             var polymorphPathOrNull = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
-            var templatePath = polymorphPathOrNull ?? Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
+            var templatePath = polymorphPathOrNull ??
+                               Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Helpers.ServerPaths.FullAppPath(templatePath)))
@@ -75,8 +75,7 @@ namespace ToSic.Sxc.Engines
 
             // Run engine-internal init stuff
             Init();
-            wrapLog.Done("ok");
-        }
+        });
 
         private string TryToFindPolymorphPath(string root, IView view, string subPath)
         {
@@ -120,7 +119,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public RenderEngineResult Render()
         {
-            var wrapLog = Log.Fn<RenderEngineResult>(startTimer: true);
+            var wrapLog = Log.Fn<RenderEngineResult>(timer: true);
             // call engine internal feature to optionally change what data is actually used or prepared for search...
 #if NETFRAMEWORK
 #pragma warning disable CS0618

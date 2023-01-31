@@ -1,6 +1,6 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
@@ -24,9 +24,8 @@ namespace ToSic.Sxc.Web.PageService
         public IPageFeatures PageFeatures { get; }
         public CspOfModule Csp { get; }
 
-        public string CspEphemeralMarker => _cspEphemeralMarker.Value;
-        private readonly GetOnce<string> _cspEphemeralMarker = new GetOnce<string>(
-            () => new Random().Next(100000000, 999999999).ToString());
+        public string CspEphemeralMarker => _cspEphemeralMarker.Get(() => new Random().Next(100000000, 999999999).ToString());
+        private readonly GetOnce<string> _cspEphemeralMarker = new GetOnce<string>();
 
         /// <summary>
         /// How the changes given to this object should be processed.

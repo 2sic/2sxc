@@ -13,7 +13,6 @@ using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
-using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Validation;
@@ -24,19 +23,19 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ImportContent: ServiceBase
     {
-        private readonly ILazySvc<IUser> _userLazy;
+        private readonly LazySvc<IUser> _userLazy;
 
         #region DI Constructor
 
         public ImportContent(
             IEnvironmentLogger envLogger,
-            ILazySvc<Import> importerLazy,
-            ILazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
+            LazySvc<Import> importerLazy,
+            LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
-            ILazySvc<JsonSerializer> jsonSerializerLazy, 
+            LazySvc<JsonSerializer> jsonSerializerLazy, 
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
-            ILazySvc<IUser> userLazy,
+            LazySvc<IUser> userLazy,
             SystemManager systemManager) : base("Bck.Export")
         {
             
@@ -54,19 +53,18 @@ namespace ToSic.Sxc.WebApi.ImportExport
         }
 
         private readonly IEnvironmentLogger _envLogger;
-        private readonly ILazySvc<Import> _importerLazy;
-        private readonly ILazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
+        private readonly LazySvc<Import> _importerLazy;
+        private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
-        private readonly ILazySvc<JsonSerializer> _jsonSerializerLazy;
+        private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IAppStates _appStates;
         protected readonly SystemManager SystemManager;
 
         #endregion
 
-        public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage)
+        public ImportResultDto Import(int zoneId, int appId, string fileName, Stream stream, string defaultLanguage) => Log.Func(l =>
         {
-            Log.A("import content start");
             var result = new ImportResultDto();
 
             var allowSystemChanges = _userLazy.Value.IsSystemAdmin;
@@ -82,6 +80,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
                 catch (Exception ex)
                 {
+                    l.Ex(ex);
                     _envLogger.LogException(ex);
                 }
             }
@@ -96,13 +95,13 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
             }
             return result;
-        }
+        });
 
 
-        public ImportResultDto ImportContentType(int zoneId, int appId, List<FileUploadDto> files, string defaultLanguage)
+        public ImportResultDto ImportContentType(int zoneId, int appId, List<FileUploadDto> files,
+            string defaultLanguage
+        ) => Log.Func($"{zoneId}, {appId}, {defaultLanguage}", l =>
         {
-            var callLog = Log.Fn<ImportResultDto>($"{zoneId}, {appId}, {defaultLanguage}");
-
             try
             {
                 // 0. Verify it's json etc.
@@ -121,17 +120,18 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 var import = _importerLazy.Value.Init(zoneId, appId, true, true);
                 import.ImportIntoDb(types, null);
 
-                Log.A($"Purging {zoneId}/{appId}");
+                l.A($"Purging {zoneId}/{appId}");
                 SystemManager.Purge(zoneId, appId);
 
                 // 3. possibly show messages / issues
-                return callLog.ReturnAsOk(new ImportResultDto(true));
+                return (new ImportResultDto(true), "ok");
             }
             catch (Exception ex)
             {
+                l.Ex(ex);
                 _envLogger.LogException(ex);
-                return callLog.Return(new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
+                return (new ImportResultDto(false, ex.Message, Message.MessageTypes.Error), "error");
             }
-        }
+        });
     }
 }

@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
+using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.Oqt.Server.Controllers;
@@ -59,17 +59,17 @@ namespace Custom.Hybrid
                 CreateInstancePath = createInstancePath as string;
         }
 
-        private void TryToAttachAppFromUrlParams(ActionExecutingContext context)
+        private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => base.Log.Do(() =>
         {
-            var wrapLog = base.Log.Fn();
             var found = false;
             try
             {
                 // Handed in from the App-API Transformer
-                context.HttpContext.Items.TryGetValue(AppApiDynamicRouteValueTransformer.HttpContextKeyForAppFolder, out var routeAppPathObj);
-                if (routeAppPathObj == null) return;
+                context.HttpContext.Items.TryGetValue(AppApiDynamicRouteValueTransformer.HttpContextKeyForAppFolder,
+                    out var routeAppPathObj);
+                if (routeAppPathObj == null) return "";
                 var routeAppPath = routeAppPathObj.ToString();
-                
+
                 var appId = CtxResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? ToSic.Eav.Constants.NullId;
 
                 if (appId != ToSic.Eav.Constants.NullId)
@@ -81,10 +81,13 @@ namespace Custom.Hybrid
                     found = true;
                 }
             }
-            catch { /* ignore */ }
+            catch
+            {
+                /* ignore */
+            }
 
-            wrapLog.Done(found.ToString());
-        }
+            return found.ToString();
+        });
 
         /// <summary>
         /// Only load the app in case we don't have a module context
@@ -92,16 +95,13 @@ namespace Custom.Hybrid
         /// <param name="appId"></param>
         /// <param name="site"></param>
         /// <returns></returns>
-        private IApp LoadAppOnly(int appId, ISite site)
+        private IApp LoadAppOnly(int appId, ISite site) => base.Log.Func($"{appId}", () =>
         {
-            var wrapLog = base.Log.Fn<IApp>($"{appId}");
-            var showDrafts = false;
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
-            var appStuff = app.Init(base.Log).Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                GetService<AppConfigDelegate>().Init(base.Log).Build(showDrafts));
-            return wrapLog.Return(appStuff);
-        }
+            return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
+                GetService<AppConfigDelegate>().Build(false));
+        });
 
         #region IHasLog
 

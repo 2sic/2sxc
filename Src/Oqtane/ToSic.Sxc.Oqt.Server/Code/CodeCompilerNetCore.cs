@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Oqt.Server.Code
     [PrivateApi]
     public class CodeCompilerNetCore: CodeCompiler
     {
-        private readonly ILazySvc<IServerPaths> _serverPaths;
+        private readonly LazySvc<IServerPaths> _serverPaths;
 
-        public CodeCompilerNetCore(ILazySvc<IServerPaths> serverPaths)
+        public CodeCompilerNetCore(LazySvc<IServerPaths> serverPaths)
         {
             ConnectServices(
                 _serverPaths = serverPaths

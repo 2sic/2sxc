@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Lib.DI;
+﻿using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Services;
@@ -19,10 +18,10 @@ namespace ToSic.Sxc.Web.PageService
 
         public PageService(
             PageServiceShared pageServiceShared,
-            ILazySvc<ContentSecurityPolicyService> cspServiceLazy,
-            ILazySvc<IHtmlTagService> htmlTagsLazy,
-            ILazySvc<ITurnOnService> turnOn,
-            ILazySvc<IModuleService> moduleService
+            LazySvc<ContentSecurityPolicyService> cspServiceLazy,
+            LazySvc<IHtmlTagService> htmlTagsLazy,
+            LazySvc<ITurnOnService> turnOn,
+            LazySvc<IModuleService> moduleService
         ) : base("2sxc.PgeSrv")
         {
             ConnectServices(_cspServiceLazy = cspServiceLazy,
@@ -33,10 +32,10 @@ namespace ToSic.Sxc.Web.PageService
             );
         }
 
-        private readonly ILazySvc<ContentSecurityPolicyService> _cspServiceLazy;
-        private readonly ILazySvc<IHtmlTagService> _htmlTagsLazy;
-        private readonly ILazySvc<IModuleService> _moduleService;
-        private readonly ILazySvc<ITurnOnService> _turnOn;
+        private readonly LazySvc<ContentSecurityPolicyService> _cspServiceLazy;
+        private readonly LazySvc<IHtmlTagService> _htmlTagsLazy;
+        private readonly LazySvc<IModuleService> _moduleService;
+        private readonly LazySvc<ITurnOnService> _turnOn;
         public PageServiceShared PageServiceShared { get; }
 
         /// <summary>

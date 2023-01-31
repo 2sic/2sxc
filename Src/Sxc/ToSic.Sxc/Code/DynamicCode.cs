@@ -1,7 +1,8 @@
 ﻿using ToSic.Eav.Data;
+using ToSic.Lib;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
@@ -38,12 +39,11 @@ namespace ToSic.Sxc.Code
         #region Dynamic Code Coupling
 
         [PrivateApi]
-        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        public override void ConnectToRoot(IDynamicCodeRoot codeRoot) => base.Log.Do(() =>
         {
             base.ConnectToRoot(codeRoot);
             _codeLog.Reset(); // reset in case it was already used before
-            base.Log.Fn().Done();
-        }
+        });
 
         [PrivateApi]
         public IDynamicCode GetContents() => _DynCodeRoot;
@@ -90,12 +90,12 @@ namespace ToSic.Sxc.Code
             string relativePath = null,
             bool throwOnError = true)
         {
-            var wrapLog = base.Log.Fn<dynamic>();
+            var wrapLog = base.Log.Fn<object>();
             // usually we don't have a relative path, so we use the preset path from when this class was instantiated
             relativePath = relativePath ?? CreateInstancePath;
             var instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name,
                 relativePath ?? CreateInstancePath, throwOnError);
-            return wrapLog.Return(instance, (instance != null).ToString());
+            return wrapLog.ReturnAndLog((object)instance);
         }
 
         #endregion

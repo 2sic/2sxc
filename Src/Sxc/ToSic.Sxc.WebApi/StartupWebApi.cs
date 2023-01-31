@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataFormats.EavLight;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Sxc.Adam;
@@ -54,6 +53,8 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<EntityPickerBackend>();
             services.TryAddTransient<EntityBackend>();
             services.TryAddTransient<EditLoadBackend>();
+            services.TryAddTransient<EditLoadPrefetchHelper>();
+            services.TryAddTransient<EditLoadSettingsHelper>();
             services.TryAddTransient<EditSaveBackend>();
             services.TryAddTransient<SaveSecurity>();
             services.TryAddTransient<AppViewPickerBackend>();
@@ -106,6 +107,16 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<BlockControllerReal>();
             services.TryAddTransient<CodeControllerReal>();
 
+            services.AddLoadSettingsProviders();
+
+            return services;
+        }
+
+        public static IServiceCollection AddLoadSettingsProviders(this IServiceCollection services)
+        {
+            services.AddTransient<ILoadSettingsProvider, LoadSettingsForGpsDefaults>();
+            services.AddTransient<ILoadSettingsProvider, LoadSettingsForContentType>();
+            services.AddTransient<ILoadSettingsProvider, LoadSettingsApiKeys>();
             return services;
         }
 

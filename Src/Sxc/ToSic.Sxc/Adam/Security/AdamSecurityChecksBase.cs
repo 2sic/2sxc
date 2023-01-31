@@ -13,7 +13,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
-    public abstract class AdamSecurityChecksBase: HasLog
+    public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase.Dependencies>
     {
 
         #region DI / Constructor
@@ -30,11 +30,9 @@ namespace ToSic.Sxc.Adam
             }
         }
 
-        protected AdamSecurityChecksBase(Dependencies dependencies, string logPrefix) : base($"{logPrefix}.TnScCk")
+        protected AdamSecurityChecksBase(Dependencies dependencies, string logPrefix) : base(dependencies, $"{logPrefix}.TnScCk")
         {
-            _deps = dependencies.SetLog(Log);
         }
-        private readonly Dependencies _deps;
 
         internal AdamSecurityChecksBase Init(AdamContext adamContext, bool usePortalRoot)
         {
@@ -100,7 +98,9 @@ namespace ToSic.Sxc.Adam
             var itm = AdamContext.AppRuntime.Entities.Get(guid);
             if (!(itm?.IsPublished ?? false)) return true;
 
-            exp = HttpException.PermissionDenied(Log.AddAndReuse("user is restricted and may not see published, but item exists and is published - not allowed"));
+            const string msg = "User is restricted and may not see published, but item exists and is published - not allowed";
+            Log.A(msg);
+            exp = HttpException.PermissionDenied(msg);
             return false;
         }
 
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = _deps.AppPermissionChecks.New()
+            var fieldPermissions = Deps.AppPermissionChecks.New()
                 .ForAttribute(AdamContext.Permissions.Context, AdamContext.Context.AppState, AdamContext.Attribute);
 
             return fieldPermissions.UserMay(requiredGrant);

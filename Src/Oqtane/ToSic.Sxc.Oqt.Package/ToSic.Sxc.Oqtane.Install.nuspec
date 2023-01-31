@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>ToSic.Sxc.Oqtane.Install</id>
-    <version>15.00.00</version>
+    <version>15.01.00</version>
     <authors>2sic internet solutions GmbH, Switzerland</authors>
     <owners>2sic internet solutions GmbH, Switzerland</owners>
     <title>2sxc CMS and Meta-Module for Oqtane</title>
@@ -19,7 +19,7 @@
     <releaseNotes>https://github.com/2sic/2sxc/releases</releaseNotes>
     <summary>2sxc 15 - CMS &amp; App-Engine for Oqtane</summary>
     <dependencies>
-      <dependency id="Oqtane.Framework" version="3.2.0" />
+      <dependency id="Oqtane.Framework" version="3.3.1" />
       <dependency id="ToSic.Imageflow.Oqtane" version="1.0.4" />
     </dependencies>
   </metadata>

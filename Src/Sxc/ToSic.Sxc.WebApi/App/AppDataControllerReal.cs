@@ -12,13 +12,13 @@ namespace ToSic.Sxc.WebApi.App
     {
         public const string LogSuffix = "Data";
 
-        public AppDataControllerReal(ILazySvc<AppContent> appContentLazy): base("Api.DataRl")
+        public AppDataControllerReal(LazySvc<AppContent> appContentLazy): base("Api.DataRl")
         {
             ConnectServices(
                 _appContentLazy = appContentLazy
             );
         }
-        private readonly ILazySvc<AppContent> _appContentLazy;
+        private readonly LazySvc<AppContent> _appContentLazy;
 
 
         #region Get List / all of a certain content-type

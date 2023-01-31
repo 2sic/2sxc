@@ -16,14 +16,14 @@ namespace ToSic.Sxc.WebApi.Cms
         public const string LogSuffix = "Hist";
 
         // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
-        public HistoryControllerReal(ILazySvc<AppManager> appManagerLazy) : base("Api.CmsHistoryRl")
+        public HistoryControllerReal(LazySvc<AppManager> appManagerLazy) : base("Api.CmsHistoryRl")
         {
             ConnectServices(
                 _appManagerLazy = appManagerLazy
             );
         }
 
-        private readonly ILazySvc<AppManager> _appManagerLazy;
+        private readonly LazySvc<AppManager> _appManagerLazy;
 
 
         public List<ItemHistory> Get(int appId, ItemIdentifier item)

@@ -19,7 +19,7 @@ namespace ToSic.Sxc.WebApi.Adam
     [PrivateApi("Used by DynamicApiController and Hybrid.Api12_DynCode")]
     public class AdamCode: ServiceForDynamicCode
     {
-        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, ILazySvc<IFeaturesInternal> featuresLazy) : base("AdamCode")
+        public AdamCode(Generator<AdamTransUpload<int, int>> adamUploadGenerator, LazySvc<IFeaturesInternal> featuresLazy) : base("AdamCode")
         {
             ConnectServices(
                 _adamUploadGenerator = adamUploadGenerator,
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
         private readonly Generator<AdamTransUpload<int, int>> _adamUploadGenerator;
-        private readonly ILazySvc<IFeaturesInternal> _featuresLazy;
+        private readonly LazySvc<IFeaturesInternal> _featuresLazy;
 
         public IFile SaveInAdam(string noParamOrder = Parameters.Protector,
             Stream stream = null,

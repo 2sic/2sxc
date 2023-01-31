@@ -1,10 +1,10 @@
 ﻿using ToSic.Eav.Configuration;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Startup
 {
-    public class SxcStartUpRegistrations: HasLog, IStartUpRegistrations
+    public class SxcStartUpRegistrations: ServiceBase, IStartUpRegistrations
     {
         public string NameId => Log.NameId;
 

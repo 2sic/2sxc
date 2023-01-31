@@ -1,8 +1,9 @@
 ﻿using Oqtane.Models;
 using System.Linq;
+using ToSic.Lib;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -70,15 +71,17 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             OqtViewResultsDto ret = null;
             var finalMessage = "";
-            LogTimer.DoInTimer(() =>
+            LogTimer.DoInTimer(() => Log.Do(timer: true, action: () =>
             {
                 #region Lightspeed output caching
-                var callLog = Log.Fn(startTimer: true);
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
                 var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
-                finalMessage = OutputCache?.IsEnabled != true ? "" : OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
+                finalMessage = OutputCache?.IsEnabled != true ? "" :
+                    OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
                 OutputCache?.Save(renderResult);
+
                 #endregion
+
                 PageOutput.Init(this, renderResult);
 
                 ret = new()
@@ -93,10 +96,10 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     HttpHeaders = renderResult.HttpHeaders,
                     CspEnabled = renderResult.CspEnabled,
                     CspEnforced = renderResult.CspEnforced,
-                    CspParameters = renderResult.CspParameters.Select(c => c.NvcToString()).ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
+                    CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
+                        .ToList(), // convert NameValueCollection to (query) string because can't serialize NameValueCollection to json
                 };
-                callLog.Done();
-            });
+            }));
             LogTimer.Done(OutputCache?.Existing?.Data?.IsError ?? false ? "⚠️" : finalMessage);
 
             // Check if there is less than 50 global types and warn user to restart application
@@ -116,7 +119,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         internal IBlock Block => _blockGetOnce.Get(() => LogTimer.DoInTimer(() =>
         {
-            var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module, Log);
+            var ctx = _contextOfBlockEmpty.Init(Page.PageId, Module);
             var block = _blockModuleEmpty.Init(ctx);
             // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
             // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
@@ -126,8 +129,8 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         }));
         private readonly GetOnce<IBlock> _blockGetOnce = new();
 
-        protected LogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
-        private readonly GetOnce<LogCall> _logTimer = new();
+        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"PreRender:{PreRender}, Page:{Page?.PageId} '{Page?.Name}', Module:{Module?.ModuleId} '{Module?.Title}'"));
+        private readonly GetOnce<ILogCall> _logTimer = new();
 
 
         protected IOutputCache OutputCache => _oc.Get(() => _outputCache.Init(Module.ModuleId, Page?.PageId ?? 0, Block));

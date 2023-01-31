@@ -20,12 +20,11 @@ namespace ToSic.Sxc.Blocks
         /// Create a module-content block
         /// </summary>
         /// <param name="ctx"></param>
-        /// <param name="parentLog">a parent-log; can be null but where possible you should wire one up</param>
         ///// <param name="overrideParams">optional override parameters</param>
         public BlockFromModule Init(IContextOfBlock ctx)
         {
             Init(ctx, ctx.Module.BlockIdentifier);
-            var wrapLog = Log.Fn<BlockFromModule>(startTimer: true);
+            var wrapLog = Log.Fn<BlockFromModule>(timer: true);
             IsContentApp = ctx.Module.IsContent;
             CompleteInit(null, ctx.Module.BlockIdentifier, ctx.Module.Id);
             return wrapLog.ReturnAsOk(this);

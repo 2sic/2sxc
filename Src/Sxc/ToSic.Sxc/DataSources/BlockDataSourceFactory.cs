@@ -62,7 +62,7 @@ namespace ToSic.Sxc.DataSources
                 if (view.Query != null)
                 {
                     Log.A("Generate query");
-                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource, Log);
+                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource);
                     Log.A("attaching");
                     viewDataSource.SetOut(query);
                 }

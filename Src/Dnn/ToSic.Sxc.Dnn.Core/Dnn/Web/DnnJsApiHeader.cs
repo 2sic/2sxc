@@ -1,32 +1,32 @@
 ﻿using DotNetNuke.Common;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Edit;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    public class DnnJsApiHeader: HasLog
+    public class DnnJsApiHeader: HelperBase
     {
-        public DnnJsApiHeader(ILog parentLog) : base("Dnn.JsApiH", parentLog)
+        public DnnJsApiHeader(ILog parentLog = null) : base(parentLog, "Dnn.JsApiH")
         {
         }
 
-        public bool AddHeaders()
+        public bool AddHeaders() => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<bool>();
             // ensure we only do this once
-            if (MarkAddedAndReturnIfAlreadyDone()) return wrapLog.ReturnFalse("already");
-            
+            if (MarkAddedAndReturnIfAlreadyDone()) return (false, "already");
+
             var json = DnnJsApi.GetJsApiJson();
-            if (json == null) return wrapLog.ReturnFalse("no path");
+            if (json == null) return (false, "no path");
 
 #pragma warning disable CS0618
             HtmlPage.AddMeta(InpageCms.MetaName, json);
 #pragma warning restore CS0618
-            return wrapLog.ReturnTrue("added");
-        }
+            return (true, "added");
+        });
   
         private const string KeyToMarkAdded = "2sxcApiHeadersAdded";
 

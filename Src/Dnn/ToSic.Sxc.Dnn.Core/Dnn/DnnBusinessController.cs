@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Search.Entities;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Dnn
                 if (_publishing != null) return Publishing;
 
                 // if publishing is used, make sure it's in the log-history
-                _publishing = ServiceProvider.Build<IPagePublishing>().LinkLog(Log);
+                _publishing = ServiceProvider.Build<IPagePublishing>(Log);
                 ServiceProvider.Build<ILogStore>().Add("dnn-publishing", Log);
                 return _publishing;
             }
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.Dnn
         public string UpgradeModule(string version)
         {
             Log.A($"upgrade module - start for v:{version}");
-            var res = ServiceProvider.Build<DnnEnvironmentInstaller>().UpgradeModule(version);
+            var res = ServiceProvider.Build<DnnEnvironmentInstaller>(Log).UpgradeModule(version);
             Log.A($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
             return res;
@@ -116,8 +116,8 @@ namespace ToSic.Sxc.Dnn
         {
             try
             {
-                return ServiceProvider.Build<SearchController>().LinkLog(Log)
-                    .GetModifiedSearchDocuments(((DnnModule)ServiceProvider.Build<IModule>()).Init(moduleInfo, Log), beginDate);
+                return ServiceProvider.Build<SearchController>(Log)
+                    .GetModifiedSearchDocuments(((DnnModule)ServiceProvider.Build<IModule>(Log)).Init(moduleInfo), beginDate);
             }
             catch (Exception e)
             {

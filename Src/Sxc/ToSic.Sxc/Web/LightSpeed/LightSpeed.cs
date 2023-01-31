@@ -5,9 +5,10 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
+using ToSic.Lib;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Lib.Helper;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Web.LightSpeed
     public class LightSpeed : ServiceBase, IOutputCache
     {
 
-        public LightSpeed(IFeaturesInternal features, ILazySvc<IAppStates> appStatesLazy, ILazySvc<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, ILazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
+        public LightSpeed(IFeaturesInternal features, LazySvc<IAppStates> appStatesLazy, LazySvc<AppPaths> appPathsLazy, LightSpeedStats lightSpeedStats, LazySvc<ICmsContext> cmsContext) : base(Constants.SxcLogName + ".Lights")
         {
             ConnectServices(
                 LightSpeedStats = lightSpeedStats,
@@ -31,9 +32,9 @@ namespace ToSic.Sxc.Web.LightSpeed
         }
         public LightSpeedStats LightSpeedStats { get; }
         private readonly IFeaturesInternal _features;
-        private readonly ILazySvc<IAppStates> _appStatesLazy;
-        private readonly ILazySvc<AppPaths> _appPathsLazy;
-        private readonly ILazySvc<ICmsContext> _cmsContext;
+        private readonly LazySvc<IAppStates> _appStatesLazy;
+        private readonly LazySvc<AppPaths> _appPathsLazy;
+        private readonly LazySvc<ICmsContext> _cmsContext;
 
         public IOutputCache Init(int moduleId, int pageId, IBlock block)
         {
@@ -152,7 +153,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             return urlParams;
         }
 
-        private string CacheKey => _key.Get(() => Log.Return(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
+        private string CacheKey => _key.Get(() => Log.Func(() => Ocm.Id(_moduleId, _pageId, UserIdOrAnon, ViewKey, Suffix, CurrentCulture)));
         private readonly GetOnce<string> _key = new GetOnce<string>();
 
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);

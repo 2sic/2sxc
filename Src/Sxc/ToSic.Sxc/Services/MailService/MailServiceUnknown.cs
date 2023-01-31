@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services
 {
     public class MailServiceUnknown : MailServiceBase
     {
-        public MailServiceUnknown(WarnUseOfUnknown<MailServiceUnknown> warn, LazySvc<IUser> userLazy) : base(userLazy)
+        public MailServiceUnknown(WarnUseOfUnknown<MailServiceUnknown> _, LazySvc<IUser> userLazy) : base(userLazy)
         { }
 
         protected override SmtpClient SmtpClient()

@@ -13,25 +13,29 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.InPage
 {
-    public class AppViewPickerBackend: BlockWebApiBackendBase<AppViewPickerBackend>
+    public class AppViewPickerBackend: BlockWebApiBackendBase
     {
+        private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
+
         public AppViewPickerBackend(Generator<MultiPermissionsApp> multiPermissionsApp, 
             LazySvc<CmsManager> cmsManagerLazy, 
-            IContextResolver ctxResolver, 
-            Generator<BlockEditorForModule> blkEdtForMod,
-            Generator<BlockEditorForEntity> blkEdtForEnt
+            IContextResolver ctxResolver,
+            LazySvc<BlockEditorSelector> blockEditorSelectorLazy
+            //Generator<BlockEditorForModule> blkEdtForMod,
+            //Generator<BlockEditorForEntity> blkEdtForEnt
             ) : base(multiPermissionsApp, cmsManagerLazy, ctxResolver,"Bck.ViwApp")
         {
             ConnectServices(
-                _blkEdtForMod = blkEdtForMod,
-                _blkEdtForEnt = blkEdtForEnt
+                _blockEditorSelectorLazy = blockEditorSelectorLazy
+                //_blkEdtForMod = blkEdtForMod,
+                //_blkEdtForEnt = blkEdtForEnt
             );
         }
 
-        private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
-        private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
+        //private readonly IGenerator<BlockEditorForModule> _blkEdtForMod;
+        //private readonly IGenerator<BlockEditorForEntity> _blkEdtForEnt;
 
-        public void SetAppId(int? appId) => BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SetAppId(appId);
+        public void SetAppId(int? appId) => _blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.SetAppId(appId);
 
         public IEnumerable<TemplateUiInfo> Templates() =>
             Block?.App == null 
@@ -60,7 +64,7 @@ namespace ToSic.Sxc.WebApi.InPage
         {
             var callLog = Log.Fn<Guid?>($"{templateId}, {forceCreateContentGroup}");
             ThrowIfNotAllowedInApp(GrantSets.WriteSomething);
-            return callLog.ReturnAsOk(BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt).SaveTemplateId(templateId, forceCreateContentGroup));
+            return callLog.ReturnAsOk(_blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.SaveTemplateId(templateId, forceCreateContentGroup));
         }
 
         public bool Publish(int id)

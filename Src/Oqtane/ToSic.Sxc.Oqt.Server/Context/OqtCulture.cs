@@ -17,15 +17,15 @@ namespace ToSic.Sxc.Oqt.Server.Context
     /// </summary>
     public class OqtCulture: ServiceBase
     {
-        public OqtCulture(ILazySvc<ILocalizationManager> localizationManager, ILazySvc<ILanguageRepository> languageRepository): base($"{OqtConstants.OqtLogPrefix}.Cultur")
+        public OqtCulture(LazySvc<ILocalizationManager> localizationManager, LazySvc<ILanguageRepository> languageRepository): base($"{OqtConstants.OqtLogPrefix}.Cultur")
         {
             ConnectServices(
                 _localizationManager = localizationManager,
                 _languageRepository = languageRepository
             );
         }
-        private readonly ILazySvc<ILocalizationManager> _localizationManager;
-        private readonly ILazySvc<ILanguageRepository> _languageRepository;
+        private readonly LazySvc<ILocalizationManager> _localizationManager;
+        private readonly LazySvc<ILanguageRepository> _languageRepository;
 
         const string FallbackLanguageCode = "en-us";
 

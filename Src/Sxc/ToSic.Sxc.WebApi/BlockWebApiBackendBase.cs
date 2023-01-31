@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Security;
-using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi
 {
-    public abstract class BlockWebApiBackendBase<T>: ServiceBase
+    public abstract class BlockWebApiBackendBase : ServiceBase
     {
         private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
         public IContextResolver CtxResolver { get; }

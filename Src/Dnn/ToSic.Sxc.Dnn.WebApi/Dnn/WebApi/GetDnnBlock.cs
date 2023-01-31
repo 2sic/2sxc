@@ -23,22 +23,21 @@ namespace ToSic.Sxc.Dnn.WebApi
             );
         }
 
-        internal IBlock GetCmsBlock(HttpRequestMessage request)
+        internal IBlock GetCmsBlock(HttpRequestMessage request) => Log.Func(timer: true, func: () =>
         {
-            var wrapLog = Log.Fn<IBlock>(startTimer: true);
-
             var moduleInfo = request.FindModuleInfo();
 
             if (moduleInfo == null)
-                return wrapLog.ReturnNull("request ModuleInfo not found");
+                return (null, "request ModuleInfo not found");
 
             var block = _moduleAndBlockBuilder.New().GetBlock(moduleInfo, null);
 
             // check if we need an inner block
-            if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId)) { 
+            if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId))
+            {
                 var blockHeaderId = request.Headers.GetValues(WebApiConstants.HeaderContentBlockId).FirstOrDefault();
                 int.TryParse(blockHeaderId, out var blockId);
-                if (blockId < 0)   // negative id, so it's an inner block
+                if (blockId < 0) // negative id, so it's an inner block
                 {
                     Log.A($"Inner Content: {blockId}");
                     if (request.Headers.Contains("BlockIds"))
@@ -46,12 +45,13 @@ namespace ToSic.Sxc.Dnn.WebApi
                         var blockIds = request.Headers.GetValues("BlockIds").FirstOrDefault()?.Split(',');
                         block = FindInnerContentParentBlock(block, blockId, blockIds);
                     }
+
                     block = _blockFromEntity.New().Init(block, blockId);
                 }
             }
 
-            return wrapLog.ReturnAsOk(block);
-        }
+            return (block, "ok");
+        });
 
         private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, string[] blockIds)
         {

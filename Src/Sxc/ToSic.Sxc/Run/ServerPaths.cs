@@ -4,7 +4,6 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 #else
 using System.Web.Hosting;
-using System;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 #endif
@@ -42,11 +41,11 @@ namespace ToSic.Sxc.Run
         }
 
 #else
-        public ServerPaths(ILazySvc<IValueConverter> valueConverterLazy)
+        public ServerPaths(LazySvc<IValueConverter> valueConverterLazy)
         {
             _valueConverterLazy = valueConverterLazy;
         }
-        private readonly ILazySvc<IValueConverter> _valueConverterLazy;
+        private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
         protected string MapContentPath(string virtualPath) => HostingEnvironment.MapPath(virtualPath);
 

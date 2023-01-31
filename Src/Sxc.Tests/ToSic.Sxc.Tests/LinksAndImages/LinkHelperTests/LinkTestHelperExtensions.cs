@@ -1,5 +1,4 @@
 ﻿using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Tests.LinksAndImages.LinkHelperTests
 {

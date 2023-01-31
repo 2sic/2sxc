@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Blocks
     public sealed class BlockFromEntity: BlockBase
     {
         internal const string CbPropertyApp = "App";
-        internal const string CbPropertyTitle = "Title";
+        internal const string CbPropertyTitle = Attributes.TitleNiceName;
         internal const string CbPropertyContentGroup = "ContentGroup";
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Blocks
         {
             var ctx = parent.Context.Clone(Log) as IContextOfBlock;
             base.Init(ctx, parent);
-            var wrapLog = Log.Fn<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}", startTimer: true);
+            var wrapLog = Log.Fn<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}", timer: true);
             return wrapLog.Return(CompleteInit(parent, blockEntity));
         }
 

@@ -4,7 +4,6 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
@@ -21,13 +20,15 @@ namespace ToSic.Sxc.WebApi.Cms
         /// </summary>
         /// <returns></returns>
         private JsonEntity GetSerializeAndMdAssignJsonEntity(int appId, BundleWithHeader<IEntity> bundle, JsonSerializer jsonSerializer,
-            ContentTypeRuntime typeRead, AppState appState)
+            ContentTypeRuntime typeRead, AppState appState) => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<JsonEntity>();
             // attach original metadata assignment when creating a new one
             JsonEntity ent;
             if (bundle.Entity != null)
+            {
                 ent = jsonSerializer.ToJson(bundle.Entity, 1);
+
+            }
             else
             {
                 ent = jsonSerializer.ToJson(ConstructEmptyEntity(appId, bundle.Header, typeRead), 0);
@@ -54,8 +55,8 @@ namespace ToSic.Sxc.WebApi.Cms
             }
             catch { /* ignore experimental */ }
 
-            return wrapLog.Return(ent);
-        }
+            return (ent);
+        });
 
         internal static List<IContentType> UsedTypes(List<BundleWithHeader<IEntity>> list, ContentTypeRuntime typeRead)
             => list.Select(i

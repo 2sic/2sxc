@@ -12,8 +12,11 @@ namespace ToSic.Sxc.Services
     /// * Added in 2sxc 12.05
     /// </remarks>
     [PublicApi]
-    public interface ISecureDataService: IHasLog
+    public interface ISecureDataService: IHasLog, ICanDebug
     {
         ISecureData<string> Parse(string value);
+
+        [PrivateApi("WIP v15.01")]
+        string Create(string value);
     }
 }

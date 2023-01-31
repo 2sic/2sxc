@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 {
     public class OqtServerPaths : ServerPathsBase
     {
-        public OqtServerPaths(IWebHostEnvironment hostingEnvironment, ILazySvc<IFileRepository> fileRepository)
+        public OqtServerPaths(IWebHostEnvironment hostingEnvironment, LazySvc<IFileRepository> fileRepository)
         {
             
             _hostingEnvironment = hostingEnvironment;
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         }
 
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly ILazySvc<IFileRepository> _fileRepository;
+        private readonly LazySvc<IFileRepository> _fileRepository;
 
 
         public override string FullAppPath(string virtualPath) => FullContentPath(virtualPath);

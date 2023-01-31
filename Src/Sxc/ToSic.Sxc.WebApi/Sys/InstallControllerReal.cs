@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
@@ -17,12 +16,22 @@ using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.App;
+using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.WebApi.Sys
 {
     public class InstallControllerReal<THttpResponseType> : ServiceBase
     {
+        private readonly LazySvc<IFeaturesService> _featureService;
+        private readonly LazySvc<IContextOfSite> _context;
+        private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
+        private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
+        private readonly ResponseMaker<THttpResponseType> _responseMaker;
+        private readonly LazySvc<IAppStates> _appStates;
+        private readonly LazySvc<AppSettingsStack> _appSettingsStack;
+        private readonly LazySvc<AppsBackend> _appsBackendLazy;
+
         public const string LogSuffix = "Install";
 
         #region System Installation
@@ -30,34 +39,24 @@ namespace ToSic.Sxc.WebApi.Sys
         public InstallControllerReal(
             LazySvc<IContextOfSite> context,
             LazySvc<IEnvironmentInstaller> envInstallerLazy, 
-            LazySvc<ImportFromRemote> impFromRemoteLazy, 
-            LazySvc<IUser> userLazy,
+            LazySvc<ImportFromRemote> impFromRemoteLazy,
             ResponseMaker<THttpResponseType> responseMaker,
-
+            LazySvc<IFeaturesService> featureService,
             LazySvc<AppsBackend> appsBackend,
             LazySvc<IAppStates> appStates,
-            LazySvc<AppSettingsStack> appSettingsStack) : base($"{LogNames.WebApi}.{LogSuffix}Rl")
+            LazySvc<AppSettingsStack> appSettingsStack) : base($"{Eav.EavLogs.WebApi}.{LogSuffix}Rl")
         {
             ConnectServices(
                 _context = context,
                 _envInstallerLazy = envInstallerLazy,
                 _impFromRemoteLazy = impFromRemoteLazy,
-                _userLazy = userLazy,
                 _responseMaker = responseMaker,
+                _featureService = featureService,
                 _appStates = appStates,
                 _appSettingsStack = appSettingsStack,
                 _appsBackendLazy = appsBackend
             );
         }
-
-        private readonly LazySvc<IContextOfSite> _context;
-        private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
-        private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
-        private readonly LazySvc<IUser> _userLazy;
-        private readonly ResponseMaker<THttpResponseType> _responseMaker;
-        private readonly LazySvc<IAppStates> _appStates;
-        private readonly LazySvc<AppSettingsStack> _appSettingsStack;
-        private readonly LazySvc<AppsBackend> _appsBackendLazy;
 
 
         /// <summary>
@@ -98,6 +97,12 @@ namespace ToSic.Sxc.WebApi.Sys
                 .Select(e => new SiteSetupAutoInstallAppsRule(e).GetRuleDto())
                 .ToList();
 
+            if (!_featureService.Value.IsEnabled(BuiltInFeatures.AppAutoInstallerConfigurable.NameId))
+            {
+                Log.A("will not add installer rules as the feature is not enabled");
+                rulesFinal = new List<AppInstallRuleDto>();
+            }
+
             return new InstallAppsDto
             {
                 remoteUrl = url,
@@ -121,7 +126,7 @@ namespace ToSic.Sxc.WebApi.Sys
             Log.A("install package:" + packageUrl);
 
             var block = container.BlockIdentifier;
-            var (success, messages) = _impFromRemoteLazy.Value.Init(_userLazy.Value)
+            var (success, messages) = _impFromRemoteLazy.Value
                 .InstallPackage(block.ZoneId, block.AppId, isApp, packageUrl);
 
             Log.A("install completed with success:" + success);

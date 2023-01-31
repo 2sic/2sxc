@@ -1,0 +1,475 @@
+{
+  "Bundles": [
+    {
+      "Name": "default",
+      "Entities": [
+        {
+          "Id": 130652,
+          "Version": 8,
+          "Guid": "06f4fa58-2e91-4896-a16e-3bbaf9a5f491",
+          "Type": {
+            "Name": "⚙️WebResources",
+            "Id": "9ff20ccf-3ff7-4a76-b749-dd22771df730"
+          },
+          "Attributes": {
+            "String": {
+              "SettingsIdentifier": {
+                "en-us": "WebResources"
+              }
+            },
+            "Entity": {
+              "Items": {
+                "*": [
+                  "e6d3d600-ea17-4957-9c56-9bae78329c67",
+                  "72286f65-e38b-42ee-a0da-0c73e55f7ba4",
+                  "4b9ef331-480a-4a38-86f1-a580f8345677",
+                  "3356ad17-91ce-4814-83c1-9f527697391a",
+                  "38e0226d-4c31-4d2e-ab97-8e16483ddf94",
+                  "3e6811a8-87ab-4954-8402-6e2b3d80c6e2"
+                ]
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 166554,
+              "Version": 1,
+              "Guid": "3c2edf90-4fe7-42dc-9031-af52dcecc36d",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1a29fa3e-69e7-48db-836f-c04ee3991284"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "06f4fa58-2e91-4896-a16e-3bbaf9a5f491"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 130653,
+          "Version": 4,
+          "Guid": "e6d3d600-ea17-4957-9c56-9bae78329c67",
+          "Type": {
+            "Name": "⚙️WebResource",
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+          },
+          "Attributes": {
+            "String": {
+              "Html": {
+                "*": "<link  data-enableoptimizations=\"true\" rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css\" integrity=\"sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l\" crossorigin=\"anonymous\">\n\n<script data-enableoptimizations=\"true\" src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns\" crossorigin=\"anonymous\" ></script>"
+              },
+              "ItemIdentifier": {
+                "*": "Bootstrap4"
+              },
+              "SettingsIdentifier": {
+                "*": "WebResources.Bootstrap4"
+              }
+            },
+            "Boolean": {
+              "Enabled": {
+                "*": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 166555,
+              "Version": 1,
+              "Guid": "136bb934-15a8-418f-9b74-2a76abdd8022",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1a29fa3e-69e7-48db-836f-c04ee3991284"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "e6d3d600-ea17-4957-9c56-9bae78329c67"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 130654,
+          "Version": 6,
+          "Guid": "38e0226d-4c31-4d2e-ab97-8e16483ddf94",
+          "Type": {
+            "Name": "⚙️WebResource",
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+          },
+          "Attributes": {
+            "String": {
+              "Html": {
+                "en-us": "<script defer async data-enableoptimizations=\"bottom\" src=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js\" integrity=\"sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>"
+              },
+              "ItemIdentifier": {
+                "en-us": "FontAwesome5"
+              },
+              "SettingsIdentifier": {
+                "en-us": "WebResources.FontAwesome5"
+              }
+            },
+            "Boolean": {
+              "Enabled": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 144504,
+              "Version": 1,
+              "Guid": "049f481e-a3aa-4a85-afe7-8c88ccafd38d",
+              "Type": {
+                "Name": "NoteDecorator",
+                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12"
+              },
+              "Attributes": {
+                "String": {
+                  "Note": {
+                    "en-us": "<p>Get updated links from the <a href=\"https://cdnjs.com/libraries/font-awesome/5.15.4\" target=\"_blank\" rel=\"noopener\">CDNJS</a>.</p>"
+                  },
+                  "NoteType": {
+                    "en-us": "note"
+                  },
+                  "Title": {
+                    "en-us": "Get updated links from the CDN..."
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "38e0226d-4c31-4d2e-ab97-8e16483ddf94"
+              }
+            },
+            {
+              "Id": 166556,
+              "Version": 1,
+              "Guid": "b757c81f-6b2a-46a6-be76-30a907586813",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1a29fa3e-69e7-48db-836f-c04ee3991284"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "38e0226d-4c31-4d2e-ab97-8e16483ddf94"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 130655,
+          "Version": 2,
+          "Guid": "4b9ef331-480a-4a38-86f1-a580f8345677",
+          "Type": {
+            "Name": "⚙️WebResource",
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+          },
+          "Attributes": {
+            "String": {
+              "Html": {
+                "*": "<link data-enableoptimizations=\"bottom\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css\" integrity=\"sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" />\n\n<script defer async data-enableoptimizations=\"bottom\" src=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js\" integrity=\"sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>"
+              },
+              "ItemIdentifier": {
+                "*": "Fancybox3"
+              },
+              "SettingsIdentifier": {
+                "*": "WebResources.Fancybox3"
+              }
+            },
+            "Boolean": {
+              "Enabled": {
+                "*": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 166557,
+              "Version": 1,
+              "Guid": "7db3406c-be34-4953-aa9e-7170ba075e5b",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1a29fa3e-69e7-48db-836f-c04ee3991284"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "4b9ef331-480a-4a38-86f1-a580f8345677"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 130658,
+          "Version": 3,
+          "Guid": "72286f65-e38b-42ee-a0da-0c73e55f7ba4",
+          "Type": {
+            "Name": "⚙️WebResource",
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+          },
+          "Attributes": {
+            "String": {
+              "Html": {
+                "en-us": "<link data-enableoptimizations=\"true\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC\" crossorigin=\"anonymous\">\n\n<script data-enableoptimizations=\"true\" src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM\" crossorigin=\"anonymous\"></script>"
+              },
+              "ItemIdentifier": {
+                "en-us": "Bootstrap5"
+              },
+              "SettingsIdentifier": {
+                "en-us": "WebResources.Bootstrap5"
+              }
+            },
+            "Boolean": {
+              "Enabled": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 166558,
+              "Version": 1,
+              "Guid": "c0c72782-77a4-4419-be31-7c5ac4f7bca0",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1a29fa3e-69e7-48db-836f-c04ee3991284"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "72286f65-e38b-42ee-a0da-0c73e55f7ba4"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 131820,
+          "Version": 9,
+          "Guid": "3356ad17-91ce-4814-83c1-9f527697391a",
+          "Type": {
+            "Name": "⚙️WebResource",
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+          },
+          "Attributes": {
+            "String": {
+              "Html": {
+                "en-us": "<link rel=\"stylesheet\" data-enableoptimizations=\"bottom\" href=\"https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.26/dist/fancybox.css\" integrity=\"sha256-TKc3YkhtFZIGx8QxHcwXCosCWnTuDft8upXnvv2oFXg=\" crossorigin=\"anonymous\">\n<script defer async data-enableoptimizations=\"bottom\" src=\"https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.26/dist/fancybox.umd.js\" integrity=\"sha256-D4Epl1XSKsE0D1vBveDYFoN61WfBppzP0OwRKU2BAmQ=\" crossorigin=\"anonymous\"></script>"
+              },
+              "ItemIdentifier": {
+                "en-us": "fancybox4"
+              },
+              "SettingsIdentifier": {
+                "en-us": "WebResources.fancybox4"
+              }
+            },
+            "Boolean": {
+              "Enabled": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 144503,
+              "Version": 1,
+              "Guid": "04c9dd2c-f931-48b0-a1ad-7473e2526f00",
+              "Type": {
+                "Name": "NoteDecorator",
+                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12"
+              },
+              "Attributes": {
+                "String": {
+                  "Note": {
+                    "en-us": "<p>Best update with exact version links and SRI from here:</p>\n<p><a href=\"https://www.jsdelivr.com/package/npm/@fancyapps/ui?path=dist\" target=\"_blank\" rel=\"noopener\">https://www.jsdelivr.com/package/npm/@fancyapps/ui?path=dist</a>&nbsp;&nbsp;</p>"
+                  },
+                  "NoteType": {
+                    "en-us": "note"
+                  },
+                  "Title": {
+                    "en-us": "Best update with exact version..."
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "3356ad17-91ce-4814-83c1-9f527697391a"
+              }
+            },
+            {
+              "Id": 166559,
+              "Version": 1,
+              "Guid": "b5aca58e-d6af-4489-9853-dcaaab66b3cb",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1a29fa3e-69e7-48db-836f-c04ee3991284"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "3356ad17-91ce-4814-83c1-9f527697391a"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 144505,
+          "Version": 2,
+          "Guid": "3e6811a8-87ab-4954-8402-6e2b3d80c6e2",
+          "Type": {
+            "Name": "⚙️WebResource",
+            "Id": "66f19c62-371e-4ad1-a98b-de0745507be4"
+          },
+          "Attributes": {
+            "String": {
+              "Html": {
+                "en-us": "<script defer async data-enableoptimizations=\"bottom\" src=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js\" integrity=\"sha512-6PM0qYu5KExuNcKt5bURAoT6KCThUmHRewN3zUFNaoI6Di7XJPTMoT6K0nsagZKk2OB4L7E3q1uQKHNHd4stIQ==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>"
+              },
+              "ItemIdentifier": {
+                "en-us": "FontAwesome6"
+              },
+              "SettingsIdentifier": {
+                "en-us": "WebResources.FontAwesome6"
+              }
+            },
+            "Boolean": {
+              "Enabled": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 144506,
+              "Version": 1,
+              "Guid": "be43a43e-56c9-4660-97a4-a3aadafa370e",
+              "Type": {
+                "Name": "NoteDecorator",
+                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12"
+              },
+              "Attributes": {
+                "String": {
+                  "Note": {
+                    "en-us": "<p>Get updated links from the <a href=\"https://cdnjs.com/libraries/font-awesome/6.1.1\" target=\"_blank\" rel=\"noopener\">CDNJS</a>.</p>"
+                  },
+                  "NoteType": {
+                    "en-us": "note"
+                  },
+                  "Title": {
+                    "en-us": "Get updated links from the CDN..."
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "3e6811a8-87ab-4954-8402-6e2b3d80c6e2"
+              }
+            },
+            {
+              "Id": 166560,
+              "Version": 1,
+              "Guid": "ecf47466-931f-4e69-9c56-d8e3a0853d38",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1a29fa3e-69e7-48db-836f-c04ee3991284"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "3e6811a8-87ab-4954-8402-6e2b3d80c6e2"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_": {
+    "V": 1
+  }
+}

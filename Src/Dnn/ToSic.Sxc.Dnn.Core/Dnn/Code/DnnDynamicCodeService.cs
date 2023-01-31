@@ -42,9 +42,8 @@ namespace ToSic.Sxc.Dnn.Code
             }
         }
 
-        public DnnDynamicCodeService(Dependencies dependencies) : base(dependencies)
+        public DnnDynamicCodeService(Dependencies dependencies) : base(dependencies, $"{DnnConstants.LogName}.DynCdS")
         {
-            Log.Rename(DnnConstants.LogName + ".DynCdS");
             _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
             _user = dependencies.User;
             Page = HttpContext.Current?.Handler as Page;
@@ -57,16 +56,15 @@ namespace ToSic.Sxc.Dnn.Code
         private readonly LazySvc<IUser> _user;
 
 
-        private void Page_PreRender(object sender, EventArgs e)
+        private void Page_PreRender(object sender, EventArgs e) => Log.Do(() =>
         {
-            var wrapLog = Log.Fn();
             var user = _user.Value;
-            var changes = _scopedDeps.PageChangeSummary.Value.FinalizeAndGetAllChanges(_scopedDeps.PageServiceShared.Value, user.IsContentAdmin);
+            var changes = _scopedDeps.PageChangeSummary.Value.FinalizeAndGetAllChanges(
+                _scopedDeps.PageServiceShared.Value, user.IsContentAdmin);
             _scopedDeps.DnnPageChanges.Value.Apply(Page, changes);
             var dnnClientResources = _scopedDeps.DnnClientResources.Value.Init(Page, false, null);
             dnnClientResources.AddEverything(changes?.Features);
-            wrapLog.Done();
-        }
+        });
 
         public Page Page;
     }

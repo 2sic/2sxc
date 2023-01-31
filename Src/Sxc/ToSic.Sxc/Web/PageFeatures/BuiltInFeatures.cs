@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         public static PageFeature JsCore = new PageFeature("2sxc.JsCore", "2sxc core js APIs", needs: new[]
         {
             ContextPage.NameId
-        });
+        }, urlWip: "js/2sxc.api.min.js");
 
         /// <summary>
         /// The INTERNAL USE 2sxc JS libraries for cms / edit actions.
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             {
                 JsCore.NameId,
                 ContextModule.NameId,
-            });
+            }, urlWip: "dist/inpage/inpage.min.js");
 
         private static readonly List<Condition> RequiresPublicEditForm = new List<Condition> { PublicEditForm.Condition };
 
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Web.PageFeatures
             {
                 JsCmsInternal.NameId,
                 ContextPage.NameId,
-            });
+            }, urlWip: "dist/inpage/inpage.min.css");
 
         /// <summary>
         /// The 2sxc JS libraries for cms / edit actions
@@ -107,7 +107,15 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <remarks>
         /// Published the key 'turnOn' in v12.02, do not change
         /// </remarks>
-        public static PageFeature TurnOn = new PageFeature("turnOn", "turnOn JS library");
+        public static PageFeature TurnOn = new PageFeature("turnOn", "turnOn JS library", urlWip: "dist/turnOn/turn-on.js");
+
+        /// <summary>
+        /// turnOn feature
+        /// </summary>
+        /// <remarks>
+        /// Added in v15.01
+        /// </remarks>
+        public static PageFeature CmsWysiwyg = new PageFeature("Cms.Wysiwyg", "Wysiwyg helpers / css for better rich content", urlWip: "dist/cms/wysiwyg.css");
 
     }
 }

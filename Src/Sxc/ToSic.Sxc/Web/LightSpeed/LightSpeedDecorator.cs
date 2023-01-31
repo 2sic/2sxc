@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Web.LightSpeed
 {
     public class LightSpeedDecorator: EntityBasedType
     {
-        public static string TypeName = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
+        public static string TypeNameId = "be34f64b-7d1f-4ad0-b488-dabbbb01a186";
         public const string FieldIsEnabled = "IsEnabled";
         public const string FieldDuration = "Duration";
         public const string FieldDurationUser = "DurationUsers";
@@ -38,10 +38,10 @@ namespace ToSic.Sxc.Web.LightSpeed
 
         public static LightSpeedDecorator GetFromAppStatePiggyBack(AppState appState, ILog log)
         {
-            var decoFromPiggyBack = appState?.PiggyBack.GetOrGenerate(appState, $"decorator-{TypeName}", () =>
+            var decoFromPiggyBack = appState?.PiggyBack.GetOrGenerate(appState, $"decorator-{TypeNameId}", () =>
             {
                 log.A("Debug WIP - remove once this has proven to work; get LightSpeed PiggyBack - recreate");
-                var decoEntityOrNullPb = appState?.Metadata?.FirstOrDefaultOfType(TypeName);
+                var decoEntityOrNullPb = appState?.Metadata?.FirstOrDefaultOfType(TypeNameId);
                 return new LightSpeedDecorator(decoEntityOrNullPb);
             });
             return decoFromPiggyBack ?? new LightSpeedDecorator(null);

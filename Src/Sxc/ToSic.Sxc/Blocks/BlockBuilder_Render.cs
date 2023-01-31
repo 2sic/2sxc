@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Lib;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helper;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
@@ -17,14 +17,14 @@ namespace ToSic.Sxc.Blocks
         public bool WrapInDiv { get; set; } = true;
 
         [PrivateApi]
-        public IRenderingHelper RenderingHelper => _rendHelp.Get(() => _deps.RenderHelpGen.New().Init(Block));
+        public IRenderingHelper RenderingHelper => _rendHelp.Get(() => Deps.RenderHelpGen.New().Init(Block));
         private readonly GetOnce<IRenderingHelper> _rendHelp = new GetOnce<IRenderingHelper>();
 
         public IRenderResult Run(bool topLevel)
         {
             // Cache Result on multiple runs
             if (_result != null) return _result;
-            var wrapLog = Log.Fn<IRenderResult>(startTimer: true);
+            var wrapLog = Log.Fn<IRenderResult>(timer: true);
             try
             {
                 var (html, err) = RenderInternal();
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Blocks
                 // So only the top-level should get them
                 if (topLevel)
                 {
-                    var allChanges = _deps.PageChangeSummary.Value
+                    var allChanges = Deps.PageChangeSummary.Value
                         .FinalizeAndGetAllChanges(Block.Context.PageServiceShared, Block.Context.UserMayEdit);
 
                     // Head & Page Changes
@@ -168,7 +168,7 @@ namespace ToSic.Sxc.Blocks
 
                 #region Add Custom Tags to the end if provided by the ModuleService
 
-                var additionalTags = _deps.ModuleService.MoreTags;
+                var additionalTags = Deps.ModuleService.MoreTags;
                 if (additionalTags.Any()) 
                     result += "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()));
 
@@ -191,7 +191,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (InstallationOk) return (null, false);
 
-            var installer = _deps.EnvInstGen.New();
+            var installer = Deps.EnvInstGen.New();
             var notReady = installer.UpgradeMessages();
             if (!string.IsNullOrEmpty(notReady))
             {
@@ -208,7 +208,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// license ok state
         /// </summary>
-        protected bool LicenseOk => _licenseOk.Get(() => _deps.LicenseService.Value.HaveValidLicense);
+        protected bool LicenseOk => _licenseOk.Get(() => Deps.LicenseService.Value.HaveValidLicense);
         private readonly GetOnce<bool> _licenseOk = new GetOnce<bool>();
 
         private string GenerateWarningMsgIfLicenseNotOk()
@@ -227,12 +227,12 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IEngine GetEngine()
         {
-            var wrapLog = Log.Fn<IEngine>(startTimer: true);
+            var wrapLog = Log.Fn<IEngine>(timer: true);
             if (_engine != null) return wrapLog.Return(_engine, "cached");
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
             if (Block.View == null) return wrapLog.ReturnNull("no view");
-            _engine = _deps.EngineFactory.CreateEngine(Block.View);
-            _engine.Init(Log).Init(Block);
+            _engine = Deps.EngineFactory.CreateEngine(Block.View);
+            _engine.Init(Block);
             return wrapLog.Return(_engine, "created");
         }
         private IEngine _engine;

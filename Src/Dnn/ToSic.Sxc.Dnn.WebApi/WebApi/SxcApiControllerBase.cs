@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Lib.Helper;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.WebApi;

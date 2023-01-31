@@ -18,19 +18,26 @@ using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.WebApi.Save;
 using JsonSerializer = ToSic.Eav.ImportExport.Json.JsonSerializer;
 using ToSic.Lib.Services;
-using ToSic.Sxc.WebApi.Adam;
+using static System.String;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public partial class EditLoadBackend: ServiceBase
     {
-        public Generator<HyperlinkBackend<int, int>> HyperlinkBackend { get; }
-        private readonly Generator<IAdamTransGetItems> _adamTransGetItems;
+        private readonly EditLoadSettingsHelper _loadSettings;
+        private readonly EntityApi _entityApi;
+        private readonly ContentGroupList _contentGroupList;
+        private readonly EntityBuilder _entityBuilder;
+        private readonly IUiContextBuilder _contextBuilder;
+        private readonly IContextResolver _ctxResolver;
+        private readonly ITargetTypes _mdTargetTypes;
+        private readonly IAppStates _appStates;
+        private readonly IUiData _uiData;
+        private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
+        private readonly EditLoadPrefetchHelper _prefetch;
         private readonly Generator<MultiPermissionsTypes> _typesPermissions;
 
         #region DI Constructor
@@ -41,17 +48,14 @@ namespace ToSic.Sxc.WebApi.Cms
             IUiContextBuilder contextBuilder,
             IContextResolver ctxResolver,
             ITargetTypes mdTargetTypes,
-            EntityPickerApi entityPickerBackend,
             IAppStates appStates,
             IUiData uiData,
             Generator<JsonSerializer> jsonSerializerGenerator,
-            GoogleMapsSettings googleMapsSettings,
             Generator<MultiPermissionsTypes> typesPermissions,
-            LazySvc<IFeaturesService> features,
-            Generator<IAdamTransGetItems> adamTransGetItems,
-            Generator<HyperlinkBackend<int, int>> hyperlinkBackend) : base("Cms.LoadBk")
+            EditLoadPrefetchHelper prefetch,
+            EditLoadSettingsHelper loadSettings
+            ) : base("Cms.LoadBk")
         {
-
             ConnectServices(
                 _entityApi = entityApi,
                 _contentGroupList = contentGroupList,
@@ -59,41 +63,22 @@ namespace ToSic.Sxc.WebApi.Cms
                 _contextBuilder = contextBuilder,
                 _ctxResolver = ctxResolver,
                 _mdTargetTypes = mdTargetTypes,
-                _entityPickerBackend = entityPickerBackend,
                 _appStates = appStates,
                 _uiData = uiData,
                 _jsonSerializerGenerator = jsonSerializerGenerator,
-                _features = features,
-                _googleMapsSettings = googleMapsSettings,
                 _typesPermissions = typesPermissions,
-                _adamTransGetItems = adamTransGetItems,
-                HyperlinkBackend = hyperlinkBackend
+                _prefetch = prefetch,
+                _loadSettings = loadSettings
             );
         }
-
-        private readonly EntityApi _entityApi;
-        private readonly ContentGroupList _contentGroupList;
-        private readonly EntityBuilder _entityBuilder;
-        private readonly IUiContextBuilder _contextBuilder;
-        private readonly IContextResolver _ctxResolver;
-        private readonly ITargetTypes _mdTargetTypes;
-        private readonly EntityPickerApi _entityPickerBackend;
-        private readonly IAppStates _appStates;
-        private readonly IUiData _uiData;
-        private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
-        private readonly LazySvc<IFeaturesService> _features;
-        private readonly GoogleMapsSettings _googleMapsSettings;
 
         #endregion
 
 
-        public EditDto Load(int appId, List<ItemIdentifier> items)
+        public EditDto Load(int appId, List<ItemIdentifier> items) => Log.Func($"load many a#{appId}, items⋮{items.Count}", l =>
         {
             // Security check
-            var l = Log.Fn<EditDto>($"load many a#{appId}, items⋮{items.Count}");
-
             var context = _ctxResolver.BlockOrApp(appId);
-
             var showDrafts = context.UserMayEdit;
 
             // do early permission check - but at this time it may be that we don't have the types yet
@@ -115,10 +100,11 @@ namespace ToSic.Sxc.WebApi.Cms
             var typeRead = entityApi.AppRead.ContentTypes;
             var list = entityApi.GetEntitiesForEditing(items);
             var jsonSerializer = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
+            var appState = _appStates.Get(appIdentity);
             result.Items = list.Select(e => new BundleWithHeader<JsonEntity>
             {
                 Header = e.Header,
-                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead, _appStates.Get(appIdentity))
+                Entity = GetSerializeAndMdAssignJsonEntity(appId, e, jsonSerializer, typeRead, appState)
             }).ToList();
 
             // set published if some data already exists
@@ -139,10 +125,10 @@ namespace ToSic.Sxc.WebApi.Cms
             // load content-types
             var serializerForTypes = _jsonSerializerGenerator.New().SetApp(entityApi.AppRead.AppState);
             serializerForTypes.ValueConvertHyperlinks = true;
-            var types = UsedTypes(list, typeRead);
-            var jsonTypes = types.Select(t => serializerForTypes.ToPackage(t, true)).ToList();
+            var usedTypes = UsedTypes(list, typeRead);
+            var jsonTypes = usedTypes.Select(t => serializerForTypes.ToPackage(t, true)).ToList();
             result.ContentTypes = jsonTypes.Select(t => t.ContentType).ToList();
-
+            // Also add global Entities like Formulas which would not be included otherwise
             result.ContentTypeItems = jsonTypes.SelectMany(t => t.Entities).ToList();
 
             // Fix not-supported input-type names; map to correct name
@@ -158,43 +144,37 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // Attach context, but only the minimum needed for the UI
             result.Context = _contextBuilder.InitApp(context.AppState)
-                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features | Ctx.ApiKeys,
-                    CtxEnable.EditUi);
+                .Get(Ctx.AppBasic | Ctx.AppEdit | Ctx.Language | Ctx.Site | Ctx.System | Ctx.User | Ctx.Features, CtxEnable.EditUi);
 
-            result.Settings = GetSettings(context);
+            result.Settings = _loadSettings.GetSettings(context, usedTypes, result.ContentTypes, entityApi.AppRead);
 
             try
             {
-                result.Prefetch = TryToPrefectAdditionalData(appId, result);
+                result.Prefetch = _prefetch.TryToPrefectAdditionalData(appId, result, entityApi.AppRead);
             }
-            catch (Exception ex)
+            catch (Exception ex) // Log and Ignore
             {
-                Log.A("Ran into an error during Prefetch");
-                Log.Ex(ex);
-                /* ignore */
+                l.A("Ran into an error during Prefetch");
+                l.Ex(ex);
             }
-
-
-
+            
             // done
-            return l.Return(result, $"ready, sending items:{result.Items.Count}, " +
+            return (result, $"ready, sending items:{result.Items.Count}, " +
                                    $"types:{result.ContentTypes.Count}, " +
                                    $"inputs:{result.InputTypes.Count}, " +
                                    $"feats:{result.Features.Count}");
-        }
+        });
         
 
         /// <summary>
         /// new 2020-12-08 - correct entity-id with lookup of existing if marked as singleton
         /// </summary>
-        private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState)
+        private bool TryToAutoFindMetadataSingleton(List<ItemIdentifier> list, AppState appState) => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<bool>();
-
             foreach (var header in list
-                .Where(header => header.For?.Singleton == true && !string.IsNullOrWhiteSpace(header.ContentTypeName)))
+                .Where(header => header.For?.Singleton == true && !IsNullOrWhiteSpace(header.ContentTypeName)))
             {
-                Log.A("Found an entity with the auto-lookup marker");
+                l.A("Found an entity with the auto-lookup marker");
                 // try to find metadata for this
                 var mdFor = header.For;
                 // #TargetTypeIdInsteadOfTarget
@@ -208,15 +188,15 @@ namespace ToSic.Sxc.WebApi.Cms
                 var mdList = mds.ToArray();
                 if (mdList.Length > 1)
                 {
-                    Log.A($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
+                    l.A($"Warning - looking for best metadata but found too many {mdList.Length}, will use first");
                     // must now sort by ID otherwise the order may be different after a few save operations
                     mdList = mdList.OrderBy(e => e.EntityId).ToArray();
                 }
                 header.EntityId = !mdList.Any() ? 0 : mdList.First().EntityId;
             }
 
-            return wrapLog.ReturnTrue("ok");
-        }
+            return true;
+        });
     }
 }
 

@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
     {
         private readonly SettingsHelper _settingsHelper;
         private readonly IPageModuleRepository _pageModuleRepository;
-        private readonly ILazySvc<CmsRuntime> _lazyCmsRuntime;
+        private readonly LazySvc<CmsRuntime> _lazyCmsRuntime;
         private readonly IAppStates _appStates;
         private readonly ISite _site;
 
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         // ReSharper disable once UnusedMember.Global
         public OqtModuleUpdater(SettingsHelper settingsHelper,
             IPageModuleRepository pageModuleRepository,
-            ILazySvc<CmsRuntime> lazyCmsRuntime, IAppStates appStates, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
+            LazySvc<CmsRuntime> lazyCmsRuntime, IAppStates appStates, ISite site) : base($"{OqtConstants.OqtLogPrefix}.MapA2I")
         {
             ConnectServices(
                 _settingsHelper = settingsHelper,
