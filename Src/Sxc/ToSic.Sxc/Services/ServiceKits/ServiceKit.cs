@@ -10,18 +10,15 @@ namespace ToSic.Sxc.Services
     /// <remarks>
     /// * History: Added v14.04
     /// * Everything that needs a ServiceKit will have a "where TKit : <see cref="ServiceKit14"/>"
-    /// * It's not abstract, so that you can use it as the placeholder in cases where you don't need a real kit
+    /// * It's not abstract, so that you can use it as the placeholder in cases where you don't need a real kit (like in DynamicCodeRoot generic types)
     /// </remarks>
     [PublicApi]
-    public class ServiceKit: INeedsDynamicCodeRoot, IHasDynamicCodeRoot
+    public class ServiceKit: ServiceForDynamicCode
     {
-        /// <inheritdoc />
         [PrivateApi]
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot) => _DynCodeRoot = codeRoot;
-
-        /// <inheritdoc />
-        [PrivateApi]
-        public IDynamicCodeRoot _DynCodeRoot { get; private set; }
+        protected ServiceKit(string logName) : base(logName)
+        {
+        }
 
         /// <summary>
         /// All the services provided by this kit must come from the code root so they are properly initialized. 
