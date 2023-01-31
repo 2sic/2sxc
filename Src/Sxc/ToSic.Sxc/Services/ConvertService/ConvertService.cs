@@ -1,18 +1,21 @@
 ﻿using System;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Web;
+using ToSic.Lib.Services;
 
 // ReSharper disable MethodOverloadWithOptionalParameter
 
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    public class ConvertService: IConvertService
+    public class ConvertService: ServiceBase, IConvertService
     {
-        public ConvertService(IJsonService json)
+        public ConvertService(LazySvc<IJsonService> json): base("Sxc.CnvSrv")
         {
-            Json = json;
+            ConnectServices(
+                _jsonLazy = json
+            );
         }
 
         public bool OptimizeNumbers => true;
@@ -33,17 +36,14 @@ namespace ToSic.Sxc.Services
         public int ToInt(object value, int fallback = 0) => To(value, fallback: fallback);
         public Guid ToGuid(object value) => To<Guid>(value);
 
-        public Guid ToGuid(object value, Guid fallback = default)
-        {
-            return To<Guid>(value, fallback: fallback);
-        }
+        public Guid ToGuid(object value, Guid fallback = default) => To(value, fallback: fallback);
 
         public float ToFloat(object value) => To<float>(value);
         public float ToFloat(object value, float fallback = 0F) => To(value, fallback: fallback);
 
         public decimal ToDecimal(object value) => To<decimal>(value);
 
-        public decimal ToDecimal(object value, decimal fallback = 0m) => To<decimal>(value, fallback: fallback);
+        public decimal ToDecimal(object value, decimal fallback = 0m) => To(value, fallback: fallback);
 
         public double ToDouble(object value) => To<double>(value);
         public double ToDouble(object value, double fallback = 0D) => To(value, fallback: fallback);
@@ -80,7 +80,8 @@ namespace ToSic.Sxc.Services
             return result;
         }
 
-        public IJsonService Json { get; }
+        public IJsonService Json => _jsonLazy.Value;
+        private LazySvc<IJsonService> _jsonLazy;
 
         #region Invisible Converts for backward compatibility
 
