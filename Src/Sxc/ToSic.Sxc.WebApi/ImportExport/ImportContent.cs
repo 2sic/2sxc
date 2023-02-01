@@ -24,6 +24,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ImportContent: ServiceBase
     {
+        private readonly LazySvc<IFeaturesInternal> _features;
+
         #region DI Constructor
 
         public ImportContent(
@@ -35,7 +37,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
             LazySvc<IUser> userLazy,
-            SystemManager systemManager) : base("Bck.Export")
+            SystemManager systemManager,
+            LazySvc<IFeaturesInternal> features) : base("Bck.Export")
         {
             ConnectServices(
                 _envLogger = envLogger,
@@ -46,7 +49,8 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 _globalConfiguration = globalConfiguration,
                 _appStates = appStates,
                 SystemManager = systemManager,
-                _userLazy = userLazy
+                _userLazy = userLazy,
+                _features = features
             );
         }
 
@@ -112,13 +116,20 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
                 // 1.1 Deserialize json files
                 var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
+                l.A($"Packages: {packages.Count}");
 
                 // 1.2. Build content types
                 var types = new List<IContentType>();
+                
+                var isEnabled = _features.Value.IsEnabled(BuiltInFeatures.DataExportImportBundles);
+                l.A($"Is bundle packages import feature enabled: {isEnabled}");
+
                 foreach (var package in packages)
                 {
+                    l.A($"import content-types from package: {package.Key}");
+
                     // bundle json
-                    if (package.Value.Bundles?.Any() == true)
+                    if (isEnabled && package.Value.Bundles?.Any() == true)
                         types.AddRange(serializer.GetContentTypesFromBundles(package.Value));
 
                     // single json
@@ -131,13 +142,16 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
                 // 1.3 Import the type
                 var import = _importerLazy.Value.Init(zoneId, appId, true, true);
-                import.ImportIntoDb(types, null);
+                if (types?.Any() == true)
+                {
+                    import.ImportIntoDb(types, null);
 
-                l.A($"Purging {zoneId}/{appId}");
-                SystemManager.Purge(zoneId, appId);
+                    l.A($"Purging {zoneId}/{appId}");
+                    SystemManager.Purge(zoneId, appId);
+                }
 
                 // are there any entities from bundles for import?
-                if (packages.All(p => p.Value.Bundles?.Any(b => b.Entities?.Any() == true) != true))
+                if (!isEnabled || packages.All(p => p.Value.Bundles?.Any(b => b.Entities?.Any() == true) != true))
                     return (new ImportResultDto(true), "ok (types only)");
 
                 // 2. Create Entities
@@ -153,9 +167,11 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 var relationshipSource = new DirectEntitiesSource(relationshipsList);
                 foreach (var package in packages)
                 {
+                    l.A($"import entities from package: {package.Key}");
                     if (package.Value.Bundles?.Any() != true) continue;
                     // bundle json
                     var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationshipSource);
+                    l.A($"entities from bundles: {entitiesFromBundles.Count}");
                     entities.AddRange(entitiesFromBundles);
                     relationshipsList.AddRange(entitiesFromBundles);
                 }
@@ -165,10 +181,16 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
                 // 2.3 Import the entities
                 l.A($"Load entity {entities.Count} items");
-                import.ImportIntoDb(null, entities.Cast<Entity>().ToList());
-                SystemManager.Purge(zoneId, appId);
-                //foreach (var entity in entities)
-                //    appState.Add(entity as Entity, null, true);
+                if (entities?.Any() == true)
+                {
+                    import.ImportIntoDb(null, entities.Cast<Entity>().ToList());
+
+                    l.A($"Purging {zoneId}/{appId}");
+                    SystemManager.Purge(zoneId, appId);
+                    
+                    //foreach (var entity in entities)
+                    //    appState.Add(entity as Entity, null, true);
+                }
 
                 // 3. possibly show messages / issues
                 return (new ImportResultDto(true), "ok (with entities)");
