@@ -117,7 +117,7 @@ namespace ToSic.Sxc.DataSources
             // Convert to Entity-Stream
             var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Page", titleField: nameof(CmsPageInfo.Name));
             var pages = pagesFromSystem
-                .Select(p => builder.Create(p.DataForBuilder, p.Id, p.Guid, created: p.Created, modified: p.Modified))
+                .Select(p => builder.Create(p))
                 .ToImmutableList();
 
             // Try to add Navigation properties

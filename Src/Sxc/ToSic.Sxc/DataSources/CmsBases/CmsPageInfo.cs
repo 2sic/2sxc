@@ -22,7 +22,7 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class CmsPageInfo: IQuickDataForBuilder
+    public class CmsPageInfo: ICanBecomeEntity
     {
         /// <summary>
         /// The page ID.
