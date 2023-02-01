@@ -426,7 +426,7 @@
         },
         {
           "Id": 129754,
-          "Version": 3,
+          "Version": 9,
           "Guid": "34acb79b-21e1-423e-bdec-b67f4a5c8c85",
           "Type": {
             "Name": "DataPipeline",
@@ -463,7 +463,7 @@
           "Metadata": [
             {
               "Id": 129756,
-              "Version": 2,
+              "Version": 8,
               "Guid": "b1fa7bee-c137-4e60-b8b5-3588b9c16b9a",
               "Type": {
                 "Name": "DataPipelinePart",
@@ -481,7 +481,7 @@
                     "*": "e35031b2-3e99-41fe-a5ac-b79f447d5800"
                   },
                   "VisualDesignerData": {
-                    "*": "{\r\n  \"Top\": 240,\r\n  \"Left\": 440\r\n}"
+                    "*": "{\r\n  \"Top\": 280,\r\n  \"Left\": 420\r\n}"
                   }
                 }
               },
@@ -2034,6 +2034,200 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "9e0c28ce-e4fe-4fe4-8cac-35fa6dad5df5"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 166627,
+          "Version": 3,
+          "Guid": "1e8d613c-e68b-471a-a438-c9325e53f003",
+          "Type": {
+            "Name": "DataPipeline",
+            "Id": "DataPipeline"
+          },
+          "Attributes": {
+            "String": {
+              "Description": {
+                "*": "Get a list of all licenses in the system."
+              },
+              "Name": {
+                "*": "Eav.Queries.Global.Licenses"
+              },
+              "Params": {
+                "*": ""
+              },
+              "StreamsOut": {
+                "*": "Default,Header"
+              },
+              "StreamWiring": {
+                "*": "70cab874-14f8-41b1-8991-def591ae0de8:Default>Out:Default"
+              },
+              "TestParameters": {
+                "*": ""
+              },
+              "VisualDesignerData": {
+                "*": "{\"ShowDataSourceDetails\":true}"
+              }
+            },
+            "Boolean": {
+              "AllowEdit": {
+                "*": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 166629,
+              "Version": 2,
+              "Guid": "70cab874-14f8-41b1-8991-def591ae0de8",
+              "Type": {
+                "Name": "DataPipelinePart",
+                "Id": "DataPipelinePart"
+              },
+              "Attributes": {
+                "String": {
+                  "Description": {
+                    "*": ""
+                  },
+                  "Name": {
+                    "*": "Licenses"
+                  },
+                  "PartAssemblyAndType": {
+                    "*": "402fa226-5584-46d1-a763-e63ba0774c31"
+                  },
+                  "VisualDesignerData": {
+                    "*": "{\r\n  \"Top\": 300,\r\n  \"Left\": 400\r\n}"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "1e8d613c-e68b-471a-a438-c9325e53f003"
+              }
+            },
+            {
+              "Id": 166633,
+              "Version": 1,
+              "Guid": "d22b716c-f4e4-4090-8a42-8ad6763d006f",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "1e8d613c-e68b-471a-a438-c9325e53f003"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 166630,
+          "Version": 4,
+          "Guid": "abb9d5ee-3333-4a15-9539-36e1e0f00953",
+          "Type": {
+            "Name": "DataPipeline",
+            "Id": "DataPipeline"
+          },
+          "Attributes": {
+            "String": {
+              "Description": {
+                "en-us": "Retrieve a list of all features and their state."
+              },
+              "Name": {
+                "en-us": "Eav.Queries.Global.Features"
+              },
+              "Params": {
+                "en-us": ""
+              },
+              "StreamsOut": {
+                "en-us": "Default,Header"
+              },
+              "StreamWiring": {
+                "en-us": "200e0670-301e-4cb7-b0b3-da6344894fcc:Default>Out:Default"
+              },
+              "TestParameters": {
+                "en-us": ""
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
+              }
+            },
+            "Boolean": {
+              "AllowEdit": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 166632,
+              "Version": 2,
+              "Guid": "200e0670-301e-4cb7-b0b3-da6344894fcc",
+              "Type": {
+                "Name": "DataPipelinePart",
+                "Id": "DataPipelinePart"
+              },
+              "Attributes": {
+                "String": {
+                  "Description": {
+                    "*": ""
+                  },
+                  "Name": {
+                    "*": "Features"
+                  },
+                  "PartAssemblyAndType": {
+                    "*": "398d0b9f-044f-48f7-83ef-307872f7ed93"
+                  },
+                  "VisualDesignerData": {
+                    "*": "{\r\n  \"Top\": 260,\r\n  \"Left\": 440\r\n}"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "abb9d5ee-3333-4a15-9539-36e1e0f00953"
+              }
+            },
+            {
+              "Id": 166634,
+              "Version": 1,
+              "Guid": "6f8ba371-8e2b-4148-aeaa-815519ff6549",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "abb9d5ee-3333-4a15-9539-36e1e0f00953"
               }
             }
           ]
