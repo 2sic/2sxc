@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             var jsonFormatterAttribute = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<JsonFormatterAttribute>().FirstOrDefault();
 
             // Build Eav to Json converters for api v15
-            var eavJsonConverterFactory = (jsonFormatterAttribute?.AutoConvertEntity == false) ? null : controllerDescriptor.Configuration
-                .DependencyResolver.GetService(typeof(EavJsonConverterFactory)) as EavJsonConverterFactory;
+            var eavJsonConverterFactory = (jsonFormatterAttribute?.AutoConvertEntity == false) ? null : 
+                controllerDescriptor.Configuration.DependencyResolver.GetService(typeof(EavJsonConverterFactory)) as EavJsonConverterFactory;
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
