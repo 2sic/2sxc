@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Http.Formatting;
+using System.Web.Http.Controllers;
 
 namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 {
@@ -9,6 +12,23 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
     /// Should only be applied to the base classes up to Api14, but not on newer classes
     /// </summary>
     public class UseOldNewtonsoftForHttpJsonAttribute : Attribute
-    { }
+    {
+        public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
+        {
+            // For older apis we need to leave NewtonsoftJson
+            SetDefaultNewtonsoftJsonFormatter(controllerSettings);
+        }
+
+        private void SetDefaultNewtonsoftJsonFormatter(HttpControllerSettings controllerSettings)
+        {
+            // Remove System.Text.Json JsonMediaTypeFormatter
+            controllerSettings.Formatters.OfType<SystemTextJsonMediaTypeFormatter>().ToList()
+                .ForEach(f => controllerSettings.Formatters.Remove(f));
+
+            // Bring back original JsonFormatter
+            if (!controllerSettings.Formatters.OfType<JsonMediaTypeFormatter>().Any())
+                controllerSettings.Formatters.Insert(0, controllerSettings.Formatters.JsonFormatter);
+        }
+    }
 }
 
