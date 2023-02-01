@@ -112,7 +112,7 @@
       <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
     </Reference>
     <Reference Include="ToSic.Razor">
-      <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
 
