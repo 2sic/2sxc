@@ -14,6 +14,7 @@ using System.Linq;
 using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Serialization;
 using ToSic.Lib.DI;
+using ToSic.Sxc.WebApi;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
 
@@ -49,11 +50,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         {
             if (context.Result is ObjectResult objectResult)
             {
-                // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
-                // instead of using global, static, singleton version because this is for API only
-                var eavJsonConverterFactory = context.HttpContext.RequestServices.Build<EavJsonConverterFactory>();
-                var systemTextJsonOutputFormatter = new SystemTextJsonOutputFormatter(JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory));
-                objectResult.Formatters.Add(systemTextJsonOutputFormatter);
+                // we need to use System.Text.Json, but generated per request
+                // because of DI dependencies for EavJsonConvertors in new generated JsonOptions
+                objectResult.Formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(context));
 
                 // Oqtane 3.2.0 and older had NewtonsoftJsonOutputFormatter that we need to remove for our endpoints
                 var newtonsoftJsonOutputFormatterType = Type.GetType("NewtonsoftJsonOutputFormatter");
@@ -63,6 +62,23 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             {
                 base.OnActionExecuted(context);
             }
+        }
+
+        private static SystemTextJsonOutputFormatter SystemTextJsonMediaTypeFormatterFactory(ActionExecutedContext context)
+        {
+            var jsonFormatterAttribute = GetCustomAttributes(context.Controller.GetType()).OfType<JsonFormatterAttribute>().FirstOrDefault();
+
+            // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
+            // instead of using global, static, singleton version because this is for API only
+            var eavJsonConverterFactory = (jsonFormatterAttribute?.AutoConvertEntity == false) ? null : 
+                context.HttpContext.RequestServices.Build<EavJsonConverterFactory>();
+
+            var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
+
+            if (jsonFormatterAttribute?.Casing == Casing.CamelCase)
+                jsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+
+            return new SystemTextJsonOutputFormatter(jsonSerializerOptions);
         }
     }
 

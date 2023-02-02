@@ -14,6 +14,11 @@ namespace ToSic.Sxc.Services
     [PublicApi]
     public class ServiceKit14: ServiceKit
     {
+        [PrivateApi("Public constructor for DI")]
+        public ServiceKit14() : base("Sxc.Kit14")
+        {
+        }
+
         /// <summary>
         /// The ADAM Service, used to retrieve files and maybe more. 
         /// </summary>

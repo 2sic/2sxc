@@ -17,6 +17,20 @@ namespace ToSic.Sxc.DataSources
 
         }
 
-        public abstract List<CmsPageInfo> GetPagesInternal();
+        /// <summary>
+        /// FYI: The filters are not actually implemented yet.
+        /// So the core data source doesn't have settings to configure this
+        /// </summary>
+        /// <returns></returns>
+        public abstract List<CmsPageInfo> GetPagesInternal(
+            string noParamOrder = Eav.Parameters.Protector,
+            bool includeHidden = default,
+            bool includeDeleted = default,
+            bool includeAdmin = default,
+            bool includeSystem = default,
+            bool includeLinks = default,
+            bool requireViewPermissions = true,
+            bool requireEditPermissions = true
+        );
     }
 }

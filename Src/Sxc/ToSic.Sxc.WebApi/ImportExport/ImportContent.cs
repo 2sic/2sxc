@@ -8,22 +8,23 @@ using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.Identity;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Validation;
 using ToSic.Lib.DI;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
     public class ImportContent: ServiceBase
     {
-        private readonly LazySvc<IUser> _userLazy;
+        private readonly LazySvc<IFeaturesInternal> _features;
 
         #region DI Constructor
 
@@ -32,23 +33,24 @@ namespace ToSic.Sxc.WebApi.ImportExport
             LazySvc<Import> importerLazy,
             LazySvc<XmlImportWithFiles> xmlImportWithFilesLazy,
             ZipImport zipImport,
-            LazySvc<JsonSerializer> jsonSerializerLazy, 
+            Generator<JsonSerializer> jsonSerializerGenerator, 
             IGlobalConfiguration globalConfiguration,
             IAppStates appStates,
             LazySvc<IUser> userLazy,
-            SystemManager systemManager) : base("Bck.Export")
+            SystemManager systemManager,
+            LazySvc<IFeaturesInternal> features) : base("Bck.Export")
         {
-            
             ConnectServices(
                 _envLogger = envLogger,
                 _importerLazy = importerLazy,
                 _xmlImportWithFilesLazy = xmlImportWithFilesLazy,
                 _zipImport = zipImport,
-                _jsonSerializerLazy = jsonSerializerLazy,
+                _jsonSerializerGenerator = jsonSerializerGenerator,
                 _globalConfiguration = globalConfiguration,
                 _appStates = appStates,
                 SystemManager = systemManager,
-                _userLazy = userLazy
+                _userLazy = userLazy,
+                _features = features
             );
         }
 
@@ -56,9 +58,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private readonly LazySvc<Import> _importerLazy;
         private readonly LazySvc<XmlImportWithFiles> _xmlImportWithFilesLazy;
         private readonly ZipImport _zipImport;
-        private readonly LazySvc<JsonSerializer> _jsonSerializerLazy;
+        private readonly Generator<JsonSerializer> _jsonSerializerGenerator;
         private readonly IGlobalConfiguration _globalConfiguration;
         private readonly IAppStates _appStates;
+        private readonly LazySvc<IUser> _userLazy;
         protected readonly SystemManager SystemManager;
 
         #endregion
@@ -98,7 +101,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         });
 
 
-        public ImportResultDto ImportContentType(int zoneId, int appId, List<FileUploadDto> files,
+        public ImportResultDto ImportJsonFiles(int zoneId, int appId, List<FileUploadDto> files,
             string defaultLanguage
         ) => Log.Func($"{zoneId}, {appId}, {defaultLanguage}", l =>
         {
@@ -108,23 +111,89 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 if (files.Any(file => !Json.IsValidJson(file.Contents)))
                     throw new ArgumentException("a file is not json");
 
-                // 1. create the content type
-                var serializer = _jsonSerializerLazy.Value.SetApp(_appStates.Get(new AppIdentity(zoneId, appId)));
+                // 1. Create content types
+                var serializer = _jsonSerializerGenerator.New().SetApp(_appStates.Get(new AppIdentity(zoneId, appId)));
 
-                var types = files.Select(f => serializer.DeserializeContentType(f.Contents)).ToList();
+                // 1.1 Deserialize json files
+                var packages = files.ToDictionary(file => file.Name, file => serializer.UnpackAndTestGenericJsonV1(file.Contents));
+                l.A($"Packages: {packages.Count}");
+
+                // 1.2. Build content types
+                var types = new List<IContentType>();
+                
+                var isEnabled = _features.Value.IsEnabled(BuiltInFeatures.DataExportImportBundles);
+                l.A($"Is bundle packages import feature enabled: {isEnabled}");
+
+                foreach (var package in packages)
+                {
+                    l.A($"import content-types from package: {package.Key}");
+
+                    // bundle json
+                    if (isEnabled && package.Value.Bundles?.Any() == true)
+                        types.AddRange(serializer.GetContentTypesFromBundles(package.Value));
+
+                    // single json
+                    if (package.Value.ContentType != null)
+                       types.Add(serializer.ConvertContentType(package.Value));
+                }
 
                 if (types.Any(t => t == null))
                     throw new NullReferenceException("One ContentType is null, something is wrong");
 
-                // 2. Import the type
+                // 1.3 Import the type
                 var import = _importerLazy.Value.Init(zoneId, appId, true, true);
-                import.ImportIntoDb(types, null);
+                if (types?.Any() == true)
+                {
+                    import.ImportIntoDb(types, null);
 
-                l.A($"Purging {zoneId}/{appId}");
-                SystemManager.Purge(zoneId, appId);
+                    l.A($"Purging {zoneId}/{appId}");
+                    SystemManager.Purge(zoneId, appId);
+                }
+
+                // are there any entities from bundles for import?
+                if (!isEnabled || packages.All(p => p.Value.Bundles?.Any(b => b.Entities?.Any() == true) != true))
+                    return (new ImportResultDto(true), "ok (types only)");
+
+                // 2. Create Entities
+
+                // 2.1 Reset serializer to use the new app
+                var appState = _appStates.Get(new AppIdentity(zoneId, appId));
+                serializer = _jsonSerializerGenerator.New().SetApp(appState);
+                l.A("Load items");
+
+                // 2.2. Build content types
+                var entities = new List<IEntity>();
+                var relationshipsList = new List<IEntity>();
+                var relationshipSource = new DirectEntitiesSource(relationshipsList);
+                foreach (var package in packages)
+                {
+                    l.A($"import entities from package: {package.Key}");
+                    if (package.Value.Bundles?.Any() != true) continue;
+                    // bundle json
+                    var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationshipSource);
+                    l.A($"entities from bundles: {entitiesFromBundles.Count}");
+                    entities.AddRange(entitiesFromBundles);
+                    relationshipsList.AddRange(entitiesFromBundles);
+                }
+
+                if (entities.Any(t => t == null))
+                    throw new NullReferenceException("One Entity is null, something is wrong");
+
+                // 2.3 Import the entities
+                l.A($"Load entity {entities.Count} items");
+                if (entities?.Any() == true)
+                {
+                    import.ImportIntoDb(null, entities.Cast<Entity>().ToList());
+
+                    l.A($"Purging {zoneId}/{appId}");
+                    SystemManager.Purge(zoneId, appId);
+                    
+                    //foreach (var entity in entities)
+                    //    appState.Add(entity as Entity, null, true);
+                }
 
                 // 3. possibly show messages / issues
-                return (new ImportResultDto(true), "ok");
+                return (new ImportResultDto(true), "ok (with entities)");
             }
             catch (Exception ex)
             {

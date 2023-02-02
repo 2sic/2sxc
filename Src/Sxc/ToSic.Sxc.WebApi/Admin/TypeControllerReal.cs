@@ -120,7 +120,7 @@ namespace ToSic.Sxc.WebApi.Admin
                 streams.Add(new FileUploadDto { Name = fileName, Stream = stream });
             }
             var result = _importContent.New()
-                .ImportContentType(zoneId, appId, streams, _context.Value.Site.DefaultCultureCode);
+                .ImportJsonFiles(zoneId, appId, streams, _context.Value.Site.DefaultCultureCode);
 
             return wrapLog.ReturnAsOk(result);
         }

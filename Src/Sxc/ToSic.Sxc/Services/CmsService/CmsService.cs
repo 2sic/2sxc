@@ -4,32 +4,36 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services.CmsService
 {
-    [PrivateApi("WIP")]
-    public partial class CmsService: ServiceBase, ICmsService
+    [PrivateApi("WIP + Hide Implementation")]
+    public class CmsService: ServiceForDynamicCode, ICmsService
     {
-        private readonly LazySvc<IPageService> _pageService;
-        private readonly LazySvc<IImageService> _imgService;
-        private readonly LazySvc<IValueConverter> _valueConverter;
+        private readonly Generator<CmsServiceStringWysiwyg> _stringWysiwyg;
 
-        public CmsService(LazySvc<IImageService> imgService, LazySvc<IValueConverter> valueConverter, LazySvc<IPageService> pageService) : base(Constants.SxcLogName + ".CmsSrv")
+        public CmsService(
+            Generator<CmsServiceStringWysiwyg> stringWysiwyg
+            ) : base(Constants.SxcLogName + ".CmsSrv")
         {
             ConnectServices(
-                _imgService = imgService,
-                _valueConverter = valueConverter,
-                _pageService = pageService
+                _stringWysiwyg = stringWysiwyg.SetInit(s => s.ConnectToRoot(_DynCodeRoot))
             );
         }
 
-        public IHtmlTag Show(object thing, string noParamOrder = Eav.Parameters.Protector, object container = null) => Log.Func(l =>
+        public IHtmlTag Show(
+            object thing,
+            string noParamOrder = Eav.Parameters.Protector,
+            object container = default,
+            string classes = default
+        ) => Log.Func(l =>
         {
             // Prepare the real container
             var realContainer = GetContainer(container);
+            if (!classes.IsEmptyOrWs())
+                realContainer.Class(classes);
 
             // If it's not a field, we cannot find out more about the object
             // In that case, just wrap the result in the container and return it
@@ -42,7 +46,7 @@ namespace ToSic.Sxc.Services.CmsService
                 return (realContainer.Wrap(thing), "can't find content-type, treat as value");
 
             var attribute = contentType[field.Name];
-            if (attribute == null) 
+            if (attribute == null)
                 return (realContainer.Wrap(thing), "no attribute info, treat as value");
 
             // Now we handle all kinds of known special treatments
@@ -52,10 +56,10 @@ namespace ToSic.Sxc.Services.CmsService
                 // ...wysiwyg
                 if (attribute.InputType() == InputTypes.InputTypeWysiwyg)
                 {
-                    var html = StringWysiwyg(field);
-                    return html == null 
+                    var html = _stringWysiwyg.New().Init(field, contentType, attribute).Process();
+                    return html == null
                         ? (realContainer.Wrap(thing), "not converted")
-                        : (realContainer.Class(WysiwygClassToAdd).Wrap(html), "ok");
+                        : (realContainer.Class(CmsServiceStringWysiwyg.WysiwygClassToAdd).Wrap(html), "ok");
                 }
             }
 

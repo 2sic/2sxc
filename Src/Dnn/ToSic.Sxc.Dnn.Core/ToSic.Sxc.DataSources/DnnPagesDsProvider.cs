@@ -21,14 +21,24 @@ namespace ToSic.Sxc.DataSources
         }
 
 
-        public override List<CmsPageInfo> GetPagesInternal() => Log.Func(l =>
+        public override List<CmsPageInfo> GetPagesInternal(
+            string noParamOrder = Eav.Parameters.Protector,
+            bool includeHidden = default,
+            bool includeDeleted = default,
+            bool includeAdmin = default,
+            bool includeSystem = default,
+            bool includeLinks = default,
+            bool requireViewPermissions = true,
+            bool requireEditPermissions = true
+        ) => Log.Func($"PortalId: {PortalSettings.Current?.PortalId ?? -1}", l =>
         {
-            var siteId = PortalSettings.Current?.PortalId ?? -1;
-            l.A($"Portal Id {siteId}");
             List<TabInfo> pages;
             try
             {
-                pages = TabController.GetPortalTabs(siteId, 0, false, true);
+                var siteId = PortalSettings.Current?.PortalId ?? -1;
+                const bool addDummyNoneSpecifiedPage = false;
+                pages = TabController.GetPortalTabs(siteId, 0, addDummyNoneSpecifiedPage,
+                    includeHidden, includeDeleted, includeLinks);
             }
             catch (Exception ex)
             {
@@ -40,9 +50,17 @@ namespace ToSic.Sxc.DataSources
 
             try
             {
-                var result = pages
-                    .Where(p => !p.IsSuperTab && !p.IsDeleted && !p.IsSystem)
-                    .Where(TabPermissionController.CanViewPage)
+                var filteredPages = (IEnumerable<TabInfo>)pages;
+
+                // Apply filters as needed
+                if (!includeAdmin) filteredPages = filteredPages.Where(x => !x.IsSystem);
+                if (!includeSystem) filteredPages = filteredPages.Where(x => !x.IsSuperTab);
+                if (requireViewPermissions) filteredPages = filteredPages.Where(TabPermissionController.CanViewPage);
+                if (requireEditPermissions) filteredPages = filteredPages.Where(TabPermissionController.CanAdminPage);
+
+                var final = filteredPages.ToList();
+
+                var result = final
                     .Select(p => new CmsPageInfo
                     {
                         Id = p.TabID,
@@ -63,6 +81,8 @@ namespace ToSic.Sxc.DataSources
                         IsDeleted = p.IsDeleted,
                         Level = p.Level + DnnLevelOffset,
                         Order = p.TabOrder,
+                        // New in 15.02
+                        LinkTarget = (string)p.TabSettings["LinkNewWindow"] == true.ToString() ? "_blank": "",
                     })
                     .ToList();
                 return (result, $"found {result.Count}");

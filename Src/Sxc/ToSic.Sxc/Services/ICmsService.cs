@@ -6,6 +6,10 @@ namespace ToSic.Sxc.Services
     [PrivateApi("WIP")]
     public interface ICmsService
     {
-        IHtmlTag Show(object thing, string noParamOrder = Eav.Parameters.Protector, object container = null);
+        IHtmlTag Show(object thing,
+            string noParamOrder = Eav.Parameters.Protector,
+            object container = default,
+            string classes = default
+        );
     }
 }

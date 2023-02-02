@@ -23,6 +23,8 @@ namespace ToSic.Sxc.Blocks
         ToSic.Sxc.Blocks.IRenderService
 #pragma warning restore CS0618
     {
+        internal const string InputTypeForContentBlocksField = "entity-content-blocks";
+
         #region Constructor & ConnectToRoot
 
         public class Dependencies: ServiceDependencies

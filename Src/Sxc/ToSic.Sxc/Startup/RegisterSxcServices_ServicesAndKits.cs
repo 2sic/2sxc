@@ -68,6 +68,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddScoped<IModuleService, ModuleService>(); // Must be scoped & shared on the module
             services.TryAddTransient<ITurnOnService, TurnOnService>();
             services.TryAddTransient<ICmsService, CmsService>();
+            services.TryAddTransient<CmsServiceStringWysiwyg>();
 
             return services;
         }

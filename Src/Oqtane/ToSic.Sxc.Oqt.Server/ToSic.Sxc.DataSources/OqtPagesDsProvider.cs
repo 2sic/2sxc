@@ -45,7 +45,16 @@ namespace ToSic.Sxc.DataSources
 
         #endregion
 
-        public override List<CmsPageInfo> GetPagesInternal() => Log.Func(l =>
+        public override List<CmsPageInfo> GetPagesInternal(
+            string noParamOrder = Eav.Parameters.Protector,
+            bool includeHidden = default,
+            bool includeDeleted = default,
+            bool includeAdmin = default,
+            bool includeSystem = default,
+            bool includeLinks = default,
+            bool requireViewPermissions = true,
+            bool requireEditPermissions = true
+        ) => Log.Func(l =>
         {
             var user = _httpContextAccessor?.HttpContext?.User;
             var pages = _pages.GetPages(_siteState.Alias.SiteId)
@@ -74,6 +83,8 @@ namespace ToSic.Sxc.DataSources
                 IsDeleted = p.IsDeleted,
                 Level = p.Level + OqtLevelOffset,
                 Order = p.Order,
+                // New in 15.02
+                LinkTarget = "", // TODO
             }).ToList();
         });
     }
