@@ -115,7 +115,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.02.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
