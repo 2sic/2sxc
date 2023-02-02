@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Dnn.Install
                     // warning!!! when you add a new case, make sure you upgrade the version number on Settings.Installation.LastVersionWithServerChanges!!!
 
                     case "15.00.00":
-                        
+                    case "15.02.00": // compensate for a bug #2997 in 15.01.00
                         try
                         {
                             // move app.json template from old to new location
