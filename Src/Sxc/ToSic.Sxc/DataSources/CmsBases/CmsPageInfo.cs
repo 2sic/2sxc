@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class CmsPageInfo: ICanBecomeEntity
+    public class CmsPageInfo: IRawEntity
     {
         /// <summary>
         /// The page ID.
@@ -180,7 +181,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> DataForBuilder => new Dictionary<string, object>
+        public Dictionary<string, object> RawProperties => new Dictionary<string, object>
         {
             // v14+
             { Attributes.TitleNiceName, Title },
