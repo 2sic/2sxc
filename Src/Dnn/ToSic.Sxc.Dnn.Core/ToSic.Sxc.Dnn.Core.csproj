@@ -147,7 +147,7 @@
     <Compile Include="ToSic.Sxc.DataSources\DnnPagesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\DnnUsers.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnUsersDsProvider.cs" />
     <Compile Include="ToSic.Sxc.Services\DnnExtensions.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_IsRunning.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Manual.cs" />

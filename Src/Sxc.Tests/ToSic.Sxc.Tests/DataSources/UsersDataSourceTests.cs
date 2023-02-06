@@ -1,16 +1,23 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
 using ToSic.Eav.DataSourceTests;
 using ToSic.Sxc.DataSources;
-using ToSic.Testing.Shared;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources
 {
     [TestClass()]
-    public class UsersDataSourceTests : TestBaseDiEavFullAndDb
+    public class UsersDataSourceTests : TestBaseSxcDb
     {
+        // Start the test with a platform-info that has a patron
+        protected override IServiceCollection SetupServices(IServiceCollection services)
+        {
+            return base.SetupServices(services).AddTransient<UsersDataSourceProvider, MockUsersDataSource>(); ;
+        }
+
+
         [TestMethod()]
         public void UsersDefault()
         {
@@ -21,8 +28,8 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("", 20)]
         [DataRow("not-a-integer, -1", 20)]
-        [DataRow("1", 1)]
-        [DataRow("2,3", 2)]
+        [DataRow("1", 0)]
+        [DataRow("2,3", 0)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 3)]
         public void UsersWithIncludeUserIdsFilter(string includeUsersFilter, int expected)
         {
@@ -34,8 +41,8 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("", 20)]
         [DataRow("not-a-guid, 00000000-0000-0000-0000-000000000000", 20)]
-        [DataRow("00000000-0000-0000-0000-000000000001", 1)]
-        [DataRow("00000000-0000-0000-0000-000000000002,00000000-0000-0000-0000-000000000003", 2)]
+        [DataRow("00000000-0000-0000-0000-000000000001", 0)]
+        [DataRow("00000000-0000-0000-0000-000000000002,00000000-0000-0000-0000-000000000003", 0)]
         [DataRow("a,b,c,-2,-1,00000000-0000-0000-0000-000000000004,00000000-0000-0000-0000-000000000004,00000000-0000-0000-0000-000000000005,00000000-0000-0000-0000-000000000006,00000000-0000-0000-0000-000000000004", 3)]
         public void UsersWithIncludeUserGuidsFilter(string includeUsersFilter, int expected)
         {
@@ -47,8 +54,8 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("", 20)]
         [DataRow("not-a-integer,-1", 20)]
-        [DataRow("1", 19)]
-        [DataRow("2,3", 18)]
+        [DataRow("1", 20)]
+        [DataRow("2,3", 20)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 17)]
         public void UsersWithExcludeUserIdsFilter(string excludeUsersFilter, int expected)
         {
@@ -60,8 +67,8 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("", 20)]
         [DataRow("not-a-guid, 00000000-0000-0000-0000-000000000000", 20)]
-        [DataRow("00000000-0000-0000-0000-000000000001", 19)]
-        [DataRow("00000000-0000-0000-0000-000000000002,00000000-0000-0000-0000-000000000003", 18)]
+        [DataRow("00000000-0000-0000-0000-000000000001", 20)]
+        [DataRow("00000000-0000-0000-0000-000000000002,00000000-0000-0000-0000-000000000003", 20)]
         [DataRow("a,b,c,-2,-1,00000000-0000-0000-0000-000000000004,00000000-0000-0000-0000-000000000004,00000000-0000-0000-0000-000000000005,00000000-0000-0000-0000-000000000006,00000000-0000-0000-0000-000000000004", 17)]
         public void UsersWithExcludeUserGuidsFilter(string excludeUsersFilter, int expected)
         {
@@ -73,7 +80,7 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("not-a-guid, 00000000-0000-0000-0000-000000000000", "not-a-integer,-1", 20)]
         [DataRow("3,4,5", "00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", 2)]
-        [DataRow("00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000002,00000000-0000-0000-0000-000000000003", "2,3", 1)]
+        [DataRow("00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000002,00000000-0000-0000-0000-000000000003", "2,3", 0)]
         public void UsersWithIncludeExcludeUsersFilter(string includeUsersFilter, string excludeUsersFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
@@ -85,8 +92,8 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("", 20)]
         [DataRow("not-a-integer,-1", 20)]
-        [DataRow("9", 11)]
-        [DataRow("1,2", 10)]
+        [DataRow("9", 14)]
+        [DataRow("1,2", 7)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 3)]
         public void UsersWithIncludeRolesFilter(string includeRolesFilter, int expected)
         {
@@ -98,8 +105,8 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataTestMethod]
         [DataRow("", 20)]
         [DataRow("not-a-integer,-1", 20)]
-        [DataRow("9", 9)]
-        [DataRow("1,2", 10)]
+        [DataRow("9", 6)]
+        [DataRow("1,2", 13)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 17)]
         public void UsersWithExcludeRolesFilter(string excludeRolesFilter, int expected)
         {
@@ -119,20 +126,20 @@ namespace ToSic.Sxc.Tests.DataSources
         }
 
         [DataTestMethod]
-        [DataRow("", 20)]
-        [DataRow("not-a-bool", 20)]
+        [DataRow("", 23)]
+        [DataRow("not-a-bool", 23)]
         [DataRow("true", 3)]
-        [DataRow("false", 17)]
+        [DataRow("false", 20)]
         [DataRow("TRue", 3)]
-        [DataRow("   false   ", 17)]
-        [DataRow("1", 20)]
-        [DataRow("0", 20)]
-        [DataRow("-1", 20)]
-        [DataRow("-100", 20)]
-        [DataRow("yes", 20)]
-        [DataRow("no", 20)]
-        [DataRow("on", 20)]
-        [DataRow("off", 20)]
+        [DataRow("   false   ", 20)]
+        [DataRow("1", 23)]
+        [DataRow("0", 23)]
+        [DataRow("-1", 23)]
+        [DataRow("-100", 23)]
+        [DataRow("yes", 23)]
+        [DataRow("no", 23)]
+        [DataRow("on", 23)]
+        [DataRow("off", 23)]
         public void UsersWithSuperUserFilter(string superUserFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
@@ -154,7 +161,7 @@ namespace ToSic.Sxc.Tests.DataSources
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
-        private MockUsersDataSource GenerateUsersDataSourceDataSource() 
-            => this.GetTestDataSource<MockUsersDataSource>(LookUpTestData.AppSetAndRes());
+        private Users GenerateUsersDataSourceDataSource() 
+            => this.GetTestDataSource<Users>(LookUpTestData.AppSetAndRes());
     }
 }

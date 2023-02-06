@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
 
-
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
 {
     /// <summary>
     /// Mock list of users
     /// </summary>
-    public class MockUsersDataSource : Users
+    public class MockUsersDataSource : UsersDataSourceProvider
     {
-        protected override IEnumerable<UserDataSourceInfo> GetUsersInternal()
+        public MockUsersDataSource() : base("DS.MockUsers")
         {
-            var wrapLog = Log.Fn<List<UserDataSourceInfo>>();
+        }
+        
+        public override IEnumerable<CmsUserInfo> GetUsersInternal()
+        {
+            var wrapLog = Log.Fn<List<CmsUserInfo>>();
             var siteId = 0;
             Log.A($"Portal Id {siteId}");
-            var result = new List<UserDataSourceInfo>();
+            var result = new List<CmsUserInfo>();
 
             // super users and admins
             for (var i = 1; i <= 3; i++)
             {
-                result.Add(new UserDataSourceInfo
+                result.Add(new CmsUserInfo
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
@@ -43,7 +46,7 @@ namespace ToSic.Sxc.DataSources
             // with 3 roles [ 2, 3, 4-10]
             for (var i = 4; i <= 10; i++)
             {
-                result.Add(new UserDataSourceInfo
+                result.Add(new CmsUserInfo
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
@@ -63,9 +66,9 @@ namespace ToSic.Sxc.DataSources
             }
 
             // with 2 roles [ 9, 10]
-            for (var i = 11; i <= 20; i++)
+            for (var i = 11; i <= 23; i++)
             {
-                result.Add(new UserDataSourceInfo
+                result.Add(new CmsUserInfo
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
@@ -85,10 +88,6 @@ namespace ToSic.Sxc.DataSources
             }
 
             return wrapLog.Return(result, "found");
-        }
-
-        public MockUsersDataSource(Dependencies dependencies) : base(dependencies)
-        {
         }
     }
 }

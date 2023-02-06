@@ -12,7 +12,7 @@ namespace ToSic.Sxc.DataSources
         {
             // TODO: Change to use the DataSourceProvider model
             services.TryAddTransient<Roles, DnnRoles>();
-            services.TryAddTransient<Users, DnnUsers>();
+            services.TryAddTransient<UsersDataSourceProvider, DnnUsersDsProvider>();
 
             // info class to ensure SQL knows about default connections
             services.TryAddTransient<SqlPlatformInfo, DnnSqlPlatformInfo>();

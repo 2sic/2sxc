@@ -74,8 +74,9 @@ namespace ToSic.Sxc.Startup
             // Koi, mainly so tests don't fail
             services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
-            // v15 Pages DataSource
+            // v15 DataSource
             services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
+            services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
 
             return services;
         }

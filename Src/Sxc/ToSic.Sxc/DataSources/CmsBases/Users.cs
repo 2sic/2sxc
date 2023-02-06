@@ -5,7 +5,6 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
@@ -30,8 +29,10 @@ namespace ToSic.Sxc.DataSources
         ExpectsDataOfType = VqExpectsDataOfType,
         Difficulty = DifficultyBeta.Default
     )]
-    public abstract class Users : ExternalData
+    public class Users : ExternalData
     {
+        private readonly UsersDataSourceProvider _provider;
+
         #region Public Consts for inheriting implementations
 
         [PrivateApi] public const string VqNiceName = "Users";
@@ -116,14 +117,16 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        protected Users(Dependencies dependencies): base(dependencies, "SDS.Users")
+        public Users(Dependencies dependencies, UsersDataSourceProvider provider) : base(dependencies, "SDS.Users")
         {
+            ConnectServices(
+                _provider = provider
+            );
             Provide(GetList); // default out, if accessed, will deliver GetList
             
             // UserRoles not final...
             // Provide("UserRoles", GetRoles);
 
-            // TODO: @STV - pls always also use constants in these filters, don't repeat the string (already done, just FYI)
             ConfigMask(UserIdsKey);
             ConfigMask(ExcludeUserIdsKey);
             ConfigMask(Roles.RoleIdsKey);
@@ -133,34 +136,17 @@ namespace ToSic.Sxc.DataSources
 
         #endregion
 
-        private IImmutableList<IEntity> GetList()
+        [PrivateApi]
+        public IImmutableList<IEntity> GetList() => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<IImmutableList<IEntity>>();
             var users = GetUsersAndFilter();
-
+            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "User", titleField: nameof(CmsUserInfo.Name));
             var result = users
-                .Select(u => DataBuilder.Entity(new Dictionary<string, object>
-                    {
-                        { nameof(u.NameId), u.NameId },
-                        { nameof(u.RoleIds), u.RoleIds == null ? null : string.Join(Separator.ToString(), u.RoleIds) },
-                        { nameof(u.IsSystemAdmin), u.IsSystemAdmin },
-                        { nameof(u.IsSiteAdmin), u.IsSiteAdmin },
-                        { nameof(u.IsContentAdmin), u.IsContentAdmin },
-                        //{"IsDesigner", u.IsDesigner},
-                        { nameof(u.IsAnonymous), u.IsAnonymous },
-                        { nameof(u.Username), u.Username },
-                        { nameof(u.Email), u.Email },
-                        { nameof(u.Name), u.Name },
-                    },
-                    id: u.Id,
-                    guid: u.Guid,
-                    created: u.Created,
-                    modified: u.Modified,
-                    titleField: "Name"))
+                .Select(p => builder.Create(p))
                 .ToImmutableList();
 
-            return wrapLog.Return(result, "found");
-        }
+            return (result, "found");
+        });
 
         // WIP - not final yet
         // We should only implement this when we're sure about how it can be used
@@ -186,31 +172,27 @@ namespace ToSic.Sxc.DataSources
             return wrapLog.Return(result, "found");
         }
 
-        private List<UserDataSourceInfo> GetUsersAndFilter()
+        private List<CmsUserInfo> GetUsersAndFilter() => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<List<UserDataSourceInfo>>();
+            if (_usersFiltered != null) return (_usersFiltered, "re-use");
+            
+            var users = _provider.GetUsersInternal()?.ToList();
 
-            if (_usersFiltered != null) return wrapLog.Return(_usersFiltered, "re-use");
-
-            var users = GetUsersInternal()?.ToList();
-
-            if (users == null || !users.Any()) return wrapLog.ReturnNull("null/empty");
+            if (users == null || !users.Any()) return (new List<CmsUserInfo>(), "null/empty");
 
             // This will resolve the tokens before starting
             Configuration.Parse();
-            
+
             foreach (var filter in Filters())
                 users = users.Where(filter).ToList();
 
-            return wrapLog.Return(_usersFiltered = users, $"found {users.Count}");
-        }
+            return (_usersFiltered = users, $"found {users.Count}");
+        });
+        private List<CmsUserInfo> _usersFiltered;
 
-        private List<UserDataSourceInfo> _usersFiltered;
-
-        private List<Func<UserDataSourceInfo, bool>> Filters()
+        private List<Func<CmsUserInfo, bool>> Filters() => Log.Func(l =>
         {
-            var l = Log.Fn<List<Func<UserDataSourceInfo, bool>>>();
-            var filters = new List<Func<UserDataSourceInfo, bool>>
+            var filters = new List<Func<CmsUserInfo, bool>>
             {
                 IncludeUsersPredicate(),
                 ExcludeUsersPredicate(),
@@ -219,10 +201,10 @@ namespace ToSic.Sxc.DataSources
                 SuperUserPredicate()
             };
             filters = filters.Where(f => f != null).ToList();
-            return l.Return(filters, $"{filters.Count}");
-        }
+            return (filters, $"{filters.Count}");
+        });
 
-        private Func<UserDataSourceInfo, bool> IncludeUsersPredicate()
+        private Func<CmsUserInfo, bool> IncludeUsersPredicate()
         {
             if (string.IsNullOrEmpty(UserIds)) return null;
             var includeUserGuids = IncludeUserGuids();
@@ -231,27 +213,27 @@ namespace ToSic.Sxc.DataSources
             return u => (includeUserGuids != null && includeUserGuids(u)) || (includeUserIds != null && includeUserIds(u));
         }
 
-        private Func<UserDataSourceInfo, bool> IncludeUserGuids()
+        private Func<CmsUserInfo, bool> IncludeUserGuids()
         {
             var userGuidFilter = UserIds.Split(Separator)
                 .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
                 .Where(u => u != Guid.Empty).ToList();
             return userGuidFilter.Any()
-                ? (Func<UserDataSourceInfo, bool>)(u => u.Guid.HasValue && userGuidFilter.Contains(u.Guid.Value))
+                ? (Func<CmsUserInfo, bool>)(u => u.Guid != Guid.Empty && userGuidFilter.Contains(u.Guid))
                 : null;
         }
 
-        private Func<UserDataSourceInfo, bool> IncludeUserIds()
+        private Func<CmsUserInfo, bool> IncludeUserIds()
         {
             var userIdFilter = UserIds.Split(Separator)
                 .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
                 .Where(u => u != -1).ToList();
             return userIdFilter.Any() 
-                ? (Func<UserDataSourceInfo, bool>) (u => userIdFilter.Contains(u.Id)) 
+                ? (Func<CmsUserInfo, bool>) (u => userIdFilter.Contains(u.Id)) 
                 : null;
         }
 
-        private Func<UserDataSourceInfo, bool> ExcludeUsersPredicate()
+        private Func<CmsUserInfo, bool> ExcludeUsersPredicate()
         {
             if (string.IsNullOrEmpty(ExcludeUserIds)) return null;
             var excludeUserGuids = ExcludeUsersByGuids();
@@ -260,77 +242,46 @@ namespace ToSic.Sxc.DataSources
             return u => (excludeUserGuids == null || excludeUserGuids(u)) && (excludeUserIds == null || excludeUserIds(u));
         }
 
-        private Func<UserDataSourceInfo, bool> ExcludeUsersByGuids()
+        private Func<CmsUserInfo, bool> ExcludeUsersByGuids()
         {
             var excludeUserGuidsFilter = ExcludeUserIds.Split(Separator)
                 .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
                 .Where(u => u != Guid.Empty).ToList();
             return excludeUserGuidsFilter.Any()
-                ? (Func<UserDataSourceInfo, bool>)(u => u.Guid.HasValue && !excludeUserGuidsFilter.Contains(u.Guid.Value))
+                ? (Func<CmsUserInfo, bool>)(u => u.Guid != Guid.Empty && !excludeUserGuidsFilter.Contains(u.Guid))
                 : null;
         }
 
-        private Func<UserDataSourceInfo, bool> ExcludeUsersById()
+        private Func<CmsUserInfo, bool> ExcludeUsersById()
         {
             var excludeUserIdsFilter = ExcludeUserIds.Split(Separator)
                 .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
                 .Where(u => u != -1).ToList();
             return excludeUserIdsFilter.Any()
-                ? (Func<UserDataSourceInfo, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
+                ? (Func<CmsUserInfo, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
                 : null;
         }
 
-        private Func<UserDataSourceInfo, bool> IncludeRolesPredicate()
+        private Func<CmsUserInfo, bool> IncludeRolesPredicate()
         {
             var rolesFilter = Roles.RolesCsvListToInt(RoleIds);
             return rolesFilter.Any()
-                ? (Func<UserDataSourceInfo, bool>) (u => u.RoleIds.Any(r => rolesFilter.Contains(r)))
+                ? (Func<CmsUserInfo, bool>) (u => u.RoleIds.Any(r => rolesFilter.Contains(r)))
                 : null;
         }
 
-        private Func<UserDataSourceInfo, bool> ExcludeRolesPredicate()
+        private Func<CmsUserInfo, bool> ExcludeRolesPredicate()
         {
             var excludeRolesFilter = Roles.RolesCsvListToInt(ExcludeRoleIds);
             return excludeRolesFilter.Any()
-                ? (Func<UserDataSourceInfo, bool>) (u => !u.RoleIds.Any(r => excludeRolesFilter.Contains(r)))
+                ? (Func<CmsUserInfo, bool>) (u => !u.RoleIds.Any(r => excludeRolesFilter.Contains(r)))
                 : null;
         }
 
-        private Func<UserDataSourceInfo, bool> SuperUserPredicate() =>
+        private Func<CmsUserInfo, bool> SuperUserPredicate() =>
             bool.TryParse(IncludeSystemAdmins, out var superUserFilter)
-                ? (Func<UserDataSourceInfo, bool>)(u => u.IsSystemAdmin == superUserFilter)
+                ? (Func<CmsUserInfo, bool>)(u => u.IsSystemAdmin == superUserFilter)
                 : null;
 
-        #region Inner Class Just For Processing
-
-        /// <summary>
-        /// The inner list retrieving the pages and doing security checks etc. 
-        /// </summary>
-        /// <returns></returns>
-        [PrivateApi]
-        protected abstract IEnumerable<UserDataSourceInfo> GetUsersInternal();
-
-        protected class UserDataSourceInfo: IHasIdentityNameId // : IUser - not inheriting for the moment, to not include deprecated properties IsAdmin, IsSuperUser, IsDesigner...
-        {
-            public int Id { get; set; }
-            public Guid? Guid { get; set; }
-            public string NameId { get; set; }
-            public List<int> RoleIds { get; set; }
-            public bool IsSystemAdmin { get; set; }
-
-            public bool IsSiteAdmin { get; set; }
-            public bool IsContentAdmin { get; set; }
-
-            //public bool IsDesigner { get; set; }
-            public bool IsAnonymous { get; set; }
-            public DateTime Created { get; set; }
-            public DateTime Modified { get; set; }
-
-            public string Username { get; set; }
-            public string Email { get; set; } // aka PreferredEmail
-            public string Name { get; set; } // aka DisplayName
-
-            #endregion
-        }
     }
 }
