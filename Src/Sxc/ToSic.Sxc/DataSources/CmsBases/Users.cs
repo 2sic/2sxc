@@ -20,30 +20,18 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        NiceName = VqNiceName,
-        Icon = VqIcon,
-        UiHint = VqUiHint,
-        HelpLink = VqHelpLink,
-        GlobalName = VqGlobalName,
-        Type = VqType,
-        ExpectsDataOfType = VqExpectsDataOfType,
+        NiceName = "Users",
+        Icon = Icons.UserCircled,
+        UiHint = "Users in this site",
+        HelpLink = "https://r.2sxc.org/ds-users",
+        GlobalName = "93ac53c6-adc6-4218-b979-48d1071a5765", // random & unique Guid
+        Type = DataSourceType.Source,
+        ExpectsDataOfType = "ac11fae7-1916-4d2d-8583-09872e1e6966",
         Difficulty = DifficultyBeta.Default
     )]
     public class Users : ExternalData
     {
         private readonly UsersDataSourceProvider _provider;
-
-        #region Public Consts for inheriting implementations
-
-        [PrivateApi] public const string VqNiceName = "Users";
-        [PrivateApi] public const string VqIcon = Icons.UserCircled;
-        [PrivateApi] public const string VqUiHint = "Users in this site";
-        [PrivateApi] public const string VqGlobalName = "93ac53c6-adc6-4218-b979-48d1071a5765"; // random & unique Guid
-        [PrivateApi] public const DataSourceType VqType = DataSourceType.Source;
-        [PrivateApi] public const string VqExpectsDataOfType = "ac11fae7-1916-4d2d-8583-09872e1e6966";
-        [PrivateApi] public const string VqHelpLink = "https://r.2sxc.org/ds-users";
-
-        #endregion
 
         #region Other Constants
 
