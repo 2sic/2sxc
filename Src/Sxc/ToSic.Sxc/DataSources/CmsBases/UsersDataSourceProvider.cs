@@ -5,21 +5,17 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.DataSources
 {
     /// <summary>
-    /// Base class to provide data to the Users DataSource.
+    /// Base class to provide data to the UsersDataSourceProvider.
     ///
     /// Must be overriden in each platform.
     /// </summary>
     public abstract class UsersDataSourceProvider: ServiceBase
     {
-        public const int NoParent = 0;
-
         protected UsersDataSourceProvider(string logName) : base(logName)
-        {
-
-        }
+        { }
 
         /// <summary>
-        /// The inner list retrieving the pages and doing security checks etc. 
+        /// The inner list retrieving the users.
         /// </summary>
         /// <returns></returns>
         [PrivateApi]

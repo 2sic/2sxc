@@ -13,8 +13,7 @@ namespace ToSic.Sxc.DataSources
     public class DnnUsersDsProvider : UsersDataSourceProvider
     {
         public DnnUsersDsProvider() : base("Dnn.Users")
-        {
-        }
+        { }
 
         public override IEnumerable<CmsUserInfo> GetUsersInternal() => Log.Func(l =>
             {
