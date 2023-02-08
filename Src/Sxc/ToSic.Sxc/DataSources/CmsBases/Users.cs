@@ -9,9 +9,9 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 // Important Info to people working with this
-// It's an abstract class, and must be overriden in each platform
-// In addition, each platform must make sure to register a TryAddTransient with the platform specific implementation
-// This is because any constructor DI should be able to target this type, and get the real implementation
+// It depends on abstract provder, that must be overriden in each platform
+// In addition, each platform must make sure to register a TryAddTransient with the platform specific provider implementation
+// This is because any constructor DI should be able to target this type, and get the real provider implementation
 
 namespace ToSic.Sxc.DataSources
 {
