@@ -145,7 +145,7 @@
     <Compile Include="Dnn\Services\DnnRenderService.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnPagesDsProvider.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnRolesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnUsersDsProvider.cs" />
     <Compile Include="ToSic.Sxc.Services\DnnExtensions.cs" />

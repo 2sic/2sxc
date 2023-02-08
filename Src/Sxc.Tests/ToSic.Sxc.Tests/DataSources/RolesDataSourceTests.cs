@@ -1,15 +1,21 @@
-﻿using System.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
 using ToSic.Eav.DataSourceTests;
-using ToSic.Testing.Shared;
+using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources
 {
     [TestClass()]
-    public class RolesDataSourceTests : TestBaseDiEavFullAndDb
+    public class RolesDataSourceTests : TestBaseSxcDb
     {
+        // Start the test with a platform-info that has a patron
+        protected override IServiceCollection SetupServices(IServiceCollection services)
+        {
+            return base.SetupServices(services).AddTransient<RolesDataSourceProvider, MockRolesDataSource>(); ;
+        }
         [TestMethod()]
         public void RolesDefault()
         {
@@ -19,7 +25,7 @@ namespace ToSic.Sxc.Tests.DataSources
 
         [DataTestMethod]
         [DataRow("", 10)]
-        [DataRow("not-a-integer,-1", 10)]
+        [DataRow("not-a-integer,-1", 0)]
         [DataRow("1", 1)]
         [DataRow("2,3", 2)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 3)]
@@ -32,7 +38,7 @@ namespace ToSic.Sxc.Tests.DataSources
 
         [DataTestMethod]
         [DataRow("", 10)]
-        [DataRow("not-a-integer,-1", 10)]
+        [DataRow("not-a-integer,-1", 0)]
         [DataRow("1", 9)]
         [DataRow("2,3", 8)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 7)]
@@ -45,7 +51,7 @@ namespace ToSic.Sxc.Tests.DataSources
 
         [DataTestMethod]
         [DataRow("", "", 10)]
-        [DataRow("not-a-integer,-1", "not-a-integer,-1", 10)]
+        [DataRow("not-a-integer,-1", "not-a-integer,-1", 0)]
         [DataRow("3,4,5", "1,2,3", 2)]
         public void RolesWithIncludeExcludeFilter(string includeRolesFilter, string excludeRolesFilter, int expected)
         {
@@ -55,7 +61,7 @@ namespace ToSic.Sxc.Tests.DataSources
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 
-        private MockRolesDataSource GenerateRolesDataSourceDataSource() 
-            => this.GetTestDataSource<MockRolesDataSource>(LookUpTestData.AppSetAndRes());
+        private Roles GenerateRolesDataSourceDataSource() 
+            => this.GetTestDataSource<Roles>(LookUpTestData.AppSetAndRes());
     }
 }

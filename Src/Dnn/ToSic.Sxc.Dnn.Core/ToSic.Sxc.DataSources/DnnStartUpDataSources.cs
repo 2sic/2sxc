@@ -10,8 +10,8 @@ namespace ToSic.Sxc.DataSources
     {
         public static IServiceCollection AddDnnSxcDataSources(this IServiceCollection services)
         {
-            // TODO: Change to use the DataSourceProvider model
-            services.TryAddTransient<Roles, DnnRoles>();
+            // DataSourceProvider model
+            services.TryAddTransient<RolesDataSourceProvider, DnnRolesDsProvider>();
             services.TryAddTransient<UsersDataSourceProvider, DnnUsersDsProvider>();
 
             // info class to ensure SQL knows about default connections

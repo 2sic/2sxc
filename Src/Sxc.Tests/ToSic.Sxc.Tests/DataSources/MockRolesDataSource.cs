@@ -9,18 +9,17 @@ namespace ToSic.Sxc.Tests.DataSources
     /// <summary>
     /// Mock a list of roles
     /// </summary>
-    public class MockRolesDataSource : Roles
+    public class MockRolesDataSource : RolesDataSourceProvider
     {
-        protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
+        public override IEnumerable<CmsRoleInfo> GetRolesInternal() => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<List<RoleDataSourceInfo>>();
             const int siteId = 0;
             Log.A($"Mock Portal Id {siteId}");
 
-            var result = new List<RoleDataSourceInfo>();
+            var result = new List<CmsRoleInfo>();
             for (var i = 1; i <= 10; i++)
             {
-                result.Add(new RoleDataSourceInfo
+                result.Add(new CmsRoleInfo
                 {
                     Id = i,
                     Name = $"[role_name_{i}]",
@@ -29,10 +28,10 @@ namespace ToSic.Sxc.Tests.DataSources
                 });
             }
 
-            return wrapLog.Return(result, "found");
-        }
+            return (result, "found");
+        });
 
-        public MockRolesDataSource(Dependencies dependencies) : base(dependencies)
+        public MockRolesDataSource() : base("DS.MockRoles")
         {
         }
     }

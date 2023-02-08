@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Tests.DataSources
 
         [DataTestMethod]
         [DataRow("", 20)]
-        [DataRow("not-a-integer,-1", 20)]
+        [DataRow("not-a-integer,-1", 0)]
         [DataRow("9", 14)]
         [DataRow("1,2", 7)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 3)]

@@ -77,6 +77,7 @@ namespace ToSic.Sxc.Startup
             // v15 DataSource
             services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
             services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
+            services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
 
             return services;
         }
