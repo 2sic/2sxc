@@ -144,6 +144,7 @@
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\Services\DnnRenderService.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnSitesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnPagesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnRolesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />

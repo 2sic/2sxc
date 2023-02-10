@@ -78,6 +78,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
             services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
             services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
+            services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
             return services;
         }

@@ -23,6 +23,7 @@ namespace ToSic.Sxc.DataSources
             services.TryAddTransient<DnnUserProfile.Dependencies>();
 
             services.TryAddTransient<PagesDataSourceProvider, DnnPagesDsProvider>();
+            services.TryAddTransient<SitesDataSourceProvider, DnnSitesDsProvider>();
 
             return services;
         }

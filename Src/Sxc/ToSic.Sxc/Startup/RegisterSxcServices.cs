@@ -151,6 +151,9 @@ namespace ToSic.Sxc.Startup
             // Sxc StartUp Routines - MUST be AddTransient, not TryAddTransient so many start-ups can be registered
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
 
+            // v15 DataSource Dependencies
+            services.TryAddTransient<SitesDataSourceProvider.Dependencies>();
+
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services
