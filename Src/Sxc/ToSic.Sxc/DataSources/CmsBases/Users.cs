@@ -31,6 +31,7 @@ namespace ToSic.Sxc.DataSources
     )]
     public class Users : ExternalData
     {
+        private readonly IDataBuilderPro _usersDataBuilder;
         private readonly UsersDataSourceProvider _provider;
 
         #region Other Constants
@@ -101,10 +102,11 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Users(Dependencies dependencies, UsersDataSourceProvider provider) : base(dependencies, "SDS.Users")
+        public Users(Dependencies dependencies, UsersDataSourceProvider provider, IDataBuilderPro usersDataBuilder) : base(dependencies, "SDS.Users")
         {
             ConnectServices(
-                _provider = provider
+                _provider = provider,
+                _usersDataBuilder = usersDataBuilder.Configure(typeName: "User", titleField: nameof(CmsUserInfo.Name))
             );
             Provide(GetList); // default out, if accessed, will deliver GetList
             
@@ -124,7 +126,7 @@ namespace ToSic.Sxc.DataSources
         public IImmutableList<IEntity> GetList() => Log.Func(l =>
         {
             var users = GetUsersAndFilter();
-            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "User", titleField: nameof(CmsUserInfo.Name));
+            var builder = _usersDataBuilder; // new DataBuilderPro(DataBuilder).Configure(typeName: "User", titleField: nameof(CmsUserInfo.Name));
             var result = users
                 .Select(p => builder.Create(p))
                 .ToImmutableList();

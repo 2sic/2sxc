@@ -32,6 +32,7 @@ namespace ToSic.Sxc.DataSources
     )]
     public class Roles : ExternalData
     {
+        private readonly IDataBuilderPro _rolesDataBuilder;
         private readonly RolesDataSourceProvider _provider;
 
         #region Other Constants
@@ -71,10 +72,11 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Roles(Dependencies dependencies, RolesDataSourceProvider provider) : base(dependencies, $"SDS.Roles")
+        public Roles(Dependencies dependencies, RolesDataSourceProvider provider, IDataBuilderPro rolesDataBuilder) : base(dependencies, $"SDS.Roles")
         {
             ConnectServices(
-                _provider = provider
+                _provider = provider,
+                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: "Role", titleField: nameof(CmsRoleInfo.Name))
             );
             Provide(GetList); // default out, if accessed, will deliver GetList
 
@@ -104,7 +106,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"excludeRoles: {excludeRolesPredicate == null}");
             if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
-            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Role", titleField: nameof(CmsRoleInfo.Name));
+            var builder = _rolesDataBuilder; // new DataBuilderPro(DataBuilder).Configure(typeName: "Role", titleField: nameof(CmsRoleInfo.Name)) as DataBuilderPro;
 
             var result = roles
                 .Select(p => builder.CreateWithEavNullId(p))

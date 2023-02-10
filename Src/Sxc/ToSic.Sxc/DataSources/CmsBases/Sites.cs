@@ -32,15 +32,17 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Sites in this CMS")]
     public class Sites: ExternalData
     {
+        private readonly IDataBuilderPro _sitesDataBuilder;
         private readonly SitesDataSourceProvider _provider;
 
         #region Constructor
 
         [PrivateApi]
-        public Sites(Dependencies dependencies, SitesDataSourceProvider provider) : base(dependencies, "CDS.Sites")
+        public Sites(Dependencies dependencies, SitesDataSourceProvider provider, IDataBuilderPro sitesDataBuilder) : base(dependencies, "CDS.Sites")
         {
             ConnectServices(
-                _provider = provider
+                _provider = provider,
+                _sitesDataBuilder = sitesDataBuilder.Configure(typeName: "Sites", titleField: nameof(CmsSiteInfo.Name))
             );
             Provide(GetSites);
         }
@@ -54,10 +56,10 @@ namespace ToSic.Sxc.DataSources
             // Get sites from underlying system/provider
             var sitesFromSystem = _provider.GetSitesInternal();
             if (sitesFromSystem == null || !sitesFromSystem.Any())
-                return (new List<IEntity>().ToImmutableList()/*new ImmutableArray<IEntity>()*/, "null/empty");
+                return (new List<IEntity>().ToImmutableList(), "null/empty");
 
             // Convert to Entity-Stream
-            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Sites", titleField: nameof(CmsSiteInfo.Name));
+            var builder = _sitesDataBuilder;// new DataBuilderPro(DataBuilder).Configure(typeName: "Sites", titleField: nameof(CmsSiteInfo.Name)) as DataBuilderPro;
             var sites = sitesFromSystem
                 .Select(s => builder.CreateWithEavNullId(s))
                 .ToImmutableList();

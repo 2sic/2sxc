@@ -25,6 +25,8 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class CmsPageInfo: IRawEntity
     {
+        public const string TypeName = "Page";
+
         /// <summary>
         /// The page ID.
         ///

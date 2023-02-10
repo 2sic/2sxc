@@ -33,7 +33,8 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Pages in this site")]
     public class Pages: ExternalData
     {
-        private readonly MultiBuilder _multiBuilder;
+        private readonly ITreeMapper _treeMapper;
+        private readonly IDataBuilderPro _pageBuilder;
         private readonly PagesDataSourceProvider _provider;
 
         #region Configuration properties
@@ -79,11 +80,12 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Pages(Dependencies dependencies, PagesDataSourceProvider provider, MultiBuilder multiBuilder) : base(dependencies, "CDS.Pages")
+        public Pages(Dependencies dependencies, PagesDataSourceProvider provider, IDataBuilderPro dataBuilder, ITreeMapper treeMapper) : base(dependencies, "CDS.Pages")
         {
             ConnectServices(
                 _provider = provider,
-                _multiBuilder = multiBuilder
+                _pageBuilder = dataBuilder.Configure(typeName: CmsPageInfo.TypeName, titleField: nameof(CmsPageInfo.Name)),
+                _treeMapper = treeMapper
             );
             Provide(GetPages);
             ConfigMask(nameof(IncludeHidden));
@@ -115,17 +117,14 @@ namespace ToSic.Sxc.DataSources
                 return (new ImmutableArray<IEntity>(), "null/empty");
 
             // Convert to Entity-Stream
-            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Page", titleField: nameof(CmsPageInfo.Name));
             var pages = pagesFromSystem
-                .Select(p => builder.Create(p))
+                .Select(p => _pageBuilder.Create(p))
                 .ToImmutableList();
 
             // Try to add Navigation properties
             try
             {
-                var treeMapper = new TreeMapper<int>(_multiBuilder, Log);
-                var asTree =
-                    treeMapper.GetEntitiesWithRelationships(pages, "EntityId", "ParentId", "Children", "Parent");
+                var asTree = _treeMapper.AddRelationships<int>(pages, "EntityId", "ParentId");
                 return (asTree, $"As Tree: {asTree.Count}");
             }
             catch (Exception ex)
