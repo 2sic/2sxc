@@ -109,7 +109,7 @@ namespace ToSic.Sxc.DataSources
             var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Role", titleField: nameof(CmsRoleInfo.Name));
 
             var result = roles
-                .Select(p => builder.Create(p))
+                .Select(p => builder.CreateWithEavNullId(p))
                 .ToImmutableList();
 
             l.A($"returning {result.Count} roles");
