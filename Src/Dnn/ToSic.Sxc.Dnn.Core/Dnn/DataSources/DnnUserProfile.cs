@@ -33,31 +33,23 @@ namespace ToSic.Sxc.Dnn.DataSources
 	public class DnnUserProfile : ExternalData
 	{
 		#region Configuration-properties
-		private const string PropertiesKey = "Properties";
-		private const string TitleFieldKey = "TitleField";
-		private const string ContentTypeKey = "ContentType";
-		private const string UserIdsKey = "UserIds";
-		private const string UserIdsDefaultKeyToken = "[Settings:UserIds||disabled]";
-		private const string PropertiesDefaultKeyToken = "[Settings:Properties||DisplayName,Email,FirstName,LastName,Username]";
-		private const string EntityTitleDefaultKeyToken = "[Settings:TitleFieldName||DisplayName]";
-		private const string ContentTypeDefaultToken = "[Settings:ContentTypeName||DnnUserInfo]";
 
         /// <summary>
         /// The user id list of users to retrieve, comma-separated
         /// </summary>
 		public string UserIds
-		{
-			get => Configuration[UserIdsKey];
-            set => Configuration[UserIdsKey] = value;
+        {
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         /// <summary>
         /// List of profile-properties to retrieve, comma-separated
         /// </summary>
 		public string Properties
-		{
-			get => Configuration[PropertiesKey];
-            set => Configuration[PropertiesKey] = value;
+        {
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
 		/// <summary>
@@ -65,8 +57,8 @@ namespace ToSic.Sxc.Dnn.DataSources
 		/// </summary>
 		public string ContentType
 		{
-			get => Configuration[ContentTypeKey];
-            set => Configuration[ContentTypeKey] = value;
+			get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
 		/// <summary>
@@ -74,8 +66,8 @@ namespace ToSic.Sxc.Dnn.DataSources
 		/// </summary>
 		public string TitleField
 		{
-			get => Configuration[TitleFieldKey];
-            set => Configuration[TitleFieldKey] = value;
+			get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
 		#endregion
@@ -105,10 +97,10 @@ namespace ToSic.Sxc.Dnn.DataSources
             _deps = dependencies.SetLog(Log);
 
 			Provide(GetList);
-			Configuration.Values.Add(UserIdsKey, UserIdsDefaultKeyToken);
-			Configuration.Values.Add(PropertiesKey, PropertiesDefaultKeyToken);
-			Configuration.Values.Add(ContentTypeKey, ContentTypeDefaultToken);
-			Configuration.Values.Add(TitleFieldKey, EntityTitleDefaultKeyToken);
+            ConfigMask($"{nameof(UserIds)}||disabled");
+            ConfigMask($"{nameof(Properties)}||DisplayName,Email,FirstName,LastName,Username");
+			ConfigMaskMyConfig(nameof(ContentType), "ContentTypeName||DnnUserInfo");
+			ConfigMaskMyConfig(nameof(TitleField), "TitleFieldName||DisplayName");
         }
 
         private readonly Dependencies _deps;
