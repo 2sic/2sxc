@@ -8,7 +8,7 @@ using ToSic.Sxc.DataSources;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Tests.DataSources
 {
-    [TestClass()]
+    [TestClass]
     public class UsersDataSourceTests : TestBaseSxcDb
     {
         // Start the test with a platform-info that has a patron
@@ -143,14 +143,15 @@ namespace ToSic.Sxc.Tests.DataSources
         public void UsersWithSuperUserFilter(string superUserFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
-            usersDataSource.IncludeSystemAdmins = superUserFilter;
+            //usersDataSource.IncludeSystemAdmins = superUserFilter;
+            usersDataSource.Configuration[nameof(usersDataSource.IncludeSystemAdmins)] = superUserFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
         [DataTestMethod]
-        [DataRow("1,2,3,4,5,6,7,8,9,10", "00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", "2", "9", "", 6)]
-        [DataRow("1,2,3,4,5,6,7,8,9,10", "00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", "1,2", "9", "true", 1)]
-        public void UsersWithAllFilters(string includeUsersFilter, string excludeUsersFilter, string includeRolesFilter, string excludeRolesFilter, string superUserFilter, int expected)
+        [DataRow("1,2,3,4,5,6,7,8,9,10", "00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", "2", "9", false, 6)]
+        [DataRow("1,2,3,4,5,6,7,8,9,10", "00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", "1,2", "9", true, 1)]
+        public void UsersWithAllFilters(string includeUsersFilter, string excludeUsersFilter, string includeRolesFilter, string excludeRolesFilter, bool superUserFilter, int expected)
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
             usersDataSource.UserIds = includeUsersFilter;

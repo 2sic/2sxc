@@ -41,18 +41,14 @@ namespace ToSic.Sxc.DataSources
 
         #region Configuration-properties
 
-        private const string UserIdsKey = "UserIds";
-        private const string ExcludeUserIdsKey = "ExcludeUserIds";
-        private const string IncludeSystemAdminsKey = "IncludeSystemAdmins";
-
         /// <summary>
         /// Optional Users (single value or comma-separated guids or integers) filter,
         /// include users based on guid or id
         /// </summary>
         public string UserIds
         {
-            get => Configuration[UserIdsKey];
-            set => Configuration[UserIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         /// <summary>
@@ -61,8 +57,8 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         public string ExcludeUserIds
         {
-            get => Configuration[ExcludeUserIdsKey];
-            set => Configuration[ExcludeUserIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         /// <summary>
@@ -71,8 +67,8 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         public string RoleIds
         {
-            get => Configuration[Roles.RoleIdsKey];
-            set => Configuration[Roles.RoleIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         /// <summary>
@@ -81,8 +77,8 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         public string ExcludeRoleIds
         {
-            get => Configuration[Roles.ExcludeRoleIdsKey];
-            set => Configuration[Roles.ExcludeRoleIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         /// <summary>
@@ -90,10 +86,10 @@ namespace ToSic.Sxc.DataSources
         /// true - only SuperUsers
         /// false - without SuperUsers
         /// </summary>
-        public string IncludeSystemAdmins
+        public bool IncludeSystemAdmins
         {
-            get => Configuration[IncludeSystemAdminsKey];
-            set => Configuration[IncludeSystemAdminsKey] = value;
+            get => Configuration.GetThis(false);
+            set => Configuration.SetThis(value);
         }
 
         #endregion
@@ -115,11 +111,11 @@ namespace ToSic.Sxc.DataSources
             // UserRoles not final...
             // Provide("UserRoles", GetRoles);
 
-            ConfigMask(UserIdsKey);
-            ConfigMask(ExcludeUserIdsKey);
-            ConfigMask(Roles.RoleIdsKey);
-            ConfigMask(Roles.ExcludeRoleIdsKey);
-            ConfigMask($"{IncludeSystemAdminsKey}||false");
+            ConfigMask(nameof(UserIds));
+            ConfigMask(nameof(ExcludeUserIds));
+            ConfigMask(nameof(RoleIds));
+            ConfigMask(nameof(ExcludeRoleIds));
+            ConfigMask($"{nameof(IncludeSystemAdmins)}||false");
         }
 
         #endregion
@@ -267,8 +263,8 @@ namespace ToSic.Sxc.DataSources
         }
 
         private Func<CmsUserInfo, bool> SuperUserPredicate() =>
-            bool.TryParse(IncludeSystemAdmins, out var superUserFilter)
-                ? (Func<CmsUserInfo, bool>)(u => u.IsSystemAdmin == superUserFilter)
+            /*bool.TryParse(*/IncludeSystemAdmins/*, out var superUserFilter)*/
+                ? (Func<CmsUserInfo, bool>)(u => u.IsSystemAdmin /*== superUserFilter*/)
                 : null;
 
     }
