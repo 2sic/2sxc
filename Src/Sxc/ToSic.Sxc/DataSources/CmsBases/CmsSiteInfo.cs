@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
         /// * In Dnn it's from `PortalInfo.PortalID`
         /// * In Oqtane it's `Site.SiteId`
         /// </summary>
-        public int Id { get; set; }
+        public int Id { get; set; } = Eav.Constants.NullId; // 0 is valid Id
 
         /// <summary>
         /// The site GUID.

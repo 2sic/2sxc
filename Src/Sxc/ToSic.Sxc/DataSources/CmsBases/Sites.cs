@@ -59,7 +59,7 @@ namespace ToSic.Sxc.DataSources
             // Convert to Entity-Stream
             var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Sites", titleField: nameof(CmsSiteInfo.Name));
             var sites = sitesFromSystem
-                .Select(s => builder.Create(s))
+                .Select(s => builder.CreateWithEavNullId(s))
                 .ToImmutableList();
 
             return (sites, $"found: {sites.Count}");
