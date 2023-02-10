@@ -30,7 +30,6 @@ namespace ToSic.Sxc.LookUp
             );
         }
 
-
         #endregion
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace ToSic.Sxc.LookUp
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal Func<App, IAppDataConfiguration> Build(IBlock block) => block.Log.Func< Func<App, IAppDataConfiguration>>(() =>
+        internal Func<App, IAppDataConfiguration> Build(IBlock block) => block.Log.Func<Func<App, IAppDataConfiguration>>(() =>
         {
             var showDrafts = block.Context.UserMayEdit;
             var existingLookups = block.Data.Configuration.LookUpEngine;
@@ -71,16 +70,14 @@ namespace ToSic.Sxc.LookUp
 
         // note: not sure yet where the best place for this method is, so it's here for now
         // will probably move again some day
-        internal LookUpEngine GetLookupEngineForContext(IContextOfSite context, IApp appForLookup, IBlock blockForLookup)
+        internal LookUpEngine GetLookupEngineForContext(IContextOfSite context, IApp appForLookup, IBlock blockForLookup
+        ) => Log.Func($"module: {(context as ContextOfBlock)?.Module.Id}, app: {appForLookup?.AppId} ..., ...", l =>
         {
             var modId = (context as ContextOfBlock)?.Module.Id ?? 0;
 
-            var wrapLog = Log.Fn<LookUpEngine>($"module: {modId}, app: {appForLookup?.AppId} ..., ...");
-
-
             // Find the standard DNN property sources if PortalSettings object is available
             var envLookups = _getEngineLazy.Value.GetLookUpEngine(modId);
-            Log.A($"Environment provided {envLookups.Sources.Count} sources");
+            l.A($"Environment provided {envLookups.Sources.Count} sources");
 
             var provider = new LookUpEngine(envLookups, Log);
 
@@ -88,8 +85,7 @@ namespace ToSic.Sxc.LookUp
             var http = _httpLazy.Value;
             if (http.Current != null)
             {
-                Log.A("Found Http-Context, will ty to add params for querystring, server etc.");
-
+                l.A("Found Http-Context, will ty to add params for querystring, server etc.");
 
                 // new (Oqt and Dnn)
                 var paramList = new NameValueCollection();
@@ -104,7 +100,7 @@ namespace ToSic.Sxc.LookUp
                 if (!provider.HasSource(LookUpConstants.SourceQuery))
                     provider.Add(new LookUpInNameValueCollection(LookUpConstants.SourceQuery, paramList));
 
-#if NETFRAMEWORK 
+#if NETFRAMEWORK
                 // old (Dnn only)
                 provider.Add(new LookUpInNameValueCollection(LookUpConstants.OldDnnSourceQueryString, paramList));
                 provider.Add(new LookUpInNameValueCollection("form", http.Request.Form));
@@ -114,7 +110,7 @@ namespace ToSic.Sxc.LookUp
 #endif
             }
             else
-                Log.A("No Http-Context found, won't add http params to look-up");
+                l.A("No Http-Context found, won't add http params to look-up");
 
 
             provider.Add(new LookUpInAppProperty("app", appForLookup));
@@ -133,7 +129,19 @@ namespace ToSic.Sxc.LookUp
                 var blockBuilderLookUp = new LookUpCmsBlock(LookUpConstants.InstanceContext, blockForLookup);
                 provider.Add(blockBuilderLookUp);
             }
-            return wrapLog.ReturnAsOk(provider);
-        }
+
+            // Provide the settings & resources stack lookup
+            if (context is IContextOfApp contextOfApp)
+            {
+                l.A("Inside an App-Context, will add stack sources for settings/resources");
+                var dims = contextOfApp.Site.SafeLanguagePriorityCodes();
+                provider.Add(new LookUpInStack(contextOfApp.AppSettings, dims));
+                provider.Add(new LookUpInStack(contextOfApp.AppResources, dims));
+            }
+            else
+                l.A("Not in App context, will not add stack for settings/resources");
+
+            return (provider, $"{provider.Sources.Count}");
+        });
     }
 }
