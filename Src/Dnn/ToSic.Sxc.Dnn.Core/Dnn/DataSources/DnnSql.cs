@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         [PrivateApi]
 		public DnnSql(Dependencies dependencies): base(dependencies)
 		{
-			Configuration[ConnectionStringNameKey] = DnnSqlPlatformInfo.SiteSqlServer;
+			ConnectionStringName = DnnSqlPlatformInfo.SiteSqlServer;
 		}
 	}
 

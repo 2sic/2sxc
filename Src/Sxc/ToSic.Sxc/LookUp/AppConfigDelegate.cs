@@ -123,7 +123,7 @@ namespace ToSic.Sxc.LookUp
             if (!provider.HasSource(CmsBlock.InstanceLookupName))
             {
                 var modulePropertyAccess = new LookUpInDictionary(CmsBlock.InstanceLookupName);
-                modulePropertyAccess.Properties.Add(CmsBlock.InstanceIdKey, modId.ToString(CultureInfo.InvariantCulture));
+                modulePropertyAccess.Properties.Add(CmsBlock.ModuleIdKey, modId.ToString(CultureInfo.InvariantCulture));
                 provider.Add(modulePropertyAccess);
             }
 

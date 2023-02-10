@@ -31,8 +31,8 @@ namespace ToSic.Sxc.DataSources
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSource
     {
-        public const string InstanceLookupName = "module";
-        public const string InstanceIdKey = "Id"; // 2021-10-07 2dm changed from "ModuleId" because that's doesn't work in Oqtane
+        [PrivateApi] internal const string InstanceLookupName = "module";
+        [PrivateApi] internal const string ModuleIdKey = "Id";
 
         [PrivateApi]
         public enum Settings
@@ -49,10 +49,10 @@ namespace ToSic.Sxc.DataSources
             get
             {
                 Configuration.Parse();
-                var listIdString = Configuration[InstanceIdKey];
+                var listIdString = Configuration.GetThis();
                 return int.TryParse(listIdString, out var listId) ? listId : new int?();
             }
-            set => Configuration[InstanceIdKey] = value.ToString();
+            set => Configuration.SetThis(value);
         }
 
         #region Constructor
@@ -83,7 +83,7 @@ namespace ToSic.Sxc.DataSources
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);
-			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
+			ConfigMaskMyConfig(nameof(ModuleId), $"{Settings.InstanceId}||[{InstanceLookupName}:{ModuleIdKey}]");
         }
         private readonly Dependencies _deps;
         #endregion

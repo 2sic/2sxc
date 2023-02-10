@@ -41,8 +41,6 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
         #region Configuration-properties
-        [PrivateApi] internal const string RoleIdsKey = "RoleIds";
-        [PrivateApi] internal const string ExcludeRoleIdsKey = "ExcludeRoleIds";
 
         /// <summary>
         /// Optional (single value or comma-separated integers) filter,
@@ -50,8 +48,8 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         public virtual string RoleIds
         {
-            get => Configuration[RoleIdsKey];
-            set => Configuration[RoleIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         /// <summary>
@@ -60,8 +58,8 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         public virtual string ExcludeRoleIds
         {
-            get => Configuration[ExcludeRoleIdsKey];
-            set => Configuration[ExcludeRoleIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         #endregion
@@ -80,8 +78,8 @@ namespace ToSic.Sxc.DataSources
             );
             Provide(GetList); // default out, if accessed, will deliver GetList
 
-            ConfigMask(RoleIdsKey);
-            ConfigMask(ExcludeRoleIdsKey);
+            ConfigMask(nameof(RoleIds));
+            ConfigMask(nameof(ExcludeRoleIds));
         }
 
         #endregion
