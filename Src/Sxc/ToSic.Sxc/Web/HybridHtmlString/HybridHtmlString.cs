@@ -18,13 +18,11 @@ namespace ToSic.Sxc.Web
         /// <returns></returns>
         public override string ToString() => _value;
 
-#if NETSTANDARD
-        public void WriteTo(System.IO.TextWriter writer, System.Text.Encodings.Web.HtmlEncoder encoder) 
-            => new Microsoft.AspNetCore.Html.HtmlString(ToString()).WriteTo(writer, encoder);
-#endif
-
 #if NETFRAMEWORK
         public string ToHtmlString() => ToString();
+#else
+        public void WriteTo(System.IO.TextWriter writer, System.Text.Encodings.Web.HtmlEncoder encoder) 
+            => new Microsoft.AspNetCore.Html.HtmlString(ToString()).WriteTo(writer, encoder);
 #endif
     }
 }

@@ -1,11 +1,11 @@
-﻿#if NETSTANDARD
-using System;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-#else
+﻿#if NETFRAMEWORK
 using System.Web.Hosting;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
+#else
+using System;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 #endif
 using ToSic.Eav.Run;
 
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Run
     /// </summary>
     public class ServerPaths: ServerPathsBase
     {
-#if NETSTANDARD
+#if !NETFRAMEWORK
 
         // NOTE: The .net standard is probably never used
         // As Oqtane has it's own ServerPaths

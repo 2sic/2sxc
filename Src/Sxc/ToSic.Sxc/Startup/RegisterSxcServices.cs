@@ -194,11 +194,11 @@ namespace ToSic.Sxc.Startup
         
         public static IServiceCollection AddNetVariations(this IServiceCollection services)
         {
-#if NETSTANDARD
-            services.TryAddTransient<IHttp, HttpNetCore>();
-#else
+#if NETFRAMEWORK
             // WebForms implementations
             services.TryAddScoped<IHttp, HttpNetFramework>();
+#else
+            services.TryAddTransient<IHttp, HttpNetCore>();
 #endif
             return services;
         }

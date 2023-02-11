@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-#if NETSTANDARD
-using Microsoft.AspNetCore.Mvc;
-#else
+#if NETFRAMEWORK
 using System.IO;
 using System.Net.Http;
 using ToSic.Eav.WebApi.ImportExport;
+#else
+using Microsoft.AspNetCore.Mvc;
 #endif
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
@@ -112,10 +112,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 BuiltInFeatures.AppSyncWithSiteFiles.Guid);
         }
 
-#if NETSTANDARD
-        public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-#else
+#if NETFRAMEWORK
         public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
+#else
+        public IActionResult Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
 #endif
 
         {
@@ -138,10 +138,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 var fileBytes = fileStream.ToArray();
                 Log.A("will stream so many bytes:" + fileBytes.Length);
                 var mimeType = MimeHelper.FallbackType;
-#if NETSTANDARD
-                return new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };
-#else
+#if NETFRAMEWORK
                 return HttpFileHelper.GetAttachmentHttpResponseMessage(fileName, mimeType, new MemoryStream(fileBytes));
+#else
+                return new FileContentResult(fileBytes, mimeType) { FileDownloadName = fileName };
 #endif
             }
         }

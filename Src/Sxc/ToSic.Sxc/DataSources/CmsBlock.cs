@@ -125,6 +125,7 @@ namespace ToSic.Sxc.DataSources
                 return true;
             }
 
+            immutableArray = new ImmutableArray<IEntity>();
             return false;
         }
 

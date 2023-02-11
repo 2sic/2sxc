@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD
+﻿#if !NETFRAMEWORK
 using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.AspNetCore.Http;

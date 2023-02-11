@@ -11,30 +11,30 @@ namespace ToSic.Sxc.Run
 {
     public class LinkPaths: ILinkPaths
     {
-#if NETSTANDARD
+#if !NETFRAMEWORK
         public LinkPaths(IUrlHelper urlHelper) => _urlHelper = urlHelper;
         private readonly IUrlHelper _urlHelper;
 #endif
 
         public string AsSeenFromTheDomainRoot(string virtualPath)
         {
-#if NETSTANDARD
-            return _urlHelper.Content(virtualPath);
-#else
+#if NETFRAMEWORK
             return VirtualPathUtility.ToAbsolute(virtualPath);
+#else
+            return _urlHelper.Content(virtualPath);
 #endif
         }
 
-#if NETSTANDARD
-        public string GetCurrentRequestUrl() => _urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl();
-#else
+#if NETFRAMEWORK
         public string GetCurrentRequestUrl() => HttpContext.Current?.Request?.Url?.AbsoluteUri ?? string.Empty;
+#else
+        public string GetCurrentRequestUrl() => _urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl();
 #endif
 
-#if NETSTANDARD
-        public string GetCurrentLinkRoot() => new Uri(_urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl()).GetLeftPart(UriPartial.Authority);
-#else
+#if NETFRAMEWORK
         public string GetCurrentLinkRoot() => HttpContext.Current?.Request?.Url?.GetLeftPart(UriPartial.Authority) ?? string.Empty;
+#else
+        public string GetCurrentLinkRoot() => new Uri(_urlHelper.ActionContext.HttpContext.Request.GetEncodedUrl()).GetLeftPart(UriPartial.Authority);
 #endif
 
         }
