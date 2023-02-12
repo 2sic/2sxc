@@ -42,8 +42,8 @@ XCOPY "..\..\packages\tosic.imageflow.oqtane\1.0.4\runtimes\*" "%OqtaneBin%\runt
 
 @Echo(
 @Echo Copy Koi DLLs
-XCOPY "..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll" "%OqtaneBin%" /Y
-XCOPY "..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.pdb" "%OqtaneBin%" /Y
+XCOPY "..\..\..\Dependencies\Koi\net6.0\Connect.Koi.dll" "%OqtaneBin%" /Y
+XCOPY "..\..\..\Dependencies\Koi\net6.0\Connect.Koi.pdb" "%OqtaneBin%" /Y
 
 @Echo(
 @Echo Copy RazorBlade DLLs from Debug

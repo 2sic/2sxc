@@ -1,18 +1,16 @@
 {
   "runtimeTarget": {
-    "name": ".NETStandard,Version=v2.0/",
+    "name": ".NETCoreApp,Version=v6.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETStandard,Version=v2.0": {},
-    ".NETStandard,Version=v2.0/": {
+    ".NETCoreApp,Version=v6.0": {
       "Connect.Koi/03.00.01": {
         "dependencies": {
           "Microsoft.AspNetCore.Html.Abstractions": "2.0.0",
           "Microsoft.AspNetCore.Http": "2.0.0",
-          "Microsoft.AspNetCore.Http.Abstractions": "2.0.0",
-          "NETStandard.Library": "2.0.3"
+          "Microsoft.AspNetCore.Http.Abstractions": "2.0.0"
         },
         "runtime": {
           "Connect.Koi.dll": {}
@@ -130,36 +128,9 @@
           }
         }
       },
-      "Microsoft.NETCore.Platforms/1.1.0": {},
-      "NETStandard.Library/2.0.3": {
-        "dependencies": {
-          "Microsoft.NETCore.Platforms": "1.1.0"
-        }
-      },
-      "System.Buffers/4.4.0": {
-        "runtime": {
-          "lib/netstandard2.0/System.Buffers.dll": {
-            "assemblyVersion": "4.0.2.0",
-            "fileVersion": "4.6.25519.3"
-          }
-        }
-      },
-      "System.Runtime.CompilerServices.Unsafe/4.4.0": {
-        "runtime": {
-          "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {
-            "assemblyVersion": "4.0.3.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "System.Text.Encodings.Web/4.4.0": {
-        "runtime": {
-          "lib/netstandard2.0/System.Text.Encodings.Web.dll": {
-            "assemblyVersion": "4.0.2.0",
-            "fileVersion": "4.6.25519.3"
-          }
-        }
-      }
+      "System.Buffers/4.4.0": {},
+      "System.Runtime.CompilerServices.Unsafe/4.4.0": {},
+      "System.Text.Encodings.Web/4.4.0": {}
     }
   },
   "libraries": {
@@ -237,20 +208,6 @@
       "sha512": "sha512-Rm9zeNCWyNrGnysHdRXJpNfeDVlPzzFuidSuRLRNvOrnw71vgNPlR4H9wHo2hG/oSaruukqNjK06MDQqb+eXhA==",
       "path": "microsoft.net.http.headers/2.0.0",
       "hashPath": "microsoft.net.http.headers.2.0.0.nupkg.sha512"
-    },
-    "Microsoft.NETCore.Platforms/1.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
-      "path": "microsoft.netcore.platforms/1.1.0",
-      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
-    },
-    "NETStandard.Library/2.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
-      "path": "netstandard.library/2.0.3",
-      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
     "System.Buffers/4.4.0": {
       "type": "package",

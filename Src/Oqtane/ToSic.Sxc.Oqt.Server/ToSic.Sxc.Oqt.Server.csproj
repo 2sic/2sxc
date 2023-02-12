@@ -109,7 +109,7 @@
 
   <ItemGroup>
     <Reference Include="Connect.Koi">
-      <HintPath>..\..\..\Dependencies\Koi\netstandard2.0\Connect.Koi.dll</HintPath>
+      <HintPath>..\..\..\Dependencies\Koi\net6.0\Connect.Koi.dll</HintPath>
     </Reference>
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
