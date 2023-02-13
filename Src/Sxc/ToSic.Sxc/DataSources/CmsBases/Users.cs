@@ -131,29 +131,29 @@ namespace ToSic.Sxc.DataSources
             return (result, "found");
         });
 
-        // WIP - not final yet
-        // We should only implement this when we're sure about how it can be used
-        // Maybe a sub-entity-property would be better...
-        private IImmutableList<IEntity> GetRoles()
-        {
-            var wrapLog = Log.Fn<IImmutableList<IEntity>>();
-            var users = GetUsersAndFilter();
+        //// WIP - not final yet
+        //// We should only implement this when we're sure about how it can be used
+        //// Maybe a sub-entity-property would be better...
+        //private IImmutableList<IEntity> GetRoles()
+        //{
+        //    var wrapLog = Log.Fn<IImmutableList<IEntity>>();
+        //    var users = GetUsersAndFilter();
 
-            var result = users
-                .Where(u => u.RoleIds?.Any() == true)
-                .SelectMany(u => u.RoleIds.Select(r =>
-                    DataBuilder.Entity(new Dictionary<string, object>
-                        {
-                            { "RoleId", r },
-                            { "UserId", u.Id },
-                            { Attributes.TitleNiceName, $"User {u.Id} in Role {r}" },
-                        },
-                        titleField: Attributes.TitleNiceName))
-                )
-                .ToImmutableList();
+        //    var result = users
+        //        .Where(u => u.RoleIds?.Any() == true)
+        //        .SelectMany(u => u.RoleIds.Select(r =>
+        //            DataBuilder.Entity(new Dictionary<string, object>
+        //                {
+        //                    { "RoleId", r },
+        //                    { "UserId", u.Id },
+        //                    { Attributes.TitleNiceName, $"User {u.Id} in Role {r}" },
+        //                },
+        //                titleField: Attributes.TitleNiceName))
+        //        )
+        //        .ToImmutableList();
 
-            return wrapLog.Return(result, "found");
-        }
+        //    return wrapLog.Return(result, "found");
+        //}
 
         private List<CmsUserInfo> GetUsersAndFilter() => Log.Func(l =>
         {
