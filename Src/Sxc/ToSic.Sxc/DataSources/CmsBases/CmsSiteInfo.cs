@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
         /// * In Dnn it's from `PortalInfo.PortalID`
         /// * In Oqtane it's `Site.SiteId`
         /// </summary>
-        public int Id { get; set; } = Eav.Constants.NullId; // 0 is valid Id
+        public int Id { get; set; }
 
         /// <summary>
         /// The site GUID.
@@ -59,9 +59,10 @@ namespace ToSic.Sxc.DataSources
 
 
         /// <summary>
-        /// The site languages.
+        /// The site languages, comma separated.
+        /// Can be empty ever if a <see cref="DefaultLanguage"/> is set, if the site itself is not multi-language.
         /// </summary>
-        public Dictionary<string, string> Languages { get; set; }
+        public string Languages { get; set; }
 
 
         /// <summary>
@@ -70,15 +71,16 @@ namespace ToSic.Sxc.DataSources
         /// * In Dnn it's from `PortalInfo.CultureCode`
         /// * in Oqtane it's from `Site.CultureCode`
         /// </summary>
-        public string LanguageCode { get; set; }
+        public string DefaultLanguage { get; set; }
 
-        /// <summary>
-        /// Determines if visitors may register / create user accounts
-        ///
-        /// * In Dnn it's from `PortalInfo.UserRegistration`
-        /// * in Oqtane it's from `Site.AllowRegistration`
-        /// </summary>
-        public bool AllowRegistration { get; set; }
+        // 2023-02-13 2dm disabled this. It's a very exotic property, don't think it should be in the normal data source
+        ///// <summary>
+        ///// Determines if visitors may register / create user accounts
+        /////
+        ///// * In Dnn it's from `PortalInfo.UserRegistration`
+        ///// * in Oqtane it's from `Site.AllowRegistration`
+        ///// </summary>
+        //public bool AllowRegistration { get; set; }
 
         /// <summary>
         /// The site creation date/time.
@@ -98,8 +100,15 @@ namespace ToSic.Sxc.DataSources
 
 
         public int ZoneId { get; set; }
-        public int DefaultAppId { get; set; }
-        //public int ContentAppId { get; set; } // TODO: ask 2DM ContentAppId vs. DefaultAppId (is this the same)
+
+        /// <summary>
+        /// The Content App.
+        /// </summary>
+        public int ContentAppId { get; set; }
+
+        /// <summary>
+        /// The (technical) primary App, which contains things such as site metadata.
+        /// </summary>
         public int PrimaryAppId { get; set; }
 
         /// <summary>
@@ -112,12 +121,10 @@ namespace ToSic.Sxc.DataSources
             { nameof(Name), Name },
             { nameof(Url), Url },
             { nameof(Languages), Languages },
-            { nameof(LanguageCode), LanguageCode },
-            { nameof(AllowRegistration), AllowRegistration },
+            { nameof(DefaultLanguage), DefaultLanguage },
             { nameof(ZoneId), ZoneId },
-            { nameof(DefaultAppId), DefaultAppId },
-            //{ nameof(ContentAppId), ContentAppId },
-            { nameof(PrimaryAppId), PrimaryAppId }
+            { nameof(ContentAppId), ContentAppId },
+            { nameof(PrimaryAppId), PrimaryAppId },
         };
     }
 }

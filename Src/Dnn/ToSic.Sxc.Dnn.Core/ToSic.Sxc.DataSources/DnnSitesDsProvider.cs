@@ -2,7 +2,6 @@
 using DotNetNuke.Entities.Urls;
 using System.Collections.Generic;
 using System.Linq;
-using DotNetNuke.Common;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -29,15 +28,13 @@ namespace ToSic.Sxc.DataSources
                     Id = s.PortalID,
                     Guid = s.GUID,
                     Name = s.PortalName,
-                    Url = GetUrl(s.PortalID, s.CultureCode).TrimLastSlash(),
-                    LanguageCode = s.CultureCode.ToLower(),
+                    Url = GetUrl(s.PortalID, s.DefaultLanguage).TrimLastSlash(),
+                    DefaultLanguage = s.DefaultLanguage.ToLower() ?? "",
                     Languages = GetLanguages(s.PortalID),
-                    AllowRegistration = AllowRegistration(s.UserRegistration),
                     Created = s.CreatedOnDate,
                     Modified = s.LastModifiedOnDate,
                     ZoneId = GetZoneId(s.PortalID),
-                    DefaultAppId = GetDefaultAppId(s.PortalID),
-                    //ContentAppId = GetContentAppId(s.PortalID),
+                    ContentAppId = GetDefaultAppId(s.PortalID),
                     PrimaryAppId = GetPrimaryAppId(s.PortalID)
                 })
                 .ToList();
@@ -52,8 +49,8 @@ namespace ToSic.Sxc.DataSources
             return primaryPortalAlias.HTTPAlias;
         }
 
-        private bool AllowRegistration(int userRegistration) =>
-            userRegistration != (int)Globals.PortalRegistrationType.NoRegistration 
-            && userRegistration != (int)Globals.PortalRegistrationType.PrivateRegistration;
+        //private bool AllowRegistration(int userRegistration) =>
+        //    userRegistration != (int)Globals.PortalRegistrationType.NoRegistration 
+        //    && userRegistration != (int)Globals.PortalRegistrationType.PrivateRegistration;
     }
 }

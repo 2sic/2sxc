@@ -35,8 +35,7 @@ namespace ToSic.Sxc.DataSources
 
         #endregion
 
-        public override List<CmsSiteInfo> GetSitesInternal(
-        ) => Log.Func(l =>
+        public override List<CmsSiteInfo> GetSitesInternal() => Log.Func(l =>
         {
             var sites = _sites.GetSites().ToList();
             return sites.Select(s => new CmsSiteInfo
@@ -46,13 +45,11 @@ namespace ToSic.Sxc.DataSources
                 Name = s.Name,
                 Url = GetUrl(s.SiteId),
                 Languages = GetLanguages(s.SiteId),
-                LanguageCode = _oqtCulture.Value.DefaultLanguageCode(s.SiteId),
-                AllowRegistration = s.AllowRegistration,
+                DefaultLanguage = _oqtCulture.Value.DefaultLanguageCode(s.SiteId),
                 Created = s.CreatedOn,
                 Modified = s.ModifiedOn,
                 ZoneId = GetZoneId(s.SiteId),
-                DefaultAppId = GetDefaultAppId(s.SiteId),
-                //ContentAppId = GetContentAppId(s.SiteId),
+                ContentAppId = GetDefaultAppId(s.SiteId),
                 PrimaryAppId = GetPrimaryAppId(s.SiteId)
             }).ToList();
         });

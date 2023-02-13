@@ -19,9 +19,6 @@ namespace ToSic.Sxc.DataSources
             public LazySvc<IZoneMapper> ZoneMapperLazy { get; }
             public IAppStates AppStates { get; }
 
-            /// <summary>
-            /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
-            /// </summary>
             public Dependencies(
                 LazySvc<IZoneMapper> zoneMapperLazy,
                 IAppStates appStates
@@ -35,15 +32,8 @@ namespace ToSic.Sxc.DataSources
 
         }
         
-        private readonly Dependencies _dependencies;
-
         protected SitesDataSourceProvider(Dependencies dependencies, string logName) : base(dependencies, logName)
         {
-            //ConnectServices(
-            //    dependencies.ZoneMapperLazy, 
-            //    dependencies.AppStates
-            //);
-            _dependencies = dependencies;
         }
 
         /// <summary>
@@ -52,15 +42,20 @@ namespace ToSic.Sxc.DataSources
         /// <returns></returns>
         public abstract List<CmsSiteInfo> GetSitesInternal();
 
-        public int GetZoneId(int siteId) => _dependencies.ZoneMapperLazy.Value.GetZoneId(siteId);
+        public int GetZoneId(int siteId) => Deps.ZoneMapperLazy.Value.GetZoneId(siteId);
 
-        public int GetDefaultAppId(int siteId) => _dependencies.AppStates.DefaultAppId(GetZoneId(siteId));
+        public int GetDefaultAppId(int siteId) => Deps.AppStates.DefaultAppId(GetZoneId(siteId));
 
-        //public int GetContentAppId(int siteId) => _dependencies.AppStates.IdentityOfDefault(GetZoneId(siteId)).AppId;
+        public int GetPrimaryAppId(int siteId) => Deps.AppStates.PrimaryAppId(GetZoneId(siteId));
 
-        public int GetPrimaryAppId(int siteId) => _dependencies.AppStates.PrimaryAppId(GetZoneId(siteId));
-
-        public Dictionary<string, string> GetLanguages(int siteId) => _dependencies.AppStates
-            .Languages(GetZoneId(siteId), true).ToDictionary(d => d.EnvironmentKey.ToLower(), d => d.Name);
+        public string GetLanguages(int siteId)
+        {
+            var languages = Deps.AppStates
+                .Languages(GetZoneId(siteId), true);
+            return string.Join(",", languages.Select(l => l.EnvironmentKey.ToLower()));
+            //return Deps.AppStates
+            //    .Languages(GetZoneId(siteId), true)
+            //    .ToDictionary(d => d.EnvironmentKey.ToLower(), d => d.Name);
+        }
     }
 }
