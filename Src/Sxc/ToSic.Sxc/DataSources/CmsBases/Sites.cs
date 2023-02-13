@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _sitesDataBuilder = sitesDataBuilder.Configure(typeName: "Sites", titleField: nameof(CmsSiteInfo.Name))
+                _sitesDataBuilder = sitesDataBuilder.Configure(typeName: "Sites", titleField: nameof(CmsSiteInfo.Name), idAutoIncrementZero: false)
             );
             Provide(GetSites);
         }
@@ -59,10 +59,7 @@ namespace ToSic.Sxc.DataSources
                 return (new List<IEntity>().ToImmutableList(), "null/empty");
 
             // Convert to Entity-Stream
-            var builder = _sitesDataBuilder;// new DataBuilderPro(DataBuilder).Configure(typeName: "Sites", titleField: nameof(CmsSiteInfo.Name)) as DataBuilderPro;
-            var sites = sitesFromSystem
-                .Select(s => builder.CreateWithEavNullId(s))
-                .ToImmutableList();
+            var sites = _sitesDataBuilder.CreateMany(sitesFromSystem);
 
             return (sites, $"found: {sites.Count}");
         });

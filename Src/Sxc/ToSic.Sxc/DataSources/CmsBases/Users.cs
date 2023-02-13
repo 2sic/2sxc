@@ -126,10 +126,7 @@ namespace ToSic.Sxc.DataSources
         public IImmutableList<IEntity> GetList() => Log.Func(l =>
         {
             var users = GetUsersAndFilter();
-            var builder = _usersDataBuilder; // new DataBuilderPro(DataBuilder).Configure(typeName: "User", titleField: nameof(CmsUserInfo.Name));
-            var result = users
-                .Select(p => builder.Create(p))
-                .ToImmutableList();
+            var result = _usersDataBuilder.CreateMany(users);
 
             return (result, "found");
         });

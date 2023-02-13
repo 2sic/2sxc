@@ -2,7 +2,6 @@
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -117,9 +116,7 @@ namespace ToSic.Sxc.DataSources
                 return (new ImmutableArray<IEntity>(), "null/empty");
 
             // Convert to Entity-Stream
-            var pages = pagesFromSystem
-                .Select(p => _pageBuilder.Create(p))
-                .ToImmutableList();
+            var pages = _pageBuilder.CreateMany(pagesFromSystem);
 
             // Try to add Navigation properties
             try

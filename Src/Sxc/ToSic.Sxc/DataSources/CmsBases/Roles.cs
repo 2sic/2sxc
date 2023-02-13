@@ -76,7 +76,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: "Role", titleField: nameof(CmsRoleInfo.Name))
+                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: "Role", titleField: nameof(CmsRoleInfo.Name), idAutoIncrementZero: false)
             );
             Provide(GetList); // default out, if accessed, will deliver GetList
 
@@ -106,14 +106,9 @@ namespace ToSic.Sxc.DataSources
             l.A($"excludeRoles: {excludeRolesPredicate == null}");
             if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
-            var builder = _rolesDataBuilder; // new DataBuilderPro(DataBuilder).Configure(typeName: "Role", titleField: nameof(CmsRoleInfo.Name)) as DataBuilderPro;
+            var result = _rolesDataBuilder.CreateMany(roles);
 
-            var result = roles
-                .Select(p => builder.CreateWithEavNullId(p))
-                .ToImmutableList();
-
-            l.A($"returning {result.Count} roles");
-            return (result, "found");
+            return (result, $"found {result.Count} roles");
         });
 
         private Func<CmsRoleInfo, bool> IncludeRolesPredicate()
