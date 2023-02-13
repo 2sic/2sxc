@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
         ExpectsDataOfType = "",
         GlobalName = "a11c28fb-7d8d-40a2-a22c-50beaa019e41",
         HelpLink = "https://r.2sxc.org/ds-sites",
-        Icon = Icons.Scopes,
+        Icon = Icons.Globe,
         NiceName = "Sites",
         Type = DataSourceType.Source,
         UiHint = "Sites in this CMS")]
