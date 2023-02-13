@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
     )]
     public class Users : ExternalData
     {
-        private readonly IDataBuilderPro _usersDataBuilder;
+        private readonly IDataBuilder _usersDataBuilder;
         private readonly UsersDataSourceProvider _provider;
 
         #region Other Constants
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Users(Dependencies dependencies, UsersDataSourceProvider provider, IDataBuilderPro usersDataBuilder) : base(dependencies, "SDS.Users")
+        public Users(Dependencies dependencies, UsersDataSourceProvider provider, IDataBuilder usersDataBuilder) : base(dependencies, "SDS.Users")
         {
             ConnectServices(
                 _provider = provider,

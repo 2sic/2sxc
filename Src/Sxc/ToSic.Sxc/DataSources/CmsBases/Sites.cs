@@ -32,13 +32,13 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Sites in this CMS")]
     public class Sites: ExternalData
     {
-        private readonly IDataBuilderPro _sitesDataBuilder;
+        private readonly IDataBuilder _sitesDataBuilder;
         private readonly SitesDataSourceProvider _provider;
 
         #region Constructor
 
         [PrivateApi]
-        public Sites(Dependencies dependencies, SitesDataSourceProvider provider, IDataBuilderPro sitesDataBuilder) : base(dependencies, "CDS.Sites")
+        public Sites(Dependencies dependencies, SitesDataSourceProvider provider, IDataBuilder sitesDataBuilder) : base(dependencies, "CDS.Sites")
         {
             ConnectServices(
                 _provider = provider,

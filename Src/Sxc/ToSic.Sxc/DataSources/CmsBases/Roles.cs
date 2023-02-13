@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
     )]
     public class Roles : ExternalData
     {
-        private readonly IDataBuilderPro _rolesDataBuilder;
+        private readonly IDataBuilder _rolesDataBuilder;
         private readonly RolesDataSourceProvider _provider;
 
         #region Other Constants
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Roles(Dependencies dependencies, RolesDataSourceProvider provider, IDataBuilderPro rolesDataBuilder) : base(dependencies, $"SDS.Roles")
+        public Roles(Dependencies dependencies, RolesDataSourceProvider provider, IDataBuilder rolesDataBuilder) : base(dependencies, $"SDS.Roles")
         {
             ConnectServices(
                 _provider = provider,

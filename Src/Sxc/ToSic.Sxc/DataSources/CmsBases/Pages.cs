@@ -33,7 +33,7 @@ namespace ToSic.Sxc.DataSources
     public class Pages: ExternalData
     {
         private readonly ITreeMapper _treeMapper;
-        private readonly IDataBuilderPro _pageBuilder;
+        private readonly IDataBuilder _pageBuilder;
         private readonly PagesDataSourceProvider _provider;
 
         #region Configuration properties
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Pages(Dependencies dependencies, PagesDataSourceProvider provider, IDataBuilderPro dataBuilder, ITreeMapper treeMapper) : base(dependencies, "CDS.Pages")
+        public Pages(Dependencies dependencies, PagesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(dependencies, "CDS.Pages")
         {
             ConnectServices(
                 _provider = provider,
