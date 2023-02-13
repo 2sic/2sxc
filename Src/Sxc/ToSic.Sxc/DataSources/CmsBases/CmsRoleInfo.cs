@@ -25,7 +25,7 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class CmsRoleInfo : IRawEntity, IRole
     {
-        public int Id { get; set; } = Eav.Constants.NullId; // 0 is valid Id
+        public int Id { get; set; }
         public Guid Guid { get; }
         public string Name { get; set; }
         public DateTime Created { get; set; }

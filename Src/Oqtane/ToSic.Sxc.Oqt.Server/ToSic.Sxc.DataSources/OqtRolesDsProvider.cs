@@ -39,6 +39,7 @@ namespace ToSic.Sxc.DataSources
                     .Select(r => new CmsRoleInfo
                     {
                         Id = r.RoleId,
+                        // Guid = r.
                         Name = r.Name,
                         Created = r.CreatedOn,
                         Modified = r.ModifiedOn,

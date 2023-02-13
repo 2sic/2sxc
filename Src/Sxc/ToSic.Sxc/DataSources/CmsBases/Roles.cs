@@ -92,7 +92,7 @@ namespace ToSic.Sxc.DataSources
             var roles = _provider.GetRolesInternal()?.ToList();
             l.A($"found {roles?.Count} roles");
 
-            if (roles == null || !roles.Any()) 
+            if (roles?.Any() != true) 
                 return (new List<IEntity>().ToImmutableList(), "null/empty");
 
             // This will resolve the tokens before starting
