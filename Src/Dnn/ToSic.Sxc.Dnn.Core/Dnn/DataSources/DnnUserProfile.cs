@@ -6,12 +6,16 @@ using System.Linq;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.Run;
+using ToSic.Lib.Data;
 using ToSic.Lib.Services;
+using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.DataSources
 {
@@ -33,7 +37,9 @@ namespace ToSic.Sxc.Dnn.DataSources
         )]
 	public class DnnUserProfile : ExternalData
 	{
-		#region Configuration-properties
+        private readonly IDataBuilder _dataBuilder;
+
+        #region Configuration-properties
 
         /// <summary>
         /// The user id list of users to retrieve, comma-separated
@@ -97,8 +103,11 @@ namespace ToSic.Sxc.Dnn.DataSources
             }
         }
 
-		public DnnUserProfile(Dependencies dependencies): base(dependencies.RootDependencies, "Dnn.Profile")
+		public DnnUserProfile(Dependencies dependencies, IDataBuilder dataBuilder) : base(dependencies.RootDependencies, "Dnn.Profile")
         {
+            ConnectServices(
+                _dataBuilder = dataBuilder.Configure(typeName: ContentType)
+            );
             _deps = dependencies.SetLog(Log);
             Provide(GetList);
         }
@@ -107,9 +116,10 @@ namespace ToSic.Sxc.Dnn.DataSources
 
         #endregion
 
-        private ImmutableArray<IEntity> GetList()
+        private IImmutableList<IEntity> GetList()
 		{
             Configuration.Parse();
+
 			var realTenant = _deps.Site.Id != Eav.Constants.NullId ? _deps.Site : _deps.ZoneMapper.SiteOfApp(AppId);
 
 			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
@@ -131,46 +141,91 @@ namespace ToSic.Sxc.Dnn.DataSources
 			// Create the type
             var userType = DataBuilder.Type(ContentType);
 
-			// convert Profiles to Entities
-			var result = new List<IEntity>();
+            // convert Profiles to Entities
+            var results = new List<DnnUserProfileInfo>();
 			foreach (UserInfo user in users)
-			{
-				// add Profile-Properties
-				var values = new Dictionary<string, object>();
-				foreach (var property in properties)
-				{
-					string value;
-					switch (property.ToLowerInvariant())
-					{
-						case "displayname":
-							value = user.DisplayName;
-							break;
-						case "email":
-							value = user.Email;
-							break;
-						case "firstname":
-							value = user.FirstName;
-							break;
-						case "lastname":
-							value = user.LastName;
-							break;
-						case "username":
-							value = user.Username;
-							break;
-						default:
-							value = user.Profile.GetPropertyValue(property);
-							break;
-					}
+            {
+                var dnnUserProfile = new DnnUserProfileInfo
+                {
+                    Id = user.UserID,
+                    Guid = user.UserGuid(),
+                    Name = GetDnnProfileValue(user, TitleField.ToLowerInvariant())
+                };
 
-					values.Add(property, value);
-				}
+                // add Profile-Properties
+                foreach (var property in properties)
+                    dnnUserProfile.Properties.Add(property, GetDnnProfileValue(user, property));
 
-				// create Entity and add to result
-				var entity = new Entity(Eav.Constants.TransientAppId, user.UserID, userType , values, TitleField);
-				result.Add(entity);
+                results.Add(dnnUserProfile);
 			}
 
-			return result.ToImmutableArray();
+			return _dataBuilder.CreateMany(results);
 		}
-	}
+
+        private static string GetDnnProfileValue(UserInfo user, string property)
+        {
+            string value;
+            switch (property.ToLowerInvariant())
+            {
+                case "displayname":
+                    value = user.DisplayName;
+                    break;
+                case "email":
+                    value = user.Email;
+                    break;
+                case "firstname":
+                    value = user.FirstName;
+                    break;
+                case "lastname":
+                    value = user.LastName;
+                    break;
+                case "username":
+                    value = user.Username;
+                    break;
+                default:
+                    value = user.Profile.GetPropertyValue(property);
+                    break;
+            }
+            return value;
+        }
+    }
+
+    /// <summary>
+    /// Internal class to hold all the information about the user profile,
+    /// until it's converted to an IEntity in the <see cref="DnnUserProfile"/> DataSource.
+    ///
+    /// For detailed documentation, check the docs of the underlying objects:
+    ///
+    /// * TODO:
+    /// * TODO:
+    /// Important: this is an internal object.
+    /// We're just including in in the docs to better understand where the properties come from.
+    /// We'll probably move it to another namespace some day.
+    /// </summary>
+    /// <remarks>
+    /// Make sure the property names never change, as they are critical for the created Entity.
+    /// </remarks>
+    [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    public class DnnUserProfileInfo : IRawEntity
+    {
+        public int Id { get; set; }
+        public Guid Guid { get; set; }
+        public string Name { get; set; } // aka DisplayName
+
+        public DateTime Created { get; set; }
+        public DateTime Modified { get; set; }
+
+        public Dictionary<string, object> Properties { get; } = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Data but without Id, Guid, Created, Modified
+        /// </summary>
+        [PrivateApi]
+        public Dictionary<string, object> RawProperties => new Dictionary<string, object>(Properties)
+        {
+            { Attributes.TitleNiceName, Name },
+            { nameof(Name), Name },
+        };
+    }
+
 }
