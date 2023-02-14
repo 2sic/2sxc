@@ -12,6 +12,7 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
 
@@ -114,31 +115,34 @@ namespace ToSic.Sxc.Dnn.DataSources
 
         #endregion
 
-        private IImmutableList<IEntity> GetList()
-		{
+        private IImmutableList<IEntity> GetList() => Log.Func(l =>
+        {
             Configuration.Parse();
 
-			var realTenant = _deps.Site.Id != Eav.Constants.NullId ? _deps.Site : _deps.ZoneMapper.SiteOfApp(AppId);
+            var realTenant = _deps.Site.Id != Eav.Constants.NullId ? _deps.Site : _deps.ZoneMapper.SiteOfApp(AppId);
+            l.A($"realTenant {realTenant.Id}");
 
-			var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
+            var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();
             var portalId = realTenant.Id;
 
-			// read all user Profiles
-			ArrayList users;
-            if (!UserIds.HasValue() || UserIds == "disabled")	// note: 'disabled' was the default text in <v15. can probably be removed, but not sure
+            // read all user Profiles
+            ArrayList users;
+            if (!UserIds.HasValue() ||
+                UserIds == "disabled") // note: 'disabled' was the default text in <v15. can probably be removed, but not sure
                 users = UserController.GetUsers(portalId);
-			// read user Profiles of specified UserIds
-			else
-			{
-				var userIds = UserIds.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-				users = new ArrayList();
-				foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
-					users.Add(user);
-			}
+            // read user Profiles of specified UserIds
+            else
+            {
+                var userIds = UserIds.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                users = new ArrayList();
+                foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
+                    users.Add(user);
+            }
+            l.A($"users: {users.Count}");
 
             // convert Profiles to Entities
             var results = new List<DnnUserProfileInfo>();
-			foreach (UserInfo user in users)
+            foreach (UserInfo user in users)
             {
                 var dnnUserProfile = new DnnUserProfileInfo
                 {
@@ -152,10 +156,11 @@ namespace ToSic.Sxc.Dnn.DataSources
                     dnnUserProfile.Properties.Add(property, GetDnnProfileValue(user, property));
 
                 results.Add(dnnUserProfile);
-			}
+            }
+            l.A($"results: {results.Count}");
 
-			return _dataBuilder.CreateMany(results);
-		}
+            return (_dataBuilder.CreateMany(results), "ok");
+        });
 
         private static string GetDnnProfileValue(UserInfo user, string property)
         {
