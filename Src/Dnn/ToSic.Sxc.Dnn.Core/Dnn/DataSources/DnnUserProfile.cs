@@ -1,20 +1,18 @@
-﻿using System;
+﻿using DotNetNuke.Entities.Users;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
 using ToSic.Eav.Run;
-using ToSic.Lib.Data;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 
 namespace ToSic.Sxc.Dnn.DataSources
@@ -137,9 +135,6 @@ namespace ToSic.Sxc.Dnn.DataSources
 				foreach (var user in userIds.Select(userId => UserController.GetUserById(portalId, userId)))
 					users.Add(user);
 			}
-
-			// Create the type
-            var userType = DataBuilder.Type(ContentType);
 
             // convert Profiles to Entities
             var results = new List<DnnUserProfileInfo>();
