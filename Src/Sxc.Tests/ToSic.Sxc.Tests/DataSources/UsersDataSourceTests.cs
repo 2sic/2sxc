@@ -144,7 +144,7 @@ namespace ToSic.Sxc.Tests.DataSources
         {
             var usersDataSource = GenerateUsersDataSourceDataSource();
             //usersDataSource.IncludeSystemAdmins = superUserFilter;
-            usersDataSource.Configuration[nameof(usersDataSource.IncludeSystemAdmins)] = superUserFilter;
+            usersDataSource.Configuration.Values[nameof(usersDataSource.IncludeSystemAdmins)] = superUserFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
