@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public object EntityTitle => Entity?.Title[_Dependencies.Dimensions];
+        public string EntityTitle => Entity?.GetBestTitle(_Dependencies.Dimensions);
 
 
         // ReSharper disable once InheritdocInvalidUsage

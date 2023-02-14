@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Blocks
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
 
-            var block = parent._Dependencies?.BlockOrNull;
+            var block = parent._Dependencies.BlockOrNull;
             Warning13To15(
                 "DeprecatedStaticRender",
                 $"View:{block?.View?.Id}",
