@@ -81,10 +81,10 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 TemplatesCount = cms.Views.GetAll().Count(),
                 HasRazorTemplates = cms.Views.GetRazor().Any(),
                 HasTokenTemplates = cms.Views.GetToken().Any(),
-                FilesCount = zipExport.FileManager.AllFiles.Count() // PortalFilesCount
-                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles.Count()), // GlobalFilesCount
-                TransferableFilesCount = zipExport.FileManager.AllTransferableFiles.Count() // TransferablePortalFilesCount
-                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllTransferableFiles.Count()), // TransferableGlobalFilesCount
+                FilesCount = zipExport.FileManager.AllFiles().Count() // PortalFilesCount
+                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.AllFiles().Count()), // GlobalFilesCount
+                TransferableFilesCount = zipExport.FileManager.GetAllTransferableFiles().Count() // TransferablePortalFilesCount
+                    + (currentApp.AppState.HasCustomParentApp() ? 0 : zipExport.FileManagerGlobal.GetAllTransferableFiles().Count()), // TransferableGlobalFilesCount
             };
         }
 

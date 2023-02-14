@@ -153,6 +153,7 @@ namespace ToSic.Sxc.Startup
 
             // v15 DataSource Dependencies
             services.TryAddTransient<SitesDataSourceProvider.Dependencies>();
+            services.TryAddTransient<AppFilesDataSourceProvider.Dependencies>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
