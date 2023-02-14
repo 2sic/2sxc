@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
         /// </summary>
-        public ILogService Log => _sysLog.Get(GetService<ILogService>);
+        public new ILogService Log => _sysLog.Get(GetService<ILogService>);
         private readonly GetOnce<ILogService> _sysLog = new GetOnce<ILogService>();
 
 

@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.Adam
             #region check content-type extensions...
 
             // Check file size and extension
-            var fileName = string.Copy(originalFileName);
+            var fileName = originalFileName;
             if (!AdamContext.Security.ExtensionIsOk(fileName, out var exceptionAbstraction))
                 throw exceptionAbstraction;
 
