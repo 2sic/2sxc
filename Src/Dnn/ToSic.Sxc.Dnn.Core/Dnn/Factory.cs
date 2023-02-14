@@ -30,13 +30,13 @@ namespace ToSic.Sxc.Dnn
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
 #pragma warning disable CS0618
-        private static T StaticBuild<T>(ILog parentLog = null) => DnnStaticDi.StaticBuild<T>(parentLog ?? NewLog());
+        private static T StaticBuild<T>(ILog parentLog = null) => DnnStaticDi.StaticBuild<T>(parentLog); // Important! Never call NewLog() here - Stack Overflow
 #pragma warning restore CS0618
 
         private static ILog NewLog()
         {
             var log = new Log("Dnn.Factor");
-            StaticBuild<ILogStore>().Add("obsolete-dnn-factory", log);
+            StaticBuild<ILogStore>(log).Add("obsolete-dnn-factory", log);
             return log;
         }
 
