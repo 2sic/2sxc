@@ -8,7 +8,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 // Important Info to people working with this
-// It depends on abstract provder, that must be overriden in each platform
+// It depends on abstract provider, that must be overriden in each platform
 // In addition, each platform must make sure to register a TryAddTransient with the platform specific provider implementation
 // This is because any constructor DI should be able to target this type, and get the real provider implementation
 
@@ -17,13 +17,11 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of pages from the current platform (Dnn or Oqtane).
     ///
-    /// As of now there are no parameters to set.
-    ///
     /// To figure out the properties returned and what they match up to, see <see cref="CmsPageInfo"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        ExpectsDataOfType = "",
+        ExpectsDataOfType = "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5",
         GlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800",
         HelpLink = "https://r.2sxc.org/ds-pages",
         Icon = Icons.PageFind,
@@ -38,49 +36,76 @@ namespace ToSic.Sxc.DataSources
 
         #region Configuration properties
 
+        /// <summary>
+        /// Include hidden pages.
+        /// Default is `false`
+        /// </summary>
         [Configuration]
         public bool IncludeHidden
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include deleted pages in the recycle bin.
+        /// Default is `false`
+        /// </summary>
         [Configuration]
         public bool IncludeDeleted
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include admin pages such as site files.
+        /// Default is `false`
+        /// </summary>
         [Configuration]
         public bool IncludeAdmin
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include system pages such as modules management.
+        /// Default is `false`
+        /// </summary>
         [Configuration]
         public bool IncludeSystem
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include link-reference pages (which are usually used in menus, and not themselves a real page).
+        /// Default is `true`
+        /// </summary>
         [Configuration]
         public bool IncludeLinks
         {
             get => Configuration.GetThis(true);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Require that the current user has view permissions on all pages.
+        /// Default is `true`
+        /// </summary>
         [Configuration]
         public bool RequireViewPermissions
         {
             get => Configuration.GetThis(true);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Require that the current user has edit permissions on all pages.
+        /// Default is `false`
+        /// </summary>
         [Configuration]
         public bool RequireEditPermissions
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
-
         #endregion
 
         #region Constructor
