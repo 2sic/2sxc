@@ -33,17 +33,13 @@ namespace ToSic.Sxc.DataSources
     {
         [PrivateApi] internal const string InstanceLookupName = "module";
         [PrivateApi] internal const string ModuleIdKey = "Id";
-
-        [PrivateApi]
-        public enum Settings
-        {
-            InstanceId
-        }
+        [PrivateApi] internal const string FieldInstanceId = "InstanceId";
 
         /// <summary>
         /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
         /// It's named Instance-Id to be more neutral as we're opening it to other platforms
         /// </summary>
+        [Configuration(Field = FieldInstanceId, Fallback = "[" + InstanceLookupName + ":" + ModuleIdKey + "]")]
         public int? ModuleId
         {
             get
@@ -83,7 +79,6 @@ namespace ToSic.Sxc.DataSources
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);
-			ConfigMaskMyConfig(nameof(ModuleId), $"{Settings.InstanceId}||[{InstanceLookupName}:{ModuleIdKey}]");
         }
         private readonly Dependencies _deps;
         #endregion

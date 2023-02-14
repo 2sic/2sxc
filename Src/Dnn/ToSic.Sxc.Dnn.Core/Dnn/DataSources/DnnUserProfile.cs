@@ -8,6 +8,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Lib.Services;
@@ -37,6 +38,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         /// <summary>
         /// The user id list of users to retrieve, comma-separated
         /// </summary>
+        [Configuration]
 		public string UserIds
         {
             get => Configuration.GetThis();
@@ -46,6 +48,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         /// <summary>
         /// List of profile-properties to retrieve, comma-separated
         /// </summary>
+        [Configuration(Fallback = "DisplayName,Email,FirstName,LastName,Username")]
 		public string Properties
         {
             get => Configuration.GetThis();
@@ -55,6 +58,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		/// <summary>
 		/// Gets or sets the Name of the ContentType to simulate
 		/// </summary>
+		[Configuration(Field = "ContentTypeName", Fallback = "DnnUserInfo")]
 		public string ContentType
 		{
 			get => Configuration.GetThis();
@@ -64,6 +68,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		/// <summary>
 		/// Gets or sets the Name of the Title Attribute of the DNN-UserInfo
 		/// </summary>
+		[Configuration(Field = "TitleFieldName", Fallback = "DisplayName")]
 		public string TitleField
 		{
 			get => Configuration.GetThis();
@@ -95,12 +100,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		public DnnUserProfile(Dependencies dependencies): base(dependencies.RootDependencies, "Dnn.Profile")
         {
             _deps = dependencies.SetLog(Log);
-
-			Provide(GetList);
-            ConfigMask($"{nameof(UserIds)}||disabled");
-            ConfigMask($"{nameof(Properties)}||DisplayName,Email,FirstName,LastName,Username");
-			ConfigMaskMyConfig(nameof(ContentType), "ContentTypeName||DnnUserInfo");
-			ConfigMaskMyConfig(nameof(TitleField), "TitleFieldName||DisplayName");
+            Provide(GetList);
         }
 
         private readonly Dependencies _deps;
@@ -117,8 +117,8 @@ namespace ToSic.Sxc.Dnn.DataSources
 
 			// read all user Profiles
 			ArrayList users;
-			if (UserIds == "disabled")
-				users = UserController.GetUsers(portalId);
+            if (!UserIds.HasValue() || UserIds == "disabled")	// note: 'disabled' was the default text in <v15. can probably be removed, but not sure
+                users = UserController.GetUsers(portalId);
 			// read user Profiles of specified UserIds
 			else
 			{

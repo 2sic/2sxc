@@ -38,36 +38,43 @@ namespace ToSic.Sxc.DataSources
 
         #region Configuration properties
 
+        [Configuration]
         public bool IncludeHidden
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        [Configuration]
         public bool IncludeDeleted
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        [Configuration]
         public bool IncludeAdmin
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        [Configuration]
         public bool IncludeSystem
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        [Configuration]
         public bool IncludeLinks
         {
             get => Configuration.GetThis(true);
             set => Configuration.SetThis(value);
         }
+        [Configuration]
         public bool RequireViewPermissions
         {
             get => Configuration.GetThis(true);
             set => Configuration.SetThis(value);
         }
+        [Configuration]
         public bool RequireEditPermissions
         {
             get => Configuration.GetThis(false);
@@ -87,13 +94,6 @@ namespace ToSic.Sxc.DataSources
                 _treeMapper = treeMapper
             );
             Provide(GetPages);
-            ConfigMask(nameof(IncludeHidden));
-            ConfigMask(nameof(IncludeDeleted));
-            ConfigMask(nameof(IncludeAdmin));
-            ConfigMask(nameof(IncludeSystem));
-            ConfigMask(nameof(IncludeLinks));
-            ConfigMask(nameof(RequireViewPermissions));
-            ConfigMask(nameof(RequireEditPermissions));
         }
         #endregion
 

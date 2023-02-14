@@ -46,6 +46,7 @@ namespace ToSic.Sxc.DataSources
         /// Optional Users (single value or comma-separated guids or integers) filter,
         /// include users based on guid or id
         /// </summary>
+        [Configuration]
         public string UserIds
         {
             get => Configuration.GetThis();
@@ -56,6 +57,7 @@ namespace ToSic.Sxc.DataSources
         /// Optional exclude Users (single value or comma-separated guids or integers) filter,
         /// exclude users based on guid or id
         /// </summary>
+        [Configuration]
         public string ExcludeUserIds
         {
             get => Configuration.GetThis();
@@ -66,6 +68,7 @@ namespace ToSic.Sxc.DataSources
         /// Optional IncludeRolesFilter (single value or comma-separated integers) filter,
         /// include users that have any of roles from filter
         /// </summary>
+        [Configuration]
         public string RoleIds
         {
             get => Configuration.GetThis();
@@ -76,6 +79,7 @@ namespace ToSic.Sxc.DataSources
         /// Optional ExcludeRolesFilter (single value or comma-separated integers) filter,
         /// exclude users that have any of roles from filter
         /// </summary>
+        [Configuration]
         public string ExcludeRoleIds
         {
             get => Configuration.GetThis();
@@ -87,6 +91,7 @@ namespace ToSic.Sxc.DataSources
         /// true - only SuperUsers
         /// false - without SuperUsers
         /// </summary>
+        [Configuration(Fallback = false)]
         public bool IncludeSystemAdmins
         {
             get => Configuration.GetThis(false);
@@ -112,12 +117,6 @@ namespace ToSic.Sxc.DataSources
             
             // UserRoles not final...
             // Provide("UserRoles", GetRoles);
-
-            ConfigMask(nameof(UserIds));
-            ConfigMask(nameof(ExcludeUserIds));
-            ConfigMask(nameof(RoleIds));
-            ConfigMask(nameof(ExcludeRoleIds));
-            ConfigMask($"{nameof(IncludeSystemAdmins)}||false");
         }
 
         #endregion

@@ -47,6 +47,7 @@ namespace ToSic.Sxc.DataSources
         /// Optional (single value or comma-separated integers) filter,
         /// include roles based on roleId
         /// </summary>
+        [Configuration]
         public virtual string RoleIds
         {
             get => Configuration.GetThis();
@@ -57,6 +58,7 @@ namespace ToSic.Sxc.DataSources
         /// Optional (single value or comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
+        [Configuration]
         public virtual string ExcludeRoleIds
         {
             get => Configuration.GetThis();
@@ -78,10 +80,7 @@ namespace ToSic.Sxc.DataSources
                 _provider = provider,
                 _rolesDataBuilder = rolesDataBuilder.Configure(typeName: "Role", titleField: nameof(CmsRoleInfo.Name), idAutoIncrementZero: false)
             );
-            Provide(GetList); // default out, if accessed, will deliver GetList
-
-            ConfigMask(nameof(RoleIds));
-            ConfigMask(nameof(ExcludeRoleIds));
+            Provide(GetList);
         }
 
         #endregion
