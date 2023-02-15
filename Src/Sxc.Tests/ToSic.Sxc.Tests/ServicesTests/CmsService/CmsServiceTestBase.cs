@@ -42,11 +42,6 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             services.TryAddTransient<IValueConverter, MockValueConverter>();
         }
 
-        //protected override void AddServices(IServiceCollection services)
-        //{
-        //    services.AddTransient<IRuntime, Runtime>();
-        //    services.TryAddTransient<IValueConverter, MockValueConverter>();
-        //}
 
         public static IEntity TstDataEntity(string text = "", string html = "", IContentType contentType = null)
         {

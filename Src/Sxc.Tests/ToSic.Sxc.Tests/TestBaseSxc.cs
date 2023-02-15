@@ -6,8 +6,10 @@ using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests
 {
-    public class TestBaseSxc: TestBaseDiEmpty
+    public class TestBaseSxc: TestBaseEav
     {
+        public TestBaseSxc() : base(new TestConfiguration() {AddAllEavServices = false})
+        { }
 
         protected override void SetupServices(IServiceCollection services)
         {

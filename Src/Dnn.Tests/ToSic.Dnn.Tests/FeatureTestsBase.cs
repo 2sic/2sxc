@@ -10,7 +10,7 @@ using ToSic.Testing.Shared.Mocks;
 
 namespace ToSic.Eav.ImportExport.Tests.FeatureTests
 {
-    public class FeatureTestsBase: TestBaseDiEavFull
+    public class FeatureTestsBase: TestBaseEav
     {
         public FeatureTestsBase()
         {
