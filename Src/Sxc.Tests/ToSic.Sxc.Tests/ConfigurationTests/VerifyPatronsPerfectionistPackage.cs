@@ -24,7 +24,8 @@ namespace ToSic.Sxc.Tests.ConfigurationTests
             var result = licenses.Enabled;
 
             // Our current test enables 6 packages, so the service should report so many active licenses
-            Assert.AreEqual(6, result.Count, "X license package should be enabled. If the number changes, this test may need update.");
+            const int testLicCount = 13;
+            Assert.AreEqual(testLicCount, result.Count, $"{testLicCount} license package should be enabled. If the number changes, this test may need update.");
         }
 
         [TestMethod]
