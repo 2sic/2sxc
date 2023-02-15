@@ -13,9 +13,10 @@ namespace ToSic.Sxc.Tests
         //    base.Configure();
         //}
 
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services)
+            base.SetupServices(services);
+            services
                 .AddSxcCore();
         }
 

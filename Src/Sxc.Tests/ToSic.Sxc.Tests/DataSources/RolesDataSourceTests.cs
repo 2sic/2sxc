@@ -12,9 +12,10 @@ namespace ToSic.Sxc.Tests.DataSources
     public class RolesDataSourceTests : TestBaseSxcDb
     {
         // Start the test with a platform-info that has a patron
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services).AddTransient<RolesDataSourceProvider, MockRolesDataSource>(); ;
+            base.SetupServices(services);
+            services.AddTransient<RolesDataSourceProvider, MockRolesDataSource>();
         }
         [TestMethod()]
         public void RolesDefault()

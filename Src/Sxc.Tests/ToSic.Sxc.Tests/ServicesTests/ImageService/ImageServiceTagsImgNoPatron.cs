@@ -9,9 +9,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
     public class ImageServiceTagsImgNoPatron : ImageServiceTagsImgBase
     {
         // Start the test with a platform-info that has no patron
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformNotPatron>();
+            base.SetupServices(services);
+            services.AddTransient<IPlatformInfo, TestPlatformNotPatron>();
         }
 
         protected override bool TestModeImg => true;

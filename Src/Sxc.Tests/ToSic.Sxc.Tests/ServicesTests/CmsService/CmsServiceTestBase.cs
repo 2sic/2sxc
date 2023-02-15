@@ -35,11 +35,18 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
         public readonly DynamicEntityDependencies DynamicEntityDependencies;
         public readonly IContentType TstDataContentType;
 
-        protected override void AddServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
+            base.SetupServices(services);
             services.AddTransient<IRuntime, Runtime>();
             services.TryAddTransient<IValueConverter, MockValueConverter>();
         }
+
+        //protected override void AddServices(IServiceCollection services)
+        //{
+        //    services.AddTransient<IRuntime, Runtime>();
+        //    services.TryAddTransient<IValueConverter, MockValueConverter>();
+        //}
 
         public static IEntity TstDataEntity(string text = "", string html = "", IContentType contentType = null)
         {

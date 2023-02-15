@@ -11,9 +11,10 @@ namespace ToSic.Sxc.Tests.ConfigurationTests
     public class VerifyPatronsPerfectionistPackage: TestBaseSxcDb
     {
         // Start the test with a platform-info that has a patron
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
+            base.SetupServices(services);
+            services.AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
         }
 
         [TestMethod]

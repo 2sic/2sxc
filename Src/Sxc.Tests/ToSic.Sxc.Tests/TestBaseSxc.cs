@@ -9,9 +9,10 @@ namespace ToSic.Sxc.Tests
     public class TestBaseSxc: TestBaseDiEmpty
     {
 
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services)
+            base.SetupServices(services);
+            services
                 .AddSxcCore()
                 .AddEavCore()
                 .AddEavCoreFallbackServices()

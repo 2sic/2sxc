@@ -9,9 +9,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
     public class ImageServiceTagsImgPatronPerfectionist : ImageServiceTagsImgBase
     {
         // Start the test with a platform-info that has WebP support
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
+            base.SetupServices(services);
+            services.AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
         }
 
         protected override bool TestModeImg => true;

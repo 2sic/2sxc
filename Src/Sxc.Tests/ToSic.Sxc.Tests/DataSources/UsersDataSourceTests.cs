@@ -12,9 +12,10 @@ namespace ToSic.Sxc.Tests.DataSources
     public class UsersDataSourceTests : TestBaseSxcDb
     {
         // Start the test with a platform-info that has a patron
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services).AddTransient<UsersDataSourceProvider, MockUsersDataSource>(); ;
+            base.SetupServices(services);
+            services.AddTransient<UsersDataSourceProvider, MockUsersDataSource>();
         }
 
 
