@@ -22,15 +22,15 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
 
         public CmsServiceTestBase()
         {
-            var eavSystemLoader = Build<EavSystemLoader>();
+            var eavSystemLoader = GetService<EavSystemLoader>();
             eavSystemLoader.StartUp();
             eavSystemLoader.LoadLicenseAndFeatures();
 
-            var appStates = Build<IAppStates>();
+            var appStates = GetService<IAppStates>();
             var app = appStates.GetPresetOrNull();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
-            DynamicEntityDependencies = Build<DynamicEntityDependencies>();
+            DynamicEntityDependencies = GetService<DynamicEntityDependencies>();
         }
         public readonly DynamicEntityDependencies DynamicEntityDependencies;
         public readonly IContentType TstDataContentType;
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var dynamicField = dynamicEntity.Field(SomeHtmlField);
             //var imgService = Build<LazySvc<IImageService>>();
             //var valueConverter = Build<LazySvc<IValueConverter>>();
-            var cmsService = Build<ICmsService>(); // new Services.CmsService.CmsService(imgService, valueConverter);
+            var cmsService = GetService<ICmsService>(); // new Services.CmsService.CmsService(imgService, valueConverter);
             return cmsService.Show(dynamicField);
         }
     }

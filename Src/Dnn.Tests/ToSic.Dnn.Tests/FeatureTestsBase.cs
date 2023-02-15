@@ -15,7 +15,7 @@ namespace ToSic.Eav.ImportExport.Tests.FeatureTests
         public FeatureTestsBase()
         {
             // Make sure that features are ready to use
-            var sysLoader = Build<EavSystemLoader>();
+            var sysLoader = GetService<EavSystemLoader>();
             sysLoader.ReloadFeatures();
         }
 

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         protected void ImageTagMultiTest(string expected, string variants, object factor, string testName)
         {
             var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
-            var svc = Build<IImageService>();
+            var svc = GetService<IImageService>();
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
                 // Factor set on the Img call
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
-                var svc = Build<IImageService>();
+                var svc = GetService<IImageService>();
                 var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height, recipe: test.Set.SrcSetRule);
                 var img = svc.Img(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule);
                 AreEqual(expected?.Replace("&amp;", "&"), img.SrcSet, $"Failed: {test.Name}");

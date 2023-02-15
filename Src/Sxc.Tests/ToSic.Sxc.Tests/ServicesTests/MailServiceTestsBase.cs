@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
     {
         #region Helpers
 
-        public IMailService MailService() => Build<IMailService>();
+        public IMailService MailService() => GetService<IMailService>();
 
         public const string Address = @"user@host";
         public const string DisplayName = @"Display Name";

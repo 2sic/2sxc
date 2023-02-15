@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Tests.ConfigurationTests
         [TestMethod]
         public void VerifyPackageOk()
         {
-            var licenses = Build<ILicenseService>();
+            var licenses = GetService<ILicenseService>();
             var result = licenses.Enabled;
 
             // Our current test enables 6 packages, so the service should report so many active licenses
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Tests.ConfigurationTests
         [TestMethod]
         public void VerifyPatronPerfectionistsActive()
         {
-            var licenses = Build<ILicenseService>();
+            var licenses = GetService<ILicenseService>();
             var result = licenses.IsEnabled(BuiltInLicenses.PatronPerfectionist);
 
             // Our current test enables 6 packages, so the service should report so many active licenses
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Tests.ConfigurationTests
         [TestMethod]
         public void VerifyImageFormats()
         {
-            var features = Build<IFeaturesInternal>();
+            var features = GetService<IFeaturesInternal>();
             var result = features.IsEnabled(Configuration.Features.BuiltInFeatures.ImageServiceMultiFormat);
 
             // Our current test enables 6 packages, so the service should report so many active licenses

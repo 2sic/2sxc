@@ -50,6 +50,6 @@ namespace ToSic.Sxc.Tests.ServicesTests
         /// test accessor
         /// </summary>
         /// <returns></returns>
-        private IConvertService Csvc() => Build<IConvertService>();
+        private IConvertService Csvc() => GetService<IConvertService>();
     }
 }

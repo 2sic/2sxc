@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void UrlResized()
         {
-            var svc = Build<IImageService>();
+            var svc = GetService<IImageService>();
             var url = TestModeImg ? svc.Img(ImgUrl).Src : svc.Picture(ImgUrl).Src;
             AreEqual(ImgUrl, url);
         }
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void ImgAlt()
         {
             const string imgAlt = "test-alt";
-            var svc = Build<IImageService>();
+            var svc = GetService<IImageService>();
             var result = TestModeImg 
                 ? svc.Img(ImgUrl, imgAlt: imgAlt).ToString()
                 : svc.Picture(ImgUrl, imgAlt: imgAlt).Img.ToString();
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void ImgClass()
         {
-            var svc = Build<IImageService>();
+            var svc = GetService<IImageService>();
             var cls = "class-dummy";
             var result = TestModeImg
                 ? svc.Img(ImgUrl, imgClass: cls).ToString()
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
 
         protected void PictureTagInner(string expectedParts, string variants, bool inPicTag, string testName)
         {
-            var svc = Build<IImageService>();
+            var svc = GetService<IImageService>();
             var rule = new Recipe(variants: variants);
             var settings = svc.Settings(width: 120, height: 24, recipe: inPicTag ? null : rule);
             var pic = svc.Picture(link: ImgUrl, settings: settings, recipe: inPicTag ? rule : null);
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
             var testSet = ImageTagsTestPermutations.GenerateTestParams(testName, variants);
             TestManyButThrowOnceOnly(testSet.Select(ts => (ts.Name, ts)), test =>
             {
-                var svc = Build<IImageService>();
+                var svc = GetService<IImageService>();
                 var settings = svc.Settings(width: test.Set.Width, height: test.Set.Height,
                     recipe: test.Set.SrcSetRule);
                 var sources = svc.Picture(link: ImgUrl, settings: settings, recipe: test.Pic.SrcSetRule).Sources;

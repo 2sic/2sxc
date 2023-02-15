@@ -12,11 +12,11 @@ namespace ToSic.Sxc.Tests.LinksAndImages.LinkImageTests
     {
         public LinkImageTestBase()
         {
-            Build<EavSystemLoader>().LoadLicenseAndFeatures();
+            GetService<EavSystemLoader>().LoadLicenseAndFeatures();
         }
 
-        public ImgResizeLinker GetLinker() => Build<ImgResizeLinker>();
-        public ILinkService GetLinkHelper() => Build<ILinkService>();
+        public ImgResizeLinker GetLinker() => GetService<ImgResizeLinker>();
+        public ILinkService GetLinkHelper() => GetService<ILinkService>();
 
         public static DynamicReadObject ToDyn(object contents) => TestAccessors.DynReadObjT(contents, false, false);
 
