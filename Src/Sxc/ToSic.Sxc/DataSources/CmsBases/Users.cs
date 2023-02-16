@@ -261,9 +261,9 @@ namespace ToSic.Sxc.DataSources
         }
 
         private Func<CmsUserInfo, bool> SuperUserPredicate() =>
-            /*bool.TryParse(*/IncludeSystemAdmins/*, out var superUserFilter)*/
-                ? (Func<CmsUserInfo, bool>)(u => u.IsSystemAdmin /*== superUserFilter*/)
-                : null;
+            IncludeSystemAdmins
+                ? (u => true) // skip IsSystemAdmin check will return normal and super users
+                : (Func<CmsUserInfo, bool>) (u => !u.IsSystemAdmin); // only normal users
 
     }
 }
