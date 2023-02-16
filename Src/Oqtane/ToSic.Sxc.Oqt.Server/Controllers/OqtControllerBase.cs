@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
 using ToSic.Lib.Helpers;
@@ -26,8 +25,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             Log = new Log($"Api.{logSuffix}", null, GetType().Name);
             _helper = new(this);
         }
-
-        protected IServiceProvider ServiceProvider => _helper.ServiceProvider;
 
         /// <inheritdoc />
         public ILog Log { get; }
