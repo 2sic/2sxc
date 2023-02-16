@@ -16,10 +16,10 @@ namespace ToSic.Sxc.Tests.DataSources
             const int siteId = 0;
             Log.A($"Mock Portal Id {siteId}");
 
-            var result = new List<CmsRoleInfo>();
+            var roles = new List<CmsRoleInfo>();
             for (var i = 1; i <= 10; i++)
             {
-                result.Add(new CmsRoleInfo
+                roles.Add(new CmsRoleInfo
                 {
                     Id = i,
                     Name = $"[role_name_{i}]",
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Tests.DataSources
                 });
             }
 
-            return (result, "found");
+            return (roles, $"mock: {roles.Count}");
         });
 
         public MockRolesDataSource() : base("DS.MockRoles")

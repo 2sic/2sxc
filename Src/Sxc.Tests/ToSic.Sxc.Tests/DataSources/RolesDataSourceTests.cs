@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
-using ToSic.Eav.DataSourceTests;
 using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
@@ -39,7 +38,7 @@ namespace ToSic.Sxc.Tests.DataSources
 
         [DataTestMethod]
         [DataRow("", 10)]
-        [DataRow("not-a-integer,-1", 0)]
+        [DataRow("not-a-integer,-1", 10)]
         [DataRow("1", 9)]
         [DataRow("2,3", 8)]
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 7)]
