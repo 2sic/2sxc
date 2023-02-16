@@ -102,16 +102,16 @@ namespace ToSic.Sxc.Dnn.DataSources
             }
         }
 
-		public DnnUserProfile(MyServices services, IDataBuilder dataBuilder) : base(services.RootServices, "Dnn.Profile")
+		public DnnUserProfile(MyServices services, IDataBuilder dataBuilder) : base(services, "Dnn.Profile")
         {
             ConnectServices(
                 _dataBuilder = dataBuilder.Configure(typeName: ContentType)
             );
-            _deps = services.SetLog(Log);
+            _services = services;
             Provide(GetList);
         }
 
-        private readonly MyServices _deps;
+        private readonly MyServices _services;
 
         #endregion
 
@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         {
             Configuration.Parse();
 
-            var realTenant = _deps.Site.Id != Eav.Constants.NullId ? _deps.Site : _deps.ZoneMapper.SiteOfApp(AppId);
+            var realTenant = _services.Site.Id != Eav.Constants.NullId ? _services.Site : _services.ZoneMapper.SiteOfApp(AppId);
             l.A($"realTenant {realTenant.Id}");
 
             var properties = Properties.Split(',').Select(p => p.Trim()).ToArray();

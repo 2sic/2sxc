@@ -72,15 +72,15 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        public CmsBlock(MyServices services): base(services.RootServices, $"SDS.CmsBks")
+        public CmsBlock(MyServices services): base(services, $"SDS.CmsBks")
         {
-            _deps = services.SetLog(Log);
+            _services = services;
 
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);
         }
-        private readonly MyServices _deps;
+        private readonly MyServices _services;
         #endregion
 
 

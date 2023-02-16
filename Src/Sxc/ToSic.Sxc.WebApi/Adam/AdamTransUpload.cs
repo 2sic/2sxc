@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi.Adam
 
         public AdamTransUpload(AdamServices<TFolderId, TFileId> services) : base(services, "Adm.TrnUpl")
         {
-            DtoMaker = _Deps.AdamDtoMaker.New().Init(AdamContext);
+            DtoMaker = Services.AdamDtoMaker.New().Init(AdamContext);
         }
 
         public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)

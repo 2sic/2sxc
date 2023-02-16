@@ -4,28 +4,24 @@ using JetBrains.Annotations;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Lib.Logging;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: ServiceBase, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
+    public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>: ServiceBase<AdamServices<TFolderId, TFileId>>, IAdamTransactionBase where T : AdamTransactionBase<T, TFolderId, TFileId>
     {
 
         #region Constructor / DI
 
-        protected AdamTransactionBase(AdamServices<TFolderId, TFileId> services, string logName) : base(logName)
+        protected AdamTransactionBase(AdamServices<TFolderId, TFileId> services, string logName) : base(services, logName)
         {
-            _Deps = services.SetLog(Log);
         }
-
-        protected readonly AdamServices<TFolderId, TFileId> _Deps;
 
         public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
         {
-            var context = appId > 0 ? _Deps.CtxResolver.BlockOrApp(appId) : _Deps.CtxResolver.AppNameRouteBlock(null);
+            var context = appId > 0 ? Services.CtxResolver.BlockOrApp(appId) : Services.CtxResolver.AppNameRouteBlock(null);
             var logCall = Log.Fn<T>($"app: {context.AppState.Show()}, type: {contentType}, itemGuid: {itemGuid}, field: {field}, portalRoot: {usePortalRoot}");
             AdamContext.Init(context, contentType, field, itemGuid, usePortalRoot);
             return logCall.Return(this as T);
@@ -37,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Adam
         }
 
 
-        protected AdamContext<TFolderId, TFileId> AdamContext => _Deps.AdamState.Value;
+        protected AdamContext<TFolderId, TFileId> AdamContext => Services.AdamState.Value;
 
         #endregion
 

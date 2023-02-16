@@ -114,7 +114,7 @@ namespace ToSic.Sxc.DataSources
             {
                 var showDrafts = Block?.Context?.UserMayEdit ?? false;
                 Log.A($"In not attached, will auto-attach with showDrafts: {showDrafts}");
-                var publishing = _deps.DataSourceFactory.Value.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
+                var publishing = _services.DataSourceFactory.Value.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
                 Attach(publishing);
             }
 
