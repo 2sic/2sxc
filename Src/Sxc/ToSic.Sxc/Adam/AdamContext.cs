@@ -18,22 +18,22 @@ namespace ToSic.Sxc.Adam
     /// <remarks>
     /// It's abstract, because there will be a typed implementation inheriting this
     /// </remarks>
-    public abstract class AdamContext: ServiceBase<AdamContext.Dependencies>
+    public abstract class AdamContext: ServiceBase<AdamContext.MyServices>
     {
         #region Constructor and DI
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public LazySvc<IFeaturesInternal> FeaturesSvc { get; }
             public Generator<AdamSecurityChecksBase> AdamSecurityGenerator { get; }
             public Generator<MultiPermissionsTypes> TypesPermissions { get; }
 
-            public Dependencies(
+            public MyServices(
                 Generator<MultiPermissionsTypes> typesPermissions,
                 Generator<AdamSecurityChecksBase> adamSecurityGenerator,
                 LazySvc<IFeaturesInternal> featuresSvc)
             {
-                AddToLogQueue(
+                ConnectServices(
                     TypesPermissions = typesPermissions,
                     AdamSecurityGenerator = adamSecurityGenerator,
                     FeaturesSvc = featuresSvc
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Adam
             }
         }
 
-        protected AdamContext(Dependencies services, string logName) : base(services, logName ?? "Adm.Ctx")
+        protected AdamContext(MyServices services, string logName) : base(services, logName ?? "Adm.Ctx")
         {
         }
         public AdamSecurityChecksBase Security;

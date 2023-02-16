@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code
         where TModel : class
         where TServiceKit : ServiceKit
     {
-        protected DynamicCodeRoot(Dependencies services, string logPrefix) : base(services, logPrefix)
+        protected DynamicCodeRoot(MyServices services, string logPrefix) : base(services, logPrefix)
         {
         }
 

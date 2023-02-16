@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn
             services.TryAddTransient<DnnGetBlock>();
 
             // new v15
-            services.TryAddTransient<DynamicApiController.Dependencies>();
+            services.TryAddTransient<DynamicApiController.MyServices>();
 
             return services;
         }

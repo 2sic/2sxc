@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Code
 {
     public class BasicDynamicCodeRoot: DynamicCodeRoot<object, ServiceKit>
     {
-        public BasicDynamicCodeRoot(Dependencies services, WarnUseOfUnknown<BasicDynamicCodeRoot> _) : base(services, LogScopes.Base)
+        public BasicDynamicCodeRoot(MyServices services, WarnUseOfUnknown<BasicDynamicCodeRoot> _) : base(services, LogScopes.Base)
         {
         }
     }

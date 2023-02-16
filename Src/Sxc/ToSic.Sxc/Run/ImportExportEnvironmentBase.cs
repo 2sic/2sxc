@@ -12,16 +12,16 @@ namespace ToSic.Sxc.Run
     {
         #region constructor / DI
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             internal readonly AppPaths AppPaths;
             internal readonly IAppStates AppStates;
             internal readonly ISite Site;
             internal readonly App NewApp;
 
-            public Dependencies(ISite site, App newApp, IAppStates appStates, AppPaths appPaths)
+            public MyServices(ISite site, App newApp, IAppStates appStates, AppPaths appPaths)
             {
-                AddToLogQueue(
+                ConnectServices(
                     AppPaths = appPaths,
                     AppStates = appStates,
                     Site = site,
@@ -34,12 +34,12 @@ namespace ToSic.Sxc.Run
         /// <summary>
         /// DI Constructor
         /// </summary>
-        protected ImportExportEnvironmentBase(Dependencies dependencies, string logName) : base(dependencies.Site, dependencies.AppStates, logName)
+        protected ImportExportEnvironmentBase(MyServices services, string logName) : base(services.Site, services.AppStates, logName)
         {
-            _dependencies = dependencies.SetLog(Log);
+            _services = services.SetLog(Log);
         }
 
-        private readonly Dependencies _dependencies;
+        private readonly MyServices _services;
 
         #endregion
 
@@ -52,8 +52,8 @@ namespace ToSic.Sxc.Run
             => AppPaths(zoneId, appId).PhysicalPathShared;
 
         private AppPaths AppPaths(int zoneId, int appId) =>
-            _appPaths ?? (_appPaths =_dependencies.AppPaths.Init(_dependencies.Site,
-                _dependencies.AppStates.Get(new AppIdentity(zoneId, appId))));
+            _appPaths ?? (_appPaths =_services.AppPaths.Init(_services.Site,
+                _services.AppStates.Get(new AppIdentity(zoneId, appId))));
         private AppPaths _appPaths;
 
 

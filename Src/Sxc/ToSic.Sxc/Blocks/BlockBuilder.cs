@@ -19,18 +19,18 @@ namespace ToSic.Sxc.Blocks
     /// Note that it also adds the current-user to the state, so that the system can log data-changes to this user
     /// </summary>
     [PrivateApi("not sure yet what to call this, maybe BlockHost or something")]
-    public partial class BlockBuilder : ServiceBase<BlockBuilder.Dependencies>, IBlockBuilder
+    public partial class BlockBuilder : ServiceBase<BlockBuilder.MyServices>, IBlockBuilder
     {
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
-            public Dependencies(
+            public MyServices(
                 EngineFactory engineFactory,
                 Generator<IEnvironmentInstaller> envInstGen,
                 Generator<IRenderingHelper> renderHelpGen,
                 LazySvc<PageChangeSummary> pageChangeSummary,
                 LazySvc<ILicenseService> licenseService,
                 IModuleService moduleService
-            ) => AddToLogQueue(
+            ) => ConnectServices(
                 EngineFactory = engineFactory,
                 EnvInstGen = envInstGen,
                 RenderHelpGen = renderHelpGen,
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Blocks
         }
 
         #region Constructor
-        public BlockBuilder(Dependencies services) : base(services, "Sxc.BlkBld") { }
+        public BlockBuilder(MyServices services) : base(services, "Sxc.BlkBld") { }
 
         public BlockBuilder Init(IBlockBuilder rootBlockBuilder, IBlock cb)
         {

@@ -19,9 +19,9 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
-    public abstract class AppFilesDataSourceProvider: ServiceBase<AppFilesDataSourceProvider.Dependencies>
+    public abstract class AppFilesDataSourceProvider: ServiceBase<AppFilesDataSourceProvider.MyServices>
     {
-        public class Dependencies : ServiceDependencies
+        public class MyServices : MyServicesBase
         {
             public ZipExport ZipExport { get; }
             public IAppStates AppStates { get; }
@@ -30,13 +30,13 @@ namespace ToSic.Sxc.DataSources
             /// <summary>
             /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
             /// </summary>
-            public Dependencies(
+            public MyServices(
                 LazySvc<App> appLazy, 
                 IAppStates appStates,
                 ZipExport zipExport
             )
             {
-                AddToLogQueue(
+                ConnectServices(
                     AppStates = appStates,
                     AppLazy = appLazy,
                     ZipExport = zipExport
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        protected AppFilesDataSourceProvider(Dependencies services, string logName) : base(services ,logName)
+        protected AppFilesDataSourceProvider(MyServices services, string logName) : base(services ,logName)
         {
         }
 

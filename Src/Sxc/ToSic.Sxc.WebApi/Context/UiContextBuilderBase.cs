@@ -16,12 +16,12 @@ using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.Dependencies>, IUiContextBuilder
+    public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>, IUiContextBuilder
     {
 
         #region Dependencies 
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public IContextOfSite SiteCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Context
             public LazySvc<IFeaturesInternal> Features { get; }
             public LazySvc<IUiData> UiDataLazy { get; }
 
-            public Dependencies(
+            public MyServices(
                 IContextOfSite siteCtx,
                 Apps.App appToLaterInitialize,
                 IAppStates appStates,
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Context
                 LazySvc<LanguagesBackend> languagesBackend
                 )
             {
-                AddToLogQueue(
+                ConnectServices(
                     SiteCtx = siteCtx,
                     AppToLaterInitialize = appToLaterInitialize,
                     AppStates = appStates,
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.WebApi.Context
 
         #region Constructor / DI
 
-        protected UiContextBuilderBase(Dependencies services): base(services, Constants.SxcLogName + ".UiCtx")
+        protected UiContextBuilderBase(MyServices services): base(services, Constants.SxcLogName + ".UiCtx")
         {
         }
 

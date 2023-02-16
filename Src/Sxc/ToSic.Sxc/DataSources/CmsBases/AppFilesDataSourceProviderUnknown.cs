@@ -7,7 +7,7 @@ namespace ToSic.Sxc.DataSources
 {
     public class AppFilesDataSourceProviderUnknown: AppFilesDataSourceProvider
     {
-        public AppFilesDataSourceProviderUnknown(Dependencies services, WarnUseOfUnknown<AppFilesDataSourceProviderUnknown> _): base(services, $"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
+        public AppFilesDataSourceProviderUnknown(MyServices services, WarnUseOfUnknown<AppFilesDataSourceProviderUnknown> _): base(services, $"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
         { }
 
 

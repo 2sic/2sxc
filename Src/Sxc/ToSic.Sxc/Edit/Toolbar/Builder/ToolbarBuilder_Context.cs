@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             // Get context, specify "true" to force it to be added
             var context = GenerateContext(target, true.ToString());
-            var rule = new ToolbarRuleContext(null, context, Deps.ToolbarButtonHelper.Value);
+            var rule = new ToolbarRuleContext(null, context, Services.ToolbarButtonHelper.Value);
             return AddInternal(rule);
         }
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             if (target == null) return (null, "no target");
             if (context.EqualsInsensitive(false.ToString())) return (null, "context=false");
-            var appStates = Deps.AppStatesLazy.Value;
+            var appStates = Services.AppStatesLazy.Value;
             if (appStates == null) return (null, "no AppStates");
 
             // Try to find the context

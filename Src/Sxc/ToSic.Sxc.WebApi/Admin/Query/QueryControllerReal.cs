@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
     {
         public const string LogSuffix = "Query";
 
-        public QueryControllerReal(QueryControllerDependencies services, LazySvc<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
+        public QueryControllerReal(QueryControllerServices services, LazySvc<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
             : base(services, "Api." + LogSuffix)
         {
             ConnectServices(

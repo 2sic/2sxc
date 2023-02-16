@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly IFileRepository _oqtFileRepository;
         private readonly IFolderRepository _oqtFolderRepository;
 
-        public OqtImportExportEnvironment(Dependencies dependencies, IServerPaths oqtServerPaths, IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository) : base(dependencies, $"{OqtConstants.OqtLogPrefix}.IExEnv")
+        public OqtImportExportEnvironment(MyServices services, IServerPaths oqtServerPaths, IFileRepository oqtFileRepository, IFolderRepository oqtFolderRepository) : base(services, $"{OqtConstants.OqtLogPrefix}.IExEnv")
         {
             _oqtServerPaths = oqtServerPaths;
             _oqtFileRepository = oqtFileRepository;

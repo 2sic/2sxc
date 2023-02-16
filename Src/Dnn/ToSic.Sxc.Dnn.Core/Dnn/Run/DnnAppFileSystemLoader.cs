@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// <summary>
         /// Constructor for DI - you must always call Init(...) afterwards
         /// </summary>
-        public DnnAppFileSystemLoader(IZoneMapper zoneMapper, Dependencies deps): base(deps, "Dnn.AppStf")
+        public DnnAppFileSystemLoader(IZoneMapper zoneMapper, MyServices deps): base(deps, "Dnn.AppStf")
         {
             ConnectServices(
                 ZoneMapper = zoneMapper

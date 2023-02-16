@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Data
     {
         /// <inheritdoc />
         public IDynamicMetadata Metadata 
-            => _dynamicMetadata ?? (_dynamicMetadata = new DynamicMetadata(Entity?.Metadata, Entity, _Dependencies));
+            => _dynamicMetadata ?? (_dynamicMetadata = new DynamicMetadata(Entity?.Metadata, Entity, _Services));
 
         private DynamicMetadata _dynamicMetadata;
 

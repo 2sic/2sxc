@@ -9,7 +9,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransFolder<TFolderId, TFileId> : AdamTransactionBase<AdamTransFolder<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransFolder(AdamDependencies<TFolderId, TFileId> dependencies) : base(dependencies, "Adm.TrnFld") { }
+        public AdamTransFolder(AdamServices<TFolderId, TFileId> services) : base(services, "Adm.TrnFld") { }
 
         public IList<AdamItemDto> Folder(string parentSubfolder, string newFolder)
         {

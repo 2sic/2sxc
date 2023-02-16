@@ -84,34 +84,34 @@ namespace ToSic.Sxc.Dnn.DataSources
 
         #region Constructor / DI
 
-        public new class Dependencies: ServiceDependencies<DataSource.Dependencies>
+        public new class MyServices: MyServicesBase<DataSource.MyServices>
         {
             public ISite Site { get; }
             public IZoneMapper ZoneMapper { get; }
 
-            public Dependencies(
-                DataSource.Dependencies rootDependencies,
+            public MyServices(
+                DataSource.MyServices rootServices,
                 ISite site,
                 IZoneMapper zoneMapper
-            ) : base(rootDependencies)
+            ) : base(rootServices)
             {
-                AddToLogQueue(
+                ConnectServices(
                     Site = site,
                     ZoneMapper = zoneMapper
                 );
             }
         }
 
-		public DnnUserProfile(Dependencies dependencies, IDataBuilder dataBuilder) : base(dependencies.RootDependencies, "Dnn.Profile")
+		public DnnUserProfile(MyServices services, IDataBuilder dataBuilder) : base(services.RootServices, "Dnn.Profile")
         {
             ConnectServices(
                 _dataBuilder = dataBuilder.Configure(typeName: ContentType)
             );
-            _deps = dependencies.SetLog(Log);
+            _deps = services.SetLog(Log);
             Provide(GetList);
         }
 
-        private readonly Dependencies _deps;
+        private readonly MyServices _deps;
 
         #endregion
 

@@ -111,7 +111,7 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Pages(Dependencies services, PagesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(services, "CDS.Pages")
+        public Pages(MyServices services, PagesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(services, "CDS.Pages")
         {
             ConnectServices(
                 _provider = provider,

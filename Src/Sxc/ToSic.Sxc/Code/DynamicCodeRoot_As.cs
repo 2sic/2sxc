@@ -29,11 +29,11 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityDependencies);
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
 
-        internal DynamicEntityDependencies DynamicEntityDependencies => _dynEntDependencies.Get(() => 
+        internal DynamicEntityServices DynamicEntityServices => _dynEntDependencies.Get(() => 
             Services.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
-        private readonly GetOnce<DynamicEntityDependencies> _dynEntDependencies = new GetOnce<DynamicEntityDependencies>();
+        private readonly GetOnce<DynamicEntityServices> _dynEntDependencies = new GetOnce<DynamicEntityServices>();
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => AsDynamicInternal(dynamicEntity);
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Code
                 case ISxcDynamicObject sxcDyn:
                     return wrapLog.Return(sxcDyn, "Dynamic Something");
                 case IEntity entity:
-                    return wrapLog.Return(new DynamicEntity(entity, DynamicEntityDependencies), "IEntity");
+                    return wrapLog.Return(new DynamicEntity(entity, DynamicEntityServices), "IEntity");
                 case DynamicObject typedDynObject:
                     return wrapLog.Return(typedDynObject, "DynamicObject");
                 default:
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Code
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
                 .ToList();
-            return new DynamicStack("unknown", DynamicEntityDependencies, sources);
+            return new DynamicStack("unknown", DynamicEntityServices, sources);
         }
 
 

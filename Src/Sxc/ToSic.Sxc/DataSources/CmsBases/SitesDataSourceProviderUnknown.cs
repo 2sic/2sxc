@@ -6,7 +6,7 @@ namespace ToSic.Sxc.DataSources
 {
     public class SitesDataSourceProviderUnknown: SitesDataSourceProvider
     {
-        public SitesDataSourceProviderUnknown(Dependencies services, WarnUseOfUnknown<SitesDataSourceProviderUnknown> _): base(services, $"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
+        public SitesDataSourceProviderUnknown(MyServices services, WarnUseOfUnknown<SitesDataSourceProviderUnknown> _): base(services, $"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
         { }
 
         public override List<CmsSiteInfo> GetSitesInternal(

@@ -6,7 +6,7 @@ namespace ToSic.Sxc.DataSources
     [PrivateApi]
     public class DnnAppFilesDsProvider: AppFilesDataSourceProvider
     {
-        public DnnAppFilesDsProvider(Dependencies dependencies) : base(dependencies, "Dnn.AppFiles")
+        public DnnAppFilesDsProvider(MyServices services) : base(services, "Dnn.AppFiles")
         { }
     };
 }

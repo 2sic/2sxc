@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Sites(Dependencies services, SitesDataSourceProvider provider, IDataBuilder sitesDataBuilder) : base(services, "CDS.Sites")
+        public Sites(MyServices services, SitesDataSourceProvider provider, IDataBuilder sitesDataBuilder) : base(services, "CDS.Sites")
         {
             ConnectServices(
                 _provider = provider,

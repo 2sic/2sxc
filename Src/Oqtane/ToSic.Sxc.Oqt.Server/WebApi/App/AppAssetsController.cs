@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     //[Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]
     public class AppAssetsController: AppAssetsControllerBase
     {
-        public AppAssetsController(Dependencies dependencies) 
-            : base(dependencies, OqtAssetsFileHelper.RouteAssets, "Assets") { }
+        public AppAssetsController(MyServices services) 
+            : base(services, OqtAssetsFileHelper.RouteAssets, "Assets") { }
     }
 }

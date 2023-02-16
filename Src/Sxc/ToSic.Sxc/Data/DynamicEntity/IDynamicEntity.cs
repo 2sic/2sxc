@@ -227,7 +227,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         // ReSharper disable once InconsistentNaming
-        DynamicEntityDependencies _Dependencies { get; }
+        DynamicEntityServices _Services { get; }
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         ///// <summary>

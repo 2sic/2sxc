@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Startup
 #pragma warning restore CS0618
 
             services.TryAddTransient<Services.IRenderService, RenderService>();  // new 12.05
-            services.TryAddTransient<RenderService.Dependencies>();
+            services.TryAddTransient<RenderService.MyServices>();
             services.TryAddTransient<SimpleRenderer>();
             services.TryAddTransient<InTextContentBlockRenderer>();
 #pragma warning disable CS0618
@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ISecureDataService, SecureDataService>();
 
             // v13 DynamicCodeService
-            services.TryAddTransient<DynamicCodeService.Dependencies>();
-            services.TryAddTransient<DynamicCodeService.ScopedDependencies>();  // new v15
+            services.TryAddTransient<DynamicCodeService.MyServices>();
+            services.TryAddTransient<DynamicCodeService.MyScopedServices>();  // new v15
             services.TryAddTransient<IDynamicCodeService, DynamicCodeService>();
 
             // 13 - ToolbarService & IFeaturesService
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Startup
 
             // v14 Toolbar Builder
             services.TryAddTransient<IToolbarBuilder, ToolbarBuilder>();
-            services.TryAddTransient<ToolbarBuilder.Dependencies>();
+            services.TryAddTransient<ToolbarBuilder.MyServices>();
             services.TryAddTransient<ToolbarButtonDecoratorHelper>();
 
             // v14 Kits

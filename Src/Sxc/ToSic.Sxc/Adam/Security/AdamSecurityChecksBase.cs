@@ -13,24 +13,24 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
-    public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase.Dependencies>
+    public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase.MyServices>
     {
 
         #region DI / Constructor
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public Generator<AppPermissionCheck> AppPermissionChecks { get; }
 
-            public Dependencies(Generator<AppPermissionCheck> appPermissionChecks)
+            public MyServices(Generator<AppPermissionCheck> appPermissionChecks)
             {
-                AddToLogQueue(
+                ConnectServices(
                     AppPermissionChecks = appPermissionChecks
                 );
             }
         }
 
-        protected AdamSecurityChecksBase(Dependencies services, string logPrefix) : base(services, $"{logPrefix}.TnScCk")
+        protected AdamSecurityChecksBase(MyServices services, string logPrefix) : base(services, $"{logPrefix}.TnScCk")
         {
         }
 

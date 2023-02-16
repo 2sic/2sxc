@@ -4,7 +4,7 @@ namespace ToSic.Sxc.Code
 {
     public class DynamicCodeServiceUnknown: DynamicCodeService
     {
-        public DynamicCodeServiceUnknown(Dependencies services, WarnUseOfUnknown<DynamicCodeServiceUnknown> _) 
+        public DynamicCodeServiceUnknown(MyServices services, WarnUseOfUnknown<DynamicCodeServiceUnknown> _) 
             : base(services)
         {
         }

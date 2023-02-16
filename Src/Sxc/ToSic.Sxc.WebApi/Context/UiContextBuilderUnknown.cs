@@ -5,7 +5,7 @@ namespace ToSic.Sxc.WebApi.Context
 {
     public sealed class UiContextBuilderUnknown: UiContextBuilderBase, IIsUnknown
     {
-        public UiContextBuilderUnknown(Dependencies services, WarnUseOfUnknown<UiContextBuilderBase> _) : base(services)
+        public UiContextBuilderUnknown(MyServices services, WarnUseOfUnknown<UiContextBuilderBase> _) : base(services)
         {
         }
     }

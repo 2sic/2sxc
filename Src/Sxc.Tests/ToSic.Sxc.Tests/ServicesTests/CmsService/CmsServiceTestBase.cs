@@ -30,9 +30,9 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var app = appStates.GetPresetOrNull();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
-            DynamicEntityDependencies = GetService<DynamicEntityDependencies>();
+            DynamicEntityServices = GetService<DynamicEntityServices>();
         }
-        public readonly DynamicEntityDependencies DynamicEntityDependencies;
+        public readonly DynamicEntityServices DynamicEntityServices;
         public readonly IContentType TstDataContentType;
 
         protected override void SetupServices(IServiceCollection services)
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             return new Entity(AppId, 1, contentType, values, SomeTextField);
         }
 
-        public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityDependencies);
+        public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityServices);
 
         public IHtmlTag CmsServiceShow(string someHtmlValue)
         {

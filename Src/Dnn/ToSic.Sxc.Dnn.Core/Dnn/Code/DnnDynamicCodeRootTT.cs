@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Code
         where TModel : class
         where TServiceKit : ServiceKit
     {
-        public DnnDynamicCodeRoot(Dependencies dependencies): base(dependencies, DnnConstants.LogName) { }
+        public DnnDynamicCodeRoot(MyServices services): base(services, DnnConstants.LogName) { }
 
         /// <summary>
         /// Dnn context with module, page, portal etc.

@@ -16,14 +16,14 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         #region Constructors and Init
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
-            public Dependencies(
+            public MyServices(
                 LazySvc<IAppStates> appStatesLazy,
                 LazySvc<ToolbarButtonDecoratorHelper> toolbarButtonHelper
             )
             {
-                AddToLogQueue(
+                ConnectServices(
                     ToolbarButtonHelper = toolbarButtonHelper,
                     AppStatesLazy = appStatesLazy
                 );
@@ -36,14 +36,14 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// Public constructor for DI
         /// </summary>
-        /// <param name="deps"></param>
-        public ToolbarBuilder(Dependencies deps) => Deps = deps.SetLog(Log);
-        protected readonly Dependencies Deps;
+        /// <param name="services"></param>
+        public ToolbarBuilder(MyServices services) => Services = services.SetLog(Log);
+        protected readonly MyServices Services;
 
         /// <summary>
         /// Clone-constructor
         /// </summary>
-        private ToolbarBuilder(ToolbarBuilder parent): this(parent.Deps)
+        private ToolbarBuilder(ToolbarBuilder parent): this(parent.Services)
         {
             this.LinkLog(parent.Log);
             _currentAppIdentity = parent._currentAppIdentity;
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (codeRoot == null) return;
             _codeRoot = codeRoot;
             _currentAppIdentity = codeRoot.App;
-            Deps.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
+            Services.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
         }
         private IDynamicCodeRoot _codeRoot;
 

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.DataSources
     [PrivateApi]
     public class DnnSitesDsProvider: SitesDataSourceProvider
     {
-        public DnnSitesDsProvider(Dependencies dependencies) : base(dependencies, "Dnn.Sites")
+        public DnnSitesDsProvider(MyServices services) : base(services, "Dnn.Sites")
         { }
 
         public override List<CmsSiteInfo> GetSitesInternal(

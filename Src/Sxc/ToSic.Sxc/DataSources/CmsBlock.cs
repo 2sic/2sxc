@@ -53,18 +53,18 @@ namespace ToSic.Sxc.DataSources
 
         #region Constructor
 
-        public new class Dependencies: ServiceDependencies<DataSource.Dependencies>
+        public new class MyServices: MyServicesBase<DataSource.MyServices>
         {
             public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
             public LazySvc<IModule> ModuleLazy { get; }
             public LazySvc<DataSourceFactory> DataSourceFactory { get; }
 
-            public Dependencies(DataSource.Dependencies rootDependencies,
+            public MyServices(DataSource.MyServices rootServices,
                 LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
-                LazySvc<DataSourceFactory> dataSourceFactory) : base(rootDependencies)
+                LazySvc<DataSourceFactory> dataSourceFactory) : base(rootServices)
             {
-                AddToLogQueue(
+                ConnectServices(
                     LazyCmsRuntime = lazyCmsRuntime,
                     ModuleLazy = moduleLazy,
                     DataSourceFactory = dataSourceFactory
@@ -72,15 +72,15 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        public CmsBlock(Dependencies dependencies): base(dependencies.RootDependencies, $"SDS.CmsBks")
+        public CmsBlock(MyServices services): base(services.RootServices, $"SDS.CmsBks")
         {
-            _deps = dependencies.SetLog(Log);
+            _deps = services.SetLog(Log);
 
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);
         }
-        private readonly Dependencies _deps;
+        private readonly MyServices _deps;
         #endregion
 
 

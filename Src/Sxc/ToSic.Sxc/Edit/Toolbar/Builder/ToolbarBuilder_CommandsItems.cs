@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 ui: pars.Ui, parameters: pars.Parameters,
                 contentType: contentType,
                 propsKeep: propsKeep, propsSkip: propsSkip,
-                decoHelper: Deps.ToolbarButtonHelper.Value);
+                decoHelper: Services.ToolbarButtonHelper.Value);
             var builder = AddInternal(command);
             return (command, builder);
         }
@@ -141,7 +141,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                     ui: pars.Ui,
                     parameters: pars.Parameters,
                     context: realContext,
-                    decoHelper: Deps.ToolbarButtonHelper.Value));
+                    decoHelper: Services.ToolbarButtonHelper.Value));
 
             return (builder.AddInternal(mdsToAdd.Cast<object>().ToArray()));
         });

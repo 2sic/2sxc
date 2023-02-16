@@ -21,7 +21,7 @@ namespace ToSic.Eav.Conversion
         /// <remarks>
         /// has an important side effect, this isn't clear from outside!
         /// </remarks>
-        public EntitiesToDictionary(): base(DnnStaticDi.StaticBuild<Dependencies>())
+        public EntitiesToDictionary(): base(DnnStaticDi.StaticBuild<MyServices>())
         {
             Sxc.Compatibility.Obsolete.Warning13To15(nameof(EntitiesToDictionary), "", "https://r.2sxc.org/brc-13-conversion");
         }

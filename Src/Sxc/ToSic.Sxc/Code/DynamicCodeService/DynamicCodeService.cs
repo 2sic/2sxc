@@ -17,13 +17,13 @@ namespace ToSic.Sxc.Code
     /// WIP - goal is to have a DI factory which creates DynamicCode objects for use in Skins and other external controls
     /// Not sure how to get this to work, since normally we always start with a code-file, and here we don't have one!
     /// </summary>
-    public partial class DynamicCodeService: ServiceBase<DynamicCodeService.Dependencies>, IDynamicCodeService, ILogWasConnected
+    public partial class DynamicCodeService: ServiceBase<DynamicCodeService.MyServices>, IDynamicCodeService, ILogWasConnected
     {
         #region Constructor and Init
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
-            public Dependencies(
+            public MyServices(
                 IServiceProvider serviceProvider,
                 LazySvc<ILogStore> logStore,
                 LazySvc<IUser> user,
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code
                 LazySvc<ISite> site,
                 LazySvc<IZoneMapper> zoneMapper,
                 LazySvc<IAppStates> appStates
-            ) => AddToLogQueue(
+            ) => ConnectServices(
                 ServiceProvider = serviceProvider,
                 LogStore = logStore,
                 User = user,
@@ -48,19 +48,19 @@ namespace ToSic.Sxc.Code
             public LazySvc<IAppStates> AppStates { get; }
         }
 
-        public class ScopedDependencies: ServiceDependencies
+        public class MyScopedServices: MyServicesBase
         {
             public Generator<App> AppGenerator { get; }
             public Generator<DynamicCodeRoot> CodeRootGenerator { get; }
             public Generator<AppConfigDelegate> AppConfigDelegateGenerator { get; }
             public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
 
-            public ScopedDependencies(
+            public MyScopedServices(
                 Generator<DynamicCodeRoot> codeRootGenerator,
                 Generator<App> appGenerator,
                 Generator<AppConfigDelegate> appConfigDelegateGenerator,
                 LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder
-            ) => AddToLogQueue(
+            ) => ConnectServices(
                 CodeRootGenerator = codeRootGenerator,
                 AppGenerator = appGenerator,
                 AppConfigDelegateGenerator = appConfigDelegateGenerator,
@@ -68,20 +68,21 @@ namespace ToSic.Sxc.Code
             );
         }
 
-        public DynamicCodeService(Dependencies services): this(services, $"{Constants.SxcLogName}.DCS") { }
-        protected DynamicCodeService(Dependencies services, string logName): base(services, logName)
+        public DynamicCodeService(MyServices services): this(services, $"{Constants.SxcLogName}.DCS") { }
+        protected DynamicCodeService(MyServices services, string logName): base(services, logName)
         {
             ScopedServiceProvider = services.ServiceProvider.CreateScope().ServiceProvider;
             // Important: These generators must be built inside the scope, so they must be made here
             // and NOT come from the constructor injection
-            _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
+            // TODO: @2DM - put log in Build call?
+            _myScopedServices = ScopedServiceProvider.Build<MyScopedServices>().SetLog(Log);
         }
 
         /// <summary>
         /// This is for all the services used here, or also for services needed in inherited classes which will need the same scoped objects
         /// </summary>
         protected IServiceProvider ScopedServiceProvider { get; }
-        private readonly ScopedDependencies _scopedDeps;
+        private readonly MyScopedServices _myScopedServices;
 
         public void LogWasConnected() => _logInitDone = true; // if we link it to a parent, we don't need to add own entry in log history
         private bool _logInitDone;

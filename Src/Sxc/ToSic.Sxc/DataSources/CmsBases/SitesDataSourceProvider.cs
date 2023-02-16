@@ -12,19 +12,19 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
-    public abstract class SitesDataSourceProvider: ServiceBase<SitesDataSourceProvider.Dependencies>
+    public abstract class SitesDataSourceProvider: ServiceBase<SitesDataSourceProvider.MyServices>
     {
-        public class Dependencies : ServiceDependencies
+        public class MyServices : MyServicesBase
         {
             public LazySvc<IZoneMapper> ZoneMapperLazy { get; }
             public IAppStates AppStates { get; }
 
-            public Dependencies(
+            public MyServices(
                 LazySvc<IZoneMapper> zoneMapperLazy,
                 IAppStates appStates
             )
             {
-                AddToLogQueue(
+                ConnectServices(
                     ZoneMapperLazy = zoneMapperLazy,
                     AppStates = appStates
                 );
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
 
         }
         
-        protected SitesDataSourceProvider(Dependencies services, string logName) : base(services, logName)
+        protected SitesDataSourceProvider(MyServices services, string logName) : base(services, logName)
         {
         }
 

@@ -14,22 +14,22 @@ namespace ToSic.Sxc.Data
     {
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
-        private readonly DynamicEntityDependencies _dependencies;
+        private readonly DynamicEntityServices _services;
         
         private Func<bool?> _getDebug;
 
-        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntityDependencies dependencies)
+        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntityServices services)
         {
             _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
-            _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
+            _services = services ?? throw new ArgumentNullException(nameof(services));
             _getDebug = getDebug;
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug,  DynamicEntityDependencies dependencies)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug,  DynamicEntityServices services)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
-            _dependencies = dependencies ?? throw new ArgumentNullException(nameof(dependencies));
+            _services = services ?? throw new ArgumentNullException(nameof(services));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
             _getDebug = getDebug;
         }
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Data
                             //? new EntityInBlock(e, ParentOrNull.EntityGuid, FieldOrNull, index++)
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i) // index++)
                             : e;
-                        return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _dependencies, debug);
+                        return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _services, debug);
                     })
                     .ToList();
             }

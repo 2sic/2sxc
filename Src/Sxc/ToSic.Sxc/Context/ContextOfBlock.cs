@@ -19,9 +19,9 @@ namespace ToSic.Sxc.Context
             IModule module,
             LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
-            ContextOfSite.Dependencies siteCtxDeps,
-            ContextOfApp.Dependencies appDependencies)
-            : base(siteCtxDeps, appDependencies, "Sxc.CtxBlk")
+            ContextOfSite.MyServices siteCtxDeps,
+            ContextOfApp.MyServices appServices)
+            : base(siteCtxDeps, appServices, "Sxc.CtxBlk")
         {
             Page = page;
             ConnectServices(

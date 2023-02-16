@@ -11,10 +11,10 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     // todo: create interface
     // todo: move some parts out into a BlockManagement
-    public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBaseDependencies>
+    public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBaseServices>
     {
         #region DI and Construction
-        internal BlockEditorBase(BlockEditorBaseDependencies services) : base(services, "CG.RefMan")
+        internal BlockEditorBase(BlockEditorBaseServices services) : base(services, "CG.RefMan")
         {
             Services.CmsRuntime.SetInit(r => r.InitQ(Block?.App, true));
             Services.CmsManager.SetInit(r => r.Init(Block?.App));

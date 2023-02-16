@@ -16,13 +16,13 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    public abstract partial class BlockBase : ServiceBase<BlockBase.Dependencies>, IBlock
+    public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBlock
     {
         #region Constructor and DI
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
-            public Dependencies(
+            public MyServices(
                 LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
                 LazySvc<App> appLazy,
                 LazySvc<AppConfigDelegate> appConfigDelegateLazy,
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Blocks
                 LazySvc<BlockBuilder> blockBuilder
             )
             {
-                AddToLogQueue(
+                ConnectServices(
                     BdsFactoryLazy = bdsFactoryLazy,
                     AppLazy = appLazy,
                     AppConfigDelegateLazy = appConfigDelegateLazy,
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Blocks
             public LazySvc<BlockBuilder> BlockBuilder { get; }
         }
 
-        protected BlockBase(Dependencies services, string logName) : base(services, logName)
+        protected BlockBase(MyServices services, string logName) : base(services, logName)
         {
         }
 

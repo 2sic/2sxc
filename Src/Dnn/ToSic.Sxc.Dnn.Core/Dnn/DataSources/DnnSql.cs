@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 	public class DnnSql : Sql
 	{
         [PrivateApi]
-		public DnnSql(Dependencies dependencies, IDataBuilder dataBuilder) : base(dependencies, dataBuilder)
+		public DnnSql(MyServices services, IDataBuilder dataBuilder) : base(services, dataBuilder)
 		{
 			ConnectionStringName = DnnSqlPlatformInfo.SiteSqlServer;
 		}

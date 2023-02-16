@@ -38,12 +38,12 @@ namespace ToSic.Sxc.Blocks
         private static Services.IRenderService RenderService(DynamicEntity parent)
         {
             // First do version checks -should not be allowed if compatibility is too low
-            if (parent._Dependencies.CompatibilityLevel > Constants.MaxLevelForStaticRender)
+            if (parent._Services.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
 
-            var block = parent._Dependencies.BlockOrNull;
+            var block = parent._Services.BlockOrNull;
             Warning13To15(
                 "DeprecatedStaticRender",
                 $"View:{block?.View?.Id}",
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Blocks
                 (log) => LogBlockDetails(block, log));
 
 
-            return parent._Dependencies.RenderService;
+            return parent._Services.RenderService;
         }
 
         /// <summary>

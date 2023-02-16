@@ -13,9 +13,9 @@ namespace ToSic.Sxc.Data
     /// They are needed for language lookups and creating inner lists of other entities
     /// </summary>
     [PrivateApi("this should all stay internal and never be public")]
-    public class DynamicEntityDependencies: ServiceDependencies
+    public class DynamicEntityServices: MyServicesBase
     {
-        public DynamicEntityDependencies(
+        public DynamicEntityServices(
             LazySvc<IDataBuilderInternal> dataBuilderLazy,
             LazySvc<IValueConverter> valueConverterLazy,
             Generator<IRenderService> renderServiceGenerator)
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Data
             _renderServiceGenerator = renderServiceGenerator;
         }
 
-        internal DynamicEntityDependencies Init(IBlock blockOrNull, string[] dimensions, ILog log, int compatibility = Constants.CompatibilityLevel10)
+        internal DynamicEntityServices Init(IBlock blockOrNull, string[] dimensions, ILog log, int compatibility = Constants.CompatibilityLevel10)
         {
             Dimensions = dimensions;
             LogOrNull = log;

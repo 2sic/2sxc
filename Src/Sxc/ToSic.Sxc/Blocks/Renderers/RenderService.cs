@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Blocks
 
         #region Constructor & ConnectToRoot
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public Generator<InTextContentBlockRenderer> InTextRenderer { get; }
             public Generator<SimpleRenderer> SimpleRenderer { get; }
@@ -35,14 +35,14 @@ namespace ToSic.Sxc.Blocks
             public LazySvc<IModuleAndBlockBuilder> Builder { get; }
             public LazySvc<ILogStore> LogStore { get; }
 
-            public Dependencies(Generator<IEditService> editGenerator,
+            public MyServices(Generator<IEditService> editGenerator,
                 LazySvc<IModuleAndBlockBuilder> builder,
                 Generator<SimpleRenderer> simpleRenderer,
                 Generator<InTextContentBlockRenderer> inTextRenderer,
                 LazySvc<ILogStore> logStore
             )
             {
-                AddToLogQueue(
+                ConnectServices(
                     EditGenerator = editGenerator,
                     Builder = builder,
                     SimpleRenderer = simpleRenderer,
@@ -52,12 +52,12 @@ namespace ToSic.Sxc.Blocks
             }
         }
 
-        public RenderService(Dependencies dependencies) : base("Sxc.RndSvc")
+        public RenderService(MyServices services) : base("Sxc.RndSvc")
         {
-            _Deps = dependencies.SetLog(Log);
+            _Deps = services.SetLog(Log);
         }
 
-        private readonly Dependencies _Deps;
+        private readonly MyServices _Deps;
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.Blocks
             MakeSureLogIsInHistory();
             var simpleRenderer = _Deps.SimpleRenderer.New();
             return new HybridHtmlString(field == null
-                ? simpleRenderer.Render(parent._Dependencies.BlockOrNull, item.Entity) // without field edit-context
+                ? simpleRenderer.Render(parent._Services.BlockOrNull, item.Entity) // without field edit-context
                 : simpleRenderer.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent))); // with field-edit-context data-list-context
         }
 
@@ -156,7 +156,7 @@ namespace ToSic.Sxc.Blocks
             // Otherwise create a new one - even though it's not clear if this would have any real effect
             var newEdit = _Deps.EditGenerator.New();
             newEdit.ConnectToRoot(_DynCodeRoot);
-            return newEdit.SetBlock(_DynCodeRoot, parent._Dependencies.BlockOrNull);
+            return newEdit.SetBlock(_DynCodeRoot, parent._Services.BlockOrNull);
         }
     }
 }

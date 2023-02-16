@@ -35,20 +35,20 @@ namespace ToSic.Sxc.WebApi
         /// This doesn't work in DNN.
         /// But for consistency, we're building a comparable structure here.
         /// </summary>
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
             public LazySvc<Apps.App> AppOverrideLazy { get; }
             public DnnCodeRootFactory DnnCodeRootFactory { get; }
             public DnnAppFolderUtilities AppFolderUtilities { get; }
 
-            public Dependencies(
+            public MyServices(
                 DnnCodeRootFactory dnnCodeRootFactory,
                 DnnAppFolderUtilities appFolderUtilities,
                 LazySvc<Apps.App> appOverrideLazy,
                 LazySvc<AppConfigDelegate> appConfigDelegateLazy)
             {
-                AddToLogQueue(
+                ConnectServices(
                     DnnCodeRootFactory = dnnCodeRootFactory,
                     AppFolderUtilities = appFolderUtilities,
                     AppOverrideLazy = appOverrideLazy,
@@ -63,8 +63,8 @@ namespace ToSic.Sxc.WebApi
         protected DynamicApiController() : base("DynApi") { }
         protected DynamicApiController(string logSuffix): base(logSuffix) { }
 
-        protected Dependencies _Deps => _depsGetter.Get(() => GetService<Dependencies>().SetLog(Log));
-        private readonly GetOnce<Dependencies> _depsGetter = new GetOnce<Dependencies>();
+        protected MyServices _Deps => _depsGetter.Get(() => GetService<MyServices>().SetLog(Log));
+        private readonly GetOnce<MyServices> _depsGetter = new GetOnce<MyServices>();
 
         #endregion
 

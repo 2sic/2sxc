@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Apps.ImportExport
         private readonly IRepositoryLoader _repositoryLoader;
 
         public XmlImportFull(
-            Dependencies services,
+            MyServices services,
             LazySvc<CmsManager> cmsManagerLazy,
             IRepositoryLoader repositoryLoader
             ) : base(services, "Sxc.XmlImp")

@@ -15,10 +15,10 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<CmsRuntime> _cmsRuntime;
 
         public CmsManager(
-            Dependencies dependencies, LazySvc<CmsRuntime> cmsRuntime,
+            MyServices services, LazySvc<CmsRuntime> cmsRuntime,
             LazySvc<ViewsManager> viewsManager,
             LazySvc<BlocksManager> blocksManager
-            ) : base(dependencies, "Sxc.CmsMan")
+            ) : base(services, "Sxc.CmsMan")
         {
             ConnectServices(
                 _cmsRuntime = cmsRuntime.SetInit(r => r.InitWithState(AppState, ShowDrafts)),

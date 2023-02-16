@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
-            services.TryAddTransient<EngineBaseDependencies>();
+            services.TryAddTransient<EngineBaseServices>();
 
             // These are usually replaced by the target platform
             services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();
@@ -80,7 +80,7 @@ namespace ToSic.Sxc.WebApi
 
             // js context / UI
             services.TryAddTransient<IUiContextBuilder, UiContextBuilderUnknown>();
-            services.TryAddTransient<UiContextBuilderBase.Dependencies>();
+            services.TryAddTransient<UiContextBuilderBase.MyServices>();
             
             // Helpers
             services.TryAddTransient<ImpExpHelpers>();
@@ -123,11 +123,11 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
         {
             // Adam Controllers etc.
-            services.TryAddTransient(typeof(AdamDependencies<,>));
-            services.TryAddTransient<AdamSecurityChecksBase.Dependencies>();
+            services.TryAddTransient(typeof(AdamServices<,>));
+            services.TryAddTransient<AdamSecurityChecksBase.MyServices>();
             services.TryAddTransient(typeof(AdamManager<,>));
             services.TryAddTransient(typeof(AdamContext<,>));
-            services.TryAddTransient<AdamContext.Dependencies>();
+            services.TryAddTransient<AdamContext.MyServices>();
             services.TryAddTransient(typeof(HyperlinkBackend<,>));
             services.TryAddTransient(typeof(AdamTransGetItems<,>));
             services.TryAddTransient(typeof(AdamTransDelete<,>));

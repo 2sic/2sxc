@@ -16,12 +16,12 @@ namespace ToSic.Sxc.WebApi.Adam
 
         #region Constructor / DI
 
-        protected AdamTransactionBase(AdamDependencies<TFolderId, TFileId> dependencies, string logName) : base(logName)
+        protected AdamTransactionBase(AdamServices<TFolderId, TFileId> services, string logName) : base(logName)
         {
-            _Deps = dependencies.SetLog(Log);
+            _Deps = services.SetLog(Log);
         }
 
-        protected readonly AdamDependencies<TFolderId, TFileId> _Deps;
+        protected readonly AdamServices<TFolderId, TFileId> _Deps;
 
         public T Init(int appId, string contentType, Guid itemGuid, string field, bool usePortalRoot)
         {

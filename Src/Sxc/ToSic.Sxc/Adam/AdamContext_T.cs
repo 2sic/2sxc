@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Adam
             LazySvc<AdamManager<TFolderId, TFileId>> adamManagerLazy,
             Generator<AdamStorageOfSite<TFolderId, TFileId>> siteStoreGenerator,
             Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStoreGenerator,
-            Dependencies services): base(services, "Adm.CtxTT")
+            MyServices services): base(services, "Adm.CtxTT")
         {
             ConnectServices(
                 _adamManagerLazy = adamManagerLazy,

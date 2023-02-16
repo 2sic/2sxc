@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.Dependencies>, IDynamicCodeRoot, IDynamicCode
+    public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MyServices>, IDynamicCodeRoot, IDynamicCode
     {
         #region Constructor
 
@@ -35,28 +35,28 @@ namespace ToSic.Sxc.Code
         /// Helper class to ensure if dependencies change, inheriting objects don't need to change their signature
         /// </summary>
         [PrivateApi]
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public LazySvc<DataSourceFactory> DataSourceFactory { get; }
             public LazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
-            public LazySvc<DynamicEntityDependencies> DynamicEntityDependencies { get; }
+            public LazySvc<DynamicEntityServices> DynamicEntityDependencies { get; }
             public LazySvc<IContextOfApp> ContextOfApp { get; }
             public LazySvc<AdamManager> AdamManager { get; }
 
-            public Dependencies(
+            public MyServices(
                 IServiceProvider serviceProvider,
                 LazySvc<CodeCompiler> codeCompilerLazy,
                 AppSettingsStack settingsStack,
-                LazySvc<DynamicEntityDependencies> dynamicEntityDependencies,
+                LazySvc<DynamicEntityServices> dynamicEntityDependencies,
                 LazySvc<IContextOfApp> contextOfApp,
                 LazySvc<AdamManager> adamManager,
                 LazySvc<IConvertService> convertService,
                 LazySvc<DataSourceFactory> dataSourceFactory)
             {
-                AddToLogQueue(
+                ConnectServices(
                     ServiceProvider = serviceProvider,
                     CodeCompilerLazy = codeCompilerLazy,
                     SettingsStack = settingsStack,
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        protected internal DynamicCodeRoot(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
+        protected internal DynamicCodeRoot(MyServices services, string logPrefix) : base(services, logPrefix + ".DynCdR")
         {
             _serviceProvider = services.ServiceProvider;
 

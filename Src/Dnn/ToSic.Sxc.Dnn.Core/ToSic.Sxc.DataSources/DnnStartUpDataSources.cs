@@ -20,7 +20,7 @@ namespace ToSic.Sxc.DataSources
             // General data sources
             services.TryAddTransient<DnnSql>();
             services.TryAddTransient<DnnUserProfile>();
-            services.TryAddTransient<DnnUserProfile.Dependencies>();
+            services.TryAddTransient<DnnUserProfile.MyServices>();
 
             services.TryAddTransient<PagesDataSourceProvider, DnnPagesDsProvider>();
             services.TryAddTransient<SitesDataSourceProvider, DnnSitesDsProvider>();
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.DataSources
             // General data sources
             services.TryAddTransient<DnnSql>();
             services.TryAddTransient<DnnUserProfile>();
-            services.TryAddTransient<DnnUserProfile.Dependencies>();
+            services.TryAddTransient<DnnUserProfile.MyServices>();
 
             return services;
         }

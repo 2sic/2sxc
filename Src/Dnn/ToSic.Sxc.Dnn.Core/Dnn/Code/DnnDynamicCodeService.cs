@@ -19,21 +19,21 @@ namespace ToSic.Sxc.Dnn.Code
     /// </summary>
     public class DnnDynamicCodeService: DynamicCodeService
     {
-        public new class ScopedDependencies: ServiceDependencies
+        public new class MyScopedServices: MyServicesBase
         {
             public LazySvc<PageServiceShared> PageServiceShared { get; }
             public LazySvc<PageChangeSummary> PageChangeSummary { get; }
             public LazySvc<DnnPageChanges> DnnPageChanges { get; }
             public LazySvc<DnnClientResources> DnnClientResources { get; }
 
-            public ScopedDependencies(
+            public MyScopedServices(
                 LazySvc<PageServiceShared> pageServiceShared,
                 LazySvc<PageChangeSummary> pageChangeSummary,
                 LazySvc<DnnPageChanges> dnnPageChanges,
                 LazySvc<DnnClientResources> dnnClientResources
                 )
             {
-                AddToLogQueue(
+                ConnectServices(
                     PageServiceShared = pageServiceShared,
                     PageChangeSummary = pageChangeSummary,
                     DnnPageChanges = dnnPageChanges,
@@ -42,27 +42,27 @@ namespace ToSic.Sxc.Dnn.Code
             }
         }
 
-        public DnnDynamicCodeService(Dependencies dependencies) : base(dependencies, $"{DnnConstants.LogName}.DynCdS")
+        public DnnDynamicCodeService(MyServices services) : base(services, $"{DnnConstants.LogName}.DynCdS")
         {
-            _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
-            _user = dependencies.User;
+            _scopedServices = ScopedServiceProvider.Build<MyScopedServices>().SetLog(Log);
+            _user = services.User;
             Page = HttpContext.Current?.Handler as Page;
 
             if (Page != null)
                 Page.PreRender += Page_PreRender;
         }
 
-        private readonly ScopedDependencies _scopedDeps;
+        private readonly MyScopedServices _scopedServices;
         private readonly LazySvc<IUser> _user;
 
 
         private void Page_PreRender(object sender, EventArgs e) => Log.Do(() =>
         {
             var user = _user.Value;
-            var changes = _scopedDeps.PageChangeSummary.Value.FinalizeAndGetAllChanges(
-                _scopedDeps.PageServiceShared.Value, user.IsContentAdmin);
-            _scopedDeps.DnnPageChanges.Value.Apply(Page, changes);
-            var dnnClientResources = _scopedDeps.DnnClientResources.Value.Init(Page, false, null);
+            var changes = _scopedServices.PageChangeSummary.Value.FinalizeAndGetAllChanges(
+                _scopedServices.PageServiceShared.Value, user.IsContentAdmin);
+            _scopedServices.DnnPageChanges.Value.Apply(Page, changes);
+            var dnnClientResources = _scopedServices.DnnClientResources.Value.Init(Page, false, null);
             dnnClientResources.AddEverything(changes?.Features);
         });
 

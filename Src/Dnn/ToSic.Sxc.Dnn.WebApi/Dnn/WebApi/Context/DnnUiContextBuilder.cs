@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.GetContents();
 
-        public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
+        public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
         {
             _ctxResolver = ctxResolver;
             _remoteRouterLink = remoteRouterLink;

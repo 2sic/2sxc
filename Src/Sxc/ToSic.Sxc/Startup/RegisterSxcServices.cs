@@ -43,31 +43,31 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<BlocksManager>();
 
             // Code
-            services.TryAddTransient<DynamicCodeRoot.Dependencies>();
-            services.TryAddTransient<DynamicEntityDependencies>();
+            services.TryAddTransient<DynamicCodeRoot.MyServices>();
+            services.TryAddTransient<DynamicEntityServices>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();
             services.TryAddTransient<BlockEditorForModule>();
-            services.TryAddTransient<BlockEditorBaseDependencies>();
+            services.TryAddTransient<BlockEditorBaseServices>();
 
             // Engine and Rendering
             services.TryAddTransient<EngineFactory>();
             services.TryAddTransient<BlockBuilder>();
-            services.TryAddTransient<BlockBuilder.Dependencies>();
+            services.TryAddTransient<BlockBuilder.MyServices>();
 
             // Block functionality
             services.TryAddTransient<BlockDataSourceFactory>();
-            services.TryAddTransient<DataSources.CmsBlock.Dependencies>(); // new v15
+            services.TryAddTransient<DataSources.CmsBlock.MyServices>(); // new v15
             services.TryAddTransient<BlockFromModule>();
             services.TryAddTransient<BlockFromEntity>();
-            services.TryAddTransient<BlockBase.Dependencies>();
+            services.TryAddTransient<BlockBase.MyServices>();
 
             // Configuration Provider WIP
             services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<AppConfigDelegate>();
             services.TryAddTransient<App>();
-            services.TryAddTransient<ImportExportEnvironmentBase.Dependencies>();
+            services.TryAddTransient<ImportExportEnvironmentBase.MyServices>();
 
             // Rendering
             services.TryAddTransient<IRenderingHelper, RenderingHelper>();
@@ -152,8 +152,8 @@ namespace ToSic.Sxc.Startup
             services.AddTransient<IStartUpRegistrations, SxcStartUpRegistrations>();
 
             // v15 DataSource Dependencies
-            services.TryAddTransient<SitesDataSourceProvider.Dependencies>();
-            services.TryAddTransient<AppFilesDataSourceProvider.Dependencies>();
+            services.TryAddTransient<SitesDataSourceProvider.MyServices>();
+            services.TryAddTransient<AppFilesDataSourceProvider.MyServices>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
