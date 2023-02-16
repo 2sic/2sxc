@@ -10,10 +10,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
-using static System.IO.File;
 using static System.IO.Path;
-using Microsoft.EntityFrameworkCore.Update;
-using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -47,11 +44,8 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        private readonly Dependencies _dependencies;
-
-        protected AppFilesDataSourceProvider(Dependencies dependencies, string logName) : base(dependencies ,logName)
+        protected AppFilesDataSourceProvider(Dependencies services, string logName) : base(services ,logName)
         {
-            _dependencies = dependencies;
         }
 
         /// <summary>
@@ -155,12 +149,12 @@ namespace ToSic.Sxc.DataSources
         }
 
         private ZipExport GetZipExport(IApp app) 
-            => _dependencies.ZipExport.Init(app.ZoneId, app.AppId, app.Folder, app.PhysicalPath, app.PhysicalPathShared);
+            => Services.ZipExport.Init(app.ZoneId, app.AppId, app.Folder, app.PhysicalPath, app.PhysicalPathShared);
 
         private IApp GetApp(int zoneId, int appId) 
-            => _dependencies.AppLazy.Value.Init(GetAppState(zoneId, appId), null);
+            => Services.AppLazy.Value.Init(GetAppState(zoneId, appId), null);
 
         private AppState GetAppState(int zoneId, int appId) 
-            => _dependencies.AppStates.Get(new AppIdentity(zoneId, appId));
+            => Services.AppStates.Get(new AppIdentity(zoneId, appId));
     }
 }

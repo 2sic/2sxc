@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code
         }
 
         /// <inheritdoc />
-        public IDynamicCode12 OfSite() => OfApp(GetPrimaryApp(null, Deps.Site.Value));
+        public IDynamicCode12 OfSite() => OfApp(GetPrimaryApp(null, Services.Site.Value));
 
         /// <inheritdoc />
         public IDynamicCode12 OfSite(int siteId) => OfApp(GetPrimaryApp(siteId, null));

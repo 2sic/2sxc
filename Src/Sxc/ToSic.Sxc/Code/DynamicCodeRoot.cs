@@ -72,9 +72,9 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        protected internal DynamicCodeRoot(Dependencies dependencies, string logPrefix) : base(dependencies, logPrefix + ".DynCdR")
+        protected internal DynamicCodeRoot(Dependencies services, string logPrefix) : base(services, logPrefix + ".DynCdR")
         {
-            _serviceProvider = dependencies.ServiceProvider;
+            _serviceProvider = services.ServiceProvider;
 
             // Prepare services which need to be attached to this dynamic code root
             CmsContext = GetService<ICmsContext>();

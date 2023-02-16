@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Adam
             }
         }
 
-        protected AdamContext(Dependencies dependencies, string logName) : base(dependencies, logName ?? "Adm.Ctx")
+        protected AdamContext(Dependencies services, string logName) : base(services, logName ?? "Adm.Ctx")
         {
         }
         public AdamSecurityChecksBase Security;
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Adam
             var callLog = Log.Fn<AdamContext>($"app: {context.AppState.Show()}, field:{fieldName}, guid:{entityGuid}");
             Context = context;
 
-            Permissions = Deps.TypesPermissions.New()
+            Permissions = Services.TypesPermissions.New()
                 .Init(context, context.AppState, contentType);
 
             // only do checks on field/guid if it's actually accessing that, if it's on the portal root, don't.
@@ -70,13 +70,13 @@ namespace ToSic.Sxc.Adam
                 ItemGuid = entityGuid;
             }
 
-            Security = Deps.AdamSecurityGenerator.New().Init(this, usePortalRoot);
+            Security = Services.AdamSecurityGenerator.New().Init(this, usePortalRoot);
 
             if (Security.MustThrowIfAccessingRootButNotAllowed(usePortalRoot, out var exception))
                 throw exception;
 
             Log.A("check if feature enabled");
-            var sysFeatures = Deps.FeaturesSvc.Value;
+            var sysFeatures = Services.FeaturesSvc.Value;
             if (Security.UserIsRestricted && !sysFeatures.Enabled(FeaturesForRestrictedUsers))
             {
                 var msg = sysFeatures.MsgMissingSome(FeaturesForRestrictedUsers);

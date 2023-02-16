@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
     public class OqtaneDynamicCodeRoot : DynamicCodeRoot<object, ServiceKit>
     {
         private readonly LazySvc<SiteStateInitializer> _siteStateInitializerLazy;
-        public OqtaneDynamicCodeRoot(Dependencies dependencies, LazySvc<SiteStateInitializer> siteStateInitializerLazy) : base(dependencies, OqtConstants.OqtLogPrefix)
+        public OqtaneDynamicCodeRoot(Dependencies services, LazySvc<SiteStateInitializer> siteStateInitializerLazy) : base(services, OqtConstants.OqtLogPrefix)
         {
             ConnectServices(
                 _siteStateInitializerLazy = siteStateInitializerLazy

@@ -107,7 +107,7 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Users(Dependencies dependencies, UsersDataSourceProvider provider, IDataBuilder usersDataBuilder) : base(dependencies, "SDS.Users")
+        public Users(Dependencies services, UsersDataSourceProvider provider, IDataBuilder usersDataBuilder) : base(services, "SDS.Users")
         {
             ConnectServices(
                 _provider = provider,

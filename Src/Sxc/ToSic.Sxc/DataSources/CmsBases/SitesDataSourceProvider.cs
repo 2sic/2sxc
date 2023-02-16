@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
 
         }
         
-        protected SitesDataSourceProvider(Dependencies dependencies, string logName) : base(dependencies, logName)
+        protected SitesDataSourceProvider(Dependencies services, string logName) : base(services, logName)
         {
         }
 
@@ -42,15 +42,15 @@ namespace ToSic.Sxc.DataSources
         /// <returns></returns>
         public abstract List<CmsSiteInfo> GetSitesInternal();
 
-        public int GetZoneId(int siteId) => Deps.ZoneMapperLazy.Value.GetZoneId(siteId);
+        public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
 
-        public int GetDefaultAppId(int siteId) => Deps.AppStates.DefaultAppId(GetZoneId(siteId));
+        public int GetDefaultAppId(int siteId) => Services.AppStates.DefaultAppId(GetZoneId(siteId));
 
-        public int GetPrimaryAppId(int siteId) => Deps.AppStates.PrimaryAppId(GetZoneId(siteId));
+        public int GetPrimaryAppId(int siteId) => Services.AppStates.PrimaryAppId(GetZoneId(siteId));
 
         public string GetLanguages(int siteId)
         {
-            var languages = Deps.AppStates
+            var languages = Services.AppStates
                 .Languages(GetZoneId(siteId), true);
             return string.Join(",", languages.Select(l => l.EnvironmentKey.ToLower()));
             //return Deps.AppStates

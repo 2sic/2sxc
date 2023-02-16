@@ -68,10 +68,10 @@ namespace ToSic.Sxc.Code
             );
         }
 
-        public DynamicCodeService(Dependencies dependencies): this(dependencies, $"{Constants.SxcLogName}.DCS") { }
-        protected DynamicCodeService(Dependencies dependencies, string logName): base(dependencies, logName)
+        public DynamicCodeService(Dependencies services): this(services, $"{Constants.SxcLogName}.DCS") { }
+        protected DynamicCodeService(Dependencies services, string logName): base(services, logName)
         {
-            ScopedServiceProvider = dependencies.ServiceProvider.CreateScope().ServiceProvider;
+            ScopedServiceProvider = services.ServiceProvider.CreateScope().ServiceProvider;
             // Important: These generators must be built inside the scope, so they must be made here
             // and NOT come from the constructor injection
             _scopedDeps = ScopedServiceProvider.Build<ScopedDependencies>().SetLog(Log);
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.Code
         {
             if (_logInitDone) return;
             _logInitDone = true;
-            Deps.LogStore.Value.Add("dynamic-code-service", Log);
+            Services.LogStore.Value.Add("dynamic-code-service", Log);
         }
 
         protected void ActivateEditUi() => EditUiRequired = true;

@@ -73,7 +73,7 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public AppFiles(Dependencies dependencies, AppFilesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(dependencies, "CDS.AppFiles")
+        public AppFiles(Dependencies services, AppFilesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(services, "CDS.AppFiles")
         {
             ConnectServices(
                 _provider = provider,

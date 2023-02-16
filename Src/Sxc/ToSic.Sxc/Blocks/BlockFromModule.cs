@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// Official constructor, must call Init afterwards
         /// </summary>
-        public BlockFromModule(Dependencies dependencies) : base(dependencies, "CB.Mod") { }
+        public BlockFromModule(Dependencies services) : base(services, "CB.Mod") { }
 
         #endregion
 

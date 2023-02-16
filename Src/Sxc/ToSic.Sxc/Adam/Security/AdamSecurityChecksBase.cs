@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Adam
             }
         }
 
-        protected AdamSecurityChecksBase(Dependencies dependencies, string logPrefix) : base(dependencies, $"{logPrefix}.TnScCk")
+        protected AdamSecurityChecksBase(Dependencies services, string logPrefix) : base(services, $"{logPrefix}.TnScCk")
         {
         }
 
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = Deps.AppPermissionChecks.New()
+            var fieldPermissions = Services.AppPermissionChecks.New()
                 .ForAttribute(AdamContext.Permissions.Context, AdamContext.Context.AppState, AdamContext.Attribute);
 
             return fieldPermissions.UserMay(requiredGrant);

@@ -23,8 +23,8 @@ namespace ToSic.Sxc.DataSources
 
         #region Constructor / DI
 
-        public OqtSitesDsProvider(Dependencies dependencies, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
-        :base(dependencies, "Oqt.Sites")
+        public OqtSitesDsProvider(Dependencies services, IAliasRepository aliases, ISiteRepository sites, LazySvc<OqtCulture> oqtCulture)
+        :base(services, "Oqt.Sites")
         {
             ConnectServices(
                 _aliases = aliases,

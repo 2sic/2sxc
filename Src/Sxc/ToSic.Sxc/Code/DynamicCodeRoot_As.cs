@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityDependencies);
 
         internal DynamicEntityDependencies DynamicEntityDependencies => _dynEntDependencies.Get(() => 
-            Deps.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
+            Services.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
         private readonly GetOnce<DynamicEntityDependencies> _dynEntDependencies = new GetOnce<DynamicEntityDependencies>();
 
         /// <inheritdoc />
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Code
         #region Convert
 
         /// <inheritdoc />
-        public IConvertService Convert => _convert ?? (_convert = Deps.ConvertService.Value);
+        public IConvertService Convert => _convert ?? (_convert = Services.ConvertService.Value);
         private IConvertService _convert;
 
         #endregion
@@ -151,11 +151,11 @@ namespace ToSic.Sxc.Code
             {
                 if (App == null)
                     throw new Exception("Can't create App Context for ADAM - no block, no App");
-                contextOfApp = Deps.ContextOfApp.Value;
+                contextOfApp = Services.ContextOfApp.Value;
                 contextOfApp.ResetApp(App);
             }
 
-            return Deps.AdamManager.Value.Init(contextOfApp, CompatibilityLevel);
+            return Services.AdamManager.Value.Init(contextOfApp, CompatibilityLevel);
         }
 
         #endregion

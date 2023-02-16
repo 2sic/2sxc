@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public DataSourceFactory DataSourceFactory => _dataSourceFactory.Get(() => Deps.DataSourceFactory.Value);
+        public DataSourceFactory DataSourceFactory => _dataSourceFactory.Get(() => Services.DataSourceFactory.Value);
         private readonly GetOnce<DataSourceFactory> _dataSourceFactory = new GetOnce<DataSourceFactory>();
 
 

@@ -74,7 +74,7 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Roles(Dependencies dependencies, RolesDataSourceProvider provider, IDataBuilder rolesDataBuilder) : base(dependencies, $"SDS.Roles")
+        public Roles(Dependencies services, RolesDataSourceProvider provider, IDataBuilder rolesDataBuilder) : base(services, $"SDS.Roles")
         {
             ConnectServices(
                 _provider = provider,

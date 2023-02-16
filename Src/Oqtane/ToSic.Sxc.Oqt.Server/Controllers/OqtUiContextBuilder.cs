@@ -61,9 +61,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
-                Deps.SiteCtx.Site,
+                Services.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0,
-                Deps.AppToLaterInitialize,
+                Services.AppToLaterInitialize,
                 true
                 );
             return gsUrl;

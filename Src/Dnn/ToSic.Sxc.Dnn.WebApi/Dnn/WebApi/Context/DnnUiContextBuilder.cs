@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
-                Deps.SiteCtx.Site,
+                Services.SiteCtx.Site,
                 Module.ModuleID,
                 app,
                 Module.DesktopModule.ModuleName == "2sxc");

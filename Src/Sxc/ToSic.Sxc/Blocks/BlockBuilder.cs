@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Blocks
         }
 
         #region Constructor
-        public BlockBuilder(Dependencies dependencies) : base(dependencies, "Sxc.BlkBld") { }
+        public BlockBuilder(Dependencies services) : base(services, "Sxc.BlkBld") { }
 
         public BlockBuilder Init(IBlockBuilder rootBlockBuilder, IBlock cb)
         {
