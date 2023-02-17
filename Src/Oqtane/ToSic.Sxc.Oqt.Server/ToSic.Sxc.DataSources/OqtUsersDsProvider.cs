@@ -34,7 +34,7 @@ namespace ToSic.Sxc.DataSources
                 {
                     var userRoles = _userRoles.GetUserRoles(siteId).ToList();
                     var users = userRoles.Select(ur => ur.User).Distinct().ToList();
-                    if (!users.Any()) return (new List<CmsUserInfo>(), "null/empty");
+                    if (!users.Any()) return (new(), "null/empty");
 
                     var result = users
                         .Where(u => !u.IsDeleted)
@@ -45,8 +45,7 @@ namespace ToSic.Sxc.DataSources
                             return new CmsUserInfo
                             {
                                 Id = u.UserId,
-                                Guid = new Guid((_identityUserManager.FindByNameAsync(u.Username).Result)
-                                    .Id), // new Guid(new IdentityUser(u.User.Username).Id),
+                                Guid = new((_identityUserManager.FindByNameAsync(u.Username).Result).Id),
                                 NameId = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
                                 RoleIds = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
                                 IsSystemAdmin =
@@ -57,7 +56,6 @@ namespace ToSic.Sxc.DataSources
                                 IsAnonymous = u.UserId == -1,
                                 Created = u.CreatedOn,
                                 Modified = u.ModifiedOn,
-                                //
                                 Username = u.Username,
                                 Email = u.Email,
                                 Name = u.DisplayName,
@@ -68,7 +66,7 @@ namespace ToSic.Sxc.DataSources
                 catch (Exception ex)
                 {
                     l.Ex(ex);
-                    return (new List<CmsUserInfo>(), "error");
+                    return (new(), "error");
                 }
             });
     }

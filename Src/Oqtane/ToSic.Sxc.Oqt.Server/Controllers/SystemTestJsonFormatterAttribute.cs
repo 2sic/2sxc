@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             if (jsonFormatterAttribute?.Casing == Casing.CamelCase)
                 jsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
 
-            return new SystemTextJsonOutputFormatter(jsonSerializerOptions);
+            return new(jsonSerializerOptions);
         }
     }
 

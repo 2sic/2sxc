@@ -41,7 +41,7 @@ namespace ToSic.Sxc.DataSources
             return sites.Select(s => new CmsSiteInfo
             {
                 Id = s.SiteId,
-                Guid = new Guid(s.SiteGuid),
+                Guid = new(s.SiteGuid),
                 Name = s.Name,
                 Url = GetUrl(s.SiteId),
                 Languages = GetLanguages(s.SiteId),
