@@ -29,6 +29,11 @@ namespace ToSic.Sxc.DataSources
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public string NameId { get; set; }
+        /// <summary>
+        /// Role ID List.
+        /// Important: Internally we use a list to do checks etc.
+        /// But for creating the entity we return a CSV
+        /// </summary>
         public List<int> RoleIds { get; set; }
         public bool IsSystemAdmin { get; set; }
         public bool IsSiteAdmin { get; set; }
@@ -56,7 +61,7 @@ namespace ToSic.Sxc.DataSources
             { nameof(IsAnonymous), IsAnonymous },
             { nameof(Username), Username },
             { nameof(Email), Email },
-            { nameof(RoleIds), RoleIds }
+            { nameof(RoleIds), RoleIds == null ? "" : string.Join(",", RoleIds) }
         };
     }
 }
