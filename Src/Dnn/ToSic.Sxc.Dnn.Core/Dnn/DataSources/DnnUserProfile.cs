@@ -90,10 +90,10 @@ namespace ToSic.Sxc.Dnn.DataSources
             public IZoneMapper ZoneMapper { get; }
 
             public MyServices(
-                DataSource.MyServices rootServices,
+                DataSource.MyServices parentServices,
                 ISite site,
                 IZoneMapper zoneMapper
-            ) : base(rootServices)
+            ) : base(parentServices)
             {
                 ConnectServices(
                     Site = site,
