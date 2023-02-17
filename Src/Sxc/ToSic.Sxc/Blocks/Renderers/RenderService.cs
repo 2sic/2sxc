@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Blocks
 
         public RenderService(MyServices services) : base("Sxc.RndSvc")
         {
-            _Deps = services.SetLog(Log);
+            _Deps = services.ConnectServices(Log);
         }
 
         private readonly MyServices _Deps;

@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn.Code
 
         public DnnDynamicCodeService(MyServices services) : base(services, $"{DnnConstants.LogName}.DynCdS")
         {
-            _scopedServices = ScopedServiceProvider.Build<MyScopedServices>().SetLog(Log);
+            _scopedServices = ScopedServiceProvider.Build<MyScopedServices>().ConnectServices(Log);
             _user = services.User;
             Page = HttpContext.Current?.Handler as Page;
 

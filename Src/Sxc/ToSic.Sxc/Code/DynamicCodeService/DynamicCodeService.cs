@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Code
             // Important: These generators must be built inside the scope, so they must be made here
             // and NOT come from the constructor injection
             // TODO: @2DM - put log in Build call?
-            _myScopedServices = ScopedServiceProvider.Build<MyScopedServices>().SetLog(Log);
+            _myScopedServices = ScopedServiceProvider.Build<MyScopedServices>().ConnectServices(Log);
         }
 
         /// <summary>

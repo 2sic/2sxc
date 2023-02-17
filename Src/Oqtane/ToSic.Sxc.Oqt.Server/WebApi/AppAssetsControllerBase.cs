@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 
         protected AppAssetsControllerBase(MyServices services, string route, string logSuffix): base(logSuffix)
         {
-            Deps = services.SetLog(Log);
+            Deps = services.ConnectServices(Log);
             Route = route;
         }
 

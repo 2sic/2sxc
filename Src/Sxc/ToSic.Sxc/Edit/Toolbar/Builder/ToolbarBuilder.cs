@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// Public constructor for DI
         /// </summary>
         /// <param name="services"></param>
-        public ToolbarBuilder(MyServices services) => Services = services.SetLog(Log);
+        public ToolbarBuilder(MyServices services) => Services = services.ConnectServices(Log);
         protected readonly MyServices Services;
 
         /// <summary>

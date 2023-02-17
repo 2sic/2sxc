@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Run
         /// </summary>
         protected ImportExportEnvironmentBase(MyServices services, string logName) : base(services.Site, services.AppStates, logName)
         {
-            _services = services.SetLog(Log);
+            _services = services.ConnectServices(Log);
         }
 
         private readonly MyServices _services;

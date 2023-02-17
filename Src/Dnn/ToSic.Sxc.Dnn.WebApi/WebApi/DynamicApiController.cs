@@ -63,7 +63,7 @@ namespace ToSic.Sxc.WebApi
         protected DynamicApiController() : base("DynApi") { }
         protected DynamicApiController(string logSuffix): base(logSuffix) { }
 
-        private MyServices Services => _depsGetter.Get(() => GetService<MyServices>().SetLog(Log));
+        private MyServices Services => _depsGetter.Get(() => GetService<MyServices>().ConnectServices(Log));
         private readonly GetOnce<MyServices> _depsGetter = new GetOnce<MyServices>();
 
         #endregion
