@@ -2,6 +2,7 @@
 using DotNetNuke.Common.Extensions;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services
@@ -46,6 +47,12 @@ namespace ToSic.Sxc.Services
         /// History
         /// - Created in v14
         /// </remarks>
-        public static T GetScopedService<T>() => HttpContext.Current.GetScope().ServiceProvider.Build<T>();
+        public static T GetScopedService<T>()
+        {
+            var serviceScope = HttpContext.Current.GetScope();
+            return serviceScope == null 
+                ? DnnStaticDi.StaticBuild<T>() // handles edge case for 404 page in DNN where scope is missing, fix https://github.com/2sic/2sxc/issues/2986
+                : serviceScope.ServiceProvider.Build<T>();
+        }
     }
 }
