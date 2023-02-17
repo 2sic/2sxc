@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
+using System;
 using System.Buffers;
 using System.Linq;
 using ToSic.Eav.Serialization;
@@ -66,7 +67,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         private static SystemTextJsonOutputFormatter SystemTextJsonMediaTypeFormatterFactory(ActionExecutedContext context)
         {
-            var jsonFormatterAttribute = GetCustomAttributes(context.Controller.GetType()).OfType<JsonFormatterAttribute>().FirstOrDefault();
+            var jsonFormatterAttribute 
+                = GetCustomAttributes(((ControllerActionDescriptor)context.ActionDescriptor).MethodInfo).OfType<JsonFormatterAttribute>().FirstOrDefault()
+                  ?? GetCustomAttributes(context.Controller.GetType()).OfType<JsonFormatterAttribute>().FirstOrDefault();
 
             // creating JsonConverter, JsonOptions and SystemTextJsonOutputFormatter per request
             // instead of using global, static, singleton version because this is for API only

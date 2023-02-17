@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.WebApi
 {
-    [AttributeUsage(AttributeTargets.Class /*| AttributeTargets.Method*/, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
     public class JsonFormatterAttribute : Attribute
     {
         public Casing Casing { get; set; } = Casing.CamelCase;
