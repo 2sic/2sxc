@@ -47,8 +47,11 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            if (jsonFormatterAttribute?.Casing == Casing.CamelCase) 
+            if (jsonFormatterAttribute?.Casing == Casing.CamelCase)
+            {
                 jsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                jsonSerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            }
 
             return new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions };
         }
