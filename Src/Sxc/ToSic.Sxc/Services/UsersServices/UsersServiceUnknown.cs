@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Services
         public UsersServiceUnknown(WarnUseOfUnknown<UsersServiceUnknown> _, LazySvc<IContextOfSite> context) : base(context)
         { }
 
-        public override string PlatformIdentityTokenPrefix() => Eav.Constants.NullNameId;
+        public override string PlatformIdentityTokenPrefix => $"{Eav.Constants.NullNameId}:";
 
         public override IUser PlatformUserInformationDto(int userId) => new CmsUserRaw();
     }

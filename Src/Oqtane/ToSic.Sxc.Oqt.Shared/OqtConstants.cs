@@ -24,7 +24,7 @@
 
         public const string DownloadLinkTemplate = "/{0}/api/file/download/{1}";
 
-        public const string UserTokenPrefix = "oqt";
+        public const string UserTokenPrefix = "oqt:userid=";
 
         // #uncertain: maybe should incorporate the virtual path of the application?
         public const string UiRoot = $"/Modules/{OqtConstants.PackageName}";

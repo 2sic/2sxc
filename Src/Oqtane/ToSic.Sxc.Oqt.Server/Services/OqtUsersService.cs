@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             );
         }
 
-        public override string PlatformIdentityTokenPrefix() => $"{OqtConstants.UserTokenPrefix}:";
+        public override string PlatformIdentityTokenPrefix => OqtConstants.UserTokenPrefix;
 
         public override IUser PlatformUserInformationDto(int userId)
         {

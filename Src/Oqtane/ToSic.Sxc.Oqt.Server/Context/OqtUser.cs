@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public string Email => UnwrappedUser?.Email;
 
-        public string IdentityToken => $"{OqtConstants.UserTokenPrefix}:{Id}";
+        public string IdentityToken => $"{OqtConstants.UserTokenPrefix}{Id}";
 
         public Guid Guid { get; private set; }
 

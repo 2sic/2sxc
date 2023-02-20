@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Dnn.Services
         public DnnUsersService(LazySvc<IContextOfSite> context) : base(context)
         { }
 
-        public override string PlatformIdentityTokenPrefix() => DnnConstants.UserTokenPrefix;
+        public override string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
 
         public override IUser PlatformUserInformationDto(int userId)
         {

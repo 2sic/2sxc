@@ -46,7 +46,7 @@ namespace ToSic.Sxc.DataSources
                         {
                             Id = u.UserId,
                             Guid = new((_identityUserManager.FindByNameAsync(u.Username).Result).Id),
-                            NameId = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
+                            NameId = $"{OqtConstants.UserTokenPrefix}{u.UserId}",
                             Roles = myRoles.Select(ur => ur.RoleId).ToList(),
                             IsSystemAdmin = myRoles.Any(ur => ur.Role.Name == RoleNames.Host),
                             IsSiteAdmin = isSiteAdmin,

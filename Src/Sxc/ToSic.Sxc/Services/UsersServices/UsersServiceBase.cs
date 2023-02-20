@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Services
 
         private readonly LazySvc<IContextOfSite> _context;
 
-        public abstract string PlatformIdentityTokenPrefix();
+        public abstract string PlatformIdentityTokenPrefix { get; }
 
         public abstract IUser PlatformUserInformationDto(int userId);
 
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Services
             if (identityToken.EqualsInsensitive(Constants.Anonymous))
                 return (CmsUserRaw.AnonymousUser.Id, "ok (anonymous)");
 
-            var prefix = PlatformIdentityTokenPrefix();
+            var prefix = PlatformIdentityTokenPrefix;
             if (identityToken.StartsWith(prefix, InvariantCultureIgnoreCase))
                 identityToken = identityToken.Substring(prefix.Length);
 
