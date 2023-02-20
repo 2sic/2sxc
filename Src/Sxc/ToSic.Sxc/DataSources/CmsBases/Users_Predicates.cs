@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.DataSources
@@ -62,9 +63,11 @@ namespace ToSic.Sxc.DataSources
 
         private Func<UserDataRaw, bool> FilterExcludeUserGuids()
         {
-            var excludeUserGuidsFilter = ExcludeUserIds.Split(Separator)
+            var excludeUserGuidsFilter = ExcludeUserIds
+                .Split(Separator)
                 .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
-                .Where(u => u != Guid.Empty).ToList();
+                .Where(u => u != Guid.Empty)
+                .ToList();
             return excludeUserGuidsFilter.Any()
                 ? (Func<UserDataRaw, bool>)(u => u.Guid != Guid.Empty && !excludeUserGuidsFilter.Contains(u.Guid))
                 : null;
@@ -72,9 +75,11 @@ namespace ToSic.Sxc.DataSources
 
         private Func<UserDataRaw, bool> FilterExcludeUserIds()
         {
-            var excludeUserIdsFilter = ExcludeUserIds.Split(Separator)
+            var excludeUserIdsFilter = ExcludeUserIds
+                .Split(Separator)
                 .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
-                .Where(u => u != -1).ToList();
+                .Where(u => u != -1)
+                .ToList();
             return excludeUserIdsFilter.Any()
                 ? (Func<UserDataRaw, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
                 : null;
@@ -96,9 +101,18 @@ namespace ToSic.Sxc.DataSources
                 : null;
         }
 
-        private Func<UserDataRaw, bool> SuperUserPredicate() =>
-            IncludeSystemAdmins
-                ? (u => true) // skip IsSystemAdmin check will return normal and super users
-                : (Func<UserDataRaw, bool>)(u => !u.IsSystemAdmin); // only normal users
+        private Func<UserDataRaw, bool> SuperUserPredicate() => Log.Func<Func<UserDataRaw, bool>>(() =>
+        {
+            // If "include" == "only" return only super users
+            if (IncludeSystemAdmins.EqualsInsensitive(IncludeRequired))
+                return (u => u.IsSystemAdmin, IncludeRequired);
+
+            // If "include" == true, return all
+            if (IncludeSystemAdmins.EqualsInsensitive(IncludeOptional))
+                return (null, $"{IncludeOptional} = any"); // skip IsSystemAdmin check will return normal and super users
+
+            // If "include" == false - or basically any unknown value, return only normal users
+            return (u => !u.IsSystemAdmin, IncludeForbidden);
+        });
     }
 }

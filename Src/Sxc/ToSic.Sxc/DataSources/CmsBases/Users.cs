@@ -91,36 +91,36 @@ namespace ToSic.Sxc.DataSources
         }
 
         /// <summary>
-        /// Optional SuperUserFilter (boolean) filter,
-        /// true - only SuperUsers
-        /// false - without SuperUsers
+        /// Optional SystemAdmins filter.
+        /// 
+        /// * `true` - with System Admins
+        /// * `false` - without System Admins
+        /// * `required` - only System Admins (no normal users)
         /// </summary>
-        [Configuration(Fallback = false)]
-        public bool IncludeSystemAdmins
+        /// <remarks>
+        /// * Changed to be string in v15.03 (before bool) to allow more options such as `required`
+        /// </remarks>
+        [Configuration]
+        public string IncludeSystemAdmins
         {
-            get => Configuration.GetThis(false);
+            get => Configuration.GetThis();
             set => Configuration.SetThis(value);
         }
+
+        private static readonly string IncludeRequired = "required";
+        private static readonly string IncludeOptional = true.ToString();
+        private static readonly string IncludeForbidden = false.ToString();
 
         /// <summary>
         /// Add property `Roles` as a relationship to role entities.
         /// </summary>
-        [Configuration(Fallback = true)] // TEMP/ WIP
-        [PrivateApi]
+        /// <remarks>
+        /// * Added v15.03 - minimal breaking change, before the source return a non-standard `RoleIds` string-array.
+        /// </remarks>
+        [Configuration(Fallback = true)]
         public bool AddRoles
         {
             get => Configuration.GetThis(true);
-            set => Configuration.SetThis(value);
-        }
-
-        /// <summary>
-        /// Add property `RoleIds` as a comma separated list of IDs.
-        /// </summary>
-        [Configuration(Fallback = false)]
-        [PrivateApi]
-        public bool AddRoleIds
-        {
-            get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
 
@@ -145,14 +145,18 @@ namespace ToSic.Sxc.DataSources
                 _dsFactory = dsFactory,
                 _treeMapper = treeMapper
             );
-            Provide(GetList); // default out, if accessed, will deliver GetList
+            Provide(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
+            Provide("Roles", () => GetUsersAndRoles().UserRoles);
         }
 
         #endregion
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetList() => Log.Func(l =>
+        private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) GetUsersAndRoles() => Log.Func(l =>
         {
+            if (_usersAndRolesCache != default) 
+                return (_usersAndRolesCache, "from cache");
+
             // Always parse configuration first
             Configuration.Parse();
 
@@ -161,10 +165,12 @@ namespace ToSic.Sxc.DataSources
 
             // Figure out options to be sure we have the roles/roleids
             var keysToAdd = new List<string>();
-            if (AddRoleIds) keysToAdd.Add(nameof(UserDataRaw.RoleIds));
+            // WIP add role IDs - probably shouldn't be part of this, but part of the SerializationOptions
+            //if (AddRoleIds) keysToAdd.Add(nameof(UserDataRaw.RoleIds));
             _usersBuilder.Configure(typeName: UserDataRaw.TypeName, titleField: UserDataRaw.TitleFieldName, createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
 
             var users = _usersBuilder.CreateMany(usersRaw);
+            var roles = new List<IEntity>().ToImmutableList();
 
             // If we should include the roles, create them now and attach
             if (AddRoles)
@@ -176,7 +182,8 @@ namespace ToSic.Sxc.DataSources
                         .Select(u =>
                             (u, usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.RoleIds ?? new List<int>()))
                         .ToList();
-                    var rolesLookup = GetRolesForLookup(usersRaw);
+                    roles = GetRolesStream(usersRaw);
+                    var rolesLookup = roles.Select(r => (r, r.EntityId)).ToList();
 
                     var mapped = _treeMapper.AddSomeRelationshipsWIP("Roles", userNeeds, rolesLookup);
                     users = mapped.ToImmutableList();
@@ -187,9 +194,11 @@ namespace ToSic.Sxc.DataSources
                     /* ignore for now */
                 }
             }
-
-            return (users, $"found {users.Count}");
+            _usersAndRolesCache = (users, roles);
+            return (_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
         });
+
+        private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
 
 
         private List<UserDataRaw> GetUsersAndFilter() => Log.Func(l =>
@@ -204,7 +213,12 @@ namespace ToSic.Sxc.DataSources
         });
 
 
-        private List<(IEntity r, int EntityId)> GetRolesForLookup(List<UserDataRaw> usersRaw)
+        /// <summary>
+        /// Retrieve roles and create lookup for relationship-mapper
+        /// </summary>
+        /// <param name="usersRaw"></param>
+        /// <returns></returns>
+        private ImmutableList<IEntity> GetRolesStream(List<UserDataRaw> usersRaw)
         {
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.RoleIds).Distinct().ToList();
@@ -212,12 +226,8 @@ namespace ToSic.Sxc.DataSources
             var rolesDs = _dsFactory.Value.GetDataSource<Roles>(this);
             // Set filter parameter to only get roles we'll need
             rolesDs.RoleIds = string.Join(",", roleIds);
-            // Retrieve roles and create lookup for relationship-mapper
-            var rolesLookup = rolesDs.List.Select(r => (r, r.EntityId)).ToList();
-            return rolesLookup;
+            var roles = rolesDs.List;
+            return roles.ToImmutableList();
         }
-
-
-
     }
 }

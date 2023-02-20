@@ -150,6 +150,7 @@ namespace ToSic.Sxc.Tests.DataSources
 
         [DataTestMethod]
         [DataRow("1,2,3,4,5,6,7,8,9,10", "00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", "2", "9", true, 6)]
+        // TODO: this test doesn't seem to do much different than the first?
         [DataRow("1,2,3,4,5,6,7,8,9,10", "00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000003", "1,2", "9", false, 6)]
         public void UsersWithAllFilters(string includeUsersFilter, string excludeUsersFilter, string includeRolesFilter, string excludeRolesFilter, bool superUserFilter, int expected)
         {
@@ -158,7 +159,7 @@ namespace ToSic.Sxc.Tests.DataSources
             usersDataSource.ExcludeUserIds = excludeUsersFilter;
             usersDataSource.RoleIds = includeRolesFilter;
             usersDataSource.ExcludeRoleIds = excludeRolesFilter;
-            usersDataSource.IncludeSystemAdmins = superUserFilter;
+            usersDataSource.IncludeSystemAdmins = superUserFilter.ToString();
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
