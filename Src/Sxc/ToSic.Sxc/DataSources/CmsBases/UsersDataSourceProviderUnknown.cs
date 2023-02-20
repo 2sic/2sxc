@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Run.Unknown;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Context.Raw;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -10,7 +11,7 @@ namespace ToSic.Sxc.DataSources
         {
         }
         
-        public override IEnumerable<UserDataRaw> GetUsersInternal(
-        ) => new List<UserDataRaw>();
+        public override IEnumerable<CmsUserRaw> GetUsersInternal(
+        ) => new List<CmsUserRaw>();
     }
 }

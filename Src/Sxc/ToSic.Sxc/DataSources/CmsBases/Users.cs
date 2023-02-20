@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSources;
@@ -9,9 +10,10 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Context.Raw;
 
 // Important Info to people working with this
-// It depends on abstract provder, that must be overriden in each platform
+// It depends on abstract provider, that must be overriden in each platform
 // In addition, each platform must make sure to register a TryAddTransient with the platform specific provider implementation
 // This is because any constructor DI should be able to target this type, and get the real provider implementation
 
@@ -19,6 +21,7 @@ namespace ToSic.Sxc.DataSources
 {
     /// <summary>
     /// Will get all (or just some) users of the current site.
+    /// The resulting Entity will match the <see cref="IUser"/> interface.
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -166,7 +169,7 @@ namespace ToSic.Sxc.DataSources
             var keysToAdd = new List<string>();
             // WIP add role IDs - probably shouldn't be part of this, but part of the SerializationOptions
             //if (AddRoleIds) keysToAdd.Add(nameof(UserDataRaw.RoleIds));
-            _usersBuilder.Configure(typeName: UserDataRaw.TypeName, titleField: UserDataRaw.TitleFieldName, createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
+            _usersBuilder.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName, createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
 
             var users = _usersBuilder.CreateMany(usersRaw);
             var roles = new List<IEntity>().ToImmutableList();
@@ -179,7 +182,7 @@ namespace ToSic.Sxc.DataSources
                     // Mix generated users with the RoleIds which only exist on the raw list
                     var userNeeds = users.ToList()
                         .Select(u =>
-                            (u, usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.RoleIds ?? new List<int>()))
+                            (u, usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
                         .ToList();
                     roles = GetRolesStream(usersRaw);
                     var rolesLookup = roles.Select(r => (r, r.EntityId)).ToList();
@@ -200,10 +203,10 @@ namespace ToSic.Sxc.DataSources
         private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
 
 
-        private List<UserDataRaw> GetUsersAndFilter() => Log.Func(l =>
+        private List<CmsUserRaw> GetUsersAndFilter() => Log.Func(l =>
         {
             var users = _provider.GetUsersInternal()?.ToList();
-            if (users == null || !users.Any()) return (new List<UserDataRaw>(), "null/empty");
+            if (users == null || !users.Any()) return (new List<CmsUserRaw>(), "null/empty");
 
             foreach (var filter in GetAllFilters())
                 users = users.Where(filter).ToList();
@@ -217,10 +220,10 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         /// <param name="usersRaw"></param>
         /// <returns></returns>
-        private ImmutableList<IEntity> GetRolesStream(List<UserDataRaw> usersRaw)
+        private ImmutableList<IEntity> GetRolesStream(List<CmsUserRaw> usersRaw)
         {
             // Get list of all role IDs which are to be used
-            var roleIds = usersRaw.SelectMany(u => u.RoleIds).Distinct().ToList();
+            var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();
             // Get roles, use the current data source to provide aspects such as lookups etc.
             var rolesDs = _dsFactory.Value.GetDataSource<Roles>(this);
             // Set filter parameter to only get roles we'll need

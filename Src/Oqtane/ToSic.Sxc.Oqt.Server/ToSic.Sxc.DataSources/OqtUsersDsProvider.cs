@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Context.Raw;
 using ToSic.Sxc.Oqt.Shared;
 
 // ReSharper disable once CheckNamespace
@@ -25,49 +26,46 @@ namespace ToSic.Sxc.DataSources
             );
         }
 
-        public override IEnumerable<UserDataRaw> GetUsersInternal()
-            => Log.Func(l =>
+        public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
+        {
+            var siteId = _siteState.Alias.SiteId;
+            l.A($"Portal Id {siteId}");
+            try
             {
-                var siteId = _siteState.Alias.SiteId;
-                l.A($"Portal Id {siteId}");
-                try
-                {
-                    var userRoles = _userRoles.GetUserRoles(siteId).ToList();
-                    var users = userRoles.Select(ur => ur.User).Distinct().ToList();
-                    if (!users.Any()) return (new(), "null/empty");
+                var userRoles = _userRoles.GetUserRoles(siteId).ToList();
+                var users = userRoles.Select(ur => ur.User).Distinct().ToList();
+                if (!users.Any()) return (new(), "null/empty");
 
-                    var result = users
-                        .Where(u => !u.IsDeleted)
-                        .Select(u =>
+                var result = users
+                    .Where(u => !u.IsDeleted)
+                    .Select(u =>
+                    {
+                        var myRoles = userRoles.Where(ur => ur.UserId == u.UserId).ToList();
+                        var isSiteAdmin = myRoles.Any(ur => ur.Role.Name == RoleNames.Admin);
+                        return new CmsUserRaw
                         {
-                            var isSiteAdmin = userRoles.Any(ur =>
-                                ur.UserId == u.UserId && ur.Role.Name == RoleNames.Admin);
-                            return new UserDataRaw
-                            {
-                                Id = u.UserId,
-                                Guid = new((_identityUserManager.FindByNameAsync(u.Username).Result).Id),
-                                NameId = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
-                                RoleIds = userRoles.Where(ur => ur.UserId == u.UserId).Select(ur => ur.RoleId).ToList(),
-                                IsSystemAdmin =
-                                    userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
-                                IsSiteAdmin = isSiteAdmin,
-                                IsContentAdmin = isSiteAdmin,
-                                //IsDesigner = userRoles.Any(ur => ur.UserId == u.UserId && ur.Role.Name == RoleNames.Host),
-                                IsAnonymous = u.UserId == -1,
-                                Created = u.CreatedOn,
-                                Modified = u.ModifiedOn,
-                                Username = u.Username,
-                                Email = u.Email,
-                                Name = u.DisplayName,
-                            };
-                        }).ToList();
-                    return (result, "found");
-                }
-                catch (Exception ex)
-                {
-                    l.Ex(ex);
-                    return (new(), "error");
-                }
-            });
+                            Id = u.UserId,
+                            Guid = new((_identityUserManager.FindByNameAsync(u.Username).Result).Id),
+                            NameId = $"{OqtConstants.UserTokenPrefix}:{u.UserId}",
+                            Roles = myRoles.Select(ur => ur.RoleId).ToList(),
+                            IsSystemAdmin = myRoles.Any(ur => ur.Role.Name == RoleNames.Host),
+                            IsSiteAdmin = isSiteAdmin,
+                            IsContentAdmin = isSiteAdmin,
+                            IsAnonymous = u.UserId == -1,
+                            Created = u.CreatedOn,
+                            Modified = u.ModifiedOn,
+                            Username = u.Username,
+                            Email = u.Email,
+                            Name = u.DisplayName,
+                        };
+                    }).ToList();
+                return (result, "found");
+            }
+            catch (Exception ex)
+            {
+                l.Ex(ex);
+                return (new(), "error");
+            }
+        });
     }
 }

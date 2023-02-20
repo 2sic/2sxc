@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.DataSources;
 
-namespace ToSic.Sxc.DataSources
+namespace ToSic.Sxc.Context.Raw
 {
     /// <summary>
     /// Internal class to hold all the information about the user,
@@ -19,12 +21,26 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     /// <remarks>
     /// Make sure the property names never change, as they are critical for the created Entity.
+    /// They must also match the ICmsUser interface
     /// </remarks>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class UserDataRaw: RawEntityBase, IRawEntity, IHasIdentityNameId // : IUser - not inheriting for the moment, to not include deprecated properties IsAdmin, IsSuperUser, IsDesigner...
+    [PrivateApi("this is only internal - public access is always through interface")]
+    public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
     {
+        #region Types and Names for Raw Entities
+
         internal static string TypeName = "User";
         internal static string TitleFieldName = nameof(Name);
+
+        #endregion
+
+        #region Constant user objects for Unknown/Anonymous
+
+        public static readonly CmsUserRaw AnonymousUser = new CmsUserRaw { Id = -1, Name = Constants.Anonymous };
+
+        public static readonly CmsUserRaw UnknownUser = new CmsUserRaw { Id = -2, Name = Eav.Constants.NullNameId };
+
+
+        #endregion
 
         public string NameId { get; set; }
         /// <summary>
@@ -32,12 +48,20 @@ namespace ToSic.Sxc.DataSources
         /// Important: Internally we use a list to do checks etc.
         /// But for creating the entity we return a CSV
         /// </summary>
-        public List<int> RoleIds { get; set; }
+        [PrivateApi]
+        public List<int> Roles { get; set; }
         public bool IsSystemAdmin { get; set; }
         public bool IsSiteAdmin { get; set; }
         public bool IsContentAdmin { get; set; }
-        //public bool IsDesigner { get; set; }
+        public bool IsSiteDeveloper => IsSystemAdmin;
+
+
         public bool IsAnonymous { get; set; }
+
+        /// <summary>
+        /// Ignore, just included for IUser compatibility
+        /// </summary>
+        string IUser.IdentityToken => null;
 
         public string Username { get; set; }
         public string Email { get; set; } // aka PreferredEmail
@@ -60,8 +84,8 @@ namespace ToSic.Sxc.DataSources
                 { nameof(Username), Username },
                 { nameof(Email), Email },
             };
-            if(options.AddKey(nameof(RoleIds)))
-                data.Add(nameof(RoleIds), RoleIds == null ? "" : string.Join(",", RoleIds));
+            if(options.AddKey(nameof(Roles)))
+                data.Add(nameof(Roles), Roles == null ? "" : string.Join(",", Roles));
             return data;
         }
     }

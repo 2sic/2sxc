@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Context.Raw;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -19,6 +20,6 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         /// <returns></returns>
         [PrivateApi]
-        public abstract IEnumerable<UserDataRaw> GetUsersInternal();
+        public abstract IEnumerable<CmsUserRaw> GetUsersInternal();
     }
 }

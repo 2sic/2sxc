@@ -19,11 +19,11 @@ namespace ToSic.Sxc.Dnn.Context
         private string GetUserIdentityToken ()
         {
             var userId = Id;
-            var token = userId == -1 ? Constants.Anonymous : DnnConstants.UserTokenPrefix + userId;
+            var token = userId == -1 ? Constants.Anonymous : $"{DnnConstants.UserTokenPrefix}{userId}";
             return token;
         }
 
-        public Guid? Guid => Membership.GetUser()?.ProviderUserKey as Guid?;
+        public Guid Guid => Membership.GetUser()?.ProviderUserKey is Guid realGuid ? realGuid : default;
 
         public string IdentityToken => GetUserIdentityToken();
 
@@ -32,21 +32,14 @@ namespace ToSic.Sxc.Dnn.Context
 
         public bool IsSystemAdmin => UnwrappedContents?.IsSuperUser ?? false;
 
-        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-        public bool IsSuperUser => IsSystemAdmin;
-
         public bool IsSiteAdmin => _getAdminPermissions().IsSiteAdmin;
         public bool IsContentAdmin => _getAdminPermissions().IsContentAdmin;
+        public bool IsSiteDeveloper => IsSystemAdmin;
 
         private DnnSiteAdminPermissions _getAdminPermissions() =>
             _adminPermissions ?? (_adminPermissions = UnwrappedContents?.UserMayAdminThis() ?? new DnnSiteAdminPermissions(false));
         private DnnSiteAdminPermissions _adminPermissions;
 
-
-        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-        public bool IsAdmin => IsSiteAdmin;
-
-        public bool IsDesigner => IsSystemAdmin;
 
         public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
         private UserInfo _user;
@@ -78,5 +71,15 @@ namespace ToSic.Sxc.Dnn.Context
         public string Name => UnwrappedContents?.DisplayName;
 
         public string Email => UnwrappedContents?.Email;
+
+        #region Removed in v15.03 2023-02-20 - already deprecated in v14.09 and probably never used outside of core code
+
+        //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        //public bool IsSuperUser => IsSystemAdmin;
+
+        //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        //public bool IsAdmin => IsSiteAdmin;
+
+        #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         {
             services.TryAddTransient<ILogService, OqtLogService>();
             services.TryAddTransient<IMailService, OqtMailService>();
-            services.TryAddTransient<IUserInformationService, OqtUserInformationService>();
+            services.TryAddTransient<IUsersService, OqtUsersService>();
             return services;
         }
     }

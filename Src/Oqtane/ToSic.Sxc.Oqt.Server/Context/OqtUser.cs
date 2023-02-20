@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         public string IdentityToken => $"{OqtConstants.UserTokenPrefix}:{Id}";
 
-        public Guid? Guid { get; private set; }
+        public Guid Guid { get; private set; }
 
         public List<int> Roles => _roles ??= _userRoleRepository.Value.GetUserRoles(Id, UnwrappedUser.SiteId).Select(r => r.RoleId).ToList();
         private List<int> _roles;
@@ -77,17 +77,12 @@ namespace ToSic.Sxc.Oqt.Server.Context
         public bool IsSystemAdmin => _isSystemAdmin ??= UserSecurity.IsAuthorized(UnwrappedUser, RoleNames.Host);
         private bool? _isSystemAdmin;
 
-        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-        public bool IsSuperUser => IsSystemAdmin;
-
-        [Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
-        public bool IsAdmin => IsSiteAdmin;
         public bool IsSiteAdmin => _isSiteAdmin ??= UserSecurity.IsAuthorized(UnwrappedUser, RoleNames.Admin);
         private bool? _isSiteAdmin;
 
         public bool IsContentAdmin => IsSiteAdmin;
 
-        public bool IsDesigner => IsSystemAdmin;
+        public bool IsSiteDeveloper => IsSystemAdmin;
 
         #region New Permission properties for v12
 
@@ -146,12 +141,24 @@ namespace ToSic.Sxc.Oqt.Server.Context
             return roles;
         }
 
-        public Guid? UserGuidFromIdentity()
+        public Guid UserGuidFromIdentity()
         {
             var username = _httpContextAccessor.HttpContext!.User.Identity!.Name;
-            if (string.IsNullOrEmpty(username)) return null;
-            return new Guid((_identityUserManager.Value.FindByNameAsync(username).Result).Id);
+            return string.IsNullOrEmpty(username)
+                ? default
+                : new((_identityUserManager.Value.FindByNameAsync(username).Result).Id);
         }
+
+        #endregion
+
+        #region Deprecated in v15
+
+        //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        //public bool IsSuperUser => IsSystemAdmin;
+
+        //[Obsolete("deprecated in v14.09 2022-10, will be removed ca. v16 #remove16")]
+        //public bool IsAdmin => IsSiteAdmin;
+
 
         #endregion
     }

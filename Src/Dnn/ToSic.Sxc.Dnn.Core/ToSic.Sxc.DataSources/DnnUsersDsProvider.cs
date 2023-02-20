@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Context.Raw;
 using ToSic.Sxc.Dnn.Run;
 
 // ReSharper disable once CheckNamespace
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.DataSources
         public DnnUsersDsProvider() : base("Dnn.Users")
         { }
 
-        public override IEnumerable<UserDataRaw> GetUsersInternal() => Log.Func(l =>
+        public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
             {
                 var siteId = PortalSettings.Current?.PortalId ?? -1;
                 l.A($"Portal Id {siteId}");
@@ -30,19 +31,19 @@ namespace ToSic.Sxc.DataSources
                         superUsersOnly: true));
 
                     var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
-                    if (!dnnUsers.Any()) return (new List<UserDataRaw>(), "null/empty");
+                    if (!dnnUsers.Any()) return (new List<CmsUserRaw>(), "null/empty");
 
                     var result = dnnUsers
                         //.Where(d => !d.IsDeleted)
                         .Select(d =>
                         {
                             var adminInfo = d.UserMayAdminThis();
-                            return new UserDataRaw
+                            return new CmsUserRaw
                             {
                                 Id = d.UserID,
                                 Guid = d.UserGuid(),
                                 NameId = d.UserIdentityToken(),
-                                RoleIds = d.RoleList(portalId: siteId),
+                                Roles = d.RoleList(portalId: siteId),
                                 IsSystemAdmin = d.IsSuperUser,
                                 IsSiteAdmin = adminInfo.IsSiteAdmin,
                                 IsContentAdmin = adminInfo.IsContentAdmin,
@@ -61,7 +62,7 @@ namespace ToSic.Sxc.DataSources
                 catch (Exception ex)
                 {
                     l.Ex(ex);
-                    return (new List<UserDataRaw>(), "error");
+                    return (new List<CmsUserRaw>(), "error");
                 }
             });
     }
