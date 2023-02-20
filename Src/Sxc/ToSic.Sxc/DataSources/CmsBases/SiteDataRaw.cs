@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
@@ -25,6 +24,9 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class SiteDataRaw: IRawEntity
     {
+        internal static string TypeName = "Site";
+        internal static string TitleFieldName = nameof(Name);
+
         /// <summary>
         /// The site ID.
         ///
@@ -116,7 +118,6 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
         {
-            { Attributes.TitleNiceName, Name },
             { nameof(Name), Name },
             { nameof(Url), Url },
             { nameof(Languages), Languages },

@@ -8,6 +8,7 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using static ToSic.Sxc.DataSources.RoleDataRaw;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -78,7 +79,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: "Role", titleField: nameof(RoleDataRaw.Name), idAutoIncrementZero: false)
+                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: TypeName, titleField: TitleFieldName, idAutoIncrementZero: false)
             );
             Provide(GetList);
         }

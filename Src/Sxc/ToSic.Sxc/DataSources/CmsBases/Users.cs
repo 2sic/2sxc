@@ -162,7 +162,7 @@ namespace ToSic.Sxc.DataSources
             // Figure out options to be sure we have the roles/roleids
             var keysToAdd = new List<string>();
             if (AddRoleIds) keysToAdd.Add(nameof(UserDataRaw.RoleIds));
-            _usersBuilder.Configure(typeName: "User", titleField: nameof(UserDataRaw.Name), createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
+            _usersBuilder.Configure(typeName: UserDataRaw.TypeName, titleField: UserDataRaw.TitleFieldName, createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
 
             var users = _usersBuilder.CreateMany(usersRaw);
 

@@ -30,6 +30,7 @@ namespace ToSic.Sxc.Web.PageService
             return ("", "ok");
         });
 
+        /// <inheritdoc />
         public string Activate(
             string noParamOrder = Eav.Parameters.Protector,
             bool condition = true,
@@ -39,8 +40,10 @@ namespace ToSic.Sxc.Web.PageService
             if (!condition)
                 return ("", "condition false");
             
-            // Must check the parameter protector, because we're not sure if the user may be calling this overload with a feature name
-            
+            // Todo: unclear what to do with the parameter protector
+            // Maybe must check the parameter protector, because we're not sure if the user may be calling this overload with a feature name
+            // Reason is we're not 100% sure it takes the simple overload vs. this one if 
+            // only one string is given, but ATM that's the case.
 
             return (Activate(features), "condition true, added");
         });

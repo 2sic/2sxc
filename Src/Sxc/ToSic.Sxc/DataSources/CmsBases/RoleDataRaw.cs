@@ -25,14 +25,17 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
     {
+        internal static string TypeName = "Role";
+        internal static string TitleFieldName = nameof(Name);
+
         public string Name { get; set; }
+
         /// <summary>
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
         public override Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
         {
-            { Attributes.TitleNiceName, Name },
             { nameof(Name), Name },
         };
     }

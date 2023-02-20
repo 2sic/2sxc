@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
-using Attributes = ToSic.Eav.Data.Attributes;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -25,6 +23,9 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class UserDataRaw: RawEntityBase, IRawEntity, IHasIdentityNameId // : IUser - not inheriting for the moment, to not include deprecated properties IsAdmin, IsSuperUser, IsDesigner...
     {
+        internal static string TypeName = "User";
+        internal static string TitleFieldName = nameof(Name);
+
         public string NameId { get; set; }
         /// <summary>
         /// Role ID List.
@@ -37,8 +38,7 @@ namespace ToSic.Sxc.DataSources
         public bool IsContentAdmin { get; set; }
         //public bool IsDesigner { get; set; }
         public bool IsAnonymous { get; set; }
-        public DateTime Created { get; set; }
-        public DateTime Modified { get; set; }
+
         public string Username { get; set; }
         public string Email { get; set; } // aka PreferredEmail
         public string Name { get; set; } // aka DisplayName
@@ -51,7 +51,6 @@ namespace ToSic.Sxc.DataSources
         {
             var data = new Dictionary<string, object>
             {
-                { Attributes.TitleNiceName, Name },
                 { nameof(Name), Name },
                 { nameof(NameId), NameId },
                 { nameof(IsSystemAdmin), IsSystemAdmin },
