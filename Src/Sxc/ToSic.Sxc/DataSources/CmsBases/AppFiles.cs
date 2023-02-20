@@ -30,7 +30,7 @@ namespace ToSic.Sxc.DataSources
         Icon = Icons.Tree,
         NiceName = "AppFiles",
         Type = DataSourceType.Source,
-        Difficulty = DifficultyBeta.Advanced,
+        Audience = Audience.Advanced,
         UiHint = "Files and folders in the App folder")]
     public class AppFiles: ExternalData
     {
