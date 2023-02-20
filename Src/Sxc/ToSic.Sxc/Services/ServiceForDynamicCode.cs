@@ -8,8 +8,7 @@ namespace ToSic.Sxc.Services
     /// <summary>
     /// Internal special base class for services which link to the dynamic code root
     /// </summary>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    // TODO: MAYBE SET PRIVATE in docs, if the remaining docs still work as expected
+    [PrivateApi]
     public abstract class ServiceForDynamicCode: ServiceBase, INeedsDynamicCodeRoot, IHasDynamicCodeRoot
     {
         [PrivateApi]
