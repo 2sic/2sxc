@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Code
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
                 .ToList();
-            return new DynamicStack("unknown", DynamicEntityServices, sources);
+            return new DynamicStack(Eav.Constants.NullNameId, DynamicEntityServices, sources);
         }
 
 

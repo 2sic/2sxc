@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Apps
             }
         }
 
-        public string Name => Get(AppConstants.FieldName, "unknown");
+        public string Name => Get(AppConstants.FieldName, Eav.Constants.NullNameId);
 
         public string Description => Get(FieldDescription, "");
 

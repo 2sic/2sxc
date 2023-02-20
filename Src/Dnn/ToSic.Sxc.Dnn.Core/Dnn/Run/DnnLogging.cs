@@ -62,10 +62,10 @@ namespace ToSic.Sxc.Dnn.Run
             {
                 if (dnn != null)
                 {
-                    logInfo.LogUserName = dnn.User?.DisplayName ?? "unknown";
+                    logInfo.LogUserName = dnn.User?.DisplayName ?? Eav.Constants.NullNameId;
                     logInfo.LogUserID = dnn.User?.UserID ?? -1;
                     logInfo.LogPortalID = dnn.Portal.PortalId;
-                    logInfo.AddProperty("Module Id", dnn.Module?.ModuleID.ToString() ?? "unknown");
+                    logInfo.AddProperty("Module Id", dnn.Module?.ModuleID.ToString() ?? Eav.Constants.NullNameId);
                 }
             }
             catch { /* ignore */ }
