@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
             );
         }
 
-        public OqtModule Init(Module module)
+        public new OqtModule Init(Module module)
         {
             base.Init(module);
             var wrapLog = Log.Fn<OqtModule>($"id:{module.ModuleId}", timer: true);

@@ -2,29 +2,26 @@
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 // Important Info to people working with this
-// It's an abstract class, and must be overriden in each platform
-// In addition, each platform must make sure to register a TryAddTransient with the platform specific implementation
-// This is because any constructor DI should be able to target this type, and get the real implementation
+// It depends on abstract provider, that must be overriden in each platform
+// In addition, each platform must make sure to register a TryAddTransient with the platform specific provider implementation
+// This is because any constructor DI should be able to target this type, and get the real provider implementation
 
 namespace ToSic.Sxc.DataSources
 {
     /// <summary>
     /// Deliver a list of pages from the current platform (Dnn or Oqtane).
     ///
-    /// As of now there are no parameters to set.
-    ///
-    /// To figure out the properties returned and what they match up to, see <see cref="CmsPageInfo"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        ExpectsDataOfType = "",
+        ExpectsDataOfType = "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5",
         GlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800",
         HelpLink = "https://r.2sxc.org/ds-pages",
         Icon = Icons.PageFind,
@@ -33,66 +30,95 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Pages in this site")]
     public class Pages: ExternalData
     {
-        private readonly MultiBuilder _multiBuilder;
+        private readonly ITreeMapper _treeMapper;
+        private readonly IDataBuilder _pageBuilder;
         private readonly PagesDataSourceProvider _provider;
 
         #region Configuration properties
 
+        /// <summary>
+        /// Include hidden pages.
+        /// Default is `false`
+        /// </summary>
+        [Configuration]
         public bool IncludeHidden
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include deleted pages in the recycle bin.
+        /// Default is `false`
+        /// </summary>
+        [Configuration]
         public bool IncludeDeleted
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include admin pages such as site files.
+        /// Default is `false`
+        /// </summary>
+        [Configuration]
         public bool IncludeAdmin
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include system pages such as modules management.
+        /// Default is `false`
+        /// </summary>
+        [Configuration]
         public bool IncludeSystem
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Include link-reference pages (which are usually used in menus, and not themselves a real page).
+        /// Default is `true`
+        /// </summary>
+        [Configuration]
         public bool IncludeLinks
         {
             get => Configuration.GetThis(true);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Require that the current user has view permissions on all pages.
+        /// Default is `true`
+        /// </summary>
+        [Configuration]
         public bool RequireViewPermissions
         {
             get => Configuration.GetThis(true);
             set => Configuration.SetThis(value);
         }
+        /// <summary>
+        /// Require that the current user has edit permissions on all pages.
+        /// Default is `false`
+        /// </summary>
+        [Configuration]
         public bool RequireEditPermissions
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
-
         #endregion
 
         #region Constructor
 
         [PrivateApi]
-        public Pages(Dependencies dependencies, PagesDataSourceProvider provider, MultiBuilder multiBuilder) : base(dependencies, "CDS.Pages")
+        public Pages(MyServices services, PagesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(services, "CDS.Pages")
         {
             ConnectServices(
                 _provider = provider,
-                _multiBuilder = multiBuilder
+                _pageBuilder = dataBuilder.Configure(typeName: PageDataRaw.TypeName, titleField: nameof(PageDataRaw.Name)),
+                _treeMapper = treeMapper
             );
             Provide(GetPages);
-            ConfigMask(nameof(IncludeHidden));
-            ConfigMask(nameof(IncludeDeleted));
-            ConfigMask(nameof(IncludeAdmin));
-            ConfigMask(nameof(IncludeSystem));
-            ConfigMask(nameof(IncludeLinks));
-            ConfigMask(nameof(RequireViewPermissions));
-            ConfigMask(nameof(RequireEditPermissions));
         }
         #endregion
 
@@ -115,17 +141,12 @@ namespace ToSic.Sxc.DataSources
                 return (new ImmutableArray<IEntity>(), "null/empty");
 
             // Convert to Entity-Stream
-            var builder = new DataBuilderQuickWIP(DataBuilder, typeName: "Page", titleField: nameof(CmsPageInfo.Name));
-            var pages = pagesFromSystem
-                .Select(p => builder.Create(p))
-                .ToImmutableList();
+            var pages = _pageBuilder.CreateMany(pagesFromSystem);
 
             // Try to add Navigation properties
             try
             {
-                var treeMapper = new TreeMapper<int>(_multiBuilder, Log);
-                var asTree =
-                    treeMapper.GetEntitiesWithRelationships(pages, "EntityId", "ParentId", "Children", "Parent");
+                var asTree = _treeMapper.AddRelationships<int>(pages, "EntityId", "ParentId");
                 return (asTree, $"As Tree: {asTree.Count}");
             }
             catch (Exception ex)

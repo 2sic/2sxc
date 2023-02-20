@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Dnn
             var user = new DnnUser();
 
             // Edit Template Button
-            if (user.IsDesigner && appIsKnown && block.View != null)
+            if (user.IsSiteDeveloper && appIsKnown && block.View != null)
                 actions.Add(GetNextActionID(), LocalizeString("ActionEditTemplateFile.Text"), ModuleActionType.EditContent,
                     "templatehelp", "edit.gif",
                     JsAction("template-develop"),

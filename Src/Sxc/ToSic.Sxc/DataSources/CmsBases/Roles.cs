@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using static ToSic.Sxc.DataSources.RoleDataRaw;
 
 // Important Info to people working with this
-// It's an abstract class, and must be overriden in each platform
-// In addition, each platform must make sure to register a TryAddTransient with the platform specific implementation
-// This is because any constructor DI should be able to target this type, and get the real implementation
+// It depends on abstract provider, that must be overriden in each platform
+// In addition, each platform must make sure to register a TryAddTransient with the platform specific provider implementation
+// This is because any constructor DI should be able to target this type, and get the real provider implementation
 
 namespace ToSic.Sxc.DataSources
 {
@@ -22,28 +22,18 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        NiceName = VqNiceName,
-        Icon = VqIcon,
-        UiHint = VqUiHint,
-        HelpLink = VqHelpLink,
-        GlobalName = VqGlobalName,
-        Type = VqType,
-        ExpectsDataOfType = VqExpectsDataOfType,
-        Difficulty = DifficultyBeta.Default
+        NiceName = "Roles (User Roles)",
+        Icon = Icons.UserCircled,
+        UiHint = "Roles in this site",
+        HelpLink = "https://r.2sxc.org/ds-roles",
+        GlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",
+        Type = DataSourceType.Source,
+        ExpectsDataOfType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
     )]
-    public abstract class Roles : ExternalData
+    public class Roles : ExternalData
     {
-        #region Public Consts for inheriting implementations
-
-        [PrivateApi] public const string VqNiceName = "Roles (User Roles)";
-        [PrivateApi] public const string VqIcon = Icons.UserCircled;
-        [PrivateApi] public const string VqUiHint = "Roles in this site";
-        [PrivateApi] public const string VqGlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45"; // random & unique Guid
-        [PrivateApi] public const DataSourceType VqType = DataSourceType.Source;
-        [PrivateApi] public const string VqExpectsDataOfType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d";
-        [PrivateApi] public const string VqHelpLink = "https://r.2sxc.org/ds-roles";
-
-        #endregion
+        private readonly IDataBuilder _rolesDataBuilder;
+        private readonly RolesDataSourceProvider _provider;
 
         #region Other Constants
 
@@ -52,27 +42,27 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
         #region Configuration-properties
-        [PrivateApi] internal const string RoleIdsKey = "RoleIds";
-        [PrivateApi] internal const string ExcludeRoleIdsKey = "ExcludeRoleIds";
 
         /// <summary>
         /// Optional (single value or comma-separated integers) filter,
         /// include roles based on roleId
         /// </summary>
+        [Configuration]
         public virtual string RoleIds
         {
-            get => Configuration[RoleIdsKey];
-            set => Configuration[RoleIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         /// <summary>
         /// Optional (single value or comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
+        [Configuration]
         public virtual string ExcludeRoleIds
         {
-            get => Configuration[ExcludeRoleIdsKey];
-            set => Configuration[ExcludeRoleIdsKey] = value;
+            get => Configuration.GetThis();
+            set => Configuration.SetThis(value);
         }
 
         #endregion
@@ -84,61 +74,55 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        protected Roles(Dependencies dependencies): base(dependencies, $"SDS.Roles")
+        public Roles(MyServices services, RolesDataSourceProvider provider, IDataBuilder rolesDataBuilder) : base(services, $"SDS.Roles")
         {
-            Provide(GetList); // default out, if accessed, will deliver GetList
-
-            ConfigMask(RoleIdsKey);
-            ConfigMask(ExcludeRoleIdsKey);
+            ConnectServices(
+                _provider = provider,
+                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: TypeName, titleField: TitleFieldName, idAutoIncrementZero: false)
+            );
+            Provide(GetList);
         }
 
         #endregion
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetList()
+        public IImmutableList<IEntity> GetList() => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<IImmutableList<IEntity>>();
-            var roles = GetRolesInternal()?.ToList();
-            
-            if (roles == null || !roles.Any()) return wrapLog.Return(new ImmutableArray<IEntity>(), "null/empty");
+            var roles = _provider.GetRolesInternal()?.ToList();
+            l.A($"found {roles?.Count} roles");
+
+            if (roles?.Any() != true) 
+                return (new List<IEntity>().ToImmutableList(), "null/empty");
 
             // This will resolve the tokens before starting
             Configuration.Parse();
 
             var includeRolesPredicate = IncludeRolesPredicate();
+            l.A($"includeRoles: {includeRolesPredicate == null}");
             if (includeRolesPredicate != null) roles = roles.Where(includeRolesPredicate).ToList();
 
             var excludeRolesPredicate = ExcludeRolesPredicate();
+            l.A($"excludeRoles: {excludeRolesPredicate == null}");
             if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
-            var result = roles
-                .Select(r =>
-                    DataBuilder.Entity(new Dictionary<string, object>
-                        {
-                            {"Name", r.Name},
-                        },
-                        id: r.Id,
-                        created: r.Created,
-                        modified: r.Modified,
-                        titleField: "Name"))
-                .ToImmutableList();
+            var result = _rolesDataBuilder.CreateMany(roles);
 
-            return wrapLog.Return(result, "found");
-        }
+            return (result, $"found {result.Count} roles");
+        });
 
-        private Func<RoleDataSourceInfo, bool> IncludeRolesPredicate()
+        private Func<RoleDataRaw, bool> IncludeRolesPredicate()
         {
             var includeRolesFilter = RolesCsvListToInt(RoleIds);
             return includeRolesFilter.Any() 
-                ? (Func<RoleDataSourceInfo, bool>) (r => includeRolesFilter.Contains(r.Id)) 
+                ? (Func<RoleDataRaw, bool>) (r => includeRolesFilter.Contains(r.Id)) 
                 : null;
         }
 
-        private Func<RoleDataSourceInfo, bool> ExcludeRolesPredicate()
+        private Func<RoleDataRaw, bool> ExcludeRolesPredicate()
         {
             var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
             return excludeRolesFilter.Any()
-                ? (Func<RoleDataSourceInfo, bool>)(r => !excludeRolesFilter.Contains(r.Id))
+                ? (Func<RoleDataRaw, bool>)(r => !excludeRolesFilter.Contains(r.Id))
                 : null;
         }
 
@@ -147,30 +131,9 @@ namespace ToSic.Sxc.DataSources
         {
             if (!stringList.HasValue()) return new List<int>();
             return stringList.Split(Separator)
-                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : -1)
-                .Where(r => r != -1)
+                .Select(r => int.TryParse(r.Trim(), out var roleId) ? roleId : int.MinValue)
+                .Where(r => r != int.MinValue)
                 .ToList();
         }
-
-
-        #region Inner Class Just For Processing
-
-        /// <summary>
-        /// The inner list retrieving the pages and doing security checks etc. 
-        /// </summary>
-        /// <returns></returns>
-        [PrivateApi]
-        protected abstract IEnumerable<RoleDataSourceInfo> GetRolesInternal();
-
-        [PrivateApi]
-        protected class RoleDataSourceInfo : IRole
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public DateTime Created { get; set; }
-            public DateTime Modified { get; set; }
-        }
-
-        #endregion
     }
 }

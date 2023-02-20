@@ -11,14 +11,13 @@ namespace ToSic.Sxc.Services
         private const string TagName = "turnOn";
         private const string AttributeName = "turn-on";
 
-        public TurnOnService(LazySvc<IHtmlTagService> htmlTagService) : base(Constants.SxcLogName + ".TrnOnS")
+        public TurnOnService(LazySvc<IHtmlTagsService> htmlTagsService) : base(Constants.SxcLogName + ".TrnOnS")
         {
             ConnectServices(
-                _htmlTagService = htmlTagService
+                _htmlTagsService = htmlTagsService
             );
         }
-
-        private readonly LazySvc<IHtmlTagService> _htmlTagService;
+        private readonly LazySvc<IHtmlTagsService> _htmlTagsService;
 
         // TODO:
         // - TEST
@@ -29,26 +28,24 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Eav.Parameters.Protector,
             object require = default,
             object data = default
-        )
+        ) => Log.Func(() =>
         {
-            var l = Log.Fn<Attribute>();
             var specs = PickOrBuildSpecs(runOrSpecs, require, data);
-            var attr = _htmlTagService.Value.Attr(AttributeName, specs);
-            return l.Return(attr);
-        }
+            var attr = _htmlTagsService.Value.Attr(AttributeName, specs);
+            return attr;
+        });
 
         public IHtmlTag Run(
             object runOrSpecs,
             string noParamOrder = Eav.Parameters.Protector,
             object require = default,
             object data = default
-        )
+        ) => Log.Func(() =>
         {
-            var l = Log.Fn<IHtmlTag>();
             var specs = PickOrBuildSpecs(runOrSpecs, require, data);
-            var tag = _htmlTagService.Value.Custom(TagName).Attr(AttributeName, specs);
-            return l.Return(tag);
-        }
+            var tag = _htmlTagsService.Value.Custom(TagName).Attr(AttributeName, specs);
+            return tag;
+        });
 
         private static object PickOrBuildSpecs(object runOrSpecs, object require, object data) =>
             runOrSpecs is string run

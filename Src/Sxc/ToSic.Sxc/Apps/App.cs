@@ -27,13 +27,13 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
         [PrivateApi]
-        public App(AppDependencies dependencies, 
+        public App(AppServices services, 
             LazySvc<GlobalPaths> globalPaths, 
             LazySvc<AppPaths> appPathsLazy, 
-            LazySvc<DynamicEntityDependencies> dynamicEntityDependenciesLazy,
+            LazySvc<DynamicEntityServices> dynamicEntityDependenciesLazy,
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate) 
-            : base(dependencies, "App.SxcApp")
+            : base(services, "App.SxcApp")
         {
             this.ConnectServices(
                 _globalPaths = globalPaths,
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Apps
 
         private readonly LazySvc<GlobalPaths> _globalPaths;
         private readonly LazySvc<AppPaths> _appPathsLazy;
-        private readonly LazySvc<DynamicEntityDependencies> _dynamicEntityDependenciesLazy;
+        private readonly LazySvc<DynamicEntityServices> _dynamicEntityDependenciesLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
@@ -94,15 +94,15 @@ namespace ToSic.Sxc.Apps
             }
         }
 #endif
-        private dynamic MakeDynProperty(IEntity contents) => new DynamicEntity(contents, DynamicEntityDependencies);
+        private dynamic MakeDynProperty(IEntity contents) => new DynamicEntity(contents, DynamicEntityServices);
 
         // TODO: THIS CAN PROBABLY BE IMPROVED
         // TO GET THE DynamicEntityDependencies from the DynamicCodeRoot which creates the App...? 
         // ATM it's a bit limited, for example it probably cannot resolve links
-        private DynamicEntityDependencies DynamicEntityDependencies
+        private DynamicEntityServices DynamicEntityServices
             => _dynamicEntityDependencies.Get(() =>
                 _dynamicEntityDependenciesLazy.Value.Init(null, Site.SafeLanguagePriorityCodes(), Log));
-        private readonly GetOnce<DynamicEntityDependencies> _dynamicEntityDependencies = new GetOnce<DynamicEntityDependencies>();
+        private readonly GetOnce<DynamicEntityServices> _dynamicEntityDependencies = new GetOnce<DynamicEntityServices>();
 
         /// <inheritdoc />
         public dynamic Settings => AppSettings != null ? _settings.Get(() => MakeDynProperty(AppSettings)) : null;

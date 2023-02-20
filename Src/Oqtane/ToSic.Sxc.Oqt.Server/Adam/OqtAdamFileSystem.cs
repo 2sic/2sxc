@@ -181,8 +181,6 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
                 return "error, probably folder already exists";
             }
-
-            return "error ?";
         });
 
         private Folder CreateVirtualFolder(Folder parentFolder, string path, string folder)

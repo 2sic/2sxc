@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestPng(string path)
         {
-            var fileInfo = Build<IImageService>().GetFormat(path);
+            var fileInfo = GetService<IImageService>().GetFormat(path);
             AssertOneFileInfo(ImageConstants.Png, fileInfo);
         }
 
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestJpg(string path)
         {
-            var fileInfo = Build<IImageService>().GetFormat(path);
+            var fileInfo = GetService<IImageService>().GetFormat(path);
             AssertOneFileInfo(ImageConstants.Jpg, fileInfo);
         }
 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [TestMethod]
         public void TestUnknown(string path, string expected)
         {
-            var typeInfo = Build<IImageService>().GetFormat(path);
+            var typeInfo = GetService<IImageService>().GetFormat(path);
             AssertUnknownFileInfo(expected, typeInfo);
         }
 

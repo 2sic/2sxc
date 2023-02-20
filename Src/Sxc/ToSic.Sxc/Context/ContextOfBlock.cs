@@ -14,14 +14,16 @@ namespace ToSic.Sxc.Context
     {
         #region Constructor / DI
 
+        // Important: this is the third inheritance, so it cannot create
+        // another MyServices to inherit again, as it's not supported across three level
+        // So these dependencies must be in the constructor
         public ContextOfBlock(
             IPage page, 
             IModule module,
             LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> publishingResolver,
             PageServiceShared pageServiceShared,
-            ContextOfSite.Dependencies siteCtxDeps,
-            ContextOfApp.Dependencies appDependencies)
-            : base(siteCtxDeps, appDependencies, "Sxc.CtxBlk")
+            MyServices appServices
+        ) : base(appServices, "Sxc.CtxBlk")
         {
             Page = page;
             ConnectServices(
@@ -29,12 +31,6 @@ namespace ToSic.Sxc.Context
                 PageServiceShared = pageServiceShared,
                 _publishingResolver = publishingResolver
             );
-
-            // 2022-12-21 2dm removed this now that we have connectServices - could cause side-effects?
-            // special check to prevent duplicate SetLog, because it could be cloned and already initialized
-            //if (!_publishingResolver.HasInitCall)
-            //    _publishingResolver.SetLog(Log);
-            //Log.Rename("Sxc.CtxBlk");
         }
         private readonly LazySvc<ServiceSwitcher<IPagePublishingGetSettings>> _publishingResolver;
 
@@ -70,7 +66,7 @@ namespace ToSic.Sxc.Context
         private BlockPublishingSettings _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, SiteDeps, Deps)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, /*Services,*/ AppServices)
             .LinkLog(parentLog);
     }
 }

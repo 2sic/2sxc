@@ -175,14 +175,14 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IModuleAndBlockBuilder, DnnModuleAndBlockBuilder>();
 
             // v13.04
-            services.TryAddTransient<IUserInformationService, DnnUserInformationService>();
+            services.TryAddTransient<IUsersService, DnnUsersService>();
 
             // v13.12
             services.AddTransient<IStartUpRegistrations, DnnStartUpRegistrations>();   // must be Add, not TryAdd
 
             // v14
             services.TryAddTransient<IDynamicCodeService, DnnDynamicCodeService>();
-            services.TryAddTransient<DnnDynamicCodeService.ScopedDependencies>();   // new v15
+            services.TryAddTransient<DnnDynamicCodeService.MyScopedServices>();   // new v15
             services.TryAddTransient<Sxc.Services.IRenderService, DnnRenderService>();
 #pragma warning disable CS0618
             services.TryAddTransient<Blocks.IRenderService, DnnRenderService>();  // Obsolete, but keep for the few apps we already released in v12

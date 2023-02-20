@@ -12,14 +12,14 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<BlocksRuntime> _blocksRuntime;
         private readonly LazySvc<ViewsRuntime> _viewsRuntime;
 
-        public CmsRuntime(AppRuntimeDependencies dependencies, 
+        public CmsRuntime(AppRuntimeServices services, 
             LazySvc<EntityRuntime> entityRuntime,
             LazySvc<MetadataRuntime> metadataRuntime,
             LazySvc<ContentTypeRuntime> contentTypeRuntime,
             LazySvc<QueryRuntime> queryRuntime, 
             LazySvc<ViewsRuntime> viewsRuntime, 
             LazySvc<BlocksRuntime> blocksRuntime) 
-            : base(dependencies, entityRuntime, metadataRuntime, contentTypeRuntime, queryRuntime, "Sxc.CmsRt")
+            : base(services, entityRuntime, metadataRuntime, contentTypeRuntime, queryRuntime, "Sxc.CmsRt")
         {
             ConnectServices(
                 _blocksRuntime = blocksRuntime.SetInit(r => r.ConnectTo(this)),

@@ -29,10 +29,10 @@ namespace ToSic.Sxc.DataSources
 
             var userMayEdit = HasInstanceContext && Block.Context.UserMayEdit;
 
-            var cms = _deps.LazyCmsRuntime.IsValueCreated
-                ? _deps.LazyCmsRuntime.Value
-                : _deps.LazyCmsRuntime.Value.InitQ(this, userMayEdit);
-            var container = _deps.ModuleLazy.Value.Init(ModuleId.Value);
+            var cms = _services.LazyCmsRuntime.IsValueCreated
+                ? _services.LazyCmsRuntime.Value
+                : _services.LazyCmsRuntime.Value.InitQ(this, userMayEdit);
+            var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
             var blockId = container.BlockIdentifier;
             return wrapLog.ReturnAsOk(cms.Blocks.GetOrGeneratePreviewConfig(blockId));
         }

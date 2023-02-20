@@ -56,7 +56,8 @@ namespace ToSic.Sxc.Data
         /// In rare cases where no title-field is known, it can be null.
         /// It can also be null if there is no underlying entity. 
         /// </returns>
-        new object EntityTitle { get; }
+        /// <remarks>This returns a string which is usually what's expected. In previous versions (before v15) 2sxc it returned an object.</remarks>
+        new string EntityTitle { get; }
 
         /// <summary>
         /// Get a Field-object of a property of this entity, to use with services like the <see cref="Services.IImageService"/> which also need more information like the metadata.
@@ -226,7 +227,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         // ReSharper disable once InconsistentNaming
-        DynamicEntityDependencies _Dependencies { get; }
+        DynamicEntityServices _Services { get; }
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         ///// <summary>

@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Blocks.Renderers
         {
             var l = Log.Fn<string>();
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent._Dependencies.BlockOrNull, subItem.Entity);
+            var inner = subItem == null ? "": Render(parent._Services.BlockOrNull, subItem.Entity);
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return l.Return(string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner}));
         }
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             var found = parent.TryGetMember(fieldName, out var objFound);
             if (found && objFound is IList<DynamicEntity> items)
                 foreach (var cb in items)
-                    innerBuilder.Append(Render(cb._Dependencies.BlockOrNull, cb.Entity));
+                    innerBuilder.Append(Render(cb._Services.BlockOrNull, cb.Entity));
 
             var result = string.Format(WrapperTemplate, new object[]
             {

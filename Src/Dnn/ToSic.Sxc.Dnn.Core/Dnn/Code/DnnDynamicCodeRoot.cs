@@ -9,6 +9,6 @@ namespace ToSic.Sxc.Dnn.Code
     [PrivateApi]
     public class DnnDynamicCodeRoot : DnnDynamicCodeRoot<object, ServiceKit>
     {
-        public DnnDynamicCodeRoot(Dependencies dependencies): base(dependencies) { }
+        public DnnDynamicCodeRoot(MyServices services): base(services) { }
     }
 }

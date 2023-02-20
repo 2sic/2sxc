@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Data
         public string Url => Value as string;
 
 
-        public IDynamicMetadata Metadata => _dynMeta.Get(() => new DynamicMetadata(MetadataOfItem, Parent.Entity, Parent._Dependencies));
+        public IDynamicMetadata Metadata => _dynMeta.Get(() => new DynamicMetadata(MetadataOfItem, Parent.Entity, Parent._Services));
         private readonly GetOnce<IDynamicMetadata> _dynMeta = new GetOnce<IDynamicMetadata>();
 
 
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Data
         public IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
                 if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
-                var app = Parent._Dependencies?.BlockOrNull?.Context?.AppState;
+                var app = Parent._Services?.BlockOrNull?.Context?.AppState;
                 var md = app?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
 
                 // Optionally add image-metadata recommendations
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Data
         public ImageDecorator ImageDecoratorOrNull => _imgDec2.Get(() =>
         {
             var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeNameId);
-            return decItem != null ? new ImageDecorator(decItem, Parent._Dependencies.Dimensions) : null;
+            return decItem != null ? new ImageDecorator(decItem, Parent._Services.Dimensions) : null;
         });
         private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();
         

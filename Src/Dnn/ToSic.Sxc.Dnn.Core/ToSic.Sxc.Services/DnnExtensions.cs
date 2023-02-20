@@ -2,6 +2,7 @@
 using DotNetNuke.Common.Extensions;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Dnn;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services
@@ -45,7 +46,19 @@ namespace ToSic.Sxc.Services
         ///
         /// History
         /// - Created in v14
+        /// - In v15.03 added special patch so it work on 404 pages where the service provider is broken/not available
         /// </remarks>
-        public static T GetScopedService<T>() => HttpContext.Current.GetScope().ServiceProvider.Build<T>();
+        public static T GetScopedService<T>()
+        {
+            var serviceScope = HttpContext.Current.GetScope();
+            // Check if the service scope is broken (typical on 404 pages) and do workaround
+            // Should be removed once the minimum DNN is upgraded to a version where it is fixed
+            // As of 2022-02-20 DNN 9.11.0 it's still broken
+            return serviceScope == null
+#pragma warning disable CS0618
+                ? DnnStaticDi.StaticBuild<T>() // handles edge case for 404 page in DNN where scope is missing, fix https://github.com/2sic/2sxc/issues/2986
+#pragma warning restore CS0618
+                : serviceScope.ServiceProvider.Build<T>();
+        }
     }
 }

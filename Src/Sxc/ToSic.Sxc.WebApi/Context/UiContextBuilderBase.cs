@@ -16,12 +16,12 @@ using static ToSic.Eav.Configuration.BuiltInFeatures;
 
 namespace ToSic.Sxc.WebApi.Context
 {
-    public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.Dependencies>, IUiContextBuilder
+    public class UiContextBuilderBase: ServiceBase<UiContextBuilderBase.MyServices>, IUiContextBuilder
     {
 
         #region Dependencies 
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public IContextOfSite SiteCtx { get; }
             public Apps.IApp AppToLaterInitialize { get; }
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi.Context
             public LazySvc<IFeaturesInternal> Features { get; }
             public LazySvc<IUiData> UiDataLazy { get; }
 
-            public Dependencies(
+            public MyServices(
                 IContextOfSite siteCtx,
                 Apps.App appToLaterInitialize,
                 IAppStates appStates,
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.Context
                 LazySvc<LanguagesBackend> languagesBackend
                 )
             {
-                AddToLogQueue(
+                ConnectServices(
                     SiteCtx = siteCtx,
                     AppToLaterInitialize = appToLaterInitialize,
                     AppStates = appStates,
@@ -53,11 +53,11 @@ namespace ToSic.Sxc.WebApi.Context
 
         #region Constructor / DI
 
-        protected UiContextBuilderBase(Dependencies dependencies): base(dependencies, Constants.SxcLogName + ".UiCtx")
+        protected UiContextBuilderBase(MyServices services): base(services, Constants.SxcLogName + ".UiCtx")
         {
         }
 
-        protected int ZoneId => Deps.SiteCtx.Site.ZoneId;
+        protected int ZoneId => Services.SiteCtx.Site.ZoneId;
         protected Sxc.Apps.IApp App;
         protected AppState AppState;
 
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.WebApi.Context
         public IUiContextBuilder InitApp(AppState appState)
         {
             AppState = appState;
-            App = appState != null ? (Deps.AppToLaterInitialize as Apps.App)?.Init(appState, null) : null;
+            App = appState != null ? (Services.AppToLaterInitialize as Apps.App)?.Init(appState, null) : null;
             return this;
         }
 
@@ -93,9 +93,9 @@ namespace ToSic.Sxc.WebApi.Context
         protected virtual ContextLanguageDto GetLanguage()
         {
             if (ZoneId == 0) return null;
-            var site = Deps.SiteCtx.Site;
+            var site = Services.SiteCtx.Site;
 
-            var converted = Deps.LanguagesBackend.Value.GetLanguagesOfApp(AppState);
+            var converted = Services.LanguagesBackend.Value.GetLanguagesOfApp(AppState);
 
             return new ContextLanguageDto
             {
@@ -123,16 +123,16 @@ namespace ToSic.Sxc.WebApi.Context
         {
             var result = new ContextResourceWithApp
             {
-                Id = Deps.SiteCtx.Site.Id,
-                Url = "//" + Deps.SiteCtx.Site.UrlRoot + "/",
+                Id = Services.SiteCtx.Site.Id,
+                Url = "//" + Services.SiteCtx.Site.UrlRoot + "/",
             };
             // Stop now if we don't need advanced infos
             if (!flags.HasFlag(Ctx.AppAdvanced)) return result;
 
             // Otherwise also add the global appId
-            var zoneId = Deps.SiteCtx.Site.ZoneId;
-            result.DefaultApp = (AppIdentity)Deps.AppStates.IdentityOfDefault(zoneId);
-            result.PrimaryApp = (AppIdentity)Deps.AppStates.IdentityOfPrimary(zoneId);
+            var zoneId = Services.SiteCtx.Site.ZoneId;
+            result.DefaultApp = (AppIdentity)Services.AppStates.IdentityOfDefault(zoneId);
+            result.PrimaryApp = (AppIdentity)Services.AppStates.IdentityOfPrimary(zoneId);
             return result;
         }
 
@@ -145,11 +145,11 @@ namespace ToSic.Sxc.WebApi.Context
         protected virtual ContextEnableDto GetEnable(CtxEnable ctx)
         {
             var isRealApp = AppState != null && !AppState.IsContentApp();// App.NameId != Eav.Constants.DefaultAppGuid; // #SiteApp v13 - Site-Apps should also have permissions
-            var tmp = new JsContextUser(Deps.SiteCtx.User);
+            var tmp = new JsContextUser(Services.SiteCtx.User);
             var dto = new ContextEnableDto
             {
                 DebugMode = tmp.CanDevelop ||
-                            Deps.Features.Value.IsEnabled(EditUiAllowDebugModeForEditors)
+                            Services.Features.Value.IsEnabled(EditUiAllowDebugModeForEditors)
             };
             if (ctx.HasFlag(CtxEnable.AppPermissions)) dto.AppPermissions = isRealApp;
             if (ctx.HasFlag(CtxEnable.CodeEditor)) dto.CodeEditor = tmp.CanDevelop;
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.WebApi.Context
         protected virtual ContextUserDto GetUser(Ctx flags)
         {
             var userDto = new ContextUserDto();
-            var user = Deps.SiteCtx.User;
+            var user = Services.SiteCtx.User;
             userDto.Email = user.Email;
             userDto.Id = user.Id;
             userDto.Guid = user.Guid;
@@ -217,6 +217,6 @@ namespace ToSic.Sxc.WebApi.Context
             return userDto;
         }
 
-        protected virtual IList<FeatureDto> GetFeatures() => Deps.UiDataLazy.Value.FeaturesDto(Deps.SiteCtx.UserMayEdit);
+        protected virtual IList<FeatureDto> GetFeatures() => Services.UiDataLazy.Value.FeaturesDto(Services.SiteCtx.UserMayEdit);
     }
 }

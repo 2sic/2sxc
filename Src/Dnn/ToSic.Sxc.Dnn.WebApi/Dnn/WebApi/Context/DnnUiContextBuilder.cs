@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
         private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.GetContents();
 
-        public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
+        public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
         {
             _ctxResolver = ctxResolver;
             _remoteRouterLink = remoteRouterLink;
@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
-                Deps.SiteCtx.Site,
+                Services.SiteCtx.Site,
                 Module.ModuleID,
                 app,
                 Module.DesktopModule.ModuleName == "2sxc");

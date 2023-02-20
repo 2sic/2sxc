@@ -35,20 +35,20 @@ namespace ToSic.Sxc.WebApi
         /// This doesn't work in DNN.
         /// But for consistency, we're building a comparable structure here.
         /// </summary>
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public LazySvc<AppConfigDelegate> AppConfigDelegateLazy { get; }
             public LazySvc<Apps.App> AppOverrideLazy { get; }
             public DnnCodeRootFactory DnnCodeRootFactory { get; }
             public DnnAppFolderUtilities AppFolderUtilities { get; }
 
-            public Dependencies(
+            public MyServices(
                 DnnCodeRootFactory dnnCodeRootFactory,
                 DnnAppFolderUtilities appFolderUtilities,
                 LazySvc<Apps.App> appOverrideLazy,
                 LazySvc<AppConfigDelegate> appConfigDelegateLazy)
             {
-                AddToLogQueue(
+                ConnectServices(
                     DnnCodeRootFactory = dnnCodeRootFactory,
                     AppFolderUtilities = appFolderUtilities,
                     AppOverrideLazy = appOverrideLazy,
@@ -63,8 +63,8 @@ namespace ToSic.Sxc.WebApi
         protected DynamicApiController() : base("DynApi") { }
         protected DynamicApiController(string logSuffix): base(logSuffix) { }
 
-        protected Dependencies _Deps => _depsGetter.Get(() => GetService<Dependencies>().SetLog(Log));
-        private readonly GetOnce<Dependencies> _depsGetter = new GetOnce<Dependencies>();
+        private MyServices Services => _depsGetter.Get(() => GetService<MyServices>().ConnectServices(Log));
+        private readonly GetOnce<MyServices> _depsGetter = new GetOnce<MyServices>();
 
         #endregion
 
@@ -86,7 +86,7 @@ namespace ToSic.Sxc.WebApi
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
             var compatibilityLevel = this is ICompatibleToCode12 ? Constants.CompatibilityLevel12 : Constants.CompatibilityLevel10;
-            _DynCodeRoot = _Deps.DnnCodeRootFactory
+            _DynCodeRoot = Services.DnnCodeRootFactory
                 .BuildDynamicCodeRoot(this)
                 .InitDynCodeRoot(block, Log, compatibilityLevel);
             _AdamCode = GetService<AdamCode>();
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.WebApi
             var found = false;
             try
             {
-                var routeAppPath = _Deps.AppFolderUtilities.GetAppFolder(Request, false);
+                var routeAppPath = Services.AppFolderUtilities.GetAppFolder(Request, false);
                 var siteCtx = SharedContextResolver.Site();
                 var appState = SharedContextResolver.AppOrNull(routeAppPath)?.AppState;
 
@@ -143,9 +143,9 @@ namespace ToSic.Sxc.WebApi
                 {
                     // Look up if page publishing is enabled - if module context is not available, always false
                     Log.A($"AppId: {appState.AppId}");
-                    var app = _Deps.AppOverrideLazy.Value
+                    var app = Services.AppOverrideLazy.Value
                         .PreInit(siteCtx.Site)
-                        .Init(appState, _Deps.AppConfigDelegateLazy.Value.Build(siteCtx.UserMayEdit));
+                        .Init(appState, Services.AppConfigDelegateLazy.Value.Build(siteCtx.UserMayEdit));
                     _DynCodeRoot.AttachApp(app);
                     found = true;
                 }

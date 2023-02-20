@@ -24,14 +24,14 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Fn<IDynamicCodeRoot>($"{pageId}, {moduleId}");
             MakeSureLogIsInHistory();
             ActivateEditUi();
-            var cmsBlock = _scopedDeps.ModAndBlockBuilder.Value.GetBlock(pageId, moduleId);
-            var codeRoot = _scopedDeps.CodeRootGenerator.New().InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
+            var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.GetBlock(pageId, moduleId);
+            var codeRoot = _myScopedServices.CodeRootGenerator.New().InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
 
             return wrapLog.ReturnAsOk(codeRoot);
         }
 
         /// <inheritdoc />
-        public IDynamicCode12 OfSite() => OfApp(GetPrimaryApp(null, Deps.Site.Value));
+        public IDynamicCode12 OfSite() => OfApp(GetPrimaryApp(null, Services.Site.Value));
 
         /// <inheritdoc />
         public IDynamicCode12 OfSite(int siteId) => OfApp(GetPrimaryApp(siteId, null));
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Fn<IDynamicCode12>();
             MakeSureLogIsInHistory();
             ActivateEditUi();
-            var codeRoot = _scopedDeps.CodeRootGenerator.New().InitDynCodeRoot(null, Log, Constants.CompatibilityLevel12);
+            var codeRoot = _myScopedServices.CodeRootGenerator.New().InitDynCodeRoot(null, Log, Constants.CompatibilityLevel12);
             var app = App(zoneId: zoneId, appId: appId);
             codeRoot.AttachApp(app);
             return wrapLog.ReturnAsOk(codeRoot);

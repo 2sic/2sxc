@@ -29,11 +29,11 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => DynamicJacket.AsDynamicJacket(json, fallback);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityDependencies);
+        public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
 
-        internal DynamicEntityDependencies DynamicEntityDependencies => _dynEntDependencies.Get(() => 
-            Deps.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
-        private readonly GetOnce<DynamicEntityDependencies> _dynEntDependencies = new GetOnce<DynamicEntityDependencies>();
+        internal DynamicEntityServices DynamicEntityServices => _dynEntDependencies.Get(() => 
+            Services.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
+        private readonly GetOnce<DynamicEntityServices> _dynEntDependencies = new GetOnce<DynamicEntityServices>();
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => AsDynamicInternal(dynamicEntity);
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Code
                 case ISxcDynamicObject sxcDyn:
                     return wrapLog.Return(sxcDyn, "Dynamic Something");
                 case IEntity entity:
-                    return wrapLog.Return(new DynamicEntity(entity, DynamicEntityDependencies), "IEntity");
+                    return wrapLog.Return(new DynamicEntity(entity, DynamicEntityServices), "IEntity");
                 case DynamicObject typedDynObject:
                     return wrapLog.Return(typedDynObject, "DynamicObject");
                 default:
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Code
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
                 .ToList();
-            return new DynamicStack("unknown", DynamicEntityDependencies, sources);
+            return new DynamicStack(Eav.Constants.NullNameId, DynamicEntityServices, sources);
         }
 
 
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Code
         #region Convert
 
         /// <inheritdoc />
-        public IConvertService Convert => _convert ?? (_convert = Deps.ConvertService.Value);
+        public IConvertService Convert => _convert ?? (_convert = Services.ConvertService.Value);
         private IConvertService _convert;
 
         #endregion
@@ -151,11 +151,11 @@ namespace ToSic.Sxc.Code
             {
                 if (App == null)
                     throw new Exception("Can't create App Context for ADAM - no block, no App");
-                contextOfApp = Deps.ContextOfApp.Value;
+                contextOfApp = Services.ContextOfApp.Value;
                 contextOfApp.ResetApp(App);
             }
 
-            return Deps.AdamManager.Value.Init(contextOfApp, CompatibilityLevel);
+            return Services.AdamManager.Value.Init(contextOfApp, CompatibilityLevel);
         }
 
         #endregion

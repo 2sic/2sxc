@@ -16,9 +16,10 @@ namespace ToSic.Sxc.Tests.ServicesTests
         /// <summary>
         /// Start the test with a platform-info that has WebP support
         /// </summary>
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services).AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
+            base.SetupServices(services);
+            services.AddTransient<IPlatformInfo, TestPlatformPatronPerfectionist>();
         }
 
         protected override bool TestModeImg => false;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         public void ImgWhichShouldAutoGetAttributes(string expected, double factor, bool json, string name)
         {
             var set = json ? ResizeRecipesData.TestRecipeSetFromJson : ResizeRecipesData.TestRecipeSet();
-            var svc = Build<IImageService>();
+            var svc = GetService<IImageService>();
             var img = svc.Img("test.jpg", factor: factor, recipe: set);
             Is(expected, img.ToString(), name);
         }
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
                     { "class", "img-fluid" },
                     { "sizes", "100vw" }
                 });
-            var svc = Build<IImageService>();
+            var svc = GetService<IImageService>();
             var settings = svc.Settings(aspectRatio: 2 / 1);
             var img = svc.Img("test.jpg", settings: settings, factor: 0.5, imgClass: "manual", recipe: recipe);
             Is(expected, img.ToString(), name);

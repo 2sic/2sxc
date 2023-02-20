@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug
     {
-        protected DynamicEntityBase(DynamicEntityDependencies dependencies) => _Dependencies = dependencies;
+        protected DynamicEntityBase(DynamicEntityServices services) => _Services = services;
 
         // ReSharper disable once InconsistentNaming
-        public DynamicEntityDependencies _Dependencies { get; }
+        public DynamicEntityServices _Services { get; }
 
         // ReSharper disable once InconsistentNaming
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
@@ -31,12 +31,12 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Dependencies, Debug);
+        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Services, Debug);
 
-        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntityDependencies dependencies, bool? debug)
+        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntityServices services, bool? debug)
         {
             if (contents == null) return null;
-            var result = new DynamicEntity(contents, dependencies);
+            var result = new DynamicEntity(contents, services);
             if (debug == true) result.Debug = true;
             return result;
         }
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        protected ILog LogOrNull => _logOrNull.Get(() => _Dependencies.LogOrNull?.SubLogOrNull("DynEnt", Debug));
+        protected ILog LogOrNull => _logOrNull.Get(() => _Services.LogOrNull?.SubLogOrNull("DynEnt", Debug));
         private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
 
     }

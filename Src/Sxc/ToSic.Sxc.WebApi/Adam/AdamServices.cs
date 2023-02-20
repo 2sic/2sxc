@@ -5,18 +5,18 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    public class AdamDependencies<TFolderId, TFileId>: ServiceDependencies
+    public class AdamServices<TFolderId, TFileId>: MyServicesBase
     {
         public LazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
         public IContextResolver CtxResolver { get; }
         public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; }
 
-        public AdamDependencies(
+        public AdamServices(
             Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
             LazySvc<AdamContext<TFolderId, TFileId>> adamState,
             IContextResolver ctxResolver)
         {
-            AddToLogQueue(
+            ConnectServices(
                 AdamDtoMaker = adamDtoMaker,
                 AdamState = adamState,
                 CtxResolver = ctxResolver

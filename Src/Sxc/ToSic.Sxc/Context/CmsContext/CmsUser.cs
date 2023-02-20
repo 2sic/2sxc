@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Context
 
         public bool IsSystemAdmin => UnwrappedContents.IsSystemAdmin;
 
-        public bool IsSiteDeveloper => UnwrappedContents.IsDesigner;
+        public bool IsSiteDeveloper => UnwrappedContents.IsSiteDeveloper;
 
         public bool IsAnonymous => UnwrappedContents.IsAnonymous;
 

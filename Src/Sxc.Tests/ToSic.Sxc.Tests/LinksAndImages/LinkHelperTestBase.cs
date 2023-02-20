@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Tests.LinksAndImages
             // @STV - don't use statics in tests - can cause unexpected results across tests
             // Every test should run by itself
 
-            Link = Build<ILinkService>();
+            Link = GetService<ILinkService>();
         }
 
         internal ILinkService Link;

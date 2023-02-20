@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Lib.Logging;
-
+using ToSic.Sxc.Context.Raw;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
@@ -9,24 +9,25 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Mock list of users
     /// </summary>
-    public class MockUsersDataSource : Users
+    public class MockUsersDataSource : UsersDataSourceProvider
     {
-        protected override IEnumerable<UserDataSourceInfo> GetUsersInternal()
-        {
-            var wrapLog = Log.Fn<List<UserDataSourceInfo>>();
-            var siteId = 0;
-            Log.A($"Portal Id {siteId}");
-            var result = new List<UserDataSourceInfo>();
+        public MockUsersDataSource() : base("DS.MockUsers") { }
 
-            // super users and admins
+        public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
+        {
+            var siteId = 0;
+            l.A($"Portal Id {siteId}");
+            var users = new List<CmsUserRaw>();
+
+            l.A($"mock 3 super users and admins with one role [1-3]");
             for (var i = 1; i <= 3; i++)
             {
-                result.Add(new UserDataSourceInfo
+                users.Add(new CmsUserRaw
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
                     NameId = $"mock:{i}",
-                    RoleIds = new List<int>() { 1 },
+                    Roles = new List<int>() {i},
                     IsSystemAdmin = true,
                     IsSiteAdmin = true,
                     //IsDesigner = false,
@@ -40,15 +41,16 @@ namespace ToSic.Sxc.DataSources
                 });
             }
 
-            // with 3 roles [ 2, 3, 4-10]
+
+            l.A($"mock 7 normal users with 3 roles [ 2, 3, 4-10]");
             for (var i = 4; i <= 10; i++)
             {
-                result.Add(new UserDataSourceInfo
+                users.Add(new CmsUserRaw
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
                     NameId = $"mock:{i}",
-                    RoleIds = new List<int> { 2, 3, i },
+                    Roles = new List<int> {2, 3, i},
                     IsSystemAdmin = false,
                     IsSiteAdmin = false,
                     //IsDesigner = false,
@@ -62,15 +64,15 @@ namespace ToSic.Sxc.DataSources
                 });
             }
 
-            // with 2 roles [ 9, 10]
+            l.A($"mock 10 normal users with 2 roles [9, 10]");
             for (var i = 11; i <= 20; i++)
             {
-                result.Add(new UserDataSourceInfo
+                users.Add(new CmsUserRaw
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
                     NameId = $"mock:{i}",
-                    RoleIds = new List<int> { 9, 10 },
+                    Roles = new List<int> {9, 10},
                     IsSystemAdmin = false,
                     IsSiteAdmin = false,
                     //IsDesigner = false,
@@ -84,11 +86,7 @@ namespace ToSic.Sxc.DataSources
                 });
             }
 
-            return wrapLog.Return(result, "found");
-        }
-
-        public MockUsersDataSource(Dependencies dependencies) : base(dependencies)
-        {
-        }
+            return (users, $"mock: {users.Count}");
+        });
     }
 }

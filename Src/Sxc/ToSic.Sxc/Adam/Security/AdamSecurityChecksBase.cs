@@ -13,24 +13,24 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Adam
 {
-    public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase.Dependencies>
+    public abstract class AdamSecurityChecksBase: ServiceBase<AdamSecurityChecksBase.MyServices>
     {
 
         #region DI / Constructor
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
             public Generator<AppPermissionCheck> AppPermissionChecks { get; }
 
-            public Dependencies(Generator<AppPermissionCheck> appPermissionChecks)
+            public MyServices(Generator<AppPermissionCheck> appPermissionChecks)
             {
-                AddToLogQueue(
+                ConnectServices(
                     AppPermissionChecks = appPermissionChecks
                 );
             }
         }
 
-        protected AdamSecurityChecksBase(Dependencies dependencies, string logPrefix) : base(dependencies, $"{logPrefix}.TnScCk")
+        protected AdamSecurityChecksBase(MyServices services, string logPrefix) : base(services, $"{logPrefix}.TnScCk")
         {
         }
 
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         public bool FieldPermissionOk(List<Grants> requiredGrant)
         {
-            var fieldPermissions = Deps.AppPermissionChecks.New()
+            var fieldPermissions = Services.AppPermissionChecks.New()
                 .ForAttribute(AdamContext.Permissions.Context, AdamContext.Context.AppState, AdamContext.Attribute);
 
             return fieldPermissions.UserMay(requiredGrant);

@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestPng(string path)
         {
-            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(ExpectedPngFormats, formats.Count);
             // If we have many, we expect that the original will be listed as the second alternative
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestEmpty(string path)
         {
-            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
         }
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestUnknownAvif(string path)
         {
-            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
         }
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
         [DataTestMethod]
         public void TestBestSvg(string path)
         {
-            var formats = Build<IImageService>().GetFormat(path).ResizeFormats;
+            var formats = GetService<IImageService>().GetFormat(path).ResizeFormats;
             Assert.IsNotNull(formats);
             Assert.AreEqual(0, formats.Count);
         }

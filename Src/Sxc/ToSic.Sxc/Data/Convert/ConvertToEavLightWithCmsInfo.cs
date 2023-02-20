@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Data
         /// Standard constructor, important for opening this class in dependency-injection
         /// </summary>
         [PrivateApi]
-	    public ConvertToEavLightWithCmsInfo(Dependencies dependencies): base(dependencies) { }
+	    public ConvertToEavLightWithCmsInfo(MyServices services): base(services) { }
 
         [PrivateApi]
         protected override EavLightEntity GetDictionaryFromEntity(IEntity entity)

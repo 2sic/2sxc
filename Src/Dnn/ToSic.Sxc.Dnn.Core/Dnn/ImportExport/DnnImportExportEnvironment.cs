@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnImportExportEnvironment(Dependencies dependencies) : base(dependencies, "Dnn.ImExEn") { }
+        public DnnImportExportEnvironment(MyServices services) : base(services, "Dnn.ImExEn") { }
 
         #endregion
 

@@ -36,7 +36,7 @@ please provide the *STEPS TO REPRODUCE* and/or a *MINIMAL DEMO* like a screensho
 A sample App to reproduce the issue is also great!
 -->
 
-### Your environment**
+### Your environment
 <!-- HINT: Operating system, IDE, package manager, HTTP server, ... -->
 
 * **2sxc version(s):** 15.0X.X  <!-- Check whether this is still an issue in the most recent version -->

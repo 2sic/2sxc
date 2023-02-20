@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Conversion
         /// </summary>
         [PrivateApi]
         [Obsolete("only keep in case external code was using this in apps ca. 2sxc 11. v12+ should use GetService")]
-        public DataToDictionary() : base(DnnStaticDi.StaticBuild<Dependencies>())
+        public DataToDictionary() : base(DnnStaticDi.StaticBuild<MyServices>())
         {
             Compatibility.Obsolete.Warning13To15(nameof(DataToDictionary), "",
                 "https://r.2sxc.org/brc-13-conversion");

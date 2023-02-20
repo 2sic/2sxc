@@ -144,10 +144,12 @@
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
     <Compile Include="Dnn\Services\DnnRenderService.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnAppFilesDsProvider.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnSitesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnPagesDsProvider.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\DnnRoles.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnRolesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnStartUpDataSources.cs" />
-    <Compile Include="ToSic.Sxc.DataSources\DnnUsers.cs" />
+    <Compile Include="ToSic.Sxc.DataSources\DnnUsersDsProvider.cs" />
     <Compile Include="ToSic.Sxc.Services\DnnExtensions.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_IsRunning.cs" />
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_Manual.cs" />
@@ -162,7 +164,7 @@
     <Compile Include="Dnn\Run\DnnEnvironmentPermission.cs" />
     <Compile Include="Dnn\Services\DnnPageChanges.cs" />
     <Compile Include="Dnn\Services\DnnLogService.cs" />
-    <Compile Include="Dnn\Services\DnnUserInformationService.cs" />
+    <Compile Include="Dnn\Services\DnnUsersService.cs" />
     <Compile Include="Dnn\Web\DnnHttp.cs" />
     <Compile Include="Dnn\Web\DnnJsApiHeader.cs" />
     <Compile Include="Dnn\Web\DnnClientResources.cs" />
@@ -171,7 +173,7 @@
     <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
     <Compile Include="Dnn\Web\DnnBlockResourceExtractor.cs" />
     <Compile Include="Dnn\DataSources\DnnSql.cs" />
-    <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
+    <Compile Include="Dnn\DataSources\DnnUserProfileDataRaw.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Dnn\Adam\DnnAdamFileSystem.cs" />
     <Compile Include="Dnn\Services\DnnLinkService.cs" />

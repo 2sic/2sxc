@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Connect.Koi/03.00.00": {
+      "Connect.Koi/03.00.01": {
         "dependencies": {
           "Microsoft.AspNetCore.Html.Abstractions": "2.0.0",
           "Microsoft.AspNetCore.Http": "2.0.0",
@@ -163,7 +163,7 @@
     }
   },
   "libraries": {
-    "Connect.Koi/03.00.00": {
+    "Connect.Koi/03.00.01": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

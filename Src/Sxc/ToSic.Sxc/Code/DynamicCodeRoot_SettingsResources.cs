@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Code
 
                 return _resources = new DynamicStack(
                     RootNameResources,
-                    DynamicEntityDependencies,
-                    Deps.SettingsStack.Init(appState)
+                    DynamicEntityServices,
+                    Services.SettingsStack.Init(appState)
                         .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
             }
         }
@@ -39,8 +39,8 @@ namespace ToSic.Sxc.Code
 
                 return _settings = new DynamicStack(
                     RootNameSettings,
-                    DynamicEntityDependencies,
-                    Deps.SettingsStack.Init(appState)
+                    DynamicEntityServices,
+                    Services.SettingsStack.Init(appState)
                         .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
             }
         }

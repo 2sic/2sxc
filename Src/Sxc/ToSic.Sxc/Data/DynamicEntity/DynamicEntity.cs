@@ -20,24 +20,24 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, DynamicEntityDependencies dependencies): base(dependencies)
+        public DynamicEntity(IEntity entity, DynamicEntityServices services): base(services)
         {
             SetEntity(entity);
 
             // WIP new in 12.03
-            _ListHelper = new DynamicEntityListHelper(this, () => Debug, dependencies);
+            _ListHelper = new DynamicEntityListHelper(this, () => Debug, services);
         }
 
-        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, DynamicEntityDependencies dependencies): base(dependencies)
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, DynamicEntityServices services): base(services)
         {
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             SetEntity(list.FirstOrDefault() ?? PlaceHolder(appIdOrNull, parent, field));
-            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, dependencies);
+            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, services);
         }
 
         private IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)
         {
-            var dummyEntity = _Dependencies.DataBuilder.FakeEntity(appIdOrNull ?? parent.AppId);
+            var dummyEntity = _Services.DataBuilder.FakeEntity(appIdOrNull ?? parent.AppId);
             return parent == null 
                 ? dummyEntity 
                 : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public object EntityTitle => Entity?.Title[_Dependencies.Dimensions];
+        public string EntityTitle => Entity?.GetBestTitle(_Services.Dimensions);
 
 
         // ReSharper disable once InheritdocInvalidUsage
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Data
         public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false).Value;
         private bool? _isDemoItem;
 
-        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataBuilder.DefaultEntityId) == DataBuilder.DefaultEntityId).Value;
+        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataBuilderInternal.DefaultEntityId) == DataBuilderInternal.DefaultEntityId).Value;
         private bool? _isFake;
     }
 }

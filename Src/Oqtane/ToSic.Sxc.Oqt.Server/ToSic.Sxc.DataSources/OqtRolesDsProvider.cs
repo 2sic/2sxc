@@ -3,7 +3,6 @@ using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
@@ -11,57 +10,48 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.DataSources
 {
     /// <summary>
-    /// Deliver a list of roles from the current platform (Dnn or Oqtane)
+    /// Deliver a list of roles from the Oqtane
     /// </summary>
-    [PrivateApi("hide internal implementation")]
-    [VisualQuery(
-        NiceName = VqNiceName,
-        Icon = VqIcon,
-        UiHint = VqUiHint,
-        HelpLink = VqHelpLink,
-        GlobalName = VqGlobalName,
-        Type = VqType,
-        ExpectsDataOfType = VqExpectsDataOfType,
-        Difficulty = DifficultyBeta.Default
-    )]
-    public class OqtRoles : Roles
+    public class OqtRolesDsProvider : RolesDataSourceProvider
     {
         private readonly IRoleRepository _roles;
         private readonly SiteState _siteState;
 
-        public OqtRoles(Dependencies dependencies, IRoleRepository roles, SiteState siteState): base(dependencies)
+        public OqtRolesDsProvider(IRoleRepository roles, SiteState siteState): base("Oqt.Roles")
         {
             ConnectServices(
                 _roles = roles,
                 _siteState = siteState
             );
         }
-        protected override IEnumerable<RoleDataSourceInfo> GetRolesInternal()
+
+        [PrivateApi]
+        public override IEnumerable<RoleDataRaw> GetRolesInternal() => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<List<RoleDataSourceInfo>>();
             var siteId = _siteState.Alias.SiteId;
-            Log.A($"Portal Id {siteId}");
+            l.A($"Portal Id {siteId}");
             try
             {
                 var roles = _roles.GetRoles(siteId, includeGlobalRoles: true).ToList();
-                if (!roles.Any()) return wrapLog.Return(new(), "null/empty");
+                if (!roles.Any()) return (new(), "null/empty");
 
                 var result = roles
-                    .Select(r => new RoleDataSourceInfo
+                    .Select(r => new RoleDataRaw
                     {
                         Id = r.RoleId,
+                        // Guid = r.
                         Name = r.Name,
                         Created = r.CreatedOn,
                         Modified = r.ModifiedOn,
                     })
                     .ToList();
-                return wrapLog.Return(result, "found");
+                return (result, "found");
             }
             catch (Exception ex)
             {
-                Log.Ex(ex);
-                return wrapLog.Return(new(), "error");
+                l.Ex(ex);
+                return (new(), "error");
             }
-        }
+        });
     }
 }

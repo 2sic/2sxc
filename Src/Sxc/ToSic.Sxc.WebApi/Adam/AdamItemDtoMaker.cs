@@ -14,18 +14,18 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         #region Constructor / DI
 
-        public class Dependencies
+        public class MyServices
         {
             public AdamSecurityChecksBase Security { get; }
-            public Dependencies(AdamSecurityChecksBase security)
+            public MyServices(AdamSecurityChecksBase security)
             {
                 Security = security;
             }
         }
 
-        public AdamItemDtoMaker(Dependencies dependencies)
+        public AdamItemDtoMaker(MyServices services)
         {
-            _security = dependencies.Security;
+            _security = services.Security;
         }
 
         public AdamItemDtoMaker<TFolderId, TFileId> Init(AdamContext adamContext)

@@ -69,13 +69,17 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<IModuleAndBlockBuilder, ModuleAndBlockBuilderUnknown>();
 
             // v13.04
-            services.TryAddTransient<IUserInformationService, UserInformationServiceUnknown>();
+            services.TryAddTransient<IUsersService, UsersServiceUnknown>();
 
             // Koi, mainly so tests don't fail
             services.TryAddTransient<ICssFrameworkDetector, CssFrameworkDetectorUnknown>();
 
-            // v15 Pages DataSource
+            // v15 DataSource
             services.TryAddTransient<PagesDataSourceProvider, PagesDataSourceProviderUnknown>();
+            services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
+            services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
+            services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
+            services.TryAddTransient<AppFilesDataSourceProvider, AppFilesDataSourceProviderUnknown>();
 
             return services;
         }

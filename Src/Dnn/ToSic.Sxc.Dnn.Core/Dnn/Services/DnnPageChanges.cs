@@ -1,5 +1,6 @@
 ﻿using DotNetNuke.Web.Client.ClientResourceManagement;
 using DotNetNuke.Web.Client.Providers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -169,7 +170,17 @@ namespace ToSic.Sxc.Dnn.Services
 
         private void ApplyHttpStatus(Page page, IRenderResult result)
         {
-            if (page?.Response == null || result?.HttpStatusCode == null) return;
+            try
+            {
+                if (page?.Response == null || result?.HttpStatusCode == null) return;
+            }
+            catch (Exception ex)
+            {
+                // FIX: handles "Response is not available in this context." in edge case for 404 page in DNN
+                // https://github.com/2sic/2sxc/issues/2986
+                Log.Ex(ex);
+                return;
+            }
 
             var code = result.HttpStatusCode.Value;
             Log.A($"Custom status code '{code}'. Will set and also {nameof(page.Response.TrySkipIisCustomErrors)}");

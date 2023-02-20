@@ -35,7 +35,7 @@ namespace ToSic.SexyContent.Interfaces
 
         Guid EntityGuid { get; }
 
-        object EntityTitle { get; }
+        string EntityTitle { get; }
 
         dynamic Get(string name);
 

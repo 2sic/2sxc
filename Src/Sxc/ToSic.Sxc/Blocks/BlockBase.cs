@@ -16,13 +16,13 @@ using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
 {
-    public abstract partial class BlockBase : ServiceBase<BlockBase.Dependencies>, IBlock
+    public abstract partial class BlockBase : ServiceBase<BlockBase.MyServices>, IBlock
     {
         #region Constructor and DI
 
-        public class Dependencies: ServiceDependencies
+        public class MyServices: MyServicesBase
         {
-            public Dependencies(
+            public MyServices(
                 LazySvc<BlockDataSourceFactory> bdsFactoryLazy,
                 LazySvc<App> appLazy,
                 LazySvc<AppConfigDelegate> appConfigDelegateLazy,
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Blocks
                 LazySvc<BlockBuilder> blockBuilder
             )
             {
-                AddToLogQueue(
+                ConnectServices(
                     BdsFactoryLazy = bdsFactoryLazy,
                     AppLazy = appLazy,
                     AppConfigDelegateLazy = appConfigDelegateLazy,
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Blocks
             public LazySvc<BlockBuilder> BlockBuilder { get; }
         }
 
-        protected BlockBase(Dependencies dependencies, string logName) : base(dependencies, logName)
+        protected BlockBase(MyServices services, string logName) : base(services, logName)
         {
         }
 
@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Blocks
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
-            BlockBuilder = Deps.BlockBuilder.Value.Init(rootBuilderOrNull, this);
+            BlockBuilder = Services.BlockBuilder.Value.Init(rootBuilderOrNull, this);
 
             // If specifically no app found, end initialization here
             // Means we have no data, and no BlockBuilder
@@ -86,13 +86,13 @@ namespace ToSic.Sxc.Blocks
 
             // Get App for this block
             Log.A("About to create app");
-            App = Deps.AppLazy.Value
+            App = Services.AppLazy.Value
                 .PreInit(Context.Site)
-                .Init(this, Deps.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
+                .Init(this, Services.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
             Log.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
-            var cms = Deps.CmsLazy.Value.InitQ(App, Context.UserMayEdit);
+            var cms = Services.CmsLazy.Value.InitQ(App, Context.UserMayEdit);
 
             Configuration = cms.Blocks.GetOrGeneratePreviewConfig(blockId);
 
@@ -162,7 +162,7 @@ namespace ToSic.Sxc.Blocks
         {
             if (_dataSource != null) return _dataSource;
             l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
-            _dataSource = Deps.BdsFactoryLazy.Value.GetBlockDataSource(this, App?.ConfigurationProvider);
+            _dataSource = Services.BdsFactoryLazy.Value.GetBlockDataSource(this, App?.ConfigurationProvider);
             return _dataSource;
         });
         private readonly GetOnce<IBlockDataSource> _data = new GetOnce<IBlockDataSource>();

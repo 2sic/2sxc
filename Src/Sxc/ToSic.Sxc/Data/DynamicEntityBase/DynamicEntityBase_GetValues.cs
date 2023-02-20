@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
-            var logOrNull = _Dependencies.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
+            var logOrNull = _Services.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
             return logOrNull.Func<object>(
                 $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
                 l =>
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data
                         return (_ValueCache[field], "cached");
 
                     // use the standard dimensions or overload
-                    var languages = language == null ? _Dependencies.Dimensions : new[] { language };
+                    var languages = language == null ? _Services.Dimensions : new[] { language };
                     l.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
 
                     // Get the field or the path if it has one
@@ -67,8 +67,8 @@ namespace ToSic.Sxc.Data
                        && original.FieldType == DataTypes.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
             {
-                safeWrap.A($"Try to convert value - HasValueConverter: {_Dependencies.ValueConverterOrNull != null}");
-                result = _Dependencies.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
+                safeWrap.A($"Try to convert value - HasValueConverter: {_Services.ValueConverterOrNull != null}");
+                result = _Services.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
                 return safeWrap.Return(result, "link-conversion");
             }
 
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Data
             if (result is IEnumerable<IEntity> children)
             {
                 safeWrap.A($"Convert entity list as {nameof(DynamicEntity)}");
-                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Dependencies);
+                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Services);
                 if (Debug) dynEnt.Debug = true;
                 return safeWrap.Return(dynEnt, "ent-list, now dyn");
             }

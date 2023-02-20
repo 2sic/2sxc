@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Code
             else if (isCs || isCshtml)
             {
                 // if no name provided, use the name which is the same as the file name
-                className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? "unknown";
+                className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? Eav.Constants.NullNameId;
 
                 var assembly = GetAssembly(virtualPath, className);
 

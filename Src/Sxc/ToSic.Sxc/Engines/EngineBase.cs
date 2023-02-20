@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Engines
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
     public abstract partial class EngineBase : ServiceBase, IEngine
     {
-        protected readonly EngineBaseDependencies Helpers;
+        protected readonly EngineBaseServices Helpers;
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Engines
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(EngineBaseDependencies helpers) : base($"{Constants.SxcLogName}.EngBas") =>
+        protected EngineBase(EngineBaseServices helpers) : base($"{Constants.SxcLogName}.EngBas") =>
             ConnectServices(
                 Helpers = helpers
             );

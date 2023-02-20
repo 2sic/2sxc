@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Engines
 
         }
 
-        public string Name { get; set; } = "Unknown";
+        public string Name { get; set; } = Eav.Constants.NullNameId;
 
 
     }

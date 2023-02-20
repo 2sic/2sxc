@@ -115,7 +115,7 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// <remarks>
         /// Added in v15.01
         /// </remarks>
-        public static PageFeature CmsWysiwyg = new PageFeature("Cms.Wysiwyg", "Wysiwyg helpers / css for better rich content", urlWip: "dist/cms/wysiwyg.css");
+        public static PageFeature CmsWysiwyg = new PageFeature("Cms.Wysiwyg", "Wysiwyg helpers / css for better rich content", urlWip: "dist/cms/wysiwyg.min.css");
 
     }
 }

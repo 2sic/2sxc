@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
     {
         #region Constructor / DI
 
-        public OqtAdamItemDtoMaker(Dependencies dependencies): base(dependencies) { }
+        public OqtAdamItemDtoMaker(MyServices services): base(services) { }
 
 
         #endregion

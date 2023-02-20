@@ -11,22 +11,22 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     // todo: create interface
     // todo: move some parts out into a BlockManagement
-    public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBaseDependencies>
+    public abstract partial class BlockEditorBase : ServiceBase<BlockEditorBaseServices>
     {
         #region DI and Construction
-        internal BlockEditorBase(BlockEditorBaseDependencies dependencies) : base(dependencies, "CG.RefMan")
+        internal BlockEditorBase(BlockEditorBaseServices services) : base(services, "CG.RefMan")
         {
-            Deps.CmsRuntime.SetInit(r => r.InitQ(Block?.App, true));
-            Deps.CmsManager.SetInit(r => r.Init(Block?.App));
-            Deps.AppManager.SetInit(r => r.Init(Block?.App));
+            Services.CmsRuntime.SetInit(r => r.InitQ(Block?.App, true));
+            Services.CmsManager.SetInit(r => r.Init(Block?.App));
+            Services.AppManager.SetInit(r => r.Init(Block?.App));
         }
 
         internal void Init(IBlock block) => Block = block;
 
         #endregion
 
-        private CmsManager CmsManager => Deps.CmsManager.Value;
-        private AppManager AppManager => Deps.AppManager.Value;
+        private CmsManager CmsManager => Services.CmsManager.Value;
+        private AppManager AppManager => Services.AppManager.Value;
 
         protected IBlock Block;
 
@@ -88,7 +88,7 @@ namespace ToSic.Sxc.Blocks.Edit
             return true;
         }
 
-        private AppManager BlockAppManager => Deps.AppManager.Value;
+        private AppManager BlockAppManager => Services.AppManager.Value;
 
         #endregion
 

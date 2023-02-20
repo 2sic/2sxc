@@ -75,8 +75,8 @@ namespace ToSic.Sxc.Dnn.Run
                 .Select(r => r.RoleID)
                 .ToList();
 
-        public static Guid? UserGuid(this UserInfo user) => 
-            Membership.GetUser(user.Username)?.ProviderUserKey as Guid?;
+        public static Guid UserGuid(this UserInfo user) =>
+            Membership.GetUser(user.Username)?.ProviderUserKey as Guid? ?? Guid.Empty;
 
         public static string UserIdentityToken(this UserInfo user) => 
             user.IsAnonymous() ? Constants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;

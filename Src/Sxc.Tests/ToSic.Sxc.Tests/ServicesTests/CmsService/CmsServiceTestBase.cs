@@ -22,24 +22,26 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
 
         public CmsServiceTestBase()
         {
-            var eavSystemLoader = Build<EavSystemLoader>();
+            var eavSystemLoader = GetService<EavSystemLoader>();
             eavSystemLoader.StartUp();
             eavSystemLoader.LoadLicenseAndFeatures();
 
-            var appStates = Build<IAppStates>();
+            var appStates = GetService<IAppStates>();
             var app = appStates.GetPresetOrNull();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
-            DynamicEntityDependencies = Build<DynamicEntityDependencies>();
+            DynamicEntityServices = GetService<DynamicEntityServices>();
         }
-        public readonly DynamicEntityDependencies DynamicEntityDependencies;
+        public readonly DynamicEntityServices DynamicEntityServices;
         public readonly IContentType TstDataContentType;
 
-        protected override void AddServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
+            base.SetupServices(services);
             services.AddTransient<IRuntime, Runtime>();
             services.TryAddTransient<IValueConverter, MockValueConverter>();
         }
+
 
         public static IEntity TstDataEntity(string text = "", string html = "", IContentType contentType = null)
         {
@@ -51,7 +53,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             return new Entity(AppId, 1, contentType, values, SomeTextField);
         }
 
-        public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityDependencies);
+        public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityServices);
 
         public IHtmlTag CmsServiceShow(string someHtmlValue)
         {
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var dynamicField = dynamicEntity.Field(SomeHtmlField);
             //var imgService = Build<LazySvc<IImageService>>();
             //var valueConverter = Build<LazySvc<IValueConverter>>();
-            var cmsService = Build<ICmsService>(); // new Services.CmsService.CmsService(imgService, valueConverter);
+            var cmsService = GetService<ICmsService>(); // new Services.CmsService.CmsService(imgService, valueConverter);
             return cmsService.Show(dynamicField);
         }
     }

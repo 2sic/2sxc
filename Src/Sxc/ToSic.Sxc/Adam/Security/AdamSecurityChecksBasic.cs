@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class AdamSecurityChecksBasic: AdamSecurityChecksBase
     {
-        public AdamSecurityChecksBasic(Dependencies dependencies) : base(dependencies, LogScopes.Base) { }
+        public AdamSecurityChecksBasic(MyServices services) : base(services, LogScopes.Base) { }
 
         /// <summary>
         /// Our version here just gives an ok - so that the site doesn't block this extension.

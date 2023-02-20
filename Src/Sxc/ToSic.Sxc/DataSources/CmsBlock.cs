@@ -31,44 +31,40 @@ namespace ToSic.Sxc.DataSources
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSource
     {
-        public const string InstanceLookupName = "module";
-        public const string InstanceIdKey = "Id"; // 2021-10-07 2dm changed from "ModuleId" because that's doesn't work in Oqtane
-
-        [PrivateApi]
-        public enum Settings
-        {
-            InstanceId
-        }
+        [PrivateApi] internal const string InstanceLookupName = "module";
+        [PrivateApi] internal const string ModuleIdKey = "Id";
+        [PrivateApi] internal const string FieldInstanceId = "InstanceId";
 
         /// <summary>
         /// The instance-id of the CmsBlock (2sxc instance, DNN ModId). <br/>
         /// It's named Instance-Id to be more neutral as we're opening it to other platforms
         /// </summary>
+        [Configuration(Field = FieldInstanceId, Fallback = "[" + InstanceLookupName + ":" + ModuleIdKey + "]")]
         public int? ModuleId
         {
             get
             {
                 Configuration.Parse();
-                var listIdString = Configuration[InstanceIdKey];
+                var listIdString = Configuration.GetThis();
                 return int.TryParse(listIdString, out var listId) ? listId : new int?();
             }
-            set => Configuration[InstanceIdKey] = value.ToString();
+            set => Configuration.SetThis(value);
         }
 
         #region Constructor
 
-        public new class Dependencies: ServiceDependencies<DataSource.Dependencies>
+        public new class MyServices: MyServicesBase<DataSource.MyServices>
         {
             public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
             public LazySvc<IModule> ModuleLazy { get; }
             public LazySvc<DataSourceFactory> DataSourceFactory { get; }
 
-            public Dependencies(DataSource.Dependencies rootDependencies,
+            public MyServices(DataSource.MyServices parentServices,
                 LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
-                LazySvc<DataSourceFactory> dataSourceFactory) : base(rootDependencies)
+                LazySvc<DataSourceFactory> dataSourceFactory) : base(parentServices)
             {
-                AddToLogQueue(
+                ConnectServices(
                     LazyCmsRuntime = lazyCmsRuntime,
                     ModuleLazy = moduleLazy,
                     DataSourceFactory = dataSourceFactory
@@ -76,16 +72,15 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        public CmsBlock(Dependencies dependencies): base(dependencies.RootDependencies, $"SDS.CmsBks")
+        public CmsBlock(MyServices services): base(services, $"SDS.CmsBks")
         {
-            _deps = dependencies.SetLog(Log);
+            _services = services;
 
             Provide(GetContent);
             Provide(ViewParts.StreamHeader, GetHeader);
             Provide(ViewParts.StreamHeaderOld, GetHeader);
-			Configuration.Values.Add(InstanceIdKey, $"[Settings:{Settings.InstanceId}||[{InstanceLookupName}:{InstanceIdKey}]]");
         }
-        private readonly Dependencies _deps;
+        private readonly MyServices _services;
         #endregion
 
 
@@ -125,6 +120,7 @@ namespace ToSic.Sxc.DataSources
                 return true;
             }
 
+            immutableArray = new ImmutableArray<IEntity>();
             return false;
         }
 

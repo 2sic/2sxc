@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources
         internal void SetOut(Query querySource) => Out = querySource.Out;
 
         [PrivateApi("not meant for public use")]
-        public Block(Dependencies dependencies, IAppStates appStates) : base(dependencies, "Sxc.BlckDs") => _appStates = appStates;
+        public Block(MyServices services, IAppStates appStates) : base(services, "Sxc.BlckDs") => _appStates = appStates;
         private readonly IAppStates _appStates;
 
 #if NETFRAMEWORK

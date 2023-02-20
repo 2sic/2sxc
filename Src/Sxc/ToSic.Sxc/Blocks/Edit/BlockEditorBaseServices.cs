@@ -5,7 +5,7 @@ using ToSic.Sxc.Apps;
 
 namespace ToSic.Sxc.Blocks.Edit
 {
-    public class BlockEditorBaseDependencies: ServiceDependencies
+    public class BlockEditorBaseServices: MyServicesBase
     {
         public LazySvc<CmsRuntime> CmsRuntime { get; }
         public LazySvc<CmsManager> CmsManager { get; }
@@ -13,13 +13,13 @@ namespace ToSic.Sxc.Blocks.Edit
         public Generator<BlockEditorForModule> BlkEdtForMod { get; }
         public Generator<BlockEditorForEntity> BlkEdtForEnt { get; }
 
-        public BlockEditorBaseDependencies(LazySvc<CmsRuntime> cmsRuntime, 
+        public BlockEditorBaseServices(LazySvc<CmsRuntime> cmsRuntime, 
             LazySvc<CmsManager> cmsManager, 
             LazySvc<AppManager> appManager,
             Generator<BlockEditorForModule> blkEdtForMod,
             Generator<BlockEditorForEntity> blkEdtForEnt)
         {
-            AddToLogQueue(
+            ConnectServices(
                 CmsRuntime = cmsRuntime,
                 CmsManager = cmsManager,
                 AppManager = appManager,

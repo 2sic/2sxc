@@ -15,11 +15,11 @@ namespace ToSic.Sxc.Dnn.Services
         private readonly Generator<IContextOfBlock> _context;
 
         public DnnRenderService(
-            Dependencies dependencies,
+            MyServices services,
             LazySvc<DnnPageChanges> dnnPageChanges,
             LazySvc<DnnClientResources> dnnClientResources,
             Generator<IContextOfBlock> context
-        ) : base(dependencies)
+        ) : base(services)
         {
             ConnectServices(
                 _dnnPageChanges = dnnPageChanges,

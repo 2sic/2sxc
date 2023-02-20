@@ -11,6 +11,7 @@ using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.Generics;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
@@ -141,28 +142,31 @@ namespace ToSic.Sxc.WebApi.App
             else ThrowIfNotAllowedInItem(itm, GrantSets.WriteSomething, AppState);
 
             // Convert to case-insensitive dictionary just to be safe!
-            var newContentItemCaseInsensitive = new Dictionary<string, object>(newContentItem, StringComparer.InvariantCultureIgnoreCase);
+            var rawValuesCaseInsensitive = newContentItem.ToInvariant();
 
             // Now create the cleaned up import-dictionary so we can create a new entity
             var cleanedNewItem = new AppContentEntityBuilder(Log)
-                .CreateEntityDictionary(contentType, newContentItemCaseInsensitive, AppState);
+                .CreateEntityDictionary(contentType, rawValuesCaseInsensitive, AppState)
+                .ToInvariant();
 
             // add owner
-            if (cleanedNewItem.Any(v => v.Key.ToLowerInvariant() == Attributes.EntityFieldOwner))
+            if (!cleanedNewItem.ContainsKey(Attributes.EntityFieldOwner))
                 cleanedNewItem.Add(Attributes.EntityFieldOwner, Context.User.IdentityToken);
 
             var dataController = DataController(AppState);
             if (id == null)
             {
+                // Get Metadata - not sure why we're using the raw values, but maybe there were removed in cleaned?
                 Log.A($"create new entity because id is null");
-                var metadata = GetMetadata(newContentItemCaseInsensitive);
+                var metadata = GetMetadata(rawValuesCaseInsensitive);
                 Log.A($"metadata: {metadata}");
 
                 var ids = dataController.Create(contentType, new List<Dictionary<string, object>> { cleanedNewItem }, metadata);
                 id = ids.FirstOrDefault();
 
                 Log.A($"new entity id: {id}");
-                var added = AddParentRelationship(newContentItemCaseInsensitive, id.Value);
+                // Get Metadata - not sure why we're using the raw values, but maybe there were removed in cleaned?
+                var added = AddParentRelationship(rawValuesCaseInsensitive, id.Value);
             }
             else
                 dataController.Update(id.Value, cleanedNewItem);
@@ -171,35 +175,36 @@ namespace ToSic.Sxc.WebApi.App
                 .Convert(AppState.List.One(id.Value));
         }
 
-        private bool AddParentRelationship(IDictionary<string, object> newContentItemCaseInsensitive, int addedEntityId)
+        private bool AddParentRelationship(IDictionary<string, object> valuesCaseInsensitive, int addedEntityId)
         {
-            var wrapLog = Log.Fn<bool>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
+            var wrapLog = Log.Fn<bool>($"item dictionary key count: {valuesCaseInsensitive.Count}");
 
-            if (!newContentItemCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
+            if (!valuesCaseInsensitive.Keys.Contains(SaveApiAttributes.ParentRelationship))
                 return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' key is missing");
 
-            var objectOrNull = newContentItemCaseInsensitive[SaveApiAttributes.ParentRelationship];
-            if (objectOrNull == null) return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' value is null");
+            var objectOrNull = valuesCaseInsensitive[SaveApiAttributes.ParentRelationship];
+            if (objectOrNull == null) 
+                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelationship}' value is null");
 
             if (!(objectOrNull is JsonObject parentRelationship))
                 return wrapLog.ReturnNull($"'{SaveApiAttributes.ParentRelationship}' value is not JsonObject");
 
             var parentGuid = (Guid?)parentRelationship[SaveApiAttributes.ParentRelParent];
-            if (!parentGuid.HasValue) return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelParent}' guid is missing");
+            if (!parentGuid.HasValue) 
+                return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelParent}' guid is missing");
 
             var parentEntity = AppState.List.One(parentGuid.Value);
-            if (parentEntity == null) return wrapLog.ReturnFalse("Parent entity is missing");
+            if (parentEntity == null) 
+                return wrapLog.ReturnFalse("Parent entity is missing");
 
-            //var entityId = (int?)parentRelationship["EntityId"];
             var ids = new[] { addedEntityId as int? };
             var index = (int)parentRelationship[SaveApiAttributes.ParentRelIndex];
-            //var willAdd = (bool?)parentRelationship["Add"];
+
             var field = (string)parentRelationship[SaveApiAttributes.ParentRelField];
             var fields = new[] { field };
 
             AppManager.Entities.FieldListAdd(parentEntity, fields, index, ids, asDraft: false, forceAddToEnd: false);
 
-            //return wrapLog.ReturnTrue($"new ParentRelationship a:{willAdd},e:{entityId},p:{parentGuid},f:{field},i:{index}");
             return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }
 

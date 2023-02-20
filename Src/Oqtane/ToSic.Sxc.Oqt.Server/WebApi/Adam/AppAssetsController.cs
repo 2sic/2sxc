@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 
     public class AppAssetsController: WebApi.AppAssetsControllerBase
     {
-        public AppAssetsController(Dependencies dependencies) 
-            : base(dependencies, OqtAssetsFileHelper.RouteAdam, "Assets") { }
+        public AppAssetsController(MyServices services) 
+            : base(services, OqtAssetsFileHelper.RouteAdam, "Assets") { }
     }
 }

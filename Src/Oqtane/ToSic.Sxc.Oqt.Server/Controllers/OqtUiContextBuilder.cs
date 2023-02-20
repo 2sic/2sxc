@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     public class OqtUiContextBuilder: UiContextBuilderBase
     {
-        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, RemoteRouterLink remoteRouterLink, Dependencies deps) : base(deps)
+        public OqtUiContextBuilder(ILinkPaths linkPaths, IContextOfSite ctx, SiteState siteState, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
         {
             _linkPaths = linkPaths;
             _context = ctx;
@@ -61,9 +61,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var gsUrl = _remoteRouterLink.LinkToRemoteRouter(
                 RemoteDestinations.GettingStarted,
-                Deps.SiteCtx.Site,
+                Services.SiteCtx.Site,
                 blockCtx?.Module.Id ?? 0,
-                Deps.AppToLaterInitialize,
+                Services.AppToLaterInitialize,
                 true
                 );
             return gsUrl;

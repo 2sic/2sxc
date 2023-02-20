@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Engines
         private readonly LazySvc<DynamicCodeRoot> _dynCodeRootLazy;
         private readonly Generator<AppConfigDelegate> _appConfigDelegateGenerator;
 
-        public TokenEngine(EngineBaseDependencies helpers, LazySvc<DynamicCodeRoot> dynCodeRootLazy, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(helpers) =>
+        public TokenEngine(EngineBaseServices helpers, LazySvc<DynamicCodeRoot> dynCodeRootLazy, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(helpers) =>
             ConnectServices(
                 _dynCodeRootLazy = dynCodeRootLazy,
                 _appConfigDelegateGenerator = appConfigDelegateGenerator

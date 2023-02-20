@@ -12,9 +12,9 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamItemDtoMaker<TFolderId, TFileId> DtoMaker { get; }
 
-        public AdamTransUpload(AdamDependencies<TFolderId, TFileId> dependencies) : base(dependencies, "Adm.TrnUpl")
+        public AdamTransUpload(AdamServices<TFolderId, TFileId> services) : base(services, "Adm.TrnUpl")
         {
-            DtoMaker = _Deps.AdamDtoMaker.New().Init(AdamContext);
+            DtoMaker = Services.AdamDtoMaker.New().Init(AdamContext);
         }
 
         public AdamItemDto UploadOne(Stream stream, string subFolder, string fileName)
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.Adam
             #region check content-type extensions...
 
             // Check file size and extension
-            var fileName = string.Copy(originalFileName);
+            var fileName = originalFileName;
             if (!AdamContext.Security.ExtensionIsOk(fileName, out var exceptionAbstraction))
                 throw exceptionAbstraction;
 

@@ -123,8 +123,6 @@ namespace ToSic.Sxc.Dnn.Adam
                 // also catch this, as it's an additional exception which also happens in the AddFolder when a folder already existed
                 return "error, probably folder already exists";
             }
-
-            return "error ?";
         });
 
         public void Rename(IFolder folder, string newName) => Log.Do($"..., {newName}", () =>

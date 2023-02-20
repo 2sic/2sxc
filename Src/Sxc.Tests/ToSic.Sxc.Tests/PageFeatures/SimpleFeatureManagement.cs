@@ -9,17 +9,17 @@ namespace ToSic.Sxc.Tests.PageFeatures
         [TestMethod]
         public void PageFeaturesCaseInsensitive()
         {
-            var fm = Build<IPageFeaturesManager>();
+            var fm = GetService<IPageFeaturesManager>();
             Assert.IsTrue(fm.Features["turnOn"] != null);
             Assert.IsTrue(fm.Features["Turnon"] != null);
         }
         [TestMethod]
         public void AdditionalFeatures()
         {
-            var fm = Build<IPageFeaturesManager>();
+            var fm = GetService<IPageFeaturesManager>();
             Assert.IsTrue(!fm.Features.TryGetValue("dummy", out _));
 
-            var cat = Build<PageFeaturesCatalog>();
+            var cat = GetService<PageFeaturesCatalog>();
             cat.Register(new PageFeature("dummy", "dummy-feature"));
 
             Assert.IsTrue(fm.Features["dummy"] != null);

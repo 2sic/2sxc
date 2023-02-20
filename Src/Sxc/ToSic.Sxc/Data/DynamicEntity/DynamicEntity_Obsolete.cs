@@ -18,16 +18,16 @@ namespace ToSic.Sxc.Data
             get
             {
                 // if it's neither in a running context nor in a running portal, no toolbar
-                if (_Dependencies.BlockOrNull == null)
+                if (_Services.BlockOrNull == null)
                     return new System.Web.HtmlString("");
 
                 // If we're not in a running context, of which we know the permissions, no toolbar
-                var userMayEdit = _Dependencies.BlockOrNull?.Context.UserMayEdit ?? false;
+                var userMayEdit = _Services.BlockOrNull?.Context.UserMayEdit ?? false;
 
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");
 
-                if (_Dependencies.CompatibilityLevel > Constants.MaxLevelForEntityDotToolbar)
+                if (_Services.CompatibilityLevel > Constants.MaxLevelForEntityDotToolbar)
                     throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://r.2sxc.org/EditToolbar");
 
                 var toolbar = new Edit.Toolbar.ItemToolbar(Entity).ToolbarAsTag;
@@ -39,10 +39,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
         public System.Web.IHtmlString Render()
         {
-            if (_Dependencies.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
+            if (_Services.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
                 throw new Exception("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
 
-            return _Dependencies.RenderService.One(this);
+            return _Services.RenderService.One(this);
         }
 
         [PrivateApi("shouldn't be used, but it may be published by accident, so shouldn't be removed. ")]

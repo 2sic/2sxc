@@ -8,17 +8,17 @@ using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Engines
 {
-    public class EngineBaseDependencies: ServiceDependencies
+    public class EngineBaseServices: MyServicesBase
     {
 
-        public EngineBaseDependencies(IServerPaths serverPaths,
+        public EngineBaseServices(IServerPaths serverPaths,
             IBlockResourceExtractor blockResourceExtractor,
             LazySvc<AppPermissionCheck> appPermCheckLazy,
             Polymorphism.Polymorphism polymorphism,
             LazySvc<IAppStates> appStatesLazy
         )
         {
-            AddToLogQueue(
+            ConnectServices(
                 Polymorphism = polymorphism,
                 AppStatesLazy = appStatesLazy,
                 ServerPaths = serverPaths,

@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Tests.ServicesTests
     {
         private ISecureDataService GetSecureDataService()
         {
-            var sds = Build<ISecureDataService>();
+            var sds = GetService<ISecureDataService>();
             sds.Debug = true;
             return sds;
         }

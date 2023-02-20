@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi.Adam
             var subfolders = currentFolder.Folders.ToList();
             var files = currentFolder.Files.ToList();
 
-            var dtoMaker = _Deps.AdamDtoMaker.New().Init(AdamContext);
+            var dtoMaker = Services.AdamDtoMaker.New().Init(AdamContext);
 
             var currentFolderDto = dtoMaker.Create(currentFolder);
             currentFolderDto.Name = ".";

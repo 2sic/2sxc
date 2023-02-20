@@ -18,19 +18,19 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 
         #region Dependencies
 
-        public class Dependencies : ServiceDependencies
+        public class MyServices : MyServicesBase
         {
             public LazySvc<OqtAssetsFileHelper> FileHelper { get; }
             public IWebHostEnvironment HostingEnvironment { get; }
             public LazySvc<AppFolder> AppFolder { get; }
             public SiteState SiteState { get; }
 
-            public Dependencies(
+            public MyServices(
                 IWebHostEnvironment hostingEnvironment,
                 LazySvc<AppFolder> appFolder,
                 SiteState siteState,
                 LazySvc<OqtAssetsFileHelper> fileHelper
-            ) => AddToLogQueue(
+            ) => ConnectServices(
                 HostingEnvironment = hostingEnvironment,
                 AppFolder = appFolder,
                 SiteState = siteState,
@@ -41,13 +41,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         #endregion
 
 
-        protected AppAssetsControllerBase(Dependencies dependencies, string route, string logSuffix): base(logSuffix)
+        protected AppAssetsControllerBase(MyServices services, string route, string logSuffix): base(logSuffix)
         {
-            Deps = dependencies.SetLog(Log);
+            Deps = services.ConnectServices(Log);
             Route = route;
         }
 
-        private Dependencies Deps;
+        private MyServices Deps;
 
         [HttpGet("{*filePath}")]
         public IActionResult GetFile([FromRoute] string appName, [FromRoute] string filePath)

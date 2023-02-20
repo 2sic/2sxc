@@ -1,21 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.StartUp;
-using ToSic.Lib;
 using ToSic.Sxc.Startup;
 using ToSic.Testing.Shared;
 
 namespace ToSic.Sxc.Tests
 {
-    public class TestBaseSxc: TestBaseDiEmpty
+    public class TestBaseSxc: TestBaseEavCore
     {
-
-        protected override IServiceCollection SetupServices(IServiceCollection services)
+        protected override void SetupServices(IServiceCollection services)
         {
-            return base.SetupServices(services)
-                .AddSxcCore()
-                .AddEavCore()
-                .AddEavCoreFallbackServices()
-                .AddLibCore();
+            base.SetupServices(services);
+            services
+                .AddSxcCore();
         }
 
     }
