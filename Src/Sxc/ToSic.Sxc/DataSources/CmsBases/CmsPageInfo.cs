@@ -183,7 +183,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> RawProperties => new Dictionary<string, object>
+        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
         {
             // v14+
             { Attributes.TitleNiceName, Title },

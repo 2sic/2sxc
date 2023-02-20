@@ -221,11 +221,12 @@ namespace ToSic.Sxc.Dnn.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> RawProperties => new Dictionary<string, object>(Properties)
+        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>(Properties)
         {
             { Attributes.TitleNiceName, Name },
             { nameof(Name), Name },
         };
+
     }
 
 }

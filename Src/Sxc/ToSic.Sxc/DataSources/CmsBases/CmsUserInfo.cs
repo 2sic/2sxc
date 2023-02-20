@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
@@ -24,10 +23,8 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class CmsUserInfo: IRawEntity, IHasIdentityNameId // : IUser - not inheriting for the moment, to not include deprecated properties IsAdmin, IsSuperUser, IsDesigner...
+    public class CmsUserInfo: RawEntityBase, IRawEntity, IHasIdentityNameId // : IUser - not inheriting for the moment, to not include deprecated properties IsAdmin, IsSuperUser, IsDesigner...
     {
-        public int Id { get; set; }
-        public Guid Guid { get; set; }
         public string NameId { get; set; }
         /// <summary>
         /// Role ID List.
@@ -50,18 +47,23 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> RawProperties => new Dictionary<string, object>
+        public override Dictionary<string, object> GetProperties(CreateRawOptions options)
         {
-            { Attributes.TitleNiceName, Name },
-            { nameof(Name), Name },
-            { nameof(NameId), NameId },
-            { nameof(IsSystemAdmin), IsSystemAdmin },
-            { nameof(IsSiteAdmin), IsSiteAdmin },
-            { nameof(IsContentAdmin), IsContentAdmin },
-            { nameof(IsAnonymous), IsAnonymous },
-            { nameof(Username), Username },
-            { nameof(Email), Email },
-            { nameof(RoleIds), RoleIds == null ? "" : string.Join(",", RoleIds) }
-        };
+            var data = new Dictionary<string, object>
+            {
+                { Attributes.TitleNiceName, Name },
+                { nameof(Name), Name },
+                { nameof(NameId), NameId },
+                { nameof(IsSystemAdmin), IsSystemAdmin },
+                { nameof(IsSiteAdmin), IsSiteAdmin },
+                { nameof(IsContentAdmin), IsContentAdmin },
+                { nameof(IsAnonymous), IsAnonymous },
+                { nameof(Username), Username },
+                { nameof(Email), Email },
+            };
+            if(options.AddKey(nameof(RoleIds)))
+                data.Add(nameof(RoleIds), RoleIds == null ? "" : string.Join(",", RoleIds));
+            return data;
+        }
     }
 }

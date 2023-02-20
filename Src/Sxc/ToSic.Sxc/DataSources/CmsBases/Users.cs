@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
@@ -29,9 +31,11 @@ namespace ToSic.Sxc.DataSources
         ExpectsDataOfType = "ac11fae7-1916-4d2d-8583-09872e1e6966",
         Difficulty = DifficultyBeta.Default
     )]
-    public class Users : ExternalData
+    public partial class Users : ExternalData
     {
-        private readonly IDataBuilder _usersDataBuilder;
+        private readonly ITreeMapper _treeMapper;
+        private readonly LazySvc<DataSourceFactory> _dsFactory;
+        private readonly IDataBuilder _usersBuilder;
         private readonly UsersDataSourceProvider _provider;
 
         #region Other Constants
@@ -98,6 +102,28 @@ namespace ToSic.Sxc.DataSources
             set => Configuration.SetThis(value);
         }
 
+        /// <summary>
+        /// Add property `Roles` as a relationship to role entities.
+        /// </summary>
+        [Configuration(Fallback = true)] // TEMP/ WIP
+        [PrivateApi]
+        public bool AddRoles
+        {
+            get => Configuration.GetThis(true);
+            set => Configuration.SetThis(value);
+        }
+
+        /// <summary>
+        /// Add property `RoleIds` as a comma separated list of IDs.
+        /// </summary>
+        [Configuration(Fallback = false)]
+        [PrivateApi]
+        public bool AddRoleIds
+        {
+            get => Configuration.GetThis(false);
+            set => Configuration.SetThis(value);
+        }
+
         #endregion
 
 
@@ -107,16 +133,19 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Users(MyServices services, UsersDataSourceProvider provider, IDataBuilder usersDataBuilder) : base(services, "SDS.Users")
+        public Users(MyServices services,
+            UsersDataSourceProvider provider,
+            IDataBuilder dataBuilder,
+            LazySvc<DataSourceFactory> dsFactory,
+            ITreeMapper treeMapper) : base(services, "SDS.Users")
         {
             ConnectServices(
                 _provider = provider,
-                _usersDataBuilder = usersDataBuilder.Configure(typeName: "User", titleField: nameof(CmsUserInfo.Name))
+                _usersBuilder = dataBuilder,
+                _dsFactory = dsFactory,
+                _treeMapper = treeMapper
             );
             Provide(GetList); // default out, if accessed, will deliver GetList
-            
-            // UserRoles not final...
-            // Provide("UserRoles", GetRoles);
         }
 
         #endregion
@@ -124,146 +153,71 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi]
         public IImmutableList<IEntity> GetList() => Log.Func(l =>
         {
-            var users = GetUsersAndFilter();
-            var result = _usersDataBuilder.CreateMany(users);
+            // Always parse configuration first
+            Configuration.Parse();
 
-            return (result, "found");
+            // Get raw users from provider, then generate entities
+            var usersRaw = GetUsersAndFilter();
+
+            // Figure out options to be sure we have the roles/roleids
+            var keysToAdd = new List<string>();
+            if (AddRoleIds) keysToAdd.Add(nameof(CmsUserInfo.RoleIds));
+            _usersBuilder.Configure(typeName: "User", titleField: nameof(CmsUserInfo.Name), createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
+
+            var users = _usersBuilder.CreateMany(usersRaw);
+
+            // If we should include the roles, create them now and attach
+            if (AddRoles)
+            {
+                try
+                {
+                    // Mix generated users with the RoleIds which only exist on the raw list
+                    var userNeeds = users.ToList()
+                        .Select(u =>
+                            (u, usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.RoleIds ?? new List<int>()))
+                        .ToList();
+                    var rolesLookup = GetRolesForLookup(usersRaw);
+
+                    var mapped = _treeMapper.AddSomeRelationshipsWIP("Roles", userNeeds, rolesLookup);
+                    users = mapped.ToImmutableList();
+                }
+                catch (Exception ex)
+                {
+                    l.Ex(ex);
+                    /* ignore for now */
+                }
+            }
+
+            return (users, $"found {users.Count}");
         });
 
-        //// WIP - not final yet
-        //// We should only implement this when we're sure about how it can be used
-        //// Maybe a sub-entity-property would be better...
-        //private IImmutableList<IEntity> GetRoles()
-        //{
-        //    var wrapLog = Log.Fn<IImmutableList<IEntity>>();
-        //    var users = GetUsersAndFilter();
-
-        //    var result = users
-        //        .Where(u => u.RoleIds?.Any() == true)
-        //        .SelectMany(u => u.RoleIds.Select(r =>
-        //            DataBuilder.Entity(new Dictionary<string, object>
-        //                {
-        //                    { "RoleId", r },
-        //                    { "UserId", u.Id },
-        //                    { Attributes.TitleNiceName, $"User {u.Id} in Role {r}" },
-        //                },
-        //                titleField: Attributes.TitleNiceName))
-        //        )
-        //        .ToImmutableList();
-
-        //    return wrapLog.Return(result, "found");
-        //}
 
         private List<CmsUserInfo> GetUsersAndFilter() => Log.Func(l =>
         {
-            if (_usersFiltered != null) return (_usersFiltered, "re-use");
-            
             var users = _provider.GetUsersInternal()?.ToList();
-
             if (users == null || !users.Any()) return (new List<CmsUserInfo>(), "null/empty");
 
-            // This will resolve the tokens before starting
-            Configuration.Parse();
-
-            foreach (var filter in Filters())
+            foreach (var filter in GetAllFilters())
                 users = users.Where(filter).ToList();
 
-            return (_usersFiltered = users, $"found {users.Count}");
-        });
-        private List<CmsUserInfo> _usersFiltered;
-
-        private List<Func<CmsUserInfo, bool>> Filters() => Log.Func(l =>
-        {
-            var filters = new List<Func<CmsUserInfo, bool>>
-            {
-                IncludeUsersPredicate(),
-                ExcludeUsersPredicate(),
-                IncludeRolesPredicate(),
-                ExcludeRolesPredicate(),
-                SuperUserPredicate()
-            };
-            filters = filters.Where(f => f != null).ToList();
-            return (filters, $"{filters.Count}");
+            return (users, $"found {users.Count}");
         });
 
-        private Func<CmsUserInfo, bool> IncludeUsersPredicate()
+
+        private List<(IEntity r, int EntityId)> GetRolesForLookup(List<CmsUserInfo> usersRaw)
         {
-            if (string.IsNullOrEmpty(UserIds)) return null;
-            var includeUserGuids = IncludeUserGuids();
-            var includeUserIds = IncludeUserIds();
-            if (includeUserGuids == null && includeUserIds == null) return null;
-            return u => (includeUserGuids != null && includeUserGuids(u)) || (includeUserIds != null && includeUserIds(u));
+            // Get list of all role IDs which are to be used
+            var roleIds = usersRaw.SelectMany(u => u.RoleIds).Distinct().ToList();
+            // Get roles, use the current data source to provide aspects such as lookups etc.
+            var rolesDs = _dsFactory.Value.GetDataSource<Roles>(this);
+            // Set filter parameter to only get roles we'll need
+            rolesDs.RoleIds = string.Join(",", roleIds);
+            // Retrieve roles and create lookup for relationship-mapper
+            var rolesLookup = rolesDs.List.Select(r => (r, r.EntityId)).ToList();
+            return rolesLookup;
         }
 
-        private Func<CmsUserInfo, bool> IncludeUserGuids()
-        {
-            var userGuidFilter = UserIds.Split(Separator)
-                .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
-                .Where(u => u != Guid.Empty).ToList();
-            return userGuidFilter.Any()
-                ? (Func<CmsUserInfo, bool>)(u => u.Guid != Guid.Empty && userGuidFilter.Contains(u.Guid))
-                : null;
-        }
 
-        private Func<CmsUserInfo, bool> IncludeUserIds()
-        {
-            var userIdFilter = UserIds.Split(Separator)
-                .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
-                .Where(u => u != -1).ToList();
-            return userIdFilter.Any() 
-                ? (Func<CmsUserInfo, bool>) (u => userIdFilter.Contains(u.Id)) 
-                : null;
-        }
-
-        private Func<CmsUserInfo, bool> ExcludeUsersPredicate()
-        {
-            if (string.IsNullOrEmpty(ExcludeUserIds)) return null;
-            var excludeUserGuids = ExcludeUsersByGuids();
-            var excludeUserIds = ExcludeUsersById();
-            if (excludeUserGuids == null && excludeUserIds == null) return null;
-            return u => (excludeUserGuids == null || excludeUserGuids(u)) && (excludeUserIds == null || excludeUserIds(u));
-        }
-
-        private Func<CmsUserInfo, bool> ExcludeUsersByGuids()
-        {
-            var excludeUserGuidsFilter = ExcludeUserIds.Split(Separator)
-                .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
-                .Where(u => u != Guid.Empty).ToList();
-            return excludeUserGuidsFilter.Any()
-                ? (Func<CmsUserInfo, bool>)(u => u.Guid != Guid.Empty && !excludeUserGuidsFilter.Contains(u.Guid))
-                : null;
-        }
-
-        private Func<CmsUserInfo, bool> ExcludeUsersById()
-        {
-            var excludeUserIdsFilter = ExcludeUserIds.Split(Separator)
-                .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
-                .Where(u => u != -1).ToList();
-            return excludeUserIdsFilter.Any()
-                ? (Func<CmsUserInfo, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
-                : null;
-        }
-
-        private Func<CmsUserInfo, bool> IncludeRolesPredicate()
-        {
-            var rolesFilter = Roles.RolesCsvListToInt(RoleIds);
-            return rolesFilter.Any()
-                ? (Func<CmsUserInfo, bool>) (u => u.RoleIds.Any(r => rolesFilter.Contains(r)))
-                : null;
-        }
-
-        private Func<CmsUserInfo, bool> ExcludeRolesPredicate()
-        {
-            var excludeRolesFilter = Roles.RolesCsvListToInt(ExcludeRoleIds);
-            return excludeRolesFilter.Any()
-                ? (Func<CmsUserInfo, bool>) (u => !u.RoleIds.Any(r => excludeRolesFilter.Contains(r)))
-                : null;
-        }
-
-        private Func<CmsUserInfo, bool> SuperUserPredicate() =>
-            IncludeSystemAdmins
-                ? (u => true) // skip IsSystemAdmin check will return normal and super users
-                : (Func<CmsUserInfo, bool>) (u => !u.IsSystemAdmin); // only normal users
 
     }
 }
