@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
             LazySvc<IUserRoleRepository> userRoleRepository,
             LazySvc<UserManager<IdentityUser>> identityUserManager,
             IHttpContextAccessor httpContextAccessor,
-            SiteState siteState): base(OqtConstants.OqtLogPrefix + ".User")
+            SiteState siteState): base($"{OqtConstants.OqtLogPrefix}.User")
         {
             ConnectServices(
                 _userRepository = userRepository,

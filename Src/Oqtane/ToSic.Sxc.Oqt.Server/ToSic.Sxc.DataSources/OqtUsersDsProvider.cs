@@ -45,7 +45,7 @@ namespace ToSic.Sxc.DataSources
                         return new CmsUserRaw
                         {
                             Id = u.UserId,
-                            Guid = new((_identityUserManager.FindByNameAsync(u.Username).Result).Id),
+                            Guid = new(_identityUserManager.FindByNameAsync(u.Username).Result.Id),
                             NameId = $"{OqtConstants.UserTokenPrefix}{u.UserId}",
                             Roles = myRoles.Select(ur => ur.RoleId).ToList(),
                             IsSystemAdmin = myRoles.Any(ur => ur.Role.Name == RoleNames.Host),
