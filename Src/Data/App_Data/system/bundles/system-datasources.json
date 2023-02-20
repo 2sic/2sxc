@@ -1175,6 +1175,121 @@
                 ]
               },
               {
+                "Name": "IncludeRelationshipsAsCsv",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 167693,
+                    "Version": 3,
+                    "Guid": "ef4f7188-f0d3-4062-ba18-1024b558da9e",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Include Relationships As CSV"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "34febfa2-fb09-43d7-880d-9103e4d6f52a"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 167694,
+                    "Version": 1,
+                    "Guid": "9838782c-a2fc-45a6-8cac-d0842491675b",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 167695,
+                    "Version": 1,
+                    "Guid": "1b8107ad-fa98-4df7-b5f6-5aff653579b9",
+                    "Type": {
+                      "Name": "@string-dropdown",
+                      "Id": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":System Default (return an object)\nfalse:Return object\ntrue:Return comma separated list of IDs"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "IncludeRelationshipId",
                 "Type": "String",
                 "InputType": "string-dropdown",
@@ -1402,7 +1517,7 @@
                 "Metadata": [
                   {
                     "Id": 129141,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "bf72b2eb-b165-48e1-9fc0-3ec583f51814",
                     "Type": {
                       "Name": "@All",
@@ -1411,25 +1526,25 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-dropdown"
+                          "en-us": "string-dropdown"
                         },
                         "Name": {
-                          "*": "Relationship Title"
+                          "en-us": "Relationship Title"
                         },
                         "Notes": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -1437,7 +1552,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "7813fc65-c96c-4a2e-a101-2018d3041d6f"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -1445,16 +1562,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": false
+                          "en-us": false
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -1462,7 +1579,7 @@
                   },
                   {
                     "Id": 129142,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "8feb67b0-2a4c-4c4d-b044-8107fdff60e9",
                     "Type": {
                       "Name": "@String",
@@ -1471,10 +1588,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -1482,7 +1599,7 @@
                   },
                   {
                     "Id": 129143,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "b8c22f77-9f56-43bf-a095-bae2c4f2a7dd",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -1491,12 +1608,15 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": "System Default (include):\nDon't include:false\nInclude:true"
+                          "en-us": "System Default (include):\nDon't include:false\nInclude:true"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": ""
                         }
                       },
                       "Boolean": {
                         "EnableTextEntry": {
-                          "*": false
+                          "en-us": false
                         }
                       }
                     },
@@ -3095,6 +3215,34 @@
           },
           "Entities": [
             {
+              "Id": 167696,
+              "Version": 1,
+              "Guid": "7813fc65-c96c-4a2e-a101-2018d3041d6f",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "function v1 (data, context) {\n  return data.IncludeRelationshipsAsCsv == 'true';\n}"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Disabled"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Disabled"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
               "Id": 134195,
               "Version": 2,
               "Guid": "48274f4d-b0ce-434c-9c73-83bb91b9f2c6",
@@ -3239,6 +3387,34 @@
                   },
                   "Title": {
                     "en-us": "Setting Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 167697,
+              "Version": 1,
+              "Guid": "34febfa2-fb09-43d7-880d-9103e4d6f52a",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "function v1 (data, context) {\n  return data.IncludeRelationshipsAsCsv == 'true'\n    ? 'CSV like \"27,42,999\"'\n    : 'object like { id: 27, guid: \"guid-guid-guidguid\" }';\n}"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Notes"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Notes"
                   }
                 },
                 "Boolean": {
@@ -15245,6 +15421,91 @@
             "Description": null,
             "Attributes": [
               {
+                "Name": "GroupFilters",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 167704,
+                    "Version": 2,
+                    "Guid": "06a447e9-6fa5-4185-9f9c-a51859f1b55d",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Optional Filters"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 167705,
+                    "Version": 1,
+                    "Guid": "9f138f55-7f73-40b0-91f9-ad9399c87eaa",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "UserIds",
                 "Type": "String",
                 "InputType": "string-dropdown-query",
@@ -15788,7 +16049,7 @@
                 "Metadata": [
                   {
                     "Id": 160767,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "2f465b34-6a19-4ce0-9641-60ba2f494e1d",
                     "Type": {
                       "Name": "@All",
@@ -15848,7 +16109,7 @@
                   },
                   {
                     "Id": 160772,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "3ff21448-631a-4e4d-9a8b-57495bf13f57",
                     "Type": {
                       "Name": "@String",
@@ -15868,7 +16129,7 @@
                   },
                   {
                     "Id": 160773,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "cef3abfb-d416-44be-aeae-1773cbbbfecc",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -15877,7 +16138,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": "false:Don't include System Admins\ntrue:Include System Admins"
+                          "en-us": "false:Don't include System Admins\ntrue:Include System Admins\nrequired:Include ONLY System Admins"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -15901,7 +16162,7 @@
                 "Metadata": [
                   {
                     "Id": 167685,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "46bf25aa-c72d-46d2-9d5e-1485662e8791",
                     "Type": {
                       "Name": "@All",
@@ -15919,7 +16180,7 @@
                           "en-us": "empty-default"
                         },
                         "Name": {
-                          "en-us": "Add More Fields (eg. Role Infos)"
+                          "en-us": "Add Special Fields"
                         },
                         "Notes": {
                           "en-us": ""
@@ -15961,7 +16222,7 @@
                   },
                   {
                     "Id": 167688,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "0f6e0ddc-ce96-4e3b-813d-f793d0b0692f",
                     "Type": {
                       "Name": "@empty-default",
@@ -15970,7 +16231,7 @@
                     "Attributes": {
                       "Boolean": {
                         "DefaultCollapsed": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },
@@ -15986,7 +16247,7 @@
                 "Metadata": [
                   {
                     "Id": 167686,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "8c12c87d-3e52-499d-b7b4-86af98c91d7b",
                     "Type": {
                       "Name": "@All",
@@ -16004,10 +16265,10 @@
                           "en-us": "string-dropdown"
                         },
                         "Name": {
-                          "en-us": "Add \"Roles\" (related items)"
+                          "en-us": "Add \"Roles\""
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>Include the Field Roles referencing the roles each user is in.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -16046,7 +16307,7 @@
                   },
                   {
                     "Id": 167689,
-                    "Version": 1,
+                    "Version": 3,
                     "Guid": "f02973a1-24e6-4a4a-9b90-4cc130d2cb86",
                     "Type": {
                       "Name": "@String",
@@ -16066,7 +16327,7 @@
                   },
                   {
                     "Id": 167690,
-                    "Version": 1,
+                    "Version": 3,
                     "Guid": "0adfbeef-3580-4758-a61c-0694dfbc66e9",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -16075,7 +16336,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": ":Default (don't add)\nfalse:Do not add Roles\ntrue:Add Roles"
+                          "en-us": ":Default (add)\nfalse:Do not add Roles\ntrue:Add Roles"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -16083,120 +16344,7 @@
                       },
                       "Boolean": {
                         "EnableTextEntry": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
-                "Name": "AddRoleIds",
-                "Type": "String",
-                "InputType": "string-dropdown",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 167687,
-                    "Version": 2,
-                    "Guid": "edec1d89-87df-4186-b84c-0640260e8b00",
-                    "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "string-dropdown"
-                        },
-                        "Name": {
-                          "en-us": "Add \"RoleIds\" (with comma separated role IDs)"
-                        },
-                        "Notes": {
-                          "en-us": ""
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": false
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
                           "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 167691,
-                    "Version": 1,
-                    "Guid": "a896ea8c-1b30-47bc-a66f-8592cfdeb6f9",
-                    "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 167692,
-                    "Version": 1,
-                    "Guid": "6ab53032-0a33-41b0-a850-dcbd8b4c18d0",
-                    "Type": {
-                      "Name": "@string-dropdown",
-                      "Id": "@string-dropdown"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ":Default (don't add)\nfalse:Do not add Role IDs\ntrue:Add Role IDs"
-                        },
-                        "DropdownValuesFormat": {
-                          "en-us": "value-label"
-                        }
-                      },
-                      "Boolean": {
-                        "EnableTextEntry": {
-                          "en-us": false
                         }
                       }
                     },
