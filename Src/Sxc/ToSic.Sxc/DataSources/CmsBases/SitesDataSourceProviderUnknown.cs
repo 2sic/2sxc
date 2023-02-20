@@ -9,7 +9,7 @@ namespace ToSic.Sxc.DataSources
         public SitesDataSourceProviderUnknown(MyServices services, WarnUseOfUnknown<SitesDataSourceProviderUnknown> _): base(services, $"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
         { }
 
-        public override List<CmsSiteInfo> GetSitesInternal(
-            ) => new List<CmsSiteInfo>();
+        public override List<SiteDataRaw> GetSitesInternal(
+            ) => new List<SiteDataRaw>();
     }
 }

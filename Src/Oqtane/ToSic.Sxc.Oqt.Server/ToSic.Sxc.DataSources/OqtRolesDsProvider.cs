@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
         }
 
         [PrivateApi]
-        public override IEnumerable<CmsRoleInfo> GetRolesInternal() => Log.Func(l =>
+        public override IEnumerable<RoleDataRaw> GetRolesInternal() => Log.Func(l =>
         {
             var siteId = _siteState.Alias.SiteId;
             l.A($"Portal Id {siteId}");
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.DataSources
                 if (!roles.Any()) return (new(), "null/empty");
 
                 var result = roles
-                    .Select(r => new CmsRoleInfo
+                    .Select(r => new RoleDataRaw
                     {
                         Id = r.RoleId,
                         // Guid = r.

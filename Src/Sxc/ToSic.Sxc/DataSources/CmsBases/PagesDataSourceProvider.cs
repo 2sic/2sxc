@@ -22,7 +22,7 @@ namespace ToSic.Sxc.DataSources
         /// So the core data source doesn't have settings to configure this
         /// </summary>
         /// <returns></returns>
-        public abstract List<CmsPageInfo> GetPagesInternal(
+        public abstract List<PageDataRaw> GetPagesInternal(
             string noParamOrder = Eav.Parameters.Protector,
             bool includeHidden = default,
             bool includeDeleted = default,

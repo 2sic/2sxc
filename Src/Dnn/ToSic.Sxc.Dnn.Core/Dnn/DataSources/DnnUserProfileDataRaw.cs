@@ -141,10 +141,10 @@ namespace ToSic.Sxc.Dnn.DataSources
             l.A($"users: {users.Count}");
 
             // convert Profiles to Entities
-            var results = new List<DnnUserProfileInfo>();
+            var results = new List<DnnUserProfileDataRaw>();
             foreach (UserInfo user in users)
             {
-                var dnnUserProfile = new DnnUserProfileInfo
+                var dnnUserProfile = new DnnUserProfileDataRaw
                 {
                     Id = user.UserID,
                     Guid = user.UserGuid(),
@@ -206,7 +206,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class DnnUserProfileInfo : IRawEntity
+    public class DnnUserProfileDataRaw : IRawEntity
     {
         public int Id { get; set; }
         public Guid Guid { get; set; }

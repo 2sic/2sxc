@@ -78,7 +78,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: "Role", titleField: nameof(CmsRoleInfo.Name), idAutoIncrementZero: false)
+                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: "Role", titleField: nameof(RoleDataRaw.Name), idAutoIncrementZero: false)
             );
             Provide(GetList);
         }
@@ -110,19 +110,19 @@ namespace ToSic.Sxc.DataSources
             return (result, $"found {result.Count} roles");
         });
 
-        private Func<CmsRoleInfo, bool> IncludeRolesPredicate()
+        private Func<RoleDataRaw, bool> IncludeRolesPredicate()
         {
             var includeRolesFilter = RolesCsvListToInt(RoleIds);
             return includeRolesFilter.Any() 
-                ? (Func<CmsRoleInfo, bool>) (r => includeRolesFilter.Contains(r.Id)) 
+                ? (Func<RoleDataRaw, bool>) (r => includeRolesFilter.Contains(r.Id)) 
                 : null;
         }
 
-        private Func<CmsRoleInfo, bool> ExcludeRolesPredicate()
+        private Func<RoleDataRaw, bool> ExcludeRolesPredicate()
         {
             var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
             return excludeRolesFilter.Any()
-                ? (Func<CmsRoleInfo, bool>)(r => !excludeRolesFilter.Contains(r.Id))
+                ? (Func<RoleDataRaw, bool>)(r => !excludeRolesFilter.Contains(r.Id))
                 : null;
         }
 

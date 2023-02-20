@@ -20,7 +20,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="CmsPageInfo"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -77,7 +77,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _fileBuilder = dataBuilder.Configure(typeName: AppFileInfo.TypeName, titleField: nameof(AppFileInfo.Title)),
+                _fileBuilder = dataBuilder.Configure(typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Title)),
                 _treeMapper = treeMapper
             );
 

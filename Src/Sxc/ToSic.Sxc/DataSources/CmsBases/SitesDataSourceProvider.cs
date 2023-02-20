@@ -40,7 +40,7 @@ namespace ToSic.Sxc.DataSources
         /// So the core data source doesn't have settings to configure this
         /// </summary>
         /// <returns></returns>
-        public abstract List<CmsSiteInfo> GetSitesInternal();
+        public abstract List<SiteDataRaw> GetSitesInternal();
 
         public int GetZoneId(int siteId) => Services.ZoneMapperLazy.Value.GetZoneId(siteId);
 

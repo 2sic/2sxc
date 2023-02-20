@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class CmsUserInfo: RawEntityBase, IRawEntity, IHasIdentityNameId // : IUser - not inheriting for the moment, to not include deprecated properties IsAdmin, IsSuperUser, IsDesigner...
+    public class UserDataRaw: RawEntityBase, IRawEntity, IHasIdentityNameId // : IUser - not inheriting for the moment, to not include deprecated properties IsAdmin, IsSuperUser, IsDesigner...
     {
         public string NameId { get; set; }
         /// <summary>

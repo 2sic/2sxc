@@ -161,8 +161,8 @@ namespace ToSic.Sxc.DataSources
 
             // Figure out options to be sure we have the roles/roleids
             var keysToAdd = new List<string>();
-            if (AddRoleIds) keysToAdd.Add(nameof(CmsUserInfo.RoleIds));
-            _usersBuilder.Configure(typeName: "User", titleField: nameof(CmsUserInfo.Name), createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
+            if (AddRoleIds) keysToAdd.Add(nameof(UserDataRaw.RoleIds));
+            _usersBuilder.Configure(typeName: "User", titleField: nameof(UserDataRaw.Name), createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
 
             var users = _usersBuilder.CreateMany(usersRaw);
 
@@ -192,10 +192,10 @@ namespace ToSic.Sxc.DataSources
         });
 
 
-        private List<CmsUserInfo> GetUsersAndFilter() => Log.Func(l =>
+        private List<UserDataRaw> GetUsersAndFilter() => Log.Func(l =>
         {
             var users = _provider.GetUsersInternal()?.ToList();
-            if (users == null || !users.Any()) return (new List<CmsUserInfo>(), "null/empty");
+            if (users == null || !users.Any()) return (new List<UserDataRaw>(), "null/empty");
 
             foreach (var filter in GetAllFilters())
                 users = users.Where(filter).ToList();
@@ -204,7 +204,7 @@ namespace ToSic.Sxc.DataSources
         });
 
 
-        private List<(IEntity r, int EntityId)> GetRolesForLookup(List<CmsUserInfo> usersRaw)
+        private List<(IEntity r, int EntityId)> GetRolesForLookup(List<UserDataRaw> usersRaw)
         {
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.RoleIds).Distinct().ToList();

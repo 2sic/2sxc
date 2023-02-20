@@ -11,7 +11,7 @@ namespace ToSic.Sxc.DataSources
         { }
 
 
-        public new List<AppFileInfo> GetAppFilesInternal(
+        public new List<AppFileDataRaw> GetAppFilesInternal(
             string noParamOrder = Eav.Parameters.Protector,
             int zoneId = default,
             int appId = default,
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.DataSources
             bool onlyFiles = default,
             string root = default,
             string filter = default
-        ) => new List<AppFileInfo>();
+        ) => new List<AppFileDataRaw>();
 
 
     }

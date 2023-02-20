@@ -19,7 +19,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="CmsSiteInfo"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="SiteDataRaw"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _sitesDataBuilder = sitesDataBuilder.Configure(typeName: "Sites", titleField: nameof(CmsSiteInfo.Name), idAutoIncrementZero: false)
+                _sitesDataBuilder = sitesDataBuilder.Configure(typeName: "Sites", titleField: nameof(SiteDataRaw.Name), idAutoIncrementZero: false)
             );
             Provide(GetSites);
         }

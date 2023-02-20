@@ -19,6 +19,6 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         /// <returns></returns>
         [PrivateApi]
-        public abstract IEnumerable<CmsUserInfo> GetUsersInternal();
+        public abstract IEnumerable<UserDataRaw> GetUsersInternal();
     }
 }

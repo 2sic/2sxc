@@ -15,7 +15,7 @@ namespace ToSic.Sxc.DataSources
         public DnnUsersDsProvider() : base("Dnn.Users")
         { }
 
-        public override IEnumerable<CmsUserInfo> GetUsersInternal() => Log.Func(l =>
+        public override IEnumerable<UserDataRaw> GetUsersInternal() => Log.Func(l =>
             {
                 var siteId = PortalSettings.Current?.PortalId ?? -1;
                 l.A($"Portal Id {siteId}");
@@ -30,14 +30,14 @@ namespace ToSic.Sxc.DataSources
                         superUsersOnly: true));
 
                     var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
-                    if (!dnnUsers.Any()) return (new List<CmsUserInfo>(), "null/empty");
+                    if (!dnnUsers.Any()) return (new List<UserDataRaw>(), "null/empty");
 
                     var result = dnnUsers
                         //.Where(d => !d.IsDeleted)
                         .Select(d =>
                         {
                             var adminInfo = d.UserMayAdminThis();
-                            return new CmsUserInfo
+                            return new UserDataRaw
                             {
                                 Id = d.UserID,
                                 Guid = d.UserGuid(),
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.DataSources
                 catch (Exception ex)
                 {
                     l.Ex(ex);
-                    return (new List<CmsUserInfo>(), "error");
+                    return (new List<UserDataRaw>(), "error");
                 }
             });
     }

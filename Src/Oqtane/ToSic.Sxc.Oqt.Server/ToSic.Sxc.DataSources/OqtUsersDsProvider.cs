@@ -25,7 +25,7 @@ namespace ToSic.Sxc.DataSources
             );
         }
 
-        public override IEnumerable<CmsUserInfo> GetUsersInternal()
+        public override IEnumerable<UserDataRaw> GetUsersInternal()
             => Log.Func(l =>
             {
                 var siteId = _siteState.Alias.SiteId;
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources
                         {
                             var isSiteAdmin = userRoles.Any(ur =>
                                 ur.UserId == u.UserId && ur.Role.Name == RoleNames.Admin);
-                            return new CmsUserInfo
+                            return new UserDataRaw
                             {
                                 Id = u.UserId,
                                 Guid = new((_identityUserManager.FindByNameAsync(u.Username).Result).Id),

@@ -12,16 +12,16 @@ namespace ToSic.Sxc.DataSources
     {
         public MockUsersDataSource() : base("DS.MockUsers") { }
 
-        public override IEnumerable<CmsUserInfo> GetUsersInternal() => Log.Func(l =>
+        public override IEnumerable<UserDataRaw> GetUsersInternal() => Log.Func(l =>
         {
             var siteId = 0;
             l.A($"Portal Id {siteId}");
-            var users = new List<CmsUserInfo>();
+            var users = new List<UserDataRaw>();
 
             l.A($"mock 3 super users and admins with one role [1-3]");
             for (var i = 1; i <= 3; i++)
             {
-                users.Add(new CmsUserInfo
+                users.Add(new UserDataRaw
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"mock 7 normal users with 3 roles [ 2, 3, 4-10]");
             for (var i = 4; i <= 10; i++)
             {
-                users.Add(new CmsUserInfo
+                users.Add(new UserDataRaw
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),
@@ -66,7 +66,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"mock 10 normal users with 2 roles [9, 10]");
             for (var i = 11; i <= 20; i++)
             {
-                users.Add(new CmsUserInfo
+                users.Add(new UserDataRaw
                 {
                     Id = i,
                     Guid = new Guid($"00000000-0000-0000-0000-{i:d12}"),

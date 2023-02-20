@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class CmsSiteInfo: IRawEntity
+    public class SiteDataRaw: IRawEntity
     {
         /// <summary>
         /// The site ID.

@@ -53,7 +53,7 @@ namespace ToSic.Sxc.DataSources
         /// So the core data source doesn't have settings to configure this
         /// </summary>
         /// <returns></returns>
-        public List<AppFileInfo> GetAppFilesInternal(
+        public List<AppFileDataRaw> GetAppFilesInternal(
             string noParamOrder = Eav.Parameters.Protector,
             int zoneId = default,
             int appId = default,
@@ -70,14 +70,14 @@ namespace ToSic.Sxc.DataSources
 
             var id = 0;
 
-            var folders = new List<AppFileInfo>();
-            var result = new List<AppFileInfo>();
+            var folders = new List<AppFileDataRaw>();
+            var result = new List<AppFileDataRaw>();
 
             if (!onlyFiles)
             {
                 folders = fileManager.GetAllTransferableFolders(/*filter*/)
                     .Select(p => new DirectoryInfo(p))
-                    .Select(d => new AppFileInfo
+                    .Select(d => new AppFileDataRaw
                     {
                         Id = ++id,
                         Guid = Guid.NewGuid(),
@@ -103,7 +103,7 @@ namespace ToSic.Sxc.DataSources
             {
                 var files = fileManager.GetAllTransferableFiles(filter)
                     .Select(p => new FileInfo(p))
-                    .Select(f => new AppFileInfo
+                    .Select(f => new AppFileDataRaw
                     {
                         Id = ++id,
                         Guid = Guid.NewGuid(),

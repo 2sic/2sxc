@@ -19,6 +19,6 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         /// <returns></returns>
         [PrivateApi]
-        public abstract IEnumerable<CmsRoleInfo> GetRolesInternal();
+        public abstract IEnumerable<RoleDataRaw> GetRolesInternal();
     }
 }

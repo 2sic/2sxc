@@ -173,7 +173,7 @@
     <Compile Include="Dnn\Code\DnnDynamicCodeRoot.cs" />
     <Compile Include="Dnn\Web\DnnBlockResourceExtractor.cs" />
     <Compile Include="Dnn\DataSources\DnnSql.cs" />
-    <Compile Include="Dnn\DataSources\DnnUserProfile.cs" />
+    <Compile Include="Dnn\DataSources\DnnUserProfileDataRaw.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Dnn\Adam\DnnAdamFileSystem.cs" />
     <Compile Include="Dnn\Services\DnnLinkService.cs" />
