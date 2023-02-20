@@ -11,14 +11,12 @@ namespace ToSic.Sxc.Web.PageService
     public partial class PageService
     {
         /// <inheritdoc />
-        public string Activate(params string[] keys)
+        public string Activate(params string[] keys) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>();
-
             // 1. Try to add manual resources from WebResources
             // This must happen in the IPageService which is per-module
             // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
-            if (!(WebResources is null)) // special problem: DynamicEntity null-compare isn't quite right, don't! use !=
+            if (!(WebResources is null)) // special problem: DynamicEntity null-compare isn't quite right, **do not** use `!=`
                 keys = AddManualResources(keys);
 
             // 2. If any keys are left, they are probably preconfigured keys, so add them now
@@ -28,9 +26,24 @@ namespace ToSic.Sxc.Web.PageService
                 // also add to this specific module, as we need a few module-level features to activate in case...
                 _DynCodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
             }
+
+            return ("", "ok");
+        });
+
+        public string Activate(
+            string noParamOrder = Eav.Parameters.Protector,
+            bool condition = true,
+            params string[] features) => Log.Func(() =>
+        {
+            // Check condition - default is true - so if it's false, this overload was called
+            if (!condition)
+                return ("", "condition false");
             
-            return wrapLog.Return("");
-        }
+            // Must check the parameter protector, because we're not sure if the user may be calling this overload with a feature name
+            
+
+            return (Activate(features), "condition true, added");
+        });
 
         private string[] AddManualResources(string[] keys)
         {
