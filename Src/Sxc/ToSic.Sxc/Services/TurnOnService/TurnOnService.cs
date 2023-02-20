@@ -11,14 +11,14 @@ namespace ToSic.Sxc.Services
         private const string TagName = "turnOn";
         private const string AttributeName = "turn-on";
 
-        public TurnOnService(LazySvc<IHtmlTagService> htmlTagService) : base(Constants.SxcLogName + ".TrnOnS")
+        public TurnOnService(LazySvc<IHtmlTagsService> HtmlTagsService) : base(Constants.SxcLogName + ".TrnOnS")
         {
             ConnectServices(
-                _htmlTagService = htmlTagService
+                _HtmlTagsService = HtmlTagsService
             );
         }
 
-        private readonly LazySvc<IHtmlTagService> _htmlTagService;
+        private readonly LazySvc<IHtmlTagsService> _HtmlTagsService;
 
         // TODO:
         // - TEST
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Services
         {
             var l = Log.Fn<Attribute>();
             var specs = PickOrBuildSpecs(runOrSpecs, require, data);
-            var attr = _htmlTagService.Value.Attr(AttributeName, specs);
+            var attr = _HtmlTagsService.Value.Attr(AttributeName, specs);
             return l.Return(attr);
         }
 
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Services
         {
             var l = Log.Fn<IHtmlTag>();
             var specs = PickOrBuildSpecs(runOrSpecs, require, data);
-            var tag = _htmlTagService.Value.Custom(TagName).Attr(AttributeName, specs);
+            var tag = _HtmlTagsService.Value.Custom(TagName).Attr(AttributeName, specs);
             return l.Return(tag);
         }
 

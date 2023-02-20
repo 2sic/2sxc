@@ -67,20 +67,20 @@ namespace ToSic.Sxc.Services
         private readonly GetOnce<IFeaturesService> _features = new GetOnce<IFeaturesService>();
 
         /// <summary>
-        /// The Razor Blade 4 HtmlTag service, to fluidly create Tags.
-        /// See [](xref:ToSic.Razor.Blade.IHtmlTagService).
+        /// The Razor Blade 4 HtmlTags service, to fluidly create Tags.
+        /// See [](xref:ToSic.Razor.Blade.IHtmlTagsService).
         ///
         /// > [!IMPORTANT]
         /// > This is _similar but different_ to the [Razor.Blade.Tag](https://razor-blade.net/api/ToSic.Razor.Blade.Tag.html).
         /// > The [](xref:ToSic.Razor.Blade.IHtmlTag) objects returned here are _immutable_.
-        /// > This means that chained commands like `...HtmlTag.Div().Id(...).Class(...)`
+        /// > This means that chained commands like `...HtmlTags.Div().Id(...).Class(...)`
         /// > all return new objects and don't modify the previous one.
         /// >
         /// > The older `Tag` helper created mutable objects where chaining always modified the original and returned it again.
         /// </summary>
         /// <remarks>Added in v15</remarks>
-        public IHtmlTagService HtmlTag => _ht.Get(GetService<IHtmlTagService>);
-        private readonly GetOnce<IHtmlTagService> _ht = new GetOnce<IHtmlTagService>();
+        public IHtmlTagsService HtmlTags => _ht.Get(GetService<IHtmlTagsService>);
+        private readonly GetOnce<IHtmlTagsService> _ht = new GetOnce<IHtmlTagsService>();
 
         /// <summary>
         /// The Images service, used to create `img` and `picture` tags
