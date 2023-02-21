@@ -34,29 +34,8 @@ namespace ToSic.Sxc.DataSources
                     if (!dnnUsers.Any()) return (new List<CmsUserRaw>(), "null/empty");
 
                     var result = dnnUsers
-                        //.Where(d => !d.IsDeleted)
-                        .Select(d =>
-                        {
-                            var adminInfo = d.UserMayAdminThis();
-                            return new CmsUserRaw
-                            {
-                                Id = d.UserID,
-                                Guid = d.UserGuid(),
-                                NameId = d.UserIdentityToken(),
-                                Roles = d.RoleList(portalId: siteId),
-                                IsSystemAdmin = d.IsSuperUser,
-                                IsSiteAdmin = adminInfo.IsSiteAdmin,
-                                IsContentAdmin = adminInfo.IsContentAdmin,
-                                //IsDesigner = d.IsDesigner(),
-                                IsAnonymous = d.IsAnonymous(),
-                                Created = d.CreatedOnDate,
-                                Modified = d.LastModifiedOnDate,
-                                //
-                                Username = d.Username,
-                                Email = d.Email,
-                                Name = d.DisplayName
-                            };
-                        }).ToList();
+                        //.Where(user => !user.IsDeleted)
+                        .Select(u => u.CmsUserBuilder(siteId)).ToList();
                     return (result, "found");
                 }
                 catch (Exception ex)

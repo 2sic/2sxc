@@ -1,28 +1,28 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Oqtane.Repository;
+﻿using Oqtane.Repository;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
-using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Server.Run;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
 {
     public class OqtUsersDsProvider : UsersDataSourceProvider
     {
-        private readonly IUserRoleRepository _userRoles;
         private readonly SiteState _siteState;
-        private readonly UserManager<IdentityUser> _identityUserManager;
+        private readonly LazySvc<OqtSecurity> _oqtSecurity;
+        private readonly LazySvc<IUserRoleRepository> _userRoles;
 
-        public OqtUsersDsProvider(IUserRoleRepository userRoles, SiteState siteState, UserManager<IdentityUser> identityUserManager) : base("Oqt.Users")
+        public OqtUsersDsProvider(SiteState siteState, LazySvc<OqtSecurity> oqtSecurity, LazySvc<IUserRoleRepository> userRoles) : base("Oqt.Users")
         {
             ConnectServices(
-                _userRoles = userRoles,
                 _siteState = siteState,
-                _identityUserManager = identityUserManager
+                _oqtSecurity = oqtSecurity,
+                _userRoles = userRoles
             );
         }
 
@@ -32,33 +32,13 @@ namespace ToSic.Sxc.DataSources
             l.A($"Portal Id {siteId}");
             try
             {
-                var userRoles = _userRoles.GetUserRoles(siteId).ToList();
+                var userRoles = _userRoles.Value.GetUserRoles(siteId).ToList();
                 var users = userRoles.Select(ur => ur.User).Distinct().ToList();
                 if (!users.Any()) return (new(), "null/empty");
 
                 var result = users
                     .Where(u => !u.IsDeleted)
-                    .Select(u =>
-                    {
-                        var myRoles = userRoles.Where(ur => ur.UserId == u.UserId).ToList();
-                        var isSiteAdmin = myRoles.Any(ur => ur.Role.Name == RoleNames.Admin);
-                        return new CmsUserRaw
-                        {
-                            Id = u.UserId,
-                            Guid = new(_identityUserManager.FindByNameAsync(u.Username).Result.Id),
-                            NameId = $"{OqtConstants.UserTokenPrefix}{u.UserId}",
-                            Roles = myRoles.Select(ur => ur.RoleId).ToList(),
-                            IsSystemAdmin = myRoles.Any(ur => ur.Role.Name == RoleNames.Host),
-                            IsSiteAdmin = isSiteAdmin,
-                            IsContentAdmin = isSiteAdmin,
-                            IsAnonymous = u.UserId == -1,
-                            Created = u.CreatedOn,
-                            Modified = u.ModifiedOn,
-                            Username = u.Username,
-                            Email = u.Email,
-                            Name = u.DisplayName,
-                        };
-                    }).ToList();
+                    .Select(u => _oqtSecurity.Value.CmsUserBuilder(u)).ToList();
                 return (result, "found");
             }
             catch (Exception ex)
