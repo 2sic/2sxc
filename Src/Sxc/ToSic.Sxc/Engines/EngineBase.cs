@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text.Json;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.Serialization;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Engines
 
             var appPathRootInInstallation = Block.App.PathSwitch(view.IsShared, PathTypes.PhysRelative);
             var subPath = view.Path;
-            var polymorphPathOrNull = TryToFindPolymorphPath(appPathRootInInstallation, view, subPath);
+            var polymorphPathOrNull = PolymorphTryToSwitchPath(appPathRootInInstallation, view, subPath);
             var templatePath = polymorphPathOrNull ??
                                Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
@@ -77,38 +77,48 @@ namespace ToSic.Sxc.Engines
             Init();
         });
 
-        private string TryToFindPolymorphPath(string root, IView view, string subPath)
+        private string PolymorphTryToSwitchPath(string root, IView view, string subPath) => Log.Func($"{root}, {subPath}", l =>
         {
-            var wrapLog = Log.Fn<string>($"{root}, {subPath}");
+            // Get initial path - here the file is already reliably stored
             view.EditionPath = subPath.ToAbsolutePathForwardSlash();
+            subPath = view.EditionPath.TrimPrefixSlash();
+
+            // Figure out the current edition - if none, stop here
             var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List);
             var edition = polymorph.Edition();
-            if (edition == null) return wrapLog.ReturnNull("no edition detected");
-            Log.A($"edition {edition} detected");
+            if (edition == null)
+                return (null, "no edition detected");
+            l.A($"edition '{edition}' detected");
 
-            var testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
-            if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
-            {
-                view.Edition = edition;
-                view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
-                return wrapLog.Return(testPath, $"edition {edition}");
-            }
+            // Case #1 where edition is between root and path
+            // eg. subPath = "View.cshtml" and there is a "bs5/View.cshtml"
+            var newPath = PolymorphTestPathAndSaveIfFound(view, root, edition, subPath);
+            if (newPath != null)
+                return (newPath, $"found edition {edition}");
 
-            Log.A("tried inserting path, will check if sub-path");
-            var firstSlash = subPath.IndexOf('/');
-            if (firstSlash == -1) return wrapLog.ReturnNull($"edition {edition} not found");
+            // Case #2 where edition _replaces_ an edition in the current path
+            // eg. subPath ="bs5/View.cshtml" and there is a "bs4/View.cshtml"
+            l.A("tried inserting path, will check if sub-path");
+            var pathWithoutFirstFolder = subPath.After("/");
+            if (string.IsNullOrEmpty(pathWithoutFirstFolder))
+                return (null, "view is not in subfolder, so no edition to replace, stopping now");
+            newPath = PolymorphTestPathAndSaveIfFound(view, root, edition, pathWithoutFirstFolder);
+            if (newPath != null)
+                return (newPath, $"edition {edition} up one path");
 
-            subPath = subPath.Substring(firstSlash + 1);
-            testPath = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
-            if (File.Exists(Helpers.ServerPaths.FullAppPath(testPath)))
-            {
-                view.Edition = edition;
-                view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
-                return wrapLog.Return(testPath, $"edition {edition} up one path");
-            }
+            return (null, $"edition {edition} not found");
+        });
 
-            return wrapLog.ReturnNull($"edition {edition} not found");
-        }
+        private string PolymorphTestPathAndSaveIfFound(IView view, string root, string edition, string subPath
+        ) => Log.Func($"root: {root}; edition: {edition}; subPath: {subPath}", () =>
+        {
+            var fullPathForTest = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
+            if (!File.Exists(Helpers.ServerPaths.FullAppPath(fullPathForTest)))
+                return (null, "not found");
+            view.Edition = edition;
+            view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
+            return (fullPathForTest, $"edition {edition}");
+        });
 
         [PrivateApi]
         protected abstract string RenderTemplate();

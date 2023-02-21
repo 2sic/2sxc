@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Helpers;
 using ToSic.Eav.Metadata;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
@@ -34,22 +35,31 @@ namespace ToSic.Sxc.Context
             => ExtendWithRecommendations(UnwrappedContents?.Metadata);
 
         /// <inheritdoc />
-        public string Path => _path.Get(() => CombinePathsAndForward(_block?.App.Path, UnwrappedContents.Edition));
+        public string Path => _path.Get(() => FigureOutPath(_block?.App.Path));
         private readonly GetOnce<string> _path = new GetOnce<string>();
 
         /// <inheritdoc />
-        public string PathShared => _pathShared.Get(() => CombinePathsAndForward(_block?.App.PathShared, UnwrappedContents.Edition));
+        public string PathShared => _pathShared.Get(() => FigureOutPath(_block?.App.PathShared));
         private readonly GetOnce<string> _pathShared = new GetOnce<string>();
 
         /// <inheritdoc />
-        public string PhysicalPath => _physPath.Get(() => CombinePathsAndForward(_block?.App.PhysicalPath, UnwrappedContents.Edition));
+        public string PhysicalPath => _physPath.Get(() => FigureOutPath(_block?.App.PhysicalPath));
         private readonly GetOnce<string> _physPath = new GetOnce<string>();
 
         /// <inheritdoc />
-        public string PhysicalPathShared => _physPathShared.Get(() => CombinePathsAndForward(_block?.App.PhysicalPathShared, UnwrappedContents.Edition));
+        public string PhysicalPathShared => _physPathShared.Get(() => FigureOutPath(_block?.App.PhysicalPathShared));
         private readonly GetOnce<string> _physPathShared = new GetOnce<string>();
 
-        private string CombinePathsAndForward(string path, string addition)
-            => System.IO.Path.Combine(path ?? "", addition ?? "").ForwardSlash();
+        /// <summary>
+        /// Figure out the path to the view based on a root path.
+        /// </summary>
+        /// <returns></returns>
+        private string FigureOutPath(string root)
+        {
+            // Get addition, but must ensure it doesn't have a leading slash (otherwise Path.Combine treats it as a root)
+            var addition = (UnwrappedContents.EditionPath ?? "").TrimPrefixSlash();
+            var pathWithFile = System.IO.Path.Combine(root ?? "", addition).ForwardSlash();
+            return pathWithFile.BeforeLast("/");
+        }
     }
 }
