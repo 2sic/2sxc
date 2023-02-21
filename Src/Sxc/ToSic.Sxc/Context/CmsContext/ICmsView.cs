@@ -56,7 +56,8 @@ namespace ToSic.Sxc.Context
 #pragma warning restore CS0108, CS0114
 
         /// <summary>
-        /// The path to this view for URLs which should load js/css from a path beneath the view.
+        /// The path to this view.
+        /// For URLs which should load js/css from a path beneath the view.
         ///
         /// This is different from the `App.Path`, because it will also contain the edition (if there is an edition)
         /// </summary>
@@ -65,10 +66,20 @@ namespace ToSic.Sxc.Context
         /// </remarks>
         string Path { get; }
 
+        /// <summary>
+        /// The path to this view in the global/shared location.
+        /// For URLs which should load js/css from a path beneath the view.
+        ///
+        /// This is different from the `App.Path`, because it will also contain the edition (if there is an edition)
+        /// </summary>
+        /// <remarks>
+        /// Added in v15.04
+        /// </remarks>
         string PathShared { get; }
 
         /// <summary>
-        /// The folder of view for retrieving files on the server in the same path or below this. 
+        /// The folder of view.
+        /// For retrieving files on the server in the same path or below this. 
         ///
         /// This is different from the `App.PhysicalPath`, because it will also contain the edition (if there is an edition)
         /// </summary>
@@ -77,6 +88,15 @@ namespace ToSic.Sxc.Context
         /// </remarks>
         string PhysicalPath { get; }
 
+        /// <summary>
+        /// The folder of view in the global shared location.
+        /// For retrieving files on the server in the same path or below this. 
+        ///
+        /// This is different from the `App.PhysicalPath`, because it will also contain the edition (if there is an edition)
+        /// </summary>
+        /// <remarks>
+        /// Added in v15.04
+        /// </remarks>
         string PhysicalPathShared { get; }
     }
 }
