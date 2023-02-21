@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Context
         private BlockPublishingSettings _publishing;
 
         /// <inheritdoc />
-        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, /*Services,*/ AppServices)
+        public new IContextOfSite Clone(ILog parentLog) => new ContextOfBlock(Page, Module, _publishingResolver, PageServiceShared, AppServices)
             .LinkLog(parentLog);
     }
 }

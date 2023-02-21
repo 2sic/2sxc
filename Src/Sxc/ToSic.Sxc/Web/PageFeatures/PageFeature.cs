@@ -69,5 +69,10 @@ namespace ToSic.Sxc.Web.PageFeatures
         /// be more sophisticated, like contain a list of configuration objects to construct the url.
         /// </summary>
         public string UrlWip { get; }
+
+        /// <summary>
+        /// ToString for easier debugging
+        /// </summary>
+        public override string ToString() => base.ToString() + "(" + NameId + ")";
     }
 }

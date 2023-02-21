@@ -34,10 +34,8 @@ namespace ToSic.Sxc.Web.PageService
         private readonly LazySvc<IBlockResourceExtractor> _resourceExtractor;
         private readonly LazySvc<RequirementsService> _requirements;
 
-        public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit)
+        public IRenderResult FinalizeAndGetAllChanges(PageServiceShared pss, bool enableEdit) => Log.Func(timer: true, func: () =>
         {
-            var callLog = Log.Fn<IRenderResult>(timer: true);
-
             if (enableEdit)
             {
                 pss.Activate(BuiltInFeatures.ToolbarsInternal.NameId);
@@ -80,19 +78,20 @@ namespace ToSic.Sxc.Web.PageService
             var additionalCsp = GetCspListFromAssets(assets);
             if (additionalCsp != null) result.CspParameters.Add(additionalCsp);
 
-            return callLog.Return(result);
-        }
+            return result;
+        });
 
 
-        private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(List<PageFeatureFromSettings> featuresFromSettings)
+        private (List<IClientAsset> newAssets, List<IPageFeature> rest) ConvertSettingsAssetsIntoReal(
+            List<PageFeatureFromSettings> featuresFromSettings
+        ) => Log.Func($"{featuresFromSettings.Count}", l =>
         {
-            var wrapLog = Log.Fn<(List<IClientAsset> newAssets, List<IPageFeature> rest)>($"{featuresFromSettings.Count}");
             var newAssets = new List<IClientAsset>();
             foreach (var settingFeature in featuresFromSettings)
             {
                 var extracted = _resourceExtractor.Value.Process(settingFeature.Html);
                 if (!extracted.Assets.Any()) continue;
-                Log.A($"Moved Feature Html {settingFeature.NameId} to assets");
+                l.A($"Moved Feature Html {settingFeature.NameId} to assets");
 
                 // All resources from the settings are seen as safe
                 extracted.Assets.ForEach(a => a.WhitelistInCsp = true);
@@ -107,8 +106,8 @@ namespace ToSic.Sxc.Web.PageService
                 .Cast<IPageFeature>()
                 .ToList();
 
-            return wrapLog.Return((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
-        }
+            return ((newAssets, featsLeft), $"New: {newAssets.Count}; Rest: {featsLeft.Count}");
+        });
 
         private CspParameters GetCspListFromAssets(List<IClientAsset> assets)
         {
