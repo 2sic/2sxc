@@ -5,7 +5,9 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.ImportExport;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using App = ToSic.Sxc.Apps.App;
@@ -19,7 +21,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
-    public abstract class AppFilesDataSourceProvider: ServiceBase<AppFilesDataSourceProvider.MyServices>
+    public abstract class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider.MyServices>
     {
         public class MyServices : MyServicesBase
         {
@@ -31,7 +33,7 @@ namespace ToSic.Sxc.DataSources
             /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
             /// </summary>
             public MyServices(
-                LazySvc<App> appLazy, 
+                LazySvc<App> appLazy,
                 IAppStates appStates,
                 ZipExport zipExport
             )
@@ -44,16 +46,11 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        protected AppFilesDataSourceProvider(MyServices services, string logName) : base(services ,logName)
+        protected AppFilesDataSourceProvider(MyServices services, string logName) : base(services, logName)
         {
         }
 
-        /// <summary>
-        /// FYI: The filters are not actually implemented yet.
-        /// So the core data source doesn't have settings to configure this
-        /// </summary>
-        /// <returns></returns>
-        public List<AppFileDataRaw> GetAppFilesInternal(
+        public AppFilesDataSourceProvider Configure(
             string noParamOrder = Eav.Parameters.Protector,
             int zoneId = default,
             int appId = default,
@@ -61,77 +58,91 @@ namespace ToSic.Sxc.DataSources
             bool onlyFiles = default,
             string root = default,
             string filter = default
-        ) => Log.Func($"app:{appId}; zone:{zoneId}", l =>
+        ) => Log.Func($"a:{appId}; z:{zoneId}, onlyFolders:{onlyFolders}, onlyFiles:{onlyFiles}, root:{root}, filter:{filter}", l =>
         {
-            var currentApp = GetApp(zoneId, appId);
-            var fileManager = GetZipExport(currentApp).FileManager;
-            var prepRoot = root.TrimPrefixSlash().Backslash();
-            fileManager.SetFolder(currentApp.PhysicalPath, prepRoot);
+            _onlyFolders = onlyFolders;
+            _onlyFiles = onlyFiles;
+            _root = root.TrimPrefixSlash().Backslash();
+            _filter = filter;
+            _currentApp = GetApp(zoneId, appId);
+            _fileManager = GetZipExport(_currentApp).FileManager;
+            _fileManager.SetFolder(_currentApp.PhysicalPath, _root);
+            return this;
+        });
 
-            var id = 0;
+        private bool _onlyFolders;
+        private bool _onlyFiles;
+        private string _root;
+        private string _filter;
+        private IApp _currentApp;
+        private FileManager _fileManager;
 
-            var folders = new List<AppFileDataRaw>();
-            var result = new List<AppFileDataRaw>();
+        /// <summary>
+        /// FYI: The filters are not actually implemented yet.
+        /// So the core data source doesn't have settings to configure this
+        /// </summary>
+        /// <returns></returns>
+        public List<AppFileDataRawBase> GetInternal() => Log.Func(l =>
+        {
+            var result = new List<AppFileDataRawBase>();
+            result.AddRange(Folders);
+            result.AddRange(Files);
+            return (result, $"found:{result.Count}");
+        });
 
-            if (!onlyFiles)
+        public List<AppFileDataRaw> Files => _files.Get(() => Log.Func( l =>
+        {
+            var files = new List<AppFileDataRaw>();
+            if (!_onlyFolders)
             {
-                folders = fileManager.GetAllTransferableFolders(/*filter*/)
-                    .Select(p => new DirectoryInfo(p))
-                    .Select(d => new AppFileDataRaw
-                    {
-                        Id = ++id,
-                        Guid = Guid.NewGuid(),
-                        Title = $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
-                        Name = GetFileNameWithoutExtension(d.FullName),
-                        Extension = d.Extension,
-                        FullName = NameInAppFolder(d.FullName, currentApp, prepRoot),
-                        Folder = FolderInAppFolder(d.FullName, currentApp, prepRoot),
-                        IsFolder = true,
-                        Size = 0,
-                        Created = d.CreationTime,
-                        Modified = d.LastWriteTime
-                    })
-                    .ToList();
-                folders.ForEach(f => f.ParentId = (folders.FirstOrDefault(d =>  d.FullName == f.Folder && f.Title != "<root>")?.Id ?? 0));
-                l.A($"folders: {folders.Count}");
-                result.AddRange(folders);
-            }
-            else
-                l.A($"onlyFiles: {onlyFiles}");
-
-            if (!onlyFolders)
-            {
-                var files = fileManager.GetAllTransferableFiles(filter)
+                files = _fileManager.GetAllTransferableFiles(_filter)
                     .Select(p => new FileInfo(p))
                     .Select(f => new AppFileDataRaw
                     {
-                        Id = ++id,
-                        Guid = Guid.NewGuid(),
-                        Title = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
-                        Name = GetFileNameWithoutExtension(f.FullName),
+                        Name = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
                         Extension = f.Extension,
-                        FullName = NameInAppFolder(f.FullName, currentApp, prepRoot),
-                        Folder = FolderInAppFolder(f.FullName, currentApp, prepRoot),
-                        ParentId = 0,
-                        IsFolder = false,
+                        FullName = NameInAppFolder(f.FullName, _currentApp, _root),
+                        Path = FolderInAppFolder(f.FullName, _currentApp, _root),
                         Size = f.Length,
                         Created = f.CreationTime,
                         Modified = f.LastWriteTime
                     })
                     .ToList();
-                files.ForEach(f => f.ParentId = (folders.FirstOrDefault(d => d.FullName == f.Folder)?.Id ?? 0));
-                l.A($"files: {files.Count}");
-                result.AddRange(files);
             }
             else
-                l.A($"onlyFolders: {onlyFolders}");
+                l.A($"onlyFolders:{_onlyFolders}");
 
-            return (result, $"found {result.Count}");
-        });
+            return (files, $"files:{files.Count}");
+        }));
+        private readonly GetOnce<List<AppFileDataRaw>> _files = new GetOnce<List<AppFileDataRaw>>();
 
-        private static string NameInAppFolder(string filePath, IApp currentApp, string root)
+        public List<AppFolderDataRaw> Folders => _folders.Get( () => Log.Func(l =>
         {
-            var name = filePath?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);
+            var folders = new List<AppFolderDataRaw>();
+            if (!_onlyFiles)
+            {
+                folders = _fileManager.GetAllTransferableFolders(/*filter*/)
+                    .Select(p => new DirectoryInfo(p))
+                    .Select(d => new AppFolderDataRaw
+                    {
+                        Name = $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
+                        FullName = NameInAppFolder(d.FullName, _currentApp, _root),
+                        Path = FolderInAppFolder(d.FullName, _currentApp, _root),
+                        Created = d.CreationTime,
+                        Modified = d.LastWriteTime
+                    })
+                    .ToList();
+            }
+            else
+                l.A($"onlyFiles:{_onlyFiles}");
+
+            return (folders, $"found:{folders.Count}");
+        }));
+        private readonly GetOnce<List<AppFolderDataRaw>> _folders = new GetOnce<List<AppFolderDataRaw>>();
+
+        private static string NameInAppFolder(string path, IApp currentApp, string root)
+        {
+            var name = path?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);
             //var isFolder = GetAttributes(filePath).HasFlag(FileAttributes.Directory);
             if (string.IsNullOrEmpty(name)) 
                 return root;
@@ -139,9 +150,9 @@ namespace ToSic.Sxc.DataSources
             return name.ForwardSlash();
         }
 
-        private static string FolderInAppFolder(string filePath, IApp currentApp, string root)
+        private static string FolderInAppFolder(string path, IApp currentApp, string root)
         {
-            var folder = GetDirectoryName(filePath)?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);
+            var folder = GetDirectoryName(path)?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);
             if (string.IsNullOrEmpty(folder)) 
                 return root;
             if (currentApp.PhysicalPathShared != null) folder = folder.Replace(Combine(currentApp.PhysicalPathShared, root), string.Empty);

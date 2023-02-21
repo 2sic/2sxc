@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 
 // Important Info to people working with this
@@ -16,7 +17,7 @@ using ToSic.Lib.Logging;
 namespace ToSic.Sxc.DataSources
 {
     /// <summary>
-    /// Deliver a list of App files from the current platform (Dnn or Oqtane).
+    /// Deliver a list of App files and folders from the current platform (Dnn or Oqtane).
     ///
     /// As of now there are no parameters to set.
     ///
@@ -34,20 +35,21 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Files and folders in the App folder")]
     public class AppFiles: ExternalData
     {
+        private readonly IDataBuilder _folderBuilder;
         private readonly ITreeMapper _treeMapper;
         private readonly IDataBuilder _fileBuilder;
         private readonly AppFilesDataSourceProvider _provider;
 
         #region Configuration properties
 
-        [Configuration]
+        [Configuration(Fallback = false)]
         public bool OnlyFolders
         {
             get => Configuration.GetThis(false);
             set => Configuration.SetThis(value);
         }
 
-        [Configuration]
+        [Configuration(Fallback = false)]
         public bool OnlyFiles
         {
             get => Configuration.GetThis(false);
@@ -73,11 +75,12 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(services, "CDS.AppFiles")
+        public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataBuilder fileDataBuilder, IDataBuilder folderBuilder, ITreeMapper treeMapper) : base(services, "CDS.AppFiles")
         {
             ConnectServices(
                 _provider = provider,
-                _fileBuilder = dataBuilder.Configure(typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Title)),
+                _fileBuilder = fileDataBuilder,
+                _folderBuilder = folderBuilder,
                 _treeMapper = treeMapper
             );
 
@@ -88,43 +91,54 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetDefault() => GetInternal(onlyFiles: OnlyFiles, onlyFolders: OnlyFolders);
+        public IImmutableList<IEntity> GetDefault() => GetInternal().Where(e => e.Type.Name == AppFileDataRaw.TypeName).ToImmutableList();
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetFolders() => GetInternal(onlyFiles: false, onlyFolders: true);
+        public IImmutableList<IEntity> GetFolders() => GetInternal().Where(e => e.Type.Name == AppFolderDataRaw.TypeName).ToImmutableList();
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetFiles() => GetInternal(onlyFiles: true, onlyFolders: false);
+        public IImmutableList<IEntity> GetFiles() => GetInternal();
 
-        private IImmutableList<IEntity> GetInternal(bool onlyFolders, bool onlyFiles) => Log.Func(l =>
+        private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() => Log.Func(l =>
         {
             Configuration.Parse();
 
+            _provider.Configure(zoneId: ZoneId, appId: AppId, onlyFolders: OnlyFolders, onlyFiles: OnlyFiles, root: Root, filter: Filter);
+
             // Get pages from underlying system/provider
-            var appFiles = _provider.GetAppFilesInternal(
-                zoneId: ZoneId,
-                appId: AppId,
-                onlyFolders: onlyFolders,
-                onlyFiles: onlyFiles,
-                root: Root,
-                filter: Filter
-            );
-            if (appFiles == null || !appFiles.Any())
+            var results = _provider.GetInternal();
+            if (results == null || !results.Any())
                 return (new List<IEntity>().ToImmutableList(), "null/empty");
 
             // Convert to Entity-Stream
-            var entities = _fileBuilder.CreateMany(appFiles);
+            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
+            var folders = _folderBuilder.CreateMany(_provider.Folders);
+
+            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name));
+            var files = _fileBuilder.CreateMany(_provider.Files);
+
+            var entities = folders.AddRange(files);
 
             try
             {
-                var asTree = _treeMapper.AddRelationships<int>(entities, "EntityId", "ParentId", "Children", "Parent");
+                var asTree = _treeMapper.AddRelationships<string>(entities, "FullName", "Path");
+
+                //var foldersTree = _treeMapper.AddRelationships<string>(folders, "FullName", "Path", "Folder.Folders");
+                //var filesTree = _treeMapper.AddRelationships<string>(entities, "FullName", "Path", "Folder.Files");
+                //var folderIds = folders.Select(f => f.EntityId).ToList();
+                //filesTree = filesTree.Where(f => !folderIds.Contains(f.EntityId)).ToImmutableList();
+                // TODO: Handle duplicate entities and empty relations 
+                //var asTree = foldersTree.AddRange(filesTree);
+
                 return (asTree, $"As Tree: {asTree.Count}");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
+
                 return (entities, $"Just entities (tree had error): {entities.Count}");
             }
-        });
+        }));
+        private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new GetOnce<IImmutableList<IEntity>>();
     }
 }
