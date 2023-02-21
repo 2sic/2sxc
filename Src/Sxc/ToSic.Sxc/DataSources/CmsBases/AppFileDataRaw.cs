@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
@@ -18,62 +17,29 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class AppFileDataRaw: IRawEntity
+    public class AppFileDataRaw: AppFileDataRawBase
     {
         public const string TypeName = "File";
-
-        public int Id { get; set; }
-
-        public Guid Guid { get; set; }
-
-        /// <summary>
-        /// The file name with extension
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// The file name without extension
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// The file name extension
         /// </summary>
         public string Extension { get; set; }
 
-        /// <summary>
-        /// Starting in the App-Root
-        /// </summary>
-        public string FullName { get; set; }
-
-        /// <summary>
-        /// Starting in the App-Root
-        /// </summary>
-        public string Folder { get; set; }
-
-        public int ParentId { get; set; }
-
-        public bool IsFolder { get; set; }
-
         public long Size { get; set; }
 
-        public DateTime Created { get; set; }
 
-        public DateTime Modified { get; set; }
-
+        //public string FilePath => Path;
 
         /// <summary>
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
-        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
+        [PrivateApi]
+        public override Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>(base.GetProperties(options))
         {
-            { Attributes.TitleNiceName, Title },
-            { nameof(Name), Name },
+            //{ nameof(FilePath), FilePath },
+            //{ "FolderPath", "*.*-not-a-folder-path" },
             { nameof(Extension), Extension },
-            //{ nameof(FullName), FullName },
-            { nameof(Folder), Folder },
-            { nameof(ParentId), ParentId },
-            //{ nameof(IsFolder), IsFolder },
             { nameof(Size), Size }
         };
     }
