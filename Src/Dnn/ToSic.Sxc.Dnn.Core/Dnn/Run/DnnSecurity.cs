@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.Run
         /// <param name="portalId"></param>
         /// <returns></returns>
         public static bool PortalHasDesignersGroup(int portalId)
-            => PortalHasGroup(portalId, Settings.DnnGroupSxcDesigners);
+            => PortalHasGroup(portalId, DnnSxcSettings.DnnGroupSxcDesigners);
 
 
         public static bool PortalHasGroup(int portalId, string groupName)
@@ -56,18 +56,18 @@ namespace ToSic.Sxc.Dnn.Run
             // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
             if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return new DnnSiteAdminPermissions(false);
 
-            var hasSpecialGroup = PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcDesigners);
+            var hasSpecialGroup = PortalHasGroup(portal.PortalId, DnnSxcSettings.DnnGroupSxcDesigners);
             if (hasSpecialGroup && IsDesigner(user)) return new DnnSiteAdminPermissions(true);
 
-            hasSpecialGroup = hasSpecialGroup || PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcAdmins);
-            if (hasSpecialGroup && user.IsInRole(Settings.DnnGroupSxcAdmins)) return new DnnSiteAdminPermissions(true);
+            hasSpecialGroup = hasSpecialGroup || PortalHasGroup(portal.PortalId, DnnSxcSettings.DnnGroupSxcAdmins);
+            if (hasSpecialGroup && user.IsInRole(DnnSxcSettings.DnnGroupSxcAdmins)) return new DnnSiteAdminPermissions(true);
 
             // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
             return new DnnSiteAdminPermissions(true, !hasSpecialGroup);
         }
 
         public static bool IsDesigner(this UserInfo user) =>
-            !user.IsAnonymous() && user.IsInRole(Settings.DnnGroupSxcDesigners);
+            !user.IsAnonymous() && user.IsInRole(DnnSxcSettings.DnnGroupSxcDesigners);
 
         public static List<int> RoleList(this UserInfo user, int? portalId = null) =>
             user.IsAnonymous() ? new List<int>() : user.Roles

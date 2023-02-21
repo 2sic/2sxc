@@ -1,10 +1,11 @@
 ﻿namespace ToSic.Sxc
 {
-    public partial class Settings
+    public class Settings
     {
-        // Important note: always use static-readonly, NOT constant for .net 451
-        // reason is that we must ensure that the static constructor is called 
-        // whenever anything is accessed
+        // Important note: always use static-readonly, NOT constant
+        // This prevents the value from being compiled into other DLLs,
+        // So if a value ever changes, it will always be retrieved from here
+
 
         /// <summary>
         /// This setting will store what App is to be shown on a module. 
@@ -13,7 +14,7 @@
 #if NETFRAMEWORK
         public static readonly string ModuleSettingApp = "ToSIC_SexyContent_AppName";
 #else
-        public const string ModuleSettingApp = "EavApp";
+        public static readonly string ModuleSettingApp = "EavApp";
 #endif
 
         /// <summary>
@@ -23,7 +24,7 @@
 #if NETFRAMEWORK
         public static readonly string ModuleSettingContentGroup = "ToSIC_SexyContent_ContentGroupGuid";
 #else
-        public const string ModuleSettingContentGroup = "EavContentGroup";
+        public static readonly string ModuleSettingContentGroup = "EavContentGroup";
 #endif
 
         /// <summary>
@@ -33,10 +34,9 @@
         /// </summary>
 #if NETFRAMEWORK
         public static readonly string ModuleSettingsPreview = "ToSIC_SexyContent_PreviewTemplateId";
+
 #else
-        public const string ModuleSettingsPreview = "EavPreview";
+        public static readonly string ModuleSettingsPreview = "EavPreview";
 #endif
-
-
     }
 }

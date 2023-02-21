@@ -47,9 +47,9 @@ namespace ToSic.Sxc.Apps.Paths
             // Note that DNN needs it because many razor file don't use @inherits and the web.config contains the default class
             // but in Oqtane we'll require that to work
             var webConfigTemplateFilePath =
-                Path.Combine(_globalConfiguration.GlobalFolder, Settings.WebConfigTemplateFile);
-            if (File.Exists(webConfigTemplateFilePath) && !sxcFolder.GetFiles(Settings.WebConfigFileName).Any())
-                File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, Settings.WebConfigFileName));
+                Path.Combine(_globalConfiguration.GlobalFolder, Constants.WebConfigTemplateFile);
+            if (File.Exists(webConfigTemplateFilePath) && !sxcFolder.GetFiles(Constants.WebConfigFileName).Any())
+                File.Copy(webConfigTemplateFilePath, Path.Combine(sxcFolder.FullName, Constants.WebConfigFileName));
 
             // Create a Content folder (or App Folder)
             if (string.IsNullOrEmpty(appState.Folder))

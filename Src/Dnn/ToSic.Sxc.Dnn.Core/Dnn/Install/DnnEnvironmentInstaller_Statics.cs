@@ -1,4 +1,7 @@
-﻿namespace ToSic.Sxc.Dnn.Install
+﻿using ToSic.Lib.Helpers;
+using static ToSic.Sxc.Dnn.DnnSxcSettings.Installation;
+
+namespace ToSic.Sxc.Dnn.Install
 {
     public partial class DnnEnvironmentInstaller
     {
@@ -31,13 +34,8 @@
 //#pragma warning restore CS0618
 //        }
 
-        private bool UpgradeComplete
-        {
-            get => _upgradeComplete ?? (_upgradeComplete = _dnnEnvInstaller.Value.IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- first check")).Value;
-            set => _upgradeComplete = value;
-        }
-
-        private static bool? _upgradeComplete;
+        private bool UpgradeComplete => UpgradeCompleteCache.Get(() => IsUpgradeComplete(LastVersionWithServerChanges, "- first check"));
+        private static readonly GetOnce<bool> UpgradeCompleteCache = new GetOnce<bool>();
 
         #endregion
     }

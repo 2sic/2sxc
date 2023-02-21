@@ -7,6 +7,7 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Run;
+using static ToSic.Sxc.Dnn.DnnSxcSettings.Installation;
 
 namespace ToSic.Sxc.Dnn.Install
 {
@@ -22,9 +23,9 @@ namespace ToSic.Sxc.Dnn.Install
             }
 
             _installLogger.LogStep("", "FinishAbortedUpgrade starting", false);
-            _installLogger.LogStep("", "Will handle " + Settings.Installation.UpgradeVersionList.Length + " versions");
+            _installLogger.LogStep("", "Will handle " + UpgradeVersionList.Length + " versions");
             // Run upgrade again for all versions that do not have a corresponding logfile
-            foreach (var upgradeVersion in Settings.Installation.UpgradeVersionList)
+            foreach (var upgradeVersion in UpgradeVersionList)
             {
                 var complete = IsUpgradeComplete(upgradeVersion, "- check for FinishAbortedUpgrade");
                 _installLogger.LogStep("", "Status for version " + upgradeVersion + " is " + complete);

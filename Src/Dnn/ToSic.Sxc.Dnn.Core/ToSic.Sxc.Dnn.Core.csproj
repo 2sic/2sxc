@@ -137,11 +137,13 @@
     <Compile Include="Dnn\DnnEnvironmentLogger.cs" />
     <Compile Include="Dnn\DnnModuleAndBlockBuilder.cs" />
     <Compile Include="Dnn\DnnStaticDi.cs" />
+    <Compile Include="Dnn\DnnSxcSettings.cs" />
     <Compile Include="Dnn\DynamicCode.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource.cs" />
     <Compile Include="Compatibility\ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource.cs" />
     <Compile Include="Dnn940\RegisterWebApiActivator.cs" />
     <Compile Include="Dnn940\WebApiHttpControllerActivator.cs" />
+    <Compile Include="Dnn\Install\DnnEnvironmentInstaller_UpgradeModule.cs" />
     <Compile Include="Dnn\Services\DnnRenderService.cs" />
     <Compile Include="Dnn\Web\DnnJsApi.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnAppFilesDsProvider.cs" />
