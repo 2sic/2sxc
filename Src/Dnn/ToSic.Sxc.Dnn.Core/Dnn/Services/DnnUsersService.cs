@@ -1,7 +1,7 @@
 ﻿using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Context.Raw;
+using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Services
@@ -18,11 +18,7 @@ namespace ToSic.Sxc.Dnn.Services
         {
             var user = UserController.Instance.GetUserById(SiteId, userId);
             if (user == null) return null;
-            return new CmsUserRaw
-            {
-                Id = user.UserID,
-                Name = user.Username
-            };
+            return user.CmsUserBuilder(SiteId);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
+using ToSic.Sxc.Context.Raw;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -80,5 +81,28 @@ namespace ToSic.Sxc.Dnn.Run
 
         public static string UserIdentityToken(this UserInfo user) => 
             user.IsAnonymous() ? Constants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
+
+        public static CmsUserRaw CmsUserBuilder(this UserInfo user, int siteId)
+        {
+            var adminInfo = user.UserMayAdminThis();
+            return new CmsUserRaw
+            {
+                Id = user.UserID,
+                Guid = user.UserGuid(),
+                NameId = user.UserIdentityToken(),
+                Roles = user.RoleList(portalId: siteId),
+                IsSystemAdmin = user.IsSuperUser,
+                IsSiteAdmin = adminInfo.IsSiteAdmin,
+                IsContentAdmin = adminInfo.IsContentAdmin,
+                //IsDesigner = user.IsDesigner(),
+                IsAnonymous = user.IsAnonymous(),
+                Created = user.CreatedOnDate,
+                Modified = user.LastModifiedOnDate,
+                //
+                Username = user.Username,
+                Email = user.Email,
+                Name = user.DisplayName
+            };
+        }
     }
 }
