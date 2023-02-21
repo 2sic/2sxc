@@ -55,8 +55,28 @@ namespace ToSic.Sxc.Context
         IDynamicMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
 
-        // 2022-06-22 this was a idea, but not enabled yet, as not really clear if this is useful
-        //[PrivateApi("WIP")]
-        //string Path { get; }
+        /// <summary>
+        /// The path to this view for URLs which should load js/css from a path beneath the view.
+        ///
+        /// This is different from the `App.Path`, because it will also contain the edition (if there is an edition)
+        /// </summary>
+        /// <remarks>
+        /// Added in v15.04
+        /// </remarks>
+        string Path { get; }
+
+        string PathShared { get; }
+
+        /// <summary>
+        /// The folder of view for retrieving files on the server in the same path or below this. 
+        ///
+        /// This is different from the `App.PhysicalPath`, because it will also contain the edition (if there is an edition)
+        /// </summary>
+        /// <remarks>
+        /// Added in v15.04
+        /// </remarks>
+        string PhysicalPath { get; }
+
+        string PhysicalPathShared { get; }
     }
 }

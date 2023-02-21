@@ -1,6 +1,7 @@
 ﻿using ToSic.Eav.Helpers;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -32,7 +33,23 @@ namespace ToSic.Sxc.Context
         protected override IMetadataOf GetMetadataOf()
             => ExtendWithRecommendations(UnwrappedContents?.Metadata);
 
-        // 2022-06-22 this was a idea, but not enabled yet, as not really clear if this is useful
-        //public string Path => $"{_block?.App.Path}{_contents.EditionPath}".ForwardSlash();
+        /// <inheritdoc />
+        public string Path => _path.Get(() => CombinePathsAndForward(_block?.App.Path, UnwrappedContents.Edition));
+        private readonly GetOnce<string> _path = new GetOnce<string>();
+
+        /// <inheritdoc />
+        public string PathShared => _pathShared.Get(() => CombinePathsAndForward(_block?.App.PathShared, UnwrappedContents.Edition));
+        private readonly GetOnce<string> _pathShared = new GetOnce<string>();
+
+        /// <inheritdoc />
+        public string PhysicalPath => _physPath.Get(() => CombinePathsAndForward(_block?.App.PhysicalPath, UnwrappedContents.Edition));
+        private readonly GetOnce<string> _physPath = new GetOnce<string>();
+
+        /// <inheritdoc />
+        public string PhysicalPathShared => _physPathShared.Get(() => CombinePathsAndForward(_block?.App.PhysicalPathShared, UnwrappedContents.Edition));
+        private readonly GetOnce<string> _physPathShared = new GetOnce<string>();
+
+        private string CombinePathsAndForward(string path, string addition)
+            => System.IO.Path.Combine(path ?? "", addition ?? "").ForwardSlash();
     }
 }
