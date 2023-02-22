@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Dnn.StartUp
         {
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
-
+            services.TryAddScoped<DnnSecurity>();
             // Make sure that ISite and IZoneCultureResolver use the same singleton!
             services.TryAddScoped<ISite, DnnSite>();    // this must come first!
             services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<ISite>());

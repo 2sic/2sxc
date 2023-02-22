@@ -3,6 +3,7 @@ using DotNetNuke.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
 using ToSic.Sxc.Dnn.Run;
@@ -13,8 +14,14 @@ namespace ToSic.Sxc.DataSources
 
     public class DnnUsersDsProvider : UsersDataSourceProvider
     {
-        public DnnUsersDsProvider() : base("Dnn.Users")
-        { }
+        private readonly LazySvc<DnnSecurity> _dnnSecurity;
+
+        public DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity) : base("Dnn.Users")
+        {
+            ConnectServices(
+                _dnnSecurity = dnnSecurity
+            );
+        }
 
         public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
             {
@@ -35,7 +42,7 @@ namespace ToSic.Sxc.DataSources
 
                     var result = dnnUsers
                         //.Where(user => !user.IsDeleted)
-                        .Select(u => u.CmsUserBuilder(siteId)).ToList();
+                        .Select(u => _dnnSecurity.Value.CmsUserBuilder(u, siteId)).ToList();
                     return (result, "found");
                 }
                 catch (Exception ex)

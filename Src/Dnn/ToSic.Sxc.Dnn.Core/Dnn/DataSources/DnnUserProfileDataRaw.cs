@@ -11,6 +11,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -88,16 +89,19 @@ namespace ToSic.Sxc.Dnn.DataSources
         {
             public ISite Site { get; }
             public IZoneMapper ZoneMapper { get; }
+            public LazySvc<DnnSecurity> DnnSecurity { get; }
 
             public MyServices(
                 DataSource.MyServices parentServices,
                 ISite site,
-                IZoneMapper zoneMapper
+                IZoneMapper zoneMapper,
+                LazySvc<DnnSecurity> dnnSecurity
             ) : base(parentServices)
             {
                 ConnectServices(
                     Site = site,
-                    ZoneMapper = zoneMapper
+                    ZoneMapper = zoneMapper,
+                    DnnSecurity = dnnSecurity
                 );
             }
         }
@@ -147,7 +151,7 @@ namespace ToSic.Sxc.Dnn.DataSources
                 var dnnUserProfile = new DnnUserProfileDataRaw
                 {
                     Id = user.UserID,
-                    Guid = user.UserGuid(),
+                    Guid = _services.DnnSecurity.Value.UserGuid(user),
                     Name = GetDnnProfileValue(user, TitleField.ToLowerInvariant())
                 };
 

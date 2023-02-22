@@ -8,9 +8,14 @@ namespace ToSic.Sxc.Dnn.Services
 {
     public class DnnUsersService : UsersServiceBase
     {
+        private readonly LazySvc<DnnSecurity> _dnnSecurity;
 
-        public DnnUsersService(LazySvc<IContextOfSite> context) : base(context)
-        { }
+        public DnnUsersService(LazySvc<IContextOfSite> context, LazySvc<DnnSecurity> dnnSecurity) : base(context)
+        {
+            ConnectServices(
+                _dnnSecurity = dnnSecurity
+            );
+        }
 
         public override string PlatformIdentityTokenPrefix => DnnConstants.UserTokenPrefix;
 
@@ -18,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Services
         {
             var user = UserController.Instance.GetUserById(SiteId, userId);
             if (user == null) return null;
-            return user.CmsUserBuilder(SiteId);
+            return _dnnSecurity.Value.CmsUserBuilder(user, SiteId);
         }
     }
 }
