@@ -91,13 +91,13 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetDefault() => GetInternal().Where(e => e.Type.Name == AppFileDataRaw.TypeName).ToImmutableList();
+        public IImmutableList<IEntity> GetDefault() => GetInternal();
 
         [PrivateApi]
         public IImmutableList<IEntity> GetFolders() => GetInternal().Where(e => e.Type.Name == AppFolderDataRaw.TypeName).ToImmutableList();
 
         [PrivateApi]
-        public IImmutableList<IEntity> GetFiles() => GetInternal();
+        public IImmutableList<IEntity> GetFiles() => GetInternal().Where(e => e.Type.Name == AppFileDataRaw.TypeName).ToImmutableList();
 
         private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() => Log.Func(l =>
         {
