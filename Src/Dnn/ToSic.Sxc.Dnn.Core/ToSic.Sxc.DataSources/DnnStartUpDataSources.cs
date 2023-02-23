@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Dnn.DataSources;
+using ToSic.Sxc.ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources
@@ -25,6 +26,7 @@ namespace ToSic.Sxc.DataSources
             services.TryAddTransient<PagesDataSourceProvider, DnnPagesDsProvider>();
             services.TryAddTransient<SitesDataSourceProvider, DnnSitesDsProvider>();
             services.TryAddTransient<AppFilesDataSourceProvider, DnnAppFilesDsProvider>();
+            services.TryAddTransient(typeof(AdamDataSourceProvider<,>), typeof(DnnAdamDsProvider<,>));
 
             return services;
         }
