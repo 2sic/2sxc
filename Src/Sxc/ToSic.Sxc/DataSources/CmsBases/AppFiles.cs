@@ -11,7 +11,7 @@ using ToSic.Lib.Logging;
 using static System.StringComparer;
 
 // Important Info to people working with this
-// It depends on abstract provder, that must be overriden in each platform
+// It depends on abstract provider, that must be overriden in each platform
 // In addition, each platform must make sure to register a TryAddTransient with the platform specific provider implementation
 // This is because any constructor DI should be able to target this type, and get the real provider implementation
 
@@ -36,10 +36,6 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Files and folders in the App folder")]
     public class AppFiles: ExternalData
     {
-        // Problems
-        // 1. Guids look real, so devs my try to use them - but they will change on each request
-        // 2. merging and splitting data by filtering type again is not efficient
-        //    - Solution: only execute once, keep the three streams in one variable and just take the parts you need
         private readonly IDataBuilder _folderBuilder;
         private readonly ITreeMapper _treeMapper;
         private readonly IDataBuilder _fileBuilder;
@@ -115,6 +111,10 @@ namespace ToSic.Sxc.DataSources
         })[streamName];
         private readonly GetOnce<Dictionary<string, IImmutableList<IEntity>>> _multiAccess = new GetOnce<Dictionary<string, IImmutableList<IEntity>>>();
 
+        /// <summary>
+        /// Get both the files and folders stream
+        /// </summary>
+        /// <returns></returns>
         private (ICollection<IEntity> folders, ICollection<IEntity> files) GetInternal() => Log.Func(l =>
         {
             Configuration.Parse();
@@ -147,35 +147,27 @@ namespace ToSic.Sxc.DataSources
                     .Select(pair => (pair.Value, pair.Key.ParentFolderInternal))
                     .ToList();
 
-                var foldersWithFirstTree = _treeMapper
+                var withSubfolders = _treeMapper
                     .AddOneRelationship("Folders", folderNeeds, foldersLookup, cloneFirst: false);
 
 
                 // Second prepare files list for each folder
-
-                //var folderNeedsFiles = foldersWithFirstTree
-                //    .Select(pair =>
-                //    {
-                //        var filesInFolder = _provider.Files
-                //            .Where(f => f.Path.Equals(pair.Key.FullName))
-                //            .Select(f => f.Guid)
-                //            .ToList();
-                //        return (pair.Key, pair.Value, filesInFolder);
-                //    }).ToList();
-
-                //var filesLookup = files.Values.Select(entity => (entity, entity.EntityGuid)).ToList();
-                var folderNeedsFiles = foldersWithFirstTree
+                var folderNeedsFiles = withSubfolders
                     .Select(pair => (pair.Key, pair.Value, new List<string> { pair.Key.FullName }))
                     .ToList();
 
-                var filesLookup = files.Select(pair => (pair.Value, pair.Key.ParentFolderInternal)).ToList();
+                var filesLookup = files
+                    .Select(pair => (pair.Value, pair.Key.ParentFolderInternal))
+                    .ToList();
 
+                var withSubFiles = _treeMapper
+                    .AddOneRelationship("Files", folderNeedsFiles, filesLookup, cloneFirst: false);
 
-                var foldersWithSecondTreeAlso =
-                    _treeMapper.AddOneRelationship("Files", folderNeedsFiles, filesLookup, cloneFirst: false);
+                // todo some time in future (not now, no priority)
+                // - add parent navigation properties to folders and files
 
-                // add files to final results
-                return ((foldersWithSecondTreeAlso.Values, files.Values), "ok");
+                // Return the final streams
+                return ((withSubFiles.Values, files.Values), "ok");
             }
             catch (Exception ex)
             {
