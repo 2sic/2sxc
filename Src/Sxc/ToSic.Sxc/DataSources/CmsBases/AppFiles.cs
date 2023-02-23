@@ -8,6 +8,7 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using static System.StringComparer;
 
 // Important Info to people working with this
 // It depends on abstract provder, that must be overriden in each platform
@@ -35,10 +36,17 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Files and folders in the App folder")]
     public class AppFiles: ExternalData
     {
+        // Problems
+        // 1. Guids look real, so devs my try to use them - but they will change on each request
+        // 2. merging and splitting data by filtering type again is not efficient
+        //    - Solution: only execute once, keep the three streams in one variable and just take the parts you need
         private readonly IDataBuilder _folderBuilder;
         private readonly ITreeMapper _treeMapper;
         private readonly IDataBuilder _fileBuilder;
         private readonly AppFilesDataSourceProvider _provider;
+
+        private const string StreamFiles = "Files";
+        private const string StreamFolders = "Folders";
 
         #region Configuration properties
 
@@ -84,22 +92,30 @@ namespace ToSic.Sxc.DataSources
                 _treeMapper = treeMapper
             );
 
-            Provide(GetDefault);
-            Provide("Folders", GetFolders);
-            Provide("Files", GetFiles);
+            Provide(() => GetMultiAccess(Eav.Constants.DefaultStreamName));
+            Provide(StreamFolders, () => GetMultiAccess(StreamFolders));
+            Provide(StreamFiles, () => GetMultiAccess(StreamFiles));
         }
         #endregion
 
-        [PrivateApi]
-        public IImmutableList<IEntity> GetDefault() => GetInternal();
+        /// <summary>
+        /// Mini-cache.
+        /// Reason is that we can only generate the streams together, so this ensures that after generating them once,
+        /// other streams requested at the same time won't re-trigger stream generation.
+        /// </summary>
+        private IImmutableList<IEntity> GetMultiAccess(string streamName) => _multiAccess.Get(() =>
+        {
+            var (folders, files) = GetInternal();
+            return new Dictionary<string, IImmutableList<IEntity>>(OrdinalIgnoreCase)
+            {
+                { Eav.Constants.DefaultStreamName, folders.Concat(files).ToImmutableList() },
+                { StreamFolders, folders.ToImmutableList() },
+                { StreamFiles, files.ToImmutableList() }
+            };
+        })[streamName];
+        private readonly GetOnce<Dictionary<string, IImmutableList<IEntity>>> _multiAccess = new GetOnce<Dictionary<string, IImmutableList<IEntity>>>();
 
-        [PrivateApi]
-        public IImmutableList<IEntity> GetFolders() => GetInternal().Where(e => e.Type.Name == AppFolderDataRaw.TypeName).ToImmutableList();
-
-        [PrivateApi]
-        public IImmutableList<IEntity> GetFiles() => GetInternal().Where(e => e.Type.Name == AppFileDataRaw.TypeName).ToImmutableList();
-
-        private IImmutableList<IEntity> GetInternal() => _getInternal.Get(() => Log.Func(l =>
+        private (ICollection<IEntity> folders, ICollection<IEntity> files) GetInternal() => Log.Func(l =>
         {
             Configuration.Parse();
 
@@ -108,58 +124,61 @@ namespace ToSic.Sxc.DataSources
             // Get pages from underlying system/provider
             var results = _provider.GetInternal();
             if (results == null || !results.Any())
-                return (new List<IEntity>().ToImmutableList(), "null/empty");
+                return ((EmptyList.ToList(), EmptyList.ToList()), "null/empty");
 
             // Convert to Entity-Stream
             _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
-            var folders = _folderBuilder.CreateMany(_provider.Folders);
+            var folders = _folderBuilder.Prepare(_provider.Folders);
+            l.A($"Folders: {folders.Count}");
 
             _fileBuilder.Configure(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name));
-            var files = _fileBuilder.CreateMany(_provider.Files);
+            var files = _fileBuilder.Prepare(_provider.Files);
+            l.A($"Files: {files.Count}");
 
-            var entities = folders.AddRange(files);
 
             try
             {
                 // First prepare subfolder list for each folder
                 var folderNeeds = folders.ToList()
-                    .Select(entity =>
+                    .Select(pair =>
                     {
-                        var fullName = entity.GetBestValue<string>("FullName", null);
-                        var subFolders = _provider.Folders.Where(f => f.Path.Equals(fullName)).Select(f => f.Guid).ToList();
-                        return (entity, subFolders);
+                        var subFolders = _provider.Folders
+                            .Where(f => f.Path.Equals(pair.Key.FullName))
+                            .Select(f => f.Guid)
+                            .ToList();
+                        return (pair.Key, pair.Value, subFolders);
                     }).ToList();
 
-                var foldersLookup = folders.Select(entity => (entity, entity.EntityGuid)).ToList();
+                var foldersLookup = folders.Values.Select(entity => (entity, entity.EntityGuid)).ToList();
 
-                var foldersWithFirstTree = _treeMapper.AddSomeRelationshipsWIP<Guid>("Folders", folderNeeds, foldersLookup).ToImmutableList();
+                var foldersWithFirstTree =
+                    _treeMapper.AddOneRelationship("Folders", folderNeeds, foldersLookup, cloneFirst: false);
 
 
                 // Second prepare files list for each folder
-                var folderNeedsFiles = foldersWithFirstTree.ToList()
-                    .Select(entity =>
+                var folderNeedsFiles = foldersWithFirstTree
+                    .Select(pair =>
                     {
-                        var fullName = entity.GetBestValue<string>("FullName", null);
-                        var filesInFolder = _provider.Files.Where(f => f.Path.Equals(fullName)).Select(f => f.Guid).ToList();
-                        return (entity, filesInFolder);
+                        var filesInFolder = _provider.Files
+                            .Where(f => f.Path.Equals(pair.Key.FullName))
+                            .Select(f => f.Guid)
+                            .ToList();
+                        return (pair.Key, pair.Value, filesInFolder);
                     }).ToList();
 
-                var filesLookup = files.Select(entity => (entity, entity.EntityGuid)).ToList();
+                var filesLookup = files.Values.Select(entity => (entity, entity.EntityGuid)).ToList();
 
-                var foldersWithSecondTreeAlso = _treeMapper.AddSomeRelationshipsWIP<Guid>("Files", folderNeedsFiles, filesLookup).ToImmutableList();
+                var foldersWithSecondTreeAlso =
+                    _treeMapper.AddOneRelationship("Files", folderNeedsFiles, filesLookup, cloneFirst: false);
 
                 // add files to final results
-                var final = foldersWithSecondTreeAlso.AddRange(files);
-
-                return (final, $"As Tree: {final.Count}");
+                return ((foldersWithSecondTreeAlso.Values, files.Values), "ok");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-
-                return (entities, $"Just entities (tree had error): {entities.Count}");
+                return ((folders.Values, files.Values), "error");
             }
-        }));
-        private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new GetOnce<IImmutableList<IEntity>>();
+        });
     }
 }

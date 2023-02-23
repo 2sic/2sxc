@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
@@ -90,7 +89,7 @@ namespace ToSic.Sxc.DataSources
             return (result, $"found:{result.Count}");
         });
 
-        public List<AppFileDataRaw> Files => _files.Get(() => Log.Func( l =>
+        public List<AppFileDataRaw> Files => _files.Get(Log, l =>
         {
             var files = new List<AppFileDataRaw>();
             if (!_onlyFolders)
@@ -113,10 +112,10 @@ namespace ToSic.Sxc.DataSources
                 l.A($"onlyFolders:{_onlyFolders}");
 
             return (files, $"files:{files.Count}");
-        }));
+        });
         private readonly GetOnce<List<AppFileDataRaw>> _files = new GetOnce<List<AppFileDataRaw>>();
 
-        public List<AppFolderDataRaw> Folders => _folders.Get( () => Log.Func(l =>
+        public List<AppFolderDataRaw> Folders => _folders.Get(Log, l =>
         {
             var folders = new List<AppFolderDataRaw>();
             if (!_onlyFiles)
@@ -137,7 +136,7 @@ namespace ToSic.Sxc.DataSources
                 l.A($"onlyFiles:{_onlyFiles}");
 
             return (folders, $"found:{folders.Count}");
-        }));
+        });
         private readonly GetOnce<List<AppFolderDataRaw>> _folders = new GetOnce<List<AppFolderDataRaw>>();
 
         private static string NameInAppFolder(string path, IApp currentApp, string root)
