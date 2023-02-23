@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using ToSic.Eav.Data.Raw;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -20,17 +17,5 @@ namespace ToSic.Sxc.DataSources
     public class AppFolderDataRaw: AppFileDataRawBase
     {
         public const string TypeName = "Folder";
-
-        //public string FolderPath => Path;
-
-        ///// <summary>
-        ///// Data but without Id, Guid, Created, Modified
-        ///// </summary>
-        //[PrivateApi]
-        //public override Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>(base.GetProperties(options))
-        //{
-        //    { "FilePath", "*.*-not-a-file-path" },
-        //    { nameof(FolderPath), FolderPath }
-        //};
     }
 }

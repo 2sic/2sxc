@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
@@ -28,17 +27,12 @@ namespace ToSic.Sxc.DataSources
 
         public long Size { get; set; }
 
-
-        //public string FilePath => Path;
-
         /// <summary>
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
         public override Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>(base.GetProperties(options))
         {
-            //{ nameof(FilePath), FilePath },
-            //{ "FolderPath", "*.*-not-a-folder-path" },
             { nameof(Extension), Extension },
             { nameof(Size), Size }
         };
