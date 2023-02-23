@@ -121,16 +121,37 @@ namespace ToSic.Sxc.DataSources
 
             try
             {
-                var asTree = _treeMapper.AddRelationships<string>(entities, "FullName", "Path");
+                // First prepare subfolder list for each folder
+                var folderNeeds = folders.ToList()
+                    .Select(entity =>
+                    {
+                        var fullName = entity.GetBestValue<string>("FullName", null);
+                        var subFolders = _provider.Folders.Where(f => f.Path.Equals(fullName)).Select(f => f.Guid).ToList();
+                        return (entity, subFolders);
+                    }).ToList();
 
-                //var foldersTree = _treeMapper.AddRelationships<string>(folders, "FullName", "Path", "Folder.Folders");
-                //var filesTree = _treeMapper.AddRelationships<string>(entities, "FullName", "Path", "Folder.Files");
-                //var folderIds = folders.Select(f => f.EntityId).ToList();
-                //filesTree = filesTree.Where(f => !folderIds.Contains(f.EntityId)).ToImmutableList();
-                // TODO: Handle duplicate entities and empty relations 
-                //var asTree = foldersTree.AddRange(filesTree);
+                var foldersLookup = folders.Select(entity => (entity, entity.EntityGuid)).ToList();
 
-                return (asTree, $"As Tree: {asTree.Count}");
+                var foldersWithFirstTree = _treeMapper.AddSomeRelationshipsWIP<Guid>("Folders", folderNeeds, foldersLookup).ToImmutableList();
+
+
+                // Second prepare files list for each folder
+                var folderNeedsFiles = foldersWithFirstTree.ToList()
+                    .Select(entity =>
+                    {
+                        var fullName = entity.GetBestValue<string>("FullName", null);
+                        var filesInFolder = _provider.Files.Where(f => f.Path.Equals(fullName)).Select(f => f.Guid).ToList();
+                        return (entity, filesInFolder);
+                    }).ToList();
+
+                var filesLookup = files.Select(entity => (entity, entity.EntityGuid)).ToList();
+
+                var foldersWithSecondTreeAlso = _treeMapper.AddSomeRelationshipsWIP<Guid>("Files", folderNeedsFiles, filesLookup).ToImmutableList();
+
+                // add files to final results
+                var final = foldersWithSecondTreeAlso.AddRange(files);
+
+                return (final, $"As Tree: {final.Count}");
             }
             catch (Exception ex)
             {
