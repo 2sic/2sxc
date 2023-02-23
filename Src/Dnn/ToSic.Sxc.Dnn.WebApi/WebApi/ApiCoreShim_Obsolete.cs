@@ -6,6 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Custom.Hybrid;
+using Interfaces = ToSic.Eav.Interfaces;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -28,18 +29,18 @@ namespace ToSic.Sxc.WebApi
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
+        public dynamic AsDynamic(Interfaces.IEntity entity)
             => Obsolete10.AsDynamicInterfacesIEntity();
 
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
+        public dynamic AsDynamic(KeyValuePair<int, Interfaces.IEntity> entityKeyValuePair)
             => Obsolete10.AsDynamicKvpInterfacesIEntity();
 
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         [PrivateApi]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Interfaces.IEntity> entities)
             => Obsolete10.AsDynamicIEnumInterfacesIEntity();
 
 
