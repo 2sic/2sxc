@@ -625,7 +625,7 @@
         },
         {
           "Id": 164759,
-          "Version": 3,
+          "Version": 4,
           "Guid": "3e9dd123-ccef-4d81-80e7-4c6ae6f5ddc6",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -640,7 +640,7 @@
                 "en-us": "text-minimal"
               },
               "Title": {
-                "en-us": "Text - Only very basic formatting"
+                "en-us": "Text-Minimal - Only very basic formatting"
               }
             },
             "Boolean": {
@@ -679,7 +679,7 @@
         },
         {
           "Id": 166477,
-          "Version": 2,
+          "Version": 3,
           "Guid": "d8d6e212-4878-4483-be4a-3de865a85ee6",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -694,7 +694,7 @@
                 "en-us": "text"
               },
               "Title": {
-                "en-us": "Text - For Text Editing without Images/Media"
+                "en-us": "Text-Default - For Text Editing without Images/Media"
               }
             },
             "Boolean": {
@@ -787,7 +787,7 @@
         },
         {
           "Id": 166515,
-          "Version": 1,
+          "Version": 2,
           "Guid": "c2d17507-e076-4a93-a9f9-e94e7ecc7e96",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -802,7 +802,7 @@
                 "en-us": "text-basic"
               },
               "Title": {
-                "en-us": "Text - Basic without Headers"
+                "en-us": "Text-Basic - Like Text, but without Headers"
               }
             },
             "Boolean": {
@@ -841,7 +841,7 @@
         },
         {
           "Id": 167713,
-          "Version": 4,
+          "Version": 5,
           "Guid": "df032556-2d8a-40d7-bc35-57ec9088f15d",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -856,7 +856,7 @@
                 "en-us": "text-plain"
               },
               "Title": {
-                "en-us": "Text - Plain (almost not a wysiwyg)"
+                "en-us": "Text-Plain - Really just text, basically not a WYSIWYG"
               }
             },
             "Boolean": {
