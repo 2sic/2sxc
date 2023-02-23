@@ -172,7 +172,7 @@ namespace ToSic.Sxc.DataSources
             _usersBuilder.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName, createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
 
             var users = _usersBuilder.CreateMany(usersRaw);
-            var roles = new List<IEntity>().ToImmutableList();
+            var roles = EmptyList;
 
             // If we should include the roles, create them now and attach
             if (AddRoles)

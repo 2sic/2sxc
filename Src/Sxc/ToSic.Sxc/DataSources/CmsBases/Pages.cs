@@ -138,7 +138,7 @@ namespace ToSic.Sxc.DataSources
                 requireEditPermissions: RequireEditPermissions
             );
             if (pagesFromSystem == null || !pagesFromSystem.Any())
-                return (new ImmutableArray<IEntity>(), "null/empty");
+                return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
             var pages = _pageBuilder.CreateMany(pagesFromSystem);

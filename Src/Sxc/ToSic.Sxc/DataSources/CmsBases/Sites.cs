@@ -56,7 +56,7 @@ namespace ToSic.Sxc.DataSources
             // Get sites from underlying system/provider
             var sitesFromSystem = _provider.GetSitesInternal();
             if (sitesFromSystem?.Any() != true)
-                return (new List<IEntity>().ToImmutableList(), "null/empty");
+                return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
             var sites = _sitesDataBuilder.CreateMany(sitesFromSystem);

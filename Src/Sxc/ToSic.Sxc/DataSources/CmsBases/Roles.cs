@@ -92,7 +92,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"found {roles?.Count} roles");
 
             if (roles?.Any() != true) 
-                return (new List<IEntity>().ToImmutableList(), "null/empty");
+                return (EmptyList, "null/empty");
 
             // This will resolve the tokens before starting
             Configuration.Parse();
