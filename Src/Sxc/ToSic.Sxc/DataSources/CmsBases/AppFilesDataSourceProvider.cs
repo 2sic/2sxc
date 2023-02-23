@@ -5,6 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -96,15 +97,20 @@ namespace ToSic.Sxc.DataSources
             {
                 files = _fileManager.GetAllTransferableFiles(_filter)
                     .Select(p => new FileInfo(p))
-                    .Select(f => new AppFileDataRaw
+                    .Select(f =>
                     {
-                        Name = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
-                        Extension = f.Extension,
-                        FullName = NameInAppFolder(f.FullName, _currentApp, _root),
-                        Path = FolderInAppFolder(f.FullName, _currentApp, _root),
-                        Size = f.Length,
-                        Created = f.CreationTime,
-                        Modified = f.LastWriteTime
+                        var fullName = NameInAppFolder(f.FullName, _currentApp, _root);
+                        return new AppFileDataRaw
+                        {
+                            Name = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
+                            Extension = f.Extension,
+                            FullName = fullName, // NameInAppFolder(f.FullName, _currentApp, _root),
+                            ParentFolderInternal = fullName.BeforeLast("/") ?? "",
+                            Path = FolderInAppFolder(f.FullName, _currentApp, _root),
+                            Size = f.Length,
+                            Created = f.CreationTime,
+                            Modified = f.LastWriteTime
+                        };
                     })
                     .ToList();
             }
@@ -122,13 +128,18 @@ namespace ToSic.Sxc.DataSources
             {
                 folders = _fileManager.GetAllTransferableFolders(/*filter*/)
                     .Select(p => new DirectoryInfo(p))
-                    .Select(d => new AppFolderDataRaw
+                    .Select(d =>
                     {
-                        Name = $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
-                        FullName = NameInAppFolder(d.FullName, _currentApp, _root),
-                        Path = FolderInAppFolder(d.FullName, _currentApp, _root),
-                        Created = d.CreationTime,
-                        Modified = d.LastWriteTime
+                        var fullName = NameInAppFolder(d.FullName, _currentApp, _root);
+                        return new AppFolderDataRaw
+                        {
+                            Name = $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
+                            FullName = fullName, // NameInAppFolder(d.FullName, _currentApp, _root),
+                            ParentFolderInternal = fullName.BeforeLast("/") ?? "",
+                            Path = FolderInAppFolder(d.FullName, _currentApp, _root),
+                            Created = d.CreationTime,
+                            Modified = d.LastWriteTime
+                        };
                     })
                     .ToList();
             }
@@ -139,6 +150,13 @@ namespace ToSic.Sxc.DataSources
         });
         private readonly GetOnce<List<AppFolderDataRaw>> _folders = new GetOnce<List<AppFolderDataRaw>>();
 
+        /// <summary>
+        /// TODO: @STV - pls explain diff between this and next function - it's really hard to guess what they do
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="currentApp"></param>
+        /// <param name="root"></param>
+        /// <returns></returns>
         private static string NameInAppFolder(string path, IApp currentApp, string root)
         {
             var name = path?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);

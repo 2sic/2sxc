@@ -139,34 +139,37 @@ namespace ToSic.Sxc.DataSources
             try
             {
                 // First prepare subfolder list for each folder
-                var folderNeeds = folders.ToList()
-                    .Select(pair =>
-                    {
-                        var subFolders = _provider.Folders
-                            .Where(f => f.Path.Equals(pair.Key.FullName))
-                            .Select(f => f.Guid)
-                            .ToList();
-                        return (pair.Key, pair.Value, subFolders);
-                    }).ToList();
+                var folderNeeds = folders
+                    .Select(pair => (pair.Key, pair.Value, new List<string> { pair.Key.FullName }))
+                    .ToList();
 
-                var foldersLookup = folders.Values.Select(entity => (entity, entity.EntityGuid)).ToList();
+                var foldersLookup = folders
+                    .Select(pair => (pair.Value, pair.Key.ParentFolderInternal))
+                    .ToList();
 
-                var foldersWithFirstTree =
-                    _treeMapper.AddOneRelationship("Folders", folderNeeds, foldersLookup, cloneFirst: false);
+                var foldersWithFirstTree = _treeMapper
+                    .AddOneRelationship("Folders", folderNeeds, foldersLookup, cloneFirst: false);
 
 
                 // Second prepare files list for each folder
-                var folderNeedsFiles = foldersWithFirstTree
-                    .Select(pair =>
-                    {
-                        var filesInFolder = _provider.Files
-                            .Where(f => f.Path.Equals(pair.Key.FullName))
-                            .Select(f => f.Guid)
-                            .ToList();
-                        return (pair.Key, pair.Value, filesInFolder);
-                    }).ToList();
 
-                var filesLookup = files.Values.Select(entity => (entity, entity.EntityGuid)).ToList();
+                //var folderNeedsFiles = foldersWithFirstTree
+                //    .Select(pair =>
+                //    {
+                //        var filesInFolder = _provider.Files
+                //            .Where(f => f.Path.Equals(pair.Key.FullName))
+                //            .Select(f => f.Guid)
+                //            .ToList();
+                //        return (pair.Key, pair.Value, filesInFolder);
+                //    }).ToList();
+
+                //var filesLookup = files.Values.Select(entity => (entity, entity.EntityGuid)).ToList();
+                var folderNeedsFiles = foldersWithFirstTree
+                    .Select(pair => (pair.Key, pair.Value, new List<string> { pair.Key.FullName }))
+                    .ToList();
+
+                var filesLookup = files.Select(pair => (pair.Value, pair.Key.ParentFolderInternal)).ToList();
+
 
                 var foldersWithSecondTreeAlso =
                     _treeMapper.AddOneRelationship("Files", folderNeedsFiles, filesLookup, cloneFirst: false);

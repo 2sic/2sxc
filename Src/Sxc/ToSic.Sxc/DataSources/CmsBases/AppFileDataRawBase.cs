@@ -10,7 +10,6 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public abstract class AppFileDataRawBase: IRawEntity
     {
-
         public int Id { get; set; }
 
         public Guid Guid { get; set; } = Guid.NewGuid();
@@ -21,6 +20,11 @@ namespace ToSic.Sxc.DataSources
         /// Starting in the App-Root
         /// </summary>
         public string FullName { get; set; }
+
+        /// <summary>
+        /// This is just for intenal lookup
+        /// </summary>
+        public string ParentFolderInternal { get; set; }
 
         /// <summary>
         /// Starting in the App-Root
