@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
+using ToSic.Eav.Data.Builder;
 using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
@@ -62,6 +63,6 @@ namespace ToSic.Sxc.Tests.DataSources
         }
 
         private Roles GenerateRolesDataSourceDataSource() 
-            => CreateDataSource<Roles>(LookUpTestData.AppSetAndRes());
+            => CreateDataSource<Roles>(new LookUpTestData(GetService<EntityBuilder>()).AppSetAndRes());
     }
 }

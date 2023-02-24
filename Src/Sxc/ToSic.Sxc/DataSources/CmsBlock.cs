@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
@@ -108,14 +109,14 @@ namespace ToSic.Sxc.DataSources
         {
             if (BlockConfiguration == null)
             {
-                immutableArray = new DataSourceErrorHandling()
+                immutableArray = new DataSourceErrorHandling(new EntityBuilder(new AttributeBuilder(new ValueBuilder(new DimensionBuilder()))))
                     .CreateErrorList(title: "CmsBlock Configuration Missing", message: "Cannot find configuration of current CmsBlock");
                 return true;
             }
 
             if (View == null)
             {
-                immutableArray = new DataSourceErrorHandling()
+                immutableArray = new DataSourceErrorHandling(new EntityBuilder(new AttributeBuilder(new ValueBuilder(new DimensionBuilder()))))
                     .CreateErrorList(title: "CmsBlock View Missing", message: "Cannot find View configuration of current CmsBlock");
                 return true;
             }

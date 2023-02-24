@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Builder;
 using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Data
     public class DynamicEntityServices: MyServicesBase
     {
         public DynamicEntityServices(
-            LazySvc<IDataBuilderInternal> dataBuilderLazy,
+            LazySvc<MultiBuilder> dataBuilderLazy,
             LazySvc<IValueConverter> valueConverterLazy,
             Generator<IRenderService> renderServiceGenerator)
         {
@@ -52,8 +53,8 @@ namespace ToSic.Sxc.Data
         private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
 
-        internal IDataBuilderInternal DataBuilder => _dataBuilderLazy.Value;
-        private readonly LazySvc<IDataBuilderInternal> _dataBuilderLazy;
+        internal MultiBuilder DataBuilder => _dataBuilderLazy.Value;
+        private readonly LazySvc<MultiBuilder> _dataBuilderLazy;
 
 
         internal IRenderService RenderService => _renderServiceGenerator.New();
