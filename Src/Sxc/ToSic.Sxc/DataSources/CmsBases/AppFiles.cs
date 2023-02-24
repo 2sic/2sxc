@@ -116,7 +116,7 @@ namespace ToSic.Sxc.DataSources
         /// Get both the files and folders stream
         /// </summary>
         /// <returns></returns>
-        private (ICollection<IEntity> folders, ICollection<IEntity> files) GetInternal() => Log.Func(l =>
+        private (IImmutableList<IEntity> folders, IImmutableList<IEntity> files) GetInternal() => Log.Func(l =>
         {
             Configuration.Parse();
 
@@ -125,7 +125,7 @@ namespace ToSic.Sxc.DataSources
             // Get pages from underlying system/provider
             var results = _provider.GetInternal();
             if (results == null || !results.Any())
-                return ((EmptyList.ToList(), EmptyList.ToList()), "null/empty");
+                return ((EmptyList, EmptyList), "null/empty");
 
             // Convert to Entity-Stream
             _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name));
@@ -141,11 +141,11 @@ namespace ToSic.Sxc.DataSources
             {
                 // First prepare subfolder list for each folder
                 var folderNeeds = folders
-                    .Select(pair => (pair.Key, pair.Value, new List<string> { pair.Key.FullName }))
+                    .Select(pair => (pair, new List<string> { pair.Original.FullName }))
                     .ToList();
 
                 var foldersLookup = folders
-                    .Select(pair => (pair.Value, pair.Key.ParentFolderInternal))
+                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal))
                     .ToList();
 
                 var withSubfolders = _treeMapper
@@ -154,11 +154,11 @@ namespace ToSic.Sxc.DataSources
 
                 // Second prepare files list for each folder
                 var folderNeedsFiles = withSubfolders
-                    .Select(pair => (pair.Key, pair.Value, new List<string> { pair.Key.FullName }))
+                    .Select(pair => (pair, new List<string> { pair.Original.FullName }))
                     .ToList();
 
                 var filesLookup = files
-                    .Select(pair => (pair.Value, pair.Key.ParentFolderInternal))
+                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal))
                     .ToList();
 
                 var withSubFiles = _treeMapper
@@ -168,12 +168,12 @@ namespace ToSic.Sxc.DataSources
                 // - add parent navigation properties to folders and files
 
                 // Return the final streams
-                return ((withSubFiles.Values, files.Values), "ok");
+                return ((_folderBuilder.Finalize(withSubFiles), _fileBuilder.Finalize(files)), "ok");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return ((folders.Values, files.Values), "error");
+                return ((_folderBuilder.Finalize(folders), _fileBuilder.Finalize(files)), "error");
             }
         });
     }
