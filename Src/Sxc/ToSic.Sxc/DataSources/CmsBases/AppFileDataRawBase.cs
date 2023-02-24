@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.New;
 using ToSic.Lib.Documentation;
 
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.DataSources
         public string FullName { get; set; }
 
         /// <summary>
-        /// This is just for intenal lookup
+        /// This is just for internal lookup
         /// </summary>
         public string ParentFolderInternal { get; set; }
 

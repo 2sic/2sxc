@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Apps;
@@ -10,9 +11,9 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using static System.IO.Path;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
-using static System.IO.Path;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -99,14 +100,14 @@ namespace ToSic.Sxc.DataSources
                     .Select(p => new FileInfo(p))
                     .Select(f =>
                     {
-                        var fullName = NameInAppFolder(f.FullName, _currentApp, _root);
+                        var fullName = FullNameWithoutAppFolder(f.FullName, _currentApp, _root);
                         return new AppFileDataNew
                         {
                             Name = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
                             Extension = f.Extension,
-                            FullName = fullName, // NameInAppFolder(f.FullName, _currentApp, _root),
-                            ParentFolderInternal = fullName.BeforeLast("/") ?? "",
-                            Path = FolderInAppFolder(f.FullName, _currentApp, _root),
+                            FullName = fullName,
+                            ParentFolderInternal = fullName.BeforeLast("/"),
+                            Path = fullName.BeforeLast("/") + "/",
                             Size = f.Length,
                             Created = f.CreationTime,
                             Modified = f.LastWriteTime
@@ -130,18 +131,19 @@ namespace ToSic.Sxc.DataSources
                     .Select(p => new DirectoryInfo(p))
                     .Select(d =>
                     {
-                        var fullName = NameInAppFolder(d.FullName, _currentApp, _root);
+                        var fullName = FullNameWithoutAppFolder(d.FullName, _currentApp, _root);
                         return new AppFolderDataNew
                         {
                             Name = $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
-                            FullName = fullName, // NameInAppFolder(d.FullName, _currentApp, _root),
-                            ParentFolderInternal = fullName.BeforeLast("/") ?? "",
-                            Path = FolderInAppFolder(d.FullName, _currentApp, _root),
+                            FullName = fullName,
+                            ParentFolderInternal = fullName.BeforeLast("/"),
+                            Path = fullName.BeforeLast("/") + "/",
                             Created = d.CreationTime,
                             Modified = d.LastWriteTime
                         };
                     })
                     .ToList();
+                folders.Insert(0, _rootFolder);
             }
             else
                 l.A($"onlyFiles:{_onlyFiles}");
@@ -150,39 +152,41 @@ namespace ToSic.Sxc.DataSources
         });
         private readonly GetOnce<List<AppFolderDataNew>> _folders = new GetOnce<List<AppFolderDataNew>>();
 
+        private readonly AppFolderDataNew _rootFolder = new AppFolderDataNew
+        {
+            Name = "Root",
+            FullName = "",
+            ParentFolderInternal = "/", // it should not be empty for root folder (it is expected that its children should have empty ParentFolderInternal)
+            Path = "/", // this is to show to end 
+            Created = DateTime.MinValue,
+            Modified = DateTime.MinValue
+        };
+
         /// <summary>
-        /// TODO: @STV - pls explain diff between this and next function - it's really hard to guess what they do
+        /// 
         /// </summary>
         /// <param name="path"></param>
         /// <param name="currentApp"></param>
         /// <param name="root"></param>
         /// <returns></returns>
-        private static string NameInAppFolder(string path, IApp currentApp, string root)
+        private static string FullNameWithoutAppFolder(string path, IApp currentApp, string root)
         {
             var name = path?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);
             //var isFolder = GetAttributes(filePath).HasFlag(FileAttributes.Directory);
-            if (string.IsNullOrEmpty(name)) 
-                return root;
-            if (currentApp.PhysicalPathShared != null) name = name.Replace(Combine(currentApp.PhysicalPathShared, root), string.Empty);
+            if (string.IsNullOrEmpty(name))
+                return string.Empty;
+            if (currentApp.PhysicalPathShared != null) 
+                name = name.Replace(Combine(currentApp.PhysicalPathShared, root), string.Empty);
             return name.ForwardSlash();
         }
 
-        private static string FolderInAppFolder(string path, IApp currentApp, string root)
-        {
-            var folder = GetDirectoryName(path)?.Replace(Combine(currentApp.PhysicalPath, root), string.Empty);
-            if (string.IsNullOrEmpty(folder)) 
-                return root;
-            if (currentApp.PhysicalPathShared != null) folder = folder.Replace(Combine(currentApp.PhysicalPathShared, root), string.Empty);
-            return folder.ForwardSlash();
-        }
-
-        private ZipExport GetZipExport(IApp app) 
+        private ZipExport GetZipExport(IApp app)
             => Services.ZipExport.Init(app.ZoneId, app.AppId, app.Folder, app.PhysicalPath, app.PhysicalPathShared);
 
-        private IApp GetApp(int zoneId, int appId) 
+        private IApp GetApp(int zoneId, int appId)
             => Services.AppLazy.Value.Init(GetAppState(zoneId, appId), null);
 
-        private AppState GetAppState(int zoneId, int appId) 
+        private AppState GetAppState(int zoneId, int appId)
             => Services.AppStates.Get(new AppIdentity(zoneId, appId));
     }
 }
