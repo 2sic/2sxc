@@ -129,11 +129,11 @@ namespace ToSic.Sxc.DataSources
                 return ((EmptyList, EmptyList), "null/empty");
 
             // Convert to Entity-Stream
-            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name), idAutoIncrementZero: false);
+            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name));
             var folders = _folderBuilder.Prepare(_provider.Folders);
             l.A($"Folders: {folders.Count}");
 
-            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name), idAutoIncrementZero: false);
+            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name));
             var files = _fileBuilder.Prepare(_provider.Files);
             l.A($"Files: {files.Count}");
 
