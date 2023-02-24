@@ -129,11 +129,11 @@ namespace ToSic.Sxc.DataSources
                 return ((EmptyList, EmptyList), "null/empty");
 
             // Convert to Entity-Stream
-            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name));
+            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name), idAutoIncrementZero: false);
             var folders = _folderBuilder.Prepare(_provider.Folders);
             l.A($"Folders: {folders.Count}");
 
-            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name));
+            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name), idAutoIncrementZero: false);
             var files = _fileBuilder.Prepare(_provider.Files);
             l.A($"Files: {files.Count}");
 
@@ -169,22 +169,15 @@ namespace ToSic.Sxc.DataSources
                 // - add parent navigation properties to folders and files
 
                 // Return the final streams
-                return ((CleanTempEntityId(_folderBuilder.Finalize(withSubFiles)), CleanTempEntityId(_fileBuilder.Finalize(files))), "ok");
+                return ((_folderBuilder.Finalize(withSubFiles), _fileBuilder.Finalize(files)), "ok");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return ((CleanTempEntityId(_folderBuilder.Finalize(folders)), CleanTempEntityId(_fileBuilder.Finalize(files))), "error");
+                return ((_folderBuilder.Finalize(folders), _fileBuilder.Finalize(files)), "error");
             }
         });
 
-        // set temp EntityId back to 0, so it is not misleading
-        // can't do the same for temp random entity guid,
-        // entity guid it's used for relations in the IEntity to EavLight conversion (happens latter)
-        private static IImmutableList<IEntity> CleanTempEntityId(IImmutableList<IEntity> entities)
-        {
-            foreach (var entity in entities) entity.ResetEntityId();
-            return entities;
-        }
+
     }
 }
