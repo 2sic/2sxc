@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Dnn.DataSources;
-using ToSic.Sxc.ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.DataSources

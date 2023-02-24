@@ -1,6 +1,5 @@
-﻿using ToSic.Sxc.DataSources;
-
-namespace ToSic.Sxc.ToSic.Sxc.DataSources
+﻿// ReSharper disable once CheckNamespace
+namespace ToSic.Sxc.DataSources
 {
     public class DnnAdamDsProvider<TFolderId, TFileId> : AdamDataSourceProvider<TFolderId, TFileId>
     {
