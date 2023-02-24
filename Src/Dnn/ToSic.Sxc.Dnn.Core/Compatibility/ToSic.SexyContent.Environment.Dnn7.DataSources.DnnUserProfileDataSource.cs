@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.Environment.Dnn7.DataSources
