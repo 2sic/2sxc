@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.New;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
+    public class RoleDataNew: NewEntityBase, INewEntity, IRole
     {
         internal static string TypeName = "Role";
         internal static string TitleFieldName = nameof(Name);
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public override Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
+        public override Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
         };

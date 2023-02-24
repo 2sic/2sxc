@@ -82,17 +82,17 @@ namespace ToSic.Sxc.DataSources
         /// So the core data source doesn't have settings to configure this
         /// </summary>
         /// <returns></returns>
-        public List<AppFileDataRawBase> GetInternal() => Log.Func(l =>
+        public List<AppFileDataNewBase> GetInternal() => Log.Func(l =>
         {
-            var result = new List<AppFileDataRawBase>();
+            var result = new List<AppFileDataNewBase>();
             result.AddRange(Folders);
             result.AddRange(Files);
             return (result, $"found:{result.Count}");
         });
 
-        public List<AppFileDataRaw> Files => _files.Get(Log, l =>
+        public List<AppFileDataNew> Files => _files.Get(Log, l =>
         {
-            var files = new List<AppFileDataRaw>();
+            var files = new List<AppFileDataNew>();
             if (!_onlyFolders)
             {
                 files = _fileManager.GetAllTransferableFiles(_filter)
@@ -100,7 +100,7 @@ namespace ToSic.Sxc.DataSources
                     .Select(f =>
                     {
                         var fullName = NameInAppFolder(f.FullName, _currentApp, _root);
-                        return new AppFileDataRaw
+                        return new AppFileDataNew
                         {
                             Name = $"{GetFileNameWithoutExtension(f.FullName)}{f.Extension}",
                             Extension = f.Extension,
@@ -119,11 +119,11 @@ namespace ToSic.Sxc.DataSources
 
             return (files, $"files:{files.Count}");
         });
-        private readonly GetOnce<List<AppFileDataRaw>> _files = new GetOnce<List<AppFileDataRaw>>();
+        private readonly GetOnce<List<AppFileDataNew>> _files = new GetOnce<List<AppFileDataNew>>();
 
-        public List<AppFolderDataRaw> Folders => _folders.Get(Log, l =>
+        public List<AppFolderDataNew> Folders => _folders.Get(Log, l =>
         {
-            var folders = new List<AppFolderDataRaw>();
+            var folders = new List<AppFolderDataNew>();
             if (!_onlyFiles)
             {
                 folders = _fileManager.GetAllTransferableFolders(/*filter*/)
@@ -131,7 +131,7 @@ namespace ToSic.Sxc.DataSources
                     .Select(d =>
                     {
                         var fullName = NameInAppFolder(d.FullName, _currentApp, _root);
-                        return new AppFolderDataRaw
+                        return new AppFolderDataNew
                         {
                             Name = $"{GetFileNameWithoutExtension(d.FullName)}{d.Extension}",
                             FullName = fullName, // NameInAppFolder(d.FullName, _currentApp, _root),
@@ -148,7 +148,7 @@ namespace ToSic.Sxc.DataSources
 
             return (folders, $"found:{folders.Count}");
         });
-        private readonly GetOnce<List<AppFolderDataRaw>> _folders = new GetOnce<List<AppFolderDataRaw>>();
+        private readonly GetOnce<List<AppFolderDataNew>> _folders = new GetOnce<List<AppFolderDataNew>>();
 
         /// <summary>
         /// TODO: @STV - pls explain diff between this and next function - it's really hard to guess what they do

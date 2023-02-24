@@ -9,9 +9,9 @@ namespace ToSic.Sxc.DataSources
 {
     public partial class Users
     {
-        private List<Func<CmsUserRaw, bool>> GetAllFilters() => Log.Func(l =>
+        private List<Func<CmsUserNew, bool>> GetAllFilters() => Log.Func(l =>
         {
-            var filters = new List<Func<CmsUserRaw, bool>>
+            var filters = new List<Func<CmsUserNew, bool>>
             {
                 IncludeUsersPredicate(),
                 ExcludeUsersPredicate(),
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.DataSources
         });
 
 
-        private Func<CmsUserRaw, bool> IncludeUsersPredicate()
+        private Func<CmsUserNew, bool> IncludeUsersPredicate()
         {
             if (string.IsNullOrEmpty(UserIds)) return null;
             var includeUserGuids = FilterKeepUserGuids();
@@ -33,27 +33,27 @@ namespace ToSic.Sxc.DataSources
             return u => (includeUserGuids != null && includeUserGuids(u)) || (includeUserIds != null && includeUserIds(u));
         }
 
-        private Func<CmsUserRaw, bool> FilterKeepUserGuids()
+        private Func<CmsUserNew, bool> FilterKeepUserGuids()
         {
             var userGuidFilter = UserIds.Split(Separator)
                 .Select(u => Guid.TryParse(u.Trim(), out var userGuid) ? userGuid : Guid.Empty)
                 .Where(u => u != Guid.Empty).ToList();
             return userGuidFilter.Any()
-                ? (Func<CmsUserRaw, bool>)(u => u.Guid != Guid.Empty && userGuidFilter.Contains(u.Guid))
+                ? (Func<CmsUserNew, bool>)(u => u.Guid != Guid.Empty && userGuidFilter.Contains(u.Guid))
                 : null;
         }
 
-        private Func<CmsUserRaw, bool> FilterKeepUserIds()
+        private Func<CmsUserNew, bool> FilterKeepUserIds()
         {
             var userIdFilter = UserIds.Split(Separator)
                 .Select(u => int.TryParse(u.Trim(), out var userId) ? userId : -1)
                 .Where(u => u != -1).ToList();
             return userIdFilter.Any()
-                ? (Func<CmsUserRaw, bool>)(u => userIdFilter.Contains(u.Id))
+                ? (Func<CmsUserNew, bool>)(u => userIdFilter.Contains(u.Id))
                 : null;
         }
 
-        private Func<CmsUserRaw, bool> ExcludeUsersPredicate()
+        private Func<CmsUserNew, bool> ExcludeUsersPredicate()
         {
             if (string.IsNullOrEmpty(ExcludeUserIds)) return null;
             var excludeUserGuids = FilterExcludeUserGuids();
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.DataSources
             return u => (excludeUserGuids == null || excludeUserGuids(u)) && (excludeUserIds == null || excludeUserIds(u));
         }
 
-        private Func<CmsUserRaw, bool> FilterExcludeUserGuids()
+        private Func<CmsUserNew, bool> FilterExcludeUserGuids()
         {
             var excludeUserGuidsFilter = ExcludeUserIds
                 .Split(Separator)
@@ -70,11 +70,11 @@ namespace ToSic.Sxc.DataSources
                 .Where(u => u != Guid.Empty)
                 .ToList();
             return excludeUserGuidsFilter.Any()
-                ? (Func<CmsUserRaw, bool>)(u => u.Guid != Guid.Empty && !excludeUserGuidsFilter.Contains(u.Guid))
+                ? (Func<CmsUserNew, bool>)(u => u.Guid != Guid.Empty && !excludeUserGuidsFilter.Contains(u.Guid))
                 : null;
         }
 
-        private Func<CmsUserRaw, bool> FilterExcludeUserIds()
+        private Func<CmsUserNew, bool> FilterExcludeUserIds()
         {
             var excludeUserIdsFilter = ExcludeUserIds
                 .Split(Separator)
@@ -82,27 +82,27 @@ namespace ToSic.Sxc.DataSources
                 .Where(u => u != -1)
                 .ToList();
             return excludeUserIdsFilter.Any()
-                ? (Func<CmsUserRaw, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
+                ? (Func<CmsUserNew, bool>)(u => !excludeUserIdsFilter.Contains(u.Id))
                 : null;
         }
 
-        private Func<CmsUserRaw, bool> FilterIncludeUsersOfRoles()
+        private Func<CmsUserNew, bool> FilterIncludeUsersOfRoles()
         {
             var rolesFilter = Roles.RolesCsvListToInt(RoleIds);
             return rolesFilter.Any()
-                ? (Func<CmsUserRaw, bool>)(u => u.Roles.Any(r => rolesFilter.Contains(r)))
+                ? (Func<CmsUserNew, bool>)(u => u.Roles.Any(r => rolesFilter.Contains(r)))
                 : null;
         }
 
-        private Func<CmsUserRaw, bool> ExcludeRolesPredicate()
+        private Func<CmsUserNew, bool> ExcludeRolesPredicate()
         {
             var excludeRolesFilter = Roles.RolesCsvListToInt(ExcludeRoleIds);
             return excludeRolesFilter.Any()
-                ? (Func<CmsUserRaw, bool>)(u => !u.Roles.Any(r => excludeRolesFilter.Contains(r)))
+                ? (Func<CmsUserNew, bool>)(u => !u.Roles.Any(r => excludeRolesFilter.Contains(r)))
                 : null;
         }
 
-        private Func<CmsUserRaw, bool> SuperUserPredicate() => Log.Func<Func<CmsUserRaw, bool>>(() =>
+        private Func<CmsUserNew, bool> SuperUserPredicate() => Log.Func<Func<CmsUserNew, bool>>(() =>
         {
             // If "include" == "only" return only super users
             if (IncludeSystemAdmins.EqualsInsensitive(IncludeRequired))

@@ -21,6 +21,6 @@ namespace ToSic.Sxc.DataSources
             string filter = default
         ) => this;
 
-        public new Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal() => (entity) => new List<AdamItemDataRaw>();
+        public new Func<IEntity, IEnumerable<AdamItemDataNew>> GetInternal() => (entity) => new List<AdamItemDataNew>();
     }
 }

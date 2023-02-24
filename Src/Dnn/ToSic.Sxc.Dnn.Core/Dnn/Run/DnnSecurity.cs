@@ -86,10 +86,10 @@ namespace ToSic.Sxc.Dnn.Run
 
         internal string UserIdentityToken(UserInfo user) => IsAnonymous(user) ? Constants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
 
-        internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
+        internal CmsUserNew CmsUserBuilder(UserInfo user, int siteId)
         {
             var adminInfo = UserMayAdminThis(user);
-            return new CmsUserRaw
+            return new CmsUserNew
             {
                 Id = user.UserID,
                 Guid = UserGuid(user),

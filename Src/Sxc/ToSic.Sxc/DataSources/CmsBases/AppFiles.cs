@@ -22,7 +22,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataNew"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -127,11 +127,11 @@ namespace ToSic.Sxc.DataSources
                 return ((EmptyList.ToList(), EmptyList.ToList()), "null/empty");
 
             // Convert to Entity-Stream
-            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
+            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name));
             var folders = _folderBuilder.Prepare(_provider.Folders);
             l.A($"Folders: {folders.Count}");
 
-            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name));
+            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name));
             var files = _fileBuilder.Prepare(_provider.Files);
             l.A($"Files: {files.Count}");
 

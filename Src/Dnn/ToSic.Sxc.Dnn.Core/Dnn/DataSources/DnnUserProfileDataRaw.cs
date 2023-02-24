@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.New;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
@@ -145,10 +145,10 @@ namespace ToSic.Sxc.Dnn.DataSources
             l.A($"users: {users.Count}");
 
             // convert Profiles to Entities
-            var results = new List<DnnUserProfileDataRaw>();
+            var results = new List<DnnUserProfileDataNew>();
             foreach (UserInfo user in users)
             {
-                var dnnUserProfile = new DnnUserProfileDataRaw
+                var dnnUserProfile = new DnnUserProfileDataNew
                 {
                     Id = user.UserID,
                     Guid = _services.DnnSecurity.Value.UserGuid(user),
@@ -210,7 +210,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class DnnUserProfileDataRaw : IRawEntity
+    public class DnnUserProfileDataNew : INewEntity
     {
         public int Id { get; set; }
         public Guid Guid { get; set; }
@@ -225,7 +225,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>(Properties)
+        public Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>(Properties)
         {
             { Attributes.TitleNiceName, Name },
             { nameof(Name), Name },

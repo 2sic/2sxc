@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
@@ -166,10 +165,7 @@ namespace ToSic.Sxc.DataSources
             var usersRaw = GetUsersAndFilter();
 
             // Figure out options to be sure we have the roles/roleids
-            var keysToAdd = new List<string>();
-            // WIP add role IDs - probably shouldn't be part of this, but part of the SerializationOptions
-            //if (AddRoleIds) keysToAdd.Add(nameof(UserDataRaw.RoleIds));
-            _usersBuilder.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName, createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
+            _usersBuilder.Configure(typeName: CmsUserNew.TypeName, titleField: CmsUserNew.TitleFieldName);
 
             var users = _usersBuilder.CreateMany(usersRaw);
             var roles = EmptyList;
@@ -203,10 +199,10 @@ namespace ToSic.Sxc.DataSources
         private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
 
 
-        private List<CmsUserRaw> GetUsersAndFilter() => Log.Func(l =>
+        private List<CmsUserNew> GetUsersAndFilter() => Log.Func(l =>
         {
             var users = _provider.GetUsersInternal()?.ToList();
-            if (users == null || !users.Any()) return (new List<CmsUserRaw>(), "null/empty");
+            if (users == null || !users.Any()) return (new List<CmsUserNew>(), "null/empty");
 
             foreach (var filter in GetAllFilters())
                 users = users.Where(filter).ToList();
@@ -220,7 +216,7 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         /// <param name="usersRaw"></param>
         /// <returns></returns>
-        private ImmutableList<IEntity> GetRolesStream(List<CmsUserRaw> usersRaw)
+        private ImmutableList<IEntity> GetRolesStream(List<CmsUserNew> usersRaw)
         {
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();

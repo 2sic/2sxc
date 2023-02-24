@@ -15,15 +15,15 @@ namespace ToSic.Sxc.DataSources
         public DnnSitesDsProvider(MyServices services) : base(services, "Dnn.Sites")
         { }
 
-        public override List<SiteDataRaw> GetSitesInternal(
+        public override List<SiteDataNew> GetSitesInternal(
         ) => Log.Func($"PortalId: {PortalSettings.Current?.PortalId ?? -1}", l =>
         {
             var portals = PortalController.Instance.GetPortals().OfType<PortalInfo>().ToList();
 
-            if (/*portals == null || */!portals.Any()) return (new List<SiteDataRaw>(), "null/empty");
+            if (/*portals == null || */!portals.Any()) return (new List<SiteDataNew>(), "null/empty");
 
             var result = portals
-                .Select(s => new SiteDataRaw
+                .Select(s => new SiteDataNew
                 {
                     Id = s.PortalID,
                     Guid = s.GUID,

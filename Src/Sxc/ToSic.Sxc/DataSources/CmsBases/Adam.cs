@@ -19,7 +19,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataNew"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -108,7 +108,7 @@ namespace ToSic.Sxc.DataSources
             _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
             var find = _provider.GetInternal();
 
-            _builder.Configure(appId: AppId, typeName: AdamItemDataRaw.TypeName, titleField: nameof(AdamItemDataRaw.Name));
+            _builder.Configure(appId: AppId, typeName: AdamItemDataNew.TypeName, titleField: nameof(AdamItemDataNew.Name));
 
             var entities = _builder.CreateMany(sourceEntities.SelectMany(o => find(o)));
 

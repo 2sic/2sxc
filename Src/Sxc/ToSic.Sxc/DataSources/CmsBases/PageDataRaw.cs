@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.New;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class PageDataRaw: IRawEntity
+    public class PageDataNew: INewEntity
     {
         public const string TypeName = "Page";
 
@@ -183,7 +183,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
+        public Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>
         {
             // v14+
             { Attributes.TitleNiceName, Title },

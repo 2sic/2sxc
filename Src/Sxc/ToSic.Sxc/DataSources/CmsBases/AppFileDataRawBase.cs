@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.New;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
 {
 
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public abstract class AppFileDataRawBase: IRawEntity
+    public abstract class AppFileDataNewBase: INewEntity
     {
         public int Id { get; set; }
 
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public virtual Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
+        public virtual Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
             { nameof(FullName), FullName },

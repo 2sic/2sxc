@@ -10,7 +10,7 @@ namespace ToSic.Sxc.DataSources
         {
         }
         
-        public override IEnumerable<RoleDataRaw> GetRolesInternal(
-        ) => new List<RoleDataRaw>();
+        public override IEnumerable<RoleDataNew> GetRolesInternal(
+        ) => new List<RoleDataNew>();
     }
 }

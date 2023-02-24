@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources
         }
 
 
-        public override List<PageDataRaw> GetPagesInternal(
+        public override List<PageDataNew> GetPagesInternal(
             string noParamOrder = Eav.Parameters.Protector,
             bool includeHidden = default,
             bool includeDeleted = default,
@@ -43,10 +43,10 @@ namespace ToSic.Sxc.DataSources
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return (new List<PageDataRaw>(), "error");
+                return (new List<PageDataNew>(), "error");
             }
 
-            if (pages == null || !pages.Any()) return (new List<PageDataRaw>(), "null/empty");
+            if (pages == null || !pages.Any()) return (new List<PageDataNew>(), "null/empty");
 
             try
             {
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.DataSources
                 var final = filteredPages.ToList();
 
                 var result = final
-                    .Select(p => new PageDataRaw
+                    .Select(p => new PageDataNew
                     {
                         Id = p.TabID,
                         Guid = p.UniqueId,
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.DataSources
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return (new List<PageDataRaw>(), "error");
+                return (new List<PageDataNew>(), "error");
             }
         });
 

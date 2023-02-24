@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
             );
         }
 
-        public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
+        public override IEnumerable<CmsUserNew> GetUsersInternal() => Log.Func(l =>
         {
             var siteId = _siteState.Alias.SiteId;
             l.A($"Portal Id {siteId}");

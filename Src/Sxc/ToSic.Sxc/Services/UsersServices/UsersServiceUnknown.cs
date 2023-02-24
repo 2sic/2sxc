@@ -13,6 +13,6 @@ namespace ToSic.Sxc.Services
 
         public override string PlatformIdentityTokenPrefix => $"{Eav.Constants.NullNameId}:";
 
-        public override IUser PlatformUserInformationDto(int userId) => new CmsUserRaw();
+        public override IUser PlatformUserInformationDto(int userId) => new CmsUserNew();
     }
 }
