@@ -6,7 +6,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
-using Interfaces = ToSic.Eav.Interfaces;
 
 namespace ToSic.Sxc.Compatibility
 {
@@ -21,7 +20,7 @@ namespace ToSic.Sxc.Compatibility
         /// </summary>
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        dynamic AsDynamic(Interfaces.IEntity entity);
+        dynamic AsDynamic(Eav.Interfaces.IEntity entity);
 
         /// <summary>
         /// Returns the value of a KeyValuePair as DynamicEntity
@@ -35,14 +34,14 @@ namespace ToSic.Sxc.Compatibility
         /// </summary>
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        dynamic AsDynamic(KeyValuePair<int, Interfaces.IEntity> entityKeyValuePair);
+        dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair);
 
         /// <summary>
         /// this is for compatibility with old systems, to ensure that things cast to IEntity in a razor can still be cast back
         /// </summary>
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        IEnumerable<dynamic> AsDynamic(IEnumerable<Interfaces.IEntity> entities);
+        IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities);
 
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.

@@ -5,14 +5,13 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav;
 
 namespace ToSic.Sxc.WebApi
 {
     public abstract partial class ApiCoreShim : IDynamicWebApi
     {
         /// <inheritdoc />
-        public dynamic File(string noParamOrder = Parameters.Protector,
+        public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
             string virtualPath = null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names

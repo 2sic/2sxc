@@ -4,7 +4,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
 using ToSic.Sxc.Data;
-using Interfaces = ToSic.Eav.Interfaces;
 
 namespace ToSic.Sxc.Compatibility.Sxc
 {
@@ -42,7 +41,7 @@ namespace ToSic.Sxc.Compatibility.Sxc
         public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<IEntity> entities)
             => _converter.Convert(entities);
 
-        public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<Interfaces.IEntity> entities)
+        public IEnumerable<IDictionary<string, object>> Prepare(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
             => _converter.Convert(entities as IEnumerable<IEntity>);
 
         public IDictionary<string, object> Prepare(IEntity entity)
