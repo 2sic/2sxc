@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -168,13 +169,22 @@ namespace ToSic.Sxc.DataSources
                 // - add parent navigation properties to folders and files
 
                 // Return the final streams
-                return ((_folderBuilder.Finalize(withSubFiles), _fileBuilder.Finalize(files)), "ok");
+                return ((CleanTempEntityId(_folderBuilder.Finalize(withSubFiles)), CleanTempEntityId(_fileBuilder.Finalize(files))), "ok");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return ((_folderBuilder.Finalize(folders), _fileBuilder.Finalize(files)), "error");
+                return ((CleanTempEntityId(_folderBuilder.Finalize(folders)), CleanTempEntityId(_fileBuilder.Finalize(files))), "error");
             }
         });
+
+        // set temp EntityId back to 0, so it is not misleading
+        // can't do the same for temp random entity guid,
+        // entity guid it's used for relations in the IEntity to EavLight conversion (happens latter)
+        private static IImmutableList<IEntity> CleanTempEntityId(IImmutableList<IEntity> entities)
+        {
+            foreach (var entity in entities) entity.ResetEntityId();
+            return entities;
+        }
     }
 }
