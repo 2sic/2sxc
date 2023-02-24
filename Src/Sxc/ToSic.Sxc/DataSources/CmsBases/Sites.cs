@@ -59,7 +59,7 @@ namespace ToSic.Sxc.DataSources
                 return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
-            var sites = _sitesDataBuilder.CreateMany(sitesFromSystem);
+            var sites = _sitesDataBuilder.Build(sitesFromSystem);
 
             return (sites, $"found: {sites.Count}");
         });

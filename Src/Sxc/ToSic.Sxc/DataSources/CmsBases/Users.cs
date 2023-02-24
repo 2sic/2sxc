@@ -168,7 +168,7 @@ namespace ToSic.Sxc.DataSources
             // Figure out options to be sure we have the roles/roleids
             _usersBuilder.Configure(typeName: CmsUserNew.TypeName, titleField: CmsUserNew.TitleFieldName);
 
-            var users = _usersBuilder.CreateMany(usersRaw);
+            var users = _usersBuilder.Build(usersRaw);
             var roles = EmptyList;
 
             // If we should include the roles, create them now and attach

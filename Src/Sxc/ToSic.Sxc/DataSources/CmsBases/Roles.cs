@@ -106,7 +106,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"excludeRoles: {excludeRolesPredicate == null}");
             if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
-            var result = _rolesDataBuilder.CreateMany(roles);
+            var result = _rolesDataBuilder.Build(roles);
 
             return (result, $"found {result.Count} roles");
         });

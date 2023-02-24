@@ -142,7 +142,7 @@ namespace ToSic.Sxc.DataSources
                 return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
-            var pages = _pageBuilder.CreateMany(pagesFromSystem);
+            var pages = _pageBuilder.Build(pagesFromSystem);
 
             // Try to add Navigation properties
             try

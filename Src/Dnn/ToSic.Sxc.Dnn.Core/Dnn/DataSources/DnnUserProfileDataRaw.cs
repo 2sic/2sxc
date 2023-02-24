@@ -164,7 +164,7 @@ namespace ToSic.Sxc.Dnn.DataSources
             }
             l.A($"results: {results.Count}");
 
-            return (_dataBuilder.CreateMany(results), "ok");
+            return (_dataBuilder.Build(results), "ok");
         });
 
         private static string GetDnnProfileValue(UserInfo user, string property)

@@ -111,7 +111,7 @@ namespace ToSic.Sxc.DataSources
 
             _builder.Configure(appId: AppId, typeName: AdamItemDataNew.TypeName, titleField: nameof(AdamItemDataNew.Name));
 
-            var entities = _builder.CreateMany(sourceEntities.SelectMany(o => find(o)));
+            var entities = _builder.Build(sourceEntities.SelectMany(o => find(o)));
 
             return (entities.ToImmutableList(), "ok");
         }));
