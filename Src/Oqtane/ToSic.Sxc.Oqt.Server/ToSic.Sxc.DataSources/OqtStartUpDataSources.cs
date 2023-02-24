@@ -16,7 +16,6 @@ namespace ToSic.Sxc.DataSources
             services.TryAddTransient<SitesDataSourceProvider, OqtSitesDsProvider>();
             services.TryAddTransient<PagesDataSourceProvider, OqtPagesDsProvider>();
             services.TryAddTransient<AppFilesDataSourceProvider, OqtAppFilesDsProvider>();
-            services.TryAddTransient(typeof(AdamDataSourceProvider<,>), typeof(OqtAdamDsProvider<,>));
 
             // info class to ensure SQL knows about default connections
             services.TryAddTransient<SqlPlatformInfo, OqtSqlPlatformInfo>();

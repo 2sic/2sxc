@@ -18,7 +18,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
-    public abstract class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.MyServices>
+    public class AdamDataSourceProvider<TFolderId, TFileId> : ServiceBase<AdamDataSourceProvider<TFolderId, TFileId>.MyServices>
     {
         private readonly MyServices _services;
         private IContextOfApp _context;
