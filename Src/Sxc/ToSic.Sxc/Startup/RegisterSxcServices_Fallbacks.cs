@@ -80,7 +80,6 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
             services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
             services.TryAddTransient<AppFilesDataSourceProvider, AppFilesDataSourceProviderUnknown>();
-            services.TryAddTransient(typeof(AdamDataSourceProvider<,>), typeof(AdamDataSourceProviderUnknown<,>));
 
             return services;
         }
