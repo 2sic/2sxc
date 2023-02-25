@@ -44,7 +44,7 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        protected AdamDataSourceProvider(MyServices services, string logName) : base(services, logName)
+        protected AdamDataSourceProvider(MyServices services) : base(services, $"{Constants.SxcLogName}.AdamDs")
         {
             _services = services;
         }

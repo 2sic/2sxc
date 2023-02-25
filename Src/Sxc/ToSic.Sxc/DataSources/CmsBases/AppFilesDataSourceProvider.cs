@@ -22,7 +22,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// Must be overriden in each platform.
     /// </summary>
-    public abstract class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider.MyServices>
+    public class AppFilesDataSourceProvider : ServiceBase<AppFilesDataSourceProvider.MyServices>
     {
         public class MyServices : MyServicesBase
         {
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        protected AppFilesDataSourceProvider(MyServices services, string logName) : base(services, logName)
+        protected AppFilesDataSourceProvider(MyServices services) : base(services, $"{Constants.SxcLogName}.AppFls")
         {
         }
 
