@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Core.Tests;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Builder;
 using ToSic.Eav.Persistence.File;
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
                 {SomeTextField, text},
                 {SomeHtmlField, html}
             };
-            return GetService<EntityBuilder>().Create(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
+            return GetService<EntityBuilder>().TestCreate(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
         }
 
         public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityServices);
