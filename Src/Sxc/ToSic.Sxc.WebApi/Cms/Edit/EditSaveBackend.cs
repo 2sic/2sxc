@@ -10,6 +10,7 @@ using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.SaveHelpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -20,6 +21,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : ServiceBase
     {
+        private readonly SaveEntities _saveBackendHelper;
         private readonly SaveSecurity _saveSecurity;
         private readonly JsonSerializer _jsonSerializer;
 
@@ -30,15 +32,18 @@ namespace ToSic.Sxc.WebApi.Cms
             LazySvc<AppManager> appManagerLazy,
             IContextResolver ctxResolver,
             JsonSerializer jsonSerializer,
-            SaveSecurity saveSecurity
+            SaveSecurity saveSecurity,
+            SaveEntities saveBackendHelper
             ) : base("Cms.SaveBk")
         {
+            
             ConnectServices(
                 _pagePublishing = pagePublishing,
                 _appManagerLazy = appManagerLazy,
                 _ctxResolver = ctxResolver,
                 _jsonSerializer = jsonSerializer,
-                _saveSecurity = saveSecurity
+                _saveSecurity = saveSecurity,
+                _saveBackendHelper = saveBackendHelper
             );
         }
         private readonly SxcPagePublishing _pagePublishing;
@@ -149,7 +154,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
                 .ToList();
 
-            var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
+            var save = _saveBackendHelper;// new Eav.WebApi.SaveHelpers.SaveEntities(Log);
             save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
 
             return save.GenerateIdList(appMan.Read.Entities, items);
