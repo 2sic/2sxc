@@ -13,25 +13,25 @@ namespace ToSic.Sxc.Context
 
         private readonly AppState _appState;
 
-        public string Email => IsAnonymous ? "" : UnwrappedContents.Email;
+        public string Email => IsAnonymous ? "" : GetContents().Email;
 
 
-        public int Id => UnwrappedContents.Id;
+        public int Id => GetContents().Id;
 
-        public bool IsSiteAdmin => UnwrappedContents.IsSiteAdmin;
+        public bool IsSiteAdmin => GetContents().IsSiteAdmin;
 
-        public bool IsContentAdmin => UnwrappedContents.IsContentAdmin;
+        public bool IsContentAdmin => GetContents().IsContentAdmin;
 
-        public bool IsSystemAdmin => UnwrappedContents.IsSystemAdmin;
+        public bool IsSystemAdmin => GetContents().IsSystemAdmin;
 
-        public bool IsSiteDeveloper => UnwrappedContents.IsSiteDeveloper;
+        public bool IsSiteDeveloper => GetContents().IsSiteDeveloper;
 
-        public bool IsAnonymous => UnwrappedContents.IsAnonymous;
+        public bool IsAnonymous => GetContents().IsAnonymous;
 
         protected override IMetadataOf GetMetadataOf() 
             => ExtendWithRecommendations(_appState.GetMetadataOf(TargetTypes.User, Id, "User (" + Id + ")"));
 
-        public string Name => IsAnonymous ? "" : UnwrappedContents.Name;
-        public string Username => IsAnonymous ? "" : UnwrappedContents.Username;
+        public string Name => IsAnonymous ? "" : GetContents().Name;
+        public string Username => IsAnonymous ? "" : GetContents().Username;
     }
 }

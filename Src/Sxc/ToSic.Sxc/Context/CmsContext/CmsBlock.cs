@@ -14,12 +14,19 @@ namespace ToSic.Sxc.Context
         public CmsBlock(IBlock block): base(block) { }
 
         /// <inheritdoc />
-        public int Id => UnwrappedContents?.Configuration.Id ?? 0;
+        public int Id => GetContents()?.Configuration.Id ?? 0;
 
         /// <inheritdoc />
-        public bool IsRoot => UnwrappedContents != null && UnwrappedContents.BlockBuilder.RootBuilder == UnwrappedContents.BlockBuilder;
+        public bool IsRoot
+        {
+            get
+            {
+                var contents = GetContents();
+                return contents != null && contents.BlockBuilder.RootBuilder == contents.BlockBuilder;
+            }
+        }
 
         /// <inheritdoc />
-        public IMetadataOf Metadata => UnwrappedContents.Configuration.Metadata;
+        public IMetadataOf Metadata => GetContents().Configuration.Metadata;
     }
 }

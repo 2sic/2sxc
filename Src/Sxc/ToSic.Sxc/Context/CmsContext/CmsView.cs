@@ -20,19 +20,19 @@ namespace ToSic.Sxc.Context
         private IBlock _block;
 
         /// <inheritdoc />
-        public int Id => UnwrappedContents?.Id ?? 0;
+        public int Id => GetContents()?.Id ?? 0;
 
         /// <inheritdoc />
-        public string Name => UnwrappedContents?.Name ?? "";
+        public string Name => GetContents()?.Name ?? "";
 
         /// <inheritdoc />
-        public string Identifier => UnwrappedContents?.Identifier ?? "";
+        public string Identifier => GetContents()?.Identifier ?? "";
 
         /// <inheritdoc />
-        public string Edition => UnwrappedContents?.Edition;
+        public string Edition => GetContents()?.Edition;
 
         protected override IMetadataOf GetMetadataOf()
-            => ExtendWithRecommendations(UnwrappedContents?.Metadata);
+            => ExtendWithRecommendations(GetContents()?.Metadata);
 
         /// <inheritdoc />
         public string Path => _path.Get(() => FigureOutPath(_block?.App.Path));
@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Context
         private string FigureOutPath(string root)
         {
             // Get addition, but must ensure it doesn't have a leading slash (otherwise Path.Combine treats it as a root)
-            var addition = (UnwrappedContents.EditionPath ?? "").TrimPrefixSlash();
+            var addition = (GetContents().EditionPath ?? "").TrimPrefixSlash();
             var pathWithFile = System.IO.Path.Combine(root ?? "", addition).ForwardSlash();
             return pathWithFile.BeforeLast("/");
         }

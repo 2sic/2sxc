@@ -27,9 +27,9 @@ namespace ToSic.Sxc.Context
 
         private AppState _appState;
 
-        public int Id => UnwrappedContents?.Id ?? Eav.Constants.NullId;
-        public string Url => UnwrappedContents?.Url ?? string.Empty;
-        public string UrlRoot => UnwrappedContents.UrlRoot ?? string.Empty;
+        public int Id => GetContents()?.Id ?? Eav.Constants.NullId;
+        public string Url => GetContents()?.Url ?? string.Empty;
+        public string UrlRoot => GetContents().UrlRoot ?? string.Empty;
 
         public IApp App => _app.Get(() => _siteAppLazy.Value.Init(_appState, null));
         private readonly GetOnce<IApp> _app = new GetOnce<IApp>();
