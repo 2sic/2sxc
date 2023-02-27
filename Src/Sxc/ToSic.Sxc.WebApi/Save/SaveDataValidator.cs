@@ -2,7 +2,6 @@
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Metadata;
@@ -31,17 +30,16 @@ namespace ToSic.Sxc.WebApi.Save
         /// that the save package doesn't contain unexpected trash (which would indicate the UI was broken)
         /// or that invalid combinations get back here
         /// </summary>
-        /// <param name="preparedException"></param>
         /// <returns></returns>
-        internal bool ContainsOnlyExpectedNodes(out HttpExceptionAbstraction preparedException)
+        internal HttpExceptionAbstraction ContainsOnlyExpectedNodes() => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<bool>();
             if (Package.ContentTypes != null) Add("package contained content-types, unexpected!");
             if (Package.InputTypes != null) Add("package contained input types, unexpected!");
             if (Package.Features != null) Add("package contained features, unexpected!");
 
             // check that items are mostly intact
-            if (Package.Items == null || Package.Items.Count == 0) Add("package didn't contain items, unexpected!");
+            if (Package.Items == null || Package.Items.Count == 0)
+                Add("package didn't contain items, unexpected!");
             else
             {
                 // do various validity tests on items
@@ -49,9 +47,9 @@ namespace ToSic.Sxc.WebApi.Save
                 ValidateEachItemInBundle(Package.Items);
             }
 
-            var ok = BuildExceptionIfHasIssues(out preparedException, "ContainsOnlyExpectedNodes() done");
-            return wrapLog.ReturnAndLog(ok);
-        }
+            BuildExceptionIfHasIssues(out var preparedException, "ContainsOnlyExpectedNodes() done");
+            return preparedException;
+        });
 
         /// <summary>
         /// Do various validity checks on each item
@@ -99,52 +97,52 @@ namespace ToSic.Sxc.WebApi.Save
             });
 
 
-        internal bool EntityIsOk(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)
+        internal HttpExceptionAbstraction EntityIsOk(int count, IEntity newEntity) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<bool>();
             if (newEntity == null)
             {
                 Add($"entity {count} couldn't deserialize");
-                var notOk = BuildExceptionIfHasIssues(out preparedException);
-                return wrapLog.Return(notOk, "newEntity is null");
+                BuildExceptionIfHasIssues(out var preparedException);
+                return (preparedException, "newEntity is null");
             }
 
             // New #2595 allow saving empty metadata decorator entities
             if (newEntity.Attributes.Count == 0 && !newEntity.Type.Metadata.HasType(Decorators.SaveEmptyDecoratorId))
                 Add($"entity {count} doesn't have attributes (or they are invalid)");
 
-            var ok = BuildExceptionIfHasIssues(out preparedException, "EntityIsOk() done");
-            return wrapLog.Return(ok);
-        }
+            BuildExceptionIfHasIssues(out var preparedException2, "EntityIsOk() done");
+            return (preparedException2, "second test");
+        });
 
-        internal bool IfUpdateValidateAndCorrectIds(int count, IEntity newEntity, out HttpExceptionAbstraction preparedException)
+        internal (int? ResetId, HttpExceptionAbstraction Exception)
+            IfUpdateValidateAndCorrectIds(int count, IEntity newEntity) => Log.Func(l =>
         {
-            var wrapLog = Log.Fn<bool>();
             var previousEntity = AppRead.Entities.Get(newEntity.EntityId)
                                  ?? AppRead.Entities.Get(newEntity.EntityGuid);
 
-            if (previousEntity != null)
+            int? resetId = default;
+            if (previousEntity == null)
+                return ((null, null), "no previous entity found");
+
+
+            l.A("found previous entity, will check types/ids/attributes");
+            CompareTypes(count, previousEntity, newEntity);
+
+            // for saving, ensure we are using the DB entity-ID 
+            if (newEntity.EntityId == 0)
             {
-                Log.A("found previous entity, will check types/ids/attributes");
-                CompareTypes(count, previousEntity, newEntity);
-
-                // for saving, ensure we are using the DB entity-ID 
-                if (newEntity.EntityId == 0)
-                {
-                    Log.A("found existing entity - will set the ID to that to overwrite");
-                    newEntity.ResetEntityId(previousEntity.EntityId);
-                }
-
-                CompareIdentities(count, previousEntity, newEntity);
-                CompareAttributes(count, previousEntity, newEntity);
+                l.A("found existing entity - will set the ID to that to overwrite");
+                resetId = previousEntity.EntityId;
+                //newEntity.ResetEntityId(previousEntity.EntityId);
             }
-            else
-                Log.A("no previous entity found");
 
-            var ok = BuildExceptionIfHasIssues(out preparedException, "EntityIsOk() done");
+            CompareIdentities(count, previousEntity, newEntity);
+            CompareAttributes(count, previousEntity, newEntity);
 
-            return wrapLog.Return(ok, $"{ok}");
-        }
+            BuildExceptionIfHasIssues(out var exception, "EntityIsOk() done");
+
+            return ((resetId, exception), "ok");
+        });
 
 
         private void CompareTypes(int count, IEntityLight originalEntity, IEntityLight newEntity) =>

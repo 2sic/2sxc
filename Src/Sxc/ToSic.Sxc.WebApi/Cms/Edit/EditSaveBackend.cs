@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Builder;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Eav.Security.Permissions;
@@ -15,12 +16,14 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : ServiceBase
     {
+        private readonly MultiBuilder _multiBuilder;
         private readonly SaveEntities _saveBackendHelper;
         private readonly SaveSecurity _saveSecurity;
         private readonly JsonSerializer _jsonSerializer;
@@ -33,17 +36,18 @@ namespace ToSic.Sxc.WebApi.Cms
             IContextResolver ctxResolver,
             JsonSerializer jsonSerializer,
             SaveSecurity saveSecurity,
-            SaveEntities saveBackendHelper
+            SaveEntities saveBackendHelper,
+            MultiBuilder multiBuilder
             ) : base("Cms.SaveBk")
         {
-            
             ConnectServices(
                 _pagePublishing = pagePublishing,
                 _appManagerLazy = appManagerLazy,
                 _ctxResolver = ctxResolver,
                 _jsonSerializer = jsonSerializer,
                 _saveSecurity = saveSecurity,
-                _saveBackendHelper = saveBackendHelper
+                _saveBackendHelper = saveBackendHelper,
+                _multiBuilder = multiBuilder
             );
         }
         private readonly SxcPagePublishing _pagePublishing;
@@ -70,8 +74,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var validator = new SaveDataValidator(package, Log);
             // perform some basic validation checks
-            if (!validator.ContainsOnlyExpectedNodes(out var exp))
-                throw exp;
+            var containsOnlyExpectedNodesException = validator.ContainsOnlyExpectedNodes();
+            if (containsOnlyExpectedNodesException != null)
+                throw containsOnlyExpectedNodesException;
 
             // todo: unsure about this - thought I should check contentblockappid in group-header, because this is where it should be saved!
             //var contextAppId = appId;
@@ -106,17 +111,24 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var items = package.Items.Select(i =>
             {
-                var ent = (Entity) ser.Deserialize(i.Entity, false, false);
+                var ent = ser.Deserialize(i.Entity, false, false);
 
                 var index = package.Items.IndexOf(i); // index is helpful in case of errors
-                if (!validator.EntityIsOk(index, ent, out exp))
-                    throw exp;
+                var isOkException = validator.EntityIsOk(index, ent);
+                if (isOkException != null)
+                    throw isOkException;
 
-                if (!validator.IfUpdateValidateAndCorrectIds(index, ent, out exp))
-                    throw exp;
+                var resultValidator = validator.IfUpdateValidateAndCorrectIds(index, ent);
 
-                ent.IsPublished = package.IsPublished;
-                ent.PlaceDraftInBranch = package.DraftShouldBranch;
+                if (resultValidator.Exception != null)
+                    throw resultValidator.Exception;
+
+                ent = _multiBuilder.Entity.Clone(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
+                    placeDraftInBranch: package.DraftShouldBranch);
+
+                //ent.ResetEntityId(resultValidator.ResetId ?? 0); //AjaxPreviewHelperWIP!
+                //ent.IsPublished = package.IsPublished;
+                //ent.PlaceDraftInBranch = package.DraftShouldBranch;
 
                 // new in 11.01
                 if (i.Header.Parent != null)
