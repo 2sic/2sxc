@@ -63,6 +63,6 @@ namespace ToSic.Sxc.Tests.DataSources
         }
 
         private Roles GenerateRolesDataSourceDataSource() 
-            => CreateDataSource<Roles>(new LookUpTestData(GetService<EntityBuilder>()).AppSetAndRes());
+            => CreateDataSource<Roles>(new LookUpTestData(GetService<MultiBuilder>()).AppSetAndRes());
     }
 }
