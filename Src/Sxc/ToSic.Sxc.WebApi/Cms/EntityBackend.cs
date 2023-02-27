@@ -31,7 +31,9 @@ namespace ToSic.Sxc.WebApi.Cms
                 throw HttpException.PermissionDenied(error);
 
             var item = context.AppState.List.One(guid);
-            var relationships = item.Relationships.AllRelationships;
+            // Note: this isn't proper yet, it's all relationships in the app, not just of this entity
+            //var relationships = item.Relationships.AllRelationships;
+
             // var result = relationships.Select(r => new EntityInRelationDto(r.))
             // todo: don't forget Metadata relationships
             return null;
