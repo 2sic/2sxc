@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Adam
         /// </summary>
         internal IDynamicMetadata GetMetadata(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
         {
-            var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, manager.AppRuntime.AppState, title);
+            var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, manager.AppRuntime.AppState);
             mdInit?.Invoke(mdOf);
             return new DynamicMetadata(mdOf, null, DynamicEntityDependencies(manager));
         }

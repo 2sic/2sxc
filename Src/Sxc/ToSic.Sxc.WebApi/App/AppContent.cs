@@ -208,28 +208,27 @@ namespace ToSic.Sxc.WebApi.App
             return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }
 
-        private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
+        private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive) => Log.Func($"count: {newContentItemCaseInsensitive.Count}", () =>
         {
-            var wrapLog = Log.Fn<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
-
-            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' key is missing");
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor))
+                return (null, $"'{Attributes.JsonKeyMetadataFor}' key is missing");
 
             var objectOrNull = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor];
-            if (objectOrNull == null) return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is null");
+            if (objectOrNull == null) 
+                return (null, $"'{Attributes.JsonKeyMetadataFor}' value is null");
 
             if (!(objectOrNull is JsonObject metadataFor))
-                return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
+                return (null, $"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
 
-            var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null)
-            {
-                KeyGuid = (Guid?)metadataFor[Attributes.GuidNiceName],
-                KeyNumber = (int?)metadataFor[Attributes.NumberNiceName],
-                KeyString = (string)metadataFor[Attributes.StringNiceName]
-            };
-            return wrapLog.Return(metaData,
-                $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
+            var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null,
+            
+                keyGuid: (Guid?)metadataFor[Attributes.GuidNiceName],
+                keyNumber: (int?)metadataFor[Attributes.NumberNiceName],
+                keyString: (string)metadataFor[Attributes.StringNiceName]
+            );
+            return (metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
 
-        }
+        });
 
         private static int GetTargetType(JsonValue target)
         {
