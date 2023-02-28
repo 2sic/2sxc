@@ -68,7 +68,8 @@ namespace ToSic.Sxc.Data
         public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false).Value;
         private bool? _isDemoItem;
 
-        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataBuilderInternal.DefaultEntityId) == DataBuilderInternal.DefaultEntityId).Value;
+        [PrivateApi("Not in use yet, and I believe not communicated")]
+        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataBuilder.DefaultEntityId) == DataBuilder.DefaultEntityId).Value;
         private bool? _isFake;
     }
 }
