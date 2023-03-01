@@ -5,6 +5,7 @@ using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.New;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
@@ -179,13 +180,13 @@ namespace ToSic.Sxc.DataSources
                     // Mix generated users with the RoleIds which only exist on the raw list
                     var userNeeds = users.ToList()
                         .Select(u =>
-                            (u, usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
+                            (new NewEntitySet<string>("dummy", u), usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
                         .ToList();
                     roles = GetRolesStream(usersRaw);
                     var rolesLookup = roles.Select(r => (r, r.EntityId)).ToList();
 
-                    var mapped = _treeMapper.AddSomeRelationshipsWIP("Roles", userNeeds, rolesLookup);
-                    users = mapped.ToImmutableList();
+                    var mapped = _treeMapper.AddOneRelationship("Roles", userNeeds, rolesLookup);
+                    users = mapped.Select(s => s.Entity).ToImmutableList();
                 }
                 catch (Exception ex)
                 {
