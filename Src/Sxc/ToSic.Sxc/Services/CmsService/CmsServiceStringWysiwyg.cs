@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Services.CmsService
                 return (html, "can't check next attribute for content-blocks");
 
             var nextField = sortedFields[index + 1];
-            var nextIsEntityField = nextField.ControlledType == ValueTypes.Entity;
+            var nextIsEntityField = nextField.Type == ValueTypes.Entity;
             var nextInputType = nextField.InputType();
             var nextHasContentBlocks = nextInputType.EqualsInsensitive(InputTypeForContentBlocksField);
             

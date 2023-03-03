@@ -110,8 +110,8 @@ namespace ToSic.Sxc.Adam
             var fieldDef = AdamContext.Attribute;
             bool result;
             // check if this field exists and is actually a file-field or a string (wysiwyg) field
-            if (fieldDef == null || !(fieldDef.Type != DataTypes.Hyperlink ||
-                                      fieldDef.Type != DataTypes.String))
+            if (fieldDef == null || !(fieldDef.Type != ValueTypes.Hyperlink ||
+                                      fieldDef.Type != ValueTypes.String))
             {
                 preparedException = HttpException.BadRequest("Requested field '" + AdamContext.ItemField + "' type doesn't allow upload");
                 Log.A($"field type:{fieldDef?.Type} - does not allow upload");

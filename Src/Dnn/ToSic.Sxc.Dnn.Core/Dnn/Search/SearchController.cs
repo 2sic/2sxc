@@ -359,10 +359,12 @@ namespace ToSic.Sxc.Search
         private string GetJoinedAttributes(IEntity entity, string language)
         {
             return string.Join(", ",
-                entity.Attributes.Where(x => x.Value.Type == DataTypes.String || x.Value.Type == DataTypes.Number).Select(x => x.Value[language])
+                entity.Attributes
+                    .Where(x => x.Value.Type == ValueTypes.String || x.Value.Type == ValueTypes.Number)
+                    .Select(x => x.Value[language])
                     .Where(a => a != null)
                     .Select(a => StripHtmlAndHtmlDecode(a.ToString()))
-                    .Where(x => !String.IsNullOrEmpty(x))) + " ";
+                    .Where(x => !string.IsNullOrEmpty(x))) + " ";
         }
     }
 }

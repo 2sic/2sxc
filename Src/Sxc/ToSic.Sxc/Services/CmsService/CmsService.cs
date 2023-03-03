@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Services.CmsService
 
             // Now we handle all kinds of known special treatments
             // Start with strings...
-            if (attribute.ControlledType == ValueTypes.String)
+            if (attribute.Type == ValueTypes.String)
             {
                 // ...wysiwyg
                 if (attribute.InputType() == InputTypes.InputTypeWysiwyg)
