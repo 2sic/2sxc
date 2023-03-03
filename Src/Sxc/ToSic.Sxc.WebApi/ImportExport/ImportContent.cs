@@ -163,18 +163,22 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
                 // 2.2. Build content types
                 var entities = new List<IEntity>();
-                var relationshipsList = new List<IEntity>();
-                var relationshipSource = new DirectEntitiesSource(relationshipsList);
-                foreach (var package in packages)
+                //var relationshipsList = new List<IEntity>();
+                //var relationshipSource = new DirectEntitiesSource(relationshipsList);
+                DirectEntitiesSource.Using(relationships =>
                 {
-                    l.A($"import entities from package: {package.Key}");
-                    if (package.Value.Bundles?.Any() != true) continue;
-                    // bundle json
-                    var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationshipSource);
-                    l.A($"entities from bundles: {entitiesFromBundles.Count}");
-                    entities.AddRange(entitiesFromBundles);
-                    relationshipsList.AddRange(entitiesFromBundles);
-                }
+                    foreach (var package in packages)
+                    {
+                        l.A($"import entities from package: {package.Key}");
+                        if (package.Value.Bundles?.Any() != true) continue;
+                        // bundle json
+                        var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationships.Source);
+                        l.A($"entities from bundles: {entitiesFromBundles.Count}");
+                        entities.AddRange(entitiesFromBundles);
+                        relationships.List.AddRange(entitiesFromBundles);
+                    }
+                    return "dummy";
+                });
 
                 if (entities.Any(t => t == null))
                     throw new NullReferenceException("One Entity is null, something is wrong");
