@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -32,17 +32,17 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Sites in this CMS")]
     public class Sites: ExternalData
     {
-        private readonly IDataBuilder _sitesDataBuilder;
+        private readonly IDataFactory _sitesFactory;
         private readonly SitesDataSourceProvider _provider;
 
         #region Constructor
 
         [PrivateApi]
-        public Sites(MyServices services, SitesDataSourceProvider provider, IDataBuilder sitesDataBuilder) : base(services, "CDS.Sites")
+        public Sites(MyServices services, SitesDataSourceProvider provider, IDataFactory sitesFactory) : base(services, "CDS.Sites")
         {
             ConnectServices(
                 _provider = provider,
-                _sitesDataBuilder = sitesDataBuilder.Configure(typeName: SiteDataNew.TypeName, titleField: SiteDataNew.TitleFieldName, idAutoIncrementZero: false)
+                _sitesFactory = sitesFactory.Configure(typeName: SiteDataNew.TypeName, titleField: SiteDataNew.TitleFieldName, idAutoIncrementZero: false)
             );
             Provide(GetSites);
         }
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.DataSources
                 return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
-            var sites = _sitesDataBuilder.Build(sitesFromSystem);
+            var sites = _sitesFactory.Build(sitesFromSystem);
 
             return (sites, $"found: {sites.Count}");
         });

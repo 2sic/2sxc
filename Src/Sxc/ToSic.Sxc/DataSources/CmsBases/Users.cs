@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 using ToSic.Eav.Data.New;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
     {
         private readonly ITreeMapper _treeMapper;
         private readonly LazySvc<DataSourceFactory> _dsFactory;
-        private readonly IDataBuilder _usersBuilder;
+        private readonly IDataFactory _usersFactory;
         private readonly UsersDataSourceProvider _provider;
 
         #region Other Constants
@@ -138,13 +138,13 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi]
         public Users(MyServices services,
             UsersDataSourceProvider provider,
-            IDataBuilder dataBuilder,
+            IDataFactory dataFactory,
             LazySvc<DataSourceFactory> dsFactory,
             ITreeMapper treeMapper) : base(services, "SDS.Users")
         {
             ConnectServices(
                 _provider = provider,
-                _usersBuilder = dataBuilder,
+                _usersFactory = dataFactory,
                 _dsFactory = dsFactory,
                 _treeMapper = treeMapper
             );
@@ -167,9 +167,9 @@ namespace ToSic.Sxc.DataSources
             var usersRaw = GetUsersAndFilter();
 
             // Figure out options to be sure we have the roles/roleids
-            _usersBuilder.Configure(typeName: CmsUserNew.TypeName, titleField: CmsUserNew.TitleFieldName);
+            _usersFactory.Configure(typeName: CmsUserNew.TypeName, titleField: CmsUserNew.TitleFieldName);
 
-            var users = _usersBuilder.Build(usersRaw);
+            var users = _usersFactory.Build(usersRaw);
             var roles = EmptyList;
 
             // If we should include the roles, create them now and attach

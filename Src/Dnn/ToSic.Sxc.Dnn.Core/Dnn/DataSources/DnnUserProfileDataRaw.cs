@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 using ToSic.Eav.Data.New;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         )]
 	public class DnnUserProfile : ExternalData
 	{
-        private readonly IDataBuilder _dataBuilder;
+        private readonly IDataFactory _dataFactory;
 
         #region Configuration-properties
 
@@ -107,10 +107,10 @@ namespace ToSic.Sxc.Dnn.DataSources
             }
         }
 
-		public DnnUserProfile(MyServices services, IDataBuilder dataBuilder) : base(services, "Dnn.Profile")
+		public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
         {
             ConnectServices(
-                _dataBuilder = dataBuilder.Configure(typeName: ContentType)
+                _dataFactory = dataFactory.Configure(typeName: ContentType)
             );
             _services = services;
             Provide(GetList);
@@ -164,7 +164,7 @@ namespace ToSic.Sxc.Dnn.DataSources
             }
             l.A($"results: {results.Count}");
 
-            return (_dataBuilder.Build(results), "ok");
+            return (_dataFactory.Build(results), "ok");
         });
 
         private static string GetDnnProfileValue(UserInfo user, string property)

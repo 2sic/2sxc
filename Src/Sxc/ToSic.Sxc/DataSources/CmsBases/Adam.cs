@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP")]
     public class Adam : DataSource
     {
-        private readonly IDataBuilder _builder;
+        private readonly IDataFactory _factory;
         private readonly AdamDataSourceProvider<int, int> _provider;
 
         #region Configuration properties
@@ -76,11 +76,11 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Adam(MyServices services, AdamDataSourceProvider<int, int> provider, IDataBuilder dataBuilder) : base(services, "CDS.Adam")
+        public Adam(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataFactory) : base(services, "CDS.Adam")
         {
             ConnectServices(
                 _provider = provider,
-                _builder = dataBuilder
+                _factory = dataFactory
             );
 
             Provide(GetDefault);
@@ -109,9 +109,9 @@ namespace ToSic.Sxc.DataSources
             _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
             var find = _provider.GetInternal();
 
-            _builder.Configure(appId: AppId, typeName: AdamItemDataNew.TypeName, titleField: nameof(AdamItemDataNew.Name));
+            _factory.Configure(appId: AppId, typeName: AdamItemDataNew.TypeName, titleField: nameof(AdamItemDataNew.Name));
 
-            var entities = _builder.Build(sourceEntities.SelectMany(o => find(o)));
+            var entities = _factory.Build(sourceEntities.SelectMany(o => find(o)));
 
             return (entities.ToImmutableList(), "ok");
         }));

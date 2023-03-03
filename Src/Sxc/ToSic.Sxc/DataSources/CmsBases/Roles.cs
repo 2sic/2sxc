@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Logging;
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.DataSources
     )]
     public class Roles : ExternalData
     {
-        private readonly IDataBuilder _rolesDataBuilder;
+        private readonly IDataFactory _rolesFactory;
         private readonly RolesDataSourceProvider _provider;
 
         #region Other Constants
@@ -75,11 +75,11 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Roles(MyServices services, RolesDataSourceProvider provider, IDataBuilder rolesDataBuilder) : base(services, $"SDS.Roles")
+        public Roles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory) : base(services, $"SDS.Roles")
         {
             ConnectServices(
                 _provider = provider,
-                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: TypeName, titleField: TitleFieldName, idAutoIncrementZero: false)
+                _rolesFactory = rolesFactory.Configure(typeName: TypeName, titleField: TitleFieldName, idAutoIncrementZero: false)
             );
             Provide(GetList);
         }
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"excludeRoles: {excludeRolesPredicate == null}");
             if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
-            var result = _rolesDataBuilder.Build(roles);
+            var result = _rolesFactory.Build(roles);
 
             return (result, $"found {result.Count} roles");
         });

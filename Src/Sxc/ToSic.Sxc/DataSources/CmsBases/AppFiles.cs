@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Builder;
+using ToSic.Eav.Data.Factory;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -38,9 +38,9 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Files and folders in the App folder")]
     public class AppFiles: ExternalData
     {
-        private readonly IDataBuilder _folderBuilder;
+        private readonly IDataFactory _folderFactory;
         private readonly ITreeMapper _treeMapper;
-        private readonly IDataBuilder _fileBuilder;
+        private readonly IDataFactory _fileFactory;
         private readonly AppFilesDataSourceProvider _provider;
 
         private const string StreamFiles = "Files";
@@ -81,12 +81,12 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataBuilder fileDataBuilder, IDataBuilder folderBuilder, ITreeMapper treeMapper) : base(services, "CDS.AppFiles")
+        public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataFactory filesFactory, IDataFactory foldersFactory, ITreeMapper treeMapper) : base(services, "CDS.AppFiles")
         {
             ConnectServices(
                 _provider = provider,
-                _fileBuilder = fileDataBuilder,
-                _folderBuilder = folderBuilder,
+                _fileFactory = filesFactory,
+                _folderFactory = foldersFactory,
                 _treeMapper = treeMapper
             );
 
@@ -129,12 +129,12 @@ namespace ToSic.Sxc.DataSources
                 return ((EmptyList, EmptyList), "null/empty");
 
             // Convert to Entity-Stream
-            _folderBuilder.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name));
-            var folders = _folderBuilder.Prepare(_provider.Folders);
+            _folderFactory.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name));
+            var folders = _folderFactory.Prepare(_provider.Folders);
             l.A($"Folders: {folders.Count}");
 
-            _fileBuilder.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name));
-            var files = _fileBuilder.Prepare(_provider.Files);
+            _fileFactory.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name));
+            var files = _fileFactory.Prepare(_provider.Files);
             l.A($"Files: {files.Count}");
 
 
@@ -169,12 +169,12 @@ namespace ToSic.Sxc.DataSources
                 // - add parent navigation properties to folders and files
 
                 // Return the final streams
-                return ((_folderBuilder.Finalize(withSubFiles), _fileBuilder.Finalize(files)), "ok");
+                return ((_folderFactory.Finalize(withSubFiles), _fileFactory.Finalize(files)), "ok");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return ((_folderBuilder.Finalize(folders), _fileBuilder.Finalize(files)), "error");
+                return ((_folderFactory.Finalize(folders), _fileFactory.Finalize(files)), "error");
             }
         });
 

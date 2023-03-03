@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.DataSources
@@ -11,7 +11,7 @@ namespace ToSic.SexyContent.DataSources
         // - we might also write some SQL to update existing pipelines, but it's not likely to have been used much...
         // - and otherwise im might be in razor-code, which we couldn't auto-update
 
-        public DnnSqlDataSource(MyServices services, IDataBuilder dataBuilder) : base(services, dataBuilder)
+        public DnnSqlDataSource(MyServices services, IDataFactory dataFactory) : base(services, dataFactory)
         {
         }
     }

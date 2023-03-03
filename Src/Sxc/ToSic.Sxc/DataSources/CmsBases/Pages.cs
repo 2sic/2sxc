@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
     public class Pages: ExternalData
     {
         private readonly ITreeMapper _treeMapper;
-        private readonly IDataBuilder _pageBuilder;
+        private readonly IDataFactory _pageFactory;
         private readonly PagesDataSourceProvider _provider;
 
         #region Configuration properties
@@ -112,11 +112,11 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Pages(MyServices services, PagesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(services, "CDS.Pages")
+        public Pages(MyServices services, PagesDataSourceProvider provider, IDataFactory dataFactory, ITreeMapper treeMapper) : base(services, "CDS.Pages")
         {
             ConnectServices(
                 _provider = provider,
-                _pageBuilder = dataBuilder.Configure(typeName: PageDataNew.TypeName, titleField: nameof(PageDataNew.Name)),
+                _pageFactory = dataFactory.Configure(typeName: PageDataNew.TypeName, titleField: nameof(PageDataNew.Name)),
                 _treeMapper = treeMapper
             );
             Provide(GetPages);
@@ -142,7 +142,7 @@ namespace ToSic.Sxc.DataSources
                 return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
-            var pages = _pageBuilder.Build(pagesFromSystem);
+            var pages = _pageFactory.Build(pagesFromSystem);
 
             // Try to add Navigation properties
             try

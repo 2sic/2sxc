@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Factory;
 using ToSic.Lib.Documentation;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Data
         private bool? _isDemoItem;
 
         [PrivateApi("Not in use yet, and I believe not communicated")]
-        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataBuilder.DefaultEntityId) == DataBuilder.DefaultEntityId).Value;
+        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataFactory.DefaultEntityId) == DataFactory.DefaultEntityId).Value;
         private bool? _isFake;
     }
 }
