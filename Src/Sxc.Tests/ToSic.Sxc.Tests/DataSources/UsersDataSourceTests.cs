@@ -165,6 +165,6 @@ namespace ToSic.Sxc.Tests.DataSources
         }
 
         private Users GenerateUsersDataSourceDataSource() 
-            => CreateDataSource<Users>(new LookUpTestData(GetService<MultiBuilder>()).AppSetAndRes());
+            => CreateDataSource<Users>(new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes());
     }
 }

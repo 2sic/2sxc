@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data
     public class DynamicEntityServices: MyServicesBase
     {
         public DynamicEntityServices(
-            LazySvc<MultiBuilder> dataBuilderLazy,
+            LazySvc<DataBuilder> dataBuilderLazy,
             LazySvc<IValueConverter> valueConverterLazy,
             Generator<IRenderService> renderServiceGenerator)
         {
@@ -52,8 +52,8 @@ namespace ToSic.Sxc.Data
         private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
 
-        internal MultiBuilder DataBuilder => _dataBuilderLazy.Value;
-        private readonly LazySvc<MultiBuilder> _dataBuilderLazy;
+        internal DataBuilder DataBuilder => _dataBuilderLazy.Value;
+        private readonly LazySvc<DataBuilder> _dataBuilderLazy;
 
 
         internal IRenderService RenderService => _renderServiceGenerator.New();

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : ServiceBase
     {
-        private readonly MultiBuilder _multiBuilder;
+        private readonly DataBuilder _dataBuilder;
         private readonly SaveEntities _saveBackendHelper;
         private readonly SaveSecurity _saveSecurity;
         private readonly JsonSerializer _jsonSerializer;
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Cms
             JsonSerializer jsonSerializer,
             SaveSecurity saveSecurity,
             SaveEntities saveBackendHelper,
-            MultiBuilder multiBuilder
+            DataBuilder dataBuilder
             ) : base("Cms.SaveBk")
         {
             ConnectServices(
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 _jsonSerializer = jsonSerializer,
                 _saveSecurity = saveSecurity,
                 _saveBackendHelper = saveBackendHelper,
-                _multiBuilder = multiBuilder
+                _dataBuilder = dataBuilder
             );
         }
         private readonly SxcPagePublishing _pagePublishing;
@@ -123,7 +123,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (resultValidator.Exception != null)
                     throw resultValidator.Exception;
 
-                ent = _multiBuilder.Entity.Clone(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
+                ent = _dataBuilder.Entity.Clone(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
                     placeDraftInBranch: package.DraftShouldBranch);
 
                 //ent.ResetEntityId(resultValidator.ResetId ?? 0); //AjaxPreviewHelperWIP!
