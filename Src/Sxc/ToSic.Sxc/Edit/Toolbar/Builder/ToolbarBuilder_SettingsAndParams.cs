@@ -59,9 +59,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         private void TargetCheck(object target)
         {
             if (target is IAsset)
-                throw new Exception("Got a target parameter which seems to be an adam-file. " +
+                throw new Exception("Got a 'target' parameter which seems to be an adam-file. " +
                                     "This is not allowed. " +
-                                    "Were you trying to target the .Metadata of this file?");
+                                    "Were you trying to target the .Metadata of this file? if so, add .Metadata to the target object.");
 
         }
 

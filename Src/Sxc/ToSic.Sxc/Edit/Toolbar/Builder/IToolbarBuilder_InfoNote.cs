@@ -1,0 +1,30 @@
+﻿using ToSic.Lib.Documentation;
+
+namespace ToSic.Sxc.Edit.Toolbar
+{
+    [PublicApi]
+    public partial interface IToolbarBuilder
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="noParamOrder"></param>
+        /// <param name="mode">Determines behavior and icon, for now `info` (default), `help`, `link`, `warning`</param>
+        /// <param name="message"></param>
+        /// <param name="link">If provided, will make the button open the link in a new window.</param>
+        /// <param name="ui"></param>
+        /// <param name="parameters"></param>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        [PrivateApi("WIP v15.04")]
+        IToolbarBuilder Info(
+            string noParamOrder = Eav.Parameters.Protector,
+            string mode = default,
+            string message = default,
+            string link = default,
+            object ui = default,
+            object parameters = default,
+            string operation = default
+        );
+    }
+}
