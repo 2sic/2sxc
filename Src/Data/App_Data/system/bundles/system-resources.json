@@ -513,6 +513,114 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "Toolbar",
+                "Type": "Entity",
+                "InputType": "entity-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 168752,
+                    "Version": 5,
+                    "Guid": "f66487be-7c17-42fa-9fd4-2d53fc8c4c15",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "entity-default"
+                        },
+                        "Name": {
+                          "en-us": "Toolbar"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 168753,
+                    "Version": 4,
+                    "Guid": "357c276d-06b0-440e-9a2e-b690645edd46",
+                    "Type": {
+                      "Name": "@Entity",
+                      "Id": "@Entity"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "EntityType": {
+                          "en-us": "\uD83C\uDF10Toolbar"
+                        },
+                        "Prefill": {
+                          "en-us": ""
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableAddExisting": {
+                          "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": true
+                        },
+                        "EnableDelete": {
+                          "en-us": true
+                        },
+                        "EnableEdit": {
+                          "en-us": true
+                        },
+                        "EnableRemove": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ],
             "Metadata": [
@@ -844,12 +952,217 @@
             ]
           },
           "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "29be4120-d21f-473a-a5c9-9ce10f0248c7",
+            "Name": "\uD83C\uDF10Toolbar",
+            "Scope": "System.Configuration",
+            "Description": null,
+            "Attributes": [
+              {
+                "Name": "Identifier",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 168746,
+                    "Version": 2,
+                    "Guid": "58b2014a-bbb8-46e3-8fb6-7b706045954e",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "Toolbar"
+                        },
+                        "InputType": {
+                          "en-us": "string-default"
+                        },
+                        "Name": {
+                          "en-us": "Identifier"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": true
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 168747,
+                    "Version": 1,
+                    "Guid": "2a7ae2dd-754c-4c6a-8d2e-57dd8f01c0bf",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 168748,
+                    "Version": 1,
+                    "Guid": "7e786097-950e-48af-af62-e776874bd4fa",
+                    "Type": {
+                      "Name": "@string-default",
+                      "Id": "@string-default"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputFontFamily": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "IsDemoItem",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 168744,
+                    "Version": 1,
+                    "Guid": "4254c9a4-c6ae-4528-94fc-8975e93b911a",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "string-default"
+                        },
+                        "Name": {
+                          "*": "IsDemoItem"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "IsDemoSubItem",
+                "Type": "String",
+                "InputType": "string-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 168745,
+                    "Version": 1,
+                    "Guid": "26f32cb0-f31f-41cf-b480-b740f204aa7a",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "InputType": {
+                          "*": "string-default"
+                        },
+                        "Name": {
+                          "*": "IsDemoSubItem"
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "VisibleInEditUI": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              }
+            ],
+            "Metadata": []
+          },
+          "Entities": []
         }
       ],
       "Entities": [
         {
           "Id": 132214,
-          "Version": 4,
+          "Version": 5,
           "Guid": "a0bedfbb-57eb-44b6-a4ce-738b199fdbc2",
           "Type": {
             "Name": "ResourcesSystem",
@@ -872,6 +1185,11 @@
               "GoogleMaps": {
                 "*": [
                   "d3af78fc-8d7a-44f4-9712-ec8554714158"
+                ]
+              },
+              "Toolbar": {
+                "*": [
+                  "1d9dc186-d707-467b-ba49-c2e58d2869a0"
                 ]
               }
             }
@@ -947,6 +1265,57 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "d3af78fc-8d7a-44f4-9712-ec8554714158"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 168749,
+          "Version": 1,
+          "Guid": "1d9dc186-d707-467b-ba49-c2e58d2869a0",
+          "Type": {
+            "Name": "\uD83C\uDF10Toolbar",
+            "Id": "29be4120-d21f-473a-a5c9-9ce10f0248c7"
+          },
+          "Attributes": {
+            "String": {
+              "Identifier": {
+                "en-us": "Toolbar"
+              },
+              "IsDemoItem": {
+                "en-us": "This is a demo item. When you edit it, it will create a new item.",
+                "de-de": "Dies ist ein Demo-Element. Wenn de ihn bearbeitest, wird ein neues Element erstellt."
+              },
+              "IsDemoSubItem": {
+                "en-us": "This is a sub item of a demo-item. You must first edit the main item to start adding sub items.",
+                "de-de": "Dies ist ein Unterelement eines Demo-Elements. Du musst zuerst das Hauptelement bearbeiten, um Unterelemente hinzuzufügen."
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 168751,
+              "Version": 1,
+              "Guid": "65141641-8f57-474b-b0bc-8f153e2eb748",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "e3d5d17c-126e-4061-8f44-658406df642a"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "1d9dc186-d707-467b-ba49-c2e58d2869a0"
               }
             }
           ]
