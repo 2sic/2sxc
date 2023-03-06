@@ -84,19 +84,18 @@ namespace ToSic.Sxc.Code
         public string CreateInstancePath { get; set; }
 
         /// <inheritdoc />
-        public dynamic CreateInstance(string virtualPath, 
+        public dynamic CreateInstance(string virtualPath,
             string noParamOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,
-            bool throwOnError = true)
+            bool throwOnError = true) => base.Log.Func(() =>
         {
-            var wrapLog = base.Log.Fn<object>();
             // usually we don't have a relative path, so we use the preset path from when this class was instantiated
             relativePath = relativePath ?? CreateInstancePath;
             var instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name,
                 relativePath ?? CreateInstancePath, throwOnError);
-            return wrapLog.ReturnAndLog((object)instance);
-        }
+            return (object)instance;
+        });
 
         #endregion
 

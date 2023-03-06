@@ -54,21 +54,23 @@ namespace ToSic.Sxc.Images
         }
 
         [PrivateApi]
-        public static AdvancedSettings FromJson(object value, ILog log = null)
+        public static AdvancedSettings FromJson(object value, ILog log = null) => log.Func(l =>
         {
-            var wrapLog = log.Fn<AdvancedSettings>();
             try
             {
                 if (value is string advString && !string.IsNullOrWhiteSpace(advString))
-                    return wrapLog.Return(JsonSerializer.Deserialize<AdvancedSettings>(advString, JsonOptions.UnsafeJsonWithoutEncodingHtml), "create");
+                    return (
+                        JsonSerializer.Deserialize<AdvancedSettings>(advString,
+                            JsonOptions.UnsafeJsonWithoutEncodingHtml), "create");
             }
             catch (Exception ex)
             {
-                log.A($"error converting json to AdvancedSettings. Json: {value}");
-                log?.Ex(ex);
+                l.A($"error converting json to AdvancedSettings. Json: {value}");
+                l.Ex(ex);
             }
-            return wrapLog.Return(new AdvancedSettings(), "new");
-        }
+
+            return (new AdvancedSettings(), "new");
+        });
 
         [PrivateApi]
         public ReadOnlyCollection<Recipe> AllSubRecipes

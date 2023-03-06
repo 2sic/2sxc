@@ -43,11 +43,6 @@ namespace ToSic.Sxc.Data
             var propRequest = !isPath
                 ? Entity.FindPropertyInternal(specs, path)
                 : PropertyStack.TraversePath(specs, path, Entity);
-            // var propRequest = Entity.FindPropertyInternal(specs, path);
-
-            // new 12.05, very experimental
-            //ApplyDynamicDataFeaturesToResult(field, propRequest);
-
             return l.Return(propRequest, $"{nameof(isPath)}: {isPath}");
         }
 
