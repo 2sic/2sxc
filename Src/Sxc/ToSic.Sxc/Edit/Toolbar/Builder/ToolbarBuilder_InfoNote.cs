@@ -10,8 +10,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         [PrivateApi("WIP v15.04")]
         public IToolbarBuilder Info(
             string noParamOrder = Eav.Parameters.Protector,
-            string mode = default,
-            string message = default,
+            string noteType = default,
+            string note = default,
             string link = default,
             object ui = default,
             object parameters = default,
@@ -19,8 +19,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         ) => InfoLikeButton(
             noParamOrder: noParamOrder,
             commandName: "info",
-            parametersMerge: new { message, link, mode },
+            parametersMerge: new { link, },
             ui: ui,
+            uiMerge: new { note, noteType },
             parameters: parameters,
             operation: operation
         );
@@ -30,13 +31,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             string commandName,
             object parametersMerge,
             object ui,
+            object uiMerge,
             object parameters,
             string operation
         )
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
             var paramsWithMessage = new ObjectToUrl().SerializeWithChild(parameters, parametersMerge);
-            var pars = PrecleanParams(operation: operation, defOp: OprNone, ui: ui, uiMerge: null, uiMergePrefix: null, parameters: paramsWithMessage, prefill: null);
+            var pars = PrecleanParams(operation: operation, defOp: OprNone, ui: ui, uiMerge: uiMerge, uiMergePrefix: null, parameters: paramsWithMessage, prefill: null);
             return EntityRule(commandName, null, pars).Builder;
 
         }
