@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             // Data: must always be object and base64
             // WIP!
-            if (set.Name == KeyData)
+            if (set.Name == KeyData || set.Name == KeyNote)
             {
                 if (set.Value == null) return set;
                 var json = JsonSerializer.Serialize(set.Value, JsonOptions.SafeJsonForHtmlAttributes);

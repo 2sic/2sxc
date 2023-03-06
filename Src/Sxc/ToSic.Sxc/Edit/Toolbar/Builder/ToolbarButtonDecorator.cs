@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         public static string KeyColor = "color";
         public static string KeyIcon = "icon";
         public static string KeyData = "data";
+        public static string KeyNote = "note";
         //public static string KeyIconSvgPrefix = "svg:";
 
 

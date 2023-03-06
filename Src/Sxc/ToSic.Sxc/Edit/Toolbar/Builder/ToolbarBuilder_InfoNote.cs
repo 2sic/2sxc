@@ -10,8 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         [PrivateApi("WIP v15.04")]
         public IToolbarBuilder Info(
             string noParamOrder = Eav.Parameters.Protector,
-            string noteType = default,
-            string note = default,
+            object note = default,
             string link = default,
             object ui = default,
             object parameters = default,
@@ -19,20 +18,20 @@ namespace ToSic.Sxc.Edit.Toolbar
         ) => InfoLikeButton(
             noParamOrder: noParamOrder,
             commandName: "info",
-            parametersMerge: new { link, },
             ui: ui,
-            uiMerge: new { note, noteType },
+            uiMerge: note is string ? new { note = new { note} } as object : new { note },
             parameters: parameters,
+            parametersMerge: link != default ? new { link, } : null,
             operation: operation
         );
 
         private IToolbarBuilder InfoLikeButton(
             string noParamOrder,
             string commandName,
-            object parametersMerge,
             object ui,
             object uiMerge,
             object parameters,
+            object parametersMerge,
             string operation
         )
         {
