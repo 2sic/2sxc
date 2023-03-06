@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Apps
                 .ToList();
         }
 
-        public IImmutableList<IEntity> ContentGroups() => _contentGroups ?? (_contentGroups = Parent.Entities.Get(BlockTypeName).ToImmutableArray());
+        public IImmutableList<IEntity> ContentGroups() => _contentGroups ?? (_contentGroups = Parent.Entities.Get(BlockTypeName).ToImmutableList());
         private IImmutableList<IEntity> _contentGroups;
 
         /// <summary>

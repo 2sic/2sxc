@@ -155,7 +155,7 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
         [PrivateApi]
-        private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) GetUsersAndRoles() => Log.Func(l =>
+        private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) GetUsersAndRoles() => Log.Func(l =>
         {
             if (_usersAndRolesCache != default) 
                 return (_usersAndRolesCache, "from cache");
@@ -198,7 +198,7 @@ namespace ToSic.Sxc.DataSources
             return (_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
         });
 
-        private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
+        private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) _usersAndRolesCache;
 
 
         private List<CmsUserNew> GetUsersAndFilter() => Log.Func(l =>

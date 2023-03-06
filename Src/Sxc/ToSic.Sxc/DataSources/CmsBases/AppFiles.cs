@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Builder;
 using ToSic.Eav.Data.Factory;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
@@ -101,23 +100,23 @@ namespace ToSic.Sxc.DataSources
         /// Reason is that we can only generate the streams together, so this ensures that after generating them once,
         /// other streams requested at the same time won't re-trigger stream generation.
         /// </summary>
-        private IImmutableList<IEntity> GetMultiAccess(string streamName) => _multiAccess.Get(() =>
+        private IEnumerable<IEntity> GetMultiAccess(string streamName) => _multiAccess.Get(() =>
         {
             var (folders, files) = GetInternal();
-            return new Dictionary<string, IImmutableList<IEntity>>(OrdinalIgnoreCase)
+            return new Dictionary<string, IEnumerable<IEntity>>(OrdinalIgnoreCase)
             {
-                { Eav.Constants.DefaultStreamName, folders.Concat(files).ToImmutableList() },
-                { StreamFolders, folders.ToImmutableList() },
-                { StreamFiles, files.ToImmutableList() }
+                { Eav.Constants.DefaultStreamName, folders.Concat(files).ToList() },
+                { StreamFolders, folders.ToList() },
+                { StreamFiles, files.ToList() }
             };
         })[streamName];
-        private readonly GetOnce<Dictionary<string, IImmutableList<IEntity>>> _multiAccess = new GetOnce<Dictionary<string, IImmutableList<IEntity>>>();
+        private readonly GetOnce<Dictionary<string, IEnumerable<IEntity>>> _multiAccess = new GetOnce<Dictionary<string, IEnumerable<IEntity>>>();
 
         /// <summary>
         /// Get both the files and folders stream
         /// </summary>
         /// <returns></returns>
-        private (IImmutableList<IEntity> folders, IImmutableList<IEntity> files) GetInternal() => Log.Func(l =>
+        private (IEnumerable<IEntity> folders, IEnumerable<IEntity> files) GetInternal() => Log.Func(l =>
         {
             Configuration.Parse();
 
