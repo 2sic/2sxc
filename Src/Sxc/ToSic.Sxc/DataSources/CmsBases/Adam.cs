@@ -103,17 +103,17 @@ namespace ToSic.Sxc.DataSources
             Configuration.Parse();
 
             // Make sure we have an In - otherwise error
-            if (!GetRequiredInList(out var sourceEntities))
-                return (sourceEntities, "error");
+            var source = GetRequiredInList();
+            if (source.IsError) return source.ErrorResult;
 
             _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
             var find = _provider.GetInternal();
 
             _factory.Configure(appId: AppId, typeName: AdamItemDataNew.TypeName, titleField: nameof(AdamItemDataNew.Name));
 
-            var entities = _factory.Build(sourceEntities.SelectMany(o => find(o)));
+            var entities = _factory.Build(source.List.SelectMany(o => find(o)));
 
-            return (entities.ToImmutableList(), "ok");
+            return (entities, "ok");
         }));
         private readonly GetOnce<IImmutableList<IEntity>> _getInternal = new GetOnce<IImmutableList<IEntity>>();
 

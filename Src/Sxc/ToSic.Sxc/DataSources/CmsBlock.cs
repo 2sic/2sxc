@@ -1,11 +1,11 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.Data.Builder;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -85,43 +85,53 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
 
-        private ImmutableArray<IEntity> GetContent()
+        private IImmutableList<IEntity> GetContent()
         {
             // First check if BlockConfiguration works - to give better error if not
-            if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
-                return immutableArray;
+            //var errors = GetErrorStreamIfConfigOrViewAreMissing();
+            //if (errors.Found) return errors.Errors;
+            //if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
+            //    return immutableArray;
 
-            return GetStream(BlockConfiguration.Content, View.ContentItem,
-                BlockConfiguration.Presentation, View.PresentationItem, false);
+            var everything = Everything;
+            if (everything.IsError)
+                return everything.Errors;
+
+            var parts = everything.Result;
+            return GetStream(parts.BlockConfiguration, parts.View, parts.BlockConfiguration.Content, parts.View.ContentItem,
+                parts.BlockConfiguration.Presentation, parts.View.PresentationItem, false);
         }
 
-        private ImmutableArray<IEntity> GetHeader()
+        private IImmutableList<IEntity> GetHeader()
         {
             // First check if BlockConfiguration works - to give better error if not
-            if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
-                return immutableArray;
+            //var errors = GetErrorStreamIfConfigOrViewAreMissing();
+            //if (errors.Found) return errors.Errors;
+            var everything = Everything;
+            if (everything.IsError)
+                return everything.Errors;
 
-            return GetStream(BlockConfiguration.Header, View.HeaderItem,
-                BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true);
+            var parts = everything.Result;
+
+
+            return GetStream(parts.BlockConfiguration, parts.View, parts.BlockConfiguration.Header, parts.View.HeaderItem,
+                parts.BlockConfiguration.HeaderPresentation, parts.View.HeaderPresentationItem, true);
         }
 
-        private bool GetErrorStreamIfConfigOrViewAreMissing(out ImmutableArray<IEntity> immutableArray)
-        {
-            if (BlockConfiguration == null)
-            {
-                immutableArray = ErrorHandler.CreateErrorList(title: "CmsBlock Configuration Missing", message: "Cannot find configuration of current CmsBlock");
-                return true;
-            }
+        //private GetStream GetErrorStreamIfConfigOrViewAreMissing()
+        //{
+        //    if (BlockConfiguration == null)
+        //        return new GetStream(found: true,
+        //            getError: () => ErrorHandler.CreateErrorList(title: "CmsBlock Configuration Missing",
+        //                message: "Cannot find configuration of current CmsBlock"));
 
-            if (View == null)
-            {
-                immutableArray = ErrorHandler.CreateErrorList(title: "CmsBlock View Missing", message: "Cannot find View configuration of current CmsBlock");
-                return true;
-            }
+        //    if (View == null)
+        //        return new GetStream(found: true, 
+        //            getError: () => ErrorHandler.CreateErrorList(title: "CmsBlock View Missing",
+        //                message: "Cannot find View configuration of current CmsBlock"));
 
-            immutableArray = new ImmutableArray<IEntity>();
-            return false;
-        }
+        //    return new GetStream(found: false);
+        //}
 
     }
 }
