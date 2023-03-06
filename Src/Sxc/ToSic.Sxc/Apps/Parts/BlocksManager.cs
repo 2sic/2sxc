@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Apps
 		            {ViewParts.Presentation, new List<int>()},
 		            {ViewParts.FieldHeader, new List<int>()},
 		            {ViewParts.FieldHeaderPresentation, new List<int>()}
-		        }).Item2; // new guid
+		        }).EntityGuid; // new guid
 		    }
 		    else
 		    {

@@ -27,8 +27,8 @@ namespace ToSic.Sxc.Dnn.Web
                 platform: PlatformType.Dnn.ToString(),
                 pageId: pageId ?? PortalSettings.Current.ActiveTab.TabID,
                 siteRoot: siteRoot,
-                apiRoot: apiRoots.Item1,
-                appApiRoot: apiRoots.Item2,
+                apiRoot: apiRoots.SiteApiRoot,
+                appApiRoot: apiRoots.AppApiRoot,
                 uiRoot: VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
                 rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
                 rvt: AntiForgeryToken(),
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Dnn.Web
             return json;
         }
 
-        internal static Tuple<string, string> GetApiRoots(string siteRoot = null)
+        internal static (string SiteApiRoot, string AppApiRoot) GetApiRoots(string siteRoot = null)
         {
             siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
             var apiRoot = siteRoot + $"api/{InpageCms.ExtensionPlaceholder}/";
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.Web
             var appApiRoot = apiRoot;
             appApiRoot = appApiRoot.Replace(InpageCms.ExtensionPlaceholder, "2sxc");
 
-            return new Tuple<string, string>(apiRoot, appApiRoot);
+            return (apiRoot, appApiRoot);
         }
 
         private static string AntiForgeryToken()

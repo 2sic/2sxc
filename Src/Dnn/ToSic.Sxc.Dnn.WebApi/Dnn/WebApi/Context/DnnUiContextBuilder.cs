@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             try
             {
                 var roots = DnnJsApi.GetApiRoots();
-                appDto.Api = roots.Item2;
+                appDto.Api = roots.AppApiRoot;
             } catch { /* ignore */ }
             return appDto;
         }
