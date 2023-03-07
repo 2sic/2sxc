@@ -16,11 +16,11 @@ namespace ToSic.Sxc.DataSources
             var config = LoadBlockConfiguration();
             if (config.IsError)
                 return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
-                    () => config.Errors);
+                    config.Errors);
 
             var view = OverrideView ?? config.Result.View;
             if (view == null)
-                return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default, () =>
+                return new ResultOrError<(BlockConfiguration BlockConfiguration, IView view)>(false, default,
                     Error.Create(title: "CmsBlock View Missing",
                         message: "Cannot find View configuration of current CmsBlock"));
             // all ok 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.DataSources
             l.A("need content-group, will construct as cannot use context");
             if (!ModuleId.HasValue)
                 return (new ResultOrError<BlockConfiguration>(false, null,
-                    () => Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",
+                    Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",
                         message: $"Neither InstanceContext nor {nameof(ModuleId)} found")), "Error, no module-id");
 
             var userMayEdit = HasInstanceContext && Block.Context.UserMayEdit;
