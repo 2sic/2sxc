@@ -141,34 +141,42 @@ namespace ToSic.Sxc.DataSources
             {
                 // First prepare subfolder list for each folder
                 var folderNeeds = folders
-                    .Select(pair => (pair, new List<string> { pair.Original.FullName }))
-                    .ToList();
-
-                var foldersLookup = folders
-                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal))
-                    .ToList();
-
-                var withSubfolders = _treeMapper
-                    .AddOneRelationship("Folders", folderNeeds, foldersLookup, cloneFirst: false);
+                    .Select(pair => (pair, new List<string> { pair.Original.FullName })).ToList();
+                var foldersForParent = folders
+                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal)).ToList();
+                folders = _treeMapper
+                    .AddOneRelationship("Folders", folderNeeds, foldersForParent);
 
 
                 // Second prepare files list for each folder
-                var folderNeedsFiles = withSubfolders
-                    .Select(pair => (pair, new List<string> { pair.Original.FullName }))
-                    .ToList();
-
-                var filesLookup = files
-                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal))
-                    .ToList();
-
-                var withSubFiles = _treeMapper
-                    .AddOneRelationship("Files", folderNeedsFiles, filesLookup, cloneFirst: false);
+                var folderNeedsFiles = folders
+                    .Select(pair => (pair, new List<string> { pair.Original.FullName })).ToList();
+                var filesForParent = files
+                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal)).ToList();
+                folders = _treeMapper
+                    .AddOneRelationship("Files", folderNeedsFiles, filesForParent);
 
                 // todo some time in future (not now, no priority)
                 // - add parent navigation properties to folders and files
+                // Note: this needs quite a bit of work because everything is immutable
+                // So if we add the folder to the file, the file will be a new file-entity so the old one is not the same
+                // To do this, we must change the architecture
+                // - first: create a source for relationship lookup
+                // - then: create relationship fields which use the source to find their relationships
+
+                // Add folder to file
+                //var foldersForChild = folders.
+                //var filesNeedFolder = files
+                //    .Select(pair => (pair, new List<string> { pair.Original.ParentFolderInternal })).ToList();
+                //var filesWithFolder = _treeMapper.AddOneRelationship("Parent", filesNeedFolder, foldersForParent);
+
+                // add folder to folder
+                //var folderNeedsParent = folders
+                //    .Select(pair => (pair, new List<string> { pair.Original.ParentFolderInternal }));
+                //folders = _treeMapper.AddOneRelationship("Parent", folderNeedsParent, foldersForParent);
 
                 // Return the final streams
-                return ((_folderFactory.WrapUp(withSubFiles), _fileFactory.WrapUp(files)), "ok");
+                return ((_folderFactory.WrapUp(folders), _fileFactory.WrapUp(files)), "ok");
             }
             catch (Exception ex)
             {
