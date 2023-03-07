@@ -84,8 +84,8 @@ namespace ToSic.Sxc.DataSources
             );
 
             Provide(GetDefault);
-            Provide("Folders", GetFolders);
-            Provide("Files", GetFiles);
+            Provide(GetFolders, "Folders");
+            Provide(GetFiles, "Files");
         }
         #endregion
 

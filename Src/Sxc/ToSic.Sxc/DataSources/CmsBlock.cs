@@ -78,8 +78,8 @@ namespace ToSic.Sxc.DataSources
             _services = services;
 
             Provide(GetContent);
-            Provide(ViewParts.StreamHeader, GetHeader);
-            Provide(ViewParts.StreamHeaderOld, GetHeader);
+            Provide(GetHeader, ViewParts.StreamHeader);
+            Provide(GetHeader, ViewParts.StreamHeaderOld);
         }
         private readonly MyServices _services;
         #endregion

@@ -149,13 +149,13 @@ namespace ToSic.Sxc.DataSources
                 _treeMapper = treeMapper
             );
             Provide(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
-            Provide("Roles", () => GetUsersAndRoles().UserRoles);
+            Provide(() => GetUsersAndRoles().UserRoles, "Roles");
         }
 
         #endregion
 
         [PrivateApi]
-        private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) GetUsersAndRoles() => Log.Func(l =>
+        private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) GetUsersAndRoles() => Log.Func(l =>
         {
             if (_usersAndRolesCache != default) 
                 return (_usersAndRolesCache, "from cache");
@@ -198,7 +198,7 @@ namespace ToSic.Sxc.DataSources
             return (_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
         });
 
-        private (IEnumerable<IEntity> Users, IEnumerable<IEntity> UserRoles) _usersAndRolesCache;
+        private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
 
 
         private List<CmsUserNew> GetUsersAndFilter() => Log.Func(l =>
