@@ -180,7 +180,7 @@ namespace ToSic.Sxc.DataSources
                     // Mix generated users with the RoleIds which only exist on the raw list
                     var userNeeds = users.ToList()
                         .Select(u =>
-                            (new NewEntitySet<string>("dummy", u), usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
+                            (new EntityPair<string>("dummy", u), usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
                         .ToList();
                     roles = GetRolesStream(usersRaw);
                     var rolesLookup = roles.Select(r => (r, r.EntityId)).ToList();

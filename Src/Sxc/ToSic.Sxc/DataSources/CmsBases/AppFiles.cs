@@ -141,18 +141,18 @@ namespace ToSic.Sxc.DataSources
             {
                 // First prepare subfolder list for each folder
                 var folderNeeds = folders
-                    .Select(pair => (pair, new List<string> { pair.Original.FullName })).ToList();
+                    .Select(pair => (pair, new List<string> { pair.Partner.FullName })).ToList();
                 var foldersForParent = folders
-                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal)).ToList();
+                    .Select(pair => (pair.Entity, pair.Partner.ParentFolderInternal)).ToList();
                 folders = _treeMapper
                     .AddOneRelationship("Folders", folderNeeds, foldersForParent);
 
 
                 // Second prepare files list for each folder
                 var folderNeedsFiles = folders
-                    .Select(pair => (pair, new List<string> { pair.Original.FullName })).ToList();
+                    .Select(pair => (pair, new List<string> { pair.Partner.FullName })).ToList();
                 var filesForParent = files
-                    .Select(pair => (pair.Entity, pair.Original.ParentFolderInternal)).ToList();
+                    .Select(pair => (pair.Entity, pair.Partner.ParentFolderInternal)).ToList();
                 folders = _treeMapper
                     .AddOneRelationship("Files", folderNeedsFiles, filesForParent);
 
