@@ -12,7 +12,7 @@ namespace ToSic.Sxc.WebApi.Adam
     {
         public AdamItemDtoMaker<TFolderId, TFileId> DtoMaker { get; }
 
-        public AdamTransUpload(AdamServices<TFolderId, TFileId> services) : base(services, "Adm.TrnUpl")
+        public AdamTransUpload(MyServices services) : base(services, "Adm.TrnUpl")
         {
             DtoMaker = Services.AdamDtoMaker.New().Init(AdamContext);
         }

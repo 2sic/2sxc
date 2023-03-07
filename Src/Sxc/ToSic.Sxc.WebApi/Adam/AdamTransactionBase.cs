@@ -13,18 +13,18 @@ using ToSic.Sxc.Context;
 namespace ToSic.Sxc.WebApi.Adam
 {
     public abstract partial class AdamTransactionBase<T, TFolderId, TFileId>
-        : ServiceBase<AdamTransactionBase<T, TFolderId, TFileId>.AdamServices<TFolderId, TFileId>>, IAdamTransactionBase
+        : ServiceBase<AdamTransactionBase<T, TFolderId, TFileId>.MyServices>, IAdamTransactionBase
         where T : AdamTransactionBase<T, TFolderId, TFileId>
     {
 
         #region Constructor / DI
-        public class AdamServices<TFolderId, TFileId> : MyServicesBase
+        public class MyServices : MyServicesBase
         {
             public LazySvc<AdamContext<TFolderId, TFileId>> AdamState { get; }
             public IContextResolver CtxResolver { get; }
             public Generator<AdamItemDtoMaker<TFolderId, TFileId>> AdamDtoMaker { get; }
 
-            public AdamServices(
+            public MyServices(
                 Generator<AdamItemDtoMaker<TFolderId, TFileId>> adamDtoMaker,
                 LazySvc<AdamContext<TFolderId, TFileId>> adamState,
                 IContextResolver ctxResolver)
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Adam
             }
         }
 
-        protected AdamTransactionBase(AdamServices<TFolderId, TFileId> services, string logName) : base(services, logName)
+        protected AdamTransactionBase(MyServices services, string logName) : base(services, logName)
         {
         }
 

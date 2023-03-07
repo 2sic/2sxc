@@ -8,6 +8,6 @@ namespace ToSic.Sxc.WebApi.Adam
     /// </summary>
     public class AdamTransGetItems<TFolderId, TFileId> : AdamTransactionBase<AdamTransGetItems<TFolderId, TFileId>, TFolderId, TFileId>, IAdamTransGetItems
     {
-        public AdamTransGetItems(AdamServices<TFolderId, TFileId> services) : base(services, "Adm.TrnItm") { }
+        public AdamTransGetItems(MyServices services) : base(services, "Adm.TrnItm") { }
     }
 }

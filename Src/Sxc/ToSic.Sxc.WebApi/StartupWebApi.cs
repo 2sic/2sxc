@@ -123,7 +123,7 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
         {
             // Adam Controllers etc.
-            services.TryAddTransient(typeof(AdamTransactionBase<,,>.AdamServices<,>));
+            services.TryAddTransient(typeof(AdamTransactionBase<,,>.MyServices));
             services.TryAddTransient<AdamSecurityChecksBase.MyServices>();
             services.TryAddTransient(typeof(AdamManager<,>));
             services.TryAddTransient(typeof(AdamContext<,>));
