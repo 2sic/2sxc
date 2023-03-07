@@ -47,7 +47,7 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        protected AppFilesDataSourceProvider(MyServices services) : base(services, $"{Constants.SxcLogName}.AppFls")
+        public AppFilesDataSourceProvider(MyServices services) : base(services, $"{Constants.SxcLogName}.AppFls")
         {
         }
 
