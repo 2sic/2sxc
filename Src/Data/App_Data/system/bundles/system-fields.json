@@ -2440,7 +2440,7 @@
                 "Metadata": [
                   {
                     "Id": 120060,
-                    "Version": 14,
+                    "Version": 16,
                     "Guid": "ed7aea66-7a76-4c72-9f5f-23a1f1c882c0",
                     "Type": {
                       "Name": "@All",
@@ -2449,25 +2449,25 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "empty-default"
+                          "en-us": "empty-default"
                         },
                         "Name": {
-                          "*": "Formulas Σ"
+                          "en-us": "Formulas Σ"
                         },
                         "Notes": {
-                          "*": "<p><a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\"><img style=\"float: right; width: 25%;\" src=\"https://sources.2sxc.org/assets/v12/content-types/formulas-banner.svg?12.01\" /></a> Use this to create formulas which control value, visibility etc. See <a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">Formulas Documentation</a>.</p>"
+                          "en-us": "<p><a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\"><img style=\"float: right; width: 25%;\" src=\"https://sources.2sxc.org/assets/v12/content-types/formulas-banner.svg?12.01\"></a>Formulas can change value, visibility etc. You should edit them in the edit UI using the developer mode. Use this section to manually delete or fix formulas in emergencies. See <a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">Formulas Documentation</a>.</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -2476,7 +2476,6 @@
                         },
                         "Formulas": {
                           "*": [
-                            "63dd9a81-4489-492e-8649-eafac78b00bb",
                             "92c9f03c-31da-4288-91ed-780503438983"
                           ]
                         },
@@ -2486,19 +2485,19 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": false
+                          "en-us": false
                         },
                         "EnableExperimental": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -2506,7 +2505,7 @@
                   },
                   {
                     "Id": 120062,
-                    "Version": 13,
+                    "Version": 15,
                     "Guid": "6cc95e17-0baf-46db-a20c-9031135cc53a",
                     "Type": {
                       "Name": "@empty-default",
@@ -2515,7 +2514,7 @@
                     "Attributes": {
                       "Boolean": {
                         "DefaultCollapsed": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -2989,37 +2988,6 @@
                   },
                   "Title": {
                     "*": "Setting Visible: InEditUI: Hide if not visible in UI"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "*": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            },
-            {
-              "Id": 130253,
-              "Version": 2,
-              "Guid": "63dd9a81-4489-492e-8649-eafac78b00bb",
-              "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "*": "v1(data, context) {\n  if(context.cache.secondRun) return data.value;\n  context.cache.secondRun = true;\n  return !data.Formulas.length;\n}"
-                  },
-                  "Notes": {
-                    "*": ""
-                  },
-                  "Target": {
-                    "*": "Field.Settings.Collapsed"
-                  },
-                  "Title": {
-                    "*": "Setting Collapsed: Open when has formulas"
                   }
                 },
                 "Boolean": {
