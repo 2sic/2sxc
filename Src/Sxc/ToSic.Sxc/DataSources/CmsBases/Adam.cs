@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Factory;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.DataSources
 
             _factory.Configure(appId: AppId, typeName: AdamItemDataNew.TypeName, titleField: nameof(AdamItemDataNew.Name));
 
-            var entities = _factory.Build(source.SelectMany(o => find(o)));
+            var entities = _factory.Create(source.SelectMany(o => find(o)));
 
             return (entities, "ok");
         }));

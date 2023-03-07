@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Factory;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -168,12 +168,12 @@ namespace ToSic.Sxc.DataSources
                 // - add parent navigation properties to folders and files
 
                 // Return the final streams
-                return ((_folderFactory.Finalize(withSubFiles), _fileFactory.Finalize(files)), "ok");
+                return ((_folderFactory.WrapUp(withSubFiles), _fileFactory.WrapUp(files)), "ok");
             }
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return ((_folderFactory.Finalize(folders), _fileFactory.Finalize(files)), "error");
+                return ((_folderFactory.WrapUp(folders), _fileFactory.WrapUp(files)), "error");
             }
         });
 

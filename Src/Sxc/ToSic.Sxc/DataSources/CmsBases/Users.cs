@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Factory;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.New;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
@@ -169,7 +169,7 @@ namespace ToSic.Sxc.DataSources
             // Figure out options to be sure we have the roles/roleids
             _usersFactory.Configure(typeName: CmsUserNew.TypeName, titleField: CmsUserNew.TitleFieldName);
 
-            var users = _usersFactory.Build(usersRaw);
+            var users = _usersFactory.Create(usersRaw);
             var roles = EmptyList;
 
             // If we should include the roles, create them now and attach

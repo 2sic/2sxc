@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Factory;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.New;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
@@ -164,7 +164,7 @@ namespace ToSic.Sxc.Dnn.DataSources
             }
             l.A($"results: {results.Count}");
 
-            return (_dataFactory.Build(results), "ok");
+            return (_dataFactory.Create(results), "ok");
         });
 
         private static string GetDnnProfileValue(UserInfo user, string property)

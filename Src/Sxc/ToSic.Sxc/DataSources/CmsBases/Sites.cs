@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Factory;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.DataSources
                 return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
-            var sites = _sitesFactory.Build(sitesFromSystem);
+            var sites = _sitesFactory.Create(sitesFromSystem);
 
             return (sites, $"found: {sites.Count}");
         });

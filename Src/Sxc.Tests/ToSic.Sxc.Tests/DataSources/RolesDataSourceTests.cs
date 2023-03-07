@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
-using ToSic.Eav.Data.Builder;
+using ToSic.Eav.Data.Build;
 using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace

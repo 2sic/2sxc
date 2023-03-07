@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Factory;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Logging;
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"excludeRoles: {excludeRolesPredicate == null}");
             if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
-            var result = _rolesFactory.Build(roles);
+            var result = _rolesFactory.Create(roles);
 
             return (result, $"found {result.Count} roles");
         });
