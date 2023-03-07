@@ -40,7 +40,7 @@ namespace ToSic.Sxc.DataSources
                 }
 
                 var entitiesToDeliver = new List<IEntity>();
-                var originals = GetInStream();
+                var originals = GetInOrAutoCreate();
                 int i = 0, entityId = 0, prevIdForErrorReporting = 0;
                 try
                 {
@@ -106,7 +106,7 @@ namespace ToSic.Sxc.DataSources
             }
         });
 
-        private ImmutableList<IEntity> GetInStream() => Log.Func(l =>
+        private ImmutableList<IEntity> GetInOrAutoCreate() => Log.Func(l =>
         {
             // Check if in not connected, in which case we must find it yourself
             if (!In.ContainsKey(Eav.Constants.DefaultStreamName))

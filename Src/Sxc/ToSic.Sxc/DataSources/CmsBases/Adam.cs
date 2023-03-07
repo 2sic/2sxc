@@ -103,7 +103,7 @@ namespace ToSic.Sxc.DataSources
             Configuration.Parse();
 
             // Make sure we have an In - otherwise error
-            var source = GetRequiredInList();
+            var source = GetInStream();
             if (source.IsError) return source.ErrorResult;
 
             _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
