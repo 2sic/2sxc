@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseServices helpers, DnnCodeRootFactory codeRootFactory) : base(helpers) =>
+        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory) : base(helpers) =>
             ConnectServices(
                 _codeRootFactory = codeRootFactory
             );

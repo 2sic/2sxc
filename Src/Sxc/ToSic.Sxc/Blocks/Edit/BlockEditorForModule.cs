@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     public class BlockEditorForModule : BlockEditorBase
     {
-        public BlockEditorForModule(BlockEditorBaseServices services,
+        public BlockEditorForModule(MyServices services,
             LazySvc<IPlatformModuleUpdater> platformModuleUpdater) : base(services)
         {
             ConnectServices(_platformModuleUpdater = platformModuleUpdater);

@@ -27,10 +27,10 @@ namespace ToSic.Sxc.Apps
     {
         #region DI Constructors
         [PrivateApi]
-        public App(AppServices services, 
+        public App(MyServices services, 
             LazySvc<GlobalPaths> globalPaths, 
             LazySvc<AppPaths> appPathsLazy, 
-            LazySvc<DynamicEntityServices> dynamicEntityDependenciesLazy,
+            LazySvc<DynamicEntity.MyServices> dynamicEntityDependenciesLazy,
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate) 
             : base(services, "App.SxcApp")
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Apps
 
         private readonly LazySvc<GlobalPaths> _globalPaths;
         private readonly LazySvc<AppPaths> _appPathsLazy;
-        private readonly LazySvc<DynamicEntityServices> _dynamicEntityDependenciesLazy;
+        private readonly LazySvc<DynamicEntity.MyServices> _dynamicEntityDependenciesLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
@@ -99,10 +99,10 @@ namespace ToSic.Sxc.Apps
         // TODO: THIS CAN PROBABLY BE IMPROVED
         // TO GET THE DynamicEntityDependencies from the DynamicCodeRoot which creates the App...? 
         // ATM it's a bit limited, for example it probably cannot resolve links
-        private DynamicEntityServices DynamicEntityServices
+        private DynamicEntity.MyServices DynamicEntityServices
             => _dynamicEntityDependencies.Get(() =>
                 _dynamicEntityDependenciesLazy.Value.Init(null, Site.SafeLanguagePriorityCodes(), Log));
-        private readonly GetOnce<DynamicEntityServices> _dynamicEntityDependencies = new GetOnce<DynamicEntityServices>();
+        private readonly GetOnce<DynamicEntity.MyServices> _dynamicEntityDependencies = new GetOnce<DynamicEntity.MyServices>();
 
         /// <inheritdoc />
         public dynamic Settings => AppSettings != null ? _settings.Get(() => MakeDynProperty(AppSettings)) : null;

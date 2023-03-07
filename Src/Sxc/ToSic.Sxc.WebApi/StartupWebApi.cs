@@ -41,7 +41,7 @@ namespace ToSic.Sxc.WebApi
 
             services.TryAddScoped<ILinkPaths, LinkPaths>();
             services.TryAddTransient<XmlImportWithFiles, XmlImportFull>();
-            services.TryAddTransient<EngineBaseServices>();
+            services.TryAddTransient<EngineBase.MyServices>();
 
             // These are usually replaced by the target platform
             services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorUnknown>();
@@ -123,7 +123,7 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddAdamWebApi<TFolder, TFile>(this IServiceCollection services)
         {
             // Adam Controllers etc.
-            services.TryAddTransient(typeof(AdamServices<,>));
+            services.TryAddTransient(typeof(AdamTransactionBase<,,>.AdamServices<,>));
             services.TryAddTransient<AdamSecurityChecksBase.MyServices>();
             services.TryAddTransient(typeof(AdamManager<,>));
             services.TryAddTransient(typeof(AdamContext<,>));

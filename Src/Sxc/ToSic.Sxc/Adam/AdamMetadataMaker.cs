@@ -14,12 +14,12 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class AdamMetadataMaker
     {
-        public AdamMetadataMaker(Generator<DynamicEntityServices> deGenerator)
+        public AdamMetadataMaker(Generator<DynamicEntity.MyServices> deGenerator)
         {
             _deGenerator = deGenerator;
         }
 
-        private readonly Generator<DynamicEntityServices> _deGenerator;
+        private readonly Generator<DynamicEntity.MyServices> _deGenerator;
 
         /// <summary>
         /// Find the first metadata entity for this file/folder
@@ -40,11 +40,11 @@ namespace ToSic.Sxc.Adam
             return new DynamicMetadata(mdOf, null, DynamicEntityDependencies(manager));
         }
 
-        private DynamicEntityServices DynamicEntityDependencies(AdamManager manager) =>
-            _dynamicEntityDeps
-            ?? (_dynamicEntityDeps = _deGenerator.New()
+        private DynamicEntity.MyServices DynamicEntityDependencies(AdamManager manager) =>
+            _myDeps
+            ?? (_myDeps = _deGenerator.New()
                 .Init(null, (manager.AppContext?.Site).SafeLanguagePriorityCodes(), null, manager.CompatibilityLevel));
-        private DynamicEntityServices _dynamicEntityDeps;
+        private DynamicEntity.MyServices _myDeps;
 
 
     }

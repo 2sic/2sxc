@@ -31,9 +31,9 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
 
-        internal DynamicEntityServices DynamicEntityServices => _dynEntDependencies.Get(() => 
+        internal DynamicEntity.MyServices DynamicEntityServices => _dynEntDependencies.Get(() => 
             Services.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
-        private readonly GetOnce<DynamicEntityServices> _dynEntDependencies = new GetOnce<DynamicEntityServices>();
+        private readonly GetOnce<DynamicEntity.MyServices> _dynEntDependencies = new GetOnce<DynamicEntity.MyServices>();
 
         /// <inheritdoc />
         public dynamic AsDynamic(object dynamicEntity) => AsDynamicInternal(dynamicEntity);

@@ -44,12 +44,12 @@ namespace ToSic.Sxc.Startup
 
             // Code
             services.TryAddTransient<DynamicCodeRoot.MyServices>();
-            services.TryAddTransient<DynamicEntityServices>();
+            services.TryAddTransient<DynamicEntity.MyServices>();
 
             // Block Editors
             services.TryAddTransient<BlockEditorForEntity>();
             services.TryAddTransient<BlockEditorForModule>();
-            services.TryAddTransient<BlockEditorBaseServices>();
+            services.TryAddTransient<BlockEditorBase.MyServices>();
 
             // Engine and Rendering
             services.TryAddTransient<EngineFactory>();

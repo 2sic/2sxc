@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Razor
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseServices helpers, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
+        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(services)
         {
             ConnectServices(
                 _dynCodeRootLazy = dynCodeRootLazy,

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Code
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
-            public LazySvc<DynamicEntityServices> DynamicEntityDependencies { get; }
+            public LazySvc<DynamicEntity.MyServices> DynamicEntityDependencies { get; }
             public LazySvc<IContextOfApp> ContextOfApp { get; }
             public LazySvc<AdamManager> AdamManager { get; }
 
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Code
                 IServiceProvider serviceProvider,
                 LazySvc<CodeCompiler> codeCompilerLazy,
                 AppSettingsStack settingsStack,
-                LazySvc<DynamicEntityServices> dynamicEntityDependencies,
+                LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
                 LazySvc<IContextOfApp> contextOfApp,
                 LazySvc<AdamManager> adamManager,
                 LazySvc<IConvertService> convertService,

@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Engines
         private readonly LazySvc<DynamicCodeRoot> _dynCodeRootLazy;
         private readonly Generator<AppConfigDelegate> _appConfigDelegateGenerator;
 
-        public TokenEngine(EngineBaseServices helpers, LazySvc<DynamicCodeRoot> dynCodeRootLazy, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(helpers) =>
+        public TokenEngine(MyServices services, LazySvc<DynamicCodeRoot> dynCodeRootLazy, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
             ConnectServices(
                 _dynCodeRootLazy = dynCodeRootLazy,
                 _appConfigDelegateGenerator = appConfigDelegateGenerator
@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Engines
 
         protected override string RenderTemplate()
         {
-            var templateSource = File.ReadAllText(Helpers.ServerPaths.FullAppPath(TemplatePath));
+            var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
             for (var upgrade = 0; upgrade < _upgrade6To7.Length/2; upgrade++)
                 templateSource = templateSource.Replace(_upgrade6To7[upgrade, 0], _upgrade6To7[upgrade, 1]);

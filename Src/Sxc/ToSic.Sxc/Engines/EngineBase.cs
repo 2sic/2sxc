@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using ToSic.Eav.Apps;
+using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
@@ -9,10 +11,12 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.Serialization;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Output;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSources.IDataSource;
 
@@ -22,9 +26,8 @@ namespace ToSic.Sxc.Engines
     /// The foundation for engines - must be inherited by other engines
     /// </summary>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("this is just fyi")]
-    public abstract partial class EngineBase : ServiceBase, IEngine
+    public abstract partial class EngineBase : ServiceBase<EngineBase.MyServices>, IEngine
     {
-        protected readonly EngineBaseServices Helpers;
         [PrivateApi] protected IView Template;
         [PrivateApi] protected string TemplatePath;
         [PrivateApi] protected IApp App;
@@ -36,13 +39,35 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor and DI
 
+        public class MyServices : MyServicesBase
+        {
+
+            public MyServices(IServerPaths serverPaths,
+                IBlockResourceExtractor blockResourceExtractor,
+                LazySvc<AppPermissionCheck> appPermCheckLazy,
+                Polymorphism.Polymorphism polymorphism,
+                LazySvc<IAppStates> appStatesLazy
+            )
+            {
+                ConnectServices(
+                    Polymorphism = polymorphism,
+                    AppStatesLazy = appStatesLazy,
+                    ServerPaths = serverPaths,
+                    BlockResourceExtractor = blockResourceExtractor,
+                    AppPermCheckLazy = appPermCheckLazy
+                );
+            }
+
+            internal readonly IServerPaths ServerPaths;
+            internal readonly IBlockResourceExtractor BlockResourceExtractor;
+            internal readonly LazySvc<AppPermissionCheck> AppPermCheckLazy;
+            internal Polymorphism.Polymorphism Polymorphism { get; }
+            internal LazySvc<IAppStates> AppStatesLazy { get; }
+        }
         /// <summary>
         /// Empty constructor, so it can be used in dependency injection
         /// </summary>
-        protected EngineBase(EngineBaseServices helpers) : base($"{Constants.SxcLogName}.EngBas") =>
-            ConnectServices(
-                Helpers = helpers
-            );
+        protected EngineBase(MyServices services) : base(services, $"{Constants.SxcLogName}.EngBas") { }
 
         #endregion
 
@@ -58,7 +83,7 @@ namespace ToSic.Sxc.Engines
                                Path.Combine(appPathRootInInstallation, subPath).ToAbsolutePathForwardSlash();
 
             // Throw Exception if Template does not exist
-            if (!File.Exists(Helpers.ServerPaths.FullAppPath(templatePath)))
+            if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
                 // todo: change to some kind of "rendering exception"
                 throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
 
@@ -84,7 +109,7 @@ namespace ToSic.Sxc.Engines
             subPath = view.EditionPath.TrimPrefixSlash();
 
             // Figure out the current edition - if none, stop here
-            var polymorph = Helpers.Polymorphism.Init(Block.App.Data.List);
+            var polymorph = Services.Polymorphism.Init(Block.App.Data.List);
             var edition = polymorph.Edition();
             if (edition == null)
                 return (null, "no edition detected");
@@ -113,7 +138,7 @@ namespace ToSic.Sxc.Engines
         ) => Log.Func($"root: {root}; edition: {edition}; subPath: {subPath}", () =>
         {
             var fullPathForTest = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();
-            if (!File.Exists(Helpers.ServerPaths.FullAppPath(fullPathForTest)))
+            if (!File.Exists(Services.ServerPaths.FullAppPath(fullPathForTest)))
                 return (null, "not found");
             view.Edition = edition;
             view.EditionPath = Path.Combine(edition, subPath).ToAbsolutePathForwardSlash();
@@ -143,7 +168,7 @@ namespace ToSic.Sxc.Engines
                 return wrapLog.Return(new RenderEngineResult(message, false, null), $"{nameof(renderStatus)} not OK");
 
             var renderedTemplate = RenderTemplate();
-            var depMan = Helpers.BlockResourceExtractor;
+            var depMan = Services.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
             return wrapLog.ReturnAsOk(result);
         }
@@ -153,7 +178,7 @@ namespace ToSic.Sxc.Engines
             if (Template == null)
                 throw new RenderingException("Template Configuration Missing");
 
-            if (Template.ContentType != "" && Helpers.AppStatesLazy.Value.Get(App).GetContentType(Template.ContentType) == null)
+            if (Template.ContentType != "" && Services.AppStatesLazy.Value.Get(App).GetContentType(Template.ContentType) == null)
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
         }
 
@@ -186,7 +211,7 @@ namespace ToSic.Sxc.Engines
         {
             // do security check IF security exists
             // should probably happen somewhere else - so it doesn't throw errors when not even rendering...
-            var templatePermissions = Helpers.AppPermCheckLazy.Value
+            var templatePermissions = Services.AppPermCheckLazy.Value
                 .ForItem(Block.Context, App, Template.Entity);
 
             // Views only use permissions to prevent access, so only check if there are any configured permissions

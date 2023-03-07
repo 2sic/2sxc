@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<BlocksRuntime> _blocksRuntime;
         private readonly LazySvc<ViewsRuntime> _viewsRuntime;
 
-        public CmsRuntime(AppRuntimeServices services, 
+        public CmsRuntime(MyServices services, 
             LazySvc<EntityRuntime> entityRuntime,
             LazySvc<MetadataRuntime> metadataRuntime,
             LazySvc<ContentTypeRuntime> contentTypeRuntime,
