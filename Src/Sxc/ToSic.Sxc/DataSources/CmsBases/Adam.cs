@@ -103,15 +103,15 @@ namespace ToSic.Sxc.DataSources
             Configuration.Parse();
 
             // Make sure we have an In - otherwise error
-            var source = GetInStream();
-            if (source.IsError) return source.ErrorResult;
+            var source = TryGetIn();
+            if (source is null) return (Error.TryGetInFailed(this), "error");
 
             _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
             var find = _provider.GetInternal();
 
             _factory.Configure(appId: AppId, typeName: AdamItemDataNew.TypeName, titleField: nameof(AdamItemDataNew.Name));
 
-            var entities = _factory.Build(source.List.SelectMany(o => find(o)));
+            var entities = _factory.Build(source.SelectMany(o => find(o)));
 
             return (entities, "ok");
         }));
