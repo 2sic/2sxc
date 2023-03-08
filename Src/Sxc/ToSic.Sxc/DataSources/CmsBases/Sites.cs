@@ -19,7 +19,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="SiteDataNew"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="SiteDataRaw"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _sitesFactory = sitesFactory.Configure(typeName: SiteDataNew.TypeName, titleField: SiteDataNew.TitleFieldName, idAutoIncrementZero: false)
+                _sitesFactory = sitesFactory.Configure(typeName: SiteDataRaw.TypeName, titleField: SiteDataRaw.TitleFieldName, idAutoIncrementZero: false)
             );
             Provide(GetSites);
         }

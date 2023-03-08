@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Context.Raw
     /// They must also match the ICmsUser interface
     /// </remarks>
     [PrivateApi("this is only internal - public access is always through interface")]
-    public class CmsUserNew: NewEntityBase, IUser, INewEntity, IHasIdentityNameId
+    public class CmsUserRaw: RawEntityBase, IUser, IRawEntity, IHasIdentityNameId
     {
         #region Types and Names for Raw Entities
 
@@ -35,9 +35,9 @@ namespace ToSic.Sxc.Context.Raw
 
         #region Constant user objects for Unknown/Anonymous
 
-        public static readonly CmsUserNew AnonymousUser = new CmsUserNew { Id = -1, Name = Constants.Anonymous };
+        public static readonly CmsUserRaw AnonymousUser = new CmsUserRaw { Id = -1, Name = Constants.Anonymous };
 
-        public static readonly CmsUserNew UnknownUser = new CmsUserNew { Id = -2, Name = Eav.Constants.NullNameId };
+        public static readonly CmsUserRaw UnknownUser = new CmsUserRaw { Id = -2, Name = Eav.Constants.NullNameId };
 
 
         #endregion

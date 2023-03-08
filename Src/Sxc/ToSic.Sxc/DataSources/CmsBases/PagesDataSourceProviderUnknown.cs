@@ -9,7 +9,7 @@ namespace ToSic.Sxc.DataSources
         public PagesDataSourceProviderUnknown(WarnUseOfUnknown<PagesDataSourceProviderUnknown> _): base($"{Constants.SxcLogName}.{LogConstants.NameUnknown}")
         { }
 
-        public override List<PageDataNew> GetPagesInternal(
+        public override List<PageDataRaw> GetPagesInternal(
             string noParamOrder = Eav.Parameters.Protector,
             bool includeHidden = default,
             bool includeDeleted = default,
@@ -18,6 +18,6 @@ namespace ToSic.Sxc.DataSources
             bool includeLinks = default,
             bool requireViewPermissions = true,
             bool requireEditPermissions = true
-        ) => new List<PageDataNew>();
+        ) => new List<PageDataRaw>();
     }
 }

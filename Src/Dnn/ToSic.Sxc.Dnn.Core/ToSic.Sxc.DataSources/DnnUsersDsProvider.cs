@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
             );
         }
 
-        public override IEnumerable<CmsUserNew> GetUsersInternal() => Log.Func(l =>
+        public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
             {
                 var siteId = PortalSettings.Current?.PortalId ?? -1;
                 l.A($"Portal Id {siteId}");
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
                         superUsersOnly: true));
 
                     var dnnUsers = dnnAllUsers.Cast<UserInfo>().ToList();
-                    if (!dnnUsers.Any()) return (new List<CmsUserNew>(), "null/empty");
+                    if (!dnnUsers.Any()) return (new List<CmsUserRaw>(), "null/empty");
 
                     var result = dnnUsers
                         //.Where(user => !user.IsDeleted)
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.DataSources
                 catch (Exception ex)
                 {
                     l.Ex(ex);
-                    return (new List<CmsUserNew>(), "error");
+                    return (new List<CmsUserRaw>(), "error");
                 }
             });
     }

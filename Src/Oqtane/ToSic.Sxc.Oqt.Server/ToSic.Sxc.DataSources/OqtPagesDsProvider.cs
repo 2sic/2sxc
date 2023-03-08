@@ -45,7 +45,7 @@ namespace ToSic.Sxc.DataSources
 
         #endregion
 
-        public override List<PageDataNew> GetPagesInternal(
+        public override List<PageDataRaw> GetPagesInternal(
             string noParamOrder = Eav.Parameters.Protector,
             bool includeHidden = default,
             bool includeDeleted = default,
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.DataSources
 
             var parts = new UrlParts(_linkPathsLazy.Value.GetCurrentRequestUrl());
 
-            return pages.Select(p => new PageDataNew
+            return pages.Select(p => new PageDataRaw
             {
                 // In v14
                 Id = p.PageId,

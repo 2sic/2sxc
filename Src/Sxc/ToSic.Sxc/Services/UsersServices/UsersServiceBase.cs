@@ -31,14 +31,14 @@ namespace ToSic.Sxc.Services
 
         public IUser Get(int userId) => Log.Func($"{userId}", () =>
         {
-            if (userId == CmsUserNew.AnonymousUser.Id) return (CmsUserNew.AnonymousUser, "ok");
-            if (userId == CmsUserNew.UnknownUser.Id) return (CmsUserNew.UnknownUser, "err");
+            if (userId == CmsUserRaw.AnonymousUser.Id) return (CmsUserRaw.AnonymousUser, "ok");
+            if (userId == CmsUserRaw.UnknownUser.Id) return (CmsUserRaw.UnknownUser, "err");
 
             var userDto = PlatformUserInformationDto(userId);
 
             return userDto != null
                 ? (userDto, "ok")
-                : (CmsUserNew.UnknownUser, "err");
+                : (CmsUserRaw.UnknownUser, "err");
         });
 
         /// <summary>
@@ -54,10 +54,10 @@ namespace ToSic.Sxc.Services
         private int UserId(string identityToken) => Log.Func($"t:{identityToken}", () =>
         {
             if (string.IsNullOrWhiteSpace(identityToken))
-                return (CmsUserNew.UnknownUser.Id, "empty identity token");
+                return (CmsUserRaw.UnknownUser.Id, "empty identity token");
 
             if (identityToken.EqualsInsensitive(Constants.Anonymous))
-                return (CmsUserNew.AnonymousUser.Id, "ok (anonymous)");
+                return (CmsUserRaw.AnonymousUser.Id, "ok (anonymous)");
 
             var prefix = PlatformIdentityTokenPrefix;
             if (identityToken.StartsWith(prefix, InvariantCultureIgnoreCase))
@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Services
 
             return int.TryParse(identityToken, out var userId)
                 ? (userId, $"ok (u:{userId})")
-                : (CmsUserNew.UnknownUser.Id, "err");
+                : (CmsUserRaw.UnknownUser.Id, "err");
         });
     }
 }

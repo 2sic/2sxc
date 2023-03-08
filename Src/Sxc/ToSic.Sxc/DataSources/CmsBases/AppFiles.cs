@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="PageDataNew"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -128,55 +129,45 @@ namespace ToSic.Sxc.DataSources
                 return ((EmptyList, EmptyList), "null/empty");
 
             // Convert to Entity-Stream
-            _folderFactory.Configure(appId: AppId, typeName: AppFolderDataNew.TypeName, titleField: nameof(AppFolderDataNew.Name));
+            _folderFactory.Configure(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
             var folders = _folderFactory.Prepare(_provider.Folders);
             l.A($"Folders: {folders.Count}");
 
-            _fileFactory.Configure(appId: AppId, typeName: AppFileDataNew.TypeName, titleField: nameof(AppFileDataNew.Name));
+            _fileFactory.Configure(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name));
             var files = _fileFactory.Prepare(_provider.Files);
             l.A($"Files: {files.Count}");
 
 
             try
             {
-                // First prepare subfolder list for each folder
-                var folderNeeds = folders
-                    .Select(pair => (pair, new List<string> { pair.Partner.FullName })).ToList();
-                var foldersForParent = folders
-                    .Select(pair => (pair.Entity, pair.Partner.ParentFolderInternal)).ToList();
-                folders = _treeMapper
-                    .AddOneRelationship("Folders", folderNeeds, foldersForParent);
+                // New WIP
+                var pathFolderLookup = new LazyLookup<string, IEntity>();
+                var parentPathFolderLookup = new LazyLookup<string, IEntity>();
+                var pathFileLookup = new LazyLookup<string, IEntity>();
+
+                var tm = (TreeMapper)_treeMapper;
+                // Get Triplet of folder with search params for the Parent Folder, then attach relationship and keep modified result
+                var foldersUpd = folders
+                    .Select(pair => pair.Extend(new List<string> { pair.Partner.ParentFolderInternal })).ToList();
+                foldersUpd = tm.AddOneRelationshipWIP("Parent", foldersUpd, pathFolderLookup, pair => new List<string> { pair.Partner.ParentFolderInternal });
+
+                // Now create Triplet of Folder with Search Params for everything that has it's full name, keep modified result
+                var folderNeedsInbound2 = foldersUpd
+                    .Select(pair => pair.Extend( new List<string> { pair.Partner.FullName })).ToList();
+                foldersUpd = tm.AddOneRelationshipWIP("Folders", folderNeedsInbound2, parentPathFolderLookup, pair => new List<string> { pair.Partner.FullName });
+                foldersUpd = tm.AddOneRelationshipWIP("Files", foldersUpd, pathFileLookup, pair => new List<string> { pair.Partner.FullName });
+
+                var filesUpd = tm.AddOneRelationshipWIP("Parent", files, pathFolderLookup, pair => new List<string> { pair.Partner.ParentFolderInternal });
 
 
-                // Second prepare files list for each folder
-                var folderNeedsFiles = folders
-                    .Select(pair => (pair, new List<string> { pair.Partner.FullName })).ToList();
-                var filesForParent = files
-                    .Select(pair => (pair.Entity, pair.Partner.ParentFolderInternal)).ToList();
-                folders = _treeMapper
-                    .AddOneRelationship("Files", folderNeedsFiles, filesForParent);
-
-                // todo some time in future (not now, no priority)
-                // - add parent navigation properties to folders and files
-                // Note: this needs quite a bit of work because everything is immutable
-                // So if we add the folder to the file, the file will be a new file-entity so the old one is not the same
-                // To do this, we must change the architecture
-                // - first: create a source for relationship lookup
-                // - then: create relationship fields which use the source to find their relationships
-
-                // Add folder to file
-                //var foldersForChild = folders.
-                //var filesNeedFolder = files
-                //    .Select(pair => (pair, new List<string> { pair.Original.ParentFolderInternal })).ToList();
-                //var filesWithFolder = _treeMapper.AddOneRelationship("Parent", filesNeedFolder, foldersForParent);
-
-                // add folder to folder
-                //var folderNeedsParent = folders
-                //    .Select(pair => (pair, new List<string> { pair.Original.ParentFolderInternal }));
-                //folders = _treeMapper.AddOneRelationship("Parent", folderNeedsParent, foldersForParent);
+                // New final - update the inner lookups to contain all the references
+                pathFolderLookup.Update(foldersUpd.ToLookup(set => set.Partner.FullName, set => set.Entity));
+                parentPathFolderLookup.Update(foldersUpd.ToLookup(set => set.Partner.ParentFolderInternal, set => set.Entity));
+                pathFileLookup.Update(filesUpd.ToLookup(pair => pair.Partner.ParentFolderInternal, pair => pair.Entity));
+                
 
                 // Return the final streams
-                return ((_folderFactory.WrapUp(folders), _fileFactory.WrapUp(files)), "ok");
+                return ((_folderFactory.WrapUp(foldersUpd), _fileFactory.WrapUp(filesUpd)), "ok");
             }
             catch (Exception ex)
             {

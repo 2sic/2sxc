@@ -35,10 +35,10 @@ namespace ToSic.Sxc.DataSources
 
         #endregion
 
-        public override List<SiteDataNew> GetSitesInternal() => Log.Func(l =>
+        public override List<SiteDataRaw> GetSitesInternal() => Log.Func(l =>
         {
             var sites = _sites.GetSites().ToList();
-            return sites.Select(s => new SiteDataNew
+            return sites.Select(s => new SiteDataRaw
             {
                 Id = s.SiteId,
                 Guid = new(s.SiteGuid),

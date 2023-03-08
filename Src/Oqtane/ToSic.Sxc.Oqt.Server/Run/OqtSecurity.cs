@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public bool IsAnonymous(User user) => Id(user) == -1;
 
-        public CmsUserNew CmsUserBuilder(User user) =>
+        public CmsUserRaw CmsUserBuilder(User user) =>
             new()
             {
                 Id = Id(user),

@@ -18,7 +18,7 @@ namespace ToSic.Sxc.DataSources
     /// <summary>
     /// Deliver a list of pages from the current platform (Dnn or Oqtane).
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="PageDataNew"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
     /// </summary>
     [PublicApi]
     [VisualQuery(
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _pageFactory = dataFactory.Configure(typeName: PageDataNew.TypeName, titleField: nameof(PageDataNew.Name)),
+                _pageFactory = dataFactory.Configure(typeName: PageDataRaw.TypeName, titleField: nameof(PageDataRaw.Name)),
                 _treeMapper = treeMapper
             );
             Provide(GetPages);

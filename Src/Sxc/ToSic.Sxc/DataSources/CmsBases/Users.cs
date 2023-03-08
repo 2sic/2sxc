@@ -167,7 +167,7 @@ namespace ToSic.Sxc.DataSources
             var usersRaw = GetUsersAndFilter();
 
             // Figure out options to be sure we have the roles/roleids
-            _usersFactory.Configure(typeName: CmsUserNew.TypeName, titleField: CmsUserNew.TitleFieldName);
+            _usersFactory.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName);
 
             var users = _usersFactory.Create(usersRaw);
             var roles = EmptyList;
@@ -180,7 +180,7 @@ namespace ToSic.Sxc.DataSources
                     // Mix generated users with the RoleIds which only exist on the raw list
                     var userNeeds = users.ToList()
                         .Select(u =>
-                            (new EntityPair<string>("dummy", u), usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
+                            (new EntityPair<string>(u, "dummy"), usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
                         .ToList();
                     roles = GetRolesStream(usersRaw);
                     var rolesLookup = roles.Select(r => (r, r.EntityId)).ToList();
@@ -201,10 +201,10 @@ namespace ToSic.Sxc.DataSources
         private (IImmutableList<IEntity> Users, IImmutableList<IEntity> UserRoles) _usersAndRolesCache;
 
 
-        private List<CmsUserNew> GetUsersAndFilter() => Log.Func(l =>
+        private List<CmsUserRaw> GetUsersAndFilter() => Log.Func(l =>
         {
             var users = _provider.GetUsersInternal()?.ToList();
-            if (users == null || !users.Any()) return (new List<CmsUserNew>(), "null/empty");
+            if (users == null || !users.Any()) return (new List<CmsUserRaw>(), "null/empty");
 
             foreach (var filter in GetAllFilters())
                 users = users.Where(filter).ToList();
@@ -218,7 +218,7 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         /// <param name="usersRaw"></param>
         /// <returns></returns>
-        private ImmutableList<IEntity> GetRolesStream(List<CmsUserNew> usersRaw)
+        private ImmutableList<IEntity> GetRolesStream(List<CmsUserRaw> usersRaw)
         {
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();

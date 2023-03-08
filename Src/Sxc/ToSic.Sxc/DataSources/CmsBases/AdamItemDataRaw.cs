@@ -7,7 +7,7 @@ namespace ToSic.Sxc.DataSources
 {
 
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class AdamItemDataNew: INewEntity
+    public class AdamItemDataRaw: IRawEntity
     {
         public const string TypeName = "AdamItem";
 

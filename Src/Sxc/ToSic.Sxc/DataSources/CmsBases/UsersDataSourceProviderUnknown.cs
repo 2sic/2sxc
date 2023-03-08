@@ -11,7 +11,7 @@ namespace ToSic.Sxc.DataSources
         {
         }
         
-        public override IEnumerable<CmsUserNew> GetUsersInternal(
-        ) => new List<CmsUserNew>();
+        public override IEnumerable<CmsUserRaw> GetUsersInternal(
+        ) => new List<CmsUserRaw>();
     }
 }

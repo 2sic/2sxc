@@ -18,17 +18,17 @@ namespace ToSic.Sxc.DataSources
         { }
 
         [PrivateApi]
-        public override IEnumerable<RoleDataNew> GetRolesInternal() => Log.Func(l =>
+        public override IEnumerable<RoleDataRaw> GetRolesInternal() => Log.Func(l =>
         {
             var siteId = PortalSettings.Current?.PortalId ?? -1;
             l.A($"Portal Id {siteId}");
             try
             {
                 var dnnRoles = RoleController.Instance.GetRoles(portalId: siteId);
-                if (!dnnRoles.Any()) return (new List<RoleDataNew>(), "null/empty");
+                if (!dnnRoles.Any()) return (new List<RoleDataRaw>(), "null/empty");
 
                 var result = dnnRoles
-                    .Select(r => new RoleDataNew
+                    .Select(r => new RoleDataRaw
                     {
                         Id = r.RoleID,
                         // Guid = r.
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.DataSources
             catch (Exception ex)
             {
                 l.Ex(ex);
-                return (new List<RoleDataNew>(), "error");
+                return (new List<RoleDataRaw>(), "error");
             }
         });
     }

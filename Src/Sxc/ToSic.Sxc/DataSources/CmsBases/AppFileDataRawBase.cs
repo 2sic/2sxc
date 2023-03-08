@@ -7,7 +7,7 @@ namespace ToSic.Sxc.DataSources
 {
 
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public abstract class AppFileDataNewBase: INewEntity
+    public abstract class AppFileDataRawBase: IRawEntity
     {
         public int Id { get; set; }
 

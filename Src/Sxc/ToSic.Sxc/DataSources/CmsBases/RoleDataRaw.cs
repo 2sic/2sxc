@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
     /// Make sure the property names never change, as they are critical for the created Entity.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public class RoleDataNew: NewEntityBase, INewEntity, IRole
+    public class RoleDataRaw: RawEntityBase, IRawEntity, IRole
     {
         internal static string TypeName = "Role";
         internal static string TitleFieldName = nameof(Name);

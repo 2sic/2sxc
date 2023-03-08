@@ -9,7 +9,7 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using static ToSic.Sxc.DataSources.RoleDataNew;
+using static ToSic.Sxc.DataSources.RoleDataRaw;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -111,19 +111,19 @@ namespace ToSic.Sxc.DataSources
             return (result, $"found {result.Count} roles");
         });
 
-        private Func<RoleDataNew, bool> IncludeRolesPredicate()
+        private Func<RoleDataRaw, bool> IncludeRolesPredicate()
         {
             var includeRolesFilter = RolesCsvListToInt(RoleIds);
             return includeRolesFilter.Any() 
-                ? (Func<RoleDataNew, bool>) (r => includeRolesFilter.Contains(r.Id)) 
+                ? (Func<RoleDataRaw, bool>) (r => includeRolesFilter.Contains(r.Id)) 
                 : null;
         }
 
-        private Func<RoleDataNew, bool> ExcludeRolesPredicate()
+        private Func<RoleDataRaw, bool> ExcludeRolesPredicate()
         {
             var excludeRolesFilter = RolesCsvListToInt(ExcludeRoleIds);
             return excludeRolesFilter.Any()
-                ? (Func<RoleDataNew, bool>)(r => !excludeRolesFilter.Contains(r.Id))
+                ? (Func<RoleDataRaw, bool>)(r => !excludeRolesFilter.Contains(r.Id))
                 : null;
         }
 

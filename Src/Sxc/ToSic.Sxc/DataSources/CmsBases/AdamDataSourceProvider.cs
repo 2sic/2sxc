@@ -72,13 +72,13 @@ namespace ToSic.Sxc.DataSources
         private string _filter;
 
 
-        public Func<IEntity, IEnumerable<AdamItemDataNew>> GetInternal()
+        public Func<IEntity, IEnumerable<AdamItemDataRaw>> GetInternal()
             => GetAdamListOfItems;
 
-        private IEnumerable<AdamItemDataNew> GetAdamListOfItems(IEntity entity) => Log.Func(() =>
+        private IEnumerable<AdamItemDataRaw> GetAdamListOfItems(IEntity entity) => Log.Func(() =>
         {
             // This will contain the list of items
-            var list = new List<AdamItemDataNew>();
+            var list = new List<AdamItemDataRaw>();
 
             // TODO: this is just tmp code to get some data...
             _services.AdamContext.Value.Init(_context, entity.Type.Name, string.Empty, entity.EntityGuid, false);
@@ -88,16 +88,16 @@ namespace ToSic.Sxc.DataSources
 
             // if no root exists then quit now
             if (root == null)
-                return (new List<AdamItemDataNew>(), "null/empty");
+                return (new List<AdamItemDataRaw>(), "null/empty");
 
             AddAdamItemsFromFolder(root, list);
 
             return (list, $"found:{list.Count}");
         });
 
-        private void AddAdamItemsFromFolder(IFolder folder, List<AdamItemDataNew> list)
+        private void AddAdamItemsFromFolder(IFolder folder, List<AdamItemDataRaw> list)
         {
-            list.AddRange(folder.Folders.Select(f => new AdamItemDataNew
+            list.AddRange(folder.Folders.Select(f => new AdamItemDataRaw
             {
                 Name = f.Name,
                 ReferenceId = (f as IHasMetadata).Metadata.Target.KeyString,
@@ -109,7 +109,7 @@ namespace ToSic.Sxc.DataSources
                 Created = f.Created,
                 Modified = f.Modified
             }));
-            list.AddRange(folder.Files.Select(f => new AdamItemDataNew
+            list.AddRange(folder.Files.Select(f => new AdamItemDataRaw
             {
                 Name = f.Name,
                 ReferenceId = (f as IHasMetadata).Metadata.Target.KeyString,
