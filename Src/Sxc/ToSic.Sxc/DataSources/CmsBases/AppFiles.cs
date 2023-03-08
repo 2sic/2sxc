@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.Data.Process;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
@@ -124,47 +125,57 @@ namespace ToSic.Sxc.DataSources
             _provider.Configure(zoneId: ZoneId, appId: AppId, onlyFolders: OnlyFolders, onlyFiles: OnlyFiles, root: Root, filter: Filter);
 
             // Get pages from underlying system/provider
-            var results = _provider.GetInternal();
-            if (results == null || !results.Any())
+            var (rawFolders, rawFiles) = _provider.GetInternal();
+            if (!rawFiles.Any() && !rawFolders.Any())
                 return ((EmptyList, EmptyList), "null/empty");
 
             // Convert to Entity-Stream
             _folderFactory.Configure(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
-            var folders = _folderFactory.Prepare(_provider.Folders);
+            // WIP CONTINUE HERE!!! @2DM - JUST CHANGED, SEEMS TO WORK!!!
+            var masterLookup = new LazyLookup<string, IEntity>();
+            ((DataFactory)_folderFactory).LookupWip = masterLookup;
+            var folders = _folderFactory.Prepare(rawFolders);
             l.A($"Folders: {folders.Count}");
 
             _fileFactory.Configure(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name));
-            var files = _fileFactory.Prepare(_provider.Files);
+            var files = _fileFactory.Prepare(rawFiles);
             l.A($"Files: {files.Count}");
 
 
             try
             {
                 // New WIP
-                var pathFolderLookup = new LazyLookup<string, IEntity>();
-                var parentPathFolderLookup = new LazyLookup<string, IEntity>();
-                var pathFileLookup = new LazyLookup<string, IEntity>();
+                //var pathFolderLookup = new LazyLookup<string, IEntity>();
+                //var parentPathFolderLookup = new LazyLookup<string, IEntity>();
+                //var pathFileLookup = new LazyLookup<string, IEntity>();
 
                 var tm = (TreeMapper)_treeMapper;
                 // Get Triplet of folder with search params for the Parent Folder, then attach relationship and keep modified result
                 var foldersUpd = folders
-                    .Select(pair => pair.Extend(new List<string> { pair.Partner.ParentFolderInternal })).ToList();
-                foldersUpd = tm.AddOneRelationshipWIP("Parent", foldersUpd, pathFolderLookup, pair => new List<string> { pair.Partner.ParentFolderInternal });
+                    .Select(pair => pair.Extend(pair.Partner.NeedsParentWIP)).ToList();
+                foldersUpd = tm.AddOneRelationshipWIP("Parent", foldersUpd, masterLookup);
 
                 // Now create Triplet of Folder with Search Params for everything that has it's full name, keep modified result
                 var folderNeedsInbound2 = foldersUpd
-                    .Select(pair => pair.Extend( new List<string> { pair.Partner.FullName })).ToList();
-                foldersUpd = tm.AddOneRelationshipWIP("Folders", folderNeedsInbound2, parentPathFolderLookup, pair => new List<string> { pair.Partner.FullName });
-                foldersUpd = tm.AddOneRelationshipWIP("Files", foldersUpd, pathFileLookup, pair => new List<string> { pair.Partner.FullName });
+                    .Select(pair => pair.Extend(pair.Partner.NeedsChildFoldersWip)).ToList();
+                foldersUpd = tm.AddOneRelationshipWIP("Folders", folderNeedsInbound2, masterLookup);
+                var folderNeedsFiles = foldersUpd
+                    .Select(pair => pair.Extend(pair.Partner.NeedsChildFilesWip)).ToList();
+                foldersUpd = tm.AddOneRelationshipWIP("Files", folderNeedsFiles, masterLookup);
 
-                var filesUpd = tm.AddOneRelationshipWIP("Parent", files, pathFolderLookup, pair => new List<string> { pair.Partner.ParentFolderInternal });
+                // var foldersLooped = foldersUpd.
+
+                var filesUpd = tm.AddOneRelationshipWIP("Parent", files, masterLookup, pair => pair.Partner.NeedsParentWIP);
 
 
-                // New final - update the inner lookups to contain all the references
-                pathFolderLookup.Update(foldersUpd.ToLookup(set => set.Partner.FullName, set => set.Entity));
-                parentPathFolderLookup.Update(foldersUpd.ToLookup(set => set.Partner.ParentFolderInternal, set => set.Entity));
-                pathFileLookup.Update(filesUpd.ToLookup(pair => pair.Partner.ParentFolderInternal, pair => pair.Entity));
-                
+                var lookupEverything2 =
+                    ((DataFactory)_folderFactory).GenerateLookup(
+                        filesUpd.Select(f => new EntityPair<IRawEntity>(f.Entity, f.Partner)),
+                        foldersUpd.Select(f => new EntityPair<IRawEntity>(f.Entity, f.Partner))
+                    );
+
+                masterLookup.Update(lookupEverything2);
+                    
 
                 // Return the final streams
                 return ((_folderFactory.WrapUp(foldersUpd), _fileFactory.WrapUp(filesUpd)), "ok");

@@ -7,7 +7,7 @@ namespace ToSic.Sxc.DataSources
 {
 
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public abstract class AppFileDataRawBase: IRawEntity
+    public abstract class AppFileDataRawBase: IRawEntity, IHasRelationshipKeys
     {
         public int Id { get; set; }
 
@@ -24,6 +24,10 @@ namespace ToSic.Sxc.DataSources
         /// This is just for internal lookup
         /// </summary>
         public string ParentFolderInternal { get; set; }
+
+        public List<string> NeedsParentWIP => new List<string> { $"Folder:{ParentFolderInternal}" };
+        public List<string> NeedsChildFoldersWip => new List<string> { $"FolderIn:{FullName}" };
+        public List<string> NeedsChildFilesWip => new List<string> { $"FileIn:{FullName}" };
 
         /// <summary>
         /// Starting in the App-Root
@@ -43,7 +47,12 @@ namespace ToSic.Sxc.DataSources
         {
             { nameof(Name), Name },
             { nameof(FullName), FullName },
-            { nameof(Path), Path }
+            { nameof(Path), Path },
+            { "TestParent", new RawRelationship($"Folder:{ParentFolderInternal}") },
         };
+
+        public virtual List<string> RelationshipKeys => new List<string>();
+
+        public abstract Dictionary<string, IList<string>> Relationships { get; }
     }
 }

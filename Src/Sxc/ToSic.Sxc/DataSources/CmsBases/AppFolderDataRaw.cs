@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System.Collections.Generic;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -17,5 +18,21 @@ namespace ToSic.Sxc.DataSources
     public class AppFolderDataRaw: AppFileDataRawBase
     {
         public const string TypeName = "Folder";
+
+        public override Dictionary<string, IList<string>> Relationships => new Dictionary<string, IList<string>>
+        {
+            { "Parent", new List<string> { $"Folder:{ParentFolderInternal}" } },
+            { "Folders", new List<string> { $"FolderIn:{FullName}" } },
+            { "Files", new List<string> { $"FileIn:{FullName}" } }
+        };
+
+        public override List<string> RelationshipKeys => new List<string>
+        {
+            // For Relationships looking for this folder
+            $"Folder:{FullName}",
+            // For Relationships looking for folders having a specific parent
+            $"FolderIn:{ParentFolderInternal}",
+        };
+
     }
 }

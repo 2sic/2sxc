@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Data.Process;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -35,6 +36,13 @@ namespace ToSic.Sxc.DataSources
         {
             { nameof(Extension), Extension },
             { nameof(Size), Size }
+        };
+
+        public override List<string> RelationshipKeys => new List<string> { $"FileIn:{ParentFolderInternal}" };
+
+        public override Dictionary<string, IList<string>> Relationships => new Dictionary<string, IList<string>>
+        {
+            { "Parent", new List<string> { $"Folder:{ParentFolderInternal}" } },
         };
     }
 }
