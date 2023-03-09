@@ -83,13 +83,7 @@ namespace ToSic.Sxc.DataSources
         /// So the core data source doesn't have settings to configure this
         /// </summary>
         /// <returns></returns>
-        public (List<AppFolderDataRaw> Folders, List<AppFileDataRaw> Files) GetInternal() => Log.Func(l =>
-        {
-            //var result = new List<AppFileDataRawBase>();
-            //result.AddRange(Folders);
-            //result.AddRange(Files);
-            return (Folders, Files);
-        });
+        public (List<AppFolderDataRaw> Folders, List<AppFileDataRaw> Files) GetAll() => Log.Func(l => (Folders, Files));
 
         public List<AppFileDataRaw> Files => _files.Get(Log, l =>
         {

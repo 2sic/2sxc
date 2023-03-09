@@ -25,10 +25,6 @@ namespace ToSic.Sxc.DataSources
         /// </summary>
         public string ParentFolderInternal { get; set; }
 
-        public List<string> NeedsParentWIP => new List<string> { $"Folder:{ParentFolderInternal}" };
-        public List<string> NeedsChildFoldersWip => new List<string> { $"FolderIn:{FullName}" };
-        public List<string> NeedsChildFilesWip => new List<string> { $"FileIn:{FullName}" };
-
         /// <summary>
         /// Starting in the App-Root
         /// </summary>
@@ -48,11 +44,9 @@ namespace ToSic.Sxc.DataSources
             { nameof(Name), Name },
             { nameof(FullName), FullName },
             { nameof(Path), Path },
-            { "TestParent", new RawRelationship($"Folder:{ParentFolderInternal}") },
+            { "Parent", new RawRelationship($"Folder:{ParentFolderInternal}") },
         };
 
-        public virtual List<string> RelationshipKeys => new List<string>();
-
-        public abstract Dictionary<string, IList<string>> Relationships { get; }
+        public abstract List<object> RelationshipKeys { get; }
     }
 }

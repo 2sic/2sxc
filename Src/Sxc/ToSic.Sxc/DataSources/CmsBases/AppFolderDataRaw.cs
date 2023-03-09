@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Data.Process;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
@@ -19,14 +20,13 @@ namespace ToSic.Sxc.DataSources
     {
         public const string TypeName = "Folder";
 
-        public override Dictionary<string, IList<string>> Relationships => new Dictionary<string, IList<string>>
+        public override Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>(base.GetProperties(options))
         {
-            { "Parent", new List<string> { $"Folder:{ParentFolderInternal}" } },
-            { "Folders", new List<string> { $"FolderIn:{FullName}" } },
-            { "Files", new List<string> { $"FileIn:{FullName}" } }
+            { "Folders", new RawRelationship($"FolderIn:{FullName}") },
+            { "Files", new RawRelationship($"FileIn:{FullName}") },
         };
 
-        public override List<string> RelationshipKeys => new List<string>
+        public override List<object> RelationshipKeys => new List<object>
         {
             // For Relationships looking for this folder
             $"Folder:{FullName}",
