@@ -32,9 +32,9 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var app = appStates.GetPresetOrNull();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
-            DynamicEntityServices = GetService<DynamicEntityServices>();
+            DynamicEntityServices = GetService<DynamicEntity.MyServices>();
         }
-        public readonly DynamicEntityServices DynamicEntityServices;
+        public readonly DynamicEntity.MyServices DynamicEntityServices;
         public readonly IContentType TstDataContentType;
 
         protected override void SetupServices(IServiceCollection services)

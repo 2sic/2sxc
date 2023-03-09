@@ -37,7 +37,7 @@ namespace ToSic.Sxc.DataSources
             { nameof(Size), Size },
         };
 
-        public override List<object> RelationshipKeys => new List<object> { $"FileIn:{ParentFolderInternal}" };
+        public override IEnumerable<object> RelationshipKeys => new List<object> { $"FileIn:{ParentFolderInternal}" };
 
     }
 }

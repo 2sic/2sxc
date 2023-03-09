@@ -178,19 +178,20 @@ namespace ToSic.Sxc.DataSources
 
             // If we should include the roles, create them now and attach
             if (AddRoles)
-            {
                 try
                 {
                     // New...
                     roles = GetRolesStream(usersRaw);
-                    relationships.Add(roles.Select(r => new KeyValuePair<object, IEntity>($"{CmsUserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
+                    relationships.Add(roles.Select(r =>
+                        new KeyValuePair<object, IEntity>($"{CmsUserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
                 }
                 catch (Exception ex)
                 {
+                    l.A("Error trying to add roles");
                     l.Ex(ex);
                     /* ignore for now */
                 }
-            }
+
             _usersAndRolesCache = (users, roles);
             return (_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
         });

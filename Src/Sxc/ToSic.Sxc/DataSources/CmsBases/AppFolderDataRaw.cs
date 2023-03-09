@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
             { "Files", new RawRelationship(key: $"FileIn:{FullName}") },
         };
 
-        public override List<object> RelationshipKeys => new List<object>
+        public override IEnumerable<object> RelationshipKeys => new List<object>
         {
             // For Relationships looking for this folder
             $"Folder:{FullName}",

@@ -47,6 +47,6 @@ namespace ToSic.Sxc.DataSources
             { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
         };
 
-        public abstract List<object> RelationshipKeys { get; }
+        public abstract IEnumerable<object> RelationshipKeys { get; }
     }
 }
