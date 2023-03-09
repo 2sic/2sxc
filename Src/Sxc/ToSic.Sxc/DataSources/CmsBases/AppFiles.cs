@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
-using ToSic.Eav.Data.Process;
-using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
@@ -129,19 +126,17 @@ namespace ToSic.Sxc.DataSources
             if (!rawFiles.Any() && !rawFolders.Any())
                 return ((EmptyList, EmptyList), "null/empty");
 
-            // Convert to Entity-Stream
+            // Convert Folders to Entities
             _folderFactory.Configure(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
-            var folders = _folderFactory.Prepare(rawFolders);
-            l.A($"Folders: {folders.Count}");
+            var folders = _folderFactory.Create(rawFolders);
 
+            // Convert Files to Entities
             _fileFactory.Configure(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name),
                 // Make sure we share relationships source with folders, as files need folders and folders need files
                 relationships: _folderFactory.Relationships);
-            var files = _fileFactory.Prepare(rawFiles);
-            l.A($"Files: {files.Count}");
+            var files = _fileFactory.Create(rawFiles);
 
-
-            return ((_folderFactory.WrapUp(folders), _fileFactory.WrapUp(files)), "ok");
+            return ((folders, files), $"folders: {folders.Count}, files: {files.Count}");
         });
 
 
