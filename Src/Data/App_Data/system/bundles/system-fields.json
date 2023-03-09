@@ -8440,6 +8440,301 @@
                     "Owner": "dnn:userid=1"
                   }
                 ]
+              },
+              {
+                "Name": "GroupMultiSelect",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169117,
+                    "Version": 2,
+                    "Guid": "e7fa92db-eb81-4e1e-bb4f-4a2992e1eb27",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Multi Select (Experimental v15)"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169120,
+                    "Version": 1,
+                    "Guid": "ad147e76-3869-43bd-97e7-7f91efd67291",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "AllowMultiValue",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169118,
+                    "Version": 2,
+                    "Guid": "7f32dfd0-5a88-4a94-9061-fcc96bab71f4",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "Multiple Items"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169121,
+                    "Version": 1,
+                    "Guid": "a7dac8c2-8cab-4807-986b-dc85d4daac9c",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Only allow selecting a single item"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "Allow selecting multiple items"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "Separator",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169119,
+                    "Version": 2,
+                    "Guid": "780f9082-75fc-4181-8c71-a583cf755ee8",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ","
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Separator"
+                        },
+                        "Notes": {
+                          "en-us": "<p>If you want to support selecting multiple items, you'll need something to keep them separate. We recommend a comma, but maybe you want something different.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169122,
+                    "Version": 1,
+                    "Guid": "2c4bdee0-e27b-412b-9ab4-276d35af6833",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169123,
+                    "Version": 1,
+                    "Guid": "88706efb-7aa9-4587-8ffb-fcd741d8885a",
+                    "Type": {
+                      "Name": "@string-dropdown",
+                      "Id": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ",\n|\n-"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ""
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ],
             "Metadata": [
@@ -9888,7 +10183,7 @@
                 "Metadata": [
                   {
                     "Id": 42566,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "8051a38f-2bd1-4309-9d0b-91c687e592ac",
                     "Type": {
                       "Name": "@All",
@@ -9897,25 +10192,25 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "boolean-default"
+                          "en-us": "boolean-default"
                         },
                         "Name": {
-                          "*": "Multiple Items"
+                          "en-us": "Multiple Items"
                         },
                         "Notes": {
-                          "*": "<p>Allow picking multiple items - otherwise the user can only pick 1 item.</p>"
+                          "en-us": "<p>Allow picking multiple items - otherwise the user can only pick 1 item.</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -9931,16 +10226,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -9948,7 +10243,7 @@
                   },
                   {
                     "Id": 42572,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "4a61c144-e35f-4dd1-85a3-5348cf682a6c",
                     "Type": {
                       "Name": "@Boolean",
@@ -9957,13 +10252,13 @@
                     "Attributes": {
                       "String": {
                         "TitleFalse": {
-                          "*": ""
+                          "en-us": "Only allow selecting a single item"
                         },
                         "TitleIndeterminate": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "TitleTrue": {
-                          "*": ""
+                          "en-us": "Allow selecting multiple items"
                         }
                       }
                     },
@@ -9979,7 +10274,7 @@
                 "Metadata": [
                   {
                     "Id": 42562,
-                    "Version": 6,
+                    "Version": 7,
                     "Guid": "2671d0ea-9743-4503-920f-75470645dc9c",
                     "Type": {
                       "Name": "@All",
@@ -9988,25 +10283,25 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ","
+                          "en-us": ","
                         },
                         "InputType": {
-                          "*": "string-dropdown"
+                          "en-us": "string-dropdown"
                         },
                         "Name": {
-                          "*": "Separator"
+                          "en-us": "Separator"
                         },
                         "Notes": {
-                          "*": "<p>If you want to support selecting multiple items, you'll need something to keep them separate. We recommend a comma, but maybe you want something different</p>"
+                          "en-us": "<p>If you want to support selecting multiple items, you'll need something to keep them separate. We recommend a comma, but maybe you want something different.</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -10022,16 +10317,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -10039,7 +10334,7 @@
                   },
                   {
                     "Id": 42563,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "160b7a1c-33db-46f1-a1b3-ef9892d30ec2",
                     "Type": {
                       "Name": "@String",
@@ -10048,10 +10343,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -10076,7 +10371,7 @@
                   },
                   {
                     "Id": 43003,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "dcecf7b1-4dbe-487c-ba0d-386da72b81d1",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -10085,12 +10380,21 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ",\n|\n-"
+                          "en-us": ",\n|\n-"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ""
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },

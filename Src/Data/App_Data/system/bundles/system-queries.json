@@ -1059,7 +1059,7 @@
         },
         {
           "Id": 160746,
-          "Version": 18,
+          "Version": 19,
           "Guid": "f54e66aa-0ed1-47ca-b15d-774f3a5d60ca",
           "Type": {
             "Name": "DataPipeline",
@@ -1099,7 +1099,7 @@
           "Metadata": [
             {
               "Id": 160751,
-              "Version": 8,
+              "Version": 9,
               "Guid": "e5837542-beeb-4528-829b-2983d11e566a",
               "Type": {
                 "Name": "DataPipelinePart",
@@ -1111,7 +1111,7 @@
                     "*": ""
                   },
                   "Name": {
-                    "*": "Roles - BETA - DO NOT USE YET"
+                    "*": "Roles"
                   },
                   "PartAssemblyAndType": {
                     "*": "eee54266-d7ad-4f5e-9422-2d00c8f93b45"
@@ -1183,7 +1183,7 @@
         },
         {
           "Id": 160760,
-          "Version": 11,
+          "Version": 24,
           "Guid": "dd3021bf-1b9a-4d10-8dde-12efe9832f47",
           "Type": {
             "Name": "DataPipeline",
@@ -1192,30 +1192,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get users of this site."
+                "en-us": "Get users of this site."
               },
               "Name": {
-                "*": "Eav.Queries.Global.Users"
+                "en-us": "Eav.Queries.Global.Users"
               },
               "Params": {
-                "*": "UserIds=[QueryString:UserIds]\nExcludeUserIds=[QueryString:ExcludeUserIds]\nRoleIds=[QueryString:RoleIds]\nExcludeRoleIds=[QueryString:ExcludeRoleIds]\nIncludeSystemAdmins=[QueryString:IncludeSystemAdmins]"
+                "en-us": "UserIds=[QueryString:UserIds]\nExcludeUserIds=[QueryString:ExcludeUserIds]\nRoleIds=[QueryString:RoleIds]\nExcludeRoleIds=[QueryString:ExcludeRoleIds]\nIncludeSystemAdmins=[QueryString:IncludeSystemAdmins]"
               },
               "StreamsOut": {
-                "*": "Default,Header,Roles"
+                "en-us": "Default,Header,Roles"
               },
               "StreamWiring": {
-                "*": "71a257cd-cebf-4c3c-a588-c46e9244a398:Default>Out:Default\r\n71a257cd-cebf-4c3c-a588-c46e9244a398:Roles>Out:Roles"
+                "en-us": "71a257cd-cebf-4c3c-a588-c46e9244a398:Default>Out:Default\r\n71a257cd-cebf-4c3c-a588-c46e9244a398:Roles>Out:Roles"
               },
               "TestParameters": {
-                "*": "[Params:IncludeSystemAdmins]=true\n[QueryString:IncludeSystemAdmins]=true"
+                "en-us": "[QueryString:IncludeSystemAdmins]=false"
               },
               "VisualDesignerData": {
-                "*": ""
+                "en-us": ""
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -1223,7 +1223,7 @@
           "Metadata": [
             {
               "Id": 160762,
-              "Version": 7,
+              "Version": 15,
               "Guid": "71a257cd-cebf-4c3c-a588-c46e9244a398",
               "Type": {
                 "Name": "DataPipelinePart",
@@ -1235,13 +1235,13 @@
                     "*": ""
                   },
                   "Name": {
-                    "*": "Users BETA - DO NOT USE YET"
+                    "*": "Users"
                   },
                   "PartAssemblyAndType": {
                     "*": "93ac53c6-adc6-4218-b979-48d1071a5765"
                   },
                   "VisualDesignerData": {
-                    "*": "{\r\n  \"Top\": 400,\r\n  \"Left\": 280\r\n}"
+                    "*": "{\r\n  \"Top\": 380,\r\n  \"Left\": 380\r\n}"
                   }
                 }
               },
@@ -1254,7 +1254,7 @@
               "Metadata": [
                 {
                   "Id": 160780,
-                  "Version": 2,
+                  "Version": 6,
                   "Guid": "580dc00d-497c-45b4-9422-c8e426d34e4a",
                   "Type": {
                     "Name": "UsersDataSourceConfig",
@@ -1262,6 +1262,9 @@
                   },
                   "Attributes": {
                     "String": {
+                      "AddRoles": {
+                        "en-us": "true"
+                      },
                       "ExcludeRoleIds": {
                         "en-us": "[Params:ExcludeRoleIds]"
                       },
@@ -2325,6 +2328,103 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "310cc86c-2281-4614-8605-a423c87105e9"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 169100,
+          "Version": 6,
+          "Guid": "2317bfff-79bc-4812-89dd-0e0b9cba1cb9",
+          "Type": {
+            "Name": "DataPipeline",
+            "Id": "DataPipeline"
+          },
+          "Attributes": {
+            "String": {
+              "Description": {
+                "en-us": "wip"
+              },
+              "Name": {
+                "en-us": "Eav.Queries.Global.Settings"
+              },
+              "Params": {
+                "en-us": ""
+              },
+              "StreamsOut": {
+                "en-us": "Default,Header"
+              },
+              "StreamWiring": {
+                "en-us": "b897b9c9-4dc2-4c2e-959b-eca18871b062:Default>Out:Default"
+              },
+              "TestParameters": {
+                "en-us": ""
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
+              }
+            },
+            "Boolean": {
+              "AllowEdit": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 169102,
+              "Version": 2,
+              "Guid": "b897b9c9-4dc2-4c2e-959b-eca18871b062",
+              "Type": {
+                "Name": "DataPipelinePart",
+                "Id": "DataPipelinePart"
+              },
+              "Attributes": {
+                "String": {
+                  "Description": {
+                    "*": ""
+                  },
+                  "Name": {
+                    "*": "App Stack"
+                  },
+                  "PartAssemblyAndType": {
+                    "*": "60806cb1-0c76-4c1e-8dfe-dcec94726f8d"
+                  },
+                  "VisualDesignerData": {
+                    "*": "{\r\n  \"Top\": 300,\r\n  \"Left\": 460\r\n}"
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "2317bfff-79bc-4812-89dd-0e0b9cba1cb9"
+              }
+            },
+            {
+              "Id": 169103,
+              "Version": 1,
+              "Guid": "97754be9-8b32-483b-8dea-a36cc17ef0c3",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "1fac6138-39c7-4ab6-9c54-9cf3e4ffd5ed"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "2317bfff-79bc-4812-89dd-0e0b9cba1cb9"
               }
             }
           ]
