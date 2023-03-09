@@ -183,10 +183,10 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>
+        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             // v14+
-            { Attributes.TitleNiceName, Title },
+            { Eav.Data.Attributes.TitleNiceName, Title },
             { nameof(Name), Name },
             { nameof(ParentId), ParentId },
             { nameof(Visible), Visible },

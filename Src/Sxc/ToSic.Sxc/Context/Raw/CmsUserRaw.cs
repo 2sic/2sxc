@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Context.Raw
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public override Dictionary<string, object> GetProperties(RawConvertOptions options)
+        public override Dictionary<string, object> Attributes(RawConvertOptions options)
         {
             var data = new Dictionary<string, object>
             {

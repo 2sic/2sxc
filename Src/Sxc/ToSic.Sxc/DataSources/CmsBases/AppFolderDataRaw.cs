@@ -20,13 +20,13 @@ namespace ToSic.Sxc.DataSources
     {
         public const string TypeName = "Folder";
 
-        public override Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>(base.GetProperties(options))
+        public override Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(base.Attributes(options))
         {
             { "Folders", new RawRelationship(key: $"FolderIn:{FullName}") },
             { "Files", new RawRelationship(key: $"FileIn:{FullName}") },
         };
 
-        public override IEnumerable<object> RelationshipKeys => new List<object>
+        public override IEnumerable<object> RelationshipKeys(RawConvertOptions options) => new List<object>
         {
             // For Relationships looking for this folder
             $"Folder:{FullName}",

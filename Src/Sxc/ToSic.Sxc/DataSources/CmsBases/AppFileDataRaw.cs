@@ -31,13 +31,13 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public override Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>(base.GetProperties(options))
+        public override Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(base.Attributes(options))
         {
             { nameof(Extension), Extension },
             { nameof(Size), Size },
         };
 
-        public override IEnumerable<object> RelationshipKeys => new List<object> { $"FileIn:{ParentFolderInternal}" };
+        public override IEnumerable<object> RelationshipKeys(RawConvertOptions options) => new List<object> { $"FileIn:{ParentFolderInternal}" };
 
     }
 }

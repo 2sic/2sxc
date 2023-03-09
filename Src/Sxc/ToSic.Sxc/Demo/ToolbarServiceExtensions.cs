@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Demo
         /// Created for 14.08, used in the tutorial starting 2022-08-23
         /// </summary>
         /// <param name="toolbarService"></param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui"></param>
         public static void ActivateDemoMode(this IToolbarService toolbarService, 
             string noParamOrder = Eav.Parameters.Protector,

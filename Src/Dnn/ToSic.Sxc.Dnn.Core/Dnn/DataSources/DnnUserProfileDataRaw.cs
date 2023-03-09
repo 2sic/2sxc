@@ -226,9 +226,9 @@ namespace ToSic.Sxc.Dnn.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>(Properties)
+        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
         {
-            { Attributes.TitleNiceName, Name },
+            { Eav.Data.Attributes.TitleNiceName, Name },
             { nameof(Name), Name },
         };
 

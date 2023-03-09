@@ -39,7 +39,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public virtual Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>
+        public virtual Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
             { nameof(FullName), FullName },
@@ -47,6 +47,6 @@ namespace ToSic.Sxc.DataSources
             { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
         };
 
-        public abstract IEnumerable<object> RelationshipKeys { get; }
+        public abstract IEnumerable<object> RelationshipKeys(RawConvertOptions options);
     }
 }
