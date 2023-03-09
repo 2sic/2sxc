@@ -34,7 +34,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public override Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>
+        public override Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
         };

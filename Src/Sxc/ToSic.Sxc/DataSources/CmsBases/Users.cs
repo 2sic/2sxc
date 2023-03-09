@@ -6,6 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Process;
+using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
@@ -167,7 +168,10 @@ namespace ToSic.Sxc.DataSources
             var usersRaw = GetUsersAndFilter();
 
             // Figure out options to be sure we have the roles/roleids
-            _usersFactory.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName);
+            var relationships = new LazyLookup<object, IEntity>();
+            _usersFactory.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName,
+                relationships: relationships,
+                rawConvertOptions: new RawConvertOptions(addKeys: new []{ "Roles"}));
 
             var users = _usersFactory.Create(usersRaw);
             var roles = EmptyList;
@@ -177,16 +181,9 @@ namespace ToSic.Sxc.DataSources
             {
                 try
                 {
-                    // Mix generated users with the RoleIds which only exist on the raw list
-                    var userNeeds = users.ToList()
-                        .Select(u =>
-                            (new EntityPair<string>(u, "dummy"), usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
-                        .ToList();
+                    // New...
                     roles = GetRolesStream(usersRaw);
-                    var rolesLookup = roles.Select(r => (r, r.EntityId)).ToList();
-
-                    var mapped = _treeMapper.AddOneRelationship("Roles", userNeeds, rolesLookup);
-                    users = mapped.Select(s => s.Entity).ToImmutableList();
+                    relationships.Add(roles.Select(r => new KeyValuePair<object, IEntity>($"{CmsUserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
                 }
                 catch (Exception ex)
                 {

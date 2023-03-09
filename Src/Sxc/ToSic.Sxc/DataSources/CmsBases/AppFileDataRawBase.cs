@@ -39,12 +39,12 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public virtual Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>
+        public virtual Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
             { nameof(FullName), FullName },
             { nameof(Path), Path },
-            { "Parent", new RawRelationship($"Folder:{ParentFolderInternal}") },
+            { "Parent", new RawRelationship(key: $"Folder:{ParentFolderInternal}") },
         };
 
         public abstract List<object> RelationshipKeys { get; }

@@ -20,10 +20,10 @@ namespace ToSic.Sxc.DataSources
     {
         public const string TypeName = "Folder";
 
-        public override Dictionary<string, object> GetProperties(CreateFromNewOptions options) => new Dictionary<string, object>(base.GetProperties(options))
+        public override Dictionary<string, object> GetProperties(RawConvertOptions options) => new Dictionary<string, object>(base.GetProperties(options))
         {
-            { "Folders", new RawRelationship($"FolderIn:{FullName}") },
-            { "Files", new RawRelationship($"FileIn:{FullName}") },
+            { "Folders", new RawRelationship(key: $"FolderIn:{FullName}") },
+            { "Files", new RawRelationship(key: $"FileIn:{FullName}") },
         };
 
         public override List<object> RelationshipKeys => new List<object>

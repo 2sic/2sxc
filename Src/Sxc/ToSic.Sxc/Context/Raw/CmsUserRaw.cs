@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.Process;
 using ToSic.Lib.Data;
@@ -71,7 +72,7 @@ namespace ToSic.Sxc.Context.Raw
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public override Dictionary<string, object> GetProperties(CreateFromNewOptions options)
+        public override Dictionary<string, object> GetProperties(RawConvertOptions options)
         {
             var data = new Dictionary<string, object>
             {
@@ -84,9 +85,13 @@ namespace ToSic.Sxc.Context.Raw
                 { nameof(Username), Username },
                 { nameof(Email), Email },
             };
-            if(options.AddKey(nameof(Roles)))
-                data.Add(nameof(Roles), Roles == null ? "" : string.Join(",", Roles));
+            if (options.AddKey(nameof(Roles)))
+                data.Add("Roles", new RawRelationship(keys: Roles?.Select(r => $"{RoleRelationshipPrefix}{r}" as object)
+                                                            ?? new List<object>())
+                );
             return data;
         }
+
+        internal const string RoleRelationshipPrefix = "Role:";
     }
 }
