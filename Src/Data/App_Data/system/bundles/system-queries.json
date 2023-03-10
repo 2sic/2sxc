@@ -2401,7 +2401,34 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "2317bfff-79bc-4812-89dd-0e0b9cba1cb9"
-              }
+              },
+              "Metadata": [
+                {
+                  "Id": 169115,
+                  "Version": 2,
+                  "Guid": "a84c055f-55e1-4faa-a5d7-e49f118bcdb6",
+                  "Type": {
+                    "Name": "SystemStackConfig",
+                    "Id": "f9aca0f0-1b1b-4414-b42e-b337de124124"
+                  },
+                  "Attributes": {
+                    "String": {
+                      "AddValues": {
+                        "en-us": ""
+                      },
+                      "StackNames": {
+                        "en-us": "Settings"
+                      }
+                    }
+                  },
+                  "Owner": "dnn:userid=41",
+                  "For": {
+                    "Target": "Entity",
+                    "TargetType": 4,
+                    "Guid": "b897b9c9-4dc2-4c2e-959b-eca18871b062"
+                  }
+                }
+              ]
             },
             {
               "Id": 169103,
