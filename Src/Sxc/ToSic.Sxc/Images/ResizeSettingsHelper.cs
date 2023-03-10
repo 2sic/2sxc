@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Images
             var subRecipes = advanced.AllSubRecipes;
 
             // No sub-recipes - return main
-            if (subRecipes?.Any() != true) return mainRecipe;
+            if (subRecipes.SafeNone()) return mainRecipe;
 
             // Prepare list of frameworks, targets and factors to use in the loops
             var frameworks = cssFramework == null ? new[] { (string)null } : new[] { cssFramework, null };

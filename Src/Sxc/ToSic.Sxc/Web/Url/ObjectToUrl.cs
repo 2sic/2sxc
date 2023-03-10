@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Web.Url
 
         private UrlValuePair ValueSerialize(NameObjectSet set)
         {
-            if (_preProcessors?.Any() == true)
+            if (_preProcessors.SafeAny())
             {
                 foreach (var pP in _preProcessors)
                 {

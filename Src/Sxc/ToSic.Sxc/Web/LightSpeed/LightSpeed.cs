@@ -5,7 +5,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching;
 using ToSic.Eav.Configuration;
-using ToSic.Lib;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Web.LightSpeed
             if (data.IsError) return wrapLog.ReturnFalse("error");
             if (!data.CanCache) return wrapLog.ReturnFalse("can't cache");
             if (data == Existing?.Data) return wrapLog.ReturnFalse("not new");
-            if (data.DependentApps?.Any() != true) return wrapLog.ReturnFalse("app not initialized");
+            if (data.DependentApps.SafeNone()) return wrapLog.ReturnFalse("app not initialized");
 
             // get dependent appStates
             var dependentAppsStates = data.DependentApps.Select(da => AppStates.Get(da.AppId)).ToList();
@@ -114,7 +114,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         private IList<string> AppPaths(List<AppState> appStates)
         {
             if (!((_block as BlockFromModule)?.App is App app)) return null;
-            if (appStates?.Any() != true) return null;
+            if (appStates.SafeNone()) return null;
 
             var paths = new List<string>();
             foreach (var appState in appStates)

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -122,7 +123,7 @@ namespace ToSic.Sxc.Dnn.Services
 
             if (page?.Response == null) return (0, "error, HttpResponse is null");
             if (page.Response.HeadersWritten) return (0, "error, to late for adding http headers");
-            if (httpHeaders?.Any() != true) return (0, "ok, no headers to add");
+            if (httpHeaders.SafeNone()) return (0, "ok, no headers to add");
 
             foreach (var httpHeader in httpHeaders)
             {

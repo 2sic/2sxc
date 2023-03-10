@@ -190,7 +190,7 @@ namespace ToSic.Sxc.Oqt.Client
                 return 0;
             }
 
-            if (httpHeaders?.Any() != true)
+            if (httpHeaders?.Any() == true)
             {
                 page?.Log($"{logPrefix}ok, no headers to add");
                 return 0;

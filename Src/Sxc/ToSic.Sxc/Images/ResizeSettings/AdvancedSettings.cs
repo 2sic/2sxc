@@ -8,6 +8,7 @@ using ToSic.Eav.Data.PiggyBack;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.Documentation;
+using ToSic.Eav.Plumbing;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -80,7 +81,7 @@ namespace ToSic.Sxc.Images
         private static List<Recipe> GetAllRecipesRecursive(IEnumerable<Recipe> recipes)
         {
             var list = new List<Recipe>();
-            if (recipes?.Any() != true) return list;
+            if (recipes.SafeNone()) return list;
 
             foreach (var r in recipes)
             {

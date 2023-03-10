@@ -1,9 +1,9 @@
 ﻿using System.Collections.Immutable;
-using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.DataSources
 
             // Get sites from underlying system/provider
             var sitesFromSystem = _provider.GetSitesInternal();
-            if (sitesFromSystem?.Any() != true)
+            if (sitesFromSystem.SafeNone())
                 return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
