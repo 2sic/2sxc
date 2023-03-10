@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Code
 
             var srcDs = (IDataTarget)src;
             srcDs.In.Clear();
-            srcDs.Attach(Eav.Constants.DefaultStreamName, inStream);
+            srcDs.Attach(DataSourceConstants.DefaultStreamName, inStream);
             return src;
         }
         #endregion

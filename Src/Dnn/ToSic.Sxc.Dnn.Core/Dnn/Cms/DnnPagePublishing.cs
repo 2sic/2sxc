@@ -9,6 +9,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -105,7 +106,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();
-                    list = TryToAddStream(list, cb.Data, Eav.Constants.DefaultStreamName);
+                    list = TryToAddStream(list, cb.Data, DataSourceConstants.DefaultStreamName);
                     list = TryToAddStream(list, cb.Data, "ListContent");
                     list = TryToAddStream(list, cb.Data, "PartOfPage");
 

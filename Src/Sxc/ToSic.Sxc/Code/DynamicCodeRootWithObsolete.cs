@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Code
             _list = new List<Element>();
 
             if (_root.Data == null || _root.Block.View == null) return;
-            if (!_root.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
+            if (!_root.Data.Out.ContainsKey(DataSourceConstants.DefaultStreamName)) return;
 
             var entities = _root.Data.List.ToList();
 

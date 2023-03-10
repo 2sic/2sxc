@@ -88,7 +88,7 @@ namespace ToSic.Sxc.DataSources
                 _treeMapper = treeMapper
             );
 
-            Provide(() => GetMultiAccess(Eav.Constants.DefaultStreamName));
+            Provide(() => GetMultiAccess(DataSourceConstants.DefaultStreamName));
             Provide(() => GetMultiAccess(StreamFolders), StreamFolders);
             Provide(() => GetMultiAccess(StreamFiles), StreamFiles);
         }
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.DataSources
             var (folders, files) = GetInternal();
             return new Dictionary<string, IImmutableList<IEntity>>(OrdinalIgnoreCase)
             {
-                { Eav.Constants.DefaultStreamName, folders.Concat(files).ToImmutableList() },
+                { DataSourceConstants.DefaultStreamName, folders.Concat(files).ToImmutableList() },
                 { StreamFolders, folders },
                 { StreamFiles, files }
             };

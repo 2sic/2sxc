@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -109,7 +110,7 @@ namespace ToSic.Sxc.DataSources
         private ImmutableList<IEntity> GetInOrAutoCreate() => Log.Func(l =>
         {
             // Check if in not connected, in which case we must find it yourself
-            if (!In.ContainsKey(Eav.Constants.DefaultStreamName))
+            if (!In.ContainsKey(DataSourceConstants.DefaultStreamName))
             {
                 var showDrafts = Block?.Context?.UserMayEdit ?? false;
                 l.A($"In not attached, will auto-attach with showDrafts: {showDrafts}");
@@ -117,7 +118,7 @@ namespace ToSic.Sxc.DataSources
                 Attach(publishing);
             }
 
-            return (In[Eav.Constants.DefaultStreamName].List.ToImmutableList(), "ok");
+            return (In[DataSourceConstants.DefaultStreamName].List.ToImmutableList(), "ok");
         });
 
         private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, int entityId)

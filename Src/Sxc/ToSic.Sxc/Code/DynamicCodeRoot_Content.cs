@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Code
             {
                 if (_content != null || _contentTried) return _content;
                 _contentTried = true;
-                return _content = TryToBuildFirstOfStream(Eav.Constants.DefaultStreamName);
+                return _content = TryToBuildFirstOfStream(DataSourceConstants.DefaultStreamName);
             }
         }
         private dynamic _content;
