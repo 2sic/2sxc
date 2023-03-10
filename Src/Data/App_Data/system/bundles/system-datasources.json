@@ -18554,7 +18554,7 @@
                 "Metadata": [
                   {
                     "Id": 169104,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "64b78479-890b-41ac-a56c-5f813a3f4076",
                     "Type": {
                       "Name": "@All",
@@ -18614,7 +18614,7 @@
                   },
                   {
                     "Id": 169109,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "e0270815-3d9f-4e62-be67-4a7d895385a3",
                     "Type": {
                       "Name": "@String",
@@ -18634,7 +18634,7 @@
                   },
                   {
                     "Id": 169110,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "bc0836f6-b6c0-4434-85f8-de9c99be90d8",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -18647,9 +18647,15 @@
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ","
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": true
+                        },
                         "EnableTextEntry": {
                           "en-us": true
                         }
