@@ -5,7 +5,7 @@
       "Entities": [
         {
           "Id": 42901,
-          "Version": 23,
+          "Version": 24,
           "Guid": "d680fba2-9ab7-417a-8821-db23c15f4a2e",
           "Type": {
             "Name": "DataPipeline",
@@ -14,30 +14,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get all apps of a zone"
+                "en-us": "Get all apps of a zone (site)"
               },
               "Name": {
-                "*": "Eav.Queries.Global.Apps"
+                "en-us": "System.Apps"
               },
               "Params": {
-                "*": ""
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "ListContent,Default"
+                "en-us": "ListContent,Default"
               },
               "StreamWiring": {
-                "*": "3e0daa8d-2c13-4b73-94f9-cae9d1c412e8:Default>666576b7-65f7-4d93-96ca-238ef1d336dd:Default\r\n666576b7-65f7-4d93-96ca-238ef1d336dd:Default>Out:Default"
+                "en-us": "3e0daa8d-2c13-4b73-94f9-cae9d1c412e8:Default>666576b7-65f7-4d93-96ca-238ef1d336dd:Default\r\n666576b7-65f7-4d93-96ca-238ef1d336dd:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[QueryString:ZoneId]=2"
+                "en-us": "[QueryString:ZoneId]=2"
               },
               "VisualDesignerData": {
-                "*": "{\"ShowDataSourceDetails\":true}"
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -187,7 +187,7 @@
         },
         {
           "Id": 42938,
-          "Version": 8,
+          "Version": 9,
           "Guid": "95041b6d-8669-4941-a516-47725acfe6ec",
           "Type": {
             "Name": "DataPipeline",
@@ -196,24 +196,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get all attributes of a content-type"
+                "en-us": "Get all attributes of a content-type"
               },
               "Name": {
-                "*": "Eav.Queries.Global.Attributes"
+                "en-us": "System.Attributes"
+              },
+              "Params": {
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "ListContent,Default"
+                "en-us": "ListContent,Default"
               },
               "StreamWiring": {
-                "*": "018a942b-1bad-4124-978c-0d0c35633be1:Default>Out:Default"
+                "en-us": "018a942b-1bad-4124-978c-0d0c35633be1:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[Module:ModuleID]=6936\n[QueryString:ContentTypeName]=@All"
+                "en-us": "[Module:ModuleID]=6936\n[QueryString:ContentTypeName]=@All"
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -305,7 +311,7 @@
         },
         {
           "Id": 42937,
-          "Version": 14,
+          "Version": 15,
           "Guid": "ede9fc6f-34bb-4a1f-8482-6dd0742e365f",
           "Type": {
             "Name": "DataPipeline",
@@ -314,24 +320,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Retrieve the content-types of an app"
+                "en-us": "Retrieve the content-types of an app"
               },
               "Name": {
-                "*": "Eav.Queries.Global.ContentTypes"
+                "en-us": "System.ContentTypes"
+              },
+              "Params": {
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "ListContent,Default"
+                "en-us": "ListContent,Default"
               },
               "StreamWiring": {
-                "*": "db8515d1-e8c9-4e84-a1ec-970376ea9922:Default>Out:Default"
+                "en-us": "db8515d1-e8c9-4e84-a1ec-970376ea9922:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[Module:ModuleID]=6936\n[QueryString:AppId]=\n[QueryString:Scope]=Default"
+                "en-us": "[Module:ModuleID]=6936\n[QueryString:AppId]=\n[QueryString:Scope]=Default"
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -426,7 +438,7 @@
         },
         {
           "Id": 129754,
-          "Version": 9,
+          "Version": 10,
           "Guid": "34acb79b-21e1-423e-bdec-b67f4a5c8c85",
           "Type": {
             "Name": "DataPipeline",
@@ -435,27 +447,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get all pages of the current site. "
+                "en-us": "Get all pages of the current site. "
               },
               "Name": {
-                "*": "Eav.Queries.Global.Pages"
+                "en-us": "System.Pages"
               },
               "Params": {
-                "*": ""
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "Default,Header"
+                "en-us": "Default,Header"
               },
               "StreamWiring": {
-                "*": "b1fa7bee-c137-4e60-b8b5-3588b9c16b9a:Default>Out:Default"
+                "en-us": "b1fa7bee-c137-4e60-b8b5-3588b9c16b9a:Default>Out:Default"
               },
               "TestParameters": {
-                "*": ""
+                "en-us": ""
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -551,7 +566,7 @@
         },
         {
           "Id": 42915,
-          "Version": 14,
+          "Version": 15,
           "Guid": "e57cfebc-2c9f-4feb-95e0-9362049b7502",
           "Type": {
             "Name": "DataPipeline",
@@ -560,24 +575,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Retrieves the queries of the current app (usually for drop-downs)"
+                "en-us": "Retrieves the queries of the current app (usually for drop-downs)"
               },
               "Name": {
-                "*": "Eav.Queries.Global.Queries"
+                "en-us": "System.Queries"
+              },
+              "Params": {
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "ListContent,Default"
+                "en-us": "ListContent,Default"
               },
               "StreamWiring": {
-                "*": "89b3116e-efab-4fee-8a7c-afe1e28825d2:DataPipeline>3b01ba93-62ea-4f73-b150-c8129eb82cab:Default\r\n3b01ba93-62ea-4f73-b150-c8129eb82cab:Default>40460932-1d32-4005-8bd1-c45f8599da24:Default\r\n40460932-1d32-4005-8bd1-c45f8599da24:Default>Out:Default"
+                "en-us": "89b3116e-efab-4fee-8a7c-afe1e28825d2:DataPipeline>3b01ba93-62ea-4f73-b150-c8129eb82cab:Default\r\n3b01ba93-62ea-4f73-b150-c8129eb82cab:Default>40460932-1d32-4005-8bd1-c45f8599da24:Default\r\n40460932-1d32-4005-8bd1-c45f8599da24:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[Module:ModuleID]=6936"
+                "en-us": ""
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -783,7 +804,7 @@
         },
         {
           "Id": 42946,
-          "Version": 35,
+          "Version": 36,
           "Guid": "2889c62f-9c07-4027-b85e-af7ddf55f44f",
           "Type": {
             "Name": "DataPipeline",
@@ -792,13 +813,13 @@
           "Attributes": {
             "String": {
               "Description": {
-                "en-us": "Retrieve streams and fields of a query. IMPORTANT: The test-values should not be changed - they must be [QueryString:QueryName]=Eav.Queries.Global.Apps and [QueryString:StreamName]=Default"
+                "en-us": "Retrieve streams and fields of a query. "
               },
               "Name": {
-                "en-us": "Eav.Queries.Global.QueryInfo"
+                "en-us": "System.QueryInfo"
               },
               "Params": {
-                "en-us": "ReplaceThis=27\nReplaceThisAsWell=[QueryString:Id]"
+                "en-us": ""
               },
               "StreamsOut": {
                 "en-us": "ListContent,Default,Attributes"
@@ -807,7 +828,7 @@
                 "en-us": "c11d7835-035d-441c-8cbc-287aaecbea81:Attributes>Out:Attributes\r\nc11d7835-035d-441c-8cbc-287aaecbea81:Default>Out:Default"
               },
               "TestParameters": {
-                "en-us": "[Module:Id]=6936\n[QueryString:QueryName]=Eav.Queries.Global.Apps\n[QueryString:StreamName]=Default"
+                "en-us": "[QueryString:QueryName]=Eav.Queries.Global.Apps\n[QueryString:StreamName]=Default"
               },
               "VisualDesignerData": {
                 "en-us": ""
@@ -905,12 +926,40 @@
                 "TargetType": 4,
                 "Guid": "2889c62f-9c07-4027-b85e-af7ddf55f44f"
               }
+            },
+            {
+              "Id": 169163,
+              "Version": 1,
+              "Guid": "f61dbc48-f992-41c2-9d04-f6aa0d6342fa",
+              "Type": {
+                "Name": "NoteDecorator",
+                "Id": "5e958dc6-2922-4d68-835c-7b9711538b12"
+              },
+              "Attributes": {
+                "String": {
+                  "Note": {
+                    "en-us": "<p>IMPORTANT: The test-values should not be changed - they must be [QueryString:QueryName]=Eav.Queries.Global.Apps and [QueryString:StreamName]=Default</p>"
+                  },
+                  "NoteType": {
+                    "en-us": "warning"
+                  },
+                  "Title": {
+                    "en-us": "IMPORTANT: The test-values sho..."
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "2889c62f-9c07-4027-b85e-af7ddf55f44f"
+              }
             }
           ]
         },
         {
           "Id": 42900,
-          "Version": 17,
+          "Version": 18,
           "Guid": "e8a702d2-eccd-4b0f-83bd-600d8a8449d9",
           "Type": {
             "Name": "DataPipeline",
@@ -919,24 +968,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Retrieve full list of all zones"
+                "en-us": "Retrieve full list of all zones"
               },
               "Name": {
-                "*": "Eav.Queries.Global.Zones"
+                "en-us": "System.Zones"
+              },
+              "Params": {
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "ListContent,Default"
+                "en-us": "ListContent,Default"
               },
               "StreamWiring": {
-                "*": "a942aaca-088c-41f4-b938-f625a5170ab0:Default>Out:Default\r\ne60248e9-4dce-475a-a99d-61d11a6fb1cc:Default>a942aaca-088c-41f4-b938-f625a5170ab0:Default"
+                "en-us": "a942aaca-088c-41f4-b938-f625a5170ab0:Default>Out:Default\r\ne60248e9-4dce-475a-a99d-61d11a6fb1cc:Default>a942aaca-088c-41f4-b938-f625a5170ab0:Default"
               },
               "TestParameters": {
-                "*": "[Module:ModuleID]=6936"
+                "en-us": ""
+              },
+              "VisualDesignerData": {
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -1059,7 +1114,7 @@
         },
         {
           "Id": 160746,
-          "Version": 19,
+          "Version": 20,
           "Guid": "f54e66aa-0ed1-47ca-b15d-774f3a5d60ca",
           "Type": {
             "Name": "DataPipeline",
@@ -1068,30 +1123,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Retrieve all roles of the current site."
+                "en-us": "Retrieve all roles of the current site."
               },
               "Name": {
-                "*": "Eav.Queries.Global.Roles"
+                "en-us": "System.Roles"
               },
               "Params": {
-                "*": "RoleIds=[QueryString:RoleIds]\nExcludeRoleIds=[QueryString:ExcludeRoleIds]"
+                "en-us": "RoleIds=[QueryString:RoleIds]\nExcludeRoleIds=[QueryString:ExcludeRoleIds]"
               },
               "StreamsOut": {
-                "*": "Default,Header"
+                "en-us": "Default,Header"
               },
               "StreamWiring": {
-                "*": "e5837542-beeb-4528-829b-2983d11e566a:Default>Out:Default"
+                "en-us": "e5837542-beeb-4528-829b-2983d11e566a:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[Params:ExcludeRoleIds]=351"
+                "en-us": "[Params:ExcludeRoleIds]=351"
               },
               "VisualDesignerData": {
-                "*": ""
+                "en-us": ""
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -1183,7 +1238,7 @@
         },
         {
           "Id": 160760,
-          "Version": 24,
+          "Version": 25,
           "Guid": "dd3021bf-1b9a-4d10-8dde-12efe9832f47",
           "Type": {
             "Name": "DataPipeline",
@@ -1195,7 +1250,7 @@
                 "en-us": "Get users of this site."
               },
               "Name": {
-                "en-us": "Eav.Queries.Global.Users"
+                "en-us": "System.Users"
               },
               "Params": {
                 "en-us": "UserIds=[QueryString:UserIds]\nExcludeUserIds=[QueryString:ExcludeUserIds]\nRoleIds=[QueryString:RoleIds]\nExcludeRoleIds=[QueryString:ExcludeRoleIds]\nIncludeSystemAdmins=[QueryString:IncludeSystemAdmins]"
@@ -1319,7 +1374,7 @@
         },
         {
           "Id": 166473,
-          "Version": 4,
+          "Version": 5,
           "Guid": "34693704-fa1f-48bd-a5d7-0ace93d1ee3e",
           "Type": {
             "Name": "DataPipeline",
@@ -1328,30 +1383,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get all the scopes of the current App"
+                "en-us": "Get all the data scopes of the current App (like folders to organize content-types)"
               },
               "Name": {
-                "*": "Eav.Queries.Global.Scopes"
+                "en-us": "System.Scopes"
               },
               "Params": {
-                "*": ""
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "Default,Header"
+                "en-us": "Default,Header"
               },
               "StreamWiring": {
-                "*": "0d20bfd8-52c8-411a-bf78-fc6908c70ad1:Default>Out:Default"
+                "en-us": "0d20bfd8-52c8-411a-bf78-fc6908c70ad1:Default>Out:Default"
               },
               "TestParameters": {
-                "*": ""
+                "en-us": ""
               },
               "VisualDesignerData": {
-                "*": "{\"ShowDataSourceDetails\":true}"
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -1416,7 +1471,7 @@
         },
         {
           "Id": 166484,
-          "Version": 23,
+          "Version": 24,
           "Guid": "05ab1404-55f3-45f4-8252-a3c9bd59d6f6",
           "Type": {
             "Name": "DataPipeline",
@@ -1425,30 +1480,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Retrieve settings entities from global App and from current App."
+                "en-us": "Retrieve settings entities from global App and from current App."
               },
               "Name": {
-                "*": "Eav.Queries.Global.SettingsEntities"
+                "en-us": "System.SettingsEntities"
               },
               "Params": {
-                "*": "ContentType=[QueryString:ContentType]"
+                "en-us": "ContentType=[QueryString:ContentType]"
               },
               "StreamsOut": {
-                "*": "Default,Header"
+                "en-us": "Default,Header"
               },
               "StreamWiring": {
-                "*": "167d3279-5f5a-4d38-94e2-bbfa8059992f:Default>f2763a09-34f5-489c-a66e-47e898f06c8d:Default\r\n9ff0fabc-8105-4c3c-8f76-15440ff4140a:Default>27ca5071-eba1-4c0e-8101-d63f8b5e2404:Default\r\nf2763a09-34f5-489c-a66e-47e898f06c8d:Default>513065d0-4dc8-4297-aea6-6f4efa3ff4d8:Preset\r\n27ca5071-eba1-4c0e-8101-d63f8b5e2404:Default>513065d0-4dc8-4297-aea6-6f4efa3ff4d8:Default\r\n513065d0-4dc8-4297-aea6-6f4efa3ff4d8:Default>706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default\r\nc51b4457-17eb-4be9-838a-221e223956dd:Default>88053e7a-b79c-4987-856d-fde73ac0b136:Default\r\n88053e7a-b79c-4987-856d-fde73ac0b136:Default>513065d0-4dc8-4297-aea6-6f4efa3ff4d8:System\r\n706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default>Out:Default"
+                "en-us": "167d3279-5f5a-4d38-94e2-bbfa8059992f:Default>f2763a09-34f5-489c-a66e-47e898f06c8d:Default\r\n9ff0fabc-8105-4c3c-8f76-15440ff4140a:Default>27ca5071-eba1-4c0e-8101-d63f8b5e2404:Default\r\nf2763a09-34f5-489c-a66e-47e898f06c8d:Default>513065d0-4dc8-4297-aea6-6f4efa3ff4d8:Preset\r\n27ca5071-eba1-4c0e-8101-d63f8b5e2404:Default>513065d0-4dc8-4297-aea6-6f4efa3ff4d8:Default\r\n513065d0-4dc8-4297-aea6-6f4efa3ff4d8:Default>706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default\r\nc51b4457-17eb-4be9-838a-221e223956dd:Default>88053e7a-b79c-4987-856d-fde73ac0b136:Default\r\n88053e7a-b79c-4987-856d-fde73ac0b136:Default>513065d0-4dc8-4297-aea6-6f4efa3ff4d8:System\r\n706d272f-9cd5-4c10-80a7-cfa4128a8e7b:Default>Out:Default"
               },
               "TestParameters": {
-                "*": "[QueryString:ContentType]=StringWysiwygConfiguration"
+                "en-us": "[QueryString:ContentType]=StringWysiwygConfiguration"
               },
               "VisualDesignerData": {
-                "*": "{\"ShowDataSourceDetails\":true}"
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -1946,7 +2001,7 @@
         },
         {
           "Id": 166506,
-          "Version": 4,
+          "Version": 5,
           "Guid": "9e0c28ce-e4fe-4fe4-8cac-35fa6dad5df5",
           "Type": {
             "Name": "DataPipeline",
@@ -1958,7 +2013,7 @@
                 "en-us": "List of Metadata TargetTypes, which determine what kind of target the metadata is for."
               },
               "Name": {
-                "en-us": "Eav.Queries.Global.MetadataTargetTypes"
+                "en-us": "System.MetadataTargetTypes"
               },
               "Params": {
                 "en-us": ""
@@ -2043,7 +2098,7 @@
         },
         {
           "Id": 166627,
-          "Version": 3,
+          "Version": 4,
           "Guid": "1e8d613c-e68b-471a-a438-c9325e53f003",
           "Type": {
             "Name": "DataPipeline",
@@ -2052,30 +2107,30 @@
           "Attributes": {
             "String": {
               "Description": {
-                "*": "Get a list of all licenses in the system."
+                "en-us": "Get a list of all licenses in the system."
               },
               "Name": {
-                "*": "Eav.Queries.Global.Licenses"
+                "en-us": "System.Licenses"
               },
               "Params": {
-                "*": ""
+                "en-us": ""
               },
               "StreamsOut": {
-                "*": "Default,Header"
+                "en-us": "Default,Header"
               },
               "StreamWiring": {
-                "*": "70cab874-14f8-41b1-8991-def591ae0de8:Default>Out:Default"
+                "en-us": "70cab874-14f8-41b1-8991-def591ae0de8:Default>Out:Default"
               },
               "TestParameters": {
-                "*": ""
+                "en-us": ""
               },
               "VisualDesignerData": {
-                "*": "{\"ShowDataSourceDetails\":true}"
+                "en-us": "{\"ShowDataSourceDetails\":true}"
               }
             },
             "Boolean": {
               "AllowEdit": {
-                "*": true
+                "en-us": true
               }
             }
           },
@@ -2140,7 +2195,7 @@
         },
         {
           "Id": 166630,
-          "Version": 4,
+          "Version": 5,
           "Guid": "abb9d5ee-3333-4a15-9539-36e1e0f00953",
           "Type": {
             "Name": "DataPipeline",
@@ -2152,7 +2207,7 @@
                 "en-us": "Retrieve a list of all features and their state."
               },
               "Name": {
-                "en-us": "Eav.Queries.Global.Features"
+                "en-us": "System.Features"
               },
               "Params": {
                 "en-us": ""
@@ -2237,7 +2292,7 @@
         },
         {
           "Id": 166646,
-          "Version": 5,
+          "Version": 6,
           "Guid": "310cc86c-2281-4614-8605-a423c87105e9",
           "Type": {
             "Name": "DataPipeline",
@@ -2249,7 +2304,7 @@
                 "en-us": "Get all the sites in the system."
               },
               "Name": {
-                "en-us": "Eav.Queries.Global.Sites"
+                "en-us": "System.Sites"
               },
               "Params": {
                 "en-us": ""
@@ -2334,7 +2389,7 @@
         },
         {
           "Id": 169100,
-          "Version": 6,
+          "Version": 7,
           "Guid": "2317bfff-79bc-4812-89dd-0e0b9cba1cb9",
           "Type": {
             "Name": "DataPipeline",
@@ -2343,10 +2398,10 @@
           "Attributes": {
             "String": {
               "Description": {
-                "en-us": "wip"
+                "en-us": "Get all settings of the current app incl. global and preset settings."
               },
               "Name": {
-                "en-us": "Eav.Queries.Global.Settings"
+                "en-us": "System.Settings"
               },
               "Params": {
                 "en-us": ""
