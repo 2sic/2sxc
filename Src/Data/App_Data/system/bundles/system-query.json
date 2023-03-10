@@ -206,7 +206,7 @@
                 "Metadata": [
                   {
                     "Id": 45124,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "ea3d9f87-c42b-46c9-8ddd-9c073f09c0fe",
                     "Type": {
                       "Name": "@All",
@@ -214,17 +214,37 @@
                     },
                     "Attributes": {
                       "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
                         "DefaultValue": {
-                          "*": "True"
+                          "en-us": "True"
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "boolean-default"
+                          "en-us": "boolean-default"
                         },
                         "Name": {
-                          "*": "Allow Edit"
+                          "en-us": "Allow Edit"
                         },
                         "Notes": {
-                          "*": "If set to false, the pipeline-system will only show this pipeline but not allow changes."
+                          "en-us": "If set to false, the pipeline-system will only show this pipeline but not allow changes."
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -239,12 +259,151 @@
                         }
                       },
                       "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
                     "Owner": "dnn:userid=1"
+                  },
+                  {
+                    "Id": 169179,
+                    "Version": 1,
+                    "Guid": "b8ac5fc0-85c5-4146-ba33-e897e932c857",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Read-only - editing not allowed"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "Allow Edit"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "HiddenInQueryPicker",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169177,
+                    "Version": 3,
+                    "Guid": "d94606d0-72d5-4f65-a1aa-ecea3fa4f049",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "HiddenInQueryPicker"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Hide this query from users who pick a query in a query picker.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169178,
+                    "Version": 2,
+                    "Guid": "297811b1-d326-4600-8700-d789e366c3fc",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Visible in Query Picker (default)"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "Hidden in Query Picker"
+                        }
+                      },
+                      "Boolean": {
+                        "ReverseToggle": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
