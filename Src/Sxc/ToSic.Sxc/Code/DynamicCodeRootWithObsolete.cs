@@ -21,38 +21,20 @@ namespace ToSic.Sxc.Code
             _root = dynCode;
         }
 
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity as IEntity);
-
-
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
-
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
-
 
         [PrivateApi("obsolete")]
         [Obsolete("you should use the CreateSource<T> instead")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
         {
-            if (lookUpEngine == null)
-                lookUpEngine = _root.ConfigurationProvider;
+            lookUpEngine = lookUpEngine ?? _root.ConfigurationProvider;
 
             if (inSource != null)
-                return _root.DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
+                return _root.DataSourceFactory.Create(typeName, inSource, inSource, lookUpEngine);
 
             var userMayEdit = _root.Block?.Context?.UserMayEdit ?? false;
 
-            var initialSource = _root.DataSourceFactory.GetPublishing(
-                _root.App, userMayEdit, _root.ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? _root.DataSourceFactory.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
+            var initialSource = _root.DataSourceFactory.GetPublishing(_root.App, userMayEdit, _root.ConfigurationProvider as LookUpEngine);
+            return typeName != "" ? _root.DataSourceFactory.Create(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
         }
 
 
