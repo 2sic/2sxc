@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -37,7 +36,7 @@ namespace ToSic.Sxc.DataSources
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
             var initialSource = dsFactory.GetPublishing(block, showDrafts, configurationProvider);
-            var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
+            var moduleDataSource = dsFactory.Create<CmsBlock>(upstream: initialSource);
 
             moduleDataSource.OverrideView = view;
             moduleDataSource.UseSxcInstanceContentGroup = true;
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.GetDataSource<Block>(block, viewDataSourceUpstream, configurationProvider);
+            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, upstream: viewDataSourceUpstream, configLookUp: configurationProvider);
 
             // Take Publish-Properties from the View-Template
             if (view != null)

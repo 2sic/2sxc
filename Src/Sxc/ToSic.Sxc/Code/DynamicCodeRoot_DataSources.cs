@@ -44,17 +44,16 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource
         {
-            if (configurationProvider == null)
-                configurationProvider = ConfigurationProvider;
+            configurationProvider = configurationProvider ?? ConfigurationProvider;
 
             if (inSource != null)
-                return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
+                return DataSourceFactory.Create<T>(upstream: inSource, configLookUp: configurationProvider);
 
             var userMayEdit = (CmsContext as CmsContext)?.CtxSite?.UserMayEdit ?? false;
 
             var initialSource = DataSourceFactory.GetPublishing(
                 App, userMayEdit, ConfigurationProvider as LookUpEngine);
-            return DataSourceFactory.GetDataSource<T>(initialSource, initialSource, configurationProvider);
+            return DataSourceFactory.Create<T>(upstream: initialSource, configLookUp: configurationProvider);
         }
 
         /// <inheritdoc />
