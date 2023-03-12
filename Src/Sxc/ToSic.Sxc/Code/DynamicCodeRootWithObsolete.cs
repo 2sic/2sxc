@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Catalog;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
@@ -23,18 +24,39 @@ namespace ToSic.Sxc.Code
 
 
         [PrivateApi("obsolete")]
-        [Obsolete("you should use the CreateSource<T> instead")]
+        [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
         {
-            lookUpEngine = lookUpEngine ?? _root.ConfigurationProvider;
+            // 2023-03-12 2dm
+            // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
+            // This has never been tested but probably works, but we won't invest time to be certain.
 
-            if (inSource != null)
-                return _root.DataSourceFactory.Create(typeName, inSource, inSource, lookUpEngine);
+            try
+            {
+                // try to find with assembly name, or otherwise with GlobalName / previous names
+                var type = DataSourceCatalog.FindType(typeName);
+                lookUpEngine = lookUpEngine ?? _root.ConfigurationProvider;
 
-            var userMayEdit = _root.Block?.Context?.UserMayEdit ?? false;
+                if (inSource != null)
+                    return _root.DataSourceFactory.Create(type, inSource, inSource, lookUpEngine);
 
-            var initialSource = _root.DataSourceFactory.GetPublishing(_root.App, userMayEdit, _root.ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? _root.DataSourceFactory.Create(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
+                var userMayEdit = _root.Block?.Context?.UserMayEdit ?? false;
+
+                var initialSource = _root.DataSourceFactory.GetPublishing(_root.App, userMayEdit,
+                    _root.ConfigurationProvider as LookUpEngine);
+                return typeName != ""
+                    ? _root.DataSourceFactory.Create(type, initialSource, initialSource, lookUpEngine)
+                    : initialSource;
+            }
+            catch (Exception ex)
+            {
+                var errMessage = $"The razor code is calling a very old method {nameof(CreateSource)}." +
+                                 $" In this version, you used the type name as a string {nameof(CreateSource)}(string typeName, ...)." +
+                                 $" This has been deprecated since ca. v4 and has been removed now. " +
+                                 $" Please use the newer {nameof(CreateSource)}<Type>(...) overload.";
+
+                throw new Exception(errMessage, ex);
+            }
         }
 
 
