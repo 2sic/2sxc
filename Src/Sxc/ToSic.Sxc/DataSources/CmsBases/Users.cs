@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
     public partial class Users : ExternalData
     {
         private readonly ITreeMapper _treeMapper;
-        private readonly LazySvc<DataSourceFactory> _dsFactory;
+        private readonly LazySvc<IDataSourceFactory> _dsFactory;
         private readonly IDataFactory _usersFactory;
         private readonly UsersDataSourceProvider _provider;
 
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.DataSources
         public Users(MyServices services,
             UsersDataSourceProvider provider,
             IDataFactory dataFactory,
-            LazySvc<DataSourceFactory> dsFactory,
+            LazySvc<IDataSourceFactory> dsFactory,
             ITreeMapper treeMapper) : base(services, "SDS.Users")
         {
             ConnectServices(

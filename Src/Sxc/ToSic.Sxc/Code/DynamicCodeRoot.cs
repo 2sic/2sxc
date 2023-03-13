@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class MyServices: MyServicesBase
         {
-            public LazySvc<DataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IDataSourceFactory> DataSourceFactory { get; }
             public LazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Code
                 LazySvc<IContextOfApp> contextOfApp,
                 LazySvc<AdamManager> adamManager,
                 LazySvc<IConvertService> convertService,
-                LazySvc<DataSourceFactory> dataSourceFactory)
+                LazySvc<IDataSourceFactory> dataSourceFactory)
             {
                 ConnectServices(
                     ServiceProvider = serviceProvider,

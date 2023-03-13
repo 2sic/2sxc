@@ -58,12 +58,12 @@ namespace ToSic.Sxc.DataSources
         {
             public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
             public LazySvc<IModule> ModuleLazy { get; }
-            public LazySvc<DataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IDataSourceFactory> DataSourceFactory { get; }
 
             public MyServices(DataSource.MyServices parentServices,
                 LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
-                LazySvc<DataSourceFactory> dataSourceFactory) : base(parentServices)
+                LazySvc<IDataSourceFactory> dataSourceFactory) : base(parentServices)
             {
                 ConnectServices(
                     LazyCmsRuntime = lazyCmsRuntime,
