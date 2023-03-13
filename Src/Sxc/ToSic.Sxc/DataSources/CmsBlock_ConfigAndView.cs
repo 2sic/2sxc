@@ -42,11 +42,9 @@ namespace ToSic.Sxc.DataSources
                     Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",
                         message: $"Neither InstanceContext nor {nameof(ModuleId)} found")), "Error, no module-id");
 
-            var userMayEdit = HasInstanceContext && Block.Context.UserMayEdit;
-
             var cms = _services.LazyCmsRuntime.IsValueCreated
                 ? _services.LazyCmsRuntime.Value
-                : _services.LazyCmsRuntime.Value.InitQ(this, userMayEdit);
+                : _services.LazyCmsRuntime.Value.InitQ(this);
             var container = _services.ModuleLazy.Value.Init(ModuleId.Value);
             var blockId = container.BlockIdentifier;
             return (new ResultOrError<BlockConfiguration>(true, cms.Blocks.GetOrGeneratePreviewConfig(blockId)), "ok");

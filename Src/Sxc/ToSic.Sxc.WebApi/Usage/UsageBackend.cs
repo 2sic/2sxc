@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi.Usage
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
-            var cms = _cmsRuntime.InitQ(context.AppState, context.UserMayEdit);
+            var cms = _cmsRuntime.InitQ(context.AppState);
             // treat view as a list - in case future code will want to analyze many views together
             var views = new List<IView> { cms.Views.Get(guid) };
 

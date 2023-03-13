@@ -49,9 +49,9 @@ namespace ToSic.Sxc.Code
             if (inSource != null)
                 return DataSourceFactory.Create<T>(upstream: inSource, configLookUp: configurationProvider);
 
-            var userMayEdit = (CmsContext as CmsContext)?.CtxSite?.UserMayEdit ?? false;
+            //var userMayEdit = (CmsContext as CmsContext)?.CtxSite?.UserMayEdit ?? false;
 
-            var initialSource = DataSourceFactory.GetPublishing(App, userMayEdit, ConfigurationProvider);
+            var initialSource = DataSourceFactory.GetPublishing(appIdentity: App, /*showDrafts: userMayEdit,*/ configLookUp: ConfigurationProvider);
             return DataSourceFactory.Create<T>(upstream: initialSource, configLookUp: configurationProvider);
         }
 

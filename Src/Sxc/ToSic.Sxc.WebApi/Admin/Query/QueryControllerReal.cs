@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         /// </summary>
         public bool DeleteIfUnused(int appId, int id)
             => _cmsManagerLazy.Value
-                .InitQ(_appStates.IdentityOfApp(appId), true)
+                .InitQ(_appStates.IdentityOfApp(appId))
                 .DeleteQueryIfNotUsedByView(id, Log);
 
 

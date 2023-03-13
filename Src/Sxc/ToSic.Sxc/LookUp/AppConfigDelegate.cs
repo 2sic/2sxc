@@ -38,33 +38,29 @@ namespace ToSic.Sxc.LookUp
         internal Func<App, IAppDataConfiguration> BuildForNewBlock(IContextOfBlock context, IBlock block
         ) => Log.Func<Func<App, IAppDataConfiguration>>($"showDrafts: {context.UserMayEdit}", () =>
         {
-            var showDrafts = context.UserMayEdit;
             return appToUse =>
             {
                 // check if we'll use the config already on the sxc-instance, or generate a new one
                 var lookUpEngine = GetLookupEngineForContext(context, appToUse as IApp, block);
 
                 // return results
-                return new AppDataConfiguration(showDrafts, lookUpEngine);
+                return new AppDataConfiguration(lookUpEngine);
             };
         });
 
         /// <summary>
         /// Generate a delegate which will be used to build the configuration based on a new sxc-instance
         /// </summary>
-        internal Func<App, IAppDataConfiguration> Build(IBlock block) => block.Log.Func<Func<App, IAppDataConfiguration>>(() =>
-        {
-            var showDrafts = block.Context.UserMayEdit;
-            var existingLookups = block.Data.Configuration.LookUpEngine;
-            return appToUse => new AppDataConfiguration(showDrafts, existingLookups);
-        });
+        internal Func<App, IAppDataConfiguration> Build(IBlock block) => block.Log.Func<Func<App, IAppDataConfiguration>>(() => appToUse => 
+            new AppDataConfiguration(block.Data.Configuration.LookUpEngine));
 
         /// <summary>
         /// Generate a delegate which will be used to build a basic configuration with very little context
         /// </summary>
-        internal Func<App, IAppDataConfiguration> Build(bool showDrafts)
-            => appToUse => new AppDataConfiguration(showDrafts,
-                GetLookupEngineForContext(null, appToUse as IApp, null));
+        internal Func<App, IAppDataConfiguration> Build(bool? showDrafts) => appToUse => 
+            new AppDataConfiguration(GetLookupEngineForContext(null, appToUse as IApp, null), showDrafts);
+        internal Func<App, IAppDataConfiguration> Build() => appToUse => 
+            new AppDataConfiguration(GetLookupEngineForContext(null, appToUse as IApp, null));
 
 
 

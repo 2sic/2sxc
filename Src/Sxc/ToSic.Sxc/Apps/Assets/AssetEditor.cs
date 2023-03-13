@@ -66,9 +66,7 @@ namespace ToSic.Sxc.Apps.Assets
         {
             _appState = app;
             _appPaths.Init(_site, _appState);
-
-            // todo: 2dm Views - see if we can get logger to flow
-            _cmsRuntime = _cmsRuntimeLazy.Value.InitQ(_appState, true);
+            _cmsRuntime = _cmsRuntimeLazy.Value.InitQ(_appState/*, true*/);
         }
 
         #endregion

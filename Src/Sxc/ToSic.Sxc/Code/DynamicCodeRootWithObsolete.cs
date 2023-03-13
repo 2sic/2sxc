@@ -40,9 +40,7 @@ namespace ToSic.Sxc.Code
                 if (inSource != null)
                     return _root.DataSourceFactory.Create(type, inSource, inSource, lookUpEngine);
 
-                var userMayEdit = _root.Block?.Context?.UserMayEdit ?? false;
-
-                var initialSource = _root.DataSourceFactory.GetPublishing(_root.App, userMayEdit, _root.ConfigurationProvider);
+                var initialSource = _root.DataSourceFactory.GetPublishing(appIdentity: _root.App, configLookUp: _root.ConfigurationProvider);
                 return typeName != ""
                     ? _root.DataSourceFactory.Create(type, initialSource, initialSource, lookUpEngine)
                     : initialSource;

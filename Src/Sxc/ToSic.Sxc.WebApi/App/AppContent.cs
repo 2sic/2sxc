@@ -22,9 +22,7 @@ using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -62,7 +60,7 @@ namespace ToSic.Sxc.WebApi.App
         private readonly Sxc.Context.IContextResolver _ctxResolver;
         private readonly LazySvc<AppManager> _appManagerLazy;
         private readonly LazySvc<SimpleDataController> _dataControllerLazy;
-        private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState, showDrafts: false));
+        private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState));
         private readonly GetOnce<AppManager> _appManager = new GetOnce<AppManager>();
 
         public AppContent Init(string appName)
@@ -243,13 +241,6 @@ namespace ToSic.Sxc.WebApi.App
             }
         }
 
-        /// <summary>
-        /// used for API calls to get the current app
-        /// </summary>
-        /// <returns></returns>
-        internal IApp GetApp(int appId, bool showDrafts) => _app.New().Init(appId, null, showDrafts);
-
-        // TODO: THIS SHOULD probably replace The GetApp above, as it's just an indirect way of getting the data-controller?
         private SimpleDataController DataController(IAppIdentity app) => _dataController ?? (_dataController = _dataControllerLazy.Value.Init(app.ZoneId, app.AppId));
         private SimpleDataController _dataController;
 
@@ -280,7 +271,7 @@ namespace ToSic.Sxc.WebApi.App
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            var entityApi = _entityApi.Init(AppState.AppId, true);
+            var entityApi = _entityApi.Init(AppState.AppId/*, true*/);
             var itm = entityApi.AppRead.AppState.List.GetOrThrow(contentType, id);
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
@@ -291,7 +282,7 @@ namespace ToSic.Sxc.WebApi.App
             Log.A($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
-            var entityApi = _entityApi.Init(AppState.AppId, Context.UserMayEdit);
+            var entityApi = _entityApi.Init(AppState.AppId/*, Context.UserMayEdit*/);
             var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);

@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Blocks.Edit
 
         internal BlockEditorBase(MyServices services) : base(services, "CG.RefMan")
         {
-            Services.CmsRuntime.SetInit(r => r.InitQ(Block?.App, true));
+            Services.CmsRuntime.SetInit(r => r.InitQ(Block?.App/*, true*/));
             Services.CmsManager.SetInit(r => r.Init(Block?.App));
             Services.AppManager.SetInit(r => r.Init(Block?.App));
         }

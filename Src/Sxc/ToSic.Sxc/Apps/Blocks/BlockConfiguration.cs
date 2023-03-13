@@ -13,7 +13,6 @@ namespace ToSic.Sxc.Apps.Blocks
     {
         public  int ZoneId { get; }
         public  int AppId { get; }
-        internal readonly bool ShowDrafts;
         internal Guid? PreviewTemplateId;
 
         internal IBlockIdentifier BlockIdentifierOrNull; 
@@ -26,7 +25,6 @@ namespace ToSic.Sxc.Apps.Blocks
             _cmsRuntime = cmsRuntime;
             ZoneId = cmsRuntime.ZoneId;
             AppId = cmsRuntime.AppId;
-            ShowDrafts = cmsRuntime.ShowDrafts;
         }
         
         internal BlockConfiguration WarnIfMissingData()

@@ -145,7 +145,7 @@ namespace ToSic.Sxc.WebApi
                     Log.A($"AppId: {appState.AppId}");
                     var app = Services.AppOverrideLazy.Value
                         .PreInit(siteCtx.Site)
-                        .Init(appState, Services.AppConfigDelegateLazy.Value.Build(siteCtx.UserMayEdit));
+                        .Init(appState, Services.AppConfigDelegateLazy.Value.Build(/*siteCtx.UserMayEdit*/));
                     _DynCodeRoot.AttachApp(app);
                     found = true;
                 }

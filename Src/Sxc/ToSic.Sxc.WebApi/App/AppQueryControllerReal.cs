@@ -70,9 +70,9 @@ namespace ToSic.Sxc.WebApi.App
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = _app.New().Init(appCtx.AppState.AppId, maybeBlock, appCtx.UserMayEdit);
+            var app = _app.New().Init(appCtx.AppState.AppId, maybeBlock);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx, more);
             return result;
         });
 
@@ -92,10 +92,10 @@ namespace ToSic.Sxc.WebApi.App
 
             var appCtx = _ctxResolver.SetAppOrGetBlock(appPath);
             
-            var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build(appCtx.UserMayEdit));
+            var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build(/*appCtx.UserMayEdit*/));
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, appCtx.UserMayEdit, more);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, /*appCtx.UserMayEdit,*/ more);
             return result;
         });
 
@@ -108,8 +108,8 @@ namespace ToSic.Sxc.WebApi.App
             string name,
             string stream,
             bool includeGuid,
-            IContextOfSite context,
-            bool userMayEdit,
+            IContextOfApp context,
+            //bool userMayEdit,
             QueryParameters more
         ) => Log.Func($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}", l =>
         {
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.WebApi.App
 
             _dataConverter.WithGuid = includeGuid;
             if (_dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
-                serializerWithEdit.WithEdit = userMayEdit;
+                serializerWithEdit.WithEdit = context.UserMayEdit; // userMayEdit;
             if (stream == AllStreams) stream = null;
             var result = _dataConverter.Convert(query, stream?.Split(','), more?.Guids);
             return result;

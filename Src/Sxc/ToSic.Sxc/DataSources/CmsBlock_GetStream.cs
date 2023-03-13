@@ -112,9 +112,8 @@ namespace ToSic.Sxc.DataSources
             // Check if in not connected, in which case we must find it yourself
             if (!In.ContainsKey(DataSourceConstants.DefaultStreamName))
             {
-                var showDrafts = Block?.Context?.UserMayEdit ?? false;
-                l.A($"In not attached, will auto-attach with showDrafts: {showDrafts}");
-                var publishing = _services.DataSourceFactory.Value.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
+                l.A("In not attached, will auto-attach");
+                var publishing = _services.DataSourceFactory.Value.GetPublishing(appIdentity: this, configLookUp: Configuration.LookUpEngine);
                 Attach(publishing);
             }
 

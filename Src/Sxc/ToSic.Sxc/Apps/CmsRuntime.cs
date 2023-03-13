@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Apps
             );
         }
 
-        public new CmsRuntime InitWithState(AppState appState, bool showDrafts)
+        public new CmsRuntime InitWithState(AppState appState, bool? showDrafts)
         {
             return base.InitWithState(appState, showDrafts) as CmsRuntime;
         }

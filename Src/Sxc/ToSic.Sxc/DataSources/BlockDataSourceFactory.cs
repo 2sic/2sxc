@@ -29,13 +29,12 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi]
         internal IBlockDataSource GetBlockDataSource(IBlock block, ILookUpEngine configLookUp)
         {
+            var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
             var view = block.View;
-            var showDrafts = block.Context.UserMayEdit;
 
-            var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, draft:{showDrafts}, view:{block.View?.Name}");
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
-            var initialSource = dsFactory.GetPublishing(block, showDrafts, configLookUp);
+            var initialSource = dsFactory.GetPublishing(appIdentity: block, configLookUp: configLookUp);
             var moduleDataSource = dsFactory.Create<CmsBlock>(upstream: initialSource);
 
             moduleDataSource.OverrideView = view;
@@ -61,7 +60,7 @@ namespace ToSic.Sxc.DataSources
                 if (view.Query != null)
                 {
                     Log.A("Generate query");
-                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, showDrafts, viewDataSource);
+                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, viewDataSource);
                     Log.A("attaching");
                     viewDataSource.SetOut(query);
                 }

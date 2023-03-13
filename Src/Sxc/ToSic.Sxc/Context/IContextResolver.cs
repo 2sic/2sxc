@@ -10,10 +10,6 @@ namespace ToSic.Sxc.Context
     /// </summary>
     public interface IContextResolver: Eav.Context.IContextResolver
     {
-
-
-        //IContextOfApp App(int appId);
-
         /// <summary>
         /// Return the block or throw an error
         /// </summary>
