@@ -34,8 +34,8 @@ namespace ToSic.Sxc.DataSources
 
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
-            var initialSource = dsFactory.GetPublishing(appIdentity: block, configLookUp: configLookUp);
-            var moduleDataSource = dsFactory.Create<CmsBlock>(upstream: initialSource);
+            var initialSource = dsFactory.CreateDefault(appIdentity: block, configSource: configLookUp);
+            var moduleDataSource = dsFactory.Create<CmsBlock>(source: initialSource);
 
             moduleDataSource.OverrideView = view;
             moduleDataSource.UseSxcInstanceContentGroup = true;
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, upstream: viewDataSourceUpstream, configLookUp: configLookUp);
+            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, source: viewDataSourceUpstream, configSource: configLookUp);
 
             // Take Publish-Properties from the View-Template
             if (view != null)

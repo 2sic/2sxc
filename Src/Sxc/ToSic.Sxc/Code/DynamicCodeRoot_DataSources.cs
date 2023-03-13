@@ -46,13 +46,9 @@ namespace ToSic.Sxc.Code
         {
             configurationProvider = configurationProvider ?? ConfigurationProvider;
 
-            if (inSource != null)
-                return DataSourceFactory.Create<T>(upstream: inSource, configLookUp: configurationProvider);
-
-            //var userMayEdit = (CmsContext as CmsContext)?.CtxSite?.UserMayEdit ?? false;
-
-            var initialSource = DataSourceFactory.GetPublishing(appIdentity: App, /*showDrafts: userMayEdit,*/ configLookUp: ConfigurationProvider);
-            return DataSourceFactory.Create<T>(upstream: initialSource, configLookUp: configurationProvider);
+            // If no in-source was provided, make sure that we create one from the current app
+            inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configSource: ConfigurationProvider);
+            return DataSourceFactory.Create<T>(source: inSource, configSource: configurationProvider);
         }
 
         /// <inheritdoc />

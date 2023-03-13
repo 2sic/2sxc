@@ -38,11 +38,11 @@ namespace ToSic.Sxc.Code
                 lookUpEngine = lookUpEngine ?? _root.ConfigurationProvider;
 
                 if (inSource != null)
-                    return _root.DataSourceFactory.Create(type, inSource, inSource, lookUpEngine);
+                    return _root.DataSourceFactory.Create(type: type, source: inSource, configSource: lookUpEngine);
 
-                var initialSource = _root.DataSourceFactory.GetPublishing(appIdentity: _root.App, configLookUp: _root.ConfigurationProvider);
+                var initialSource = _root.DataSourceFactory.CreateDefault(appIdentity: _root.App, configSource: _root.ConfigurationProvider);
                 return typeName != ""
-                    ? _root.DataSourceFactory.Create(type, initialSource, initialSource, lookUpEngine)
+                    ? _root.DataSourceFactory.Create(type: type, source: initialSource, configSource: lookUpEngine)
                     : initialSource;
             }
             catch (Exception ex)

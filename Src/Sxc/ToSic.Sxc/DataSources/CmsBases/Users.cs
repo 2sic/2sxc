@@ -221,7 +221,7 @@ namespace ToSic.Sxc.DataSources
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();
             // Get roles, use the current data source to provide aspects such as lookups etc.
-            var rolesDs = _dsFactory.Value.Create<Roles>(upstream: this);
+            var rolesDs = _dsFactory.Value.Create<Roles>(source: this);
             // Set filter parameter to only get roles we'll need
             rolesDs.RoleIds = string.Join(",", roleIds);
             var roles = rolesDs.List;

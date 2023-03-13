@@ -113,7 +113,7 @@ namespace ToSic.Sxc.DataSources
             if (!In.ContainsKey(DataSourceConstants.DefaultStreamName))
             {
                 l.A("In not attached, will auto-attach");
-                var publishing = _services.DataSourceFactory.Value.GetPublishing(appIdentity: this, configLookUp: Configuration.LookUpEngine);
+                var publishing = _services.DataSourceFactory.Value.CreateDefault(appIdentity: this, configSource: Configuration.LookUpEngine);
                 Attach(publishing);
             }
 
