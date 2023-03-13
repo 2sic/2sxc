@@ -42,8 +42,7 @@ namespace ToSic.Sxc.Code
 
                 var userMayEdit = _root.Block?.Context?.UserMayEdit ?? false;
 
-                var initialSource = _root.DataSourceFactory.GetPublishing(_root.App, userMayEdit,
-                    _root.ConfigurationProvider as LookUpEngine);
+                var initialSource = _root.DataSourceFactory.GetPublishing(_root.App, userMayEdit, _root.ConfigurationProvider);
                 return typeName != ""
                     ? _root.DataSourceFactory.Create(type, initialSource, initialSource, lookUpEngine)
                     : initialSource;

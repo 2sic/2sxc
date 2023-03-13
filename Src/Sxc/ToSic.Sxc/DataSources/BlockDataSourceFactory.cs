@@ -27,7 +27,7 @@ namespace ToSic.Sxc.DataSources
 
 
         [PrivateApi]
-        internal IBlockDataSource GetBlockDataSource(IBlock block, ILookUpEngine configurationProvider)
+        internal IBlockDataSource GetBlockDataSource(IBlock block, ILookUpEngine configLookUp)
         {
             var view = block.View;
             var showDrafts = block.Context.UserMayEdit;
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.DataSources
             var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, draft:{showDrafts}, view:{block.View?.Name}");
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
-            var initialSource = dsFactory.GetPublishing(block, showDrafts, configurationProvider);
+            var initialSource = dsFactory.GetPublishing(block, showDrafts, configLookUp);
             var moduleDataSource = dsFactory.Create<CmsBlock>(upstream: initialSource);
 
             moduleDataSource.OverrideView = view;
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, upstream: viewDataSourceUpstream, configLookUp: configurationProvider);
+            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, upstream: viewDataSourceUpstream, configLookUp: configLookUp);
 
             // Take Publish-Properties from the View-Template
             if (view != null)
@@ -61,7 +61,7 @@ namespace ToSic.Sxc.DataSources
                 if (view.Query != null)
                 {
                     Log.A("Generate query");
-                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource);
+                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, showDrafts, viewDataSource);
                     Log.A("attaching");
                     viewDataSource.SetOut(query);
                 }

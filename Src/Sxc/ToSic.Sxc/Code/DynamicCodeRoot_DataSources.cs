@@ -51,8 +51,7 @@ namespace ToSic.Sxc.Code
 
             var userMayEdit = (CmsContext as CmsContext)?.CtxSite?.UserMayEdit ?? false;
 
-            var initialSource = DataSourceFactory.GetPublishing(
-                App, userMayEdit, ConfigurationProvider as LookUpEngine);
+            var initialSource = DataSourceFactory.GetPublishing(App, userMayEdit, ConfigurationProvider);
             return DataSourceFactory.Create<T>(upstream: initialSource, configLookUp: configurationProvider);
         }
 
