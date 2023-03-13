@@ -1,18 +1,15 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
-using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Environment;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
-using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Run
@@ -25,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
         private readonly LazySvc<IFolderRepository> _folderRepositoryLazy;
         private readonly LazySvc<ITenantResolver> _oqtTenantResolverLazy;
         private readonly LazySvc<OqtAssetsFileHelper> _fileHelper;
-        private readonly IContextResolver _ctxResolver;
+        //private readonly IContextResolver _ctxResolver;
 
         #region Constructor / DI
 
@@ -39,7 +36,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
             LazySvc<ITenantResolver> oqtTenantResolverLazy,
             IAppStates appStates,
             LazySvc<OqtAssetsFileHelper> fileHelper
-            ) : base(xmlSerializer, appStates, OqtConstants.OqtLogPrefix)
+            ) : base(xmlSerializer, appStates, ctxResolver, OqtConstants.OqtLogPrefix)
         {
             ConnectServices(
                 _hostingEnvironment = hostingEnvironment,
@@ -47,7 +44,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 _folderRepositoryLazy = folderRepositoryLazy,
                 _oqtTenantResolverLazy = oqtTenantResolverLazy,
                 _fileHelper = fileHelper,
-                _ctxResolver = ctxResolver,
+                //_ctxResolver = ctxResolver,
                 AdamManager = adamManager
             );
         }
@@ -56,16 +53,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds)
         {
-            var context = _ctxResolver.App(appId);
-            var contextOfSite = _ctxResolver.Site();
-            var oqtSite = (OqtSite) contextOfSite.Site;
-            var appState = AppStates.Get(new AppIdentity(zoneId, appId));
+            base.Init(zoneId, appId, appRuntime, appExport, attrSetIds, entityIds);
+            var appCtx = ContextResolver.App();//appId);
+            //var contextOfSite = _ctxResolver.Site();
+            //var oqtSite = (OqtSite)contextOfSite.Site;
+            //var appState = AppStates.Get(new AppIdentity(zoneId, appId));
 
-            AdamManager.Init(context, Constants.CompatibilityLevel10);
-            Constructor(zoneId, appRuntime, appState.NameId, appExport, attrSetIds, entityIds);
+            AdamManager.Init(appCtx, Constants.CompatibilityLevel10);
+            //Constructor(zoneId, appRuntime, appCtx.AppState.NameId, appExport, attrSetIds, entityIds);
 
-            // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            InitExportXDocument(oqtSite.DefaultCultureCode, EavSystemInfo.VersionString);
+            //// this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
+            //InitExportXDocument(/*oqtSite*/appCtx.Site.DefaultCultureCode, EavSystemInfo.VersionString);
 
             return this;
         }

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             SharedContextResolver = GetService<IContextResolver>();
-            SharedContextResolver.AttachRealBlock(GetBlock);
+            SharedContextResolver.AttachBlock(GetBlock);
         }
 
         protected IContextResolver SharedContextResolver;

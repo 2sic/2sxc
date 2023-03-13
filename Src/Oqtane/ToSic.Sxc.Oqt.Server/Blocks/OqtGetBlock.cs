@@ -1,5 +1,4 @@
 ﻿using Oqtane.Repository;
-using System;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -27,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         {
             ConnectServices(
                 _modRepoLazy = modRepoLazy,
-                this.requestHelper = requestHelper,
+                _requestHelper = requestHelper,
                 _contextResolverToInit = contextResolverToInit,
                 _cntOfBlkGen = cntOfBlkGen,
                 _blkFromModGen = blkFromModGen,
@@ -36,7 +35,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         }
 
         private readonly LazySvc<IModuleRepository> _modRepoLazy;
-        private readonly RequestHelper requestHelper;
+        private readonly RequestHelper _requestHelper;
         private readonly IContextResolver _contextResolverToInit;
         private readonly Generator<IContextOfBlock> _cntOfBlkGen;
         private readonly Generator<BlockFromModule> _blkFromModGen;
@@ -44,15 +43,14 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
         public IContextResolver TryToLoadBlockAndAttachToResolver()
         {
-            if (alreadyTriedToLoad) return _contextResolverToInit;
-            alreadyTriedToLoad = true;
+            if (_alreadyTriedToLoad) return _contextResolverToInit;
+            _alreadyTriedToLoad = true;
 
             var block = GetBlock();
-            _contextResolverToInit.AttachRealBlock(() => block);
+            _contextResolverToInit.AttachBlock(() => block);
             return _contextResolverToInit;
         }
-
-        private bool alreadyTriedToLoad;
+        private bool _alreadyTriedToLoad;
 
 
         private IBlock GetBlock()
@@ -84,7 +82,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             var block = _blkFromModGen.New().Init(ctx);
 
             // only if it's negative, do we load the inner block
-            var contentBlockId = requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+            var contentBlockId = _requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             if (contentBlockId >= 0) return wrapLog.Return(block, "found block");
 
             Log.A($"Inner Content: {contentBlockId}");
@@ -96,7 +94,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         {
             var wrapLog = Log.Fn<int>();
 
-            var pageId = requestHelper.TryGetPageId();
+            var pageId = _requestHelper.TryGetPageId();
 
             return pageId == Eav.Constants.NullId
                 ? wrapLog.Return(Eav.Constants.NullId, "error, pageId not found") 
@@ -107,7 +105,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         {
             var wrapLog = Log.Fn<int>();
 
-            var moduleId = requestHelper.TryGetModuleId();
+            var moduleId = _requestHelper.TryGetModuleId();
 
             return moduleId == Eav.Constants.NullId
                 ? wrapLog.Return(Eav.Constants.NullId, "error, moduleId not found")

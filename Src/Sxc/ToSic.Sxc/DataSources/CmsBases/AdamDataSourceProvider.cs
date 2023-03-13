@@ -26,14 +26,14 @@ namespace ToSic.Sxc.DataSources
         public class MyServices : MyServicesBase
         {
             public LazySvc<AdamContext<TFolderId, TFileId>> AdamContext { get; }
-            public IContextResolver CtxResolver { get; }
+            public Sxc.Context.IContextResolver CtxResolver { get; }
 
             /// <summary>
             /// Note that we will use Generators for safety, because in rare cases the dependencies could be re-used to create a sub-data-source
             /// </summary>
             public MyServices(
                 LazySvc<AdamContext<TFolderId, TFileId>> adamContext,
-                IContextResolver ctxResolver
+                Sxc.Context.IContextResolver ctxResolver
             )
             {
                 ConnectServices(
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.DataSources
             string filter = default
         ) => Log.Func($"a:{appId}; entityIds:{entityIds}, entityGuids:{entityGuids}, fields:{fields}, filter:{filter}", l =>
         {
-            _context = appId > 0 ? Services.CtxResolver.BlockOrApp(appId) : Services.CtxResolver.AppNameRouteBlock(null);
+            _context = appId > 0 ? Services.CtxResolver.GetBlockOrSetApp(appId) : Services.CtxResolver.AppNameRouteBlock(null);
             _entityIds = entityIds;
             _entityGuids = entityGuids;
             _fields = fields;

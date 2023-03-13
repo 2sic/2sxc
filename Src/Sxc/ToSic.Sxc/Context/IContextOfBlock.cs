@@ -4,7 +4,7 @@ using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Context
 {
-    public interface IContextOfBlock: IContextOfSite, IContextOfApp
+    public interface IContextOfBlock: IContextOfApp
     {
         /// <summary>
         /// The page it's running on + parameters for queries, url etc.

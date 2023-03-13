@@ -78,7 +78,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditDto Load(int appId, List<ItemIdentifier> items) => Log.Func($"load many a#{appId}, items⋮{items.Count}", l =>
         {
             // Security check
-            var context = _ctxResolver.BlockOrApp(appId);
+            var context = _ctxResolver.GetBlockOrSetApp(appId);
             var showDrafts = context.UserMayEdit;
 
             // do early permission check - but at this time it may be that we don't have the types yet

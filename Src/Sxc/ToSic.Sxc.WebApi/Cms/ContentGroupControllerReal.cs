@@ -40,7 +40,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly GetOnce<CmsManager> _cmsManager = new GetOnce<CmsManager>();
 
 
-        private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());
+        private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
         private IContextOfBlock _context;
 
         #endregion

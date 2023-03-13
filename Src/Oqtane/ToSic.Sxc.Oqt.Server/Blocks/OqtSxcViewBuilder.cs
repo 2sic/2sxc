@@ -1,6 +1,5 @@
 ﻿using Oqtane.Models;
 using System.Linq;
-using ToSic.Lib;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -124,7 +123,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             // Special for Oqtane - normally the IContextResolver is only used in WebAPIs
             // But the ModuleLookUp and PageLookUp also rely on this, so the IContextResolver must know about this for now
             // In future, we should find a better way for this, so that IContextResolver is really only used on WebApis
-            _contextResolverForLookUps.AttachRealBlock(() => block);
+            _contextResolverForLookUps.AttachBlock(() => block);
             return block;
         }));
         private readonly GetOnce<IBlock> _blockGetOnce = new();

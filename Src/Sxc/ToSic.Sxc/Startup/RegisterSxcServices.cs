@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -80,9 +81,14 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<IPage, Page>();
             services.TryAddTransient<Page>();
 
+
             // Context stuff, which is explicitly scoped
-            services.TryAddScoped<IContextResolver, ContextResolver>();
+            services.TryAddScoped<Sxc.Context.IContextResolver, Sxc.Context.ContextResolver>();
+            // New v15.04 WIP
+            services.TryAddScoped<Eav.Context.IContextResolver>(x => x.GetRequiredService<Sxc.Context.IContextResolver>());
+            services.TryAddScoped<IContextResolverUserPermissions>(x => x.GetRequiredService<Sxc.Context.IContextResolver>());
             services.TryAddScoped<AppIdResolver>();
+
 
             // JS UI Context
             services.TryAddTransient<JsContextAll>();

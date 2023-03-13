@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppQueryControllerReal(IContextResolver ctxResolver, 
+        public AppQueryControllerReal(Sxc.Context.IContextResolver ctxResolver, 
             IConvertToEavLight dataConverter, 
             Generator<AppPermissionCheck> appPermissionCheck,
             Generator<AppConfigDelegate> appConfigDelegate,
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.App
             );
         }
         
-        private readonly IContextResolver _ctxResolver;
+        private readonly Sxc.Context.IContextResolver _ctxResolver;
         private readonly IConvertToEavLight _dataConverter;
         private readonly Generator<AppPermissionCheck> _appPermissionCheck;
 
@@ -62,10 +62,10 @@ namespace ToSic.Sxc.WebApi.App
             int? appId, string stream = null,
             bool includeGuid = false) => Log.Func($"'{name}', inclGuid: {includeGuid}, stream: {stream}", l =>
         {
-            var appCtx = appId != null ? _ctxResolver.BlockOrApp(appId.Value) : _ctxResolver.BlockRequired();
+            var appCtx = appId != null ? _ctxResolver.GetBlockOrSetApp(appId.Value) : _ctxResolver.BlockContextRequired();
 
             // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
-            var maybeBlock = appId == null || appId == appCtx.AppState.AppId ? _ctxResolver.RealBlockOrNull() : null;
+            var maybeBlock = appId == null || appId == appCtx.AppState.AppId ? _ctxResolver.BlockOrNull() : null;
 
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
@@ -90,7 +90,7 @@ namespace ToSic.Sxc.WebApi.App
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
 
-            var appCtx = _ctxResolver.AppOrBlock(appPath);
+            var appCtx = _ctxResolver.SetAppOrGetBlock(appPath);
             
             var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build(appCtx.UserMayEdit));
 

@@ -15,15 +15,15 @@ namespace ToSic.Sxc.WebApi
     public abstract class BlockWebApiBackendBase : ServiceBase
     {
         private readonly Generator<MultiPermissionsApp> _multiPermissionsApp;
-        public IContextResolver CtxResolver { get; }
+        public Sxc.Context.IContextResolver CtxResolver { get; }
         protected readonly LazySvc<CmsManager> CmsManagerLazy;
 
         protected IContextOfApp ContextOfBlock =>
-            _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockRequired());
+            _contextOfAppOrBlock ?? (_contextOfAppOrBlock = CtxResolver.BlockContextRequired());
         private IContextOfApp _contextOfAppOrBlock;
         #region Block-Context Requiring properties
 
-        public IBlock Block => _block ?? (_block = CtxResolver.RealBlockRequired());
+        public IBlock Block => _block ?? (_block = CtxResolver.BlockRequired());
         private IBlock _block;
 
         protected CmsManager CmsManagerOfBlock => _cmsManager ?? (_cmsManager = CmsManagerLazy.Value.Init(Block.Context));
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.WebApi
         protected BlockWebApiBackendBase(
             Generator<MultiPermissionsApp> multiPermissionsApp,
             LazySvc<CmsManager> cmsManagerLazy,
-            IContextResolver ctxResolver, string logName
+            Sxc.Context.IContextResolver ctxResolver, string logName
             ) : base(logName)
         {
             ConnectServices(

@@ -39,7 +39,7 @@ namespace ToSic.Sxc.WebApi.App
         public AppContent(Generator<Apps.App> app,
             EntityApi entityApi,
             LazySvc<IConvertToEavLight> entToDicLazy,
-            IContextResolver ctxResolver,
+            Sxc.Context.IContextResolver ctxResolver,
             Generator<MultiPermissionsTypes> typesPermissions,
             Generator<MultiPermissionsItems> itemsPermissions,
             LazySvc<AppManager> appManagerLazy,
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.App
 
         private readonly EntityApi _entityApi;
         private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
-        private readonly IContextResolver _ctxResolver;
+        private readonly Sxc.Context.IContextResolver _ctxResolver;
         private readonly LazySvc<AppManager> _appManagerLazy;
         private readonly LazySvc<SimpleDataController> _dataControllerLazy;
         private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState, showDrafts: false));

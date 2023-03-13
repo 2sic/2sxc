@@ -136,11 +136,11 @@ namespace ToSic.Sxc.WebApi
             try
             {
                 var routeAppPath = Services.AppFolderUtilities.GetAppFolder(Request, false);
-                var siteCtx = SharedContextResolver.Site();
-                var appState = SharedContextResolver.AppOrNull(routeAppPath)?.AppState;
+                var appState = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppState;
 
                 if (appState != default)
                 {
+                    var siteCtx = SharedContextResolver.Site();
                     // Look up if page publishing is enabled - if module context is not available, always false
                     Log.A($"AppId: {appState.AppId}");
                     var app = Services.AppOverrideLazy.Value

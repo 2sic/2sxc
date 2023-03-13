@@ -70,7 +70,7 @@ namespace Custom.Hybrid
                 if (routeAppPathObj == null) return "";
                 var routeAppPath = routeAppPathObj.ToString();
 
-                var appId = CtxResolver.AppOrNull(routeAppPath)?.AppState.AppId ?? ToSic.Eav.Constants.NullId;
+                var appId = CtxResolver.SetAppOrNull(routeAppPath)?.AppState.AppId ?? ToSic.Eav.Constants.NullId;
 
                 if (appId != ToSic.Eav.Constants.NullId)
                 {

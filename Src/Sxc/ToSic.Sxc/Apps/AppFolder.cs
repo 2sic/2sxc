@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Apps
 
         public AppFolder Init(Func<IBlock> getBlock)
         {
-            _ctxResolver.AttachRealBlock(getBlock);
+            _ctxResolver.AttachBlock(getBlock);
             return this;
         }
 

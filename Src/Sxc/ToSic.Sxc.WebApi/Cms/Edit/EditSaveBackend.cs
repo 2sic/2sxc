@@ -16,7 +16,6 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -33,7 +32,7 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditSaveBackend(
             SxcPagePublishing pagePublishing, 
             LazySvc<AppManager> appManagerLazy,
-            IContextResolver ctxResolver,
+            Sxc.Context.IContextResolver ctxResolver,
             JsonSerializer jsonSerializer,
             SaveSecurity saveSecurity,
             SaveEntities saveBackendHelper,
@@ -52,14 +51,14 @@ namespace ToSic.Sxc.WebApi.Cms
         }
         private readonly SxcPagePublishing _pagePublishing;
         private readonly LazySvc<AppManager> _appManagerLazy;
-        private readonly IContextResolver _ctxResolver;
+        private readonly Sxc.Context.IContextResolver _ctxResolver;
 
         public EditSaveBackend Init(int appId)
         {
             _appId = appId;
             // The context should be from the block if there is one, because it affects saving/publishing
             // Basically it can result in things being saved draft or titles being updated
-            _context = _ctxResolver.BlockOrApp(appId);
+            _context = _ctxResolver.GetBlockOrSetApp(appId);
             _pagePublishing.Init(_context);
             return this;
         }
@@ -151,7 +150,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.A("items to save generated, all data tests passed");
 
-            return _pagePublishing.SaveInPagePublishing(_ctxResolver.RealBlockOrNull(), _appId, items, partOfPage,
+            return _pagePublishing.SaveInPagePublishing(_ctxResolver.BlockOrNull(), _appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }
