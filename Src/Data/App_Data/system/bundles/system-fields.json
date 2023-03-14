@@ -2772,23 +2772,6 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 169161,
-                    "Version": 1,
-                    "Guid": "50021acc-103f-4bbc-8969-271fdc0cf1ab",
-                    "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
-                          "en-us": false
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
                     "Id": 169157,
                     "Version": 3,
                     "Guid": "59a05a27-35d1-4ce7-a36a-15334847a1af",
@@ -2856,6 +2839,23 @@
                         },
                         "VisibleInEditUI": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169161,
+                    "Version": 1,
+                    "Guid": "50021acc-103f-4bbc-8969-271fdc0cf1ab",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
                         }
                       }
                     },
