@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Context
         {
             _getBlock = getBlock;
             _block.Reset();
+            _blockContext.Reset();
         }
         private Func<IBlock> _getBlock;
 
