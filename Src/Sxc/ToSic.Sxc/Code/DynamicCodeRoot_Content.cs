@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Code
             {
                 if (_content != null || _contentTried) return _content;
                 _contentTried = true;
-                return _content = TryToBuildFirstOfStream(DataSourceConstants.DefaultStreamName);
+                return _content = TryToBuildFirstOfStream(DataSourceConstants.StreamDefaultName);
             }
         }
         private dynamic _content;

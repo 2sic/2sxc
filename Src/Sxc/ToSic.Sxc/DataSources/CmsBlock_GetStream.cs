@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.DataSources.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -15,26 +14,25 @@ namespace ToSic.Sxc.DataSources
     {
         private IImmutableList<IEntity> GetStream(
             BlockConfiguration config,
-            IView view,
-            IReadOnlyCollection<IEntity> contList, 
+            IReadOnlyCollection<IEntity> items, 
             IEntity cDemoItem, 
             IReadOnlyList<IEntity> presList, 
             IEntity pDemoItem, 
             bool isListHeader
-        ) => Log.Func($"content⋮{contList.Count}, demo#{cDemoItem?.EntityId}, present⋮{presList?.Count}, presDemo#{pDemoItem?.EntityId}, header:{isListHeader}", l =>
+        ) => Log.Func($"content⋮{items.Count}, demo#{cDemoItem?.EntityId}, present⋮{presList?.Count}, presDemo#{pDemoItem?.EntityId}, header:{isListHeader}", l =>
         {
             
             try
             {
                 // if no template is defined, return empty list
-                if (view == null)
+                if (config.View == null)
                     return (EmptyList, "no template definition - empty list");
 
                 // Create copy of list (not in cache) because it will get modified
-                var contentEntities = contList.ToList();
+                var contentEntities = items.ToList();
 
                 // If no Content Elements exist and type is content (means, presentationList is not null), add an empty entity (demo entry will be taken for this)
-                if (contList.Count == 0 && presList != null)
+                if (items.Count == 0 && presList != null)
                 {
                     l.A("empty list, will add a null-item");
                     contentEntities.Add(null);
@@ -110,14 +108,14 @@ namespace ToSic.Sxc.DataSources
         private ImmutableList<IEntity> GetInOrAutoCreate() => Log.Func(l =>
         {
             // Check if in not connected, in which case we must find it yourself
-            if (!In.ContainsKey(DataSourceConstants.DefaultStreamName))
+            if (!In.ContainsKey(StreamDefaultName))
             {
                 l.A("In not attached, will auto-attach");
                 var publishing = _services.DataSourceFactory.Value.CreateDefault(appIdentity: this, configSource: Configuration.LookUpEngine);
                 Attach(publishing);
             }
 
-            return (In[DataSourceConstants.DefaultStreamName].List.ToImmutableList(), "ok");
+            return (In[StreamDefaultName].List.ToImmutableList(), "ok");
         });
 
         private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, int entityId)

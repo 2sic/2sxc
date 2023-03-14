@@ -37,6 +37,7 @@ namespace ToSic.Sxc.DataSources
 
             // If we don't have a context, then look it up based on the InstanceId
             l.A("need content-group, will construct as cannot use context");
+            Configuration.Parse();
             if (!ModuleId.HasValue)
                 return (new ResultOrError<BlockConfiguration>(false, null,
                     Error.Create(title: $"{nameof(CmsBlock)} cannot find Block Configuration",

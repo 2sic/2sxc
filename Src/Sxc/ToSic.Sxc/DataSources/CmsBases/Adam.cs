@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
         Icon = Icons.Tree,
         Type = DataSourceType.Lookup,
         Audience = Audience.Advanced,
-        In = new[] { DataSourceConstants.DefaultStreamNameRequired },
+        In = new[] { QueryConstants.InStreamDefaultRequired },
         DynamicOut = false,
         ExpectsDataOfType = "" // TODO: ...
         )]

@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Code
 
             var srcDs = (IDataTarget)src;
             srcDs.In.Clear();
-            srcDs.Attach(DataSourceConstants.DefaultStreamName, inStream);
+            srcDs.Attach(DataSourceConstants.StreamDefaultName, inStream);
             return src;
         }
         #endregion

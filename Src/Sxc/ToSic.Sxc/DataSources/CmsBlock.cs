@@ -27,7 +27,7 @@ namespace ToSic.Sxc.DataSources
         Type = DataSourceType.Source, 
         GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
         ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
-        In = new []{DataSourceConstants.DefaultStreamName},
+        In = new []{DataSourceConstants.StreamDefaultName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
         PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSource
@@ -43,12 +43,7 @@ namespace ToSic.Sxc.DataSources
         [Configuration(Field = FieldInstanceId, Fallback = "[" + InstanceLookupName + ":" + ModuleIdKey + "]")]
         public int? ModuleId
         {
-            get
-            {
-                Configuration.Parse();
-                var listIdString = Configuration.GetThis();
-                return int.TryParse(listIdString, out var listId) ? listId : new int?();
-            }
+            get => int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?();
             set => Configuration.SetThis(value);
         }
 
@@ -88,25 +83,18 @@ namespace ToSic.Sxc.DataSources
         private IImmutableList<IEntity> GetContent()
         {
             // First check if BlockConfiguration works - to give better error if not
-            //var errors = GetErrorStreamIfConfigOrViewAreMissing();
-            //if (errors.Found) return errors.Errors;
-            //if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
-            //    return immutableArray;
-
             var everything = Everything;
             if (everything.IsError)
                 return everything.Errors;
 
             var parts = everything.Result;
-            return GetStream(parts.BlockConfiguration, parts.View, parts.BlockConfiguration.Content, parts.View.ContentItem,
+            return GetStream(parts.BlockConfiguration, parts.BlockConfiguration.Content, parts.View.ContentItem,
                 parts.BlockConfiguration.Presentation, parts.View.PresentationItem, false);
         }
 
         private IImmutableList<IEntity> GetHeader()
         {
             // First check if BlockConfiguration works - to give better error if not
-            //var errors = GetErrorStreamIfConfigOrViewAreMissing();
-            //if (errors.Found) return errors.Errors;
             var everything = Everything;
             if (everything.IsError)
                 return everything.Errors;
@@ -114,24 +102,8 @@ namespace ToSic.Sxc.DataSources
             var parts = everything.Result;
 
 
-            return GetStream(parts.BlockConfiguration, parts.View, parts.BlockConfiguration.Header, parts.View.HeaderItem,
+            return GetStream(parts.BlockConfiguration, parts.BlockConfiguration.Header, parts.View.HeaderItem,
                 parts.BlockConfiguration.HeaderPresentation, parts.View.HeaderPresentationItem, true);
         }
-
-        //private GetStream GetErrorStreamIfConfigOrViewAreMissing()
-        //{
-        //    if (BlockConfiguration == null)
-        //        return new GetStream(found: true,
-        //            getError: () => ErrorHandler.CreateErrorList(title: "CmsBlock Configuration Missing",
-        //                message: "Cannot find configuration of current CmsBlock"));
-
-        //    if (View == null)
-        //        return new GetStream(found: true, 
-        //            getError: () => ErrorHandler.CreateErrorList(title: "CmsBlock View Missing",
-        //                message: "Cannot find View configuration of current CmsBlock"));
-
-        //    return new GetStream(found: false);
-        //}
-
     }
 }
