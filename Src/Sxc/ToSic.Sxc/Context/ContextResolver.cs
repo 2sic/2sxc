@@ -24,10 +24,6 @@ namespace ToSic.Sxc.Context
 
         #endregion
 
-        //public IContextOfSite Site() => _site.Get(() => _contextOfSite.New());
-        //private readonly GetOnce<IContextOfSite> _site = new GetOnce<IContextOfSite>();
-
-
 
         /// <summary>
         /// Get the best possible context which can give us insights about the user permissions.
