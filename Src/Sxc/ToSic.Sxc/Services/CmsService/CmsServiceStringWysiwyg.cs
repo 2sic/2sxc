@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
@@ -16,16 +13,17 @@ namespace ToSic.Sxc.Services.CmsService
 {
     public class CmsServiceStringWysiwyg: ServiceForDynamicCode
     {
+
         #region Constructor / DI
 
-        private readonly LazySvc<IValueConverter> _valueConverter;
+        private readonly CmsServiceImageExtractor _imageExtractor;
 
         public CmsServiceStringWysiwyg(
-            LazySvc<IValueConverter> valueConverter
+            CmsServiceImageExtractor imageExtractor
             ) : base("Cms.StrWys")
         {
             ConnectServices(
-                _valueConverter = valueConverter
+                _imageExtractor = imageExtractor
             );
         }
         private ServiceKit14 ServiceKit => _svcKit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
@@ -79,66 +77,26 @@ namespace ToSic.Sxc.Services.CmsService
 
             foreach (var imgTag in imgTags)
             {
-                var oldImgTag = imgTag.ToString();
+                var originalImgTag = imgTag.ToString();
 
-                #region empty picture parameters
-
-                string src = null;
-                string factor = null;
-                object width = default;
-                string imgAlt = null;
-                string imgClass = null;
-                var otherAttributes = new Dictionary<string, string>();
-
-                #endregion
-
-
-                // get all attributes
-                var attributes = RegexUtil.AttributesDetection.Matches(oldImgTag);
-                foreach (Match attributeMatch in attributes)
-                {
-                    var key = attributeMatch.Groups["Key"].Value;
-                    var value = attributeMatch.Groups["Value"].Value;
-                    switch (key.ToLowerInvariant())
-                    {
-                        case "data-cmsid":
-                            src = _valueConverter.Value.ToValue(value); // convert 'file:22' to real value 'folder/image.png'
-                            break;
-                        case "src":
-                            if (src == null) src = src ?? value; // should not overwrite data-cmsid
-                            break;
-                        case "width":
-                            width = value;
-                            break;
-                        case "alt":
-                            imgAlt = value;
-                            break;
-                        case "class": // specially look at the classes
-                            factor = GetImgServiceResizeFactor(value); // use the "#/#" as the `factor` parameter
-                            imgClass = value; // add it as class
-                            break;
-                        default:
-                            // store alt-attribute, class etc. from the original if it had it (to re-attach latter)
-                            otherAttributes[key] = string.IsNullOrEmpty(value) ? null : value;
-                            break;
-                    }
-                }
+                var parts = _imageExtractor.ExtractProperties(originalImgTag);
 
                 // use the IImageService to create Picture tags for it
-                var picture = ServiceKit.Image.Picture(link: src, factor: factor, width: width, imgAlt: imgAlt,
-                    imgClass: imgClass);
+                var picture = ServiceKit.Image.Picture(link: parts.src, factor: parts.factor, width: parts.width, imgAlt: parts.imgAlt,
+                    imgClass: parts.imgClasses, picClass: parts.picClasses);
 
                 // re-attach an alt-attribute, class etc. from the original if it had it
                 // TODO: @2DM - this could fail because of fluid API - picture.img isn't updated
-                var newImg = otherAttributes.Aggregate(picture.Img, (img, attr) => img.Attr(attr.Key, attr.Value));
+                var newImg = parts.otherAttributes.Aggregate(picture.Img, (img, attr) => img.Attr(attr.Key, attr.Value));
 
                 // replace the old img tag with the new one
-                html = html.Replace(oldImgTag, picture.ToString());
+                html = html.Replace(originalImgTag, picture.ToString());
             }
 
             // reconstruct the original html and return wrapped in the realContainer
             return (new CmsProcessed(true, html, classes), "wysiwyg changed");
         });
+        
 
         private string ProcessInnerContent(string html) => Log.Func(() =>
         {
@@ -163,29 +121,5 @@ namespace ToSic.Sxc.Services.CmsService
 
             return (html, "ok");
         });
-
-
-        public static string GetImgServiceResizeFactor(string value)
-        {
-            // check if we can find something like "wysiwyg-width#of#" - this is for resize ratios
-            //var widthMatch = RegexUtil.WysiwygWidthNumDetection.Match(value);
-            var widthMatch = RegexUtil.WysiwygWidthLazy.Value.Match(value);
-            // convert to a format like "#/#"
-            if (!widthMatch.Success) return null;
-            var numString = widthMatch.Groups["percent"].Value;
-            // We want to return a nice factor, in case the rules have optimized values
-            switch (numString)
-            {
-                case "100": return "1";
-                case "50": return "1/2";
-                case "33": return "1/3";
-                case "66": return "2/3";
-                case "25": return "1/4";
-                case "75": return "3/4";
-                default: return numString;
-            }
-            //return widthMatch.Success ? $"{widthMatch.Groups["num"].Value}/{widthMatch.Groups["all"].Value}" : null;
-        }
-
     }
 }

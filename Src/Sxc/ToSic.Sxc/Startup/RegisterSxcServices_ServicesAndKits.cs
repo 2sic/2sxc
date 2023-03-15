@@ -69,6 +69,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ITurnOnService, TurnOnService>();
             services.TryAddTransient<ICmsService, CmsService>();
             services.TryAddTransient<CmsServiceStringWysiwyg>();
+            services.TryAddTransient<CmsServiceImageExtractor>();
 
             return services;
         }
