@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.DataSources.DataSourceConstants;
 
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.DataSources
     public sealed partial class CmsBlock
     {
         private IImmutableList<IEntity> GetStream(
-            BlockConfiguration config,
+            IView view,
             IReadOnlyCollection<IEntity> items, 
             IEntity cDemoItem, 
             IReadOnlyList<IEntity> presList, 
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.DataSources
             try
             {
                 // if no template is defined, return empty list
-                if (config.View == null)
+                if (view == null)
                     return (EmptyList, "no template definition - empty list");
 
                 // Create copy of list (not in cache) because it will get modified

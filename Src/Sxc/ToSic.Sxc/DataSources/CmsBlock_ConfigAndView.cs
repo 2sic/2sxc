@@ -11,7 +11,7 @@ namespace ToSic.Sxc.DataSources
 {
     public sealed partial class CmsBlock
     {
-        private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> Everything => _everything.Get(() =>
+        private ResultOrError<(BlockConfiguration BlockConfiguration, IView View)> ConfigAndViewOrErrors => _everything.Get(() =>
         {
             var config = LoadBlockConfiguration();
             if (config.IsError)

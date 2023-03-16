@@ -83,26 +83,26 @@ namespace ToSic.Sxc.DataSources
         private IImmutableList<IEntity> GetContent()
         {
             // First check if BlockConfiguration works - to give better error if not
-            var everything = Everything;
-            if (everything.IsError)
-                return everything.Errors;
+            var blockSpecsAndErrors = ConfigAndViewOrErrors;
+            if (blockSpecsAndErrors.IsError)
+                return blockSpecsAndErrors.Errors;
 
-            var parts = everything.Result;
-            return GetStream(parts.BlockConfiguration, parts.BlockConfiguration.Content, parts.View.ContentItem,
+            var parts = blockSpecsAndErrors.Result;
+            return GetStream(parts.View, parts.BlockConfiguration.Content, parts.View.ContentItem,
                 parts.BlockConfiguration.Presentation, parts.View.PresentationItem, false);
         }
 
         private IImmutableList<IEntity> GetHeader()
         {
             // First check if BlockConfiguration works - to give better error if not
-            var everything = Everything;
-            if (everything.IsError)
-                return everything.Errors;
+            var blockSpecsAndErrors = ConfigAndViewOrErrors;
+            if (blockSpecsAndErrors.IsError)
+                return blockSpecsAndErrors.Errors;
 
-            var parts = everything.Result;
+            var parts = blockSpecsAndErrors.Result;
 
 
-            return GetStream(parts.BlockConfiguration, parts.BlockConfiguration.Header, parts.View.HeaderItem,
+            return GetStream(parts.View, parts.BlockConfiguration.Header, parts.View.HeaderItem,
                 parts.BlockConfiguration.HeaderPresentation, parts.View.HeaderPresentationItem, true);
         }
     }
