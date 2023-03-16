@@ -3,28 +3,28 @@ using Microsoft.AspNetCore.Hosting;
 using Oqtane.Repository;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Adam;
 using ToSic.Sxc.Oqt.Shared;
+using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
 
     public class OqtXmlExporter : XmlExporter
     {
+        #region Constructor / DI
+
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly LazySvc<IFileRepository> _fileRepositoryLazy;
         private readonly LazySvc<IFolderRepository> _folderRepositoryLazy;
         private readonly LazySvc<ITenantResolver> _oqtTenantResolverLazy;
         private readonly LazySvc<OqtAssetsFileHelper> _fileHelper;
-        //private readonly IContextResolver _ctxResolver;
-
-        #region Constructor / DI
 
         public OqtXmlExporter(
             AdamManager<int, int> adamManager,
@@ -44,29 +44,17 @@ namespace ToSic.Sxc.Oqt.Server.Run
                 _folderRepositoryLazy = folderRepositoryLazy,
                 _oqtTenantResolverLazy = oqtTenantResolverLazy,
                 _fileHelper = fileHelper,
-                //_ctxResolver = ctxResolver,
                 AdamManager = adamManager
             );
         }
 
         internal AdamManager<int, int> AdamManager { get; }
 
-        public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds)
+        protected override void PostContextInit(IContextOfApp appContext)
         {
-            base.Init(zoneId, appId, appRuntime, appExport, attrSetIds, entityIds);
-            var appCtx = ContextResolver.App();//appId);
-            //var contextOfSite = _ctxResolver.Site();
-            //var oqtSite = (OqtSite)contextOfSite.Site;
-            //var appState = AppStates.Get(new AppIdentity(zoneId, appId));
-
-            AdamManager.Init(appCtx, Constants.CompatibilityLevel10);
-            //Constructor(zoneId, appRuntime, appCtx.AppState.NameId, appExport, attrSetIds, entityIds);
-
-            //// this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            //InitExportXDocument(/*oqtSite*/appCtx.Site.DefaultCultureCode, EavSystemInfo.VersionString);
-
-            return this;
+            AdamManager.Init(appContext, Constants.CompatibilityLevel10);
         }
+
 
         #endregion
 

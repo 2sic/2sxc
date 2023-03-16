@@ -1,10 +1,11 @@
 ﻿using DotNetNuke.Services.FileSystem;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.ImportExport;
+using ToSic.Eav.Context;
 using ToSic.Eav.ImportExport.Environment;
 using ToSic.Eav.Persistence.Xml;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Context;
+using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 
 namespace ToSic.Sxc.Dnn.ImportExport
 {
@@ -16,28 +17,18 @@ namespace ToSic.Sxc.Dnn.ImportExport
             : base(xmlSerializer, appStates, ctxResolver, DnnConstants.LogName)
         {
             ConnectServices(
-                //_ctxResolver = ctxResolver,
                 AdamManager = adamManager
             );
         }
-
-        //private readonly IContextResolver _ctxResolver;
 
 
         private readonly IFileManager _dnnFiles = FileManager.Instance;
         internal AdamManager<int, int> AdamManager { get; }
 
-        public override XmlExporter Init(int zoneId, int appId, AppRuntime appRuntime, bool appExport, string[] attrSetIds, string[] entityIds)
-        {
-            base.Init(zoneId, appId, appRuntime, appExport, attrSetIds, entityIds);
-            var appCtx = ContextResolver.App();//appId);
-            //var appState = AppStates.Get(new AppIdentity(zoneId, appId));
-            AdamManager.Init(appCtx, Constants.CompatibilityLevel10);
-            //Constructor(zoneId, appRuntime, /*appState*/appCtx.AppState.NameId, appExport, attrSetIds, entityIds);
 
-            // this must happen very early, to ensure that the file-lists etc. are correct for exporting when used externally
-            //InitExportXDocument(/*_site*/appCtx.Site.DefaultCultureCode, EavSystemInfo.VersionString);
-            return this;
+        protected override void PostContextInit(IContextOfApp appContext)
+        {
+            AdamManager.Init(appContext, Constants.CompatibilityLevel10);
         }
 
         #endregion
