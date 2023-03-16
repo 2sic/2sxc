@@ -31,14 +31,6 @@ namespace ToSic.Sxc.Data
         /// </summary>
         public IEntity Presentation { get; set; }
 
-        // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
-        //#if NETFRAMEWORK
-        //        /// <summary>
-        //        /// Block ID, because as the group changes, we must be able to find it
-        //        /// </summary>
-        //        public Guid GroupId { get; set; }
-        //#endif 
-
         /// <summary>
         /// Info if the item is a plain demo/fake item, or if it was added on purpose.
         /// new 2019-09-18 trying to mark demo-items for better detection in output #1792

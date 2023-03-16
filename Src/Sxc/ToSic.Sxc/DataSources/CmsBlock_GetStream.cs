@@ -67,23 +67,14 @@ namespace ToSic.Sxc.DataSources
                         // use demo-entities where available
                         entityId = contentEntity.EntityId;
 
-                        var presentationEntity = GetPresentationEntity(originals, presList, i, /*presentationDemoEntity,*/ entityId)
+                        var presentationEntity = GetPresentationEntity(originals, presList, i, entityId)
                             ?? pDemoItem;
 
                         try
                         {
                             var itm = originals.One(entityId);
                             entitiesToDeliver.Add(
-                                EntityInBlockDecorator.Wrap(itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem)
-                            //{
-                            //    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
-                            //    //#if NETFRAMEWORK
-                            //    // actually unclear if this is ever used, maybe for automatic serialization?
-                            //    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
-                            //    //GroupId = BlockConfiguration.Guid,
-                            //    //#endif
-                            //}
-                            );
+                                EntityInBlockDecorator.Wrap(itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem));
                         }
                         catch (Exception ex)
                         {

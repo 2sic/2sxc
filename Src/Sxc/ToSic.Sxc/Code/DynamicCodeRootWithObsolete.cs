@@ -97,11 +97,8 @@ namespace ToSic.Sxc.Code
 
                 var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
 
-                //if (e is EntityInBlock c)
                 if (editDecorator != null)
                 {
-                    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
-                    //el.GroupId = editDecorator.GroupId;
                     el.Presentation = editDecorator.Presentation == null ? null : _root.AsDynamic(editDecorator.Presentation);
                     el.SortOrder = editDecorator.SortOrder;
                 }
