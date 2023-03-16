@@ -18,16 +18,16 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
     {
         #region Constructor and DI
 
-        public OqtPageOutput(SiteState siteState, IBlockResourceExtractor oqtBlockResourceExtractor) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtPageOutput(SiteState siteState, IBlockResourceExtractor blockResourceExtractor) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             ConnectServices(
                 _siteState = siteState,
-                _oqtBlockResourceExtractor = oqtBlockResourceExtractor
+                _blockResourceExtractor = blockResourceExtractor
             );
         }
 
         private readonly SiteState _siteState;
-        private readonly IBlockResourceExtractor _oqtBlockResourceExtractor;
+        private readonly IBlockResourceExtractor _blockResourceExtractor;
         
         public void Init(OqtSxcViewBuilder parent, IRenderResult renderResult)
         {
