@@ -85,12 +85,11 @@ namespace ToSic.Sxc.Images
             string imgAlt = null,
             string imgAltFallback = default,
             string imgClass = null,
-            string picClass = default,
             object recipe = null)
         {
             var respParams = new ResponsiveParams(nameof(ImgOrPic), link, noParamOrder,
                 Settings(settings, factor: factor, width: width, recipe: recipe),
-                imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, picClass: picClass);
+                imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass);
             var path = respParams.Link.Url;
             var format = GetFormat(path);
             return format.ResizeFormats.Any()
@@ -109,12 +108,11 @@ namespace ToSic.Sxc.Images
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
-            string picClass = default,
             object recipe = default)
             => new ResponsivePicture(this,
                 new ResponsiveParams(nameof(Picture), link, noParamOrder,
                     Settings(settings, factor: factor, width: width, recipe: recipe),
-                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, picClass: picClass),
+                    imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass),
                 Log);
 
         /// <inheritdoc />

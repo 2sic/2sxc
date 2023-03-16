@@ -83,14 +83,14 @@ namespace ToSic.Sxc.Services.CmsService
 
                 // use the IImageService to create Picture tags for it
                 var picture = ServiceKit.Image.Picture(link: parts.src, factor: parts.factor, width: parts.width, imgAlt: parts.imgAlt,
-                    imgClass: parts.imgClasses, picClass: parts.picClasses);
+                    imgClass: parts.imgClasses);
 
                 // re-attach an alt-attribute, class etc. from the original if it had it
                 // TODO: @2DM - this could fail because of fluid API - picture.img isn't updated
                 var newImg = parts.otherAttributes.Aggregate(picture.Img, (img, attr) => img.Attr(attr.Key, attr.Value));
 
                 // replace the old img tag with the new one
-                html = html.Replace(originalImgTag, picture.ToString());
+                html = html.Replace(originalImgTag, picture.Picture.Class(parts.picClasses).ToString());
             }
 
             // reconstruct the original html and return wrapped in the realContainer

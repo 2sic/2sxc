@@ -153,7 +153,6 @@ namespace ToSic.Sxc.Services
         /// _new in v15_
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
-        /// <param name="picClass">Optional `class` attribute on the created `picture` tag (new 15.04)</param>
         /// <param name="recipe">
         /// Optional recipe = instructions how to create the various variants of this link.
         /// Can be any one of these:
@@ -178,7 +177,6 @@ namespace ToSic.Sxc.Services
             string imgAlt = default,
             string imgAltFallback = default,
             string imgClass = default,
-            string picClass = default,
             object recipe = default
         );
 
@@ -271,7 +269,6 @@ namespace ToSic.Sxc.Services
         /// _new in v15_
         /// </param>
         /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
-        /// <param name="picClass">Optional `class` attribute on the created `picture` tag (new 15.04)</param>
         /// <param name="recipe">
         ///     Optional recipe = instructions how to create the various variants of this link.
         ///     Can be any one of these:
@@ -295,7 +292,6 @@ namespace ToSic.Sxc.Services
             string imgAlt = null,
             string imgAltFallback = default,
             string imgClass = null,
-            string picClass = default,
             object recipe = null);
 
     }
