@@ -27,6 +27,6 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
         [TestMethod]
         [DataRow("<p>some html</p>", 0)]
         [DataRow("<p><img bbb='cccccc'><img/><IMG aaa data-cmsid='xxx'/><iMG     data-cmsid='yyy'  QQQ=\"abc\"  ></p>", 2)]
-        public void ImagesWithDataCmsid(string html, int matches) => AreEqual(matches, RegexUtil.ImagesDetection.Matches(html).Count);
+        public void ImagesWithDataCmsid(string html, int matches) => AreEqual(matches, RegexUtil.ImagesDetection.Value.Matches(html).Count);
     }
 }

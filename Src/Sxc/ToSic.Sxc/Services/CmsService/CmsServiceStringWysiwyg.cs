@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Services.CmsService
             // 3. Check Responsive Images
             // extract img tags from html using regex case insensitive
             // and check if we have an img tags with data-cmsid="file:..." attributes
-            var imgTags = RegexUtil.ImagesDetection.Matches(html);
+            var imgTags = RegexUtil.ImagesDetection.Value.Matches(html);
             if (imgTags.Count == 0)
                 return (new CmsProcessed(false, html, classes), "can't find img tags with data-cmsid, return HTML so classes are added");
 

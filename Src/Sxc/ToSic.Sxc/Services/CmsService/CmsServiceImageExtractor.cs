@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Services.CmsService
             var otherAttributes = new Dictionary<string, string>();
 
             // get all attributes
-            var attributes = RegexUtil.AttributesDetection.Matches(oldImgTag);
+            var attributes = RegexUtil.AttributesDetection.Value.Matches(oldImgTag);
             foreach (Match attributeMatch in attributes)
             {
                 var key = attributeMatch.Groups["Key"].Value;

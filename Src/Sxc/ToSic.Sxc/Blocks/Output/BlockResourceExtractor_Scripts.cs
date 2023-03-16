@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks.Output
         {
             var wrapLog = Log.Fn<string>();
 
-            var scriptMatches = RegexUtil.ScriptSrcDetection.Matches(renderedTemplate);
+            var scriptMatches = RegexUtil.ScriptSrcDetection.Value.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
             Log.A($"Found {scriptMatches.Count} external scripts");
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Blocks.Output
                 }
 
                 // Also get the ID (new in v12)
-                var idMatches = RegexUtil.IdDetection.Match(match.Value);
+                var idMatches = RegexUtil.IdDetection.Value.Match(match.Value);
                 var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
 
                 // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(Match match, string posInPage, int priority)
         {
-            var optMatch = RegexUtil.OptimizeDetection.Match(match.Value);
+            var optMatch = RegexUtil.OptimizeDetection.Value.Match(match.Value);
             if (!optMatch.Success && ExtractOnlyEnableOptimization) return (true, null, 0);
 
             posInPage = optMatch.Groups[TokenPosition]?.Value ?? posInPage;
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Blocks.Output
 
         protected string ExtractInlineScripts(string renderedTemplate) => Log.Func(() =>
         {
-            var scriptMatches = RegexUtil.ScriptContentDetection.Matches(renderedTemplate);
+            var scriptMatches = RegexUtil.ScriptContentDetection.Value.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
             Log.A($"Found {scriptMatches.Count} inline scripts");

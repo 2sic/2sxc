@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Blocks.Output
         {
             if (string.IsNullOrWhiteSpace(htmlTag)) return (null, null);
 
-            var attributesMatch = RegexUtil.AttributesDetection.Matches(htmlTag);
+            var attributesMatch = RegexUtil.AttributesDetection.Value.Matches(htmlTag);
 
             if (attributesMatch.Count == 0) return (null, null);
 
