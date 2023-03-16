@@ -18,6 +18,33 @@ namespace ToSic.Sxc.Context
         [InternalApi_DoNotUse_MayChangeWithoutNotice("wip")]
         string ToString();
 
+        #region Get (new v15.04)
+
+        /// <summary>
+        /// Get a parameter.
+        /// </summary>
+        /// <param name="key">the key/name in the url</param>
+        /// <returns>a string or null</returns>
+        /// <remarks>
+        /// Added v15.04
+        /// </remarks>
+        string Get(string key);
+
+        /// <summary>
+        /// Get a parameter and convert to the needed type - or return the default/fallback.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key">Key/name of the parameter</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">Optional fallback value to use if not found</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Added v15.04
+        /// </remarks>
+        T Get<T>(string key, string noParamOrder = Eav.Parameters.Protector, T fallback = default);
+
+        #endregion
+
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
         /// If the name/key already exists, it will extend it, add a simple 
@@ -25,9 +52,9 @@ namespace ToSic.Sxc.Context
         /// 
         /// _Important: this does not change the current object, it returns a new object._
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        IParameters Add(string name);
+        IParameters Add(string key);
 
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
@@ -36,10 +63,10 @@ namespace ToSic.Sxc.Context
         /// 
         /// _Important: this does not change the current object, it returns a new object._
         /// </summary>
-        /// <param name="name">the key</param>
+        /// <param name="key">the key</param>
         /// <param name="value">the value</param>
         /// <returns>A new <see cref="IParameters"/> object</returns>
-        IParameters Add(string name, string value);
+        IParameters Add(string key, string value);
 
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
@@ -52,11 +79,11 @@ namespace ToSic.Sxc.Context
         /// For example, bool values are lower case `true`|`false`, numbers are culture invariant and dates
         /// are treated as is with time removed if it has no time. 
         /// </summary>
-        /// <param name="name">the key</param>
+        /// <param name="key">the key</param>
         /// <param name="value">object! value</param>
         /// <returns>A new <see cref="IParameters"/> object</returns>
         /// <remarks>Added in v15.0</remarks>
-        IParameters Add(string name, object value);
+        IParameters Add(string key, object value);
 
         /// <summary>
         /// Add another URL parameter and return a new <see cref="IParameters"/>.
