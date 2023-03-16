@@ -122,7 +122,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 if (resultValidator.Exception != null)
                     throw resultValidator.Exception;
 
-                ent = _dataBuilder.Entity.Clone(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
+                ent = _dataBuilder.Entity.CreateFrom(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
                     placeDraftInBranch: package.DraftShouldBranch);
 
                 //ent.ResetEntityId(resultValidator.ResetId ?? 0); //AjaxPreviewHelperWIP!
