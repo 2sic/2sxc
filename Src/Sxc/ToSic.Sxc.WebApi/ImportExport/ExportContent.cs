@@ -73,7 +73,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                         })
                 }),
                 TemplatesWithoutContentTypes = templates
-                    .Where(t => !string.IsNullOrEmpty(t.ContentType))
+                    .Where(t => string.IsNullOrEmpty(t.ContentType))
                     .Select(t => new IdNameDto
                     {
                         Id = t.Id,
