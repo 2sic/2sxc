@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Blocks
         public virtual IRenderResult Module(int pageId, int moduleId) => Log.Func($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}", () =>
         {
             MakeSureLogIsInHistory();
-            var block = _Deps.Builder.Value.GetBlock(pageId, moduleId).BlockBuilder;
+            var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
             var result = block.Run(true);
             return (result, "ok");
         });

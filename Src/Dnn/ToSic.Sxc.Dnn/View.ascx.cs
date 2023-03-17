@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn
         /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
         /// which runs before page-load
         /// </summary>
-        private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetBlock(ModuleConfiguration, null)), timer: true);
+        private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetProvider(ModuleConfiguration, null).LoadBlock()), timer: true);
         private readonly GetOnce<IBlock> _blockGetOnce = new GetOnce<IBlock>();
 
         #region Logging

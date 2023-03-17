@@ -13,7 +13,6 @@ using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Edit;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.Url;
 using ToSic.Sxc.WebApi.InPage;
@@ -82,7 +81,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.A($"try to publish #{index} on '{part}'");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            return _blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.Publish(part, index);
+            return _blockEditorSelectorLazy.Value.GetEditor(Block).Publish(part, index);
         }
 
         public AjaxRenderDto RenderV2(int templateId, string lang, string root)

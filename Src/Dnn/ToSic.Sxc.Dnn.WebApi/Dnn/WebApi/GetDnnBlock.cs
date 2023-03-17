@@ -23,15 +23,24 @@ namespace ToSic.Sxc.Dnn.WebApi
             );
         }
 
-        internal IBlock GetCmsBlock(HttpRequestMessage request) => Log.Func(timer: true, func: () =>
+        internal BlockWithContextProvider GetCmsBlock(HttpRequestMessage request) => Log.Func(timer: true, func: () =>
         {
             var moduleInfo = request.FindModuleInfo();
 
             if (moduleInfo == null)
                 return (null, "request ModuleInfo not found");
 
-            var block = _moduleAndBlockBuilder.New().GetBlock(moduleInfo, null);
+            var blockProvider = _moduleAndBlockBuilder.New().GetProvider(moduleInfo, null);
 
+            var result = new BlockWithContextProvider(blockProvider.ContextOfBlock,
+                () => GetBlockOrInnerContentBlock(request, blockProvider));
+
+            return (result, "ok");
+        });
+
+        private IBlock GetBlockOrInnerContentBlock(HttpRequestMessage request, BlockWithContextProvider blockWithContextProvider)
+        {
+            var block = blockWithContextProvider.LoadBlock();
             // check if we need an inner block
             if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId))
             {
@@ -50,8 +59,8 @@ namespace ToSic.Sxc.Dnn.WebApi
                 }
             }
 
-            return (block, "ok");
-        });
+            return block;
+        }
 
         private IBlock FindInnerContentParentBlock(IBlock parent, int contentBlockId, string[] blockIds)
         {

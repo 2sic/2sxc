@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Context
@@ -34,7 +33,7 @@ namespace ToSic.Sxc.Context
 
         IContextOfApp AppNameRouteBlock(string nameOrPath);
 
-        void AttachBlock(Func<IBlock> getBlock);
+        void AttachBlock(BlockWithContextProvider blockWithContextProvider);
 
         IBlock BlockOrNull();
 

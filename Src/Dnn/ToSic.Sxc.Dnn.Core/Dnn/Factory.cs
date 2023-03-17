@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Dnn
         public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog) => parentLog.Func($"{pageId}, {modId}", () =>
         {
             Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
-            return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetBlock(pageId, modId).BlockBuilder;
+            return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(pageId, modId).LoadBlock().BlockBuilder;
         });
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Dnn
             Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
             parentLog = parentLog ?? NewLog();
             var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
-            return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetBlock(dnnModule, null).BlockBuilder;
+            return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(dnnModule, null).LoadBlock().BlockBuilder;
         }
 
         /// <summary>

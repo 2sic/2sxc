@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.Context;
+﻿using System;
+using ToSic.Eav.Context;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 
@@ -9,7 +10,6 @@ namespace ToSic.Sxc.Context
         #region Constructor / DI
         
         protected readonly LazySvc<AppIdResolver> AppIdResolver;
-        //private readonly Generator<IContextOfApp> _contextOfApp;
 
         public ContextResolver(
             LazySvc<AppIdResolver> appIdResolverLazy,
@@ -17,7 +17,6 @@ namespace ToSic.Sxc.Context
             Generator<IContextOfApp> contextOfApp) : base(contextOfSite, contextOfApp, "Sxc.CtxRes")
         {
             ConnectServices(
-                //_contextOfApp = contextOfApp,
                 AppIdResolver = appIdResolverLazy
             );
         }
@@ -31,7 +30,7 @@ namespace ToSic.Sxc.Context
         /// TODO: WIP - requires that if an app is to be used, it was accessed before - not yet perfect...
         /// </summary>
         /// <returns></returns>
-        public IContextOfUserPermissions UserPermissions() => _ctxUserPerm.Get(() => BlockContext ?? LatestAppContext ?? Site());
+        public IContextOfUserPermissions UserPermissions() => _ctxUserPerm.Get(() => BlockContextOrNull() ?? LatestAppContext ?? Site());
         private readonly GetOnce<IContextOfUserPermissions> _ctxUserPerm = new GetOnce<IContextOfUserPermissions>();
     }
 }

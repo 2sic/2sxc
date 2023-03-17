@@ -12,17 +12,15 @@ namespace ToSic.Sxc.Dnn
 {
     public class DnnModuleAndBlockBuilder: ModuleAndBlockBuilder
     {
-        public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base(DnnConstants.LogName)
+        public DnnModuleAndBlockBuilder(Generator<IModule> moduleGenerator, Generator<IContextOfBlock> contextGenerator, Generator<BlockFromModule> blockGenerator) : base(blockGenerator, DnnConstants.LogName)
         {
             ConnectServices(
                 _moduleGenerator = moduleGenerator,
-                _contextGenerator = contextGenerator,
-                _blockGenerator = blockGenerator
+                _contextGenerator = contextGenerator
             );
         }
         private readonly Generator<IModule> _moduleGenerator;
         private readonly Generator<IContextOfBlock> _contextGenerator;
-        private readonly Generator<BlockFromModule> _blockGenerator;
         private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
 
@@ -37,19 +35,19 @@ namespace ToSic.Sxc.Dnn
             l.A($"Page Id on IModule: {module.BlockIdentifier} - should be {pageId}");
             return module;
         });
-        protected override IBlock GetBlock(IModule module, int? pageId) => GetBlock((module as DnnModule)?.GetContents(), pageId);
+
+        protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId) => GetContextOfBlock((module as DnnModule)?.GetContents(), pageId);
 
 
-        public override IBlock GetBlock<TPlatformModule>(TPlatformModule module, int? pageId) => Log.Func(timer: true, func: l =>
+        protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
         {
             if (module == null) throw new ArgumentNullException(nameof(module));
             if (!(module is ModuleInfo dnnModule)) throw new ArgumentException("Given data is not a module");
-            l.A($"Module: {dnnModule.ModuleID}");
+            Log.A($"Module: {dnnModule.ModuleID}");
 
             var initializedCtx = InitDnnSiteModuleAndBlockContext(dnnModule, pageId);
-            var result = _blockGenerator.New().Init(initializedCtx);
-            return result;
-        });
+            return initializedCtx;
+        }
 
         private IContextOfBlock InitDnnSiteModuleAndBlockContext(ModuleInfo dnnModule, int? pageId) => Log.Func(() =>
         {

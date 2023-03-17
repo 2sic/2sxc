@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Dnn
         /// Probably obsolete, but a bit risky to just remove
         /// We will only add it to ApiController but not to Api12, because no new code should ever use that.
         /// </remarks>
-        [PrivateApi] public IBlock Block => GetBlock();
+        [PrivateApi] public IBlock Block => GetBlockAndContext().LoadBlock();
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 

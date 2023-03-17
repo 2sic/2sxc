@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Context
         public IContextOfApp GetBlockOrSetApp(int appId)
         {
             // get the current block context
-            var ctx = BlockContext;
+            var ctx = BlockContextOrNull();
 
             // if there is a block context, make sure it's of the requested app (or no app was specified)
             // then return that

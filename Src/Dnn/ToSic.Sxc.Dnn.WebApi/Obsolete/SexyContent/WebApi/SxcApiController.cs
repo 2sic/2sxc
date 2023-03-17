@@ -65,7 +65,8 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
         /// </summary>
-        [PrivateApi] public IBlock Block => GetBlock();
+        [PrivateApi] public IBlock Block => GetBlockAndContext().LoadBlock();
+
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />

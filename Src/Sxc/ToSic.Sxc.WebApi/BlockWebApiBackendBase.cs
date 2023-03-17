@@ -7,7 +7,6 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi

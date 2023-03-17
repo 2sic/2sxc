@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Search
             var appLoaderTool = _loaderTools.Value;
             _appsCache.Value.Load(module.BlockIdentifier, DnnSite.DefaultCultureCode, appLoaderTool);
 
-            Block = _moduleAndBlockBuilder.Value.GetBlock(DnnModule, null);
+            Block = _moduleAndBlockBuilder.Value.GetProvider(DnnModule, null).LoadBlock();
 
             if (Block.View == null) return "no view";
             if (Block.View.SearchIndexingDisabled) return "search disabled"; // new in 12.02
