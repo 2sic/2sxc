@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Blocks
@@ -22,6 +23,7 @@ namespace ToSic.Sxc.Blocks
         private readonly Func<IBlock> _delayedBlockGen;
 
         public IContextOfBlock ContextOfBlock { get; }
-        public IBlock LoadBlock() => _delayedBlockGen();
+        public IBlock LoadBlock() => _block.Get(_delayedBlockGen);
+        private readonly GetOnce<IBlock> _block = new GetOnce<IBlock>();
     }
 }
