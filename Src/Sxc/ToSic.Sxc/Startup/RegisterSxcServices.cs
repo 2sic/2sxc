@@ -21,6 +21,7 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.Services.GoogleMaps;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
+using ToSic.Sxc.Web.EditUi;
 using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.Web.LightSpeed;
 using ToSic.Sxc.Web.PageFeatures;
@@ -163,6 +164,9 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<AppFilesDataSourceProvider.MyServices>();
             services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
             services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
+
+            // v15 EditUi Resources
+            services.TryAddTransient<EditUiResources>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

@@ -1247,7 +1247,7 @@
       "Entities": [
         {
           "Id": 130652,
-          "Version": 10,
+          "Version": 11,
           "Guid": "06f4fa58-2e91-4896-a16e-3bbaf9a5f491",
           "Type": {
             "Name": "⚙️WebResources",
@@ -1256,7 +1256,7 @@
           "Attributes": {
             "String": {
               "CdnSourceEdit": {
-                "en-us": ""
+                "en-us": "https://cdn.2sxc.org/packages"
               },
               "CdnSourcePublic": {
                 "en-us": ""

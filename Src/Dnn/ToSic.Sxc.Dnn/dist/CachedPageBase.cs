@@ -1,13 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Web;
 using System.Web.Caching;
+using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
+using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.EditUi;
 
 namespace ToSic.Sxc.Dnn.dist
 {
@@ -36,7 +40,11 @@ namespace ToSic.Sxc.Dnn.dist
 
             var content = DnnJsApi.GetJsApiJson(pageId, siteRoot);
 
-            var customHeaders = ""; 
+            //var sp = HttpContext.Current.GetScope().ServiceProvider;
+            //var editUiResources = sp.GetService<EditUiResources>();
+            //var comment = editUiResources.GetResources(true, true, true).Html;
+
+            var customHeaders = "";// comment;
             return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders, "");
         }
 

@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Web.WebResources
         // Note: this should not change often
         // As usually new versions of assets will often run side-by side with older versions
         // But do keep in sync w/2sxc versions (possibly just not upgrade as only small things change) for clarity
-        internal const string VersionSuffix = "/v15";
+        public const string VersionSuffix = "/v15";
 
         //internal const string Cdn2SxcRoot = "https://cdn.2sxc.org/packages";
         //internal const string CdnLocalRoot = "/cdn/packages";
