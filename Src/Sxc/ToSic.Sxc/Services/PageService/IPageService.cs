@@ -165,7 +165,7 @@ namespace ToSic.Sxc.Services
         /// This is for testing only, and not a real API. Should not be used outside of testing.
         /// </summary>
         [PrivateApi]
-        void Testing(string cdnMode, string cdnRoot);
+        void TestCdn(string cdnSource);
 
         #endregion
     }

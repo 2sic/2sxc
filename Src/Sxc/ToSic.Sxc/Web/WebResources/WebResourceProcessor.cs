@@ -6,20 +6,43 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web.PageFeatures;
-using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Web.WebResources
 {
     internal class WebResourceProcessor: HelperBase
     {
-        public string CdnMode { get; }
-        public string AlternateRoot { get; }
+        #region Constants
 
-        public WebResourceProcessor(string cdnMode, string alternateRoot, ILog parentLog) : base(parentLog, "Sxc.WebRHl")
+        internal const string Cdn2SxcRoot = "https://2sxc.github.io/cdn.2sxc.org/packages";
+        internal const string CdnLocalRoot = "/cdn/packages";
+        // Note: this should not change often
+        // As usually new versions of assets will often run side-by side with older versions
+        // But do keep in sync w/2sxc versions (possibly just not upgrade as only small things change) for clarity
+        internal const string VersionSuffix = "/v15";
+
+        internal const string CdnDefault = "cdn";
+        internal const string Cdn2Sxc = "cdn.2sxc.org";
+        internal const string CdnLocal = "local";
+        internal const string CdnCustom = "custom";
+
+        private const string WebResHtmlField = "Html";
+
+        private const string WebResEnabledField = "Enabled";
+
+        private const string WebResAutoOptimizeField = "AutoOptimize";
+
+        #endregion
+
+        #region Constructor
+
+        public string CdnSource { get; }
+
+        public WebResourceProcessor(string cdnSource, ILog parentLog) : base(parentLog, "Sxc.WebRHl")
         {
-            CdnMode = cdnMode;
-            AlternateRoot = alternateRoot;
+            CdnSource = cdnSource;
         }
+
+        #endregion
 
         public PageFeatureFromSettings Process(string key, DynamicEntity webRes)
         {
@@ -34,14 +57,11 @@ namespace ToSic.Sxc.Web.WebResources
             // TODO: HANDLE AUTO-ENABLE-OPTIMIZATIONS
             var autoOptimize = webRes.Get(WebResAutoOptimizeField, fallback: false);
 
-            if (!CdnMode.HasValue() || CdnMode == CdnDefault)
+            if (!CdnSource.HasValue() || CdnSource == CdnDefault)
                 return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
 
             // override temp dev
             var newRoot = PickBestNewRoot();
-            var currentResRoot = webRes.Get<string>(WebResRootPathField);
-            if (!currentResRoot.HasValue())
-                return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, tried to replace root but original not set");
 
             // Replacements will be delayed until preparing to generate the final HTML
             // to be sure we only replace things in the url.
@@ -51,8 +71,12 @@ namespace ToSic.Sxc.Web.WebResources
             foreach (var match in srcMatches)
             {
                 var orig = match.Groups[RegexUtil.SrcKey].Value;
-                var updated = orig
-                    .Replace(currentResRoot, newRoot)
+                var thirdSlash = orig.GetNthIndex('/', 3); // all paths start with "https://xxx/" - which we want to truncate
+                var updated = thirdSlash == -1
+                ? "error-path-should-have-at-least-3-slashes"
+                : newRoot + orig
+                    .Substring(thirdSlash)
+                    // .subReplace(currentResRoot, newRoot)
                     .Replace("@", "-"); // not underscore, because this fails on github cdn where folders starting with underscore are hidden?
                 html = html.Replace(orig, updated);
             }
@@ -66,19 +90,17 @@ namespace ToSic.Sxc.Web.WebResources
             }
 
             return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), 
-                $"ok; replace root '{currentResRoot}' with {newRoot}");
+                $"ok; root now {newRoot}");
         }
 
         private string PickBestNewRoot()
         {
-            switch (CdnMode)
+            switch (CdnSource)
             {
-                case Cdn2Sxc: return Cdn2SxcRoot;
-                case CdnLocal: return CdnLocalRoot;
-                case CdnCustom: return AlternateRoot;
+                case Cdn2Sxc: return Cdn2SxcRoot + VersionSuffix;
+                case CdnLocal: return CdnLocalRoot + VersionSuffix;
+                default: return CdnSource + VersionSuffix;
             }
-
-            return "cdn-mode-unknown";
         }
 
     }

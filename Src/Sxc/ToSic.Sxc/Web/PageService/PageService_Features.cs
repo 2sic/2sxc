@@ -10,14 +10,11 @@ namespace ToSic.Sxc.Web.PageService
 {
     public partial class PageService
     {
-        public void Testing(string cdnMode, string cdnRoot)
+        public void TestCdn(string cdnSource)
         {
-            _overrideCdnMode = cdnMode;
-            _overrideCdnRoot = cdnRoot;
+            _overrideCdnSource = cdnSource;
         }
-
-        private string _overrideCdnMode = null;
-        private string _overrideCdnRoot = null;
+        private string _overrideCdnSource;
 
         /// <inheritdoc />
         public string Activate(params string[] keys) => Log.Func(() =>
@@ -61,7 +58,7 @@ namespace ToSic.Sxc.Web.PageService
         {
             var l = Log.Fn<string[]>();
             var keysToRemove = new List<string>();
-            var processor = new WebResourceProcessor(_overrideCdnMode ?? CdnMode, _overrideCdnRoot ?? CustomSourceRoot, Log);
+            var processor = new WebResourceProcessor(_overrideCdnSource ?? CdnSource, Log);
             foreach (var key in keys)
             {
                 l.A($"Key: {key}");
@@ -83,36 +80,8 @@ namespace ToSic.Sxc.Web.PageService
             return l.Return(keys);
         }
 
-        //public (PageFeatureFromSettings feature, string message) ProcessResource(string key, DynamicEntity webRes, string cdnMode, string alternateRoot)
-        //{
-        //    // Check if it's enabled
-        //    if (webRes.Get(WebResEnabledField) as bool? == false) return (null, "not enabled");
-
-        //    // Check if we really have HTML to use
-        //    if (!(webRes.Get(WebResHtmlField) is string html) || html.IsEmpty()) return (null, "no html");
-
-        //    // TODO: HANDLE AUTO-ENABLE-OPTIMIZATIONS
-        //    var autoOptimize = webRes.Get(WebResAutoOptimizeField, fallback: false);
-
-        //    if (!cdnMode.HasValue() || cdnMode == CdnDefault)
-        //        return (new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
-
-        //    // override temp dev
-        //    alternateRoot = Cdn2SxcRoot;
-        //    var currentResRoot = webRes.Get<string>(WebResRootPathField);
-        //    if (!currentResRoot.HasValue())
-        //        return (new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, tried to replace root but original not set");
-
-        //    html = html.Replace(currentResRoot, alternateRoot);
-
-        //    return (new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), $"ok; replace root '{currentResRoot}' with {alternateRoot}");
-        //}
-
-        private string CustomSourceRoot => _custSourceRoot.Get(() => WebResources.Get<string>(CustomSourceRootField));
-        private readonly GetOnce<string> _custSourceRoot = new GetOnce<string>();
-
-        private string CdnMode => _cdnMode.Get(() => WebResources.Get<string>(PreferredSourcesField));
-        private readonly GetOnce<string> _cdnMode = new GetOnce<string>();
+        private string CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
+        private readonly GetOnce<string> _cdnSource = new GetOnce<string>();
 
         private DynamicEntity WebResources => _webResources.Get(() => Settings?.Get(WebResourcesNode) as DynamicEntity);
         private readonly GetOnce<DynamicEntity> _webResources = new GetOnce<DynamicEntity>();

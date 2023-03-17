@@ -528,122 +528,6 @@
                 ]
               },
               {
-                "Name": "RootPath",
-                "Type": "String",
-                "InputType": "string-default",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 169557,
-                    "Version": 2,
-                    "Guid": "708c1fb5-3b73-4488-b527-ef719f6b7bec",
-                    "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "en-us": ""
-                        },
-                        "DefaultValue": {
-                          "en-us": ""
-                        },
-                        "Information": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": "string-default"
-                        },
-                        "Name": {
-                          "en-us": "Root Path"
-                        },
-                        "Notes": {
-                          "en-us": "<p>Specify what part of the default URL is the root, so that the same resource can be loaded from other sources.</p>"
-                        },
-                        "Placeholder": {
-                          "en-us": ""
-                        },
-                        "Tooltip": {
-                          "en-us": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "en-us": ""
-                        }
-                      },
-                      "Hyperlink": {
-                        "HelpLink": {
-                          "en-us": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "en-us": false
-                        },
-                        "DisableTranslation": {
-                          "en-us": false
-                        },
-                        "Required": {
-                          "en-us": false
-                        },
-                        "VisibleInEditUI": {
-                          "en-us": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 169558,
-                    "Version": 1,
-                    "Guid": "f3673d6c-3020-49b9-a5b1-0c1f6a91b2bc",
-                    "Type": {
-                      "Name": "@String",
-                      "Id": "@String"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "DropdownValues": {
-                          "en-us": ""
-                        },
-                        "InputType": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 169559,
-                    "Version": 1,
-                    "Guid": "d2e224e4-a340-43b6-9ae3-2297a9583cbc",
-                    "Type": {
-                      "Name": "@string-default",
-                      "Id": "@string-default"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "InputFontFamily": {
-                          "en-us": ""
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
                 "Name": "AutoOptimize",
                 "Type": "Boolean",
                 "InputType": "boolean-default",
@@ -941,14 +825,14 @@
                 ]
               },
               {
-                "Name": "PreferredSources",
+                "Name": "CdnSourcePublic",
                 "Type": "String",
                 "InputType": "string-dropdown",
                 "IsTitle": false,
                 "Metadata": [
                   {
                     "Id": 169551,
-                    "Version": 3,
+                    "Version": 6,
                     "Guid": "c26bb49e-8607-47bd-add3-12962104a963",
                     "Type": {
                       "Name": "@All",
@@ -969,10 +853,10 @@
                           "en-us": "string-dropdown"
                         },
                         "Name": {
-                          "en-us": "Preferred Sources"
+                          "en-us": "CDN Source for Public Resources"
                         },
                         "Notes": {
-                          "en-us": "<p>Preferred location where to load resources from.</p>"
+                          "en-us": "<p>Preferred location where to load public resources from, such as bootstrap, fancybox etc.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -1019,7 +903,7 @@
                   },
                   {
                     "Id": 169552,
-                    "Version": 2,
+                    "Version": 5,
                     "Guid": "4d053dd3-3456-41d9-a797-90b9ab0849d7",
                     "Type": {
                       "Name": "@String",
@@ -1039,7 +923,7 @@
                   },
                   {
                     "Id": 169553,
-                    "Version": 2,
+                    "Version": 5,
                     "Guid": "880a956f-d542-4608-8e6a-055858a1e589",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -1048,7 +932,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\ncdn.2sxc.org:2sxc CDN (cdn.2sxc.org)\nlocal:Local - on this website (on /_cdn)\ncustom:Custom path or site"
+                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\ncdn.2sxc.org:2sxc CDN (cdn.2sxc.org)\nlocal:Local - on this website (on /_cdn)\ncustom:Custom path or site (switch to text-mode to enter)"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -1071,15 +955,15 @@
                 ]
               },
               {
-                "Name": "CustomSourceRoot",
-                "Type": "Hyperlink",
-                "InputType": "hyperlink-default",
+                "Name": "CdnSourceEdit",
+                "Type": "String",
+                "InputType": "string-dropdown",
                 "IsTitle": false,
                 "Metadata": [
                   {
-                    "Id": 169554,
-                    "Version": 3,
-                    "Guid": "d1170a65-2f73-4cb5-8863-ff052f425050",
+                    "Id": 169564,
+                    "Version": 4,
+                    "Guid": "7d01e570-7af5-4ed2-bfe1-0ba58a956a1d",
                     "Type": {
                       "Name": "@All",
                       "Id": "@All"
@@ -1096,13 +980,13 @@
                           "en-us": ""
                         },
                         "InputType": {
-                          "en-us": "hyperlink-default"
+                          "en-us": "string-dropdown"
                         },
                         "Name": {
-                          "en-us": "Custom Source Root"
+                          "en-us": "CDN Source for Edit Resources"
                         },
                         "Notes": {
-                          "en-us": "<p>Custom location for custom delivery of Web Resources.</p>"
+                          "en-us": "<p>These are resources used in the edit dialog, such as icons and fonts.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
@@ -1124,9 +1008,7 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": [
-                            "326a1c9f-7f4a-4c43-8054-82b979527c52"
-                          ]
+                          "*": []
                         },
                         "Warnings": {
                           "*": []
@@ -1150,43 +1032,51 @@
                     "Owner": "dnn:userid=41"
                   },
                   {
-                    "Id": 169555,
-                    "Version": 1,
-                    "Guid": "9f734518-2869-427e-b5af-2a306accab42",
+                    "Id": 169565,
+                    "Version": 3,
+                    "Guid": "0e2a664d-e946-4585-a1e3-6a2a810d00bd",
                     "Type": {
-                      "Name": "@Hyperlink",
-                      "Id": "@Hyperlink"
+                      "Name": "@String",
+                      "Id": "@String"
                     },
                     "Attributes": {
                       "String": {
-                        "Buttons": {
-                          "en-us": "adam,more"
-                        },
-                        "DefaultDialog": {
+                        "DropdownValues": {
                           "en-us": ""
                         },
-                        "FileFilter": {
+                        "InputType": {
                           "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169566,
+                    "Version": 3,
+                    "Guid": "4eac359d-372e-42d1-94c5-3628c9a79fab",
+                    "Type": {
+                      "Name": "@string-dropdown",
+                      "Id": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\ncdn.2sxc.org:2sxc CDN (cdn.2sxc.org)\nlocal:Local - on this website (on /_cdn)\ncustom:Custom path or site (switch to text-mode to enter)"
                         },
-                        "Paths": {
-                          "en-us": ""
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
                         },
-                        "ServerResourceMapping": {
-                          "en-us": ""
+                        "Separator": {
+                          "en-us": ","
                         }
                       },
                       "Boolean": {
-                        "ShowAdam": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
                           "en-us": true
-                        },
-                        "ShowFileManager": {
-                          "en-us": false
-                        },
-                        "ShowImageManager": {
-                          "en-us": false
-                        },
-                        "ShowPagePicker": {
-                          "en-us": false
                         }
                       }
                     },
@@ -1351,42 +1241,13 @@
               }
             ]
           },
-          "Entities": [
-            {
-              "Id": 169556,
-              "Version": 2,
-              "Guid": "326a1c9f-7f4a-4c43-8054-82b979527c52",
-              "Type": {
-                "Name": "UiFormula",
-                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
-              },
-              "Attributes": {
-                "String": {
-                  "Formula": {
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return data.PreferredSources.indexOf('custom') > -1;\n});"
-                  },
-                  "Target": {
-                    "en-us": "Field.Settings.Visible"
-                  },
-                  "Title": {
-                    "en-us": "Field.Settings.Visible"
-                  }
-                },
-                "Boolean": {
-                  "Enabled": {
-                    "en-us": true
-                  }
-                }
-              },
-              "Owner": "dnn:userid=41"
-            }
-          ]
+          "Entities": []
         }
       ],
       "Entities": [
         {
           "Id": 130652,
-          "Version": 9,
+          "Version": 10,
           "Guid": "06f4fa58-2e91-4896-a16e-3bbaf9a5f491",
           "Type": {
             "Name": "⚙️WebResources",
@@ -1394,16 +1255,14 @@
           },
           "Attributes": {
             "String": {
-              "PreferredSources": {
-                "en-us": "cdn"
+              "CdnSourceEdit": {
+                "en-us": ""
+              },
+              "CdnSourcePublic": {
+                "en-us": ""
               },
               "SettingsIdentifier": {
                 "en-us": "WebResources"
-              }
-            },
-            "Hyperlink": {
-              "CustomSourceRoot": {
-                "en-us": ""
               }
             },
             "Entity": {
@@ -1463,9 +1322,6 @@
               "ItemIdentifier": {
                 "en-us": "Bootstrap4"
               },
-              "RootPath": {
-                "en-us": "https://cdn.jsdelivr.net/npm"
-              },
               "SettingsIdentifier": {
                 "en-us": "WebResources.Bootstrap4"
               }
@@ -1522,9 +1378,6 @@
               },
               "ItemIdentifier": {
                 "en-us": "FontAwesome5"
-              },
-              "RootPath": {
-                "en-us": "https://cdnjs.cloudflare.com/ajax/libs"
               },
               "SettingsIdentifier": {
                 "en-us": "WebResources.FontAwesome5"
@@ -1611,9 +1464,6 @@
               "ItemIdentifier": {
                 "en-us": "Fancybox3"
               },
-              "RootPath": {
-                "en-us": "https://cdnjs.cloudflare.com/ajax/libs"
-              },
               "SettingsIdentifier": {
                 "en-us": "WebResources.Fancybox3"
               }
@@ -1671,9 +1521,6 @@
               "ItemIdentifier": {
                 "en-us": "Bootstrap5"
               },
-              "RootPath": {
-                "en-us": "https://cdn.jsdelivr.net/npm"
-              },
               "SettingsIdentifier": {
                 "en-us": "WebResources.Bootstrap5"
               }
@@ -1730,9 +1577,6 @@
               },
               "ItemIdentifier": {
                 "en-us": "fancybox4"
-              },
-              "RootPath": {
-                "en-us": "https://cdn.jsdelivr.net/npm"
               },
               "SettingsIdentifier": {
                 "en-us": "WebResources.fancybox4"
@@ -1818,9 +1662,6 @@
               },
               "ItemIdentifier": {
                 "en-us": "FontAwesome6"
-              },
-              "RootPath": {
-                "en-us": "https://cdnjs.cloudflare.com/ajax/libs"
               },
               "SettingsIdentifier": {
                 "en-us": "WebResources.FontAwesome6"
