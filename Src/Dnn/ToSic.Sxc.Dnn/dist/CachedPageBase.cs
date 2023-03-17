@@ -1,19 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Web;
 using System.Web.Caching;
-using DotNetNuke.Common.Extensions;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Urls;
 using DotNetNuke.Framework;
-using Microsoft.Extensions.DependencyInjection;
-using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
-using ToSic.Eav.Data;
-using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 
