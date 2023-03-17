@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Blocks.Output
             Log.A($"Found {scriptMatches.Count} external scripts");
             foreach (Match match in scriptMatches)
             {
-                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
+                var url = FixUrlWithSpaces(match.Groups[RegexUtil.SrcKey].Value);
 
                 // always remove 2sxc JS requests from template and ensure it's added the standard way
                 if (Is2SxcApiJs(url))

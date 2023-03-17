@@ -948,7 +948,7 @@
                 "Metadata": [
                   {
                     "Id": 169551,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "c26bb49e-8607-47bd-add3-12962104a963",
                     "Type": {
                       "Name": "@All",
@@ -1019,7 +1019,7 @@
                   },
                   {
                     "Id": 169552,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "4d053dd3-3456-41d9-a797-90b9ab0849d7",
                     "Type": {
                       "Name": "@String",
@@ -1039,7 +1039,7 @@
                   },
                   {
                     "Id": 169553,
-                    "Version": 1,
+                    "Version": 2,
                     "Guid": "880a956f-d542-4608-8e6a-055858a1e589",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -1048,7 +1048,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\ncdn-custom:Private CDN\nlocal:Local installation - same server as this website\nlocal-custom:Local but from custom URL"
+                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\ncdn.2sxc.org:2sxc CDN (cdn.2sxc.org)\nlocal:Local - on this website (on /_cdn)\ncustom:Custom path or site"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -1354,7 +1354,7 @@
           "Entities": [
             {
               "Id": 169556,
-              "Version": 1,
+              "Version": 2,
               "Guid": "326a1c9f-7f4a-4c43-8054-82b979527c52",
               "Type": {
                 "Name": "UiFormula",
@@ -1363,7 +1363,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return data.PreferredSources.indexOf('custom') > 0;\n});"
+                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return data.PreferredSources.indexOf('custom') > -1;\n});"
                   },
                   "Target": {
                     "en-us": "Field.Settings.Visible"

@@ -1,17 +1,28 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Utils
 {
     public class RegexUtil
     {
+        /// <summary>
+        /// Used in ScriptSrc and StyleSrc Formulas
+        /// </summary>
+        public const string SrcKey = "Src";
+
+        public const string IntegrityKey = "Integrity";
+
         // language=regex
         private const string AttributesFormula = "\\s(?<Key>[\\w-]+(?=[^<]*>))=([\"'])(?<Value>.*?[^\\1][\\s\\S]+?)\\1|\\s(?<Key>[\\w-]+(?=.*?))";
         // language=regex
         private const string ImagesWithDataCmsidFormula = "<img[^>]*data-cmsid=['\"](?<cmsid>[^'\"]+)['\"][^>]*>";
         // language=regex
         private const string ScriptSrcFormula = "<script\\s([^>]*)src=('|\")(?<Src>.*?)('|\")(([^>]*/>)|[^>]*(>.*?</script>))";
+        // language=regex
+        private const string IntegrityAttributeFormula = "(?<Integrity>integrity=('|\").*?('|\"))";
+
         // language=regex
         private const string ScriptContentFormula = @"<script[^>]*>(?<Content>(.|\n)*?)</script[^>]*>";
         // language=regex
@@ -27,8 +38,17 @@ namespace ToSic.Sxc.Utils
         public static readonly Lazy<Regex> AttributesDetection = new Lazy<Regex>(() => new Regex(AttributesFormula, RegexOptions.IgnoreCase));
         public static readonly Lazy<Regex> ImagesDetection = new Lazy<Regex>(() => new Regex(ImagesWithDataCmsidFormula, RegexOptions.IgnoreCase));
         public static readonly Lazy<Regex> ScriptSrcDetection = new Lazy<Regex>(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+        // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
+        public static Regex ScriptSrcDetectionMultiLine => ScriptSrcDetMl.Get(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
+        private static readonly GetOnce<Regex> ScriptSrcDetMl = new GetOnce<Regex>();
+
         public static readonly Lazy<Regex> ScriptContentDetection = new Lazy<Regex>(() => new Regex(ScriptContentFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
         public static readonly Lazy<Regex> StyleDetection = new Lazy<Regex>(() => new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+        // note: 2dm created this, because I wasn't sure if changing the original to ML would have side effects
+        public static Regex StyleDetectionMultiLine => StyleSrcDetMl.Get(() => new Regex(StyleSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Multiline));
+        private static readonly GetOnce<Regex> StyleSrcDetMl = new GetOnce<Regex>();
+        public static Regex IntegrityAttribute => IntegrAttr.Get(() => new Regex(IntegrityAttributeFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));
+        private static readonly GetOnce<Regex> IntegrAttr = new GetOnce<Regex>();
         public static readonly Lazy<Regex> StyleRelDetect = new Lazy<Regex>(() => new Regex(StyleRelFormula, RegexOptions.IgnoreCase));
         public static readonly Lazy<Regex> OptimizeDetection = new Lazy<Regex>(() => new Regex(ClientDependencyRegex, RegexOptions.IgnoreCase));
         public static readonly Lazy<Regex> IdDetection = new Lazy<Regex>(() => new Regex(IdFormula, RegexOptions.IgnoreCase));
