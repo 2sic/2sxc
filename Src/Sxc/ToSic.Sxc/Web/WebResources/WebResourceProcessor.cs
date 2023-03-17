@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web.WebResources
     {
         #region Constants
 
-        internal const string Cdn2SxcRoot = "https://2sxc.github.io/cdn.2sxc.org/packages";
+        internal const string Cdn2SxcRoot = "https://cdn.2sxc.org/packages";
         internal const string CdnLocalRoot = "/cdn/packages";
         // Note: this should not change often
         // As usually new versions of assets will often run side-by side with older versions
@@ -23,7 +23,6 @@ namespace ToSic.Sxc.Web.WebResources
         internal const string CdnDefault = "cdn";
         internal const string Cdn2Sxc = "cdn.2sxc.org";
         internal const string CdnLocal = "local";
-        internal const string CdnCustom = "custom";
 
         private const string WebResHtmlField = "Html";
 
