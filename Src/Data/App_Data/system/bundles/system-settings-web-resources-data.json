@@ -832,7 +832,7 @@
                 "Metadata": [
                   {
                     "Id": 169551,
-                    "Version": 6,
+                    "Version": 8,
                     "Guid": "c26bb49e-8607-47bd-add3-12962104a963",
                     "Type": {
                       "Name": "@All",
@@ -903,7 +903,7 @@
                   },
                   {
                     "Id": 169552,
-                    "Version": 5,
+                    "Version": 7,
                     "Guid": "4d053dd3-3456-41d9-a797-90b9ab0849d7",
                     "Type": {
                       "Name": "@String",
@@ -923,7 +923,7 @@
                   },
                   {
                     "Id": 169553,
-                    "Version": 5,
+                    "Version": 7,
                     "Guid": "880a956f-d542-4608-8e6a-055858a1e589",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -932,7 +932,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\ncdn.2sxc.org:2sxc CDN (cdn.2sxc.org)\nlocal:Local - on this website (on /_cdn)\ncustom:Custom path or site (switch to text-mode to enter)"
+                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\nhttps\\://cdn.2sxc.org/packages:2sxc CDN (cdn.2sxc.org)\n/cdn/packages:Local - on this website (/cdn)\ncustom:Custom path or site (switch to text-mode to type custom value)"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -962,7 +962,7 @@
                 "Metadata": [
                   {
                     "Id": 169564,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "7d01e570-7af5-4ed2-bfe1-0ba58a956a1d",
                     "Type": {
                       "Name": "@All",
@@ -1033,7 +1033,7 @@
                   },
                   {
                     "Id": 169565,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "0e2a664d-e946-4585-a1e3-6a2a810d00bd",
                     "Type": {
                       "Name": "@String",
@@ -1053,7 +1053,7 @@
                   },
                   {
                     "Id": 169566,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "4eac359d-372e-42d1-94c5-3628c9a79fab",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -1062,7 +1062,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\ncdn.2sxc.org:2sxc CDN (cdn.2sxc.org)\nlocal:Local - on this website (on /_cdn)\ncustom:Custom path or site (switch to text-mode to enter)"
+                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\nhttps\\://cdn.2sxc.org/packages:2sxc CDN (cdn.2sxc.org)\n/cdn/packages:Local - on this website (/cdn)\ncustom:Custom path or site (switch to text-mode to type custom value)"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
