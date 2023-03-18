@@ -12,6 +12,7 @@ using Oqtane.Repository;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.EditUi;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     {
         private static readonly MemoryCache Cache = MemoryCache.Default;
 
-        public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath)
+        public static Task PageOutputCached(HttpContext context, IWebHostEnvironment env, string virtualPath, EditUiResourceSettings settings)
         {
             context.Response.Headers.Add("test-dev", "2sxc");
 
@@ -41,24 +42,38 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var pageIdString = context.Request.Query[HtmlDialog.PageIdInUrl];
             var pageId = !string.IsNullOrEmpty(pageIdString) ? Convert.ToInt32(pageIdString) : -1;
 
-            var siteStateInitializer = context.RequestServices.GetService<SiteStateInitializer>();
+            var sp = context.RequestServices;
+            var siteStateInitializer = sp.GetService<SiteStateInitializer>();
             
             // find siteId from pageId (if provided)
+            var siteId = 1; // TODO: @STV - why do we have the site with all the null checks?
             if (pageId != -1)
             {
                 // siteState need to be initialized for DB connection to get siteId from pageId
                 var _ = siteStateInitializer?.InitializedState;
-                var pages = context.RequestServices.GetRequiredService<IPageRepository>();
+                var pages = sp.GetRequiredService<IPageRepository>();
                 var page = pages.GetPage(pageId, false);
                 siteStateInitializer?.InitIfEmpty(page?.SiteId);
+                siteId = page?.SiteId ?? siteId;
             }
 
             var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
-            var antiForgery = context.RequestServices.GetRequiredService<IAntiforgery>();
+            var antiForgery = sp.GetRequiredService<IAntiforgery>();
             var tokenSet = antiForgery.GetAndStoreTokens(context);
             var rsvt = tokenSet.RequestToken;
             var content = OqtJsApi.GetJsApi(pageId, siteRoot, rsvt);
-            html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", "", $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rsvt}\" >");
+
+            // New feature to get resources
+            var htmlHead = "";
+            try
+            {
+                var editUiResources = sp.GetRequiredService<EditUiResources>();
+                var assets = editUiResources.GetResources(true, siteId, settings);
+                htmlHead = assets.HtmlHead;
+            }
+            catch { /* ignore */ }
+
+            html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", htmlHead, $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rsvt}\" >");
 
             var bytes = Encoding.Default.GetBytes(html);
 

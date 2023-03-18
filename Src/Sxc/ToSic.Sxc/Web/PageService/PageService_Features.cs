@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Web.PageService
         {
             var l = Log.Fn<string[]>();
             var keysToRemove = new List<string>();
-            var processor = new WebResourceProcessor(_overrideCdnSource ?? CdnSource, Log);
+            var processor = new WebResourceProcessor(_features.Value, _overrideCdnSource ?? CdnSource, Log);
             foreach (var key in keys)
             {
                 l.A($"Key: {key}");

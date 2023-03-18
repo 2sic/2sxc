@@ -1,21 +1,33 @@
 ﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Plumbing;
-using ToSic.Sxc.Web.WebResources;
+using ToSic.Eav.Run;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Configuration.Features;
+using ToSic.Sxc.Services;
+using static ToSic.Eav.Configuration.ConfigurationConstants;
+using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
+using static ToSic.Sxc.Web.WebResources.WebResourceProcessor;
 
 namespace ToSic.Sxc.Web.EditUi
 {
-    public class EditUiResources
+    public class EditUiResources: ServiceBase
     {
+
         #region Constructor
 
         private readonly IAppStates _appStates;
         private readonly AppSettingsStack _stackHelper;
+        private readonly IZoneMapper _zoneMapper;
+        private readonly IFeaturesService _features;
 
-        public EditUiResources(IAppStates appStates, AppSettingsStack stackHelper)
+        public EditUiResources(IAppStates appStates, AppSettingsStack stackHelper, IZoneMapper zoneMapper, IFeaturesService features) : base("Sxc.EUiRes")
         {
-            _appStates = appStates;
-            _stackHelper = stackHelper;
+            ConnectServices(
+                _appStates = appStates,
+                _stackHelper = stackHelper,
+                _zoneMapper = zoneMapper,
+                _features = features
+            );
         }
 
         #endregion
@@ -25,41 +37,50 @@ namespace ToSic.Sxc.Web.EditUi
         public const string LinkTagTemplate = "<link rel=\"stylesheet\" href=\"{0}\">";
         public const string RobotoFromGoogle = "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap";
         public const string RobotoFromAltCdn = "/google-fonts/roboto/fonts.css";
-        public const string MaterialIconsGoogle = "";
-        public const string MaterialIconsAltCdn = "/google-fonts/material-symbols-outlined/fonts.css";
+        public const string MaterialIconsGoogle = "https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined";
+        public const string MaterialIconsAltCdn = "/google-fonts/material-icons/fonts.css";
 
         #endregion
 
-        public EditUiResourcesSpecs GetResources(bool enabled, bool icons, bool roboto)
+        public EditUiResourcesSpecs GetResources(bool enabled, int siteId, EditUiResourceSettings settings)
         {
             if (!enabled) return new EditUiResourcesSpecs();
-            var appPreset = _appStates.GetPresetApp();
-            var stack = _stackHelper.Init(appPreset).GetStack(ConfigurationConstants.RootNameSettings);
-            var getResult =
-                stack.InternalGetPath(
-                    $"{WebResourceConstants.WebResourcesNode}.{WebResourceConstants.CdnSourceEditField}");
-            var cdnSettings = getResult.Result as string;
-            var useAltCdn = cdnSettings.HasValue();
-            cdnSettings += WebResourceProcessor.VersionSuffix;
-            var html = $"<!-- 2dm: cdn settings {getResult.IsFinal}, '{getResult.Result}', '{getResult.Result?.GetType()}' '{cdnSettings}', {cdnSettings?.Length} -->";
-            if (icons)
+            var cdnRoot = "";
+            var useAltCdn = false;
+            var html = "";
+
+            if (_features.IsEnabled(BuiltInFeatures.CdnSourceEdit.NameId))
             {
-                var url = useAltCdn ? cdnSettings + MaterialIconsAltCdn : MaterialIconsGoogle;
+                var zoneId = _zoneMapper.GetZoneId(siteId);
+                var appPreset = _appStates.GetPrimaryApp(zoneId, Log);
+                var stack = _stackHelper.Init(appPreset).GetStack(RootNameSettings);
+                var getResult = stack.InternalGetPath($"{WebResourcesNode}.{CdnSourceEditField}");
+                cdnRoot = getResult.Result as string;
+                useAltCdn = cdnRoot.HasValue() && cdnRoot != CdnDefault;
+                cdnRoot += VersionSuffix;
+                html += $"<!-- CDN settings {getResult.IsFinal}, '{getResult.Result}', '{getResult.Result?.GetType()}' '{cdnRoot}', {cdnRoot?.Length} -->";
+            }
+            else
+                html += "<!-- CDN Settings: Default (feature not enabled) -->";
+
+            if (settings.IconsMaterial)
+            {
+                var url = useAltCdn ? cdnRoot + MaterialIconsAltCdn : MaterialIconsGoogle;
                 html += "\n" + string.Format(LinkTagTemplate, url);
             }
 
-            if (roboto)
+            if (settings.FontRoboto)
             {
-                var url = useAltCdn ? cdnSettings + RobotoFromAltCdn : RobotoFromGoogle;
+                var url = useAltCdn ? cdnRoot + RobotoFromAltCdn : RobotoFromGoogle;
                 html += "\n" + string.Format(LinkTagTemplate, url);
             }
             html += "\n";
-            return new EditUiResourcesSpecs { Html = html };
+            return new EditUiResourcesSpecs { HtmlHead = html };
         }
 
         public class EditUiResourcesSpecs
         {
-            public string Html { get; set; } = "";
+            public string HtmlHead { get; set; } = "";
 
             // later we'll also add CSP specs here
         }

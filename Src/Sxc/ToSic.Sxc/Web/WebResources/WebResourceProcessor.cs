@@ -4,13 +4,17 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web.PageFeatures;
+using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Web.WebResources
 {
     internal class WebResourceProcessor: HelperBase
     {
+        private readonly IFeaturesService _features;
+
         #region Constants
 
         // Note: this should not change often
@@ -37,8 +41,9 @@ namespace ToSic.Sxc.Web.WebResources
 
         public string CdnSource { get; }
 
-        public WebResourceProcessor(string cdnSource, ILog parentLog) : base(parentLog, "Sxc.WebRHl")
+        public WebResourceProcessor(IFeaturesService features, string cdnSource, ILog parentLog) : base(parentLog, "Sxc.WebRHl")
         {
+            _features = features;
             CdnSource = cdnSource;
         }
 
@@ -60,8 +65,12 @@ namespace ToSic.Sxc.Web.WebResources
             if (!CdnSource.HasValue() || CdnSource == CdnDefault)
                 return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, using built-in cdn-path");
 
+            // check if feature is enabled
+            if (!_features.IsEnabled(BuiltInFeatures.CdnSourcePublic.NameId))
+                return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
+
             // override temp dev
-            var newRoot = CdnSource + VersionSuffix; // PickBestNewRoot();
+            var newRoot = CdnSource + VersionSuffix;
 
             // Replacements will be delayed until preparing to generate the final HTML
             // to be sure we only replace things in the url.

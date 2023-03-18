@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Sxc.Web.EditUi;
 
 namespace ToSic.Sxc.Dnn.dist.eavUi
 {
@@ -8,7 +9,8 @@ namespace ToSic.Sxc.Dnn.dist.eavUi
         {
             Response.AppendHeader("test-dev", "2sxc");
 
-            Response.Write(PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng-edit/index-raw.html"));
+            Response.Write(PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/ng-edit/index-raw.html",
+                EditUiResourceSettings.EditUi));
 
             // HACK: opening editui will change user language in cookie, so disable that
             //if (Response.Cookies["language"] != null) Response.Cookies.Remove("language");

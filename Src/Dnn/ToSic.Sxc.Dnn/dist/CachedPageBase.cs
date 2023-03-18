@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Dnn.dist
 {
     public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to preserve correct language cookie
     {
-        protected string PageOutputCached(string virtualPath)
+        protected string PageOutputCached(string virtualPath, EditUiResourceSettings settings)
         {
             var key = CacheKey(virtualPath);
             if (!(Cache.Get(key) is string html))
@@ -30,21 +30,21 @@ namespace ToSic.Sxc.Dnn.dist
 
             // portalId should be provided in query string (because of DNN special handling of aspx pages in DesktopModules)
             var portalIdString = Request.QueryString[DnnJsApi.PortalIdParamName];
-            var portalId = portalIdString.HasValue() ? Convert.ToInt32(portalIdString) : -1;
-            var addOn = $"&{DnnJsApi.PortalIdParamName}={portalId}";
+            var siteId = portalIdString.HasValue() ? Convert.ToInt32(portalIdString) : -1;
+            var addOn = $"&{DnnJsApi.PortalIdParamName}={siteId}";
 
             // pageId should be provided in query string
             var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
             var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
-            var siteRoot = GetSiteRoot(pageId, portalId);
+            var siteRoot = GetSiteRoot(pageId, siteId);
 
             var content = DnnJsApi.GetJsApiJson(pageId, siteRoot);
 
-            //var sp = HttpContext.Current.GetScope().ServiceProvider;
-            //var editUiResources = sp.GetService<EditUiResources>();
-            //var comment = editUiResources.GetResources(true, true, true).Html;
+            var sp = HttpContext.Current.GetScope().ServiceProvider;
+            var editUiResources = sp.GetService<EditUiResources>();
+            var assets = editUiResources.GetResources(true, siteId, settings);
 
-            var customHeaders = "";// comment;
+            var customHeaders = assets.HtmlHead;
             return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders, "");
         }
 

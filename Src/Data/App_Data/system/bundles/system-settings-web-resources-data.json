@@ -825,6 +825,87 @@
                 ]
               },
               {
+                "Name": "CdnSourceNotEnabledWarning",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169950,
+                    "Version": 4,
+                    "Guid": "3a897222-1950-4d38-a0b1-fe5af3f98888",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "CdnSourceNotEnabledWarning"
+                        },
+                        "Notes": {
+                          "en-us": "<p><strong>⚠️ Warning ⚠️</strong></p>\n<p>You have configured an alternate CDN source. It appears that the features for this are not enabled, so the settings will not have an effect. See <a href=\"https://r.2sxc.org/cdn\" target=\"_blank\" rel=\"noopener\">CDN docs</a>.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "69741b0b-6734-49b8-a8b5-46b42908e302"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "CdnSourcePublic",
                 "Type": "String",
                 "InputType": "string-dropdown",
@@ -832,7 +913,7 @@
                 "Metadata": [
                   {
                     "Id": 169551,
-                    "Version": 8,
+                    "Version": 9,
                     "Guid": "c26bb49e-8607-47bd-add3-12962104a963",
                     "Type": {
                       "Name": "@All",
@@ -903,7 +984,7 @@
                   },
                   {
                     "Id": 169552,
-                    "Version": 7,
+                    "Version": 8,
                     "Guid": "4d053dd3-3456-41d9-a797-90b9ab0849d7",
                     "Type": {
                       "Name": "@String",
@@ -923,7 +1004,7 @@
                   },
                   {
                     "Id": 169553,
-                    "Version": 7,
+                    "Version": 8,
                     "Guid": "880a956f-d542-4608-8e6a-055858a1e589",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -932,7 +1013,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\nhttps\\://cdn.2sxc.org/packages:2sxc CDN (cdn.2sxc.org)\n/cdn/packages:Local - on this website (/cdn)\ncustom:Custom path or site (switch to text-mode to type custom value)"
+                          "en-us": ":Not set - use system default (usually Public CDNs)\ncdn:Public CDNs such as Google-Fonts\nhttps\\://cdn.2sxc.org/packages:2sxc CDN (cdn.2sxc.org)\n/cdn/packages:Local - on this website (/cdn)\ncustom:Custom path or site (switch to text-mode to type custom value)"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -962,7 +1043,7 @@
                 "Metadata": [
                   {
                     "Id": 169564,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "7d01e570-7af5-4ed2-bfe1-0ba58a956a1d",
                     "Type": {
                       "Name": "@All",
@@ -1033,7 +1114,7 @@
                   },
                   {
                     "Id": 169565,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "0e2a664d-e946-4585-a1e3-6a2a810d00bd",
                     "Type": {
                       "Name": "@String",
@@ -1053,7 +1134,7 @@
                   },
                   {
                     "Id": 169566,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "4eac359d-372e-42d1-94c5-3628c9a79fab",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -1062,7 +1143,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": ":Not set - use system default (Public CDNs)\ncdn:Public CDNs such as Google-Fonts\nhttps\\://cdn.2sxc.org/packages:2sxc CDN (cdn.2sxc.org)\n/cdn/packages:Local - on this website (/cdn)\ncustom:Custom path or site (switch to text-mode to type custom value)"
+                          "en-us": ":Not set - use system default (usually Public CDNs)\ncdn:Public CDNs such as Google-Fonts\nhttps\\://cdn.2sxc.org/packages:2sxc CDN (cdn.2sxc.org)\n/cdn/packages:Local - on this website (/cdn)\ncustom:Custom path or site (switch to text-mode to type custom value)"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -1241,13 +1322,42 @@
               }
             ]
           },
-          "Entities": []
+          "Entities": [
+            {
+              "Id": 169951,
+              "Version": 2,
+              "Guid": "69741b0b-6734-49b8-a8b5-46b42908e302",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  const hasCdn = data.CdnSourceEdit || data.CdnSourcePublic;\n  if (!hasCdn) return false;\n  // show the warning if any of the features are not enabled\n  const f = context.features;\n  if (!f.isEnabled('CdnSourceEdit') || !f.isEnabled('CdnSourcePublic'))\n    return true;\n  return false;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         }
       ],
       "Entities": [
         {
           "Id": 130652,
-          "Version": 11,
+          "Version": 12,
           "Guid": "06f4fa58-2e91-4896-a16e-3bbaf9a5f491",
           "Type": {
             "Name": "⚙️WebResources",
@@ -1256,7 +1366,7 @@
           "Attributes": {
             "String": {
               "CdnSourceEdit": {
-                "en-us": "https://cdn.2sxc.org/packages"
+                "en-us": ""
               },
               "CdnSourcePublic": {
                 "en-us": ""

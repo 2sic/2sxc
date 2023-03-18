@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "If enabled, ContentSecurityPolicy headers will be set. Note that APIs will always work, but not result in http headers if this is disabled. ",
             FeaturesCatalogRules.Security0Improved,
-            Eav.Configuration.BuiltInFeatures.ForPatronsSentinel
+            Eav.Configuration.BuiltInFeatures.ForPatronsSentinelDisabled
         );
         
         public static readonly FeatureDefinition ContentSecurityPolicyTestUrl = new FeatureDefinition(
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "If enabled, you can add csp=true to any url to temporarily enable a policy and see if it works. Requires the CSP system to be enabled.",
             FeaturesCatalogRules.Security0Improved,
-            Eav.Configuration.BuiltInFeatures.ForPatronsSentinel
+            Eav.Configuration.BuiltInFeatures.ForPatronsSentinelDisabled
         );
         public static readonly FeatureDefinition ContentSecurityPolicyEnforceTemp = new FeatureDefinition(
             "ContentSecurityPolicyEnforceTemp",
@@ -34,7 +34,54 @@ namespace ToSic.Sxc.Configuration.Features
             false,
             "Enable CSP on all pages. This is a temporary setting, till we have more configuration in normal Settings.",
             FeaturesCatalogRules.Security0Improved,
-            Eav.Configuration.BuiltInFeatures.ForPatronsSentinel
+            Eav.Configuration.BuiltInFeatures.ForPatronsSentinelDisabled
         );
+
+        public static readonly FeatureDefinition CdnSourcePublic = new FeatureDefinition(
+            nameof(CdnSourcePublic),
+            new Guid("b8b993d3-a02b-4099-a2a8-c06bf8961a66"),
+            "Change CDN source for public Web Resources",
+            false,
+            false,
+            "Allow reconfigure of the CDN source for public Web Resources.",
+            FeaturesCatalogRules.Security0Improved,
+            Eav.Configuration.BuiltInFeatures.ForPatronsSentinelEnabled
+        );
+        public static readonly FeatureDefinition CdnSourceEdit = new FeatureDefinition(
+            nameof(CdnSourceEdit),
+            new Guid("34dce40e-30fc-4d4f-b1ab-8fcface90e61"),
+            "Change CDN source for Edit Web Resources",
+            false,
+            false,
+            "Allow reconfigure of the CDN source for Web Resources used in the Edit UI.",
+            FeaturesCatalogRules.Security0Improved,
+            Eav.Configuration.BuiltInFeatures.ForPatronsSentinelEnabled
+        );
+
+        // Note: not in use ATM
+        public static readonly FeatureDefinition CdnSourceAdmin = new FeatureDefinition(
+            nameof(CdnSourceAdmin),
+            new Guid("c799c71e-aa4a-4a30-ae8a-e177e615a36c"),
+            "Change CDN source for Admin Web Resources",
+            false,
+            false,
+            "Allow reconfigure of the CDN source for Web Resources used in the Admin UI.",
+            FeaturesCatalogRules.Security0Improved,
+            Eav.Configuration.BuiltInFeatures.ForPatronsSentinelEnabled
+        );
+
+        // Note: not in use ATM
+        public static readonly FeatureDefinition CdnSourceDev = new FeatureDefinition(
+            nameof(CdnSourceDev),
+            new Guid("81a51003-ad55-491e-9749-d74529496465"),
+            "Change CDN source for Development Web Resources",
+            false,
+            false,
+            "Allow reconfigure of the CDN source for Web Resources used in the Developers UIs.",
+            FeaturesCatalogRules.Security0Improved,
+            Eav.Configuration.BuiltInFeatures.ForPatronsSentinelEnabled
+        );
+
+
     }
 }
