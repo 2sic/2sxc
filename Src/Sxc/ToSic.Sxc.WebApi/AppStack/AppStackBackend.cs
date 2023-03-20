@@ -6,7 +6,9 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.DataSources.Sys;
+using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using static ToSic.Eav.Configuration.ConfigurationConstants;
@@ -18,18 +20,20 @@ namespace ToSic.Sxc.WebApi.AppStack
 
         #region Constructor / DI
 
-        public AppStackBackend(AppSettingsStack settingsStack, IZoneCultureResolver zoneCulture, IAppStates appStates) : base("Sxc.ApiApQ")
+        public AppStackBackend(AppSettingsStack settingsStack, IZoneCultureResolver zoneCulture, IAppStates appStates, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Sxc.ApiApQ")
         {
             ConnectServices(
                 _settingsStack = settingsStack,
                 _zoneCulture = zoneCulture,
-                _appStates = appStates
+                _appStates = appStates,
+                _qDefBuilder = qDefBuilder
             );
         }
 
         private readonly IAppStates _appStates;
         private readonly IZoneCultureResolver _zoneCulture;
         private readonly AppSettingsStack _settingsStack;
+        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
 
         #endregion
 
@@ -79,7 +83,7 @@ namespace ToSic.Sxc.WebApi.AppStack
             {
                 var viewEnt = appState.List.One(viewGuid.Value);
                 if (viewEnt == null) throw new Exception($"Tried to get view but not found. Guid was {viewGuid}");
-                var view = new View(viewEnt, languages, Log);
+                var view = new View(viewEnt, languages, Log, _qDefBuilder);
 
                 viewStackPart = realName == RootNameSettings ? view.Settings : view.Resources;
             }

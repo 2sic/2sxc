@@ -5,6 +5,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
@@ -34,7 +35,8 @@ namespace ToSic.Sxc.Code
             try
             {
                 // try to find with assembly name, or otherwise with GlobalName / previous names
-                var type = DataSourceCatalog.FindType(typeName, _root.App.AppId);
+                var catalog = _root.GetService<DataSourceCatalog>();
+                var type = catalog.FindType(typeName, _root.App.AppId);
                 lookUpEngine = lookUpEngine ?? _root.ConfigurationProvider;
 
                 if (inSource != null)

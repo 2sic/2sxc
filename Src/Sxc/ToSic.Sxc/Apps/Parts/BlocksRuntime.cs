@@ -6,6 +6,8 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources.Queries;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
@@ -15,11 +17,17 @@ namespace ToSic.Sxc.Apps
 {
     public class BlocksRuntime: PartOf<CmsRuntime>
     {
+        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IZoneCultureResolver _cultureResolver;
         public const string BlockTypeName = "2SexyContent-ContentGroup";
 
-        public BlocksRuntime(IZoneCultureResolver cultureResolver) : base("Sxc.BlkRdr") 
-            => ConnectServices(_cultureResolver = cultureResolver);
+        public BlocksRuntime(IZoneCultureResolver cultureResolver, LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Sxc.BlkRdr")
+        {
+            ConnectServices(
+                _cultureResolver = cultureResolver,
+                _qDefBuilder = qDefBuilder
+            );
+        }
 
         public List<BlockConfiguration> AllWithView()
         {
@@ -34,7 +42,7 @@ namespace ToSic.Sxc.Apps
                         : null;
                 })
                 .Where(b => b != null)
-                .Select(e => new BlockConfiguration(e.Entity, Parent, _cultureResolver.CurrentCultureCode, Log))
+                .Select(e => new BlockConfiguration(e.Entity, Parent, Parent.Data.List, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log))
                 .ToList();
         }
 
@@ -51,9 +59,9 @@ namespace ToSic.Sxc.Apps
             var groupEntity = ContentGroups().One(contentGroupGuid);
             var found = groupEntity != null;
             return (found
-                    ? new BlockConfiguration(groupEntity, Parent, _cultureResolver.CurrentCultureCode, Log)
+                    ? new BlockConfiguration(groupEntity, Parent, Parent.Data.List, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
                         .WarnIfMissingData()
-                    : new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log)
+                    : new BlockConfiguration(null, Parent, Parent.Data.List, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log)
                     {
                         PreviewTemplateId = Guid.Empty,
                         DataIsMissing = true
@@ -69,7 +77,7 @@ namespace ToSic.Sxc.Apps
             var createTempBlockForPreview = blockId.Guid == Guid.Empty;
             l.A($"{nameof(createTempBlockForPreview)}:{createTempBlockForPreview}");
             var result = createTempBlockForPreview
-                ? new BlockConfiguration(null, Parent, _cultureResolver.CurrentCultureCode, Log) { PreviewTemplateId = blockId.PreviewView }
+                ? new BlockConfiguration(null, Parent, Parent.Data.List, _qDefBuilder, _cultureResolver.CurrentCultureCode, Log) { PreviewTemplateId = blockId.PreviewView }
                 : GetBlockConfig(blockId.Guid);
             result.BlockIdentifierOrNull = blockId;
             return result;

@@ -4,6 +4,8 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Run;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources.Queries;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
@@ -15,14 +17,16 @@ namespace ToSic.Sxc.Apps.Blocks
         public  int AppId { get; }
         internal Guid? PreviewTemplateId;
 
-        internal IBlockIdentifier BlockIdentifierOrNull; 
+        internal IBlockIdentifier BlockIdentifierOrNull;
 
-        private readonly CmsRuntime _cmsRuntime;
+        private readonly IEnumerable<IEntity> _data;
+        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
 
-        public BlockConfiguration(IEntity entity, CmsRuntime cmsRuntime, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
+        public BlockConfiguration(IEntity entity, IAppIdentity cmsRuntime, IEnumerable<IEntity> data, LazySvc<QueryDefinitionBuilder> qDefBuilder, string languageCode, ILog parentLog): base(entity, languageCode, parentLog, "Blk.Config")
         {
             Log.A("Entity is " + (entity == null ? "" : "not") + " null");
-            _cmsRuntime = cmsRuntime;
+            _data = data;
+            _qDefBuilder = qDefBuilder;
             ZoneId = cmsRuntime.ZoneId;
             AppId = cmsRuntime.AppId;
         }
@@ -54,10 +58,10 @@ namespace ToSic.Sxc.Apps.Blocks
 
                 // if we're previewing another template, look that up
                 var templateEntity = PreviewTemplateId.HasValue
-                    ? _cmsRuntime.Data.List.One(PreviewTemplateId.Value) // ToDo: Should use an indexed Guid filter
+                    ? _data.One(PreviewTemplateId.Value) // ToDo: Should use an indexed Guid filter
                     : Entity?.Children(ViewParts.ViewFieldInContentBlock).FirstOrDefault();
 
-                return _view = templateEntity == null ? null : new View(templateEntity, LookupLanguages, Log);
+                return _view = templateEntity == null ? null : new View(templateEntity, LookupLanguages, Log, _qDefBuilder);
             }
         }
         private IView _view;
