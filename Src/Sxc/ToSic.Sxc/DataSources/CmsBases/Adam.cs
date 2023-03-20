@@ -83,9 +83,9 @@ namespace ToSic.Sxc.DataSources
                 _dataFactory = dataDataFactory
             );
 
-            Provide(GetDefault);
-            Provide(GetFolders, "Folders");
-            Provide(GetFiles, "Files");
+            ProvideOut(GetDefault);
+            ProvideOut(GetFolders, "Folders");
+            ProvideOut(GetFiles, "Files");
         }
         #endregion
 

@@ -120,7 +120,7 @@ namespace ToSic.Sxc.DataSources
                 _pageFactory = dataFactory.New(options: PageDataRaw.Option),
                 _treeMapper = treeMapper
             );
-            Provide(GetPages);
+            ProvideOut(GetPages);
         }
         #endregion
 

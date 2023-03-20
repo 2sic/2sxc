@@ -146,8 +146,8 @@ namespace ToSic.Sxc.DataSources
                 _dataFactory = dataFactory,
                 _rolesGenerator = rolesGenerator
             );
-            Provide(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
-            Provide(() => GetUsersAndRoles().UserRoles, "Roles");
+            ProvideOut(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
+            ProvideOut(() => GetUsersAndRoles().UserRoles, "Roles");
         }
 
         #endregion

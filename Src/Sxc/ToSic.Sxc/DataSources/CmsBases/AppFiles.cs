@@ -85,9 +85,9 @@ namespace ToSic.Sxc.DataSources
                 _dataFactory = dataFactory
             );
 
-            Provide(() => GetMultiAccess(StreamDefaultName));
-            Provide(() => GetMultiAccess(StreamFolders), StreamFolders);
-            Provide(() => GetMultiAccess(StreamFiles), StreamFiles);
+            ProvideOut(() => GetMultiAccess(StreamDefaultName));
+            ProvideOut(() => GetMultiAccess(StreamFolders), StreamFolders);
+            ProvideOut(() => GetMultiAccess(StreamFiles), StreamFiles);
         }
         #endregion
 

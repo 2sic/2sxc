@@ -82,7 +82,7 @@ namespace ToSic.Sxc.DataSources
                 _provider = provider,
                 _rolesFactory = rolesFactory.New(options: RoleDataRaw.Options)
             );
-            Provide(GetList);
+            ProvideOut(GetList);
         }
 
         #endregion

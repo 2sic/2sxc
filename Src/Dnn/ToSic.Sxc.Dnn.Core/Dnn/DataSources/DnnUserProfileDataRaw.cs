@@ -113,7 +113,7 @@ namespace ToSic.Sxc.Dnn.DataSources
                 _dataFactory = dataFactory
             );
             _services = services;
-            Provide(GetList);
+            ProvideOut(GetList);
         }
 
         private readonly MyServices _services;
