@@ -86,14 +86,14 @@ namespace ToSic.Sxc.Dnn.DataSources
 
         #region Constructor / DI
 
-        public new class MyServices: MyServicesBase<DataSource.MyServices>
+        public new class MyServices: MyServicesBase<CustomDataSource.MyServices>
         {
             public ISite Site { get; }
             public IZoneMapper ZoneMapper { get; }
             public LazySvc<DnnSecurity> DnnSecurity { get; }
 
             public MyServices(
-                DataSource.MyServices parentServices,
+                CustomDataSource.MyServices parentServices,
                 ISite site,
                 IZoneMapper zoneMapper,
                 LazySvc<DnnSecurity> dnnSecurity

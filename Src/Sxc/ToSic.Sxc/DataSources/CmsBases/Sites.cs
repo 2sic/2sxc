@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
@@ -33,17 +32,15 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Sites in this CMS")]
     public class Sites: CustomDataSource
     {
-        private readonly IDataFactory _sitesFactory;
         private readonly SitesDataSourceProvider _provider;
 
         #region Constructor
 
         [PrivateApi]
-        public Sites(MyServices services, SitesDataSourceProvider provider, IDataFactory sitesFactory) : base(services, "CDS.Sites")
+        public Sites(MyServices services, SitesDataSourceProvider provider) : base(services, "CDS.Sites")
         {
             ConnectServices(
-                _provider = provider,
-                _sitesFactory = sitesFactory.New(settings: SiteDataRaw.Settings)
+                _provider = provider
             );
             Provide(GetSites);
         }
@@ -60,7 +57,7 @@ namespace ToSic.Sxc.DataSources
                 return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
-            var sites = _sitesFactory.Create(sitesFromSystem);
+            var sites = DataFactory.New(settings: SiteDataRaw.Settings).Create(sitesFromSystem);
 
             return (sites, $"found: {sites.Count}");
         });
