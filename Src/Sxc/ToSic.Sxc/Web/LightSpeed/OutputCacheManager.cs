@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Configuration;
 using ToSic.Lib.Documentation;
 
