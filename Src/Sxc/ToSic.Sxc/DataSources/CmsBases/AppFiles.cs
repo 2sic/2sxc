@@ -37,9 +37,7 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Files and folders in the App folder")]
     public class AppFiles: ExternalData
     {
-        private readonly IDataFactory _folderFactory;
-        private readonly ITreeMapper _treeMapper;
-        private readonly IDataFactory _fileFactory;
+        private readonly IDataFactory _dataFactory;
         private readonly AppFilesDataSourceProvider _provider;
 
         private const string StreamFiles = "Files";
@@ -80,13 +78,11 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataFactory filesFactory, IDataFactory foldersFactory, ITreeMapper treeMapper) : base(services, "CDS.AppFiles")
+        public AppFiles(MyServices services, AppFilesDataSourceProvider provider, IDataFactory dataFactory) : base(services, "CDS.AppFiles")
         {
             ConnectServices(
                 _provider = provider,
-                _fileFactory = filesFactory,
-                _folderFactory = foldersFactory,
-                _treeMapper = treeMapper
+                _dataFactory = dataFactory
             );
 
             Provide(() => GetMultiAccess(StreamDefaultName));
@@ -128,14 +124,14 @@ namespace ToSic.Sxc.DataSources
                 return ((EmptyList, EmptyList), "null/empty");
 
             // Convert Folders to Entities
-            _folderFactory.Configure(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
-            var folders = _folderFactory.Create(rawFolders);
+            var folderFactory = _dataFactory.New(appId: AppId, typeName: AppFolderDataRaw.TypeName, titleField: nameof(AppFolderDataRaw.Name));
+            var folders = folderFactory.Create(rawFolders);
 
             // Convert Files to Entities
-            _fileFactory.Configure(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name),
+            var fileFactory = _dataFactory.New(appId: AppId, typeName: AppFileDataRaw.TypeName, titleField: nameof(AppFileDataRaw.Name),
                 // Make sure we share relationships source with folders, as files need folders and folders need files
-                relationships: _folderFactory.Relationships);
-            var files = _fileFactory.Create(rawFiles);
+                relationships: folderFactory.Relationships);
+            var files = fileFactory.Create(rawFiles);
 
             return ((folders, files), $"folders: {folders.Count}, files: {files.Count}");
         });

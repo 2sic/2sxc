@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
         {
             ConnectServices(
-                _dataFactory = dataFactory.Configure(typeName: ContentType)
+                _dataFactory = dataFactory.New(typeName: ContentType)
             );
             _services = services;
             Provide(GetList);

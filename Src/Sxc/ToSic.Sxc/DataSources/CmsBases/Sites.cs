@@ -43,7 +43,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _sitesFactory = sitesFactory.Configure(typeName: SiteDataRaw.TypeName, titleField: SiteDataRaw.TitleFieldName, idAutoIncrementZero: false)
+                _sitesFactory = sitesFactory.New(typeName: SiteDataRaw.TypeName, titleField: SiteDataRaw.TitleFieldName, idAutoIncrementZero: false)
             );
             Provide(GetSites);
         }

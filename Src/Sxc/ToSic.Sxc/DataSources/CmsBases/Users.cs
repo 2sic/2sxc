@@ -9,7 +9,6 @@ using ToSic.Eav.Data.Process;
 using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
@@ -38,9 +37,8 @@ namespace ToSic.Sxc.DataSources
     )]
     public partial class Users : ExternalData
     {
-        private readonly ITreeMapper _treeMapper;
-        private readonly LazySvc<IDataSourceFactory> _dsFactory;
-        private readonly IDataFactory _usersFactory;
+        private readonly IDataSourceGenerator<Roles> _rolesGenerator;
+        private readonly IDataFactory _dataFactory;
         private readonly UsersDataSourceProvider _provider;
 
         #region Other Constants
@@ -141,14 +139,12 @@ namespace ToSic.Sxc.DataSources
         public Users(MyServices services,
             UsersDataSourceProvider provider,
             IDataFactory dataFactory,
-            LazySvc<IDataSourceFactory> dsFactory,
-            ITreeMapper treeMapper) : base(services, "SDS.Users")
+            IDataSourceGenerator<Roles> rolesGenerator) : base(services, "SDS.Users")
         {
             ConnectServices(
                 _provider = provider,
-                _usersFactory = dataFactory,
-                _dsFactory = dsFactory,
-                _treeMapper = treeMapper
+                _dataFactory = dataFactory,
+                _rolesGenerator = rolesGenerator
             );
             Provide(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
             Provide(() => GetUsersAndRoles().UserRoles, "Roles");
@@ -170,11 +166,11 @@ namespace ToSic.Sxc.DataSources
 
             // Figure out options to be sure we have the roles/roleids
             var relationships = new LazyLookup<object, IEntity>();
-            _usersFactory.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName,
+            var userFactory = _dataFactory.New(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName,
                 relationships: relationships,
                 rawConvertOptions: new RawConvertOptions(addKeys: new []{ "Roles"}));
 
-            var users = _usersFactory.Create(usersRaw);
+            var users = userFactory.Create(usersRaw);
             var roles = EmptyList;
 
             // If we should include the roles, create them now and attach
@@ -222,7 +218,7 @@ namespace ToSic.Sxc.DataSources
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();
             // Get roles, use the current data source to provide aspects such as lookups etc.
-            var rolesDs = _dsFactory.Value.Create<Roles>(source: this);
+            var rolesDs = _rolesGenerator.New(source: this); // _dsFactory.Value.Create<Roles>(source: this);
             // Set filter parameter to only get roles we'll need
             rolesDs.RoleIds = string.Join(",", roleIds);
             var roles = rolesDs.List;

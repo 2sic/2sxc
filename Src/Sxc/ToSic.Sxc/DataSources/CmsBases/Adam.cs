@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP")]
     public class Adam : DataSource
     {
-        private readonly IDataFactory _factory;
+        private readonly IDataFactory _dataFactory;
         private readonly AdamDataSourceProvider<int, int> _provider;
 
         #region Configuration properties
@@ -76,11 +76,11 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Adam(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataFactory) : base(services, "CDS.Adam")
+        public Adam(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataDataFactory) : base(services, "CDS.Adam")
         {
             ConnectServices(
                 _provider = provider,
-                _factory = dataFactory
+                _dataFactory = dataDataFactory
             );
 
             Provide(GetDefault);
@@ -109,9 +109,9 @@ namespace ToSic.Sxc.DataSources
             _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
             var find = _provider.GetInternal();
 
-            _factory.Configure(appId: AppId, typeName: AdamItemDataRaw.TypeName, titleField: nameof(AdamItemDataRaw.Name));
+            var adamFactory = _dataFactory.New(appId: AppId, typeName: AdamItemDataRaw.TypeName, titleField: nameof(AdamItemDataRaw.Name));
 
-            var entities = _factory.Create(source.SelectMany(o => find(o)));
+            var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 
             return (entities, "ok");
         }));
