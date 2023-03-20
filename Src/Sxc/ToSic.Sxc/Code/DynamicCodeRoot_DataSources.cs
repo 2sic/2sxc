@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
 using ToSic.Lib;
 using ToSic.Lib.Documentation;
@@ -61,6 +62,16 @@ namespace ToSic.Sxc.Code
             srcDs.In.Clear();
             srcDs.Attach(DataSourceConstants.StreamDefaultName, inStream);
             return src;
+        }
+
+        [PrivateApi]
+        public IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        {
+            // VERY WIP
+            var catalog = GetService<DataSourceCatalog>();
+            var type = catalog.FindType(name, App.AppId);
+            configurationProvider = configurationProvider ?? ConfigurationProvider;
+            return DataSourceFactory.Create(type, appIdentity: App, source: inSource, configSource: configurationProvider);
         }
         #endregion
     }

@@ -79,6 +79,10 @@ namespace Custom.Hybrid
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
+        [PrivateApi]
+        public IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+            // where T : IDataSource
+            => _DynCodeRoot.CreateSourceWip(name, inSource, configurationProvider);
 
         #endregion
 

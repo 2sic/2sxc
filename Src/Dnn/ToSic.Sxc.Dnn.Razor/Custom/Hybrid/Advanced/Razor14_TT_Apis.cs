@@ -90,6 +90,11 @@ namespace Custom.Hybrid.Advanced
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inStream);
 
+        [PrivateApi]
+        public IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+            // where T : IDataSource
+            => _DynCodeRoot.CreateSourceWip(name, inSource, configurationProvider);
+
         #endregion
 
 

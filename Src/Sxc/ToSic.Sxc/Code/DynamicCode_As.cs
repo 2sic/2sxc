@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
@@ -51,6 +52,11 @@ namespace ToSic.Sxc.Code
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+
+        [PrivateApi]
+        public IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+            // where T : IDataSource
+            => _DynCodeRoot.CreateSourceWip(name, inSource, configurationProvider);
 
         #endregion
 

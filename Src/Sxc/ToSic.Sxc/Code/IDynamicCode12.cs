@@ -211,6 +211,9 @@ namespace ToSic.Sxc.Code
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
+
+        [PrivateApi]
+        IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = default);
         #endregion
 
         #region Context

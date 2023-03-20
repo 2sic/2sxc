@@ -13,7 +13,7 @@ namespace Custom.Hybrid
         /// <param name="logName"></param>
         protected DataSource15(MyServices services, string logName = null) : base(services, logName: "Cus.HybDs")
         {
-
+            
         }
 
     }
