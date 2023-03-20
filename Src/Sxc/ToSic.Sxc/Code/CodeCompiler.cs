@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Helpers;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -71,7 +73,6 @@ namespace ToSic.Sxc.Code
 
         public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string virtualPath, string className, bool throwOnError)
         {
-            Type compiledType = null;
             string errorMessages;
             // if no name provided, use the name which is the same as the file name
             className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? Eav.Constants.NullNameId;
@@ -79,23 +80,32 @@ namespace ToSic.Sxc.Code
             Assembly assembly;
             (assembly, errorMessages) = GetAssembly(virtualPath, className);
 
-            if (errorMessages == null)
+            if (errorMessages != null) return (null, errorMessages);
+
+            if (assembly == null) return (null, "assembly is null");
+
+            var possibleErrorMessage = $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}. Maybe the class name doesn't match the file name. ";
+            Type compiledType = null;
+            try
             {
-                var possibleErrorMessage =
-                    $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}. Maybe the class name doesn't match the file name. ";
-                try
+                compiledType = assembly.GetType(className, false, true);
+                if (compiledType == null)
                 {
-                    compiledType = assembly?.GetType(className, throwOnError, true);
-                }
-                catch (Exception ex)
-                {
-                    Log.A(possibleErrorMessage);
-                    if (throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
+                    var types = assembly.GetTypes();
+                    compiledType = types.FirstOrDefault(t => t.Name.EqualsInsensitive(className));
                 }
 
-                if (compiledType == null)
-                    errorMessages = possibleErrorMessage;
+                if (compiledType == null && throwOnError)
+                    assembly.GetType(className, true, true);
             }
+            catch (Exception ex)
+            {
+                Log.A(possibleErrorMessage);
+                if (throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
+            }
+
+            if (compiledType == null)
+                errorMessages = possibleErrorMessage;
 
             return (compiledType, errorMessages);
         }
