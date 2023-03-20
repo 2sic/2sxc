@@ -19,6 +19,7 @@ using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.PageService;
+using static ToSic.Sxc.Web.ClientAssetConstants;
 using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Dnn.Services
@@ -243,15 +244,13 @@ namespace ToSic.Sxc.Dnn.Services
 
         private string DnnProviderName(string position)
         {
-            position = position.ToLowerInvariant();
-
-            switch (position)
+            switch (position.ToLowerInvariant())
             {
-                case "body": return DnnBodyProvider.DefaultName;
-                case "head": return DnnPageHeaderProvider.DefaultName;
-                case "bottom": return DnnFormBottomProvider.DefaultName;
+                case AddToBody: return DnnBodyProvider.DefaultName;
+                case AddToHead: return DnnPageHeaderProvider.DefaultName;
+                case AddToBottom: return DnnFormBottomProvider.DefaultName;
+                default: return "";
             }
-            return "";
         }
 
     }

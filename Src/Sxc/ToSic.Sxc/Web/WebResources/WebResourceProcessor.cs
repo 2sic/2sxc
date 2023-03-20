@@ -69,7 +69,7 @@ namespace ToSic.Sxc.Web.WebResources
             if (!_features.IsEnabled(BuiltInFeatures.CdnSourcePublic.NameId))
                 return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), "ok, cdn-swap feature not enabled");
 
-            // override temp dev
+            // Set new root based on CdnSource settings
             var newRoot = CdnSource + VersionSuffix;
 
             // Replacements will be delayed until preparing to generate the final HTML
@@ -85,12 +85,12 @@ namespace ToSic.Sxc.Web.WebResources
                 ? "error-path-should-have-at-least-3-slashes"
                 : newRoot + orig
                     .Substring(thirdSlash)
-                    // .subReplace(currentResRoot, newRoot)
                     .Replace("@", "-"); // not underscore, because this fails on github cdn where folders starting with underscore are hidden?
                 html = html.Replace(orig, updated);
             }
 
             // When going local, drop integrity property because ATM DNN changes it, and we would need to ensure it's not changed
+            // TODO: ideally we only do this, if we don't have another CDN - or make it optional... ? - where would the setting be?
             var integrityMatches = RegexUtil.IntegrityAttribute.Matches(html);
             foreach (Match match in integrityMatches)
             {
@@ -101,16 +101,6 @@ namespace ToSic.Sxc.Web.WebResources
             return l.Return(new PageFeatureFromSettings(key, html: html, autoOptimize: autoOptimize), 
                 $"ok; root now {newRoot}");
         }
-
-        //private string PickBestNewRoot()
-        //{
-        //    switch (CdnSource)
-        //    {
-        //        case Cdn2Sxc: return Cdn2SxcRoot + VersionSuffix;
-        //        case CdnLocal: return CdnLocalRoot + VersionSuffix;
-        //        default: return CdnSource + VersionSuffix;
-        //    }
-        //}
 
     }
 }

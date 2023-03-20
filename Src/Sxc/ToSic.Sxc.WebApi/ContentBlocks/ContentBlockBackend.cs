@@ -13,6 +13,7 @@ using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.Url;
 using ToSic.Sxc.WebApi.InPage;
@@ -110,12 +111,9 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             Log.A("3. Add manual resources (fancybox etc.)");
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
             var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
-            var optimizer = _optimizer.Value;
-            if(optimizer is BlockResourceExtractor withInternal)
-                withInternal.ExtractOnlyEnableOptimization = false;
 
             Log.A("4.1. Process optimizers");
-            var renderResult = optimizer.Process(mergedFeatures);
+            var renderResult = _optimizer.Value.Process(mergedFeatures, new ClientAssetsExtractSettings(extractAll: true));
             var rest = renderResult.Html;
             if (!string.IsNullOrWhiteSpace(rest)) 
                 Log.A("Warning: Rest after extraction should be empty - not handled ATM");

@@ -35,6 +35,9 @@ namespace ToSic.Sxc.Utils
         private const string ClientDependencyRegex =
             "\\s" + PageService.AssetOptimizationsAttributeName + "=('|\")(?<Priority>true|[0-9]+)?(?::)?(?<Position>bottom|head|body)?('|\")(>|\\s)";
 
+        public const string PriorityKey = "Priority";
+        public const string PositionKey = "Position";
+
         public static readonly Lazy<Regex> AttributesDetection = new Lazy<Regex>(() => new Regex(AttributesFormula, RegexOptions.IgnoreCase));
         public static readonly Lazy<Regex> ImagesDetection = new Lazy<Regex>(() => new Regex(ImagesWithDataCmsidFormula, RegexOptions.IgnoreCase));
         public static readonly Lazy<Regex> ScriptSrcDetection = new Lazy<Regex>(() => new Regex(ScriptSrcFormula, RegexOptions.IgnoreCase | RegexOptions.Singleline));

@@ -1475,7 +1475,7 @@
         },
         {
           "Id": 130654,
-          "Version": 7,
+          "Version": 9,
           "Guid": "38e0226d-4c31-4d2e-ab97-8e16483ddf94",
           "Type": {
             "Name": "⚙️WebResource",
@@ -1484,7 +1484,7 @@
           "Attributes": {
             "String": {
               "Html": {
-                "en-us": "<script defer async data-enableoptimizations=\"bottom\" src=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js\" integrity=\"sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>\n"
+                "en-us": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js\" integrity=\"sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>\n"
               },
               "ItemIdentifier": {
                 "en-us": "FontAwesome5"
@@ -1495,7 +1495,7 @@
             },
             "Boolean": {
               "AutoOptimize": {
-                "en-us": false
+                "en-us": true
               },
               "Enabled": {
                 "en-us": true
@@ -1560,7 +1560,7 @@
         },
         {
           "Id": 130655,
-          "Version": 4,
+          "Version": 5,
           "Guid": "4b9ef331-480a-4a38-86f1-a580f8345677",
           "Type": {
             "Name": "⚙️WebResource",
@@ -1569,7 +1569,7 @@
           "Attributes": {
             "String": {
               "Html": {
-                "en-us": "<link data-enableoptimizations=\"bottom\" rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css\" integrity=\"sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" />\n\n<script defer async data-enableoptimizations=\"bottom\" src=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js\" integrity=\"sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>"
+                "en-us": "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css\" integrity=\"sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\" />\n\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js\" integrity=\"sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>"
               },
               "ItemIdentifier": {
                 "en-us": "Fancybox3"
@@ -1580,7 +1580,7 @@
             },
             "Boolean": {
               "AutoOptimize": {
-                "en-us": false
+                "en-us": true
               },
               "Enabled": {
                 "en-us": true
@@ -1674,7 +1674,7 @@
         },
         {
           "Id": 131820,
-          "Version": 10,
+          "Version": 11,
           "Guid": "3356ad17-91ce-4814-83c1-9f527697391a",
           "Type": {
             "Name": "⚙️WebResource",
@@ -1683,7 +1683,7 @@
           "Attributes": {
             "String": {
               "Html": {
-                "en-us": "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.css\" integrity=\"sha256-7gMVmh7i2Xmo99mvvfnSn9dZfunTii7j4yPdmTAMUR0=\" crossorigin=\"anonymous\">\n\n<script defer async src=\"https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.umd.js\" integrity=\"sha256-0af2VbC4vmPsa8OLBAKBmLoyuKq4bBlKK2KOgMWayio=\" crossorigin=\"anonymous\"></script>"
+                "en-us": "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.css\" integrity=\"sha256-7gMVmh7i2Xmo99mvvfnSn9dZfunTii7j4yPdmTAMUR0=\" crossorigin=\"anonymous\">\n\n<script src=\"https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.umd.js\" integrity=\"sha256-0af2VbC4vmPsa8OLBAKBmLoyuKq4bBlKK2KOgMWayio=\" crossorigin=\"anonymous\"></script>"
               },
               "ItemIdentifier": {
                 "en-us": "fancybox4"
@@ -1759,7 +1759,7 @@
         },
         {
           "Id": 144505,
-          "Version": 3,
+          "Version": 5,
           "Guid": "3e6811a8-87ab-4954-8402-6e2b3d80c6e2",
           "Type": {
             "Name": "⚙️WebResource",
@@ -1768,7 +1768,7 @@
           "Attributes": {
             "String": {
               "Html": {
-                "en-us": "<script defer async data-enableoptimizations=\"bottom\"\nsrc=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js\" integrity=\"sha512-2bMhOkE/ACz21dJT8zBOMgMecNxx0d37NND803ExktKiKdSzdwn+L7i9fdccw/3V06gM/DBWKbYmQvKMdAA9Nw==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>\n"
+                "en-us": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js\" integrity=\"sha512-2bMhOkE/ACz21dJT8zBOMgMecNxx0d37NND803ExktKiKdSzdwn+L7i9fdccw/3V06gM/DBWKbYmQvKMdAA9Nw==\" crossorigin=\"anonymous\" referrerpolicy=\"no-referrer\"></script>\n"
               },
               "ItemIdentifier": {
                 "en-us": "FontAwesome6"
@@ -1779,7 +1779,7 @@
             },
             "Boolean": {
               "AutoOptimize": {
-                "en-us": false
+                "en-us": true
               },
               "Enabled": {
                 "en-us": true

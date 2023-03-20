@@ -3,12 +3,13 @@ using System.Text.RegularExpressions;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ClientAssets;
 
 namespace ToSic.Sxc.Blocks.Output
 {
     public abstract partial class BlockResourceExtractor
     {
-        protected string ExtractStyles(string renderedTemplate) => Log.Func(() =>
+        protected string ExtractStyles(string renderedTemplate, ClientAssetsExtractSettings settings) => Log.Func(() =>
         {
             var styleMatches = RegexUtil.StyleDetection.Value.Matches(renderedTemplate);
             var styleMatchesToRemove = new List<Match>();
@@ -28,8 +29,15 @@ namespace ToSic.Sxc.Blocks.Output
                 if (!RegexUtil.StyleRelDetect.Value.IsMatch(match.Value)) continue;
 
                 // skip if not matched and setting only wants matches
-                var (skip, posInPage, priority) = CheckOptimizationSettings(match, "head", CssDefaultPriority);
-                if (skip) continue;
+                var (skip, posInPage, priority) = CheckOptimizationSettings(match.Value, settings.Css);
+                if (skip)
+                {
+                    if (!settings.Css.ExtractAll) continue;
+                    // if Auto-Optimize, then set these defaults
+                    posInPage = ClientAssetConstants.AddToBottom;
+                    priority = ClientAssetConstants.CssDefaultPriority;
+                }
+
 
                 // get all Attributes
                 var (_, cspCode) = GetHtmlAttributes(match.Value);

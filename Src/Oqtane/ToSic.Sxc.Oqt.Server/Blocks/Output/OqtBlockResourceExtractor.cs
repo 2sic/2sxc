@@ -1,4 +1,6 @@
-﻿using ToSic.Sxc.Blocks.Output;
+﻿using ToSic.Lib.Helpers;
+using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output
@@ -7,24 +9,25 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
     {
         public OqtBlockResourceExtractor(PageServiceShared pageServiceShared): base(pageServiceShared) { }
 
-        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate)
+        protected override ClientAssetsExtractSettings Settings => _settings.Get(() => new(extractAll: true));
+        private readonly GetOnce<ClientAssetsExtractSettings> _settings = new();
+
+        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings)
         {
             var include2SxcJs = false;
 
-            ExtractOnlyEnableOptimization = false;
-
             // Handle Client Dependency injection
-            renderedTemplate = ExtractExternalScripts(renderedTemplate, ref include2SxcJs);
+            html = ExtractExternalScripts(html, ref include2SxcJs, settings);
 
             // Handle inline JS
-            renderedTemplate = ExtractInlineScripts(renderedTemplate);
+            html = ExtractInlineScripts(html);
 
             // Handle Styles
-            renderedTemplate = ExtractStyles(renderedTemplate);
+            html = ExtractStyles(html, settings);
 
             Assets.ForEach(a => a.PosInPage = OqtPositionName(a.PosInPage));
 
-            return (renderedTemplate, include2SxcJs);
+            return (html, include2SxcJs);
         }
 
 

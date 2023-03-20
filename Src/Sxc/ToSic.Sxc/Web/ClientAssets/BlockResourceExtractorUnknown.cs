@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Run.Unknown;
 using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.PageService;
 
 namespace ToSic.Sxc.Web
@@ -10,6 +11,7 @@ namespace ToSic.Sxc.Web
         public BlockResourceExtractorUnknown(WarnUseOfUnknown<BlockResourceExtractorUnknown> _, PageServiceShared pageServiceShared): base(pageServiceShared)
         { }
 
-        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate) => (renderedTemplate, false);
+        protected override (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate, ClientAssetsExtractSettings settings)
+            => (renderedTemplate, false);
     }
 }
