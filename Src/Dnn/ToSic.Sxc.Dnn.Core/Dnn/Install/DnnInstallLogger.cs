@@ -19,17 +19,15 @@ namespace ToSic.Sxc.Dnn.Install
 
         internal void CloseLogFiles()
         {
-            if (FileStreamWriter != null)
-            {
-                //FileStreamWriter.BaseStream.Close();
-                FileStreamWriter.Close();
-                FileStreamWriter.Dispose();
-            }
-            //_fileStreamWriter = null;
+            if (_fileStreamWriterCached == null) return;
+
+            _fileStreamWriterCached.Close();
+            _fileStreamWriterCached.Dispose();
+            _fileStreamWriterCached = null;
         }
 
-        private StreamWriter FileStreamWriter => _fileStreamWriter ?? (_fileStreamWriter = OpenLogFiles());
-        private StreamWriter _fileStreamWriter;
+        private StreamWriter FileStreamWriter => _fileStreamWriterCached ?? (_fileStreamWriterCached = OpenLogFiles());
+        private StreamWriter _fileStreamWriterCached;
 
 
         internal StreamWriter OpenLogFiles()
