@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
@@ -13,7 +11,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller
+    public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IPlatformAppInstaller
     {
         private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
         private readonly RemoteRouterLink _remoteRouterLink;

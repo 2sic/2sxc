@@ -60,6 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         {
             // Installation: Helper to ensure the installation is complete
             services.TryAddTransient<IEnvironmentInstaller, OqtEnvironmentInstaller>();
+            services.TryAddTransient<IPlatformAppInstaller, OqtEnvironmentInstaller>();
 
             // Installation: Verify the Razor Helper DLLs are available
             services.TryAddSingleton<GlobalTypesCheck>();
