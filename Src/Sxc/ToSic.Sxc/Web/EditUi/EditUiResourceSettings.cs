@@ -14,8 +14,8 @@
 
         public static EditUiResourceSettings QuickDialog = new EditUiResourceSettings
         {
-            IconsMaterial = false,
-            FontRoboto = false,
+            IconsMaterial = true,
+            FontRoboto = true,
         };
     }
 }
