@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Process;
 using ToSic.Lib.Documentation;
 
@@ -19,6 +20,8 @@ namespace ToSic.Sxc.DataSources
     public class AppFileDataRaw: AppFileDataRawBase
     {
         public const string TypeName = "File";
+
+        public static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
 
         /// <summary>
         /// The file name extension

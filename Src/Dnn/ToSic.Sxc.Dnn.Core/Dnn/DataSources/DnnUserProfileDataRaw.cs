@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		/// <summary>
 		/// Gets or sets the Name of the ContentType to simulate
 		/// </summary>
-		[Configuration(Field = "ContentTypeName", Fallback = "DnnUserInfo")]
+		[Configuration(Field = "ContentTypeName", Fallback = DnnUserProfileDataRaw.TypeName)]
 		public string ContentType
 		{
 			get => Configuration.GetThis();
@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
         {
             ConnectServices(
-                _dataFactory = dataFactory.New(typeName: ContentType)
+                _dataFactory = dataFactory
             );
             _services = services;
             Provide(GetList);
@@ -163,8 +163,8 @@ namespace ToSic.Sxc.Dnn.DataSources
                 results.Add(dnnUserProfile);
             }
             l.A($"results: {results.Count}");
-
-            return (_dataFactory.Create(results), "ok");
+            var userProfileDataFactory = _dataFactory.New(settings: new DataFactorySettings(DnnUserProfileDataRaw.Settings, typeName: ContentType?.NullIfNoValue()));
+            return (userProfileDataFactory.Create(results), "ok");
         });
 
         private static string GetDnnProfileValue(UserInfo user, string property)
@@ -213,6 +213,9 @@ namespace ToSic.Sxc.Dnn.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class DnnUserProfileDataRaw : IRawEntity
     {
+        internal const string TypeName = "UserProfile";
+
+        internal static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public string Name { get; set; } // aka DisplayName

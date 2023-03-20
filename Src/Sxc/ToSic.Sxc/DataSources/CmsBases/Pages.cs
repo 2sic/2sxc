@@ -117,7 +117,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _pageFactory = dataFactory.New(typeName: PageDataRaw.TypeName, titleField: nameof(PageDataRaw.Name)),
+                _pageFactory = dataFactory.New(settings: PageDataRaw.Setting),
                 _treeMapper = treeMapper
             );
             Provide(GetPages);

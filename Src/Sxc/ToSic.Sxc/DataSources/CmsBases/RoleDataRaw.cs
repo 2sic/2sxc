@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Process;
 using ToSic.Lib.Documentation;
 
@@ -27,6 +28,8 @@ namespace ToSic.Sxc.DataSources
     {
         internal static string TypeName = "Role";
         internal static string TitleFieldName = nameof(Name);
+
+        internal static DataFactorySettings Settings = new DataFactorySettings(typeName: "Role", titleField: nameof(Name), autoId: false);
 
         public string Name { get; set; }
 

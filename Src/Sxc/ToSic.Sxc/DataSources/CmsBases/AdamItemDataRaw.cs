@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Process;
 using ToSic.Lib.Documentation;
 
@@ -10,6 +11,8 @@ namespace ToSic.Sxc.DataSources
     public class AdamItemDataRaw: IRawEntity
     {
         public const string TypeName = "AdamItem";
+
+        public static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
 
         public int Id { get; set; }
         public Guid Guid { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Process;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.Context.Raw
         #region Types and Names for Raw Entities
 
         internal static string TypeName = "User";
-        internal static string TitleFieldName = nameof(Name);
+        internal static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
 
         #endregion
 

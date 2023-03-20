@@ -109,7 +109,7 @@ namespace ToSic.Sxc.DataSources
             _provider.Configure(appId: AppId, entityIds: EntityIds, entityGuids: EntityGuids, fields: Fields, filter: Filter);
             var find = _provider.GetInternal();
 
-            var adamFactory = _dataFactory.New(appId: AppId, typeName: AdamItemDataRaw.TypeName, titleField: nameof(AdamItemDataRaw.Name));
+            var adamFactory = _dataFactory.New(settings: new DataFactorySettings(AdamItemDataRaw.Settings, appId: AppId));
 
             var entities = adamFactory.Create(source.SelectMany(o => find(o)));
 

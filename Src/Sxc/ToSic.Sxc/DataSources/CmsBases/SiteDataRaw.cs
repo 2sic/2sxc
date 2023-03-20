@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Process;
 using ToSic.Lib.Documentation;
 
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.DataSources
     public class SiteDataRaw: IRawEntity
     {
         internal static string TypeName = "Site";
-        internal static string TitleFieldName = nameof(Name);
+        internal static DataFactorySettings Settings => new DataFactorySettings(typeName: TypeName, titleField: nameof(Name), autoId: false);
 
         /// <summary>
         /// The site ID.
