@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Dnn.Install
         internal string LockFileName => HostingEnvironment.MapPath(DnnConstants.LogDirectory + "lock.resources");
         internal string LockFolder => HostingEnvironment.MapPath(DnnConstants.LogDirectory);
         private FileStream _lockFile;
-
+        // Acquire lock
         internal FileStream Set()
         {
             return _lockFile ??
@@ -16,7 +16,22 @@ namespace ToSic.Sxc.Dnn.Install
                        new FileStream(LockFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read));
         }
 
-        internal void Release() => _lockFile?.Close();
+        // Close and dispose lock
+        internal void Release()
+        {
+            _lockFile?.Close();
+            _lockFile?.Dispose();
+            _lockFile = null;
+            try
+            {
+                // try delete
+                File.Delete(LockFileName);
+            }
+            catch
+            {
+                // ignored
+            }
+        }
 
         internal bool IsSet
         {
