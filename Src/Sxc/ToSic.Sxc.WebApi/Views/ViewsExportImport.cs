@@ -87,7 +87,6 @@ namespace ToSic.Sxc.WebApi.Views
                 var webPath = _appIconHelpers.IconPathOrNull(app, view, PathTypes.PhysRelative)?.ForwardSlash();
                 if(webPath != null)
                 {
-                    //var relativePath = view.Icon?.Replace("[App:Path]","").TrimPrefixSlash();
                     var relativePath = webPath.Replace(app.RelativePath.ForwardSlash(), "").TrimPrefixSlash();
                     TryAddAsset(bundle, webPath, relativePath);
                 }
