@@ -163,7 +163,7 @@ namespace ToSic.Sxc.Dnn.DataSources
                 results.Add(dnnUserProfile);
             }
             l.A($"results: {results.Count}");
-            var userProfileDataFactory = _dataFactory.New(settings: new DataFactorySettings(DnnUserProfileDataRaw.Settings, typeName: ContentType?.NullIfNoValue()));
+            var userProfileDataFactory = _dataFactory.New(options: new DataFactorySettings(DnnUserProfileDataRaw.Settings, typeName: ContentType?.NullIfNoValue()));
             return (userProfileDataFactory.Create(results), "ok");
         });
 

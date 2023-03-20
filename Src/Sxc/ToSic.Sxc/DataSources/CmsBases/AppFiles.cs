@@ -124,11 +124,11 @@ namespace ToSic.Sxc.DataSources
                 return ((EmptyList, EmptyList), "null/empty");
 
             // Convert Folders to Entities
-            var folderFactory = _dataFactory.New(settings: new DataFactorySettings(AppFolderDataRaw.Settings, appId: AppId));
+            var folderFactory = _dataFactory.New(options: new DataFactorySettings(AppFolderDataRaw.Settings, appId: AppId));
             var folders = folderFactory.Create(rawFolders);
 
             // Convert Files to Entities
-            var fileFactory = _dataFactory.New(settings: new DataFactorySettings(AppFileDataRaw.Settings, appId: AppId),
+            var fileFactory = _dataFactory.New(options: new DataFactorySettings(AppFileDataRaw.Settings, appId: AppId),
                 // Make sure we share relationships source with folders, as files need folders and folders need files
                 relationships: folderFactory.Relationships);
             var files = fileFactory.Create(rawFiles);

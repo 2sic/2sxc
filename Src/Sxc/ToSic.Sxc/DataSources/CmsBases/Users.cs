@@ -166,7 +166,7 @@ namespace ToSic.Sxc.DataSources
 
             // Figure out options to be sure we have the roles/roleids
             var relationships = new LazyLookup<object, IEntity>();
-            var userFactory = _dataFactory.New(settings: CmsUserRaw.Settings,
+            var userFactory = _dataFactory.New(options: CmsUserRaw.Settings,
                 relationships: relationships,
                 rawConvertOptions: new RawConvertOptions(addKeys: new []{ "Roles"}));
 
