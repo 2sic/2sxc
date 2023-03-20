@@ -1,11 +1,6 @@
-﻿using System.Collections.Immutable;
-using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
-using static ToSic.Eav.DataSources.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -30,36 +25,13 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Sites",
         Type = DataSourceType.Source,
         UiHint = "Sites in this CMS")]
-    public class Sites: CustomDataSource
+    public class Sites: CustomDataSourceLight
     {
-        private readonly SitesDataSourceProvider _provider;
-
-        #region Constructor
-
         [PrivateApi]
-        public Sites(MyServices services, SitesDataSourceProvider provider) : base(services, "CDS.Sites")
+        public Sites(MyServices services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
         {
-            ConnectServices(
-                _provider = provider
-            );
-            Provide(GetSites);
+            ConnectServices(sitesProvider);
+            ProvideOut(sitesProvider.GetSitesInternal, options: SiteDataRaw.Options);
         }
-        #endregion
-
-        [PrivateApi]
-        public IImmutableList<IEntity> GetSites() => Log.Func(l =>
-        {
-            Configuration.Parse();
-
-            // Get sites from underlying system/provider
-            var sitesFromSystem = _provider.GetSitesInternal();
-            if (sitesFromSystem.SafeNone())
-                return (EmptyList, "null/empty");
-
-            // Convert to Entity-Stream
-            var sites = DataFactory.New(settings: SiteDataRaw.Settings).Create(sitesFromSystem);
-
-            return (sites, $"found: {sites.Count}");
-        });
     }
 }

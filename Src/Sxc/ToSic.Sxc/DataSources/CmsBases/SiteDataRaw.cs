@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
     public class SiteDataRaw: IRawEntity
     {
         internal static string TypeName = "Site";
-        internal static DataFactorySettings Settings => new DataFactorySettings(typeName: TypeName, titleField: nameof(Name), autoId: false);
+        internal static DataFactorySettings Options => new DataFactorySettings(typeName: TypeName, titleField: nameof(Name), autoId: false);
 
         /// <summary>
         /// The site ID.
