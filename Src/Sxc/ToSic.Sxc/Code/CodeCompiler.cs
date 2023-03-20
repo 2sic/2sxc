@@ -23,12 +23,9 @@ namespace ToSic.Sxc.Code
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
 
-        protected string ErrorMessage;
-
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
             var wrapLog = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
-            //string ErrorMessage = null;
 
             // Perform various checks on the path values
             var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
@@ -45,44 +42,24 @@ namespace ToSic.Sxc.Code
             var isCshtml = pathLowerCase.EndsWith(CsHtmlFileExtension);
 
             Type compiledType = null;
+            string errorMessages;
             if (isCshtml && string.IsNullOrEmpty(className))
             {
-                compiledType = GetCsHtmlType(virtualPath);
+                (compiledType, errorMessages) = GetCsHtmlType(virtualPath);
             }
             // compile .cs files
             else if (isCs || isCshtml)
             {
-                // if no name provided, use the name which is the same as the file name
-                className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? Eav.Constants.NullNameId;
-
-                var assembly = GetAssembly(virtualPath, className);
-
-                if (ErrorMessage == null)
-                {
-                    var possibleErrorMessage =
-                        $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}. Maybe the class name doesn't match the file name. ";
-                    try
-                    {
-                        compiledType = assembly?.GetType(className, throwOnError, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.A(possibleErrorMessage);
-                        if(throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
-                    }
-
-                    if (compiledType == null)
-                        ErrorMessage = possibleErrorMessage;
-                }
+                (compiledType, errorMessages) = GetTypeOrErrorMessages(virtualPath, className, throwOnError);
             }
             else
-                ErrorMessage = $"Error: given path '{Path.GetFileName(virtualPath)}' doesn't point to a .cs or .cshtml";
+                errorMessages = $"Error: given path '{Path.GetFileName(virtualPath)}' doesn't point to a .cs or .cshtml";
 
-            if (ErrorMessage != null)
+            if (errorMessages != null)
             {
-                Log.A(ErrorMessage + $"; throw error: {throwOnError}");
+                Log.A(errorMessages + $"; throw error: {throwOnError}");
                 wrapLog.ReturnNull("failed");
-                if (throwOnError) throw new Exception(ErrorMessage);
+                if (throwOnError) throw new Exception(errorMessages);
                 return null;
             }
 
@@ -92,10 +69,41 @@ namespace ToSic.Sxc.Code
             return wrapLog.Return(instance, $"found: {instance != null}");
         }
 
-        protected abstract Assembly GetAssembly(string virtualPath, string className);
+        public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string virtualPath, string className, bool throwOnError)
+        {
+            Type compiledType = null;
+            string errorMessages;
+            // if no name provided, use the name which is the same as the file name
+            className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? Eav.Constants.NullNameId;
+
+            Assembly assembly;
+            (assembly, errorMessages) = GetAssembly(virtualPath, className);
+
+            if (errorMessages == null)
+            {
+                var possibleErrorMessage =
+                    $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}. Maybe the class name doesn't match the file name. ";
+                try
+                {
+                    compiledType = assembly?.GetType(className, throwOnError, true);
+                }
+                catch (Exception ex)
+                {
+                    Log.A(possibleErrorMessage);
+                    if (throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
+                }
+
+                if (compiledType == null)
+                    errorMessages = possibleErrorMessage;
+            }
+
+            return (compiledType, errorMessages);
+        }
+
+        protected abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string virtualPath, string className);
 
 
-        protected abstract Type GetCsHtmlType(string virtualPath);
+        protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath);
 
 
         /// <summary>
