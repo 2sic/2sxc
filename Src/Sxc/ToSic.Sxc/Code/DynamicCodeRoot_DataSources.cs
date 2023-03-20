@@ -2,11 +2,8 @@
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
-using ToSic.Lib;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Code
 {
@@ -71,7 +68,11 @@ namespace ToSic.Sxc.Code
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindType(name, App.AppId);
             configurationProvider = configurationProvider ?? ConfigurationProvider;
-            return DataSourceFactory.Create(type, appIdentity: App, source: inSource, configSource: configurationProvider);
+            var ds = DataSourceFactory.Create(type, appIdentity: App, source: inSource, configSource: configurationProvider);
+
+            // if it supports all our known context properties, attach them
+            if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
+            return ds;
         }
         #endregion
     }

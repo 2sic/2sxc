@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Custom.Hybrid;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Renderers;
@@ -70,6 +71,9 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ICmsService, CmsService>();
             services.TryAddTransient<CmsServiceStringWysiwyg>();
             services.TryAddTransient<CmsServiceImageExtractor>();
+
+            // v15 CustomDataSources
+            services.TryAddTransient<DataSource15.MyServices>();
 
             return services;
         }
