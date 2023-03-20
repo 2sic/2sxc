@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.DataSources
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
         }
         )]
-	public class DnnUserProfile : CustomDataSource
+	public class DnnUserProfile : CustomDataSourceAdvanced
 	{
         private readonly IDataFactory _dataFactory;
 
@@ -86,14 +86,14 @@ namespace ToSic.Sxc.Dnn.DataSources
 
         #region Constructor / DI
 
-        public new class MyServices: MyServicesBase<CustomDataSource.MyServices>
+        public new class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
         {
             public ISite Site { get; }
             public IZoneMapper ZoneMapper { get; }
             public LazySvc<DnnSecurity> DnnSecurity { get; }
 
             public MyServices(
-                CustomDataSource.MyServices parentServices,
+                CustomDataSourceAdvanced.MyServices parentServices,
                 ISite site,
                 IZoneMapper zoneMapper,
                 LazySvc<DnnSecurity> dnnSecurity
