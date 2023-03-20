@@ -25,6 +25,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.ImportExport;
+using ToSic.Eav.Helpers;
 
 namespace ToSic.Sxc.WebApi.Views
 {
@@ -83,9 +84,13 @@ namespace ToSic.Sxc.WebApi.Views
             if (!string.IsNullOrEmpty(view.Path))
             {
                 TryAddAsset(bundle, app.ViewPath(view, PathTypes.PhysRelative), view.Path);
-                var thumb = _appIconHelpers.IconPathOrNull(app, view, PathTypes.PhysRelative);
-                if(thumb != null)
-                    TryAddAsset(bundle, thumb, thumb);
+                var webPath = _appIconHelpers.IconPathOrNull(app, view, PathTypes.PhysRelative)?.ForwardSlash();
+                if(webPath != null)
+                {
+                    //var relativePath = view.Icon?.Replace("[App:Path]","").TrimPrefixSlash();
+                    var relativePath = webPath.Replace(app.RelativePath.ForwardSlash(), "").TrimPrefixSlash();
+                    TryAddAsset(bundle, webPath, relativePath);
+                }
             }
 
             var serializer = _jsonSerializerLazy.Value.SetApp(cms.AppState);
