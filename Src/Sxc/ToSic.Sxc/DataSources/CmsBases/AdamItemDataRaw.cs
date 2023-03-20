@@ -12,7 +12,7 @@ namespace ToSic.Sxc.DataSources
     {
         public const string TypeName = "AdamItem";
 
-        public static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
+        public static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
 
         public int Id { get; set; }
         public Guid Guid { get; set; }

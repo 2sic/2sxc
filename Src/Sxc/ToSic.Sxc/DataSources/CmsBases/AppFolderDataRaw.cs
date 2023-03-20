@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources
     {
         public const string TypeName = "Folder";
 
-        public static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
+        public static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
 
         public override Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(base.Attributes(options))
         {

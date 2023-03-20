@@ -80,7 +80,7 @@ namespace ToSic.Sxc.DataSources
         {
             ConnectServices(
                 _provider = provider,
-                _rolesFactory = rolesFactory.New(options: RoleDataRaw.Settings)
+                _rolesFactory = rolesFactory.New(options: RoleDataRaw.Options)
             );
             Provide(GetList);
         }

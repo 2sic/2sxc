@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class PageDataRaw: IRawEntity
     {
-        public static DataFactorySettings Setting = new DataFactorySettings(typeName: "Page", titleField: nameof(Name));
+        public static DataFactoryOptions Option = new DataFactoryOptions(typeName: "Page", titleField: nameof(Name));
 
         /// <summary>
         /// The page ID.

@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Context.Raw
         #region Types and Names for Raw Entities
 
         internal static string TypeName = "User";
-        internal static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
+        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
 
         #endregion
 

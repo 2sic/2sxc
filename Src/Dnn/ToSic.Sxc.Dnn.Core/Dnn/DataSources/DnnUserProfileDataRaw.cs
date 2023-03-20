@@ -163,7 +163,7 @@ namespace ToSic.Sxc.Dnn.DataSources
                 results.Add(dnnUserProfile);
             }
             l.A($"results: {results.Count}");
-            var userProfileDataFactory = _dataFactory.New(options: new DataFactorySettings(DnnUserProfileDataRaw.Settings, typeName: ContentType?.NullIfNoValue()));
+            var userProfileDataFactory = _dataFactory.New(options: new DataFactoryOptions(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
             return (userProfileDataFactory.Create(results), "ok");
         });
 
@@ -215,7 +215,7 @@ namespace ToSic.Sxc.Dnn.DataSources
     {
         internal const string TypeName = "UserProfile";
 
-        internal static DataFactorySettings Settings = new DataFactorySettings(typeName: TypeName, titleField: nameof(Name));
+        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public string Name { get; set; } // aka DisplayName
