@@ -28,13 +28,13 @@ namespace ToSic.Sxc.Dnn.Install
                 if (!File.Exists(lockFilePath))
                     return false;
 
-                FileStream stream = null;
                 try
                 {
-                    stream = new FileStream(lockFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read);
-                    stream.Close();
-                    stream = null;
-                    // delete doesn't seem to work... File.Delete(lockFilePath);
+                    using (var stream = new FileStream(lockFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+                    {
+                        // FileStream opened successfully, meaning the file is not locked
+                    }
+                    File.Delete(lockFilePath);
                 }
                 catch (IOException)
                 {
@@ -42,10 +42,6 @@ namespace ToSic.Sxc.Dnn.Install
                     // - being processed by another thread
                     // - does not exist (has already been processed)
                     return true;
-                }
-                finally
-                {
-                    stream?.Close();
                 }
 
                 return false;

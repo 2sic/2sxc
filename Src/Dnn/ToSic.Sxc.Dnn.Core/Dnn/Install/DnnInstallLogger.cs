@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsvHelper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -18,11 +19,16 @@ namespace ToSic.Sxc.Dnn.Install
 
         internal void CloseLogFiles()
         {
-            FileStreamWriter.BaseStream.Close();
-            _fileStreamWriter = null;
+            if (FileStreamWriter != null)
+            {
+                //FileStreamWriter.BaseStream.Close();
+                FileStreamWriter.Close();
+                FileStreamWriter.Dispose();
+            }
+            //_fileStreamWriter = null;
         }
 
-        private StreamWriter FileStreamWriter => _fileStreamWriter ?? OpenLogFiles();
+        private StreamWriter FileStreamWriter => _fileStreamWriter ?? (_fileStreamWriter = OpenLogFiles());
         private StreamWriter _fileStreamWriter;
 
 
@@ -35,8 +41,21 @@ namespace ToSic.Sxc.Dnn.Install
                                        + "-" + System.Diagnostics.Process.GetCurrentProcess().Id
                                        + "-" + AppDomain.CurrentDomain.Id + ".log.resources");
 
-            var fileHandle = new FileStream(logFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
-            var streamWriter = new StreamWriter(fileHandle);
+            StreamWriter streamWriter = null;
+            try
+            {
+                var fileHandle = new FileStream(logFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                    FileShare.Read);
+                streamWriter = new StreamWriter(fileHandle);
+            }
+            catch (Exception)
+            {
+                if (streamWriter != null)
+                {
+                    streamWriter.Close();
+                    streamWriter.Dispose();
+                }
+            }
             return streamWriter;
         }
 
