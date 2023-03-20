@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
         [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Init(appId).Get(appId, id);
 
-        [HttpGet] public IEnumerable<DataSourceDto> DataSources() => Real.Init(0).DataSources();
+        [HttpGet] public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) => Real.Init(appId).DataSources();
 
         [HttpPost] public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
             => Real.Init(appId).Save(data, appId, id);
