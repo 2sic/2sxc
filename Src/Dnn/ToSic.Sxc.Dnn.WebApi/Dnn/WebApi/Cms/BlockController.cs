@@ -60,7 +60,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang) => Real.Set(DnnConstants.SysFolderRootVirtual.Trim('~')).Render(templateId, lang);
+        public AjaxRenderDto Render([FromUri] int templateId, [FromUri] string lang, [FromUri] string edition) 
+            => Real.Set(DnnConstants.SysFolderRootVirtual.Trim('~')).Render(templateId, lang, edition);
 
         /// <inheritdoc />
         [HttpPost]

@@ -85,11 +85,11 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             return _blockEditorSelectorLazy.Value.GetEditor(Block).Publish(part, index);
         }
 
-        public AjaxRenderDto RenderV2(int templateId, string lang, string root)
+        public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
         {
             var wrapLog = Log.Fn<AjaxRenderDto>();
             Log.A("1. Get Render result");
-            var result = RenderToResult(templateId, lang);
+            var result = RenderToResult(templateId, lang, edition);
 
             Log.A("2.1. Build Resources");
             var resources = new List<AjaxResourceDtoWIP>();
@@ -133,7 +133,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             });
         }
 
-        private IRenderResult RenderToResult(int templateId, string lang)
+        private IRenderResult RenderToResult(int templateId, string lang, string edition)
         {
             var callLog = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
             //SetThreadCulture(lang);
@@ -142,6 +142,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             if (templateId > 0)
             {
                 var template = CmsManagerOfBlock.Read.Views.Get(templateId);
+                template.Edition = edition;
                 Block.View = template;
             }
 

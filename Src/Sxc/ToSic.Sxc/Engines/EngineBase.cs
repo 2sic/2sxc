@@ -110,14 +110,15 @@ namespace ToSic.Sxc.Engines
 
             // Figure out the current edition - if none, stop here
             var polymorph = Services.Polymorphism.Init(Block.App.Data.List);
-            var edition = polymorph.Edition();
+            // New 2023-03-20 - if the view comes with a preset edition, it's an ajax-preview which should be respected
+            var edition = view.Edition.NullIfNoValue() ?? polymorph.Edition();
             if (edition == null)
                 return (null, "no edition detected");
             l.A($"edition '{edition}' detected");
 
             // Case #1 where edition is between root and path
             // eg. subPath = "View.cshtml" and there is a "bs5/View.cshtml"
-            var newPath = PolymorphTestPathAndSaveIfFound(view, root, edition, subPath);
+            var newPath = PolymorphTestPathAndSetIfFound(view, root, edition, subPath);
             if (newPath != null)
                 return (newPath, $"found edition {edition}");
 
@@ -127,14 +128,14 @@ namespace ToSic.Sxc.Engines
             var pathWithoutFirstFolder = subPath.After("/");
             if (string.IsNullOrEmpty(pathWithoutFirstFolder))
                 return (null, "view is not in subfolder, so no edition to replace, stopping now");
-            newPath = PolymorphTestPathAndSaveIfFound(view, root, edition, pathWithoutFirstFolder);
+            newPath = PolymorphTestPathAndSetIfFound(view, root, edition, pathWithoutFirstFolder);
             if (newPath != null)
                 return (newPath, $"edition {edition} up one path");
 
             return (null, $"edition {edition} not found");
         });
 
-        private string PolymorphTestPathAndSaveIfFound(IView view, string root, string edition, string subPath
+        private string PolymorphTestPathAndSetIfFound(IView view, string root, string edition, string subPath
         ) => Log.Func($"root: {root}; edition: {edition}; subPath: {subPath}", () =>
         {
             var fullPathForTest = Path.Combine(root, edition, subPath).ToAbsolutePathForwardSlash();

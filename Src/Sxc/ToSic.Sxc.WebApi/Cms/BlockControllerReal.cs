@@ -113,10 +113,10 @@ namespace ToSic.Sxc.WebApi.Cms
         #endregion
 
         /// <inheritdoc />
-        public AjaxRenderDto Render(int templateId, string lang)
+        public AjaxRenderDto Render(int templateId, string lang, string edition)
         {
             Log.A($"render template:{templateId}, lang:{lang}");
-            return Backend.RenderV2(templateId, lang, _moduleRoot);
+            return Backend.RenderForAjax(templateId, lang, _moduleRoot, edition);
         }
         public BlockControllerReal Set(string moduleRoot)
         {

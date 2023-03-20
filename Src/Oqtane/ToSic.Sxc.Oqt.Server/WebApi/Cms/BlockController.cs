@@ -77,7 +77,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         [Authorize(Roles = RoleNames.Admin)]
-        public AjaxRenderDto Render(int templateId, string lang) => Real.Set(OqtConstants.UiRoot).Render(templateId, lang);
+        public AjaxRenderDto Render(int templateId, string lang, string edition) => Real.Set(OqtConstants.UiRoot).Render(templateId, lang, edition);
 
         /// <inheritdoc />
         [HttpPost]
