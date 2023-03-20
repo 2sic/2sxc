@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
         Type = DataSourceType.Source,
         ExpectsDataOfType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
     )]
-    public class Roles : ExternalData
+    public class Roles : CustomDataSource
     {
         private readonly IDataFactory _rolesFactory;
         private readonly RolesDataSourceProvider _provider;

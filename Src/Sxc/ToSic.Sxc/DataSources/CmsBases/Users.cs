@@ -35,7 +35,7 @@ namespace ToSic.Sxc.DataSources
         Type = DataSourceType.Source,
         ExpectsDataOfType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
     )]
-    public partial class Users : ExternalData
+    public partial class Users : CustomDataSource
     {
         private readonly IDataSourceGenerator<Roles> _rolesGenerator;
         private readonly IDataFactory _dataFactory;

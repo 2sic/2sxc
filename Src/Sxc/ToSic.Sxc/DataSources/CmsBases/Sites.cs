@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Sites",
         Type = DataSourceType.Source,
         UiHint = "Sites in this CMS")]
-    public class Sites: ExternalData
+    public class Sites: CustomDataSource
     {
         private readonly IDataFactory _sitesFactory;
         private readonly SitesDataSourceProvider _provider;

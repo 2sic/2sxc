@@ -30,7 +30,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Pages",
         Type = DataSourceType.Source,
         UiHint = "Pages in this site")]
-    public class Pages: ExternalData
+    public class Pages: CustomDataSource
     {
         private readonly ITreeMapper _treeMapper;
         private readonly IDataFactory _pageFactory;

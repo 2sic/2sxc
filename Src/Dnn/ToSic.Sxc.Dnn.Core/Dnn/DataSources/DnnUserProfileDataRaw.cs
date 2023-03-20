@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.DataSources
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
         }
         )]
-	public class DnnUserProfile : ExternalData
+	public class DnnUserProfile : CustomDataSource
 	{
         private readonly IDataFactory _dataFactory;
 

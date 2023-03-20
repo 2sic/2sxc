@@ -35,7 +35,7 @@ namespace ToSic.Sxc.DataSources
         Type = DataSourceType.Source,
         Audience = Audience.Advanced,
         UiHint = "Files and folders in the App folder")]
-    public class AppFiles: ExternalData
+    public class AppFiles: CustomDataSource
     {
         private readonly IDataFactory _dataFactory;
         private readonly AppFilesDataSourceProvider _provider;
