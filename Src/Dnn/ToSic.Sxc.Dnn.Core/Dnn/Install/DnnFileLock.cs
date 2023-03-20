@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.Install
             {
                 Directory.CreateDirectory(LockFolder); // create if it doesn't exist (doesn't need checking beforehand)
 
-                var lockFilePath = LockFileName;// HostingEnvironment.MapPath(Settings.Installation.LogDirectory + "lock.resources");
+                var lockFilePath = LockFileName;
                 if (!File.Exists(lockFilePath))
                     return false;
 

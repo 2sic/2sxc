@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Web;
-using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.Run;
 using static ToSic.Sxc.Dnn.DnnSxcSettings.Installation;
 
 namespace ToSic.Sxc.Dnn.Install
@@ -30,52 +24,16 @@ namespace ToSic.Sxc.Dnn.Install
                 var complete = IsUpgradeComplete(upgradeVersion, "- check for FinishAbortedUpgrade");
                 _installLogger.LogStep("", "Status for version " + upgradeVersion + " is " + complete);
                 if (!complete)
-                    UpgradeModule(upgradeVersion);
+                    UpgradeModule(upgradeVersion, false);
             }
 
             _installLogger.LogStep("", "FinishAbortedUpgrade done", false);
 
+            _installLogger.CloseLogFiles();
             // Restart application
             HttpRuntime.UnloadAppDomain();
             return (true, "ok");
         });
 
-
-        public string GetAutoInstallPackagesUiUrl(ISite site, IModule module, bool forContentApp) => Log.Func(() =>
-        {
-            var moduleInfo = (module as DnnModule)?.GetContents();
-            var portal = (site as DnnSite)?.GetContents();
-            if (moduleInfo == null || portal == null)
-                throw new ArgumentException("missing portal/module");
-
-            // new: check if it should allow this
-            // it should only be allowed, if the current situation is either
-            // Content - and no views exist (even invisible ones)
-            // App - and no apps exist - this is already checked on client side, so I won't include a check here
-            if (forContentApp)
-                try
-                {
-                    var primaryAppId = _appStatesLazy.Value.IdentityOfDefault(site.ZoneId);
-                    // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
-                    var contentViews = _cmsRuntimeLazy.Value
-                        .InitQ(primaryAppId)
-                        .Views.GetAll();
-                    if (contentViews.Any()) return null;
-                }
-                catch
-                {
-                    /* ignore */
-                }
-
-            var gettingStartedSrc = _remoteRouterLazy.Value.LinkToRemoteRouter(
-                RemoteDestinations.AutoConfigure,
-                site,
-                module.Id,
-                app: null,
-                forContentApp);
-
-            // Set src to iframe
-            return gettingStartedSrc;
-        });
     }
 }

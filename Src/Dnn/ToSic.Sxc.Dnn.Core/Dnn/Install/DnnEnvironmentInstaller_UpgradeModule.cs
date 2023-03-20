@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Install
 {
     public partial class DnnEnvironmentInstaller
     {
-        internal string UpgradeModule(string version)
+        internal string UpgradeModule(string version, bool closeWhenDone)
         {
             // Check if table "ToSIC_SexyContent_Templates" exists. 
             // If it's gone, then PROBABLY skip all upgrade-codes incl. 8.11!
@@ -148,7 +148,7 @@ namespace ToSic.Sxc.Dnn.Install
 
                     // Reset Upgrade complete so it's regenerated
                     UpgradeCompleteCache.Reset();
-                    var getNewStatus = UpgradeComplete;
+                    var getNewStatus = UpgradeComplete();
                     _installLogger.LogStep(version, $"updated upgrade-complete status to {getNewStatus}");
                 }
 
@@ -166,6 +166,8 @@ namespace ToSic.Sxc.Dnn.Install
                 IsUpgradeRunning = false;
             }
             _installLogger.LogStep(version, "UpgradeModule done / returning");
+            if (closeWhenDone)
+                _installLogger.CloseLogFiles();
             return version;
         }
         

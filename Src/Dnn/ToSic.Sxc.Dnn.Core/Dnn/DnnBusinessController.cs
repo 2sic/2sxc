@@ -93,11 +93,6 @@ namespace ToSic.Sxc.Dnn
             return Publishing.GetPublishedVersion(instanceId);
         }
 
-        // 2022-02-03 2dm moved to the env-installer
-        //internal static void UpdateUpgradeCompleteStatus()
-        //    => DnnEnvironmentInstaller.UpgradeComplete = DnnStaticDi.GetPageScopedServiceProvider().Build<DnnEnvironmentInstaller>()
-        //        .IsUpgradeComplete(Settings.Installation.LastVersionWithServerChanges, "- static check");
-
         /// <summary>
         /// This is part of the IUpgradeable of DNN
         /// </summary>
@@ -106,7 +101,8 @@ namespace ToSic.Sxc.Dnn
         public string UpgradeModule(string version)
         {
             Log.A($"upgrade module - start for v:{version}");
-            var res = ServiceProvider.Build<DnnEnvironmentInstaller>(Log).UpgradeModule(version);
+            var installer = ServiceProvider.Build<DnnEnvironmentInstaller>(Log);
+            var res = installer.UpgradeModule(version, true);
             Log.A($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
             return res;
