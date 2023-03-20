@@ -19,6 +19,7 @@ namespace ToSic.Sxc.Apps
 {
 	public class ViewsRuntime: PartOf<CmsRuntime>
     {
+        private readonly IDataSourceGenerator<EntityTypeFilter> _typeFilterGenerator;
 
         #region Constructor / DI
 
@@ -26,21 +27,19 @@ namespace ToSic.Sxc.Apps
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
         private readonly LazySvc<AppIconHelpers> _appIconHelpers;
-        private readonly IDataSourceFactory _dataSourceFactory;
 
         public ViewsRuntime(LazySvc<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
             IConvertToEavLight dataToFormatLight,
             LazySvc<AppIconHelpers> appIconHelpers,
-            IDataSourceFactory dataSourceFactory
-            ) : base("Cms.ViewRd")
+            IDataSourceGenerator<EntityTypeFilter> typeFilterGenerator) : base("Cms.ViewRd")
         {
             ConnectServices(
                 _valConverterLazy = valConverterLazy,
                 _cultureResolver = cultureResolver,
                 _dataToFormatLight = dataToFormatLight,
                 _appIconHelpers = appIconHelpers,
-                _dataSourceFactory = dataSourceFactory
+                _typeFilterGenerator = typeFilterGenerator
             );
         }
 
@@ -48,14 +47,13 @@ namespace ToSic.Sxc.Apps
 
         private IDataSource _viewDs;
 		private IDataSource ViewsDataSource()
-		{
-            if(_viewDs!= null)return _viewDs;
+        {
+            if (_viewDs != null) return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = Parent.Data;
-			var typeFilter = _dataSourceFactory.Create<EntityTypeFilter>(source: dataSource);
+			var typeFilter = _typeFilterGenerator.New(source: dataSource);
 		    typeFilter.TypeName = Eav.Apps.Configuration.TemplateContentType;
-		    _viewDs = typeFilter;
-            return typeFilter;
+		    return _viewDs = typeFilter;
 		}
 
         public IEnumerable<IView> GetAll() 

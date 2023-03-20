@@ -36,7 +36,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 throw Eav.WebApi.Errors.HttpException.PermissionDenied("Tried to access app from another zone. Requires SuperUser permissions.");
             }
 
-            var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId), _configProvider.Build(true));
+            var app = _unInitializedApp.Init(new AppIdentity(zoneId, appId), _configProvider.Build());
             return wrapLog.Return(app);
         }
 
