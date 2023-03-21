@@ -43,19 +43,20 @@ namespace ToSic.Sxc.DataSources
         {
             _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
             var l = Log.Fn<(List<DataSourceInfo> data, CacheItemPolicy policy)>();
+            var expiration = new TimeSpan(1, 0, 0);
+            var policy = new CacheItemPolicy { SlidingExpiration = expiration };
             try
             {
-                var expiration = new TimeSpan(1, 0, 0);
-                var policy = new CacheItemPolicy { SlidingExpiration = expiration };
-
+                // Get paths
                 var (physicalPath, virtualPath) = GetAppDataSourceFolderPaths(appId);
 
-                // TODO: @STV
                 // If the directory doesn't exist, return an empty list with a 3 minute policy
                 // just so we don't keep trying to do this on every query
+                if (!Directory.Exists(physicalPath))
+                    return l.Return((new List<DataSourceInfo>(),
+                        new CacheItemPolicy { SlidingExpiration = new TimeSpan(0, 5, 0) }), "error");
 
-                if (Directory.Exists(physicalPath))
-                    policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
+                policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
 
                 var data = CreateDataSourceInfos(appId, physicalPath, virtualPath);
 
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.DataSources
             }
             catch
             {
-                return l.Return((null, null), "error");
+                return l.Return((new List<DataSourceInfo>(), policy), "error");
             }
         }
 
