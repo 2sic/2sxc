@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Caching;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Apps.DataSources;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -16,50 +18,97 @@ namespace ToSic.Sxc.DataSources
 {
     public class AppDataSourcesLoader : ServiceBase, IAppDataSourcesLoader
     {
-        private readonly ISite _site;
-        private readonly LazySvc<AppPaths> _appPathsLazy;
-        private readonly LazySvc<CodeCompiler> _codeCompilerLazy;
-        private readonly LazySvc<DataSourceCatalog> _dataSourceCatalogLazy;
+        private const string DataSourcesFolder = "DataSources";
 
-        public AppDataSourcesLoader(ISite site, LazySvc<AppPaths> appPathsLazy, LazySvc<CodeCompiler> codeCompilerLazy, LazySvc<DataSourceCatalog> dataSourceCatalogLazy) : base("Eav.AppDtaSrcLoad")
+        public AppDataSourcesLoader(ISite site, IAppStates appStates, LazySvc<AppPaths> appPathsLazy, LazySvc<CodeCompiler> codeCompilerLazy) : base("Eav.AppDtaSrcLoad")
         {
             ConnectServices(
                 _site = site,
+                _appStates = appStates,
                 _appPathsLazy = appPathsLazy,
-                _codeCompilerLazy = codeCompilerLazy,
-                _dataSourceCatalogLazy = dataSourceCatalogLazy
+                _codeCompilerLazy = codeCompilerLazy
             );
         }
+        private readonly IAppStates _appStates;
+        private readonly ISite _site;
+        private readonly LazySvc<AppPaths> _appPathsLazy;
+        private readonly LazySvc<CodeCompiler> _codeCompilerLazy;
 
-        public void Register(AppState appState) => Log.Do($"a:{appState.AppId}", l =>
+        /// <summary>
+        /// A cache of all DataSource Types - initialized upon first access ever, then static cache.
+        /// </summary>
+        private static MemoryCache AppCache => MemoryCache.Default;
+
+        private static string AppCacheKey(int appId) => $"{appId}";
+
+        public List<DataSourceInfo> Get(int appId)
         {
-            var dataSourceCatalog = _dataSourceCatalogLazy.Value;
-            var dataSourceInfos = dataSourceCatalog.Get(appState.AppId);
-            if (dataSourceInfos != null) return;
+            var appCacheKey = AppCacheKey(appId);
 
-            var appPaths = _appPathsLazy.Value.Init(_site, appState);
-            var dataSourcesFolder = Path.Combine(appPaths.PhysicalPath, "DataSources");
+            if (AppCache[appCacheKey] is List<DataSourceInfo> cache) return cache;
 
-            if (!Directory.Exists(dataSourcesFolder))
+            return UpdateAppCache(appId);
+        }
+
+        private List<DataSourceInfo> UpdateAppCache(int appId)
+        {
+            try
             {
-                l.A($"no folder {dataSourcesFolder}");
-                return;
+                var expiration = new TimeSpan(1, 0, 0);
+                var policy = new CacheItemPolicy { SlidingExpiration = expiration };
+
+                var (physicalPath, virtualPath) = GetAppDataSourceFolderPaths(appId);
+                if (Directory.Exists(physicalPath))
+                    policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
+
+                var appDataSources = LoadAppDataSources(appId);
+
+                var data = (appDataSources ?? new List<Type>())
+                .Select(t => new DataSourceInfo(t, false))
+                .ToList();
+
+                AppCache.Set(new CacheItem(AppCacheKey(appId), data), policy);
+
+                return data;
             }
+            catch
+            {
+                /* ignore for now */
+            }
+            return null;
+        }
+
+        private (string physicalPath, string virtualPath) GetAppDataSourceFolderPaths(int appId)
+        {
+            var appState = _appStates.Get(appId);
+            var appPaths = _appPathsLazy.Value.Init(_site, appState);
+            var physicalPath = Path.Combine(appPaths.PhysicalPath, DataSourcesFolder);
+            var virtualPath = Path.Combine(appPaths.Path, DataSourcesFolder);
+            return (physicalPath, virtualPath);
+        }
+
+        private IEnumerable<Type> LoadAppDataSources(int appId) => Log.Func($"a:{appId}", l =>
+        {
+            var (physicalPath, virtualPath) = GetAppDataSourceFolderPaths(appId);
+
+            if (!Directory.Exists(physicalPath))
+                return (null, $"no folder {physicalPath}");
 
             var compiler = _codeCompilerLazy.Value;
             var types = new List<Type>();
             var errors = new List<string>();
 
-            foreach (var dataSourceFile in Directory.GetFiles(dataSourcesFolder, "*.cs",
-                         SearchOption.TopDirectoryOnly))
+            foreach (var dataSourceFile in Directory.GetFiles(physicalPath, "*.cs", SearchOption.TopDirectoryOnly))
             {
-                var virtualPath = Path.Combine(appPaths.Path, "DataSources", Path.GetFileName(dataSourceFile));
-                var className = Path.GetFileNameWithoutExtension(virtualPath);
                 try
                 {
-                    var rez = compiler.GetTypeOrErrorMessages(virtualPath, className, false);
-                    if (rez.Item1 != null) types.Add(rez.Item1);
-                    if (!string.IsNullOrEmpty(rez.Item2)) errors.Add(rez.Item2);
+                    var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
+                        virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)), 
+                        className: Path.GetFileNameWithoutExtension(dataSourceFile), 
+                        throwOnError: false);
+
+                    if (type != null) types.Add(type);
+                    if (!string.IsNullOrEmpty(errorMessages)) errors.Add(errorMessages);
                 }
                 catch (Exception ex)
                 {
@@ -70,16 +119,11 @@ namespace ToSic.Sxc.DataSources
 
             if (errors.Any()) l.A($"errors: {string.Join(",", errors)}");
 
-            if (types.Any())
-            {
-                l.A($"data sources: {string.Join(",", types.Select(t => t.FullName))}");
+            if (!types.Any()) return (null, "OK, no types found, so no update of DataSourceCatalog");
 
+            l.A($"data sources: {string.Join(",", types.Select(t => t.FullName))}");
 
-                dataSourceCatalog.UpdateAppCache(appState.AppId, types, dataSourcesFolder);
-                l.A($"OK, DataSourceCatalog updated appId:{appState.AppId}, types:{types.Count}, path:{dataSourcesFolder}");
-            }
-            else
-                l.A("OK, no types found, so no update of DataSourceCatalog");
+            return (types, $"OK, types:{types.Count}, path:{virtualPath}");
         });
     }
 }
