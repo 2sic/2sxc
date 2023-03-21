@@ -39,16 +39,7 @@ namespace ToSic.Sxc.DataSources
         private readonly LazySvc<AppPaths> _appPathsLazy;
         private readonly LazySvc<CodeCompiler> _codeCompilerLazy;
 
-        /// <summary>
-        /// A cache of all DataSource Types - initialized upon first access ever, then static cache.
-        /// </summary>
-        private static MemoryCache AppCache => MemoryCache.Default;
-
-        private static string AppCacheKey(int appId) => $"{appId}";
-
-        public List<DataSourceInfo> Get(int appId) => AppCache[AppCacheKey(appId)] as List<DataSourceInfo> ?? CreateAndReturnAppCache(appId);
-
-        private List<DataSourceInfo> CreateAndReturnAppCache(int appId)
+        public (List<DataSourceInfo> data, CacheItemPolicy policy) CreateAndReturnAppCache(int appId)
         {
             try
             {
@@ -61,15 +52,13 @@ namespace ToSic.Sxc.DataSources
 
                 var data = CreateDataSourceInfos(appId);
 
-                AppCache.Set(new CacheItem(AppCacheKey(appId), data), policy);
-
-                return data;
+                return (data, policy);
             }
             catch
             {
                 /* ignore for now */
             }
-            return null;
+            return (null, null);
         }
 
         private List<DataSourceInfo> CreateDataSourceInfos(int appId)
