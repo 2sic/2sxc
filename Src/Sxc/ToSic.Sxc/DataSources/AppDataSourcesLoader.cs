@@ -44,16 +44,9 @@ namespace ToSic.Sxc.DataSources
 
         private static string AppCacheKey(int appId) => $"{appId}";
 
-        public List<DataSourceInfo> Get(int appId)
-        {
-            var appCacheKey = AppCacheKey(appId);
+        public List<DataSourceInfo> Get(int appId) => AppCache[AppCacheKey(appId)] as List<DataSourceInfo> ?? CreateAndReturnAppCache(appId);
 
-            if (AppCache[appCacheKey] is List<DataSourceInfo> cache) return cache;
-
-            return UpdateAppCache(appId);
-        }
-
-        private List<DataSourceInfo> UpdateAppCache(int appId)
+        private List<DataSourceInfo> CreateAndReturnAppCache(int appId)
         {
             try
             {
@@ -64,11 +57,9 @@ namespace ToSic.Sxc.DataSources
                 if (Directory.Exists(physicalPath))
                     policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
 
-                var appDataSources = LoadAppDataSources(appId);
-
-                var data = (appDataSources ?? new List<Type>())
-                .Select(t => new DataSourceInfo(t, false))
-                .ToList();
+                var data = (LoadAppDataSources(appId) ?? new List<Type>())
+                    .Select(t => new DataSourceInfo(t, false))
+                    .ToList();
 
                 AppCache.Set(new CacheItem(AppCacheKey(appId), data), policy);
 
@@ -122,13 +113,11 @@ namespace ToSic.Sxc.DataSources
                 }
             }
 
-            if (errors.Any()) l.A($"errors: {string.Join(",", errors)}");
+            if (errors.Any()) l.A($"Errors: {string.Join(",", errors)}");
 
-            if (!types.Any()) return (null, "OK, no types found, so no update of DataSourceCatalog");
-
-            l.A($"data sources: {string.Join(",", types.Select(t => t.FullName))}");
-
-            return (types, $"OK, types:{types.Count}, path:{virtualPath}");
+            return types.Any() 
+                ? (types, $"OK, DataSources:{types.Count} ({string.Join(";", types.Select(t => t.FullName))}), path:{virtualPath}")
+                : (null, $"OK, no working DataSources found, path:{virtualPath}") ;
         });
     }
 }
