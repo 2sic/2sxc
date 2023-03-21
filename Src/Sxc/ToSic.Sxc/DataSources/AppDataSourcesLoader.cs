@@ -61,6 +61,15 @@ namespace ToSic.Sxc.DataSources
                     .Select(t => new DataSourceInfo(t, false))
                     .ToList();
 
+                // add configuration types
+                var appState = _appStates.Get(appId);
+                data.ForEach(dsi =>
+                {
+                    dsi.VisualQuery.ConfigurationType = string.IsNullOrEmpty(dsi.VisualQuery.ConfigurationType) 
+                        ? appState.GetContentType($"{dsi.TypeName}Configuration")?.NameId
+                        : dsi.VisualQuery.ConfigurationType;
+                });
+
                 AppCache.Set(new CacheItem(AppCacheKey(appId), data), policy);
 
                 return data;
