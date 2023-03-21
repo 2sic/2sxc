@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ToSic.Eav;
@@ -16,12 +17,9 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 
 // ReSharper disable once CheckNamespace
-
-// TODO:
-// - ability to get in-stream...?
 namespace Custom.DataSources
 {
-    public abstract class DataSource15: IDataSource, IAppIdentitySync
+    public abstract partial class DataSource15: IDataSource, IAppIdentitySync
     {
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
@@ -44,28 +42,22 @@ namespace Custom.DataSources
         protected DataSource15(MyServices services, string logName = null)
         {
             _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
+            _inner.BreachProvideOut(GetDefault);
         }
 
         private readonly CustomDataSourceLight _inner;
 
-        protected void ProvideOutRaw<T>(
-            Func<IEnumerable<IHasRawEntity<T>>> source,
+        protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
+
+
+        protected void ProvideOut(Func<IEnumerable> getList,
             string noParamOrder = Parameters.Protector,
-            DataFactoryOptions options = default) where T : IRawEntity =>
-            _inner.BreachProvideOutRaw(source, options: options);
+            string name = DataSourceConstants.StreamDefaultName,
+            DataFactoryOptions options = default
+            )
+            => _inner.BreachProvideOut(getList, name: name, options: options);
 
-        protected void ProvideOutRaw<T>(
-            Func<IEnumerable<T>> source,
-            string noParamOrder = Parameters.Protector,
-            DataFactoryOptions options = default) where T : IRawEntity =>
-            _inner.BreachProvideOutRaw(source, options: options);
 
-        protected void ProvideOut(Func<IEnumerable<IEntity>> getList, string name = DataSourceConstants.StreamDefaultName)
-            => _inner.BreachProvideOut(getList, name);
-
-        protected void ProvideOut(Func<IImmutableList<IEntity>> getList,
-            string name = DataSourceConstants.StreamDefaultName)
-            => _inner.BreachProvideOut(getList, name);
         #region CodeLog
 
         public ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log));
@@ -85,51 +77,6 @@ namespace Custom.DataSources
 
         #endregion
 
-        #region Explicit IDataSource Implementation
-
-        Guid IDataSourceShared.Guid => _inner.Guid;
-
-        string IDataSourceShared.Name => GetType().Name;
-
-        string IDataSourceShared.Label => _inner.Label;
-        void IDataSourceShared.AddDebugInfo(Guid? guid, string label) => _inner.AddDebugInfo(guid, label);
-
-        string ICacheKey.CachePartialKey => _inner.CachePartialKey;
-
-        string ICacheKey.CacheFullKey => _inner.CacheFullKey;
-
-        long ITimestamped.CacheTimestamp => _inner.CacheTimestamp;
-
-        bool ICacheExpiring.CacheChanged(long dependentTimeStamp)
-        {
-            return _inner.CacheChanged(dependentTimeStamp);
-        }
-
-        void ICanPurgeListCache.PurgeList(bool cascade)
-        {
-            _inner.PurgeList(cascade);
-        }
-
-        IDictionary<string, IDataStream> IDataSourceSource.Out => _inner.Out;
-
-        IDataStream IDataSourceSource.this[string outName] => _inner[outName];
-
-        IDataStream IDataSourceSource.GetStream(string name, string noParamOrder, bool nullIfNotFound,
-            bool emptyIfNotFound)
-        {
-            return _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
-        }
-
-        IEnumerable<IEntity> IDataSourceSource.List => _inner.List;
-
-        List<string> IDataSourceSource.CacheRelevantConfigurations => _inner.CacheRelevantConfigurations;
-
-        ICacheKeyManager IDataSourceSource.CacheKey => _inner.CacheKey;
-
-
-        ILog IHasLog.Log => _inner.Log;
-
-        #endregion
 
 
         #region IDataTarget - all public

@@ -73,12 +73,10 @@ namespace ToSic.Sxc.Code
 
         public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string virtualPath, string className, bool throwOnError)
         {
-            string errorMessages;
             // if no name provided, use the name which is the same as the file name
             className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? Eav.Constants.NullNameId;
 
-            Assembly assembly;
-            (assembly, errorMessages) = GetAssembly(virtualPath, className);
+            var (assembly, errorMessages) = GetAssembly(virtualPath, className);
 
             if (errorMessages != null) return (null, errorMessages);
 
