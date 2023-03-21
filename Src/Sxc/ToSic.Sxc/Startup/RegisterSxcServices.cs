@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Eav.Apps.DataSources;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
@@ -164,6 +165,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<AppFilesDataSourceProvider.MyServices>();
             services.TryAddTransient(typeof(AdamDataSourceProvider<,>));
             services.TryAddTransient(typeof(AdamDataSourceProvider<,>.MyServices));
+            services.TryAddTransient<IAppDataSourcesLoader, AppDataSourcesLoader>();
 
             // v15 EditUi Resources
             services.TryAddTransient<EditUiResources>();
