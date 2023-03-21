@@ -66,7 +66,7 @@ namespace ToSic.Sxc.DataSources
             // App state for automatic lookup of configuration content-types
             var appState = _appStates.Get(appId);
 
-            var data = (LoadAppDataSources(appId))
+            var data = LoadAppDataSources(appId)
                 .Select(pair =>
                 {
                     var t = pair.Type;
@@ -119,40 +119,43 @@ namespace ToSic.Sxc.DataSources
                 return (null, $"no folder {physicalPath}");
 
             var compiler = _codeCompilerLazy.Value;
-            var types = new List<Type>();
             var errors = new List<string>();
 
-            var types2 = Directory.GetFiles(physicalPath, "*.cs", SearchOption.TopDirectoryOnly).Select(
-                dataSourceFile =>
-                {
-                    try
+            var types2 = Directory
+                .GetFiles(physicalPath, "*.cs", SearchOption.TopDirectoryOnly)
+                .Select(
+                    dataSourceFile =>
                     {
-                        var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
-                            virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)),
-                            className: Path.GetFileNameWithoutExtension(dataSourceFile),
-                            throwOnError: false);
-
-                        if (type != null) types.Add(type);
-                        DataSourceInfoError err = null;
-                        if (!string.IsNullOrEmpty(errorMessages))
+                        try
                         {
-                            errors.Add(errorMessages);
-                            err = new DataSourceInfoError() { Title = "Error Compiling", Message = errorMessages };
+                            var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
+                                virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)),
+                                className: Path.GetFileNameWithoutExtension(dataSourceFile),
+                                throwOnError: false);
+
+                            DataSourceInfoError err = null;
+                            if (!string.IsNullOrEmpty(errorMessages))
+                            {
+                                errors.Add(errorMessages);
+                                err = new DataSourceInfoError { Title = "Error Compiling", Message = errorMessages };
+                            }
+
+                            return (type ?? typeof(Error), err);
                         }
-                        return (type, err);
-                    }
-                    catch (Exception ex)
-                    {
-                        errors.Add(ex.Message);
-                        l.Ex(ex);
-                        return (null as Type, new DataSourceInfoError() { Title = "Unknown Exception", Message = ex.Message });
-                    }
-                }).ToList();
+                        catch (Exception ex)
+                        {
+                            errors.Add(ex.Message);
+                            l.Ex(ex);
+                            return (typeof(Error),
+                                new DataSourceInfoError { Title = "Unknown Exception", Message = ex.Message });
+                        }
+                    })
+                .ToList();
 
             if (errors.Any()) l.A($"Errors: {string.Join(",", errors)}");
 
             return types2.Any() 
-                ? (types2, $"OK, DataSources:{types2.Count} ({string.Join(";", types.Select(t => t.FullName))}), path:{virtualPath}")
+                ? (types2, $"OK, DataSources:{types2.Count} ({string.Join(";", types2.Select(t => t.Item1.FullName))}), path:{virtualPath}")
                 : (Enumerable.Empty<(Type, DataSourceInfoError)>(), $"OK, no working DataSources found, path:{virtualPath}") ;
         });
     }
