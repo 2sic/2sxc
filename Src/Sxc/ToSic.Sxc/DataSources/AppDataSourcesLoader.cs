@@ -71,7 +71,8 @@ namespace ToSic.Sxc.DataSources
                 {
                     var t = pair.Type;
                     // 1. Make sure we only keep DataSources and not other classes in the same folder
-                    if (!typeof(IDataSource).IsAssignableFrom(t)) return null;
+                    // but assume all null-types are errors, which we should preserve
+                    if (t != null && !typeof(IDataSource).IsAssignableFrom(t)) return null;
 
                     // 2. Get VisualQuery Attribute if available, or create new, since it's optional in DynamicCode
                     var vq = t?.GetDirectlyAttachedAttribute<VisualQueryAttribute>()
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.DataSources
                     if (!vq._DynamicInWasSet) vq.DynamicIn = true;
 
                     // 4. Build DataSourceInfo with the manually built Visual Query Attribute
-                    return new DataSourceInfo(t ?? typeof(Error), false, vq, pair.Error);
+                    return new DataSourceInfo(t ?? typeof(Error), false, overrideTypeName: typeName, overrideVisualQuery: vq, error: pair.Error);
                 })
                 .Where(dsi => dsi != null)
                 .ToList();

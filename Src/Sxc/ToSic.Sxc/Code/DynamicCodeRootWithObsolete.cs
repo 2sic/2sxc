@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Code
             {
                 // try to find with assembly name, or otherwise with GlobalName / previous names
                 var catalog = _root.GetService<DataSourceCatalog>();
-                var type = catalog.FindDataSourceInfo(typeName, _root.App.AppId).Type;
+                var type = catalog.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
                 lookUpEngine = lookUpEngine ?? _root.ConfigurationProvider;
 
                 if (inSource != null)

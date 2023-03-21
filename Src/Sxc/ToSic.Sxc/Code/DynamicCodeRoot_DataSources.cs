@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Code
         {
             // VERY WIP
             var catalog = GetService<DataSourceCatalog>();
-            var type = catalog.FindDataSourceInfo(name, App.AppId).Type;
+            var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
             configSource = configSource ?? ConfigurationProvider;
             var ds = DataSourceFactory.Create(type, appIdentity: App, source: source, configSource: configSource, configuration: configuration);
 
