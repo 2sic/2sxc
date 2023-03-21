@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
@@ -55,12 +56,11 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi]
         public IDataSource CreateSourceWip(
-                string name,
-                string noParamOrder = Eav.Parameters.Protector,
-                IDataSource source = default,
-                ILookUpEngine configSource = default,
-                IDictionary<string, string> configuration = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, configSource: configSource, configuration: configuration);
+            string name,
+            string noParamOrder = ToSic.Eav.Parameters.Protector,
+            IDataSource source = default,
+            IConfiguration configuration = default)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
 
         #endregion
 

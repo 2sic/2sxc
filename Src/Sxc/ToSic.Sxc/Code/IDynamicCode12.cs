@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
@@ -217,8 +218,7 @@ namespace ToSic.Sxc.Code
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             IDataSource source = default,
-            ILookUpEngine configSource = default,
-            IDictionary<string, string> configuration = default);
+            IConfiguration configuration = default);
         #endregion
 
         #region Context

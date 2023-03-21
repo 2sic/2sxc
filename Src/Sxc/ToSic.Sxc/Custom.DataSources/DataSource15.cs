@@ -4,15 +4,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Caching;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Caching;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 
@@ -21,6 +18,11 @@ namespace Custom.DataSources
 {
     public abstract partial class DataSource15: IDataSource, IAppIdentitySync
     {
+        /// <summary>
+        /// These are dependencies of DataSource15.
+        /// At the moment we could use something else, but this ensures that all users must have this
+        /// in the constructor, so we can be sure we can add more dependencies as we need them.
+        /// </summary>
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
         {
@@ -29,17 +31,16 @@ namespace Custom.DataSources
             }
         }
 
-        protected DataSource15(MyServices services): this(services, null)
-        {
-        }
-
         /// <summary>
-        /// Default constructor.
-        /// You need to call this constructor in your code to ensure that
+        /// Constructor with the option to provide a log name.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="logName"></param>
-        protected DataSource15(MyServices services, string logName = null)
+        /// <param name="services">
+        /// Services the object needs to work.
+        /// You don't need to worry about the details, just make sure it's provided in the constructor.
+        /// See MyServices convention TODO:
+        /// </param>
+        /// <param name="logName">Optional name to use in logs.</param>
+        protected DataSource15(MyServices services, string logName = default)
         {
             _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
             _inner.BreachProvideOut(GetDefault);
@@ -67,7 +68,7 @@ namespace Custom.DataSources
 
         #region Public IDataSource Implementation
 
-        public IDataSourceConfiguration Configuration => _inner.Configuration;
+        public IDataSourceConfigurationManager Configuration => _inner.Configuration;
 
         public DataSourceErrorHelper Error => _inner.Error;
 

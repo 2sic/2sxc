@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Code
 
             // If no in-source was provided, make sure that we create one from the current app
             inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configSource: ConfigurationProvider);
-            return DataSourceFactory.Create<T>(source: inSource, configSource: configurationProvider);
+            return DataSourceFactory.Create<T>(source: inSource, configuration: configurationProvider);
         }
 
         /// <inheritdoc />
@@ -65,14 +66,17 @@ namespace ToSic.Sxc.Code
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             IDataSource source = default,
-            ILookUpEngine configSource = default,
-            IDictionary<string, string> configuration = default)
+            IConfiguration configuration = default)
         {
             // VERY WIP
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
-            configSource = configSource ?? ConfigurationProvider;
-            var ds = DataSourceFactory.Create(type, appIdentity: App, source: source, configSource: configSource, configuration: configuration);
+            var configurationSourceNew = new ConfigurationWip
+            {
+                LookUpEngine = configuration?.GetLookupEngineWip() ?? ConfigurationProvider?.GetLookupEngineWip(),
+                Values = null // todo configuration
+            };
+            var ds = DataSourceFactory.Create(type, appIdentity: App, source: source, configuration: configurationSourceNew);
 
             // if it supports all our known context properties, attach them
             if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);

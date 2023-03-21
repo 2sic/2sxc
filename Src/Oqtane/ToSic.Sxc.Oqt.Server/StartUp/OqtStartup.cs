@@ -21,6 +21,7 @@ using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web.EditUi;
 using ToSic.Sxc.WebApi;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp

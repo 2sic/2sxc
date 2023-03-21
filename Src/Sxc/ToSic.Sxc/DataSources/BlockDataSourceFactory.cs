@@ -46,7 +46,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, source: viewDataSourceUpstream, configSource: configLookUp);
+            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, source: viewDataSourceUpstream, configuration: configLookUp);
 
             // Take Publish-Properties from the View-Template
             if (view != null)

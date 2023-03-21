@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
@@ -87,9 +88,8 @@ namespace Custom.Hybrid
             string name,
             string noParamOrder = ToSic.Eav.Parameters.Protector,
             IDataSource source = default,
-            ILookUpEngine configSource = default,
-            IDictionary<string, string> configuration = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, configSource: configSource, configuration: configuration);
+            IConfiguration configuration = default)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
 
         #endregion
 
