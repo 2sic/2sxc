@@ -54,9 +54,13 @@ namespace ToSic.Sxc.Code
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-            // where T : IDataSource
-            => _DynCodeRoot.CreateSourceWip(name, inSource, configurationProvider);
+        public IDataSource CreateSourceWip(
+                string name,
+                string noParamOrder = Eav.Parameters.Protector,
+                IDataSource source = default,
+                ILookUpEngine configSource = default,
+                IDictionary<string, string> configuration = default)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, configSource: configSource, configuration: configuration);
 
         #endregion
 

@@ -144,20 +144,6 @@ namespace Custom.DataSources
 
         #endregion
 
-        #region Get/Set settings
-
-        
-        public string Get(string name) => _inner.Get(name);
-
-        public TValue Get<TValue>(string name) => _inner.Get<TValue>(name);
-
-        // ReSharper disable once MethodOverloadWithOptionalParameter
-        public TValue Get<TValue>(string name, string noParamOrder = Parameters.Protector, TValue fallback = default) => _inner.Get(name, noParamOrder, fallback);
-
-        public void Set<TValue>(string name, TValue value) => _inner.Set(name, value);
-
-
-        #endregion
 
         #region IDataTarget - all public
 

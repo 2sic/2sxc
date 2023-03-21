@@ -213,7 +213,12 @@ namespace ToSic.Sxc.Code
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
 
         [PrivateApi]
-        IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = default);
+        IDataSource CreateSourceWip(
+            string name,
+            string noParamOrder = Eav.Parameters.Protector,
+            IDataSource source = default,
+            ILookUpEngine configSource = default,
+            IDictionary<string, string> configuration = default);
         #endregion
 
         #region Context

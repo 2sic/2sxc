@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
@@ -60,13 +61,18 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(string name, IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        public IDataSource CreateSourceWip(
+            string name,
+            string noParamOrder = Eav.Parameters.Protector,
+            IDataSource source = default,
+            ILookUpEngine configSource = default,
+            IDictionary<string, string> configuration = default)
         {
             // VERY WIP
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindDataSourceInfo(name, App.AppId).Type;
-            configurationProvider = configurationProvider ?? ConfigurationProvider;
-            var ds = DataSourceFactory.Create(type, appIdentity: App, source: inSource, configSource: configurationProvider);
+            configSource = configSource ?? ConfigurationProvider;
+            var ds = DataSourceFactory.Create(type, appIdentity: App, source: source, configSource: configSource, configuration: configuration);
 
             // if it supports all our known context properties, attach them
             if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
