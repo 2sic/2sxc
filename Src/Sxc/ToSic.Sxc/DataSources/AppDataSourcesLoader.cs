@@ -10,6 +10,8 @@ using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
+using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -57,18 +59,7 @@ namespace ToSic.Sxc.DataSources
                 if (Directory.Exists(physicalPath))
                     policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
 
-                var data = (LoadAppDataSources(appId) ?? new List<Type>())
-                    .Select(t => new DataSourceInfo(t, false))
-                    .ToList();
-
-                // add configuration types
-                var appState = _appStates.Get(appId);
-                data.ForEach(dsi =>
-                {
-                    dsi.VisualQuery.ConfigurationType = string.IsNullOrEmpty(dsi.VisualQuery.ConfigurationType) 
-                        ? appState.GetContentType($"{dsi.TypeName}Configuration")?.NameId
-                        : dsi.VisualQuery.ConfigurationType;
-                });
+                var data = CreateDataSourceInfos(appId);
 
                 AppCache.Set(new CacheItem(AppCacheKey(appId), data), policy);
 
@@ -79,6 +70,31 @@ namespace ToSic.Sxc.DataSources
                 /* ignore for now */
             }
             return null;
+        }
+
+        private List<DataSourceInfo> CreateDataSourceInfos(int appId)
+        {
+            var data = (LoadAppDataSources(appId) ?? new List<Type>())
+                .Select(t =>
+                {
+                    var dsi = new DataSourceInfo(t, false);
+                    // create VisualQueryAttribute when is missing
+                    if (dsi.VisualQuery == null) dsi = new DataSourceInfo(t, false, new VisualQueryAttribute());
+                    return dsi;
+                })
+                .ToList();
+
+            // adjust VisualQueryAttribute values
+            var appState = _appStates.Get(appId);
+            data.ForEach(dsi =>
+            {
+                dsi.VisualQuery.GlobalName = dsi.VisualQuery.GlobalName.NullIfNoValue() ?? dsi.TypeName;
+                dsi.VisualQuery.ConfigurationType = dsi.VisualQuery.ConfigurationType.NullIfNoValue()
+                                                    ?? appState.GetContentType($"{dsi.TypeName}Configuration")?.NameId;
+                dsi.VisualQuery.Type = DataSourceType.App;
+                dsi.VisualQuery.Icon = dsi.VisualQuery.Icon.NullIfNoValue() ?? "star";
+            });
+            return data;
         }
 
         private (string physicalPath, string virtualPath) GetAppDataSourceFolderPaths(int appId)
