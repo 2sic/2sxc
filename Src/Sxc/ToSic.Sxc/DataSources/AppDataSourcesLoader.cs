@@ -48,7 +48,7 @@ namespace ToSic.Sxc.DataSources
             try
             {
                 // Get paths
-                var (physicalPath, virtualPath) = GetAppDataSourceFolderPaths(appId);
+                var (physicalPath, relativePath) = GetAppDataSourceFolderPaths(appId);
 
                 // If the directory doesn't exist, return an empty list with a 3 minute policy
                 // just so we don't keep trying to do this on every query
@@ -58,7 +58,7 @@ namespace ToSic.Sxc.DataSources
 
                 policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
 
-                var data = CreateDataSourceInfos(appId, physicalPath, virtualPath);
+                var data = CreateDataSourceInfos(appId, physicalPath, relativePath);
 
                 return l.ReturnAsOk((data, policy));
             }
@@ -68,12 +68,12 @@ namespace ToSic.Sxc.DataSources
             }
         }
 
-        private List<DataSourceInfo> CreateDataSourceInfos(int appId, string physicalPath, string virtualPath)
+        private List<DataSourceInfo> CreateDataSourceInfos(int appId, string physicalPath, string relativePath)
         {
             // App state for automatic lookup of configuration content-types
             var appState = _appStates.Get(appId);
 
-            var types = LoadAppDataSources(appId, physicalPath, virtualPath);
+            var types = LoadAppDataSources(appId, physicalPath, relativePath);
             var data = types
                 .Select(pair =>
                 {
@@ -116,19 +116,19 @@ namespace ToSic.Sxc.DataSources
             return data;
         }
 
-        private (string physicalPath, string virtualPath) GetAppDataSourceFolderPaths(int appId)
+        private (string physicalPath, string relativePath) GetAppDataSourceFolderPaths(int appId)
         {
             var appState = _appStates.Get(appId);
             var appPaths = _appPathsLazy.Value.Init(_site, appState);
             var physicalPath = Path.Combine(appPaths.PhysicalPath, DataSourcesFolder);
-            var virtualPath = Path.Combine(appPaths.Path, DataSourcesFolder);
-            return (physicalPath, virtualPath);
+            var relativePath = Path.Combine(appPaths.RelativePath, DataSourcesFolder);
+            return (physicalPath, relativePath);
         }
 
         private IEnumerable<(string ClassName, Type Type, DataSourceInfoError Error)> LoadAppDataSources(
             int appId,
             string physicalPath, 
-            string virtualPath
+            string relativePath
         ) => Log.Func($"a:{appId}", l =>
         {
             if (!Directory.Exists(physicalPath))
@@ -144,7 +144,7 @@ namespace ToSic.Sxc.DataSources
                     try
                     {
                         var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
-                            virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)),
+                            relativePath: Path.Combine(relativePath, Path.GetFileName(dataSourceFile)),
                             className: className,
                             throwOnError: false);
 
@@ -162,8 +162,8 @@ namespace ToSic.Sxc.DataSources
                 .ToList();
 
             return types.Any() 
-                ? (types2: types, $"OK, DataSources:{types.Count} ({string.Join(";", types.Select(t => t.className))}), path:{virtualPath}")
-                : (types2: types, $"OK, no working DataSources found, path:{virtualPath}") ;
+                ? (types2: types, $"OK, DataSources:{types.Count} ({string.Join(";", types.Select(t => t.className))}), path:{relativePath}")
+                : (types2: types, $"OK, no working DataSources found, path:{relativePath}") ;
         });
     }
 }

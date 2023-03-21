@@ -26,19 +26,23 @@ namespace ToSic.Sxc.Oqt.Server.Code
             => throw new("Runtime Compile of .cshtml is Not Implemented in .net standard / core");
         protected override (Assembly Assembly, string ErrorMessages) GetAssembly(string virtualPath, string className)
         {
-            var fullPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
-            fullPath = NormalizeFullFilePath(fullPath);
+            var l = Log.Fn<(Assembly Assembly, string ErrorMessages)>(
+                $"{nameof(virtualPath)}: '{virtualPath}'; {nameof(className)}: '{className}'");
+            var fullContentPath = _serverPaths.Value.FullContentPath(virtualPath.Backslash());
+            var fullPath = NormalizeFullFilePath(fullContentPath);
+            l.A($"New paths: '{fullContentPath}', '{fullPath}'");
             try
             {
-                return (new Compiler().Compile(fullPath, className), null);
+                var assembly = new Compiler().Compile(fullPath, className);
+                return l.Return((assembly, null), "ok");
             }
             catch (Exception ex)
             {
-                Log.Ex(ex);
+                l.Ex(ex);
                 var errorMessage =
                     $"Error: Can't compile '{className}' in {Path.GetFileName(virtualPath)}. Details are logged into insights. " +
                     ex.Message;
-                return (null, errorMessage);
+                return l.Return((null, errorMessage), "error");
             }
         }
 

@@ -8,6 +8,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Code
 {
@@ -27,14 +28,14 @@ namespace ToSic.Sxc.Code
 
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
-            var wrapLog = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
+            var l = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
 
             // Perform various checks on the path values
             var hasErrorMessage = CheckIfPathsOkAndCleanUp(ref virtualPath, relativePath);
             if (hasErrorMessage != null)
             {
-                Log.A($"Error: {hasErrorMessage}");
-                wrapLog.ReturnNull("failed");
+                l.A($"Error: {hasErrorMessage}");
+                l.ReturnNull("failed");
                 if (throwOnError) throw new Exception(hasErrorMessage);
                 return null;
             }
@@ -46,21 +47,17 @@ namespace ToSic.Sxc.Code
             Type compiledType = null;
             string errorMessages;
             if (isCshtml && string.IsNullOrEmpty(className))
-            {
                 (compiledType, errorMessages) = GetCsHtmlType(virtualPath);
-            }
             // compile .cs files
             else if (isCs || isCshtml)
-            {
                 (compiledType, errorMessages) = GetTypeOrErrorMessages(virtualPath, className, throwOnError);
-            }
             else
                 errorMessages = $"Error: given path '{Path.GetFileName(virtualPath)}' doesn't point to a .cs or .cshtml";
 
             if (errorMessages != null)
             {
-                Log.A(errorMessages + $"; throw error: {throwOnError}");
-                wrapLog.ReturnNull("failed");
+                l.A($"{errorMessages}; throw error: {throwOnError}");
+                l.ReturnNull("failed");
                 if (throwOnError) throw new Exception(errorMessages);
                 return null;
             }
@@ -68,21 +65,23 @@ namespace ToSic.Sxc.Code
             var instance = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
             AttachRelativePath(virtualPath, instance);
             
-            return wrapLog.Return(instance, $"found: {instance != null}");
+            return l.Return(instance, $"found: {instance != null}");
         }
 
-        public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string virtualPath, string className, bool throwOnError)
+        public (Type Type, string ErrorMessages) GetTypeOrErrorMessages(string relativePath, string className, bool throwOnError)
         {
+            var l = Log.Fn<(Type Type, string ErrorMessages)>($"'{relativePath}', '{className}', throw: {throwOnError}");
+
             // if no name provided, use the name which is the same as the file name
-            className = className ?? Path.GetFileNameWithoutExtension(virtualPath) ?? Eav.Constants.NullNameId;
+            className = className ?? Path.GetFileNameWithoutExtension(relativePath) ?? Eav.Constants.NullNameId;
 
-            var (assembly, errorMessages) = GetAssembly(virtualPath, className);
+            var (assembly, errorMessages) = GetAssembly(relativePath, className);
 
-            if (errorMessages != null) return (null, errorMessages);
+            if (errorMessages != null) return l.Return((null, errorMessages), "error messages");
 
-            if (assembly == null) return (null, "assembly is null");
+            if (assembly == null) return l.Return((null, "assembly is null"), "no assembly");
 
-            var possibleErrorMessage = $"Error: Didn't find type '{className}' in {Path.GetFileName(virtualPath)}. Maybe the class name doesn't match the file name. ";
+            var possibleErrorMessage = $"Error: Didn't find type '{className}' in {Path.GetFileName(relativePath)}. Maybe the class name doesn't match the file name. ";
             Type compiledType = null;
             try
             {
@@ -98,20 +97,20 @@ namespace ToSic.Sxc.Code
             }
             catch (Exception ex)
             {
-                Log.A(possibleErrorMessage);
+                l.A(possibleErrorMessage);
                 if (throwOnError) throw new TypeLoadException(possibleErrorMessage, ex);
             }
 
             if (compiledType == null)
                 errorMessages = possibleErrorMessage;
 
-            return (compiledType, errorMessages);
+            return l.Return((compiledType, errorMessages), errorMessages == null ? "ok" : "errors");
         }
 
-        protected abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string virtualPath, string className);
+        protected abstract (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className);
 
 
-        protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string virtualPath);
+        protected abstract (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath);
 
 
         /// <summary>
@@ -122,42 +121,41 @@ namespace ToSic.Sxc.Code
         /// <returns>null if all is ok, or an error message if not</returns>
         private string CheckIfPathsOkAndCleanUp(ref string virtualPath, string relativePath)
         {
+            var l = Log.Fn<string>($"{nameof(virtualPath)}: '{virtualPath}', {nameof(relativePath)}: '{relativePath}'");
             if (string.IsNullOrWhiteSpace(virtualPath))
-                return "no path/name provided";
+                return l.ReturnAndLog("no path/name provided");
 
             // if path relative, merge with shared code path
-            virtualPath = virtualPath.ForwardSlash();// .Replace("\\", "/");
+            virtualPath = virtualPath.ForwardSlash();
             if (!virtualPath.StartsWith("/"))
             {
-                Log.A($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
+                l.A($"Trying to resolve relative path: '{virtualPath}' using '{relativePath}'");
                 if (relativePath == null)
-                    return "Unexpected null value on relativePath";
+                    return l.ReturnAndLog("Unexpected null value on relativePath");
 
                 // if necessary, add trailing slash
-                //if (!relativePath.EndsWith("/"))
-                relativePath = relativePath.SuffixSlash();// += "/";
-                //virtualPath = _serviceProvider.Build<ILinkPaths>().ToAbsolute(Path.Combine(relativePath, virtualPath));
+                relativePath = relativePath.SuffixSlash();
                 virtualPath = Path.Combine(relativePath, virtualPath).ToAbsolutePathForwardSlash();
-                Log.A($"final virtual path: '{virtualPath}'");
+                l.A($"final virtual path: '{virtualPath}'");
             }
 
-            if (virtualPath.IndexOf(":", StringComparison.InvariantCultureIgnoreCase) > -1)
-                return $"Tried to get .cs file, but found '{virtualPath}' containing ':', (not allowed)";
+            if (virtualPath.IndexOf(":", InvariantCultureIgnoreCase) > -1)
+                return l.ReturnAndLog($"Tried to get .cs file, but found '{virtualPath}' containing ':', (not allowed)");
 
-            return null;
+            return l.ReturnNull("all ok");
         }
 
 
         private bool AttachRelativePath(string virtualPath, object instance)
         {
-            var wrapLog = Log.Fn<bool>();
+            var l = Log.Fn<bool>();
 
             if (!(instance is ICreateInstance codeForwarding)) 
-                return wrapLog.ReturnFalse("didn't attach");
+                return l.ReturnFalse("didn't attach");
 
             // in case it supports shared code again, give it the relative path
             codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
-            return wrapLog.ReturnTrue("attached");
+            return l.ReturnTrue("attached");
         }
     }
 }
