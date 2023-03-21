@@ -74,14 +74,17 @@ namespace ToSic.Sxc.DataSources
                     if (!typeof(IDataSource).IsAssignableFrom(t)) return null;
 
                     // 2. Get VisualQuery Attribute if available, or create new, since it's optional in DynamicCode
-                    var vq = t.GetDirectlyAttachedAttribute<VisualQueryAttribute>()
+                    var vq = t?.GetDirectlyAttachedAttribute<VisualQueryAttribute>()
                              ?? new VisualQueryAttribute();
+
+                    var typeName = t?.Name ?? pair.className;
+                    
 
                     // 3. Update various properties which are needed for further functionality
                     // The global name is always necessary
-                    vq.NameId = vq.NameId.NullIfNoValue() ?? t.Name;
+                    vq.NameId = vq.NameId.NullIfNoValue() ?? typeName;
                     // The configuration type is automatically picked as *Configuration (if the type exists)
-                    vq.ConfigurationType = vq.ConfigurationType.NullIfNoValue() ?? appState.GetContentType($"{t.Name}Configuration")?.NameId;
+                    vq.ConfigurationType = vq.ConfigurationType.NullIfNoValue() ?? appState.GetContentType($"{typeName}Configuration")?.NameId;
                     // Force the type of all local DataSources to be App
                     vq.Type = DataSourceType.App;
                     // Optionally set the star-icon if none is set
@@ -92,7 +95,7 @@ namespace ToSic.Sxc.DataSources
                     if (!vq._DynamicInWasSet) vq.DynamicIn = true;
 
                     // 4. Build DataSourceInfo with the manually built Visual Query Attribute
-                    return new DataSourceInfo(t, false, vq, pair.Error);
+                    return new DataSourceInfo(t ?? typeof(Error), false, vq, pair.Error);
                 })
                 .Where(dsi => dsi != null)
                 .ToList();
@@ -109,7 +112,7 @@ namespace ToSic.Sxc.DataSources
             return (physicalPath, virtualPath);
         }
 
-        private IEnumerable<(Type Type, DataSourceInfoError Error)> LoadAppDataSources(int appId) => Log.Func($"a:{appId}", l =>
+        private IEnumerable<(Type Type, DataSourceInfoError Error, string className)> LoadAppDataSources(int appId) => Log.Func($"a:{appId}", l =>
         {
             _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
 
@@ -126,11 +129,12 @@ namespace ToSic.Sxc.DataSources
                 .Select(
                     dataSourceFile =>
                     {
+                        var className = Path.GetFileNameWithoutExtension(dataSourceFile);
                         try
                         {
                             var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
                                 virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)),
-                                className: Path.GetFileNameWithoutExtension(dataSourceFile),
+                                className: className,
                                 throwOnError: false);
 
                             DataSourceInfoError err = null;
@@ -140,14 +144,15 @@ namespace ToSic.Sxc.DataSources
                                 err = new DataSourceInfoError { Title = "Error Compiling", Message = errorMessages };
                             }
 
-                            return (type ?? typeof(Error), err);
+                            return (type, err, className);
                         }
                         catch (Exception ex)
                         {
                             errors.Add(ex.Message);
                             l.Ex(ex);
-                            return (typeof(Error),
-                                new DataSourceInfoError { Title = "Unknown Exception", Message = ex.Message });
+                            return (null,
+                                new DataSourceInfoError { Title = "Unknown Exception", Message = ex.Message }, 
+                                className);
                         }
                     })
                 .ToList();
@@ -155,8 +160,8 @@ namespace ToSic.Sxc.DataSources
             if (errors.Any()) l.A($"Errors: {string.Join(",", errors)}");
 
             return types2.Any() 
-                ? (types2, $"OK, DataSources:{types2.Count} ({string.Join(";", types2.Select(t => t.Item1.FullName))}), path:{virtualPath}")
-                : (Enumerable.Empty<(Type, DataSourceInfoError)>(), $"OK, no working DataSources found, path:{virtualPath}") ;
+                ? (types2, $"OK, DataSources:{types2.Count} ({string.Join(";", types2.Select(t => t.Item3))}), path:{virtualPath}")
+                : (Enumerable.Empty<(Type, DataSourceInfoError, string)>(), $"OK, no working DataSources found, path:{virtualPath}") ;
         });
     }
 }
