@@ -29,9 +29,9 @@ namespace ToSic.Sxc.Dnn.DataSources
         UiHint = "Users profiles of specified users in Dnn",
         Icon = Icons.Face,
         Type = DataSourceType.Source, 
-        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
+        NameId = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
         ConfigurationType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
-        PreviousNames = new []
+        NameIds = new []
         {
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
         }

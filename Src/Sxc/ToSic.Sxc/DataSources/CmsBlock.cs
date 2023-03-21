@@ -25,11 +25,11 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Data for this CMS Block (instance/module)",
         Icon = Icons.RecentActor,
         Type = DataSourceType.Source, 
-        GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
+        NameId = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
         ConfigurationType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
         In = new []{DataSourceConstants.StreamDefaultName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
-        PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
+        NameIds = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSource
     {
         [PrivateApi] internal const string InstanceLookupName = "module";

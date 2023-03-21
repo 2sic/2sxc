@@ -89,7 +89,7 @@ namespace ToSic.Sxc.DataSources
 
                     // 3. Update various properties which are needed for further functionality
                     // The global name is always necessary
-                    vq.GlobalName = vq.GlobalName.NullIfNoValue() ?? t.Name;
+                    vq.NameId = vq.NameId.NullIfNoValue() ?? t.Name;
                     // The configuration type is automatically picked as *Configuration (if the type exists)
                     vq.ConfigurationType = vq.ConfigurationType.NullIfNoValue() ?? appState.GetContentType($"{t.Name}Configuration")?.NameId;
                     // Force the type of all local DataSources to be App

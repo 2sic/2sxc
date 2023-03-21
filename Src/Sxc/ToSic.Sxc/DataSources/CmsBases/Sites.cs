@@ -19,7 +19,7 @@ namespace ToSic.Sxc.DataSources
     [PublicApi]
     [VisualQuery(
         ConfigurationType = "",
-        GlobalName = "a11c28fb-7d8d-40a2-a22c-50beaa019e41",
+        NameId = "a11c28fb-7d8d-40a2-a22c-50beaa019e41",
         HelpLink = "https://r.2sxc.org/ds-sites",
         Icon = Icons.Globe,
         NiceName = "Sites",

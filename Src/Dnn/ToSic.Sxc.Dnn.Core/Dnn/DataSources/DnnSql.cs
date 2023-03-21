@@ -15,9 +15,9 @@ namespace ToSic.Sxc.Dnn.DataSources
         UiHint = "Data from the Dnn database",
         Icon = Icons.DynamicForm,
         Type = DataSourceType.Source, 
-        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
+        NameId = "ToSic.Sxc.Dnn.DataSources.DnnSql, ToSic.Sxc.Dnn",
         DynamicOut = false,
-        PreviousNames = new []
+        NameIds = new []
         {
             "ToSic.SexyContent.DataSources.DnnSqlDataSource, ToSic.SexyContent",
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource, ToSic.SexyContent"

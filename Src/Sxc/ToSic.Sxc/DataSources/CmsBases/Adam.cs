@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
     [VisualQuery(
         NiceName = "Adam",
         UiHint = "Files and folders in the Adam",
-        GlobalName = "ee1d0cb6-5086-4d59-b16a-d0dc7b594bf2",
+        NameId = "ee1d0cb6-5086-4d59-b16a-d0dc7b594bf2",
         HelpLink = "https://r.2sxc.org/ds-adam",
         Icon = Icons.Tree,
         Type = DataSourceType.Lookup,
