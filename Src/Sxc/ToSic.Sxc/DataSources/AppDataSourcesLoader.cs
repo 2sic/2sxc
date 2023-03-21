@@ -78,7 +78,7 @@ namespace ToSic.Sxc.DataSources
                              ?? new VisualQueryAttribute();
 
                     var typeName = t?.Name ?? pair.className;
-                    
+                  
 
                     // 3. Update various properties which are needed for further functionality
                     // The global name is always necessary
