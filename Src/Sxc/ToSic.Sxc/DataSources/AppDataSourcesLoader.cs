@@ -74,29 +74,39 @@ namespace ToSic.Sxc.DataSources
 
         private List<DataSourceInfo> CreateDataSourceInfos(int appId)
         {
+            // App state for automatic lookup of configuration content-types
+            var appState = _appStates.Get(appId);
+
             var data = (LoadAppDataSources(appId) ?? new List<Type>())
                 .Select(t =>
                 {
-                    var dsi = new DataSourceInfo(t, false);
-                    // create VisualQueryAttribute when is missing
-                    if (dsi.VisualQuery == null) dsi = new DataSourceInfo(t, false, new VisualQueryAttribute());
-                    return dsi;
+                    // 1. Make sure we only keep DataSources and not other classes in the same folder
+                    if (!typeof(IDataSource).IsAssignableFrom(t)) return null;
+
+                    // 2. Get VisualQuery Attribute if available, or create new, since it's optional in DynamicCode
+                    var vq = t.GetDirectlyAttachedAttribute<VisualQueryAttribute>()
+                             ?? new VisualQueryAttribute();
+
+                    // 3. Update various properties which are needed for further functionality
+                    // The global name is always necessary
+                    vq.GlobalName = vq.GlobalName.NullIfNoValue() ?? t.Name;
+                    // The configuration type is automatically picked as *Configuration (if the type exists)
+                    vq.ConfigurationType = vq.ConfigurationType.NullIfNoValue() ?? appState.GetContentType($"{t.Name}Configuration")?.NameId;
+                    // Force the type of all local DataSources to be App
+                    vq.Type = DataSourceType.App;
+                    // Optionally set the star-icon if none is set
+                    vq.Icon = vq.Icon.NullIfNoValue() ?? "star";
+                    // If In has not been set, make sure we show the Default In as an option
+                    vq.In = vq.In ?? new[] { DataSourceConstants.StreamDefaultName };
+                    // Only set dynamic in if it was never set
+                    if (!vq._DynamicInWasSet) vq.DynamicIn = true;
+
+                    // 4. Build DataSourceInfo with the manually built Visual Query Attribute
+                    return new DataSourceInfo(t, false, vq);
                 })
+                .Where(dsi => dsi != null)
                 .ToList();
 
-            // adjust VisualQueryAttribute values
-            var appState = _appStates.Get(appId);
-            data.ForEach(dsi =>
-            {
-                var vq = dsi.VisualQuery;
-                vq.GlobalName = vq.GlobalName.NullIfNoValue() ?? dsi.TypeName;
-                vq.ConfigurationType = vq.ConfigurationType.NullIfNoValue() ?? appState.GetContentType($"{dsi.TypeName}Configuration")?.NameId;
-                vq.Type = DataSourceType.App;
-                vq.Icon = vq.Icon.NullIfNoValue() ?? "star";
-                vq.In = vq.In ?? new[] { DataSourceConstants.StreamDefaultName };
-                if (!vq._DynamicInWasSet)
-                    vq.DynamicIn = true;
-            });
             return data;
         }
 
