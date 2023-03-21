@@ -77,9 +77,10 @@ namespace ToSic.Sxc.DataSources
             // App state for automatic lookup of configuration content-types
             var appState = _appStates.Get(appId);
 
-            var data = (LoadAppDataSources(appId) ?? new List<Type>())
-                .Select(t =>
+            var data = (LoadAppDataSources(appId))
+                .Select(pair =>
                 {
+                    var t = pair.Type;
                     // 1. Make sure we only keep DataSources and not other classes in the same folder
                     if (!typeof(IDataSource).IsAssignableFrom(t)) return null;
 
@@ -102,7 +103,7 @@ namespace ToSic.Sxc.DataSources
                     if (!vq._DynamicInWasSet) vq.DynamicIn = true;
 
                     // 4. Build DataSourceInfo with the manually built Visual Query Attribute
-                    return new DataSourceInfo(t, false, vq);
+                    return new DataSourceInfo(t, false, vq, pair.Error);
                 })
                 .Where(dsi => dsi != null)
                 .ToList();
@@ -119,7 +120,7 @@ namespace ToSic.Sxc.DataSources
             return (physicalPath, virtualPath);
         }
 
-        private IEnumerable<Type> LoadAppDataSources(int appId) => Log.Func($"a:{appId}", l =>
+        private IEnumerable<(Type Type, DataSourceInfoError Error)> LoadAppDataSources(int appId) => Log.Func($"a:{appId}", l =>
         {
             _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
 
@@ -132,30 +133,38 @@ namespace ToSic.Sxc.DataSources
             var types = new List<Type>();
             var errors = new List<string>();
 
-            foreach (var dataSourceFile in Directory.GetFiles(physicalPath, "*.cs", SearchOption.TopDirectoryOnly))
-            {
-                try
+            var types2 = Directory.GetFiles(physicalPath, "*.cs", SearchOption.TopDirectoryOnly).Select(
+                dataSourceFile =>
                 {
-                    var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
-                        virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)), 
-                        className: Path.GetFileNameWithoutExtension(dataSourceFile), 
-                        throwOnError: false);
+                    try
+                    {
+                        var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
+                            virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)),
+                            className: Path.GetFileNameWithoutExtension(dataSourceFile),
+                            throwOnError: false);
 
-                    if (type != null) types.Add(type);
-                    if (!string.IsNullOrEmpty(errorMessages)) errors.Add(errorMessages);
-                }
-                catch (Exception ex)
-                {
-                    errors.Add(ex.Message);
-                    l.Ex(ex);
-                }
-            }
+                        if (type != null) types.Add(type);
+                        DataSourceInfoError err = null;
+                        if (!string.IsNullOrEmpty(errorMessages))
+                        {
+                            errors.Add(errorMessages);
+                            err = new DataSourceInfoError() { Title = "Error Compiling", Message = errorMessages };
+                        }
+                        return (type, err);
+                    }
+                    catch (Exception ex)
+                    {
+                        errors.Add(ex.Message);
+                        l.Ex(ex);
+                        return (null as Type, new DataSourceInfoError() { Title = "Unknown Exception", Message = ex.Message });
+                    }
+                }).ToList();
 
             if (errors.Any()) l.A($"Errors: {string.Join(",", errors)}");
 
-            return types.Any() 
-                ? (types, $"OK, DataSources:{types.Count} ({string.Join(";", types.Select(t => t.FullName))}), path:{virtualPath}")
-                : (null, $"OK, no working DataSources found, path:{virtualPath}") ;
+            return types2.Any() 
+                ? (types2, $"OK, DataSources:{types2.Count} ({string.Join(";", types.Select(t => t.FullName))}), path:{virtualPath}")
+                : (Enumerable.Empty<(Type, DataSourceInfoError)>(), $"OK, no working DataSources found, path:{virtualPath}") ;
         });
     }
 }
