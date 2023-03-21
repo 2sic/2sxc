@@ -43,8 +43,7 @@ namespace Custom.DataSources
         /// <param name="logName"></param>
         protected DataSource15(MyServices services, string logName = null)
         {
-            _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, logName ?? "Cus.HybDs");
-            _inner.BreachAutoLoadAllConfigMasks(GetType());
+            _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
         }
 
         private readonly CustomDataSourceLight _inner;
@@ -88,19 +87,11 @@ namespace Custom.DataSources
 
         #region Explicit IDataSource Implementation
 
-        Guid IDataSourceShared.Guid
-        {
-            get => _inner.Guid;
-            set => _inner.Guid = value;
-        }
+        Guid IDataSourceShared.Guid => _inner.Guid;
 
-        string IDataSourceShared.Name => _inner.Name;
+        string IDataSourceShared.Name => GetType().Name;
 
-        string IDataSourceShared.Label
-        {
-            get => _inner.Label;
-            set => _inner.Label = value;
-        }
+        string IDataSourceShared.Label => _inner.Label;
 
 
         string ICacheKey.CachePartialKey => _inner.CachePartialKey;
