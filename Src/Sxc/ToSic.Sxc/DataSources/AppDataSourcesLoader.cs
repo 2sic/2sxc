@@ -88,11 +88,14 @@ namespace ToSic.Sxc.DataSources
             var appState = _appStates.Get(appId);
             data.ForEach(dsi =>
             {
-                dsi.VisualQuery.GlobalName = dsi.VisualQuery.GlobalName.NullIfNoValue() ?? dsi.TypeName;
-                dsi.VisualQuery.ConfigurationType = dsi.VisualQuery.ConfigurationType.NullIfNoValue()
-                                                    ?? appState.GetContentType($"{dsi.TypeName}Configuration")?.NameId;
-                dsi.VisualQuery.Type = DataSourceType.App;
-                dsi.VisualQuery.Icon = dsi.VisualQuery.Icon.NullIfNoValue() ?? "star";
+                var vq = dsi.VisualQuery;
+                vq.GlobalName = vq.GlobalName.NullIfNoValue() ?? dsi.TypeName;
+                vq.ConfigurationType = vq.ConfigurationType.NullIfNoValue() ?? appState.GetContentType($"{dsi.TypeName}Configuration")?.NameId;
+                vq.Type = DataSourceType.App;
+                vq.Icon = vq.Icon.NullIfNoValue() ?? "star";
+                vq.In = vq.In ?? new[] { DataSourceConstants.StreamDefaultName };
+                if (!vq._DynamicInWasSet)
+                    vq.DynamicIn = true;
             });
             return data;
         }
