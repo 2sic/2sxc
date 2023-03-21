@@ -92,7 +92,7 @@ namespace Custom.DataSources
         string IDataSourceShared.Name => GetType().Name;
 
         string IDataSourceShared.Label => _inner.Label;
-
+        void IDataSourceShared.AddDebugInfo(Guid? guid, string label) => _inner.AddDebugInfo(guid, label);
 
         string ICacheKey.CachePartialKey => _inner.CachePartialKey;
 
