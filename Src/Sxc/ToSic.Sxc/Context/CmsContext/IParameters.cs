@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Conventions;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Context
@@ -9,7 +10,7 @@ namespace ToSic.Sxc.Context
     /// Has a special ToString() implementation, which gives you the parameters for re-use in other scenarios...?
     /// </summary>
     [PublicApi]
-    public interface IParameters: IReadOnlyDictionary<string, string>
+    public interface IParameters: IReadOnlyDictionary<string, string>, IGetAccessors<string>
     {
         /// <summary>
         /// ToString is especially implemented, to give you the parameters again as they were originally given on the page.
@@ -28,7 +29,7 @@ namespace ToSic.Sxc.Context
         /// <remarks>
         /// Added v15.04
         /// </remarks>
-        string Get(string key);
+        new string Get(string key);
 
         /// <summary>
         /// Get a parameter and convert to the needed type - or return the default/fallback.
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Context
         /// <remarks>
         /// Added v15.04
         /// </remarks>
-        T Get<T>(string key, string noParamOrder = Eav.Parameters.Protector, T fallback = default);
+        new T Get<T>(string key, string noParamOrder = Eav.Parameters.Protector, T fallback = default);
 
         #endregion
 

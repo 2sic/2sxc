@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
+using ToSic.Eav.Conventions;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
@@ -15,9 +16,13 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 
 // ReSharper disable once CheckNamespace
+
+// TODO:
+// - RENAME to Custom.DataSources
+// - ability to get in...?
 namespace Custom.Hybrid
 {
-    public abstract class DataSource15: IDataSource
+    public abstract class DataSource15: IDataSource, IGetAccessors<string>, ISetAccessors<string>, ISetAccessors<object>
     {
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
@@ -57,13 +62,7 @@ namespace Custom.Hybrid
             DataFactoryOptions options = default) where T : IRawEntity =>
             _inner.BreachProvideOut(source, options: options);
 
-        #region Public IDataSource implementation parts
-
-        public IEnumerable<IEntity> List => _inner.List;
-
-        public IDataSourceConfiguration Configuration => _inner.Configuration;
-
-        #endregion
+        
 
         #region CodeLog
 
@@ -117,6 +116,9 @@ namespace Custom.Hybrid
         {
             return _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
         }
+        IDataSourceConfiguration IDataSource.Configuration => _inner.Configuration;
+
+        IEnumerable<IEntity> IDataSource.List => _inner.List;
 
         List<string> IDataSource.CacheRelevantConfigurations
         {
@@ -129,6 +131,21 @@ namespace Custom.Hybrid
         DataSourceErrorHelper IDataSource.Error => _inner.Error;
 
         ILog IHasLog.Log => _inner.Log;
+
+        #endregion
+
+        #region Get/Set settings
+
+        
+        public string Get(string name) => _inner.Get(name);
+
+        public TValue Get<TValue>(string name) => _inner.Get<TValue>(name);
+
+        public TValue Get<TValue>(string name, string noParamOrder = Parameters.Protector, TValue fallback = default) => _inner.Get(name, noParamOrder, fallback);
+
+        public void Set(string name, string value) => _inner.Set(name, value);
+
+        public void Set(string name, object value) => _inner.Set(name, (string)value);
 
         #endregion
 
