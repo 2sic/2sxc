@@ -49,20 +49,24 @@ namespace Custom.DataSources
 
         private readonly CustomDataSourceLight _inner;
 
-        protected void ProvideOut<T>(
+        protected void ProvideOutRaw<T>(
             Func<IEnumerable<IHasRawEntity<T>>> source,
             string noParamOrder = Parameters.Protector,
             DataFactoryOptions options = default) where T : IRawEntity =>
-            _inner.BreachProvideOut(source, options: options);
+            _inner.BreachProvideOutRaw(source, options: options);
 
-        protected void ProvideOut<T>(
+        protected void ProvideOutRaw<T>(
             Func<IEnumerable<T>> source,
             string noParamOrder = Parameters.Protector,
             DataFactoryOptions options = default) where T : IRawEntity =>
-            _inner.BreachProvideOut(source, options: options);
+            _inner.BreachProvideOutRaw(source, options: options);
 
-        
+        protected void ProvideOut(Func<IEnumerable<IEntity>> getList, string name = DataSourceConstants.StreamDefaultName)
+            => _inner.BreachProvideOut(getList, name);
 
+        protected void ProvideOut(Func<IImmutableList<IEntity>> getList,
+            string name = DataSourceConstants.StreamDefaultName)
+            => _inner.BreachProvideOut(getList, name);
         #region CodeLog
 
         public ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log));
@@ -73,6 +77,12 @@ namespace Custom.DataSources
         #region Public IDataSource Implementation
 
         public IDataSourceConfiguration Configuration => _inner.Configuration;
+
+        public DataSourceErrorHelper Error => _inner.Error;
+
+        public int ZoneId => _inner.ZoneId;
+
+        public int AppId => _inner.AppId;
 
         #endregion
 
@@ -92,9 +102,6 @@ namespace Custom.DataSources
             set => _inner.Label = value;
         }
 
-        int IZoneIdentity.ZoneId => _inner.ZoneId;
-
-        int IAppIdentityLight.AppId => _inner.AppId;
 
         string ICacheKey.CachePartialKey => _inner.CachePartialKey;
 
@@ -132,7 +139,6 @@ namespace Custom.DataSources
 
         ICacheKeyManager IDataSourceSource.CacheKey => _inner.CacheKey;
 
-        DataSourceErrorHelper IDataSourceSource.Error => _inner.Error;
 
         ILog IHasLog.Log => _inner.Log;
 
