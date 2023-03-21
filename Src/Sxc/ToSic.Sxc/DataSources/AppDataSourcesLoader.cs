@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching.CachingMonitors;
@@ -20,17 +21,19 @@ namespace ToSic.Sxc.DataSources
     {
         private const string DataSourcesFolder = "DataSources";
 
-        public AppDataSourcesLoader(ISite site, IAppStates appStates, LazySvc<AppPaths> appPathsLazy, LazySvc<CodeCompiler> codeCompilerLazy) : base("Eav.AppDtaSrcLoad")
+        public AppDataSourcesLoader(ILogStore logStore, ISite site, IAppStates appStates, LazySvc<AppPaths> appPathsLazy, LazySvc<CodeCompiler> codeCompilerLazy) : base("Eav.AppDtaSrcLoad")
         {
             ConnectServices(
+                _logStore = logStore,
                 _site = site,
                 _appStates = appStates,
                 _appPathsLazy = appPathsLazy,
                 _codeCompilerLazy = codeCompilerLazy
             );
         }
-        private readonly IAppStates _appStates;
+        private readonly ILogStore _logStore;
         private readonly ISite _site;
+        private readonly IAppStates _appStates;
         private readonly LazySvc<AppPaths> _appPathsLazy;
         private readonly LazySvc<CodeCompiler> _codeCompilerLazy;
 
@@ -89,6 +92,8 @@ namespace ToSic.Sxc.DataSources
 
         private IEnumerable<Type> LoadAppDataSources(int appId) => Log.Func($"a:{appId}", l =>
         {
+            _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
+
             var (physicalPath, virtualPath) = GetAppDataSourceFolderPaths(appId);
 
             if (!Directory.Exists(physicalPath))
