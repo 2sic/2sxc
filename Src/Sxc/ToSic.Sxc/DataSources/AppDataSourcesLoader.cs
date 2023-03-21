@@ -41,44 +41,55 @@ namespace ToSic.Sxc.DataSources
 
         public (List<DataSourceInfo> data, CacheItemPolicy policy) CreateAndReturnAppCache(int appId)
         {
+            _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
+            var l = Log.Fn<(List<DataSourceInfo> data, CacheItemPolicy policy)>();
             try
             {
                 var expiration = new TimeSpan(1, 0, 0);
                 var policy = new CacheItemPolicy { SlidingExpiration = expiration };
 
                 var (physicalPath, virtualPath) = GetAppDataSourceFolderPaths(appId);
+
+                // TODO: @STV
+                // If the directory doesn't exist, return an empty list with a 3 minute policy
+                // just so we don't keep trying to do this on every query
+
                 if (Directory.Exists(physicalPath))
                     policy.ChangeMonitors.Add(new FolderChangeMonitor(new List<string> { physicalPath }));
 
-                var data = CreateDataSourceInfos(appId);
+                var data = CreateDataSourceInfos(appId, physicalPath, virtualPath);
 
-                return (data, policy);
+                return l.ReturnAsOk((data, policy));
             }
             catch
             {
-                /* ignore for now */
+                return l.Return((null, null), "error");
             }
-            return (null, null);
         }
 
-        private List<DataSourceInfo> CreateDataSourceInfos(int appId)
+        private List<DataSourceInfo> CreateDataSourceInfos(int appId, string physicalPath, string virtualPath)
         {
             // App state for automatic lookup of configuration content-types
             var appState = _appStates.Get(appId);
 
-            var data = LoadAppDataSources(appId)
+            var types = LoadAppDataSources(appId, physicalPath, virtualPath);
+            var data = types
                 .Select(pair =>
                 {
-                    var t = pair.Type;
+
+                    // 0. If error then type is null, in this case, return a specially crafted DSI
+                    if (pair.Type == null)
+                        return DataSourceInfo.CreateError(pair.ClassName, false, DataSourceType.App, pair.Error);
+
                     // 1. Make sure we only keep DataSources and not other classes in the same folder
                     // but assume all null-types are errors, which we should preserve
-                    if (t != null && !typeof(IDataSource).IsAssignableFrom(t)) return null;
+                    if (!typeof(IDataSource).IsAssignableFrom(pair.Type)) return null;
 
                     // 2. Get VisualQuery Attribute if available, or create new, since it's optional in DynamicCode
-                    var vq = t?.GetDirectlyAttachedAttribute<VisualQueryAttribute>()
+                    var vq = pair.Type.GetDirectlyAttachedAttribute<VisualQueryAttribute>()
                              ?? new VisualQueryAttribute();
 
-                    var typeName = t?.Name ?? pair.className;
+                    var typeName = pair.Type.Name;
                   
 
                     // 3. Update various properties which are needed for further functionality
@@ -96,7 +107,7 @@ namespace ToSic.Sxc.DataSources
                     if (!vq._DynamicInWasSet) vq.DynamicIn = true;
 
                     // 4. Build DataSourceInfo with the manually built Visual Query Attribute
-                    return new DataSourceInfo(t ?? typeof(Error), false, overrideTypeName: typeName, overrideVisualQuery: vq, error: pair.Error);
+                    return new DataSourceInfo(pair.Type, false, overrideVisualQuery: vq);
                 })
                 .Where(dsi => dsi != null)
                 .ToList();
@@ -113,56 +124,45 @@ namespace ToSic.Sxc.DataSources
             return (physicalPath, virtualPath);
         }
 
-        private IEnumerable<(Type Type, DataSourceInfoError Error, string className)> LoadAppDataSources(int appId) => Log.Func($"a:{appId}", l =>
+        private IEnumerable<(string ClassName, Type Type, DataSourceInfoError Error)> LoadAppDataSources(
+            int appId,
+            string physicalPath, 
+            string virtualPath
+        ) => Log.Func($"a:{appId}", l =>
         {
-            _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
-
-            var (physicalPath, virtualPath) = GetAppDataSourceFolderPaths(appId);
-
             if (!Directory.Exists(physicalPath))
                 return (null, $"no folder {physicalPath}");
 
             var compiler = _codeCompilerLazy.Value;
-            var errors = new List<string>();
 
-            var types2 = Directory
+            var types = Directory
                 .GetFiles(physicalPath, "*.cs", SearchOption.TopDirectoryOnly)
-                .Select(
-                    dataSourceFile =>
+                .Select(dataSourceFile =>
+                {
+                    var className = Path.GetFileNameWithoutExtension(dataSourceFile);
+                    try
                     {
-                        var className = Path.GetFileNameWithoutExtension(dataSourceFile);
-                        try
-                        {
-                            var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
-                                virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)),
-                                className: className,
-                                throwOnError: false);
+                        var (type, errorMessages) = compiler.GetTypeOrErrorMessages(
+                            virtualPath: Path.Combine(virtualPath, Path.GetFileName(dataSourceFile)),
+                            className: className,
+                            throwOnError: false);
 
-                            DataSourceInfoError err = null;
-                            if (!string.IsNullOrEmpty(errorMessages))
-                            {
-                                errors.Add(errorMessages);
-                                err = new DataSourceInfoError { Title = "Error Compiling", Message = errorMessages };
-                            }
-
-                            return (type, err, className);
-                        }
-                        catch (Exception ex)
-                        {
-                            errors.Add(ex.Message);
-                            l.Ex(ex);
-                            return (null,
-                                new DataSourceInfoError { Title = "Unknown Exception", Message = ex.Message }, 
-                                className);
-                        }
-                    })
+                        if (!errorMessages.HasValue()) 
+                            return (className, type, null);
+                        l.E(errorMessages);
+                        return(className, type, new DataSourceInfoError("Error Compiling", errorMessages));
+                    }
+                    catch (Exception ex)
+                    {
+                        l.Ex(ex);
+                        return (className, null, new DataSourceInfoError("Unknown Exception", ex.Message));
+                    }
+                })
                 .ToList();
 
-            if (errors.Any()) l.A($"Errors: {string.Join(",", errors)}");
-
-            return types2.Any() 
-                ? (types2, $"OK, DataSources:{types2.Count} ({string.Join(";", types2.Select(t => t.Item3))}), path:{virtualPath}")
-                : (Enumerable.Empty<(Type, DataSourceInfoError, string)>(), $"OK, no working DataSources found, path:{virtualPath}") ;
+            return types.Any() 
+                ? (types2: types, $"OK, DataSources:{types.Count} ({string.Join(";", types.Select(t => t.className))}), path:{virtualPath}")
+                : (types2: types, $"OK, no working DataSources found, path:{virtualPath}") ;
         });
     }
 }
