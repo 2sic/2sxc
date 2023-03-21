@@ -122,11 +122,7 @@ namespace Custom.DataSources
 
         IEnumerable<IEntity> IDataSourceSource.List => _inner.List;
 
-        List<string> IDataSourceSource.CacheRelevantConfigurations
-        {
-            get => _inner.CacheRelevantConfigurations;
-            set => _inner.CacheRelevantConfigurations = value;
-        }
+        List<string> IDataSourceSource.CacheRelevantConfigurations => _inner.CacheRelevantConfigurations;
 
         ICacheKeyManager IDataSourceSource.CacheKey => _inner.CacheKey;
 
