@@ -21,7 +21,7 @@ using ToSic.Sxc.Code;
 // - ability to get in-stream...?
 namespace Custom.DataSources
 {
-    public abstract class DataSource15: IDataSource
+    public abstract class DataSource15: IDataSource, IAppIdentitySync
     {
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
@@ -167,5 +167,6 @@ namespace Custom.DataSources
 
         #endregion
 
+        void IAppIdentitySync.UpdateAppIdentity(IAppIdentity appIdentity) => ((IAppIdentitySync)_inner).UpdateAppIdentity(appIdentity);
     }
 }
