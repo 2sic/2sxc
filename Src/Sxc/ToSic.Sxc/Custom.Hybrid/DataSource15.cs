@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
-using ToSic.Eav.Conventions;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
@@ -22,7 +21,7 @@ using ToSic.Sxc.Code;
 // - ability to get in-stream...?
 namespace Custom.DataSources
 {
-    public abstract class DataSource15: IDataSource, IDataTarget, IGetAccessors<string>, ISetAccessors<string>, ISetAccessors<object>
+    public abstract class DataSource15: IDataSource, IDataTarget
     {
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
@@ -146,11 +145,11 @@ namespace Custom.DataSources
 
         public TValue Get<TValue>(string name) => _inner.Get<TValue>(name);
 
+        // ReSharper disable once MethodOverloadWithOptionalParameter
         public TValue Get<TValue>(string name, string noParamOrder = Parameters.Protector, TValue fallback = default) => _inner.Get(name, noParamOrder, fallback);
 
-        public void Set(string name, string value) => _inner.Set(name, value);
+        public void Set<TValue>(string name, TValue value) => _inner.Set(name, value);
 
-        public void Set(string name, object value) => _inner.Set(name, (string)value);
 
         #endregion
 
@@ -167,5 +166,6 @@ namespace Custom.DataSources
         public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetIn(name);
 
         #endregion
+
     }
 }
