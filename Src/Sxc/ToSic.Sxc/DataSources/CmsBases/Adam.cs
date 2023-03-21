@@ -33,7 +33,7 @@ namespace ToSic.Sxc.DataSources
         Audience = Audience.Advanced,
         In = new[] { QueryConstants.InStreamDefaultRequired },
         DynamicOut = false,
-        ExpectsDataOfType = "" // TODO: ...
+        ConfigurationType = "" // TODO: ...
         )]
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP")]
     public class Adam : DataSource

@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        ExpectsDataOfType = "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5",
+        ConfigurationType = "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5",
         GlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800",
         HelpLink = "https://r.2sxc.org/ds-pages",
         Icon = Icons.PageFind,

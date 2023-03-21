@@ -30,7 +30,7 @@ namespace ToSic.Sxc.DataSources
         HelpLink = "https://r.2sxc.org/ds-roles",
         GlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",
         Type = DataSourceType.Source,
-        ExpectsDataOfType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
+        ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
     )]
     public class Roles : CustomDataSourceAdvanced
     {

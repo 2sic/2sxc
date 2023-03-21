@@ -33,7 +33,7 @@ namespace ToSic.Sxc.DataSources
         HelpLink = "https://r.2sxc.org/ds-users",
         GlobalName = "93ac53c6-adc6-4218-b979-48d1071a5765", // random & unique Guid
         Type = DataSourceType.Source,
-        ExpectsDataOfType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
+        ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
     )]
     public partial class Users : CustomDataSourceAdvanced
     {

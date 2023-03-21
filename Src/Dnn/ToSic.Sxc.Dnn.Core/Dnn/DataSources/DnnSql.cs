@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Dnn.DataSources
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnSqlDataSource, ToSic.SexyContent"
         },
 	    HelpLink = "https://github.com/2sic/2sxc/wiki/DotNet-DataSource-DnnSqlDataSource",
-	    ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]
+	    ConfigurationType = "|Config ToSic.SexyContent.DataSources.DnnSqlDataSource")]
 	public class DnnSql : Sql
 	{
         [PrivateApi]

@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         Icon = Icons.Face,
         Type = DataSourceType.Source, 
         GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
-        ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
+        ConfigurationType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
         PreviousNames = new []
         {
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"

@@ -27,7 +27,7 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        ExpectsDataOfType = "", // TODO:
+        ConfigurationType = "", // TODO:
         GlobalName = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
         HelpLink = "https://r.2sxc.org/ds-appfiles",
         Icon = Icons.Tree,
