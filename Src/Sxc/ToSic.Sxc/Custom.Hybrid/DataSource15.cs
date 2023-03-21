@@ -21,7 +21,7 @@ using ToSic.Sxc.Code;
 // - ability to get in-stream...?
 namespace Custom.DataSources
 {
-    public abstract class DataSource15: IDataSource, IDataTarget
+    public abstract class DataSource15: IDataSource
     {
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
@@ -78,15 +78,15 @@ namespace Custom.DataSources
 
         #region Explicit IDataSource Implementation
 
-        Guid IDataPartShared.Guid
+        Guid IDataSourceShared.Guid
         {
             get => _inner.Guid;
             set => _inner.Guid = value;
         }
 
-        string IDataPartShared.Name => _inner.Name;
+        string IDataSourceShared.Name => _inner.Name;
 
-        string IDataPartShared.Label
+        string IDataSourceShared.Label
         {
             get => _inner.Label;
             set => _inner.Label = value;
@@ -112,27 +112,27 @@ namespace Custom.DataSources
             _inner.PurgeList(cascade);
         }
 
-        IDictionary<string, IDataStream> IDataSource.Out => _inner.Out;
+        IDictionary<string, IDataStream> IDataSourceSource.Out => _inner.Out;
 
-        IDataStream IDataSource.this[string outName] => _inner[outName];
+        IDataStream IDataSourceSource.this[string outName] => _inner[outName];
 
-        IDataStream IDataSource.GetStream(string name, string noParamOrder, bool nullIfNotFound,
+        IDataStream IDataSourceSource.GetStream(string name, string noParamOrder, bool nullIfNotFound,
             bool emptyIfNotFound)
         {
             return _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
         }
 
-        IEnumerable<IEntity> IDataSource.List => _inner.List;
+        IEnumerable<IEntity> IDataSourceSource.List => _inner.List;
 
-        List<string> IDataSource.CacheRelevantConfigurations
+        List<string> IDataSourceSource.CacheRelevantConfigurations
         {
             get => _inner.CacheRelevantConfigurations;
             set => _inner.CacheRelevantConfigurations = value;
         }
 
-        ICacheKeyManager IDataSource.CacheKey => _inner.CacheKey;
+        ICacheKeyManager IDataSourceSource.CacheKey => _inner.CacheKey;
 
-        DataSourceErrorHelper IDataSource.Error => _inner.Error;
+        DataSourceErrorHelper IDataSourceSource.Error => _inner.Error;
 
         ILog IHasLog.Log => _inner.Log;
 

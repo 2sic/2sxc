@@ -54,10 +54,8 @@ namespace ToSic.Sxc.Code
         {
             // if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
             var src = CreateSource<T>(inStream.Source);
-
-            var srcDs = (IDataTarget)src;
-            srcDs.In.Clear();
-            srcDs.Attach(DataSourceConstants.StreamDefaultName, inStream);
+            src.In.Clear();
+            src.Attach(DataSourceConstants.StreamDefaultName, inStream);
             return src;
         }
 
