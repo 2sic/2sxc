@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Caching;
@@ -18,11 +19,10 @@ using ToSic.Sxc.Code;
 // ReSharper disable once CheckNamespace
 
 // TODO:
-// - RENAME to Custom.DataSources
-// - ability to get in...?
-namespace Custom.Hybrid
+// - ability to get in-stream...?
+namespace Custom.DataSources
 {
-    public abstract class DataSource15: IDataSource, IGetAccessors<string>, ISetAccessors<string>, ISetAccessors<object>
+    public abstract class DataSource15: IDataSource, IDataTarget, IGetAccessors<string>, ISetAccessors<string>, ISetAccessors<object>
     {
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
@@ -71,6 +71,12 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region Public IDataSource Implementation
+
+        public IDataSourceConfiguration Configuration => _inner.Configuration;
+
+        #endregion
+
         #region Explicit IDataSource Implementation
 
         Guid IDataPartShared.Guid
@@ -116,7 +122,6 @@ namespace Custom.Hybrid
         {
             return _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
         }
-        IDataSourceConfiguration IDataSource.Configuration => _inner.Configuration;
 
         IEnumerable<IEntity> IDataSource.List => _inner.List;
 
@@ -149,5 +154,18 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region IDataTarget - all public
+
+        public IDictionary<string, IDataStream> In => _inner.In;
+
+        public void Attach(IDataSource dataSource) => _inner.Attach(dataSource);
+
+        public void Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
+
+        public void Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
+
+        public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetIn(name);
+
+        #endregion
     }
 }
