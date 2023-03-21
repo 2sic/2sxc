@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Custom.Hybrid;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
@@ -164,9 +165,9 @@ namespace ToSic.SexyContent.Razor
             => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, lookUpEngine);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
             where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource

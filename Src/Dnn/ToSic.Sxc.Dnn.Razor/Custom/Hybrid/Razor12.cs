@@ -101,9 +101,9 @@ namespace Custom.Hybrid
         #region Data Source Stuff
 
         /// <inheritdoc/>
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
             where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
         /// <inheritdoc/>
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource

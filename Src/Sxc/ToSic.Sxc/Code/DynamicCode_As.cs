@@ -50,9 +50,9 @@ namespace ToSic.Sxc.Code
             => _DynCodeRoot.CreateSource<T>(inStream);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
             where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
         [PrivateApi]
         public IDataSource CreateSourceWip(

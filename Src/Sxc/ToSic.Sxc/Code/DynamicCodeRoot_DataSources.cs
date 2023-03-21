@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
@@ -42,13 +41,13 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default) where T : IDataSource
         {
-            configurationProvider = configurationProvider ?? ConfigurationProvider;
+            configuration = configuration ?? ConfigurationProvider;
 
             // If no in-source was provided, make sure that we create one from the current app
             inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configSource: ConfigurationProvider);
-            return DataSourceFactory.Create<T>(source: inSource, configuration: configurationProvider);
+            return DataSourceFactory.Create<T>(source: inSource, configuration: configuration);
         }
 
         /// <inheritdoc />

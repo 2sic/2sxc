@@ -208,10 +208,10 @@ namespace ToSic.Sxc.Code
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
         /// </summary>
         /// <param name="inSource">The data source which will be the default In of the new data-source.</param>
-        /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
+        /// <param name="configuration">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
+        T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default) where T : IDataSource;
 
         [PrivateApi]
         IDataSource CreateSourceWip(
