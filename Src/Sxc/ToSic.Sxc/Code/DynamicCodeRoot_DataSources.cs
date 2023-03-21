@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Code
             configuration = configuration ?? ConfigurationProvider;
 
             // If no in-source was provided, make sure that we create one from the current app
-            inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configSource: ConfigurationProvider);
+            inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configuration: ConfigurationProvider);
             return DataSourceFactory.Create<T>(source: inSource, configuration: configuration);
         }
 

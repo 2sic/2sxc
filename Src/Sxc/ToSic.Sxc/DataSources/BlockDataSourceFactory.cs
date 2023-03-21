@@ -34,7 +34,7 @@ namespace ToSic.Sxc.DataSources
 
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
-            var initialSource = dsFactory.CreateDefault(appIdentity: block, configSource: configLookUp);
+            var initialSource = dsFactory.CreateDefault(appIdentity: block, configuration: configLookUp);
             var moduleDataSource = dsFactory.Create<CmsBlock>(source: initialSource);
 
             moduleDataSource.OverrideView = view;

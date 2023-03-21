@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
@@ -26,7 +27,7 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi("obsolete")]
         [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfiguration configuration = null)
         {
             // 2023-03-12 2dm
             // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
@@ -37,14 +38,14 @@ namespace ToSic.Sxc.Code
                 // try to find with assembly name, or otherwise with GlobalName / previous names
                 var catalog = _root.GetService<DataSourceCatalog>();
                 var type = catalog.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
-                lookUpEngine = lookUpEngine ?? _root.ConfigurationProvider;
+                configuration = configuration ?? _root.ConfigurationProvider;
 
                 if (inSource != null)
-                    return _root.DataSourceFactory.Create(type: type, source: inSource, configuration: lookUpEngine);
+                    return _root.DataSourceFactory.Create(type: type, source: inSource, configuration: configuration);
 
-                var initialSource = _root.DataSourceFactory.CreateDefault(appIdentity: _root.App, configSource: _root.ConfigurationProvider);
+                var initialSource = _root.DataSourceFactory.CreateDefault(appIdentity: _root.App, configuration: _root.ConfigurationProvider);
                 return typeName != ""
-                    ? _root.DataSourceFactory.Create(type: type, source: initialSource, configuration: lookUpEngine)
+                    ? _root.DataSourceFactory.Create(type: type, source: initialSource, configuration: configuration)
                     : initialSource;
             }
             catch (Exception ex)

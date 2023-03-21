@@ -6,7 +6,6 @@ using System.Linq;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
-using ToSic.Eav.LookUp;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
@@ -122,8 +121,8 @@ namespace ToSic.SexyContent.WebApi
         #region CreateSource implementations
         [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-	        ILookUpEngine lookUpEngine = null)
-	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, lookUpEngine);
+	        IConfiguration configuration = null)
+	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configuration);
 
         public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
             where T : IDataSource
