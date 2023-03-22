@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Code
             => _DynCodeRoot.CreateSource<T>(inStream);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default)
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Code
             string name,
             string noParamOrder = ToSic.Eav.Parameters.Protector,
             IDataSource source = default,
-            IConfiguration configuration = default)
+            IDataSourceConfiguration configuration = default)
             => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
 
         #endregion

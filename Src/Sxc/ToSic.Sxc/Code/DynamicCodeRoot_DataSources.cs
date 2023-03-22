@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code
         private ILookUpEngine _configurationProvider;
 
         [PrivateApi]
-        public ILookUpEngine ConfigurationProvider
+        public ILookUpEngine ConfigurationProvider // todo: rename to LookUpForDataSources
         {
             get
             {
@@ -41,13 +41,11 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default) where T : IDataSource
+        public T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default) where T : IDataSource
         {
-            configuration = configuration ?? ConfigurationProvider;
-
             // If no in-source was provided, make sure that we create one from the current app
-            inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configuration: ConfigurationProvider);
-            return DataSourceFactory.Create<T>(source: inSource, configuration: configuration);
+            inSource = inSource ?? DataSourceFactory.CreateDefault(new DataSourceConfiguration(appIdentity: App, lookUp: ConfigurationProvider));
+            return DataSourceFactory.Create<T>(source: inSource, configuration: configuration ?? new DataSourceConfiguration(lookUp: ConfigurationProvider));
         }
 
         /// <inheritdoc />
@@ -65,17 +63,16 @@ namespace ToSic.Sxc.Code
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             IDataSource source = default,
-            IConfiguration configuration = default)
+            IDataSourceConfiguration configuration = default)
         {
             // VERY WIP
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
-            var configurationSourceNew = new ConfigurationWip
-            {
-                LookUpEngine = configuration?.GetLookupEngineWip() ?? ConfigurationProvider?.GetLookupEngineWip(),
-                Values = null // todo configuration
-            };
-            var ds = DataSourceFactory.Create(type, appIdentity: App, source: source, configuration: configurationSourceNew);
+            var cnf2Wip = new DataSourceConfiguration(
+                lookUp: configuration?.LookUp ?? ConfigurationProvider,
+                values: configuration?.Values,
+                appIdentity: App);
+            var ds = DataSourceFactory.Create(type, source: source, configuration: cnf2Wip);
 
             // if it supports all our known context properties, attach them
             if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);

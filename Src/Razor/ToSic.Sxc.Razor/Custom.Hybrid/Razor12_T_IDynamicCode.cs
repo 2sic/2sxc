@@ -76,7 +76,7 @@ namespace Custom.Hybrid
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inStream);
 
-        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default)
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
@@ -85,7 +85,7 @@ namespace Custom.Hybrid
             string name,
             string noParamOrder = ToSic.Eav.Parameters.Protector,
             IDataSource source = default,
-            IConfiguration configuration = default)
+            IDataSourceConfiguration configuration = default)
             => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
 
         #endregion
