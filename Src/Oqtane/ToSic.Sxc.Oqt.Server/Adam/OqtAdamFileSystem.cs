@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Oqtane.Models;
 using Oqtane.Repository;
 using System;
@@ -6,8 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -175,6 +176,10 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 // like when two fields in a dialog cause the web-api to create the folders in parallel calls
                 // see also https://github.com/2sic/2sxc/issues/811
                 return "error in SQL, probably folder already exists";
+            }
+            catch (DbUpdateException)
+            {
+                return $"error in EF, probably folder already exists";
             }
             catch (NullReferenceException)
             {

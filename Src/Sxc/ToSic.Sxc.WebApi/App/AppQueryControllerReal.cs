@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi.App
 
         #region Constructor / DI
 
-        public AppQueryControllerReal(IContextResolver ctxResolver, 
+        public AppQueryControllerReal(Sxc.Context.IContextResolver ctxResolver, 
             IConvertToEavLight dataConverter, 
             Generator<AppPermissionCheck> appPermissionCheck,
             Generator<AppConfigDelegate> appConfigDelegate,
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.WebApi.App
             );
         }
         
-        private readonly IContextResolver _ctxResolver;
+        private readonly Sxc.Context.IContextResolver _ctxResolver;
         private readonly IConvertToEavLight _dataConverter;
         private readonly Generator<AppPermissionCheck> _appPermissionCheck;
 
@@ -62,17 +62,17 @@ namespace ToSic.Sxc.WebApi.App
             int? appId, string stream = null,
             bool includeGuid = false) => Log.Func($"'{name}', inclGuid: {includeGuid}, stream: {stream}", l =>
         {
-            var appCtx = appId != null ? _ctxResolver.BlockOrApp(appId.Value) : _ctxResolver.BlockRequired();
+            var appCtx = appId != null ? _ctxResolver.GetBlockOrSetApp(appId.Value) : _ctxResolver.BlockContextRequired();
 
             // If the appId wasn't specified or == to the Block-AppId, then also include block info to enable more data-sources like CmsBlock
-            var maybeBlock = appId == null || appId == appCtx.AppState.AppId ? _ctxResolver.RealBlockOrNull() : null;
+            var maybeBlock = appId == null || appId == appCtx.AppState.AppId ? _ctxResolver.BlockOrNull() : null;
 
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = _app.New().Init(appCtx.AppState.AppId, maybeBlock, appCtx.UserMayEdit);
+            var app = _app.New().Init(appCtx.AppState.AppId, maybeBlock);
 
-            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx,  appCtx.UserMayEdit, more);
+            var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx, more);
             return result;
         });
 
@@ -90,12 +90,12 @@ namespace ToSic.Sxc.WebApi.App
             if (string.IsNullOrEmpty(name))
                 throw HttpException.MissingParam(nameof(name));
 
-            var appCtx = _ctxResolver.AppOrBlock(appPath);
+            var appCtx = _ctxResolver.SetAppOrGetBlock(appPath);
             
-            var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build(appCtx.UserMayEdit));
+            var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build(/*appCtx.UserMayEdit*/));
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, appCtx.UserMayEdit, more);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, /*appCtx.UserMayEdit,*/ more);
             return result;
         });
 
@@ -108,8 +108,8 @@ namespace ToSic.Sxc.WebApi.App
             string name,
             string stream,
             bool includeGuid,
-            IContextOfSite context,
-            bool userMayEdit,
+            IContextOfApp context,
+            //bool userMayEdit,
             QueryParameters more
         ) => Log.Func($"name:{name}, stream:{stream}, withModule:{(context as IContextOfBlock)?.Module.Id}", l =>
         {
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.WebApi.App
 
             _dataConverter.WithGuid = includeGuid;
             if (_dataConverter is ConvertToEavLightWithCmsInfo serializerWithEdit)
-                serializerWithEdit.WithEdit = userMayEdit;
+                serializerWithEdit.WithEdit = context.UserMayEdit; // userMayEdit;
             if (stream == AllStreams) stream = null;
             var result = _dataConverter.Convert(query, stream?.Split(','), more?.Guids);
             return result;

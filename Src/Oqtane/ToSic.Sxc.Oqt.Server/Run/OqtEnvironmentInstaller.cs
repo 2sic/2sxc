@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Context;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
@@ -13,7 +11,7 @@ using ToSic.Sxc.Run;
 
 namespace ToSic.Sxc.Oqt.Server.Run
 {
-    public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller
+    public class OqtEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IPlatformAppInstaller
     {
         private readonly LazySvc<CmsRuntime> _cmsRuntimeLazy;
         private readonly RemoteRouterLink _remoteRouterLink;
@@ -56,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
                     var contentAppId = _appStates.IdentityOfDefault(site.ZoneId);
                     // we'll usually run into errors if nothing is installed yet, so on errors, we'll continue
                     var contentViews = _cmsRuntimeLazy.Value
-                        .InitQ(contentAppId, false)
+                        .InitQ(contentAppId/*, false*/)
                         .Views.GetAll();
                     if (contentViews.Any()) return null;
                 }

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
     {
         public const string LogSuffix = "Query";
 
-        public QueryControllerReal(QueryControllerServices services, LazySvc<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
+        public QueryControllerReal(MyServices services, LazySvc<CmsManager> cmsManagerLazy, IAppStates appStates, IContextResolver contextResolver, AppConfigDelegate appConfigMaker) 
             : base(services, "Api." + LogSuffix)
         {
             ConnectServices(
@@ -34,13 +34,13 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         /// </summary>
         public bool DeleteIfUnused(int appId, int id)
             => _cmsManagerLazy.Value
-                .InitQ(_appStates.IdentityOfApp(appId), true)
+                .InitQ(_appStates.IdentityOfApp(appId))
                 .DeleteQueryIfNotUsedByView(id, Log);
 
 
         public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25)
         {
-            var block = _contextResolver.RealBlockRequired();
+            var block = _contextResolver.BlockRequired();
             var lookUps = _appConfigMaker
                 .GetLookupEngineForContext(block.Context, block.App, block);
             return DebugStream(appId, id, top, lookUps, @from, @out);
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.WebApi.Admin.Query
         /// </summary>
         public QueryRunDto RunDev(int appId, int id, int top)
         {
-            var block = _contextResolver.RealBlockRequired();
+            var block = _contextResolver.BlockRequired();
             var lookUps = _appConfigMaker
                 .GetLookupEngineForContext(block.Context, block.App, block);
 

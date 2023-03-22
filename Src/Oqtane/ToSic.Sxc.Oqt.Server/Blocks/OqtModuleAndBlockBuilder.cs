@@ -20,18 +20,16 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             Generator<BlockFromModule> blockGenerator,
             Generator<IModuleRepository> moduleRepositoryGenerator,
             RequestHelper requestHelper
-        ) : base(OqtConstants.OqtLogPrefix)
+        ) : base(blockGenerator, OqtConstants.OqtLogPrefix)
         {
             _moduleGenerator = moduleGenerator;
             _contextGenerator = contextGenerator;
-            _blockGenerator = blockGenerator;
             _moduleRepositoryGenerator = moduleRepositoryGenerator;
             _requestHelper = requestHelper;
         }
 
         private readonly Generator<IModule> _moduleGenerator;
         private readonly Generator<IContextOfBlock> _contextGenerator;
-        private readonly Generator<BlockFromModule> _blockGenerator;
         private readonly Generator<IModuleRepository> _moduleRepositoryGenerator;
         private readonly RequestHelper _requestHelper;
         private ILog ParentLog => (Log as Log)?.Parent ?? Log;
@@ -50,11 +48,11 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             return module;
         }
 
-        protected override IBlock GetBlock(IModule module, int? pageId) => GetBlock((module as OqtModule)?.GetContents(), pageId);
+        protected override IContextOfBlock GetContextOfBlock(IModule module, int? pageId) => GetContextOfBlock((module as OqtModule)?.GetContents(), pageId);
 
-        public override IBlock GetBlock<TPlatformModule>(TPlatformModule module, int? pageId)
+        protected override IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId)
         {
-            var wrapLog = Log.Fn<IBlock>();
+            var wrapLog = Log.Fn<IContextOfBlock>();
             if (module == null) throw new ArgumentNullException(nameof(module));
 
             var oqtModule = module switch
@@ -66,9 +64,9 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             Log.A($"Module: {oqtModule.ModuleId}");
             var initializedCtx = InitOqtSiteModuleAndBlockContext(oqtModule, pageId);
-            var result = _blockGenerator.New().Init(initializedCtx);
-            return wrapLog.ReturnAsOk(result);
+            return wrapLog.ReturnAsOk(initializedCtx);
         }
+
 
         private IContextOfBlock InitOqtSiteModuleAndBlockContext(Module oqtModule, int? pageId)
         {

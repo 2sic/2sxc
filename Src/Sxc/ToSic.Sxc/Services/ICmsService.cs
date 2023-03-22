@@ -9,7 +9,8 @@ namespace ToSic.Sxc.Services
         IHtmlTag Show(object thing,
             string noParamOrder = Eav.Parameters.Protector,
             object container = default,
-            string classes = default
+            string classes = default,
+            bool debug = default
         );
     }
 }

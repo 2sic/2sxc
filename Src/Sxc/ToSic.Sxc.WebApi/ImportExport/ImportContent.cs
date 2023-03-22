@@ -9,10 +9,12 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Source;
 using ToSic.Eav.Identity;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Eav.Persistence.Logging;
+using ToSic.Eav.Plumbing;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Validation;
@@ -129,7 +131,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                     l.A($"import content-types from package: {package.Key}");
 
                     // bundle json
-                    if (isEnabled && package.Value.Bundles?.Any() == true)
+                    if (isEnabled && package.Value.Bundles.SafeAny())
                         types.AddRange(serializer.GetContentTypesFromBundles(package.Value));
 
                     // single json
@@ -142,7 +144,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
                 // 1.3 Import the type
                 var import = _importerLazy.Value.Init(zoneId, appId, true, true);
-                if (types?.Any() == true)
+                if (types.Any())
                 {
                     import.ImportIntoDb(types, null);
 
@@ -151,7 +153,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
                 }
 
                 // are there any entities from bundles for import?
-                if (!isEnabled || packages.All(p => p.Value.Bundles?.Any(b => b.Entities?.Any() == true) != true))
+                if (!isEnabled || packages.All(p => p.Value.Bundles?.Any(b => b.Entities.SafeAny()) != true))
                     return (new ImportResultDto(true), "ok (types only)");
 
                 // 2. Create Entities
@@ -163,25 +165,29 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
                 // 2.2. Build content types
                 var entities = new List<IEntity>();
-                var relationshipsList = new List<IEntity>();
-                var relationshipSource = new DirectEntitiesSource(relationshipsList);
-                foreach (var package in packages)
+                //var relationshipsList = new List<IEntity>();
+                //var relationshipSource = new DirectEntitiesSource(relationshipsList);
+                DirectEntitiesSource.Using(relationships =>
                 {
-                    l.A($"import entities from package: {package.Key}");
-                    if (package.Value.Bundles?.Any() != true) continue;
-                    // bundle json
-                    var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationshipSource);
-                    l.A($"entities from bundles: {entitiesFromBundles.Count}");
-                    entities.AddRange(entitiesFromBundles);
-                    relationshipsList.AddRange(entitiesFromBundles);
-                }
+                    foreach (var package in packages)
+                    {
+                        l.A($"import entities from package: {package.Key}");
+                        if (package.Value.Bundles.SafeNone()) continue;
+                        // bundle json
+                        var entitiesFromBundles = serializer.GetEntitiesFromBundles(package.Value, relationships.Source);
+                        l.A($"entities from bundles: {entitiesFromBundles.Count}");
+                        entities.AddRange(entitiesFromBundles);
+                        relationships.List.AddRange(entitiesFromBundles);
+                    }
+                    return "dummy";
+                });
 
                 if (entities.Any(t => t == null))
                     throw new NullReferenceException("One Entity is null, something is wrong");
 
                 // 2.3 Import the entities
                 l.A($"Load entity {entities.Count} items");
-                if (entities?.Any() == true)
+                if (entities.Any())
                 {
                     import.ImportIntoDb(null, entities.Cast<Entity>().ToList());
 

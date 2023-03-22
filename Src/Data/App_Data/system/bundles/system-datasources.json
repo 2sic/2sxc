@@ -3734,6 +3734,234 @@
                     "Owner": "dnn:userid=41"
                   }
                 ]
+              },
+              {
+                "Name": "GroupExperimental",
+                "Type": "Empty",
+                "InputType": "empty-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169164,
+                    "Version": 3,
+                    "Guid": "5e9091d7-356c-451c-9a14-6797f4a150ab",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-default"
+                        },
+                        "Name": {
+                          "en-us": "Experimental (v15)"
+                        },
+                        "Notes": {
+                          "en-us": "<p>These are very experimental settings, you should not use them yet.&nbsp;</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "622e3024-b35e-4b9e-aaa5-ea6265148b0b"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169169,
+                    "Version": 1,
+                    "Guid": "e00d498b-10d2-48c3-86b2-6fddc2decc47",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "en-us": false
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "WithAncestors",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169165,
+                    "Version": 2,
+                    "Guid": "44312377-408c-4a54-84ca-0a44d989add3",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "With Ancestors"
+                        },
+                        "Notes": {
+                          "en-us": "<p>This is a super advanced setting, you should normally not use this.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169166,
+                    "Version": 1,
+                    "Guid": "9c020580-4fd7-4368-8346-2898270dca75",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169167,
+                    "Version": 1,
+                    "Guid": "765665ca-eda1-43ba-9a37-6f532fae8ec7",
+                    "Type": {
+                      "Name": "@string-dropdown",
+                      "Id": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":Not set (default) - without ancestors\ntrue:With ancestors\nfalse:Without ancestors"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
               }
             ],
             "Metadata": [
@@ -3808,7 +4036,40 @@
               }
             ]
           },
-          "Entities": []
+          "Entities": [
+            {
+              "Id": 169168,
+              "Version": 1,
+              "Guid": "622e3024-b35e-4b9e-aaa5-ea6265148b0b",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "*": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});",
+                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return context.debug;\n});"
+                  },
+                  "Target": {
+                    "*": "Field.Settings.Visible",
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "*": "Field.Settings.Visible",
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "*": true,
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         },
         {
           "ContentType": {
@@ -18533,6 +18794,439 @@
                   "Target": "ContentType",
                   "TargetType": 5,
                   "String": "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5"
+                }
+              }
+            ]
+          },
+          "Entities": []
+        },
+        {
+          "ContentType": {
+            "Id": "f9aca0f0-1b1b-4414-b42e-b337de124124",
+            "Name": "SystemStackConfig",
+            "Scope": "System.DataSources",
+            "Description": null,
+            "Attributes": [
+              {
+                "Name": "StackNames",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": true,
+                "Metadata": [
+                  {
+                    "Id": 169104,
+                    "Version": 5,
+                    "Guid": "64b78479-890b-41ac-a56c-5f813a3f4076",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Stack Name"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Which stack you want.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169109,
+                    "Version": 4,
+                    "Guid": "e0270815-3d9f-4e62-be67-4a7d895385a3",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169110,
+                    "Version": 4,
+                    "Guid": "bc0836f6-b6c0-4434-85f8-de9c99be90d8",
+                    "Type": {
+                      "Name": "@string-dropdown",
+                      "Id": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": "Settings:Settings\nResources:Resources"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": true
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "Keys",
+                "Type": "String",
+                "InputType": "string-dropdown-query",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169105,
+                    "Version": 2,
+                    "Guid": "6da2bd43-f156-445a-ad35-b9f3f8f0e179",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown-query"
+                        },
+                        "Name": {
+                          "en-us": "Key"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169113,
+                    "Version": 1,
+                    "Guid": "221c51f7-b774-4fab-af92-d0cd723d48fa",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169114,
+                    "Version": 1,
+                    "Guid": "932c04ce-73c7-4027-912b-036138ae833e",
+                    "Type": {
+                      "Name": "@string-dropdown-query",
+                      "Id": "@string-dropdown-query"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "EntityType": {
+                          "en-us": ""
+                        },
+                        "Label": {
+                          "en-us": "Title"
+                        },
+                        "Query": {
+                          "en-us": "Eav.Queries.Global.Settings"
+                        },
+                        "Separator": {
+                          "en-us": ","
+                        },
+                        "StreamName": {
+                          "en-us": "Default"
+                        },
+                        "UrlParameters": {
+                          "en-us": ""
+                        },
+                        "Value": {
+                          "en-us": "Title"
+                        }
+                      },
+                      "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
+                        "EnableCreate": {
+                          "en-us": false
+                        },
+                        "EnableEdit": {
+                          "en-us": false
+                        },
+                        "EnableRemove": {
+                          "en-us": true
+                        },
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "AddValues",
+                "Type": "String",
+                "InputType": "string-dropdown",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 169106,
+                    "Version": 2,
+                    "Guid": "438a8bae-f345-4691-a28e-f6fd71d78c03",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "string-dropdown"
+                        },
+                        "Name": {
+                          "en-us": "Add Values in Result"
+                        },
+                        "Notes": {
+                          "en-us": "<p>Determine if you also want the values of settings. If no you'll just get the keys.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169111,
+                    "Version": 1,
+                    "Guid": "d521e078-d931-4706-bf4d-2fff26503b14",
+                    "Type": {
+                      "Name": "@String",
+                      "Id": "@String"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": ""
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 169112,
+                    "Version": 1,
+                    "Guid": "e78000a1-3d59-46cc-9c6d-3317926d52da",
+                    "Type": {
+                      "Name": "@string-dropdown",
+                      "Id": "@string-dropdown"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "DropdownValues": {
+                          "en-us": ":Default - add values\ntrue:Add Values\nfalse:Do not add values"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        }
+                      },
+                      "Boolean": {
+                        "EnableTextEntry": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              }
+            ],
+            "Metadata": [
+              {
+                "Id": 169107,
+                "Version": 1,
+                "Guid": "75371e3d-fe95-4cb3-bd1f-f8ad05f2f548",
+                "Type": {
+                  "Name": "ContentType",
+                  "Id": "ContentType"
+                },
+                "Attributes": {
+                  "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
+                    "Description": {
+                      "en-us": ""
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
+                    },
+                    "EditInstructions": {
+                      "en-us": "<p>Configure what the SystemStack DataSource should return.</p>"
+                    },
+                    "Label": {
+                      "en-us": "System Stack Configuration (Settings/Resources)"
+                    },
+                    "ListInstructions": {
+                      "en-us": ""
+                    },
+                    "Notes": {
+                      "en-us": ""
+                    }
+                  },
+                  "Hyperlink": {
+                    "Icon": {
+                      "en-us": ""
+                    },
+                    "Link": {
+                      "en-us": ""
+                    }
+                  }
+                },
+                "Owner": "dnn:userid=41",
+                "For": {
+                  "Target": "ContentType",
+                  "TargetType": 5,
+                  "String": "f9aca0f0-1b1b-4414-b42e-b337de124124"
                 }
               }
             ]

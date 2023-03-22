@@ -24,7 +24,6 @@ namespace ToSic.Sxc.DataSources
 
             services.TryAddTransient<PagesDataSourceProvider, DnnPagesDsProvider>();
             services.TryAddTransient<SitesDataSourceProvider, DnnSitesDsProvider>();
-            services.TryAddTransient<AppFilesDataSourceProvider, DnnAppFilesDsProvider>();
 
             return services;
         }

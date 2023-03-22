@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
@@ -81,14 +82,23 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [NonAction]
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
             where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
         /// <inheritdoc />
         [NonAction]
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inStream);
+
+        [PrivateApi]
+        [NonAction]
+        public IDataSource CreateSourceWip(
+            string name,
+            string noParamOrder = ToSic.Eav.Parameters.Protector,
+            IDataSource source = default,
+            IConfiguration configuration = default)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
 
         #endregion
 

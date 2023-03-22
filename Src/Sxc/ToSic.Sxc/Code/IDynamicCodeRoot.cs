@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Code
         ILookUpEngine ConfigurationProvider { get; }
         
         [PrivateApi]
-        DataSourceFactory DataSourceFactory { get; }
+        IDataSourceFactory DataSourceFactory { get; }
 
         [PrivateApi]
         void AttachApp(IApp app);

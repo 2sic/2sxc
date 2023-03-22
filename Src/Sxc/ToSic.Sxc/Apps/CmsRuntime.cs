@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<BlocksRuntime> _blocksRuntime;
         private readonly LazySvc<ViewsRuntime> _viewsRuntime;
 
-        public CmsRuntime(AppRuntimeServices services, 
+        public CmsRuntime(MyServices services, 
             LazySvc<EntityRuntime> entityRuntime,
             LazySvc<MetadataRuntime> metadataRuntime,
             LazySvc<ContentTypeRuntime> contentTypeRuntime,
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Apps
             );
         }
 
-        public new CmsRuntime InitWithState(AppState appState, bool showDrafts)
+        public new CmsRuntime InitWithState(AppState appState, bool? showDrafts)
         {
             return base.InitWithState(appState, showDrafts) as CmsRuntime;
         }

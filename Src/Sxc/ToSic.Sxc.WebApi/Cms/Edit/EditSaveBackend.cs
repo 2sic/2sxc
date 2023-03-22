@@ -4,12 +4,14 @@ using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Eav.Security.Permissions;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Eav.WebApi.Formats;
+using ToSic.Eav.WebApi.SaveHelpers;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -20,6 +22,8 @@ namespace ToSic.Sxc.WebApi.Cms
 {
     public class EditSaveBackend : ServiceBase
     {
+        private readonly DataBuilder _dataBuilder;
+        private readonly SaveEntities _saveBackendHelper;
         private readonly SaveSecurity _saveSecurity;
         private readonly JsonSerializer _jsonSerializer;
 
@@ -28,9 +32,11 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditSaveBackend(
             SxcPagePublishing pagePublishing, 
             LazySvc<AppManager> appManagerLazy,
-            IContextResolver ctxResolver,
+            Sxc.Context.IContextResolver ctxResolver,
             JsonSerializer jsonSerializer,
-            SaveSecurity saveSecurity
+            SaveSecurity saveSecurity,
+            SaveEntities saveBackendHelper,
+            DataBuilder dataBuilder
             ) : base("Cms.SaveBk")
         {
             ConnectServices(
@@ -38,19 +44,21 @@ namespace ToSic.Sxc.WebApi.Cms
                 _appManagerLazy = appManagerLazy,
                 _ctxResolver = ctxResolver,
                 _jsonSerializer = jsonSerializer,
-                _saveSecurity = saveSecurity
+                _saveSecurity = saveSecurity,
+                _saveBackendHelper = saveBackendHelper,
+                _dataBuilder = dataBuilder
             );
         }
         private readonly SxcPagePublishing _pagePublishing;
         private readonly LazySvc<AppManager> _appManagerLazy;
-        private readonly IContextResolver _ctxResolver;
+        private readonly Sxc.Context.IContextResolver _ctxResolver;
 
         public EditSaveBackend Init(int appId)
         {
             _appId = appId;
             // The context should be from the block if there is one, because it affects saving/publishing
             // Basically it can result in things being saved draft or titles being updated
-            _context = _ctxResolver.BlockOrApp(appId);
+            _context = _ctxResolver.GetBlockOrSetApp(appId);
             _pagePublishing.Init(_context);
             return this;
         }
@@ -65,8 +73,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var validator = new SaveDataValidator(package, Log);
             // perform some basic validation checks
-            if (!validator.ContainsOnlyExpectedNodes(out var exp))
-                throw exp;
+            var containsOnlyExpectedNodesException = validator.ContainsOnlyExpectedNodes();
+            if (containsOnlyExpectedNodesException != null)
+                throw containsOnlyExpectedNodesException;
 
             // todo: unsure about this - thought I should check contentblockappid in group-header, because this is where it should be saved!
             //var contextAppId = appId;
@@ -101,17 +110,24 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var items = package.Items.Select(i =>
             {
-                var ent = (Entity) ser.Deserialize(i.Entity, false, false);
+                var ent = ser.Deserialize(i.Entity, false, false);
 
                 var index = package.Items.IndexOf(i); // index is helpful in case of errors
-                if (!validator.EntityIsOk(index, ent, out exp))
-                    throw exp;
+                var isOkException = validator.EntityIsOk(index, ent);
+                if (isOkException != null)
+                    throw isOkException;
 
-                if (!validator.IfUpdateValidateAndCorrectIds(index, ent, out exp))
-                    throw exp;
+                var resultValidator = validator.IfUpdateValidateAndCorrectIds(index, ent);
 
-                ent.IsPublished = package.IsPublished;
-                ent.PlaceDraftInBranch = package.DraftShouldBranch;
+                if (resultValidator.Exception != null)
+                    throw resultValidator.Exception;
+
+                ent = _dataBuilder.Entity.CreateFrom(ent, id: resultValidator.ResetId, isPublished: package.IsPublished,
+                    placeDraftInBranch: package.DraftShouldBranch);
+
+                //ent.ResetEntityId(resultValidator.ResetId ?? 0); //AjaxPreviewHelperWIP!
+                //ent.IsPublished = package.IsPublished;
+                //ent.PlaceDraftInBranch = package.DraftShouldBranch;
 
                 // new in 11.01
                 if (i.Header.Parent != null)
@@ -134,7 +150,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             Log.A("items to save generated, all data tests passed");
 
-            return _pagePublishing.SaveInPagePublishing(_ctxResolver.RealBlockOrNull(), _appId, items, partOfPage,
+            return _pagePublishing.SaveInPagePublishing(_ctxResolver.BlockOrNull(), _appId, items, partOfPage,
                     forceSaveAsDraft => DoSave(appMan, items, forceSaveAsDraft),
                     permCheck);
         }
@@ -149,7 +165,7 @@ namespace ToSic.Sxc.WebApi.Cms
                 .Where(e => !e.Header.IsContentBlockMode || !e.Header.IsEmpty)
                 .ToList();
 
-            var save = new Eav.WebApi.SaveHelpers.SaveEntities(Log);
+            var save = _saveBackendHelper;// new Eav.WebApi.SaveHelpers.SaveEntities(Log);
             save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
 
             return save.GenerateIdList(appMan.Read.Entities, items);

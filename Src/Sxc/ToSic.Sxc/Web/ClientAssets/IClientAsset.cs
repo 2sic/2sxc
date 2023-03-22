@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Web
         string Url { get; set; }
         int Priority { get; set; }
         string PosInPage { get; set; }
-        bool AutoOpt { get; set; }
+        //bool AutoOpt { get; set; }
         bool IsExternal { get; set; }
         string Content { get; set; }
 

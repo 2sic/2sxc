@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
@@ -28,13 +29,15 @@ namespace ToSic.Sxc.DataSources
         internal static string TypeName = "Role";
         internal static string TitleFieldName = nameof(Name);
 
+        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: "Role", titleField: nameof(Name), autoId: false);
+
         public string Name { get; set; }
 
         /// <summary>
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public override Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
+        public override Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
         };

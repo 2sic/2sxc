@@ -40,17 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [Authorize(Roles = RoleNames.Admin)]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public InstallAppsDto InstallSettings(bool isContentApp)
-            => Real.InstallSettings(isContentApp, GetContext().Module);
-
-        ///// <inheritdoc />
-        //[HttpGet]
-        //// [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        //[Authorize(Roles = RoleNames.Admin)]
-        //public IActionResult RemoteWizardUrl(bool isContentApp)
-        //{
-        //    PrepareResponseMaker();
-        //    return Real.RemoteWizardUrl(isContentApp, GetContext().Module);
-        //}
+            => Real.InstallSettings(isContentApp, BlockOptional.Context.Module);
 
         private void PrepareResponseMaker()
         {
@@ -68,7 +58,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         {
             HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
             PrepareResponseMaker();
-            return Real.RemotePackage(packageUrl, GetContext().Module);
+            return Real.RemotePackage(packageUrl, BlockOptional?.Context.Module);
         }
     }
 }

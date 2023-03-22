@@ -1,18 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Oqtane.Models;
+using Oqtane.Repository;
+using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Oqtane.Models;
-using Oqtane.Repository;
-using Oqtane.Security;
-using Oqtane.Shared;
 using ToSic.Eav.Context;
-using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Shared;
 
 namespace ToSic.Sxc.Oqt.Server.Context
@@ -20,8 +18,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
     public class OqtUser: ServiceBase, IUser<User>
     {
         private readonly LazySvc<IUserRepository> _userRepository;
-        private readonly LazySvc<IUserRoleRepository> _userRoleRepository;
-        private readonly LazySvc<UserManager<IdentityUser>> _identityUserManager;
+        private readonly LazySvc<OqtSecurity> _oqtSecurity;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SiteState _siteState;
 
@@ -29,15 +26,13 @@ namespace ToSic.Sxc.Oqt.Server.Context
         /// Constructor for DI
         /// </summary>
         public OqtUser(LazySvc<IUserRepository> userRepository,
-            LazySvc<IUserRoleRepository> userRoleRepository,
-            LazySvc<UserManager<IdentityUser>> identityUserManager,
+            LazySvc<OqtSecurity> oqtSecurity,
             IHttpContextAccessor httpContextAccessor,
             SiteState siteState): base($"{OqtConstants.OqtLogPrefix}.User")
         {
             ConnectServices(
                 _userRepository = userRepository,
-                _userRoleRepository = userRoleRepository,
-                _identityUserManager = identityUserManager,
+                _oqtSecurity = oqtSecurity,
                 _httpContextAccessor = httpContextAccessor,
                 _siteState = siteState
             );
@@ -58,27 +53,26 @@ namespace ToSic.Sxc.Oqt.Server.Context
             return user;
         }
 
-        public int Id => UnwrappedUser?.UserId ?? -1;
+        public int Id => _oqtSecurity.Value.Id(UnwrappedUser);
 
-        public string Username => UnwrappedUser?.Username;
+        public string Username => _oqtSecurity.Value.Username(UnwrappedUser);
 
-        public string Name => UnwrappedUser?.DisplayName;
+        public string Name => _oqtSecurity.Value.Name(UnwrappedUser);
 
-        public string Email => UnwrappedUser?.Email;
+        public string Email => _oqtSecurity.Value.Email(UnwrappedUser);
 
-        public string IdentityToken => $"{OqtConstants.UserTokenPrefix}{Id}";
+        public string IdentityToken => _oqtSecurity.Value.UserIdentityToken(UnwrappedUser);
 
         public Guid Guid { get; private set; }
 
-        public List<int> Roles => _roles ??= _userRoleRepository.Value.GetUserRoles(Id, UnwrappedUser.SiteId).Select(r => r.RoleId).ToList();
-        private List<int> _roles;
+        public List<int> Roles => _roles.Get(() => _oqtSecurity.Value.Roles(UnwrappedUser));
+        private readonly GetOnce<List<int>> _roles = new();
 
+        public bool IsSystemAdmin => _isSystemAdmin.Get(() => _oqtSecurity.Value.IsSystemAdmin(UnwrappedUser));
+        private readonly GetOnce<bool> _isSystemAdmin = new();
 
-        public bool IsSystemAdmin => _isSystemAdmin ??= UserSecurity.IsAuthorized(UnwrappedUser, RoleNames.Host);
-        private bool? _isSystemAdmin;
-
-        public bool IsSiteAdmin => _isSiteAdmin ??= UserSecurity.IsAuthorized(UnwrappedUser, RoleNames.Admin);
-        private bool? _isSiteAdmin;
+        public bool IsSiteAdmin => _isSiteAdmin.Get(() => _oqtSecurity.Value.IsSiteAdmin(UnwrappedUser));
+        private readonly GetOnce<bool> _isSiteAdmin = new();
 
         public bool IsContentAdmin => IsSiteAdmin;
 
@@ -100,7 +94,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
 
         #endregion
 
-        public bool IsAnonymous => Id == -1;
+        public bool IsAnonymous => _oqtSecurity.Value.IsAnonymous(UnwrappedUser);
 
 
         #region Private methods
@@ -146,7 +140,7 @@ namespace ToSic.Sxc.Oqt.Server.Context
             var username = _httpContextAccessor.HttpContext!.User.Identity!.Name;
             return string.IsNullOrEmpty(username)
                 ? default
-                : new((_identityUserManager.Value.FindByNameAsync(username).Result).Id);
+                : _oqtSecurity.Value.UserGuid(username);
         }
 
         #endregion

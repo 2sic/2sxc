@@ -3,6 +3,7 @@ using DotNetNuke.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
 using ToSic.Sxc.Dnn.Run;
@@ -13,8 +14,14 @@ namespace ToSic.Sxc.DataSources
 
     public class DnnUsersDsProvider : UsersDataSourceProvider
     {
-        public DnnUsersDsProvider() : base("Dnn.Users")
-        { }
+        private readonly LazySvc<DnnSecurity> _dnnSecurity;
+
+        public DnnUsersDsProvider(LazySvc<DnnSecurity> dnnSecurity) : base("Dnn.Users")
+        {
+            ConnectServices(
+                _dnnSecurity = dnnSecurity
+            );
+        }
 
         public override IEnumerable<CmsUserRaw> GetUsersInternal() => Log.Func(l =>
             {
@@ -34,29 +41,8 @@ namespace ToSic.Sxc.DataSources
                     if (!dnnUsers.Any()) return (new List<CmsUserRaw>(), "null/empty");
 
                     var result = dnnUsers
-                        //.Where(d => !d.IsDeleted)
-                        .Select(d =>
-                        {
-                            var adminInfo = d.UserMayAdminThis();
-                            return new CmsUserRaw
-                            {
-                                Id = d.UserID,
-                                Guid = d.UserGuid(),
-                                NameId = d.UserIdentityToken(),
-                                Roles = d.RoleList(portalId: siteId),
-                                IsSystemAdmin = d.IsSuperUser,
-                                IsSiteAdmin = adminInfo.IsSiteAdmin,
-                                IsContentAdmin = adminInfo.IsContentAdmin,
-                                //IsDesigner = d.IsDesigner(),
-                                IsAnonymous = d.IsAnonymous(),
-                                Created = d.CreatedOnDate,
-                                Modified = d.LastModifiedOnDate,
-                                //
-                                Username = d.Username,
-                                Email = d.Email,
-                                Name = d.DisplayName
-                            };
-                        }).ToList();
+                        //.Where(user => !user.IsDeleted)
+                        .Select(u => _dnnSecurity.Value.CmsUserBuilder(u, siteId)).ToList();
                     return (result, "found");
                 }
                 catch (Exception ex)

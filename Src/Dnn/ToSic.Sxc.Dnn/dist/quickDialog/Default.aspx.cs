@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Sxc.Web.EditUi;
 
 namespace ToSic.Sxc.Dnn.dist.quickDialog
 {
@@ -8,7 +9,7 @@ namespace ToSic.Sxc.Dnn.dist.quickDialog
         {
             Response.AppendHeader("test-dev", "2sxc");
 
-            Response.Write(PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/quickDialog/index-raw.html"));
+            Response.Write(PageOutputCached("~/DesktopModules/ToSIC_SexyContent/dist/quickDialog/index-raw.html", EditUiResourceSettings.QuickDialog));
         }
     }
 }

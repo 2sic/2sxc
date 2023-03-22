@@ -4,13 +4,15 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
+using ToSic.Eav.Data.Source;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
+using static ToSic.Eav.DataSources.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -29,15 +31,14 @@ namespace ToSic.Sxc.DataSources
         Icon = Icons.UserCircled,
         UiHint = "Users in this site",
         HelpLink = "https://r.2sxc.org/ds-users",
-        GlobalName = "93ac53c6-adc6-4218-b979-48d1071a5765", // random & unique Guid
+        NameId = "93ac53c6-adc6-4218-b979-48d1071a5765", // random & unique Guid
         Type = DataSourceType.Source,
-        ExpectsDataOfType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
+        ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"
     )]
-    public partial class Users : ExternalData
+    public partial class Users : CustomDataSourceAdvanced
     {
-        private readonly ITreeMapper _treeMapper;
-        private readonly LazySvc<DataSourceFactory> _dsFactory;
-        private readonly IDataBuilder _usersBuilder;
+        private readonly IDataSourceGenerator<Roles> _rolesGenerator;
+        private readonly IDataFactory _dataFactory;
         private readonly UsersDataSourceProvider _provider;
 
         #region Other Constants
@@ -137,18 +138,16 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi]
         public Users(MyServices services,
             UsersDataSourceProvider provider,
-            IDataBuilder dataBuilder,
-            LazySvc<DataSourceFactory> dsFactory,
-            ITreeMapper treeMapper) : base(services, "SDS.Users")
+            IDataFactory dataFactory,
+            IDataSourceGenerator<Roles> rolesGenerator) : base(services, "SDS.Users")
         {
             ConnectServices(
                 _provider = provider,
-                _usersBuilder = dataBuilder,
-                _dsFactory = dsFactory,
-                _treeMapper = treeMapper
+                _dataFactory = dataFactory,
+                _rolesGenerator = rolesGenerator
             );
-            Provide(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
-            Provide("Roles", () => GetUsersAndRoles().UserRoles);
+            ProvideOut(() => GetUsersAndRoles().Users); // default out, if accessed, will deliver GetList
+            ProvideOut(() => GetUsersAndRoles().UserRoles, "Roles");
         }
 
         #endregion
@@ -166,36 +165,30 @@ namespace ToSic.Sxc.DataSources
             var usersRaw = GetUsersAndFilter();
 
             // Figure out options to be sure we have the roles/roleids
-            var keysToAdd = new List<string>();
-            // WIP add role IDs - probably shouldn't be part of this, but part of the SerializationOptions
-            //if (AddRoleIds) keysToAdd.Add(nameof(UserDataRaw.RoleIds));
-            _usersBuilder.Configure(typeName: CmsUserRaw.TypeName, titleField: CmsUserRaw.TitleFieldName, createRawOptions: new CreateRawOptions(addKeys: keysToAdd));
+            var relationships = new LazyLookup<object, IEntity>();
+            var userFactory = _dataFactory.New(options: CmsUserRaw.Options,
+                relationships: relationships,
+                rawConvertOptions: new RawConvertOptions(addKeys: new []{ "Roles"}));
 
-            var users = _usersBuilder.CreateMany(usersRaw);
-            var roles = new List<IEntity>().ToImmutableList();
+            var users = userFactory.Create(usersRaw);
+            var roles = EmptyList;
 
             // If we should include the roles, create them now and attach
             if (AddRoles)
-            {
                 try
                 {
-                    // Mix generated users with the RoleIds which only exist on the raw list
-                    var userNeeds = users.ToList()
-                        .Select(u =>
-                            (u, usersRaw.FirstOrDefault(usr => usr.Id == u.EntityId)?.Roles ?? new List<int>()))
-                        .ToList();
+                    // New...
                     roles = GetRolesStream(usersRaw);
-                    var rolesLookup = roles.Select(r => (r, r.EntityId)).ToList();
-
-                    var mapped = _treeMapper.AddSomeRelationshipsWIP("Roles", userNeeds, rolesLookup);
-                    users = mapped.ToImmutableList();
+                    relationships.Add(roles.Select(r =>
+                        new KeyValuePair<object, IEntity>($"{CmsUserRaw.RoleRelationshipPrefix}{r.EntityId}", r)));
                 }
                 catch (Exception ex)
                 {
+                    l.A("Error trying to add roles");
                     l.Ex(ex);
                     /* ignore for now */
                 }
-            }
+
             _usersAndRolesCache = (users, roles);
             return (_usersAndRolesCache, $"users {users.Count}; roles {roles.Count}");
         });
@@ -225,7 +218,7 @@ namespace ToSic.Sxc.DataSources
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();
             // Get roles, use the current data source to provide aspects such as lookups etc.
-            var rolesDs = _dsFactory.Value.GetDataSource<Roles>(this);
+            var rolesDs = _rolesGenerator.New(source: this); // _dsFactory.Value.Create<Roles>(source: this);
             // Set filter parameter to only get roles we'll need
             rolesDs.RoleIds = string.Join(",", roleIds);
             var roles = rolesDs.List;

@@ -23,9 +23,9 @@ namespace ToSic.Sxc.WebApi.Save
 
         private readonly LazySvc<BlockEditorSelector> _blockEditorSelectorLazy;
         private readonly LazySvc<CmsManager> _cmsManagerLazy;
-        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity, _withDrafts));
+        private CmsManager CmsManager => _cmsManager ?? (_cmsManager = _cmsManagerLazy.Value.InitQ(_appIdentity/*, _withDrafts*/));
         private CmsManager _cmsManager;
-        private bool _withDrafts = false;
+        //private bool? _withDrafts = false;
 
         public ContentGroupList(LazySvc<CmsManager> cmsManagerLazy, LazySvc<BlockEditorSelector> blockEditorSelectorLazy) : base("Api.GrpPrc")
         {
@@ -35,13 +35,12 @@ namespace ToSic.Sxc.WebApi.Save
             );
         }
 
-        public ContentGroupList Init(IAppIdentity appIdentity, bool withDraftsTemp)
+        public ContentGroupList Init(IAppIdentity appIdentity/*, bool? withDraftsTemp*/)
         {
             _appIdentity = appIdentity;
-            _withDrafts = withDraftsTemp;
+            //_withDrafts = withDraftsTemp;
             return this;
         }
-
         private IAppIdentity _appIdentity;
         #endregion
 

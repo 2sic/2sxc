@@ -34,7 +34,7 @@ namespace ToSic.Sxc.WebApi.Cms
         private readonly Generator<IPagePublishing> _versioning;
         private readonly IPagePublishing _publishing;
 
-        private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockRequired());
+        private IContextOfBlock Context => _context ?? (_context = CtxResolver.BlockContextRequired());
         private IContextOfBlock _context;
 
 
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private IEntity FindOrThrow(Guid? parent)
         {
-            var target = parent == null ? CtxResolver.RealBlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value);
+            var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value);
             if (target == null) throw new Exception($"Can't find parent {parent}");
             return target;
         }

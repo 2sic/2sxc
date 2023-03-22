@@ -8,7 +8,7 @@ using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.Apps
 {
-    public class CmsManager: AppManager, IAppIdentityWithPublishingState
+    public class CmsManager: AppManager //, IAppIdentityWithPublishingState
     {
         private readonly LazySvc<ViewsManager> _viewsManager;
         private readonly LazySvc<BlocksManager> _blocksManager;
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Apps
             );
         }
 
-        public CmsManager Init(IAppIdentityWithPublishingState app)
+        public CmsManager Init(IApp app)
         {
             base.Init(app);
             return this;
@@ -35,22 +35,22 @@ namespace ToSic.Sxc.Apps
 
         public CmsManager Init(IContextOfApp context)
         {
-            this.InitQ(context.AppState, context.UserMayEdit);
+            this.InitQ(context.AppState);
             return this;
         }
 
-        public new CmsManager InitWithState(AppState app, bool showDrafts)
+        public new CmsManager InitWithState(AppState app, bool? showDrafts = null)
         {
-            base.InitWithState(app, showDrafts);
+            base.InitWithState(app);
             return this;
         }
 
         public new CmsRuntime Read => _cmsRuntime.Value;
 
-        public ViewsManager Views => _views.Get(() => _viewsManager.Value);// new ViewsManager().Init(Log).ConnectTo(this));
+        public ViewsManager Views => _views.Get(() => _viewsManager.Value);
         private readonly GetOnce<ViewsManager> _views = new GetOnce<ViewsManager>();
 
-        public BlocksManager Blocks => _blocks.Get(() => _blocksManager.Value);// new BlocksManager().Init(Log).ConnectTo(this));
+        public BlocksManager Blocks => _blocks.Get(() => _blocksManager.Value);
         private readonly GetOnce<BlocksManager> _blocks = new GetOnce<BlocksManager>();
 
 

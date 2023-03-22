@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -23,45 +18,20 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        ExpectsDataOfType = "",
-        GlobalName = "a11c28fb-7d8d-40a2-a22c-50beaa019e41",
+        ConfigurationType = "",
+        NameId = "a11c28fb-7d8d-40a2-a22c-50beaa019e41",
         HelpLink = "https://r.2sxc.org/ds-sites",
         Icon = Icons.Globe,
         NiceName = "Sites",
         Type = DataSourceType.Source,
         UiHint = "Sites in this CMS")]
-    public class Sites: ExternalData
+    public class Sites: CustomDataSourceLight
     {
-        private readonly IDataBuilder _sitesDataBuilder;
-        private readonly SitesDataSourceProvider _provider;
-
-        #region Constructor
-
         [PrivateApi]
-        public Sites(MyServices services, SitesDataSourceProvider provider, IDataBuilder sitesDataBuilder) : base(services, "CDS.Sites")
+        public Sites(MyServices services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
         {
-            ConnectServices(
-                _provider = provider,
-                _sitesDataBuilder = sitesDataBuilder.Configure(typeName: SiteDataRaw.TypeName, titleField: SiteDataRaw.TitleFieldName, idAutoIncrementZero: false)
-            );
-            Provide(GetSites);
+            ConnectServices(sitesProvider);
+            ProvideOutRaw(sitesProvider.GetSitesInternal, options: SiteDataRaw.Options);
         }
-        #endregion
-
-        [PrivateApi]
-        public IImmutableList<IEntity> GetSites() => Log.Func(l =>
-        {
-            Configuration.Parse();
-
-            // Get sites from underlying system/provider
-            var sitesFromSystem = _provider.GetSitesInternal();
-            if (sitesFromSystem?.Any() != true)
-                return (new List<IEntity>().ToImmutableList(), "null/empty");
-
-            // Convert to Entity-Stream
-            var sites = _sitesDataBuilder.CreateMany(sitesFromSystem);
-
-            return (sites, $"found: {sites.Count}");
-        });
     }
 }

@@ -101,12 +101,11 @@ namespace ToSic.Sxc.WebApi.Cms
             return wrapLog.Return(found, $"{found.Count}");
         }
 
-        internal IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead)
+        private IEntity ConstructEmptyEntity(int appId, ItemIdentifier header, ContentTypeRuntime typeRead) => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<IEntity>();
             var type = typeRead.Get(header.ContentTypeName);
-            var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, 0, type);
-            return wrapLog.Return(ent);
-        }
+            var ent = _entityBuilder.EmptyOfType(appId, header.Guid, header.EntityId, type);
+            return ent;
+        });
     }
 }

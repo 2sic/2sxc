@@ -6,11 +6,13 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -27,16 +29,16 @@ namespace ToSic.Sxc.Dnn.DataSources
         UiHint = "Users profiles of specified users in Dnn",
         Icon = Icons.Face,
         Type = DataSourceType.Source, 
-        GlobalName = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
-        ExpectsDataOfType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
-        PreviousNames = new []
+        NameId = "ToSic.Sxc.Dnn.DataSources.DnnUserProfile, ToSic.Sxc.Dnn",
+        ConfigurationType = "|Config ToSic.SexyContent.DataSources.DnnUserProfileDataSource",
+        NameIds = new []
         {
             "ToSic.SexyContent.Environment.Dnn7.DataSources.DnnUserProfileDataSource, ToSic.SexyContent"
         }
         )]
-	public class DnnUserProfile : ExternalData
+	public class DnnUserProfile : CustomDataSourceAdvanced
 	{
-        private readonly IDataBuilder _dataBuilder;
+        private readonly IDataFactory _dataFactory;
 
         #region Configuration-properties
 
@@ -63,7 +65,7 @@ namespace ToSic.Sxc.Dnn.DataSources
 		/// <summary>
 		/// Gets or sets the Name of the ContentType to simulate
 		/// </summary>
-		[Configuration(Field = "ContentTypeName", Fallback = "DnnUserInfo")]
+		[Configuration(Field = "ContentTypeName", Fallback = DnnUserProfileDataRaw.TypeName)]
 		public string ContentType
 		{
 			get => Configuration.GetThis();
@@ -84,31 +86,34 @@ namespace ToSic.Sxc.Dnn.DataSources
 
         #region Constructor / DI
 
-        public new class MyServices: MyServicesBase<DataSource.MyServices>
+        public new class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
         {
             public ISite Site { get; }
             public IZoneMapper ZoneMapper { get; }
+            public LazySvc<DnnSecurity> DnnSecurity { get; }
 
             public MyServices(
-                DataSource.MyServices parentServices,
+                CustomDataSourceAdvanced.MyServices parentServices,
                 ISite site,
-                IZoneMapper zoneMapper
+                IZoneMapper zoneMapper,
+                LazySvc<DnnSecurity> dnnSecurity
             ) : base(parentServices)
             {
                 ConnectServices(
                     Site = site,
-                    ZoneMapper = zoneMapper
+                    ZoneMapper = zoneMapper,
+                    DnnSecurity = dnnSecurity
                 );
             }
         }
 
-		public DnnUserProfile(MyServices services, IDataBuilder dataBuilder) : base(services, "Dnn.Profile")
+		public DnnUserProfile(MyServices services, IDataFactory dataFactory) : base(services, "Dnn.Profile")
         {
             ConnectServices(
-                _dataBuilder = dataBuilder.Configure(typeName: ContentType)
+                _dataFactory = dataFactory
             );
             _services = services;
-            Provide(GetList);
+            ProvideOut(GetList);
         }
 
         private readonly MyServices _services;
@@ -147,7 +152,7 @@ namespace ToSic.Sxc.Dnn.DataSources
                 var dnnUserProfile = new DnnUserProfileDataRaw
                 {
                     Id = user.UserID,
-                    Guid = user.UserGuid(),
+                    Guid = _services.DnnSecurity.Value.UserGuid(user),
                     Name = GetDnnProfileValue(user, TitleField.ToLowerInvariant())
                 };
 
@@ -158,8 +163,8 @@ namespace ToSic.Sxc.Dnn.DataSources
                 results.Add(dnnUserProfile);
             }
             l.A($"results: {results.Count}");
-
-            return (_dataBuilder.CreateMany(results), "ok");
+            var userProfileDataFactory = _dataFactory.New(options: new DataFactoryOptions(DnnUserProfileDataRaw.Options, typeName: ContentType?.NullIfNoValue()));
+            return (userProfileDataFactory.Create(results), "ok");
         });
 
         private static string GetDnnProfileValue(UserInfo user, string property)
@@ -208,6 +213,9 @@ namespace ToSic.Sxc.Dnn.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class DnnUserProfileDataRaw : IRawEntity
     {
+        internal const string TypeName = "UserProfile";
+
+        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public string Name { get; set; } // aka DisplayName
@@ -221,9 +229,9 @@ namespace ToSic.Sxc.Dnn.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>(Properties)
+        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
         {
-            { Attributes.TitleNiceName, Name },
+            { Eav.Data.Attributes.TitleNiceName, Name },
             { nameof(Name), Name },
         };
 

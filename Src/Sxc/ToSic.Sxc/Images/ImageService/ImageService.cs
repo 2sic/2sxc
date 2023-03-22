@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using ToSic.Lib;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Data;
@@ -101,15 +100,15 @@ namespace ToSic.Sxc.Images
 
         /// <inheritdoc />
         public IResponsivePicture Picture(
-            object link = null,
-            object settings = null,
+            object link = default,
+            object settings = default,
             string noParamOrder = Eav.Parameters.Protector,
-            object factor = null,
+            object factor = default,
             object width = default,
-            string imgAlt = null,
+            string imgAlt = default,
             string imgAltFallback = default,
-            string imgClass = null,
-            object recipe = null)
+            string imgClass = default,
+            object recipe = default)
             => new ResponsivePicture(this,
                 new ResponsiveParams(nameof(Picture), link, noParamOrder,
                     Settings(settings, factor: factor, width: width, recipe: recipe),

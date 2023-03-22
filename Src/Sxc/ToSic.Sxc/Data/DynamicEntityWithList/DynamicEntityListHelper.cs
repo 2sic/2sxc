@@ -14,18 +14,18 @@ namespace ToSic.Sxc.Data
     {
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
-        private readonly DynamicEntityServices _services;
+        private readonly DynamicEntity.MyServices _services;
         
         private Func<bool?> _getDebug;
 
-        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntityServices services)
+        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntity.MyServices services)
         {
             _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _getDebug = getDebug;
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug,  DynamicEntityServices services)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug,  DynamicEntity.MyServices services)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;

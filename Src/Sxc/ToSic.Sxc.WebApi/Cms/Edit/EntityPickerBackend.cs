@@ -37,7 +37,7 @@ namespace ToSic.Sxc.WebApi.Cms
         // 2dm 2023-01-22 #maybeSupportIncludeParentApps
         public IEnumerable<EntityForPickerDto> GetForEntityPicker(int appId, string[] items, string contentTypeName/*, bool includeParentApps*/) => Log.Func(() =>
         {
-            var context = _ctxResolver.BlockOrApp(appId);
+            var context = _ctxResolver.GetBlockOrSetApp(appId);
             // do security check
             var permCheck = string.IsNullOrEmpty(contentTypeName)
                 ? _appPermissions.New().Init(context, context.AppState)

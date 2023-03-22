@@ -1,24 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ClientAssets;
+using static ToSic.Sxc.Web.ClientAssetConstants;
 
 namespace ToSic.Sxc.Blocks.Output
 {
     public abstract partial class BlockResourceExtractor
     {
-        protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs)
+        protected string ExtractExternalScripts(string renderedTemplate, ref bool include2SxcJs, ClientAssetsExtractSettings settings)
         {
             var wrapLog = Log.Fn<string>();
 
-            var scriptMatches = RegexUtil.ScriptSrcDetection.Matches(renderedTemplate);
+            var scriptMatches = RegexUtil.ScriptSrcDetection.Value.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
             Log.A($"Found {scriptMatches.Count} external scripts");
-            foreach (Match match in scriptMatches)
+            foreach (Match match in scriptMatches.Cast<Match>())
             {
-                var url = FixUrlWithSpaces(match.Groups["Src"].Value);
+                var url = FixUrlWithSpaces(match.Groups[RegexUtil.SrcKey].Value);
 
                 // always remove 2sxc JS requests from template and ensure it's added the standard way
                 if (Is2SxcApiJs(url))
@@ -29,7 +33,7 @@ namespace ToSic.Sxc.Blocks.Output
                 }
 
                 // Also get the ID (new in v12)
-                var idMatches = RegexUtil.IdDetection.Match(match.Value);
+                var idMatches = RegexUtil.IdDetection.Value.Match(match.Value);
                 var id = idMatches.Success ? idMatches.Groups["Id"].Value : null;
 
                 // todo: ATM the priority and type is only detected in the Regex which expects "enable-optimizations"
@@ -37,13 +41,15 @@ namespace ToSic.Sxc.Blocks.Output
                 // ...and another for the priority etc.
 
                 // skip if not matched and setting only wants matches
-                // bool skip;
-                var (skip, posInPage, priority) = CheckOptimizationSettings(match, "body", JsDefaultPriority);
+                var jsSettings = settings.Js;
+                var (skip, posInPage, priority) = CheckOptimizationSettings(match.Value, jsSettings);
                 if (skip) continue;
 
                 // get all Attributes
                 var (attributes, cspCode) = GetHtmlAttributes(match.Value);
                 var forCsp = cspCode == _pageServiceShared.CspEphemeralMarker;
+                if (jsSettings.AutoDefer && !attributes.ContainsKey(AttributeDefer)) attributes[AttributeDefer] = null;
+                if (jsSettings.AutoAsync && !attributes.ContainsKey(AttributeAsync)) attributes[AttributeAsync] = null;
 
                 // Register, then add to remove-queue
                 Assets.Add(new ClientAsset { Id = id, IsJs = true, PosInPage = posInPage, Priority = priority, Url = url, HtmlAttributes = attributes, WhitelistInCsp = forCsp });
@@ -56,24 +62,33 @@ namespace ToSic.Sxc.Blocks.Output
             return wrapLog.Return(renderedTemplate);
         }
 
-        private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(Match match, string posInPage, int priority)
+        private (bool Skip, string PosInPage, int Priority) CheckOptimizationSettings(string value, ClientAssetExtractSettings settings)
         {
-            var optMatch = RegexUtil.OptimizeDetection.Match(match.Value);
-            if (!optMatch.Success && ExtractOnlyEnableOptimization) return (true, null, 0);
+            // Check if we have the optimize attribute
+            var optMatch = RegexUtil.OptimizeDetection.Value.Match(value);
+            if (!optMatch.Success && !settings.ExtractAll) return (true, settings.Location, settings.Priority);
 
-            posInPage = optMatch.Groups[TokenPosition]?.Value ?? posInPage;
+            var finalPosInPage = (optMatch.Groups[RegexUtil.PositionKey]?.Value).UseFallbackIfNoValue(settings.Location);
 
-            priority = GetPriority(optMatch, priority);
+            var priority = GetPriority(optMatch, settings.Priority);
 
-            if (priority <= 0) return (true, null, 0); // don't register/remove if not within specs
+            // Return as skip if priority is not known
+            return (priority <= 0, finalPosInPage, priority); // don't register/remove if not within specs
+        }
 
-            return (false, posInPage, priority);
+        private int GetPriority(Match optMatch, int defaultPriority)
+        {
+            var priorityString = (optMatch.Groups[RegexUtil.PriorityKey]?.Value ?? "true").ToLowerInvariant();
+            var priority = priorityString == "true" || priorityString == ""
+                ? defaultPriority
+                : int.Parse(priorityString);
+            return priority;
         }
 
 
         protected string ExtractInlineScripts(string renderedTemplate) => Log.Func(() =>
         {
-            var scriptMatches = RegexUtil.ScriptContentDetection.Matches(renderedTemplate);
+            var scriptMatches = RegexUtil.ScriptContentDetection.Value.Matches(renderedTemplate);
             var scriptMatchesToRemove = new List<Match>();
 
             Log.A($"Found {scriptMatches.Count} inline scripts");

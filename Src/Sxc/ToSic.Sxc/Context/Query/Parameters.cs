@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using ToSic.Eav.Conventions;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Web.Url;
@@ -14,6 +15,8 @@ namespace ToSic.Sxc.Context.Query
     [PrivateApi("Hide implementation")]
     public class Parameters : IParameters
     {
+        #region Constructor
+
         public Parameters() : this(null) { }
 
         public Parameters(NameValueCollection originals)
@@ -22,6 +25,24 @@ namespace ToSic.Sxc.Context.Query
         }
 
         protected readonly NameValueCollection Nvc;
+
+        #endregion
+
+        #region Get (new v15.04)
+
+        public string Get(string key) => OriginalsAsDic.TryGetValue(key, out var value) ? value : null;
+
+        public TValue Get<TValue>(string name) => Get<TValue>(name, fallback: default);
+
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        public T Get<T>(string key, string noParamOrder = Eav.Parameters.Protector, T fallback = default)
+        {
+            if (!ContainsKey(key)) return fallback;
+            var temp = this[key];
+            return temp.ConvertOrFallback(fallback);
+        }
+
+        #endregion
 
         private IDictionary<string, string> OriginalsAsDic {
             get
@@ -59,7 +80,7 @@ namespace ToSic.Sxc.Context.Query
 
         public bool TryGetValue(string key, out string value) => OriginalsAsDic.TryGetValue(key, out value);
 
-        public string this[string key] => OriginalsAsDic.TryGetValue(key, out var value) ? value : null;
+        public string this[string name] => Get(name);
 
         public IEnumerable<string> Keys => OriginalsAsDic.Keys;
 
@@ -68,15 +89,15 @@ namespace ToSic.Sxc.Context.Query
 
         public override string ToString() => Nvc.NvcToString();
 
-        public IParameters Add(string name)
+        public IParameters Add(string key)
         {
-            var copy = new NameValueCollection(Nvc) { { name, null } };
+            var copy = new NameValueCollection(Nvc) { { key, null } };
             return new Parameters(copy);
         }
 
-        public IParameters Add(string name, string value)
+        public IParameters Add(string key, string value)
         {
-            var copy = new NameValueCollection(Nvc) { { name, value } };
+            var copy = new NameValueCollection(Nvc) { { key, value } };
             return new Parameters(copy);
         }
 
@@ -99,7 +120,7 @@ namespace ToSic.Sxc.Context.Query
 
         #region New Object Add/Set
 
-        public IParameters Add(string name, object value) => Add(name, ValueToUrlValue(value));
+        public IParameters Add(string key, object value) => Add(key, ValueToUrlValue(value));
 
         public IParameters Set(string name, object value) => Set(name, ValueToUrlValue(value));
 

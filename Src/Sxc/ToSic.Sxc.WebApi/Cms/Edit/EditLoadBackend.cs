@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
-using ToSic.Eav.Data.Builder;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Eav.ImportExport.Serialization;
 using ToSic.Lib.Logging;
@@ -78,13 +78,13 @@ namespace ToSic.Sxc.WebApi.Cms
         public EditDto Load(int appId, List<ItemIdentifier> items) => Log.Func($"load many a#{appId}, items⋮{items.Count}", l =>
         {
             // Security check
-            var context = _ctxResolver.BlockOrApp(appId);
-            var showDrafts = context.UserMayEdit;
+            var context = _ctxResolver.GetBlockOrSetApp(appId);
+            //var showDrafts = context.UserMayEdit;
 
             // do early permission check - but at this time it may be that we don't have the types yet
             // because they may be group/id combinations, without type information which we'll look up afterwards
             var appIdentity = _appStates.IdentityOfApp(appId);
-            items = _contentGroupList.Init(appIdentity, showDrafts)
+            items = _contentGroupList.Init(appIdentity/*, showDrafts*/)
                 .ConvertGroup(items)
                 .ConvertListIndexToId(items);
             TryToAutoFindMetadataSingleton(items, context.AppState);

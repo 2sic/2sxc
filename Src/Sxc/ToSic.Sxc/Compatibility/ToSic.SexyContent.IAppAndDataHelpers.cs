@@ -1,5 +1,6 @@
 ﻿#if NETFRAMEWORK
 using System;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
@@ -48,8 +49,8 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <returns></returns>
         T CreateSource<T>(IDataStream inStream) where T : IDataSource;
-        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
-        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource;
+        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfiguration configuration = null);
+        T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default) where T : IDataSource;
         #endregion
 
     }

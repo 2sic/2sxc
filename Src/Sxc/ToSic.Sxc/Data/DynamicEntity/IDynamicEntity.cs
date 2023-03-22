@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Data
         /// Note that you don't need to specify it, if you specify the `fallback` property.
         /// </typeparam>
         /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
-        /// <param name="noParamOrder"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">the fallback value to provide if not found</param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
@@ -227,7 +227,7 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         // ReSharper disable once InconsistentNaming
-        DynamicEntityServices _Services { get; }
+        DynamicEntity.MyServices _Services { get; }
 
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         ///// <summary>

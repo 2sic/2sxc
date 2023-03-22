@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Dnn
         /// Get the service provider only once - ideally in Dnn9.4 we will get it from Dnn
         /// If we would get it multiple times, there are edge cases where it could be different each time! #2614
         /// </summary>
-        private IServiceProvider ServiceProvider => _serviceProvider ?? (_serviceProvider = DnnStaticDi.CreateModuleScopedServiceProvider());
-        private IServiceProvider _serviceProvider;
+        private IServiceProvider ServiceProvider => _serviceProvider.Get(DnnStaticDi.CreateModuleScopedServiceProvider);
+        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
         private TService GetService<TService>() => ServiceProvider.Build<TService>(Log);
 
         #endregion
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn
         /// Block needs to self-initialize when first requested, because it's used in the Actions-Menu builder
         /// which runs before page-load
         /// </summary>
-        private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetBlock(ModuleConfiguration, null)), timer: true);
+        private IBlock Block => _blockGetOnce.Get(Log, () => LogTimer.DoInTimer(() => GetService<IModuleAndBlockBuilder>().GetProvider(ModuleConfiguration, null).LoadBlock()), timer: true);
         private readonly GetOnce<IBlock> _blockGetOnce = new GetOnce<IBlock>();
 
         #region Logging

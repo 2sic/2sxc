@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
 {
@@ -31,8 +32,8 @@ namespace ToSic.Sxc.Adam
         /// Get a (root) folder object for this container
         /// </summary>
         /// <returns></returns>
-        internal Folder<TFolderId, TFileId> Folder(bool autoCreate = false) => _folder ?? (_folder = Folder("", autoCreate));
-        private Folder<TFolderId, TFileId> _folder;
+        internal Folder<TFolderId, TFileId> Folder(bool autoCreate = false) => _folder.Get(() => Folder("", autoCreate));
+        private readonly GetOnce<Folder<TFolderId, TFileId>> _folder = new GetOnce<Folder<TFolderId, TFileId>>();
 
     }
 }

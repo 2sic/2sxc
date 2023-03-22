@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
@@ -29,7 +31,7 @@ namespace ToSic.Sxc.Context.Raw
         #region Types and Names for Raw Entities
 
         internal static string TypeName = "User";
-        internal static string TitleFieldName = nameof(Name);
+        internal static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
 
         #endregion
 
@@ -71,7 +73,7 @@ namespace ToSic.Sxc.Context.Raw
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public override Dictionary<string, object> GetProperties(CreateRawOptions options)
+        public override Dictionary<string, object> Attributes(RawConvertOptions options)
         {
             var data = new Dictionary<string, object>
             {
@@ -84,9 +86,13 @@ namespace ToSic.Sxc.Context.Raw
                 { nameof(Username), Username },
                 { nameof(Email), Email },
             };
-            if(options.AddKey(nameof(Roles)))
-                data.Add(nameof(Roles), Roles == null ? "" : string.Join(",", Roles));
+            if (options.AddKey(nameof(Roles)))
+                data.Add("Roles", new RawRelationship(keys: Roles?.Select(r => $"{RoleRelationshipPrefix}{r}" as object)
+                                                            ?? new List<object>())
+                );
             return data;
         }
+
+        internal const string RoleRelationshipPrefix = "Role:";
     }
 }

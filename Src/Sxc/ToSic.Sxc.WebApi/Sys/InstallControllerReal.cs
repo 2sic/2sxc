@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ToSic.Eav.Apps;
@@ -23,6 +22,7 @@ namespace ToSic.Sxc.WebApi.Sys
 {
     public class InstallControllerReal<THttpResponseType> : ServiceBase
     {
+        private readonly LazySvc<IPlatformAppInstaller> _platformAppInstaller;
         private readonly LazySvc<IFeaturesService> _featureService;
         private readonly LazySvc<IContextOfSite> _context;
         private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
@@ -39,6 +39,7 @@ namespace ToSic.Sxc.WebApi.Sys
         public InstallControllerReal(
             LazySvc<IContextOfSite> context,
             LazySvc<IEnvironmentInstaller> envInstallerLazy, 
+            LazySvc<IPlatformAppInstaller> platformAppInstaller,
             LazySvc<ImportFromRemote> impFromRemoteLazy,
             ResponseMaker<THttpResponseType> responseMaker,
             LazySvc<IFeaturesService> featureService,
@@ -49,6 +50,7 @@ namespace ToSic.Sxc.WebApi.Sys
             ConnectServices(
                 _context = context,
                 _envInstallerLazy = envInstallerLazy,
+                _platformAppInstaller = platformAppInstaller,
                 _impFromRemoteLazy = impFromRemoteLazy,
                 _responseMaker = responseMaker,
                 _featureService = featureService,
@@ -73,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Sys
         {
             // Get Remote Install URL
             var site = _context.Value.Site;
-            var url = _envInstallerLazy.Value
+            var url = _platformAppInstaller.Value
                 .GetAutoInstallPackagesUiUrl(site, module, isContentApp);
 
             // Get list of already installed Apps

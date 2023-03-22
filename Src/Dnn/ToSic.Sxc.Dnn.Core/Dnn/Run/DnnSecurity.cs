@@ -5,25 +5,33 @@ using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using DotNetNuke.Security.Roles;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Context.Raw;
 
 namespace ToSic.Sxc.Dnn.Run
 {
-    public static class DnnSecurity
+    public class DnnSecurity : ServiceBase
     {
+        private readonly LazySvc<RoleController> _roleController;
+
+        public DnnSecurity(LazySvc<RoleController> roleController) : base("dnnSec")
+        {
+            ConnectServices(
+                _roleController = roleController
+            );
+        }
+
         /// <summary>
         /// Returns true if a DotNetNuke User Group "2sxc Designers" exists
         /// </summary>
         /// <param name="portalId"></param>
         /// <returns></returns>
-        public static bool PortalHasDesignersGroup(int portalId)
-            => PortalHasGroup(portalId, Settings.DnnGroupSxcDesigners);
+        internal bool PortalHasDesignersGroup(int portalId) => PortalHasGroup(portalId, DnnSxcSettings.DnnGroupSxcDesigners);
 
+        internal bool PortalHasGroup(int portalId, string groupName) => _roleController.Value.GetRoleByName(portalId, groupName) != null;
 
-        public static bool PortalHasGroup(int portalId, string groupName)
-            => new RoleController().GetRoleByName(portalId, groupName) != null;
-
-        public static bool IsAnonymous(this UserInfo user) =>
-            user == null || user.UserID == -1;
+        internal bool IsAnonymous(UserInfo user) => user == null || user.UserID == -1;
 
         internal class DnnSiteAdminPermissions
         {
@@ -39,10 +47,10 @@ namespace ToSic.Sxc.Dnn.Run
             }
         }
 
-        internal static DnnSiteAdminPermissions UserMayAdminThis(this UserInfo user)
+        internal DnnSiteAdminPermissions UserMayAdminThis(UserInfo user)
         {
             // Null-Check
-            if (user.IsAnonymous()) return new DnnSiteAdminPermissions(false);
+            if (IsAnonymous(user)) return new DnnSiteAdminPermissions(false);
 
             // Super always AppAdmin
             if (user.IsSuperUser) return new DnnSiteAdminPermissions(true);
@@ -55,30 +63,50 @@ namespace ToSic.Sxc.Dnn.Run
             // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
             if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return new DnnSiteAdminPermissions(false);
 
-            var hasSpecialGroup = PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcDesigners);
+            var hasSpecialGroup = PortalHasGroup(portal.PortalId, DnnSxcSettings.DnnGroupSxcDesigners);
             if (hasSpecialGroup && IsDesigner(user)) return new DnnSiteAdminPermissions(true);
 
-            hasSpecialGroup = hasSpecialGroup || PortalHasGroup(portal.PortalId, Settings.DnnGroupSxcAdmins);
-            if (hasSpecialGroup && user.IsInRole(Settings.DnnGroupSxcAdmins)) return new DnnSiteAdminPermissions(true);
+            hasSpecialGroup = hasSpecialGroup || PortalHasGroup(portal.PortalId, DnnSxcSettings.DnnGroupSxcAdmins);
+            if (hasSpecialGroup && user.IsInRole(DnnSxcSettings.DnnGroupSxcAdmins)) return new DnnSiteAdminPermissions(true);
 
             // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
             return new DnnSiteAdminPermissions(true, !hasSpecialGroup);
         }
 
-        public static bool IsDesigner(this UserInfo user) =>
-            !user.IsAnonymous() && user.IsInRole(Settings.DnnGroupSxcDesigners);
+        internal bool IsDesigner(UserInfo user) => !IsAnonymous(user) && user.IsInRole(DnnSxcSettings.DnnGroupSxcDesigners);
 
-        public static List<int> RoleList(this UserInfo user, int? portalId = null) =>
-            user.IsAnonymous() ? new List<int>() : user.Roles
+        internal List<int> RoleList(UserInfo user, int? portalId = null) =>
+            IsAnonymous(user) ? new List<int>() : user.Roles
                 .Select(r => RoleController.Instance.GetRoleByName(portalId ?? user.PortalID, r))
                 .Where(r => r != null)
                 .Select(r => r.RoleID)
                 .ToList();
 
-        public static Guid UserGuid(this UserInfo user) =>
-            Membership.GetUser(user.Username)?.ProviderUserKey as Guid? ?? Guid.Empty;
+        internal Guid UserGuid(UserInfo user) => Membership.GetUser(user.Username)?.ProviderUserKey as Guid? ?? Guid.Empty;
 
-        public static string UserIdentityToken(this UserInfo user) => 
-            user.IsAnonymous() ? Constants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
+        internal string UserIdentityToken(UserInfo user) => IsAnonymous(user) ? Constants.Anonymous : DnnConstants.UserTokenPrefix + user.UserID;
+
+        internal CmsUserRaw CmsUserBuilder(UserInfo user, int siteId)
+        {
+            var adminInfo = UserMayAdminThis(user);
+            return new CmsUserRaw
+            {
+                Id = user.UserID,
+                Guid = UserGuid(user),
+                NameId = UserIdentityToken(user),
+                Roles = RoleList(user, portalId: siteId),
+                IsSystemAdmin = user.IsSuperUser,
+                IsSiteAdmin = adminInfo.IsSiteAdmin,
+                IsContentAdmin = adminInfo.IsContentAdmin,
+                //IsDesigner = user.IsDesigner(),
+                IsAnonymous = IsAnonymous(user),
+                Created = user.CreatedOnDate,
+                Modified = user.LastModifiedOnDate,
+                //
+                Username = user.Username,
+                Email = user.Email,
+                Name = user.DisplayName
+            };
+        }
     }
 }

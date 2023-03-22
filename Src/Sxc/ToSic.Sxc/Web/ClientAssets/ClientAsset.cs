@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Web
         public string Url { get; set; }
         public int Priority {get; set; }
         public string PosInPage { get; set; } = "body";
-        public bool AutoOpt { get; set; } = false;
+        //public bool AutoOpt { get; set; } = false;
 
         public bool IsExternal { get; set; } = true;
         public string Content { get; set; } = null;

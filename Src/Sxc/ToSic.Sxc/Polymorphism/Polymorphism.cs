@@ -45,28 +45,28 @@ namespace ToSic.Sxc.Polymorphism
             if (parts.Length > 0) Parameters = parts[1];
         }
 
-        public string Edition()
+        public string Edition() => Log.Func(() =>
         {
-            var wrapLog = Log.Fn<string>();
             try
             {
-                if (string.IsNullOrEmpty(Resolver)) return wrapLog.ReturnNull("no resolver");
+                if (string.IsNullOrEmpty(Resolver)) return (null, "no resolver");
 
-                var rInfo = Cache.FirstOrDefault(r => r.Name.Equals(Resolver, StringComparison.InvariantCultureIgnoreCase));
+                var rInfo = Cache.FirstOrDefault(r =>
+                    r.Name.Equals(Resolver, StringComparison.InvariantCultureIgnoreCase));
                 if (rInfo == null)
-                    return wrapLog.ReturnNull("resolver not found");
+                    return (null, "resolver not found");
                 Log.A($"resolver for {Resolver} found");
                 var editionResolver = (IResolver)_serviceProvider.GetService(rInfo.Type);
                 var result = editionResolver.Edition(Parameters, Log);
 
-                return wrapLog.Return(result);
+                return (result, "ok");
             }
             // We don't expect errors - but such a simple helper just shouldn't be able to throw errors
             catch
             {
-                return wrapLog.ReturnNull("error");
+                return (null, "error");
             }
-        }
+        });
 
         private static List<ResolverInfo> Cache { get; } = AssemblyHandling
             .FindInherited(typeof(IResolver))

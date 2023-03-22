@@ -165,7 +165,8 @@ namespace ToSic.Sxc.Services
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
         /// History:
-        /// - Added in 2sxc 13.03
+        /// * Added in v13.03
+        /// * `picClass` added in v15.04
         /// </remarks>
         IResponsivePicture Picture(
             object link = null,
@@ -267,7 +268,7 @@ namespace ToSic.Sxc.Services
         /// Optional `alt` attribute which is only used if the `imgAlt` or the alt-text in the metadata are empty.
         /// _new in v15_
         /// </param>
-        /// <param name="imgClass">`class` attribute on the created `img` tag</param>
+        /// <param name="imgClass">Optional `class` attribute on the created `img` tag</param>
         /// <param name="recipe">
         ///     Optional recipe = instructions how to create the various variants of this link.
         ///     Can be any one of these:
@@ -279,7 +280,8 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <returns>A ResponsiveImage object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
-        /// History: Added in 2sxc 13.03
+        /// * Added in v13.03
+        /// * `picClass` added in v15.04
         /// </remarks>
         IResponsiveImage ImgOrPic(
             object link = null,

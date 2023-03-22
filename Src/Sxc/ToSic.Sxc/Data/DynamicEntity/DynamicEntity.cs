@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, DynamicEntityServices services): base(services)
+        public DynamicEntity(IEntity entity, MyServices services): base(services)
         {
             SetEntity(entity);
 
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Data
             _ListHelper = new DynamicEntityListHelper(this, () => Debug, services);
         }
 
-        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, DynamicEntityServices services): base(services)
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, MyServices services): base(services)
         {
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             SetEntity(list.FirstOrDefault() ?? PlaceHolder(appIdOrNull, parent, field));
@@ -67,7 +67,8 @@ namespace ToSic.Sxc.Data
         public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false).Value;
         private bool? _isDemoItem;
 
-        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataBuilderInternal.DefaultEntityId) == DataBuilderInternal.DefaultEntityId).Value;
+        [PrivateApi("Not in use yet, and I believe not communicated")]
+        public bool IsFake => _isFake ?? (_isFake = (Entity?.EntityId ?? DataConstants.DataFactoryDefaultEntityId) == DataConstants.DataFactoryDefaultEntityId).Value;
         private bool? _isFake;
     }
 }

@@ -47,7 +47,7 @@ namespace ToSic.Sxc.WebApi.Save
 
             // The internal call which will be used further down
             var appIdentity = _appStates.IdentityOfApp(appId);
-            var groupList = _contentGroupList.Init(appIdentity, Context.UserMayEdit);
+            var groupList = _contentGroupList.Init(appIdentity/*, Context.UserMayEdit*/);
 
             Dictionary<Guid, int> SaveAndSaveGroupsInnerCall(Func<bool, Dictionary<Guid, int>> call,
                 bool forceSaveAsDraft)

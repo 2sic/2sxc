@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Utils;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageService;
+using static System.StringComparer;
 
 namespace ToSic.Sxc.Blocks.Output
 {
@@ -26,27 +27,10 @@ namespace ToSic.Sxc.Blocks.Output
 
         #region Settings
 
-        /// <summary>
-        /// Priority of a CSS - will be used for sorting when added to page
-        /// </summary>
-        protected int CssDefaultPriority = 99;
-
-        /// <summary>
-        /// Priority of a CSS - will be used for sorting when added to page
-        /// </summary>
-        protected int JsDefaultPriority = 100;
-
-        /// <summary>
-        /// Extract only script tags which are marked for extraction
-        /// </summary>
-        public bool ExtractOnlyEnableOptimization = true;
-
-        /// <summary>
-        /// List of special attributes like "src", "id", "data-enableoptimizations"
-        /// that we need to skip from adding in general HtmlAttributes dictionary
-        /// because this special attributes are handled in custom way.
-        /// </summary>
-        private static readonly List<string> SkipHtmlAttributes = new List<string> { "src", "id", PageService.AssetOptimizationsAttributeName, CspConstants.CspWhitelistAttribute };
+        protected virtual ClientAssetsExtractSettings Settings => _settings.Get(() => new ClientAssetsExtractSettings(
+            extractAll: false
+        ));
+        private readonly GetOnce<ClientAssetsExtractSettings> _settings = new GetOnce<ClientAssetsExtractSettings>();
 
         #endregion
 
@@ -55,20 +39,21 @@ namespace ToSic.Sxc.Blocks.Output
         /// </summary>
         protected List<IClientAsset> Assets { get; private set; }
 
+        public RenderEngineResult Process(string html) => Process(html, Settings);
+
         /// <summary>
         /// Run the sequence to extract assets
         /// </summary>
-        /// <param name="renderedTemplate"></param>
         /// <returns></returns>
-        public RenderEngineResult Process(string renderedTemplate)
+        public RenderEngineResult Process(string html, ClientAssetsExtractSettings settings)
         {
             // Pre-Flush Assets, so each call gets its own list
             Assets = new List<IClientAsset>();
-            var (template, include2SxcJs) = ExtractFromHtml(renderedTemplate);
+            var (template, include2SxcJs) = ExtractFromHtml(html, settings);
             return new RenderEngineResult(template, include2SxcJs, Assets);
         }
 
-        protected abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string renderedTemplate);
+        protected abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings);
 
 
 
@@ -82,18 +67,18 @@ namespace ToSic.Sxc.Blocks.Output
         {
             if (string.IsNullOrWhiteSpace(htmlTag)) return (null, null);
 
-            var attributesMatch = RegexUtil.AttributesDetection.Matches(htmlTag);
+            var attributesMatch = RegexUtil.AttributesDetection.Value.Matches(htmlTag);
 
             if (attributesMatch.Count == 0) return (null, null);
 
-            var attributes = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            var attributes = new Dictionary<string, string>(InvariantCultureIgnoreCase);
             foreach (Match attributeMatch in attributesMatch)
             {
                 if (!attributeMatch.Success) continue;
                 var key = attributeMatch.Groups["Key"]?.Value.ToLowerInvariant();
 
                 // skip special attributes like "src", "id", "data-enableoptimizations"
-                if (string.IsNullOrEmpty(key) || SkipHtmlAttributes.Contains(key, StringComparer.InvariantCultureIgnoreCase)) continue;
+                if (string.IsNullOrEmpty(key) || ClientAssetConstants.SpecialHtmlAttributes.Contains(key, InvariantCultureIgnoreCase)) continue;
 
                 var value = attributeMatch.Groups["Value"]?.Value;
 

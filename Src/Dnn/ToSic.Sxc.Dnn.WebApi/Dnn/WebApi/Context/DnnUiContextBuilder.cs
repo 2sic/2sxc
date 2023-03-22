@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
         private readonly RemoteRouterLink _remoteRouterLink;
         private readonly PortalSettings _portal = PortalSettings.Current;
 
-        private ModuleInfo Module => (_ctxResolver.BlockOrNull()?.Module as DnnModule)?.GetContents();
+        private ModuleInfo Module => (_ctxResolver.BlockContextOrNull()?.Module as DnnModule)?.GetContents();
 
         public DnnUiContextBuilder(IContextResolver ctxResolver, RemoteRouterLink remoteRouterLink, MyServices deps) : base(deps)
         {
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
             try
             {
                 var roots = DnnJsApi.GetApiRoots();
-                appDto.Api = roots.Item2;
+                appDto.Api = roots.AppApiRoot;
             } catch { /* ignore */ }
             return appDto;
         }

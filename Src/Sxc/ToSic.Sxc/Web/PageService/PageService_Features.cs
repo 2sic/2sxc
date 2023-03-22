@@ -3,13 +3,19 @@ using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web.PageFeatures;
-using static ToSic.Eav.Configuration.ConfigurationConstants;
+using ToSic.Sxc.Web.WebResources;
+using static ToSic.Sxc.Web.WebResources.WebResourceConstants;
 
 namespace ToSic.Sxc.Web.PageService
 {
     public partial class PageService
     {
+        public void TestCdn(string cdnSource)
+        {
+            _overrideCdnSource = cdnSource;
+        }
+        private string _overrideCdnSource;
+
         /// <inheritdoc />
         public string Activate(params string[] keys) => Log.Func(() =>
         {
@@ -50,31 +56,37 @@ namespace ToSic.Sxc.Web.PageService
 
         private string[] AddManualResources(string[] keys)
         {
-            var wrapLog = Log.Fn<string[]>();
+            var l = Log.Fn<string[]>();
             var keysToRemove = new List<string>();
+            var processor = new WebResourceProcessor(_features.Value, _overrideCdnSource ?? CdnSource, Log);
             foreach (var key in keys)
             {
-                Log.A($"Key: {key}");
-                if (!(WebResources.Get(key) is DynamicEntity resConfig)) continue; // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
+                l.A($"Key: {key}");
+                if (!(WebResources.Get(key) is DynamicEntity webRes)) continue; // special problem: DynamicEntity null-compare isn't quite right, don't! use ==
 
-                var enabled = resConfig.Get(WebResourceEnabledField) as bool?;
-                if (enabled == false) continue;
-
-                if (!(resConfig.Get(WebResourceHtmlField) is string html)) continue;
-
-                Log.A("Found html and everything, will register");
-                // all ok so far
+                // Found - make sure we remove the key, no matter what decisions are made below
                 keysToRemove.Add(key);
-                PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(new PageFeatureFromSettings(key, "", "", html: html));
+
+                var pageFeature = processor.Process(key, webRes);
+                if (pageFeature == null) continue;
+
+                l.A("Found html and everything, will register");
+                // all ok so far
+                PageServiceShared.PageFeatures.FeaturesFromSettingsAdd(pageFeature);
             }
 
             // drop keys which were already taken care of
             keys = keys.Where(k => !keysToRemove.Contains(k)).ToArray();
-            return wrapLog.Return(keys);
+            return l.Return(keys);
         }
 
-        private DynamicEntity WebResources => _webResources.Get(() => (_DynCodeRoot?.Settings as DynamicStack)?.Get(WebResourcesNode) as DynamicEntity);
+        private string CdnSource => _cdnSource.Get(() => WebResources.Get<string>(CdnSourcePublicField));
+        private readonly GetOnce<string> _cdnSource = new GetOnce<string>();
+
+        private DynamicEntity WebResources => _webResources.Get(() => Settings?.Get(WebResourcesNode) as DynamicEntity);
         private readonly GetOnce<DynamicEntity> _webResources = new GetOnce<DynamicEntity>();
-        
+
+        private DynamicStack Settings => _settings.Get(() => _DynCodeRoot?.Settings as DynamicStack);
+        private readonly GetOnce<DynamicStack> _settings = new GetOnce<DynamicStack>();
     }
 }

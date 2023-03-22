@@ -7,6 +7,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
@@ -19,6 +20,8 @@ namespace ToSic.Sxc.Apps
 {
 	public class ViewsRuntime: PartOf<CmsRuntime>
     {
+        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
+        private readonly IDataSourceGenerator<EntityTypeFilter> _typeFilterGenerator;
 
         #region Constructor / DI
 
@@ -26,21 +29,21 @@ namespace ToSic.Sxc.Apps
         private readonly IZoneCultureResolver _cultureResolver;
         private readonly IConvertToEavLight _dataToFormatLight;
         private readonly LazySvc<AppIconHelpers> _appIconHelpers;
-        private readonly DataSourceFactory _dataSourceFactory;
 
         public ViewsRuntime(LazySvc<IValueConverter> valConverterLazy,
             IZoneCultureResolver cultureResolver,
             IConvertToEavLight dataToFormatLight,
             LazySvc<AppIconHelpers> appIconHelpers,
-            DataSourceFactory dataSourceFactory
-            ) : base("Cms.ViewRd")
+            LazySvc<QueryDefinitionBuilder> qDefBuilder,
+            IDataSourceGenerator<EntityTypeFilter> typeFilterGenerator) : base("Cms.ViewRd")
         {
             ConnectServices(
                 _valConverterLazy = valConverterLazy,
                 _cultureResolver = cultureResolver,
                 _dataToFormatLight = dataToFormatLight,
                 _appIconHelpers = appIconHelpers,
-                _dataSourceFactory = dataSourceFactory
+                _typeFilterGenerator = typeFilterGenerator,
+                _qDefBuilder = qDefBuilder
             );
         }
 
@@ -48,19 +51,18 @@ namespace ToSic.Sxc.Apps
 
         private IDataSource _viewDs;
 		private IDataSource ViewsDataSource()
-		{
-            if(_viewDs!= null)return _viewDs;
+        {
+            if (_viewDs != null) return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = Parent.Data;
-			var typeFilter = _dataSourceFactory.GetDataSource<EntityTypeFilter>(dataSource);
+			var typeFilter = _typeFilterGenerator.New(source: dataSource);
 		    typeFilter.TypeName = Eav.Apps.Configuration.TemplateContentType;
-		    _viewDs = typeFilter;
-            return typeFilter;
+		    return _viewDs = typeFilter;
 		}
 
         public IEnumerable<IView> GetAll() 
             => _all ?? (_all = ViewsDataSource().List
-                   .Select(p => new View(p, _cultureResolver.CurrentCultureCode, Log))
+                   .Select(p => new View(p, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder))
                    .OrderBy(p => p.Name));
         private IEnumerable<IView> _all;
 
@@ -75,7 +77,7 @@ namespace ToSic.Sxc.Apps
             if(templateEntity == null)
 				throw new Exception("The template with id " + templateId + " does not exist.");
 
-			return new View(templateEntity, _cultureResolver.CurrentCultureCode, Log);
+			return new View(templateEntity, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder);
 		}
 
         public IView Get(Guid guid)
@@ -85,7 +87,7 @@ namespace ToSic.Sxc.Apps
             if (templateEntity == null)
                 throw new Exception("The template with id " + guid + " does not exist.");
 
-            return new View(templateEntity, _cultureResolver.CurrentCultureCode, Log);
+            return new View(templateEntity, new[] { _cultureResolver.CurrentCultureCode }, Log, _qDefBuilder);
         }
 
 

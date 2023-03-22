@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Lib;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
@@ -19,7 +19,12 @@ namespace ToSic.Sxc.Images
         }
 
 
-        public Picture Picture => _picTag.Get(() => Razor.Blade.Tag.Picture(Sources, Img));
+        public Picture Picture => _picTag.Get(() =>
+        {
+            var pic = Razor.Blade.Tag.Picture(Sources, Img);
+            if (Call.PicClass.HasValue()) pic = pic.Class(Call.PicClass);
+            return pic;
+        });
         private readonly GetOnce<Picture> _picTag = new GetOnce<Picture>();
 
         protected override IHtmlTag GetOutermostTag() => Picture;

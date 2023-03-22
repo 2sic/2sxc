@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Razor
 
         #region Constructor / DI
 
-        public RazorEngine(EngineBaseServices helpers, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(helpers)
+        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(services)
         {
             ConnectServices(
                 _dynCodeRootLazy = dynCodeRootLazy,
@@ -32,15 +32,14 @@ namespace ToSic.Sxc.Razor
         }
         
         #endregion
-        
+
         /// <inheritdoc/>
-        protected override string RenderTemplate()
+        protected override string RenderTemplate() => Log.Func(() =>
         {
-            var wrapCall = Log.Fn<string>();
             var task = RenderTask();
             task.Wait();
-            return wrapCall.Return(task.Result.ToString());
-        }
+            return (task.Result.ToString(), "ok");
+        });
 
         [PrivateApi]
         public async Task<TextWriter> RenderTask()

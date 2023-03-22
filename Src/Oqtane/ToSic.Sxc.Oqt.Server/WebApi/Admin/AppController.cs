@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using ToSic.Eav.WebApi.Adam;
+using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = RoleNames.Admin)]
-        public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
+        public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
             => Real.GetStack(appId, part, key, view);
 
         /// <inheritdoc />
@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
         public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false) 
-            => Real.Reset(zoneId, appId, GetContext().Site.DefaultCultureCode, withPortalFiles);
+            => Real.Reset(zoneId, appId, BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
 
         /// <inheritdoc />
         [HttpPost]

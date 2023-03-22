@@ -19,15 +19,14 @@ namespace ToSic.Sxc.Polymorphism
             _pageCss = pageCss;
         }
 
-        public string Edition(string parameters, ILog log)
+        public string Edition(string parameters, ILog log) => log.Func(() =>
         {
-            var wrapLog = log.Fn<string>(parameters);
-            if (!string.Equals(parameters, ModeCssFramework, InvariantCultureIgnoreCase)) 
-                return wrapLog.ReturnNull("unknown param");
+            if (!string.Equals(parameters, ModeCssFramework, InvariantCultureIgnoreCase))
+                return (null, "unknown param");
             // Note: this is still using the global object which we want to get rid of
             // But to use DI, we must refactor Polymorphism
             var cssFramework = _pageCss.Framework; // Connect.Koi.Koi.Css;
-            return wrapLog.Return(cssFramework, cssFramework);
-        }
+            return (cssFramework, cssFramework);
+        });
     }
 }

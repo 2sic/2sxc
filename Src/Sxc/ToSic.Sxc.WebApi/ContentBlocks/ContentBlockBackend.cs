@@ -13,7 +13,7 @@ using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Edit;
+using ToSic.Sxc.Web.ClientAssets;
 using ToSic.Sxc.Web.PageFeatures;
 using ToSic.Sxc.Web.Url;
 using ToSic.Sxc.WebApi.InPage;
@@ -82,14 +82,14 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
         {
             Log.A($"try to publish #{index} on '{part}'");
             ThrowIfNotAllowedInApp(GrantSets.WritePublished);
-            return _blockEditorSelectorLazy.Value.GetEditor(Block) /*BlockEditorBase.GetEditor(Block, _blkEdtForMod, _blkEdtForEnt)*/.Publish(part, index);
+            return _blockEditorSelectorLazy.Value.GetEditor(Block).Publish(part, index);
         }
 
-        public AjaxRenderDto RenderV2(int templateId, string lang, string root)
+        public AjaxRenderDto RenderForAjax(int templateId, string lang, string root, string edition)
         {
             var wrapLog = Log.Fn<AjaxRenderDto>();
             Log.A("1. Get Render result");
-            var result = RenderToResult(templateId, lang);
+            var result = RenderToResult(templateId, lang, edition);
 
             Log.A("2.1. Build Resources");
             var resources = new List<AjaxResourceDtoWIP>();
@@ -111,12 +111,9 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             Log.A("3. Add manual resources (fancybox etc.)");
             // First get all the parts out of HTML, as the configuration is still stored as plain HTML
             var mergedFeatures  = string.Join("\n", result.FeaturesFromSettings.Select(mc => mc.Html));
-            var optimizer = _optimizer.Value;
-            if(optimizer is BlockResourceExtractor withInternal)
-                withInternal.ExtractOnlyEnableOptimization = false;
 
             Log.A("4.1. Process optimizers");
-            var renderResult = optimizer.Process(mergedFeatures);
+            var renderResult = _optimizer.Value.Process(mergedFeatures, new ClientAssetsExtractSettings(extractAll: true));
             var rest = renderResult.Html;
             if (!string.IsNullOrWhiteSpace(rest)) 
                 Log.A("Warning: Rest after extraction should be empty - not handled ATM");
@@ -136,7 +133,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             });
         }
 
-        private IRenderResult RenderToResult(int templateId, string lang)
+        private IRenderResult RenderToResult(int templateId, string lang, string edition)
         {
             var callLog = Log.Fn<IRenderResult>($"{nameof(templateId)}:{templateId}, {nameof(lang)}:{lang}");
             //SetThreadCulture(lang);
@@ -145,6 +142,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             if (templateId > 0)
             {
                 var template = CmsManagerOfBlock.Read.Views.Get(templateId);
+                template.Edition = edition;
                 Block.View = template;
             }
 

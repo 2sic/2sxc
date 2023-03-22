@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.Core.Tests;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Persistence.File;
 using ToSic.Eav.Run;
 using ToSic.Razor.Blade;
@@ -30,9 +32,9 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             var app = appStates.GetPresetOrNull();
             TstDataContentType = app.GetContentType("TstData");
             if (TstDataContentType == null) throw new Exception("TstData content type not found. Probably JSON is missing.");
-            DynamicEntityServices = GetService<DynamicEntityServices>();
+            DynamicEntityServices = GetService<DynamicEntity.MyServices>();
         }
-        public readonly DynamicEntityServices DynamicEntityServices;
+        public readonly DynamicEntity.MyServices DynamicEntityServices;
         public readonly IContentType TstDataContentType;
 
         protected override void SetupServices(IServiceCollection services)
@@ -43,14 +45,14 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
         }
 
 
-        public static IEntity TstDataEntity(string text = "", string html = "", IContentType contentType = null)
+        public IEntity TstDataEntity(string text = "", string html = "", IContentType contentType = null)
         {
             var values = new Dictionary<string, object>()
             {
                 {SomeTextField, text},
                 {SomeHtmlField, html}
             };
-            return new Entity(AppId, 1, contentType, values, SomeTextField);
+            return GetService<EntityBuilder>().TestCreate(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
         }
 
         public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityServices);

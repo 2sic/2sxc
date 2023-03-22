@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.DataSources
     public class SiteDataRaw: IRawEntity
     {
         internal static string TypeName = "Site";
-        internal static string TitleFieldName = nameof(Name);
+        internal static DataFactoryOptions Options => new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name), autoId: false);
 
         /// <summary>
         /// The site ID.
@@ -116,7 +117,7 @@ namespace ToSic.Sxc.DataSources
         /// <summary>
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
-        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
+        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
             { nameof(Url), Url },

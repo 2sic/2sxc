@@ -25,13 +25,15 @@ namespace ToSic.Sxc.WebApi.Cms
 
         public dynamic Usage(int appId, Guid guid)
         {
-            var context = _ctxResolver.BlockOrApp(appId);
+            var context = _ctxResolver.GetBlockOrSetApp(appId);
             var permCheck = _appPermissions.New().Init(context, context.AppState);
             if (!permCheck.EnsureAll(GrantSets.ReadSomething, out var error))
                 throw HttpException.PermissionDenied(error);
 
             var item = context.AppState.List.One(guid);
-            var relationships = item.Relationships.AllRelationships;
+            // Note: this isn't proper yet, it's all relationships in the app, not just of this entity
+            //var relationships = item.Relationships.AllRelationships;
+
             // var result = relationships.Select(r => new EntityInRelationDto(r.))
             // todo: don't forget Metadata relationships
             return null;

@@ -4,41 +4,42 @@ using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.DataSources.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources
 {
     public sealed partial class CmsBlock
     {
-        private ImmutableArray<IEntity> GetStream(
-            IReadOnlyCollection<IEntity> contentList, 
-            IEntity contentDemoEntity, 
-            IReadOnlyList<IEntity> presentationList, 
-            IEntity presentationDemoEntity, 
-            bool isListHeader)
+        private IImmutableList<IEntity> GetStream(
+            IView view,
+            IReadOnlyCollection<IEntity> items, 
+            IEntity cDemoItem, 
+            IReadOnlyList<IEntity> presList, 
+            IEntity pDemoItem, 
+            bool isListHeader
+        ) => Log.Func($"content⋮{items.Count}, demo#{cDemoItem?.EntityId}, present⋮{presList?.Count}, presDemo#{pDemoItem?.EntityId}, header:{isListHeader}", l =>
         {
-            Log.A($"get stream content⋮{contentList.Count}, demo#{contentDemoEntity?.EntityId}, present⋮{presentationList?.Count}, presDemo#{presentationDemoEntity?.EntityId}, header:{isListHeader}");
+            
             try
             {
                 // if no template is defined, return empty list
-                if (BlockConfiguration.View == null && OverrideView == null)
-                {
-                    Log.A("no template definition - will return empty list");
-                    return ImmutableArray<IEntity>.Empty;
-                }
+                if (view == null)
+                    return (EmptyList, "no template definition - empty list");
 
                 // Create copy of list (not in cache) because it will get modified
-                var contentEntities = contentList.ToList();
+                var contentEntities = items.ToList();
 
                 // If no Content Elements exist and type is content (means, presentationList is not null), add an empty entity (demo entry will be taken for this)
-                if (contentList.Count == 0 && presentationList != null)
+                if (items.Count == 0 && presList != null)
                 {
-                    Log.A("empty list, will add a null-item");
+                    l.A("empty list, will add a null-item");
                     contentEntities.Add(null);
                 }
 
                 var entitiesToDeliver = new List<IEntity>();
-                var originals = GetInStream();
+                var originals = GetInOrAutoCreate();
                 int i = 0, entityId = 0, prevIdForErrorReporting = 0;
                 try
                 {
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.DataSources
                         // so try revert back to the demo-item (assuming it exists...)
                         if (contentEntity == null || !originals.Has(contentEntity.EntityId))
                         {
-                            contentEntity = contentDemoEntity;
+                            contentEntity = cDemoItem;
                             isDemoItem = true;  // mark demo-items for demo-item detection in template #1792
                         }
 
@@ -66,23 +67,14 @@ namespace ToSic.Sxc.DataSources
                         // use demo-entities where available
                         entityId = contentEntity.EntityId;
 
-                        var presentationEntity = GetPresentationEntity(originals, presentationList, i, /*presentationDemoEntity,*/ entityId)
-                            ?? presentationDemoEntity;
+                        var presentationEntity = GetPresentationEntity(originals, presList, i, entityId)
+                            ?? pDemoItem;
 
                         try
                         {
                             var itm = originals.One(entityId);
                             entitiesToDeliver.Add(
-                                EntityInBlockDecorator.Wrap(itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem)
-                            //{
-                            //    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
-                            //    //#if NETFRAMEWORK
-                            //    // actually unclear if this is ever used, maybe for automatic serialization?
-                            //    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
-                            //    //GroupId = BlockConfiguration.Guid,
-                            //    //#endif
-                            //}
-                            );
+                                EntityInBlockDecorator.Wrap(itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem));
                         }
                         catch (Exception ex)
                         {
@@ -96,30 +88,26 @@ namespace ToSic.Sxc.DataSources
                     throw new Exception("problems looping items - had to stop on id " + i + "; current entity is " + entityId + "; prev is " + prevIdForErrorReporting, ex);
                 }
 
-                Log.A($"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
-                return entitiesToDeliver.ToImmutableArray();
+                return (entitiesToDeliver.ToImmutableList(), $"stream:{(isListHeader ? "list" : "content")} - items⋮{entitiesToDeliver.Count}");
             }
             catch (Exception ex)
             {
                 throw new Exception("Error loading items of a module - probably the module-id is incorrect - happens a lot with test-values on visual queries.", ex);
             }
-        }
+        });
 
-        private ImmutableList<IEntity> GetInStream()
+        private ImmutableList<IEntity> GetInOrAutoCreate() => Log.Func(l =>
         {
-            var callLog = Log.Fn<ImmutableList<IEntity>>();
-            
             // Check if in not connected, in which case we must find it yourself
-            if (!In.ContainsKey(Eav.Constants.DefaultStreamName))
+            if (!In.ContainsKey(StreamDefaultName))
             {
-                var showDrafts = Block?.Context?.UserMayEdit ?? false;
-                Log.A($"In not attached, will auto-attach with showDrafts: {showDrafts}");
-                var publishing = _services.DataSourceFactory.Value.GetPublishing(this, showDrafts, Configuration.LookUpEngine);
+                l.A("In not attached, will auto-attach");
+                var publishing = _services.DataSourceFactory.Value.CreateDefault(appIdentity: this, configuration: Configuration.LookUpEngine);
                 Attach(publishing);
             }
 
-            return callLog.Return(In[Eav.Constants.DefaultStreamName].List.ToImmutableList());
-        }
+            return (In[StreamDefaultName].List.ToImmutableList(), "ok");
+        });
 
         private static IEntity GetPresentationEntity(IReadOnlyCollection<IEntity> originals, IReadOnlyList<IEntity> presItems, int itemIndex, int entityId)
         {

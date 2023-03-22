@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Blocks.Edit
 {
     public class BlockEditorForEntity : BlockEditorBase
     {
-        public BlockEditorForEntity(BlockEditorBaseServices services, LazySvc<CmsManager> parentCmsManager, IAppStates appStates) 
+        public BlockEditorForEntity(MyServices services, LazySvc<CmsManager> parentCmsManager, IAppStates appStates) 
             : base(services)
         {
             ConnectServices(

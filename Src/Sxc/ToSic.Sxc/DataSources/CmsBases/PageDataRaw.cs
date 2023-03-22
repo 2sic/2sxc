@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Lib.Documentation;
 
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.DataSources
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public class PageDataRaw: IRawEntity
     {
-        public const string TypeName = "Page";
+        public static DataFactoryOptions Option = new DataFactoryOptions(typeName: "Page", titleField: nameof(Name));
 
         /// <summary>
         /// The page ID.
@@ -183,10 +184,10 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> GetProperties(CreateRawOptions options) => new Dictionary<string, object>
+        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             // v14+
-            { Attributes.TitleNiceName, Title },
+            { Eav.Data.Attributes.TitleNiceName, Title },
             { nameof(Name), Name },
             { nameof(ParentId), ParentId },
             { nameof(Visible), Visible },

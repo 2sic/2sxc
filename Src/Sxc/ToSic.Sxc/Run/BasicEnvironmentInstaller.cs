@@ -8,7 +8,7 @@ using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Run
 {
-    public class BasicEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IIsUnknown
+    public class BasicEnvironmentInstaller: ServiceBase, IEnvironmentInstaller, IIsUnknown, IPlatformAppInstaller
     {
         public BasicEnvironmentInstaller(WarnUseOfUnknown<BasicEnvironmentInstaller> _) : base($"{LogScopes.NotImplemented}.Instll")
         {

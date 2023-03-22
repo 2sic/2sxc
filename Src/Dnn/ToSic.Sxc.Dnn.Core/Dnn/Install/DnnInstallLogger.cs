@@ -1,8 +1,10 @@
-﻿using System;
+﻿using CsvHelper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Web.Hosting;
+using static System.IO.Directory;
 
 namespace ToSic.Sxc.Dnn.Install
 {
@@ -10,37 +12,49 @@ namespace ToSic.Sxc.Dnn.Install
     {
         private readonly bool _saveUnimportantDetails;
 
-        private StreamWriter _fileStreamWriter;
-        private StreamWriter FileStreamWriter => _fileStreamWriter ?? OpenLogFiles();
-
         public DnnInstallLogger()
         {
             _saveUnimportantDetails = DnnEnvironmentInstaller.SaveUnimportantDetails;
         }
 
-        // 2022-02-03 2dm seems unused
-        // todo: verify it's not needed, or make sure it's used where necessary
-        internal void CloseLogFiles() => FileStreamWriter.BaseStream.Close();
-
-        private static string GenerateNewLogFileName()
+        internal void CloseLogFiles()
         {
-            var renamedLockFilePath =
-                HostingEnvironment.MapPath(DnnConstants.LogDirectory +
-                                           DateTime.UtcNow.ToString(@"yyyy-MM-dd HH-mm-ss-fffffff") + "-" + System.Diagnostics.Process.GetCurrentProcess().Id + "-" + AppDomain.CurrentDomain.Id + ".log.resources");
-            return renamedLockFilePath;
+            if (_fileStreamWriterCached == null) return;
+
+            _fileStreamWriterCached.Close();
+            _fileStreamWriterCached.Dispose();
+            _fileStreamWriterCached = null;
         }
+
+        private StreamWriter FileStreamWriter => _fileStreamWriterCached ?? (_fileStreamWriterCached = OpenLogFiles());
+        private StreamWriter _fileStreamWriterCached;
 
 
         internal StreamWriter OpenLogFiles()
         {
             EnsureLogDirectoryExists();
 
-            if (_fileStreamWriter == null)
+            var logFileName = HostingEnvironment.MapPath(DnnConstants.LogDirectory +
+                                       DateTime.UtcNow.ToString(@"yyyy-MM-dd HH-mm-ss-fffffff")
+                                       + "-" + System.Diagnostics.Process.GetCurrentProcess().Id
+                                       + "-" + AppDomain.CurrentDomain.Id + ".log.resources");
+
+            StreamWriter streamWriter = null;
+            try
             {
-                var fileHandle = new FileStream(GenerateNewLogFileName(), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
-                _fileStreamWriter = new StreamWriter(fileHandle);
+                var fileHandle = new FileStream(logFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                    FileShare.Read);
+                streamWriter = new StreamWriter(fileHandle);
             }
-            return _fileStreamWriter;
+            catch (Exception)
+            {
+                if (streamWriter != null)
+                {
+                    streamWriter.Close();
+                    streamWriter.Dispose();
+                }
+            }
+            return streamWriter;
         }
 
 
@@ -60,25 +74,22 @@ namespace ToSic.Sxc.Dnn.Install
         }
 
 
-        internal void LogVersionCompletedToPreventRerunningTheUpgrade(string version, bool appendToFile = true)
+        internal void LogVersionCompletedToPreventRerunningTheUpgrade(string version)
         {
             EnsureLogDirectoryExists();
 
             var logFilePath = HostingEnvironment.MapPath(DnnConstants.LogDirectory + version + ".resources");
-            if (appendToFile || !File.Exists(logFilePath))
+            if (!File.Exists(logFilePath))
                 File.AppendAllText(logFilePath, DateTime.UtcNow.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffzzz"), Encoding.UTF8);
         }
 
-        private static void EnsureLogDirectoryExists()
-        {
-            Directory.CreateDirectory(HostingEnvironment.MapPath(DnnConstants.LogDirectory));
-        }
+        private static void EnsureLogDirectoryExists() => CreateDirectory(HostingEnvironment.MapPath(DnnConstants.LogDirectory));
 
         internal void DeleteAllLogFiles()
         {
-            if (Directory.Exists(HostingEnvironment.MapPath(DnnConstants.LogDirectory)))
+            if (Exists(HostingEnvironment.MapPath(DnnConstants.LogDirectory)))
             {
-                var files = new List<string>(Directory.GetFiles(HostingEnvironment.MapPath(DnnConstants.LogDirectory)));
+                var files = new List<string>(GetFiles(HostingEnvironment.MapPath(DnnConstants.LogDirectory)));
                 files.ForEach(x =>
                 {
                     try

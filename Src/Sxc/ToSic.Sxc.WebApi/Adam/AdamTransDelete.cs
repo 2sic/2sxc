@@ -5,7 +5,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransDelete<TFolderId, TFileId> : AdamTransactionBase<AdamTransDelete<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransDelete(AdamServices<TFolderId, TFileId> services) 
+        public AdamTransDelete(MyServices services) 
             : base(services, "Adm.TrnDel") { }
 
         public bool Delete(string parentSubfolder, bool isFolder, TFolderId id, TFileId fileId)

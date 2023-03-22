@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
@@ -7,8 +8,11 @@ namespace ToSic.Sxc.Blocks
 {
     public abstract class ModuleAndBlockBuilder: ServiceBase, IModuleAndBlockBuilder
     {
-        protected ModuleAndBlockBuilder(string logPrefix): base($"{logPrefix}.BnMBld")
+        private readonly Generator<BlockFromModule> _blockGenerator;
+
+        protected ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix): base($"{logPrefix}.BnMBld")
         {
+            _blockGenerator = blockGenerator;
         }
 
         protected abstract IModule GetModuleImplementation(int pageId, int moduleId);
@@ -21,16 +25,22 @@ namespace ToSic.Sxc.Blocks
             throw new Exception(msg);
         }
 
-        public IBlock GetBlock(int pageId, int moduleId)
+        public BlockWithContextProvider GetProvider(int pageId, int moduleId)
         {
-            var wrapLog = Log.Fn<IBlock>($"{pageId}, {moduleId}");
+            var wrapLog = Log.Fn<BlockWithContextProvider>($"{pageId}, {moduleId}");
             var module = GetModuleImplementation(pageId, moduleId);
-            var result = GetBlock(module, pageId);
-            return wrapLog.ReturnAsOk(result);
+            var ctx = GetContextOfBlock(module, pageId);
+            return wrapLog.ReturnAsOk(new BlockWithContextProvider(ctx, () => _blockGenerator.New().Init(ctx)));
         }
 
-        public abstract IBlock GetBlock<TPlatformModule>(TPlatformModule module, int? pageId) where TPlatformModule : class;
+        public BlockWithContextProvider GetProvider<TPlatformModule>(TPlatformModule module, int? page) where TPlatformModule : class
+        {
+            var ctx = GetContextOfBlock(module, page);
+            return new BlockWithContextProvider(ctx, () => _blockGenerator.New().Init(ctx));
+        }
 
-        protected abstract IBlock GetBlock(IModule module, int? pageId);
+        protected abstract IContextOfBlock GetContextOfBlock(IModule module, int? pageId);
+
+        protected abstract IContextOfBlock GetContextOfBlock<TPlatformModule>(TPlatformModule module, int? pageId);
     }
 }

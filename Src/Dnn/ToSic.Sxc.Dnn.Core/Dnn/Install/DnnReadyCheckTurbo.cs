@@ -77,10 +77,10 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         private void EnsureSiteIsConfiguredAndTemplateFolderExists(PortalModuleBase module, IBlock block) => Log.Do(() =>
         {
-            var sexyFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
-            var contentFolder = new DirectoryInfo(Path.Combine(sexyFolder.FullName, Eav.Constants.ContentAppFolder));
-            var webConfigTemplate = new FileInfo(Path.Combine(sexyFolder.FullName, Settings.WebConfigFileName));
-            if (!(sexyFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
+            var sxcFolder = new DirectoryInfo(block.Context.Site.AppsRootPhysicalFull);
+            var contentFolder = new DirectoryInfo(Path.Combine(sxcFolder.FullName, Eav.Constants.ContentAppFolder));
+            var webConfigTemplate = new FileInfo(Path.Combine(sxcFolder.FullName, Constants.WebConfigFileName));
+            if (!(sxcFolder.Exists && webConfigTemplate.Exists && contentFolder.Exists))
             {
                 // configure it
                 var tm = _appFolderInitializerLazy.Value;

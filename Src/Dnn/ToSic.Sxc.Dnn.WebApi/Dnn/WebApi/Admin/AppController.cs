@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using ToSic.Eav.DataSources.Sys;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
@@ -87,7 +88,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null) 
+        public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null) 
             => Real.GetStack(appId, part, key, view);
 
         /// <inheritdoc />

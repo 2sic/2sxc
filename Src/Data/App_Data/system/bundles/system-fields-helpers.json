@@ -11,6 +11,105 @@
             "Description": null,
             "Attributes": [
               {
+                "Name": "VarOverride",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 167710,
+                    "Version": 3,
+                    "Guid": "5996894a-ce5f-4ed7-94c8-e2486b44b5eb",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "false"
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "VarOverride"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "IsEphemeral": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 167711,
+                    "Version": 2,
+                    "Guid": "c36ae328-ccdd-42a9-bfdc-aa6e02359b5c",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Keep fields locked, as you shouldn't edit it here"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "I need to make some manual changes"
+                        }
+                      },
+                      "Boolean": {
+                        "ReverseToggle": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
                 "Name": "Title",
                 "Type": "String",
                 "InputType": "string-default",
@@ -18,7 +117,7 @@
                 "Metadata": [
                   {
                     "Id": 120063,
-                    "Version": 6,
+                    "Version": 7,
                     "Guid": "a5aca5c0-4e4f-41ff-b6f6-61d74d73c2ed",
                     "Type": {
                       "Name": "@All",
@@ -54,6 +153,7 @@
                         },
                         "Formulas": {
                           "*": [
+                            "d04909fa-1c34-4b2f-93cc-b680a3a2b756",
                             "a17611a7-e0d7-4340-a73c-7e0fee146ded"
                           ]
                         },
@@ -122,7 +222,7 @@
                 "Metadata": [
                   {
                     "Id": 120064,
-                    "Version": 15,
+                    "Version": 16,
                     "Guid": "6e0db16d-261c-43d7-a9af-9801d11ccbc0",
                     "Type": {
                       "Name": "@All",
@@ -167,7 +267,7 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "en-us": false
+                          "en-us": true
                         },
                         "DisableTranslation": {
                           "en-us": true
@@ -184,7 +284,7 @@
                   },
                   {
                     "Id": 120067,
-                    "Version": 14,
+                    "Version": 15,
                     "Guid": "1d4a41de-2b2d-4dd3-8c90-10c12d6b76e6",
                     "Type": {
                       "Name": "@String",
@@ -204,7 +304,7 @@
                   },
                   {
                     "Id": 120068,
-                    "Version": 14,
+                    "Version": 15,
                     "Guid": "c3a1471f-4c34-4cad-baf1-325b04f91287",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -230,97 +330,6 @@
                 ]
               },
               {
-                "Name": "Enabled",
-                "Type": "Boolean",
-                "InputType": "boolean-default",
-                "IsTitle": false,
-                "Metadata": [
-                  {
-                    "Id": 130126,
-                    "Version": 3,
-                    "Guid": "afe6ca1e-d1f8-4b2f-8c15-cbfa14fa7da8",
-                    "Type": {
-                      "Name": "@All",
-                      "Id": "@All"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "CustomJavaScript": {
-                          "*": ""
-                        },
-                        "DefaultValue": {
-                          "*": "true"
-                        },
-                        "InputType": {
-                          "*": "boolean-default"
-                        },
-                        "Name": {
-                          "*": "Enabled"
-                        },
-                        "Notes": {
-                          "*": ""
-                        },
-                        "Placeholder": {
-                          "*": ""
-                        },
-                        "ValidationRegExJavaScript": {
-                          "*": ""
-                        }
-                      },
-                      "Entity": {
-                        "Errors": {
-                          "*": []
-                        },
-                        "Formulas": {
-                          "*": []
-                        },
-                        "Warnings": {
-                          "*": []
-                        }
-                      },
-                      "Boolean": {
-                        "Disabled": {
-                          "*": false
-                        },
-                        "DisableTranslation": {
-                          "*": true
-                        },
-                        "Required": {
-                          "*": false
-                        },
-                        "VisibleInEditUI": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 130127,
-                    "Version": 2,
-                    "Guid": "72946d4a-7cdc-45c7-8038-627ed4af792b",
-                    "Type": {
-                      "Name": "@Boolean",
-                      "Id": "@Boolean"
-                    },
-                    "Attributes": {
-                      "String": {
-                        "TitleFalse": {
-                          "*": "Disabled"
-                        },
-                        "TitleIndeterminate": {
-                          "*": ""
-                        },
-                        "TitleTrue": {
-                          "*": "Enabled"
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  }
-                ]
-              },
-              {
                 "Name": "Formula",
                 "Type": "String",
                 "InputType": "string-default",
@@ -328,7 +337,7 @@
                 "Metadata": [
                   {
                     "Id": 120065,
-                    "Version": 15,
+                    "Version": 16,
                     "Guid": "377a1d4e-5131-4ce4-904c-07ac0801fcf2",
                     "Type": {
                       "Name": "@All",
@@ -337,25 +346,25 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": "v1(data, context) { return data.value; }"
+                          "en-us": "v1(data, context) { return data.value; }"
                         },
                         "InputType": {
-                          "*": "string-default"
+                          "en-us": "string-default"
                         },
                         "Name": {
-                          "*": "Formula"
+                          "en-us": "Formula"
                         },
                         "Notes": {
-                          "*": "<p>The formula - starting with v1(data, context) {...}.</p>"
+                          "en-us": "<p>The formula - starting with v1(data, context) {...}.</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -373,16 +382,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": true
                         },
                         "DisableTranslation": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -390,7 +399,7 @@
                   },
                   {
                     "Id": 120069,
-                    "Version": 14,
+                    "Version": 15,
                     "Guid": "17f5e665-ac5a-45d5-bb13-b2633302ef58",
                     "Type": {
                       "Name": "@String",
@@ -399,10 +408,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -410,7 +419,7 @@
                   },
                   {
                     "Id": 120070,
-                    "Version": 14,
+                    "Version": 15,
                     "Guid": "aef05229-76ff-4ae6-955b-4c5adaec58cb",
                     "Type": {
                       "Name": "@string-default",
@@ -419,16 +428,107 @@
                     "Attributes": {
                       "String": {
                         "InputFontFamily": {
-                          "*": "monospace"
+                          "en-us": "monospace"
                         }
                       },
                       "Number": {
                         "RowCount": {
-                          "*": 10
+                          "en-us": 10
                         }
                       }
                     },
                     "Owner": "dnn:userid=1"
+                  }
+                ]
+              },
+              {
+                "Name": "Enabled",
+                "Type": "Boolean",
+                "InputType": "boolean-default",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 130126,
+                    "Version": 4,
+                    "Guid": "afe6ca1e-d1f8-4b2f-8c15-cbfa14fa7da8",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": "true"
+                        },
+                        "InputType": {
+                          "en-us": "boolean-default"
+                        },
+                        "Name": {
+                          "en-us": "Enabled"
+                        },
+                        "Notes": {
+                          "en-us": ""
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": []
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": true
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
+                    "Id": 130127,
+                    "Version": 3,
+                    "Guid": "72946d4a-7cdc-45c7-8038-627ed4af792b",
+                    "Type": {
+                      "Name": "@Boolean",
+                      "Id": "@Boolean"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "TitleFalse": {
+                          "en-us": "Disable Formula"
+                        },
+                        "TitleIndeterminate": {
+                          "en-us": ""
+                        },
+                        "TitleTrue": {
+                          "en-us": "Enable Formula"
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
                   }
                 ]
               },
@@ -540,7 +640,7 @@
                 "Metadata": [
                   {
                     "Id": 120066,
-                    "Version": 6,
+                    "Version": 7,
                     "Guid": "db877d55-b910-415c-bfda-a474178c3727",
                     "Type": {
                       "Name": "@All",
@@ -549,25 +649,25 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-wysiwyg"
+                          "en-us": "string-wysiwyg"
                         },
                         "Name": {
-                          "*": "Notes"
+                          "en-us": "Notes"
                         },
                         "Notes": {
-                          "*": "<p>Add your own notes so you know what this is for or what it does.</p>"
+                          "en-us": "<p>Do not use this any more, please use <a href=\"https://r.2sxc.org/notes\" target=\"_blank\" rel=\"noopener\">notes</a> instead. This will be removed ca. 2023.</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -585,19 +685,19 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": true
                         },
                         "DisableTranslation": {
-                          "*": false
+                          "en-us": false
                         },
                         "EnableExperimental": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -605,7 +705,7 @@
                   },
                   {
                     "Id": 120071,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "6f952f1c-289e-4aba-afa8-30cdfd0ff756",
                     "Type": {
                       "Name": "@String",
@@ -614,10 +714,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -625,7 +725,7 @@
                   },
                   {
                     "Id": 120072,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "1c339a04-2e98-4a54-b259-2c5ade275979",
                     "Type": {
                       "Name": "@string-wysiwyg",
@@ -634,18 +734,24 @@
                     "Attributes": {
                       "String": {
                         "ButtonAdvanced": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "ButtonSource": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "Dialog": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "InlineInitialHeight": {
+                          "en-us": ""
+                        },
+                        "WysiwygConfiguration": {
+                          "en-us": ""
                         }
                       },
                       "Hyperlink": {
                         "ContentCss": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -657,7 +763,7 @@
             "Metadata": [
               {
                 "Id": 120074,
-                "Version": 11,
+                "Version": 13,
                 "Guid": "ba7533db-4b2d-48fa-bbd1-56405b2f42a6",
                 "Type": {
                   "Name": "ContentType",
@@ -665,28 +771,34 @@
                 },
                 "Attributes": {
                   "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
                     "Description": {
-                      "*": "Formula for a UI element"
+                      "en-us": "Formula for a UI element"
+                    },
+                    "DynamicChildrenField": {
+                      "en-us": ""
                     },
                     "EditInstructions": {
-                      "*": "<p><a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\"><img src=\"https://sources.2sxc.org/assets/v12/content-types/formulas-banner.svg?12.01\" height=\"100px\" /></a></p>\n<p>Use Formulas to calculate values or settings like visibility of fields. See <a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">documentation</a>.</p>"
+                      "en-us": "<p><a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\"><img src=\"https://sources.2sxc.org/assets/v12/content-types/formulas-banner.svg?12.01\" height=\"100px\"></a></p>\n<p>Use Formulas to calculate values or settings like visibility of fields. See <a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">documentation</a>.</p>\n<p><strong><span style=\"color: rgb(224, 62, 45);\">⚠️ Important: Do not edit the formulas here! ⚠️</span></strong></p>\n<p>The formulas are stored here as simple data, but it's not the right place to edit them, unless you have to fix a formula that breaks your form.&nbsp;<a href=\"https://r.2sxc.org/formulas\" target=\"_blank\" rel=\"noopener\">The right place to edit formulas is directly in the Edit Form</a>.</p>"
                     },
                     "Label": {
-                      "*": "UI Formula Σ"
+                      "en-us": "UI Formula Σ"
                     },
                     "ListInstructions": {
-                      "*": ""
+                      "en-us": ""
                     },
                     "Notes": {
-                      "*": ""
+                      "en-us": ""
                     }
                   },
                   "Hyperlink": {
                     "Icon": {
-                      "*": ""
+                      "en-us": ""
                     },
                     "Link": {
-                      "*": ""
+                      "en-us": ""
                     }
                   }
                 },
@@ -700,6 +812,34 @@
             ]
           },
           "Entities": [
+            {
+              "Id": 167712,
+              "Version": 1,
+              "Guid": "d04909fa-1c34-4b2f-93cc-b680a3a2b756",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data) => {\n  return !data.VarOverride;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Disabled"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Disabled"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 130242,
               "Version": 12,
@@ -733,7 +873,7 @@
             },
             {
               "Id": 130128,
-              "Version": 4,
+              "Version": 6,
               "Guid": "eee175b1-cd81-4e85-a813-5be709ac612a",
               "Type": {
                 "Name": "UiFormula",
@@ -742,7 +882,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "v1(data) { return !data.Enabled; }"
+                    "en-us": "v2((data) => {\r\n  const enabled = data.Enabled && data.VarOverride;\r\n  return !enabled;\r\n});"
                   },
                   "Notes": {
                     "*": ""
@@ -764,7 +904,7 @@
             },
             {
               "Id": 130132,
-              "Version": 6,
+              "Version": 7,
               "Guid": "1c6def89-b2bc-42bb-a63f-53d0e5658b39",
               "Type": {
                 "Name": "UiFormula",
@@ -773,7 +913,7 @@
               "Attributes": {
                 "String": {
                   "Formula": {
-                    "*": "v1(data) { return !data.Enabled; }"
+                    "en-us": "v2((data) => {\r\n  const enabled = data.Enabled && data.VarOverride;\r\n  return !enabled;\r\n});"
                   },
                   "Notes": {
                     "*": ""

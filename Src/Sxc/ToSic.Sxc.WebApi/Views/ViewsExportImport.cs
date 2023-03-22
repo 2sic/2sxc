@@ -6,6 +6,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.ImportExport;
 using ToSic.Eav.ImportExport.Json;
 using ToSic.Eav.ImportExport.Json.V1;
@@ -25,11 +26,13 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.ImportExport;
+using ToSic.Eav.Helpers;
 
 namespace ToSic.Sxc.WebApi.Views
 {
     public class ViewsExportImport<THttpResponseType> : ServiceBase
     {
+        private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IServerPaths _serverPaths;
         private readonly IEnvironmentLogger _envLogger;
         private readonly LazySvc<CmsManager> _cmsManagerLazy;
@@ -49,8 +52,8 @@ namespace ToSic.Sxc.WebApi.Views
             IAppStates appStates,
             AppIconHelpers appIconHelpers,
             Generator<ImpExpHelpers> impExpHelpers,
-            ResponseMaker<THttpResponseType> responseMaker
-            ) : base("Bck.Views")
+            ResponseMaker<THttpResponseType> responseMaker,
+            LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Bck.Views")
         {
             ConnectServices(
                 _serverPaths = serverPaths,
@@ -60,7 +63,8 @@ namespace ToSic.Sxc.WebApi.Views
                 _appStates = appStates,
                 _appIconHelpers = appIconHelpers,
                 _impExpHelpers = impExpHelpers,
-                _responseMaker = responseMaker
+                _responseMaker = responseMaker,
+                _qDefBuilder = qDefBuilder
             );
             _site = context.Site;
             _user = context.User;
@@ -78,14 +82,17 @@ namespace ToSic.Sxc.WebApi.Views
             };
 
             // Attach files
-            var view = new View(bundle.Entity, _site.CurrentCultureCode, Log);
+            var view = new View(bundle.Entity, new[] { _site.CurrentCultureCode }, Log, _qDefBuilder);
 
             if (!string.IsNullOrEmpty(view.Path))
             {
                 TryAddAsset(bundle, app.ViewPath(view, PathTypes.PhysRelative), view.Path);
-                var thumb = _appIconHelpers.IconPathOrNull(app, view, PathTypes.PhysRelative);
-                if(thumb != null)
-                    TryAddAsset(bundle, thumb, thumb);
+                var webPath = _appIconHelpers.IconPathOrNull(app, view, PathTypes.PhysRelative)?.ForwardSlash();
+                if(webPath != null)
+                {
+                    var relativePath = webPath.Replace(app.RelativePath.ForwardSlash(), "").TrimPrefixSlash();
+                    TryAddAsset(bundle, webPath, relativePath);
+                }
             }
 
             var serializer = _jsonSerializerLazy.Value.SetApp(cms.AppState);

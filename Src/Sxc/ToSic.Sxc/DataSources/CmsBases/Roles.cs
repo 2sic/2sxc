@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using static ToSic.Eav.DataSources.DataSourceConstants;
 using static ToSic.Sxc.DataSources.RoleDataRaw;
 
 // Important Info to people working with this
@@ -26,13 +28,13 @@ namespace ToSic.Sxc.DataSources
         Icon = Icons.UserCircled,
         UiHint = "Roles in this site",
         HelpLink = "https://r.2sxc.org/ds-roles",
-        GlobalName = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",
+        NameId = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",
         Type = DataSourceType.Source,
-        ExpectsDataOfType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
+        ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"
     )]
-    public class Roles : ExternalData
+    public class Roles : CustomDataSourceAdvanced
     {
-        private readonly IDataBuilder _rolesDataBuilder;
+        private readonly IDataFactory _rolesFactory;
         private readonly RolesDataSourceProvider _provider;
 
         #region Other Constants
@@ -74,13 +76,13 @@ namespace ToSic.Sxc.DataSources
         /// Constructor to tell the system what out-streams we have
         /// </summary>
         [PrivateApi]
-        public Roles(MyServices services, RolesDataSourceProvider provider, IDataBuilder rolesDataBuilder) : base(services, $"SDS.Roles")
+        public Roles(MyServices services, RolesDataSourceProvider provider, IDataFactory rolesFactory) : base(services, $"SDS.Roles")
         {
             ConnectServices(
                 _provider = provider,
-                _rolesDataBuilder = rolesDataBuilder.Configure(typeName: TypeName, titleField: TitleFieldName, idAutoIncrementZero: false)
+                _rolesFactory = rolesFactory.New(options: RoleDataRaw.Options)
             );
-            Provide(GetList);
+            ProvideOut(GetList);
         }
 
         #endregion
@@ -91,8 +93,8 @@ namespace ToSic.Sxc.DataSources
             var roles = _provider.GetRolesInternal()?.ToList();
             l.A($"found {roles?.Count} roles");
 
-            if (roles?.Any() != true) 
-                return (new List<IEntity>().ToImmutableList(), "null/empty");
+            if (roles.SafeNone()) 
+                return (EmptyList, "null/empty");
 
             // This will resolve the tokens before starting
             Configuration.Parse();
@@ -105,7 +107,7 @@ namespace ToSic.Sxc.DataSources
             l.A($"excludeRoles: {excludeRolesPredicate == null}");
             if (excludeRolesPredicate != null) roles = roles.Where(excludeRolesPredicate).ToList();
 
-            var result = _rolesDataBuilder.CreateMany(roles);
+            var result = _rolesFactory.Create(roles);
 
             return (result, $"found {result.Count} roles");
         });

@@ -9,6 +9,7 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.Dnn.Cms
                 // publish all entities of this content block
                 var dnnModule = ModuleController.Instance.GetModule(instanceId, Null.NullInteger, true);
                 // must find tenant through module, as the Portal-Settings.Current is null in search mode
-                var cb = _moduleAndBlockBuilder.Value.GetBlock(dnnModule, null);
+                var cb = _moduleAndBlockBuilder.Value.GetProvider(dnnModule, null).LoadBlock();
 
                 Log.A($"found dnn mod {cb.Context.Module.Id}, tenant {cb.Context.Site.Id}, cb exists: {cb.ContentGroupExists}");
                 if (cb.ContentGroupExists)
@@ -105,7 +106,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
                     // Add content entities
                     IEnumerable<IEntity> list = new List<IEntity>();
-                    list = TryToAddStream(list, cb.Data, Eav.Constants.DefaultStreamName);
+                    list = TryToAddStream(list, cb.Data, DataSourceConstants.StreamDefaultName);
                     list = TryToAddStream(list, cb.Data, "ListContent");
                     list = TryToAddStream(list, cb.Data, "PartOfPage");
 

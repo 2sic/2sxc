@@ -5,16 +5,26 @@ using System.Web.Security;
 using DotNetNuke.Entities.Portals;
 using DotNetNuke.Entities.Users;
 using ToSic.Eav.Context;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Dnn.Run;
 using static ToSic.Sxc.Dnn.Run.DnnSecurity;
 
 namespace ToSic.Sxc.Dnn.Context
 {
     [PrivateApi("this is just internal, external users don't really have anything to do with this")]
-    public class DnnUser: IUser<UserInfo>
+    public class DnnUser: ServiceBase, IUser<UserInfo>
     {
-        public DnnUser() { }
+        private readonly LazySvc<DnnSecurity> _dnnSecurity;
+
+        public DnnUser(LazySvc<DnnSecurity> dnnSecurity) : base("dnnUsr")
+        {
+            ConnectServices(
+                _dnnSecurity = dnnSecurity
+            );
+        }
 
         private string GetUserIdentityToken ()
         {
@@ -27,8 +37,8 @@ namespace ToSic.Sxc.Dnn.Context
 
         public string IdentityToken => GetUserIdentityToken();
 
-        public List<int> Roles => _roles ?? (_roles = BuildRoleList());
-        private List<int> _roles;
+        public List<int> Roles => _roles.Get(BuildRoleList);
+        private readonly GetOnce<List<int>> _roles = new GetOnce<List<int>>();
 
         public bool IsSystemAdmin => UnwrappedContents?.IsSuperUser ?? false;
 
@@ -36,13 +46,17 @@ namespace ToSic.Sxc.Dnn.Context
         public bool IsContentAdmin => _getAdminPermissions().IsContentAdmin;
         public bool IsSiteDeveloper => IsSystemAdmin;
 
-        private DnnSiteAdminPermissions _getAdminPermissions() =>
-            _adminPermissions ?? (_adminPermissions = UnwrappedContents?.UserMayAdminThis() ?? new DnnSiteAdminPermissions(false));
-        private DnnSiteAdminPermissions _adminPermissions;
+        private DnnSiteAdminPermissions _getAdminPermissions() => _adminPermissions.Get(
+            () => UnwrappedContents != null 
+                ? _dnnSecurity.Value.UserMayAdminThis(UnwrappedContents) 
+                : new DnnSiteAdminPermissions(false)
+            );
+        private readonly GetOnce<DnnSiteAdminPermissions> _adminPermissions = new GetOnce<DnnSiteAdminPermissions>();
 
 
-        public UserInfo UnwrappedContents => _user ?? (_user = PortalSettings.Current?.UserInfo);
-        private UserInfo _user;
+        public UserInfo UnwrappedContents => _user.Get(() => PortalSettings.Current?.UserInfo);
+        private readonly GetOnce<UserInfo> _user = new GetOnce<UserInfo>();
+
         public UserInfo GetContents() => UnwrappedContents;
 
         private static List<int> BuildRoleList()

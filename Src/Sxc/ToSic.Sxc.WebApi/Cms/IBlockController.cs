@@ -59,7 +59,7 @@ namespace ToSic.Sxc.WebApi.Cms
         /// <summary>
         /// Used in InPage.js
         /// </summary>
-        AjaxRenderDto Render(int templateId, string lang);
+        AjaxRenderDto Render(int templateId, string lang, string edition);
 
         /// <summary>
         /// Used to be GET Module/Publish

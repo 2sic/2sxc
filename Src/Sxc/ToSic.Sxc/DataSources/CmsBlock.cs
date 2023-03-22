@@ -5,6 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -24,11 +25,11 @@ namespace ToSic.Sxc.DataSources
         UiHint = "Data for this CMS Block (instance/module)",
         Icon = Icons.RecentActor,
         Type = DataSourceType.Source, 
-        GlobalName = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
-        ExpectsDataOfType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
-        In = new []{Eav.Constants.DefaultStreamName},
+        NameId = "ToSic.Sxc.DataSources.CmsBlock, ToSic.Sxc",
+        ConfigurationType = "7c2b2bc2-68c6-4bc3-ba18-6e6b5176ba02",
+        In = new []{DataSourceConstants.StreamDefaultName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
-        PreviousNames = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
+        NameIds = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
     public sealed partial class CmsBlock : DataSource
     {
         [PrivateApi] internal const string InstanceLookupName = "module";
@@ -42,12 +43,7 @@ namespace ToSic.Sxc.DataSources
         [Configuration(Field = FieldInstanceId, Fallback = "[" + InstanceLookupName + ":" + ModuleIdKey + "]")]
         public int? ModuleId
         {
-            get
-            {
-                Configuration.Parse();
-                var listIdString = Configuration.GetThis();
-                return int.TryParse(listIdString, out var listId) ? listId : new int?();
-            }
+            get => int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?();
             set => Configuration.SetThis(value);
         }
 
@@ -57,12 +53,12 @@ namespace ToSic.Sxc.DataSources
         {
             public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
             public LazySvc<IModule> ModuleLazy { get; }
-            public LazySvc<DataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IDataSourceFactory> DataSourceFactory { get; }
 
             public MyServices(DataSource.MyServices parentServices,
                 LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
-                LazySvc<DataSourceFactory> dataSourceFactory) : base(parentServices)
+                LazySvc<IDataSourceFactory> dataSourceFactory) : base(parentServices)
             {
                 ConnectServices(
                     LazyCmsRuntime = lazyCmsRuntime,
@@ -76,53 +72,38 @@ namespace ToSic.Sxc.DataSources
         {
             _services = services;
 
-            Provide(GetContent);
-            Provide(ViewParts.StreamHeader, GetHeader);
-            Provide(ViewParts.StreamHeaderOld, GetHeader);
+            ProvideOut(GetContent);
+            ProvideOut(GetHeader, ViewParts.StreamHeader);
+            ProvideOut(GetHeader, ViewParts.StreamHeaderOld);
         }
         private readonly MyServices _services;
         #endregion
 
 
-        private ImmutableArray<IEntity> GetContent()
+        private IImmutableList<IEntity> GetContent()
         {
             // First check if BlockConfiguration works - to give better error if not
-            if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
-                return immutableArray;
+            var blockSpecsAndErrors = ConfigAndViewOrErrors;
+            if (blockSpecsAndErrors.IsError)
+                return blockSpecsAndErrors.Errors;
 
-            return GetStream(BlockConfiguration.Content, View.ContentItem,
-                BlockConfiguration.Presentation, View.PresentationItem, false);
+            var parts = blockSpecsAndErrors.Result;
+            return GetStream(parts.View, parts.BlockConfiguration.Content, parts.View.ContentItem,
+                parts.BlockConfiguration.Presentation, parts.View.PresentationItem, false);
         }
 
-        private ImmutableArray<IEntity> GetHeader()
+        private IImmutableList<IEntity> GetHeader()
         {
             // First check if BlockConfiguration works - to give better error if not
-            if (GetErrorStreamIfConfigOrViewAreMissing(out var immutableArray)) 
-                return immutableArray;
+            var blockSpecsAndErrors = ConfigAndViewOrErrors;
+            if (blockSpecsAndErrors.IsError)
+                return blockSpecsAndErrors.Errors;
 
-            return GetStream(BlockConfiguration.Header, View.HeaderItem,
-                BlockConfiguration.HeaderPresentation, View.HeaderPresentationItem, true);
+            var parts = blockSpecsAndErrors.Result;
+
+
+            return GetStream(parts.View, parts.BlockConfiguration.Header, parts.View.HeaderItem,
+                parts.BlockConfiguration.HeaderPresentation, parts.View.HeaderPresentationItem, true);
         }
-
-        private bool GetErrorStreamIfConfigOrViewAreMissing(out ImmutableArray<IEntity> immutableArray)
-        {
-            if (BlockConfiguration == null)
-            {
-                immutableArray = new DataSourceErrorHandling()
-                    .CreateErrorList(title: "CmsBlock Configuration Missing", message: "Cannot find configuration of current CmsBlock");
-                return true;
-            }
-
-            if (View == null)
-            {
-                immutableArray = new DataSourceErrorHandling()
-                    .CreateErrorList(title: "CmsBlock View Missing", message: "Cannot find View configuration of current CmsBlock");
-                return true;
-            }
-
-            immutableArray = new ImmutableArray<IEntity>();
-            return false;
-        }
-
     }
 }

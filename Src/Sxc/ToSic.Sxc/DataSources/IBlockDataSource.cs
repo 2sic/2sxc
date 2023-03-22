@@ -11,7 +11,7 @@ namespace ToSic.Sxc.DataSources
     /// They have some internal functionality which isn't published as of now.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public interface IBlockDataSource: IDataSource, IDataTarget
+    public interface IBlockDataSource: IDataSource
     {
         [PrivateApi("older use case, will probably become obsolete some day")]
         DataPublishing Publish { get; }

@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Dnn
                     SecurityAccessLevel.Edit, true, false);
             }
 
-            var user = new DnnUser();
+            var user = GetService<DnnUser>();
 
             // Edit Template Button
             if (user.IsSiteDeveloper && appIsKnown && block.View != null)

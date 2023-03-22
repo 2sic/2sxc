@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Apps.ImportExport
             // Otherwise it will auto-initialize, which it shouldn't do when importing data
             var appState = _repositoryLoader.AppState(AppId, false);
 
-            var viewsManager = _cmsManagerLazy.Value.InitWithState(appState, true).Views;
+            var viewsManager = _cmsManagerLazy.Value.InitWithState(appState).Views;
 
             foreach (var template in templates.Elements(XmlConstants.Template))
             {

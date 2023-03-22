@@ -16,16 +16,16 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public string Add(string message, [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
         {
-            UnwrappedContents.A(message, cPath, cName, cLine);
+            GetContents().A(message, cPath, cName, cLine);
             return message;
         }
 
         /// <inheritdoc />
         public void Warn(string message, [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0) 
-            => UnwrappedContents.W(message, cPath, cName, cLine);
+            => GetContents().W(message, cPath, cName, cLine);
 
         public void Exception(Exception ex, [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
-            => UnwrappedContents.Ex(ex, cPath, cName, cLine);
+            => GetContents().Ex(ex, cPath, cName, cLine);
 
 
         /// <inheritdoc />
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Code
             [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
         {
             // must call the opener first, then return the closing function
-            var call = UnwrappedContents.Fn(parameters, message, useTimer, cPath, cName, cLine);
+            var call = GetContents().Fn(parameters, message, useTimer, cPath, cName, cLine);
             return finalMsg => call.Done(finalMsg);
         }
 
@@ -42,14 +42,14 @@ namespace ToSic.Sxc.Code
             [CallerFilePath] string cPath = null, [CallerMemberName] string cName = null, [CallerLineNumber] int cLine = 0)
         {
             // must call the opener first, then return the closing function
-            var call = UnwrappedContents.Fn<T>(parameters, message, useTimer, cPath, cName, cLine);
+            var call = GetContents().Fn<T>(parameters, message, useTimer, cPath, cName, cLine);
             return (data, finalMsg) => call.Return(data, finalMsg);
         }
 
         public bool Preserve
         {
-            get => (UnwrappedContents as Log)?.Preserve ?? false; // default to false if there is no log
-            set { if (UnwrappedContents is Log log) log.Preserve = value; }
+            get => (GetContents() as Log)?.Preserve ?? false; // default to false if there is no log
+            set { if (GetContents() is Log log) log.Preserve = value; }
         }
     }
 }

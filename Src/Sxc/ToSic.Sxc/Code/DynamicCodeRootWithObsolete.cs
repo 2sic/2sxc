@@ -2,8 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Catalog;
+using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
@@ -21,38 +24,39 @@ namespace ToSic.Sxc.Code
             _root = dynCode;
         }
 
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => DynCode.AsDynamic(entity as IEntity);
-
-
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => DynCode.AsDynamic(entityKeyValuePair.Value);
-
-        //[PrivateApi]
-        //[Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        //public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => entities.Select(e => AsDynamic(e));
-
-        ///// <inheritdoc />
-        //public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => entities.Select(e => AsDynamic(e));
-
 
         [PrivateApi("obsolete")]
-        [Obsolete("you should use the CreateSource<T> instead")]
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null)
+        [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfiguration configuration = null)
         {
-            if (lookUpEngine == null)
-                lookUpEngine = _root.ConfigurationProvider;
+            // 2023-03-12 2dm
+            // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
+            // This has never been tested but probably works, but we won't invest time to be certain.
 
-            if (inSource != null)
-                return _root.DataSourceFactory.GetDataSource(typeName, inSource, inSource, lookUpEngine);
+            try
+            {
+                // try to find with assembly name, or otherwise with GlobalName / previous names
+                var catalog = _root.GetService<DataSourceCatalog>();
+                var type = catalog.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
+                configuration = configuration ?? _root.ConfigurationProvider;
 
-            var userMayEdit = _root.Block?.Context?.UserMayEdit ?? false;
+                if (inSource != null)
+                    return _root.DataSourceFactory.Create(type: type, source: inSource, configuration: configuration);
 
-            var initialSource = _root.DataSourceFactory.GetPublishing(
-                _root.App, userMayEdit, _root.ConfigurationProvider as LookUpEngine);
-            return typeName != "" ? _root.DataSourceFactory.GetDataSource(typeName, initialSource, initialSource, lookUpEngine) : initialSource;
+                var initialSource = _root.DataSourceFactory.CreateDefault(appIdentity: _root.App, configuration: _root.ConfigurationProvider);
+                return typeName != ""
+                    ? _root.DataSourceFactory.Create(type: type, source: initialSource, configuration: configuration)
+                    : initialSource;
+            }
+            catch (Exception ex)
+            {
+                var errMessage = $"The razor code is calling a very old method {nameof(CreateSource)}." +
+                                 $" In this version, you used the type name as a string {nameof(CreateSource)}(string typeName, ...)." +
+                                 $" This has been deprecated since ca. v4 and has been removed now. " +
+                                 $" Please use the newer {nameof(CreateSource)}<Type>(...) overload.";
+
+                throw new Exception(errMessage, ex);
+            }
         }
 
 
@@ -80,7 +84,7 @@ namespace ToSic.Sxc.Code
             _list = new List<Element>();
 
             if (_root.Data == null || _root.Block.View == null) return;
-            if (!_root.Data.Out.ContainsKey(Eav.Constants.DefaultStreamName)) return;
+            if (!_root.Data.Out.ContainsKey(DataSourceConstants.StreamDefaultName)) return;
 
             var entities = _root.Data.List.ToList();
 
@@ -96,11 +100,8 @@ namespace ToSic.Sxc.Code
 
                 var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
 
-                //if (e is EntityInBlock c)
                 if (editDecorator != null)
                 {
-                    // 2021-10-12 2dm #dropGroupId - believe this is never used anywhere. Leave comment till EOY 2021
-                    //el.GroupId = editDecorator.GroupId;
                     el.Presentation = editDecorator.Presentation == null ? null : _root.AsDynamic(editDecorator.Presentation);
                     el.SortOrder = editDecorator.SortOrder;
                 }

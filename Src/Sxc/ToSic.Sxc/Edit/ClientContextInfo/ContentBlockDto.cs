@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Helpers;
 using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             ZoneId = block.ZoneId;
             TemplateId = block.View?.Id ?? 0;
             Edition = block.View?.Edition;
-            TemplatePath = block.View?.EditionPath;
+            TemplatePath = block.View?.EditionPath.PrefixSlash();
             TemplateIsShared = block.View?.IsShared ?? false;
             QueryId = block.View?.Query?.Id; // will be null if not defined
             ContentTypeName = block.View?.ContentType ?? "";

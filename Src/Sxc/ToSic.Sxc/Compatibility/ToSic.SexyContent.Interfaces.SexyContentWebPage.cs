@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
@@ -49,7 +50,7 @@ namespace ToSic.Sxc.Compatibility
         /// <returns>A typed DataSource object</returns>
         [Obsolete("Please use the CreateSource<T> overload instead.")]
         [PrivateApi]
-        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
+        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfiguration configuration = null);
 
     }
 }

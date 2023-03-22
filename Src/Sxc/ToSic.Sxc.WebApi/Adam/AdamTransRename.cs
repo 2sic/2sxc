@@ -6,7 +6,7 @@ namespace ToSic.Sxc.WebApi.Adam
 {
     public class AdamTransRename<TFolderId, TFileId> : AdamTransactionBase<AdamTransRename<TFolderId, TFileId>, TFolderId, TFileId>
     {
-        public AdamTransRename(AdamServices<TFolderId, TFileId> services) : base(services, "Adm.TrnRen") { }
+        public AdamTransRename(MyServices services) : base(services, "Adm.TrnRen") { }
 
         public bool Rename(string parentSubfolder, bool isFolder, TFolderId folderId, TFileId fileId, string newName)
         {

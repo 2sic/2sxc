@@ -1,4 +1,7 @@
 ﻿using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Services;
 using BuiltInFeatures = ToSic.Sxc.Web.PageFeatures.BuiltInFeatures;
 
 namespace ToSic.Sxc.Edit.EditService
@@ -16,26 +19,30 @@ namespace ToSic.Sxc.Edit.EditService
 
         /// <inheritdoc/>
         public string Enable(string noParamOrder = Eav.Parameters.Protector, bool? js = null, bool? api = null,
-            bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null)
+            bool? forms = null, bool? context = null, bool? autoToolbar = null, bool? styles = null
+        ) => Log.Func<string>(() =>
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
+            Eav.Parameters.Protect(noParamOrder,
+                $"{nameof(js)},{nameof(api)},{nameof(forms)},{nameof(context)},{nameof(autoToolbar)},{nameof(autoToolbar)},{nameof(styles)}");
 
-            var psf = Block?.Context?.PageServiceShared;
+            var ps = _DynCodeRoot.GetKit<ServiceKit14>()?.Page;
+            if (ps == null)
+                return (null, "page service not found");
 
-            if (js == true || api ==true || forms == true) psf?.Activate(BuiltInFeatures.JsCore.NameId);
+            if (js == true || api == true || forms == true) ps.Activate(BuiltInFeatures.JsCore.NameId);
 
             // only update the values if true, otherwise leave untouched
             // Must activate the "public" one JsCms, not internal, so feature-tests will run
-            if (api == true || forms == true) psf?.Activate(BuiltInFeatures.JsCms.NameId);
+            if (api == true || forms == true) ps.Activate(BuiltInFeatures.JsCms.NameId);
 
-            if (styles.HasValue) psf?.Activate(BuiltInFeatures.Toolbars.NameId);
+            if (styles.HasValue) ps.Activate(BuiltInFeatures.Toolbars.NameId);
 
-            if (context.HasValue) psf?.Activate(BuiltInFeatures.ContextModule.NameId);
+            if (context.HasValue) ps.Activate(BuiltInFeatures.ContextModule.NameId);
 
-            if (autoToolbar.HasValue) psf?.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
+            if (autoToolbar.HasValue) ps.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
 
-            return null;
-        }
+            return (null, "ok");
+        });
 
         #endregion Scripts and CSS includes
     }

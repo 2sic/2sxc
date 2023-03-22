@@ -1,5 +1,4 @@
-﻿using System;
-using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -14,30 +13,29 @@ namespace ToSic.Sxc.DataSources
     {
         #region Constructor
 
-        public BlockDataSourceFactory(LazySvc<DataSourceFactory> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
+        public BlockDataSourceFactory(LazySvc<IDataSourceFactory> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
         {
             ConnectServices(
                 _dataSourceFactory = dataSourceFactory,
                 _queryLazy = queryLazy
             );
         }
-        private readonly LazySvc<DataSourceFactory> _dataSourceFactory;
+        private readonly LazySvc<IDataSourceFactory> _dataSourceFactory;
         private readonly LazySvc<Query> _queryLazy;
 
         #endregion
 
 
         [PrivateApi]
-        internal IBlockDataSource GetBlockDataSource(IBlock block, ILookUpEngine configurationProvider)
+        internal IBlockDataSource GetBlockDataSource(IBlock block, ILookUpEngine configLookUp)
         {
+            var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
             var view = block.View;
-            var showDrafts = block.Context.UserMayEdit;
 
-            var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, draft:{showDrafts}, view:{block.View?.Name}");
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
-            var initialSource = dsFactory.GetPublishing(block, showDrafts, configurationProvider);
-            var moduleDataSource = dsFactory.GetDataSource<CmsBlock>(initialSource);
+            var initialSource = dsFactory.CreateDefault(appIdentity: block, configuration: configLookUp);
+            var moduleDataSource = dsFactory.Create<CmsBlock>(source: initialSource);
 
             moduleDataSource.OverrideView = view;
             moduleDataSource.UseSxcInstanceContentGroup = true;
@@ -48,7 +46,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.GetDataSource<Block>(block, viewDataSourceUpstream, configurationProvider);
+            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, source: viewDataSourceUpstream, configuration: configLookUp);
 
             // Take Publish-Properties from the View-Template
             if (view != null)
@@ -62,7 +60,7 @@ namespace ToSic.Sxc.DataSources
                 if (view.Query != null)
                 {
                     Log.A("Generate query");
-                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configurationProvider, showDrafts, viewDataSource);
+                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, viewDataSource);
                     Log.A("attaching");
                     viewDataSource.SetOut(query);
                 }

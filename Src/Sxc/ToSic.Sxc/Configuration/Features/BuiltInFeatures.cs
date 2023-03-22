@@ -12,6 +12,13 @@ namespace ToSic.Sxc.Configuration.Features
                 ContentSecurityPolicyTestUrl,
                 ContentSecurityPolicyEnforceTemp,
 
+                // New 15.04
+                CdnSourcePublic,
+                CdnSourceEdit,
+                // Not yet available
+                //CdnSourceAdmin,
+                //CdnSourceDev,
+
                 // Patrons Perfectionist
                 ImageServiceMultiFormat, // v13
                 ImageServiceMultipleSizes,

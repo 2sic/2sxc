@@ -2,10 +2,12 @@
 using System.Collections.Immutable;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using static ToSic.Eav.DataSources.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -21,17 +23,17 @@ namespace ToSic.Sxc.DataSources
     /// </summary>
     [PublicApi]
     [VisualQuery(
-        ExpectsDataOfType = "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5",
-        GlobalName = "e35031b2-3e99-41fe-a5ac-b79f447d5800",
+        ConfigurationType = "3d970d2b-32cb-4ecb-aeaf-c49fbcc678a5",
+        NameId = "e35031b2-3e99-41fe-a5ac-b79f447d5800",
         HelpLink = "https://r.2sxc.org/ds-pages",
         Icon = Icons.PageFind,
         NiceName = "Pages",
         Type = DataSourceType.Source,
         UiHint = "Pages in this site")]
-    public class Pages: ExternalData
+    public class Pages: CustomDataSourceAdvanced
     {
         private readonly ITreeMapper _treeMapper;
-        private readonly IDataBuilder _pageBuilder;
+        private readonly IDataFactory _pageFactory;
         private readonly PagesDataSourceProvider _provider;
 
         #region Configuration properties
@@ -111,14 +113,14 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Pages(MyServices services, PagesDataSourceProvider provider, IDataBuilder dataBuilder, ITreeMapper treeMapper) : base(services, "CDS.Pages")
+        public Pages(MyServices services, PagesDataSourceProvider provider, IDataFactory dataFactory, ITreeMapper treeMapper) : base(services, "CDS.Pages")
         {
             ConnectServices(
                 _provider = provider,
-                _pageBuilder = dataBuilder.Configure(typeName: PageDataRaw.TypeName, titleField: nameof(PageDataRaw.Name)),
+                _pageFactory = dataFactory.New(options: PageDataRaw.Option),
                 _treeMapper = treeMapper
             );
-            Provide(GetPages);
+            ProvideOut(GetPages);
         }
         #endregion
 
@@ -138,15 +140,15 @@ namespace ToSic.Sxc.DataSources
                 requireEditPermissions: RequireEditPermissions
             );
             if (pagesFromSystem == null || !pagesFromSystem.Any())
-                return (new ImmutableArray<IEntity>(), "null/empty");
+                return (EmptyList, "null/empty");
 
             // Convert to Entity-Stream
-            var pages = _pageBuilder.CreateMany(pagesFromSystem);
+            var pages = _pageFactory.Create(pagesFromSystem);
 
             // Try to add Navigation properties
             try
             {
-                var asTree = _treeMapper.AddRelationships<int>(pages, "EntityId", "ParentId");
+                var asTree = ((TreeMapper)_treeMapper).AddParentChild(pages, "EntityId", "ParentId");
                 return (asTree, $"As Tree: {asTree.Count}");
             }
             catch (Exception ex)

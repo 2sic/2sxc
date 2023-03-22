@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.App
         public List<AppDto> Apps()
         {
             var cms = _cmsZones.SetId(_context.Site.ZoneId);
-            var configurationBuilder = _appConfigDelegate.New().Build(_context.UserMayEdit);
+            var configurationBuilder = _appConfigDelegate.New().Build(/*_context.UserMayEdit*/);
             var list = cms.AppsRt.GetApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
         }
@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi.App
         public List<AppDto> GetInheritableApps()
         {
             var cms = _cmsZones.SetId(_context.Site.ZoneId);
-            var configurationBuilder = _appConfigDelegate.New().Build(_context.UserMayEdit);
+            var configurationBuilder = _appConfigDelegate.New().Build(/*_context.UserMayEdit*/);
             var list = cms.AppsRt.GetInheritableApps(_context.Site, configurationBuilder);
             return list.Select(CreateAppDto).ToList();
         }

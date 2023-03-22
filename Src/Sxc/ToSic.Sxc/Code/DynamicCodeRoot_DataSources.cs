@@ -1,11 +1,10 @@
 ﻿using System;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
-using ToSic.Lib;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Context;
 
 namespace ToSic.Sxc.Code
 {
@@ -36,25 +35,19 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public DataSourceFactory DataSourceFactory => _dataSourceFactory.Get(() => Services.DataSourceFactory.Value);
-        private readonly GetOnce<DataSourceFactory> _dataSourceFactory = new GetOnce<DataSourceFactory>();
+        public IDataSourceFactory DataSourceFactory => _dataSourceFactory.Get(() => Services.DataSourceFactory.Value);
+        private readonly GetOnce<IDataSourceFactory> _dataSourceFactory = new GetOnce<IDataSourceFactory>();
 
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null) where T : IDataSource
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default) where T : IDataSource
         {
-            if (configurationProvider == null)
-                configurationProvider = ConfigurationProvider;
+            configuration = configuration ?? ConfigurationProvider;
 
-            if (inSource != null)
-                return DataSourceFactory.GetDataSource<T>(inSource, inSource, configurationProvider);
-
-            var userMayEdit = (CmsContext as CmsContext)?.CtxSite?.UserMayEdit ?? false;
-
-            var initialSource = DataSourceFactory.GetPublishing(
-                App, userMayEdit, ConfigurationProvider as LookUpEngine);
-            return DataSourceFactory.GetDataSource<T>(initialSource, initialSource, configurationProvider);
+            // If no in-source was provided, make sure that we create one from the current app
+            inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configuration: ConfigurationProvider);
+            return DataSourceFactory.Create<T>(source: inSource, configuration: configuration);
         }
 
         /// <inheritdoc />
@@ -62,11 +55,31 @@ namespace ToSic.Sxc.Code
         {
             // if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
             var src = CreateSource<T>(inStream.Source);
-
-            var srcDs = (IDataTarget)src;
-            srcDs.In.Clear();
-            srcDs.Attach(Eav.Constants.DefaultStreamName, inStream);
+            src.In.Clear();
+            src.Attach(DataSourceConstants.StreamDefaultName, inStream);
             return src;
+        }
+
+        [PrivateApi]
+        public IDataSource CreateSourceWip(
+            string name,
+            string noParamOrder = Eav.Parameters.Protector,
+            IDataSource source = default,
+            IConfiguration configuration = default)
+        {
+            // VERY WIP
+            var catalog = GetService<DataSourceCatalog>();
+            var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
+            var configurationSourceNew = new ConfigurationWip
+            {
+                LookUpEngine = configuration?.GetLookupEngineWip() ?? ConfigurationProvider?.GetLookupEngineWip(),
+                Values = null // todo configuration
+            };
+            var ds = DataSourceFactory.Create(type, appIdentity: App, source: source, configuration: configurationSourceNew);
+
+            // if it supports all our known context properties, attach them
+            if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
+            return ds;
         }
         #endregion
     }

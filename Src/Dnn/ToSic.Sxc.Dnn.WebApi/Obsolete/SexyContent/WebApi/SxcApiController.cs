@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
-using ToSic.Eav.LookUp;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
@@ -65,7 +65,8 @@ namespace ToSic.SexyContent.WebApi
         /// <summary>
         /// Old API - probably never used, but we shouldn't remove it as we could break some existing code out there
         /// </summary>
-        [PrivateApi] public IBlock Block => GetBlock();
+        [PrivateApi] public IBlock Block => GetBlockAndContext().LoadBlock();
+
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
         /// <inheritdoc />
@@ -120,12 +121,12 @@ namespace ToSic.SexyContent.WebApi
         #region CreateSource implementations
         [Obsolete]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null,
-	        ILookUpEngine lookUpEngine = null)
-	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, lookUpEngine);
+	        IConfiguration configuration = null)
+	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configuration);
 
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
             where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+            =>  _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
 	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
             => _DynCodeRoot.CreateSource<T>(inStream);

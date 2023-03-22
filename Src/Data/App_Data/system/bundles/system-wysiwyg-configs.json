@@ -123,7 +123,7 @@
                 "Metadata": [
                   {
                     "Id": 164751,
-                    "Version": 6,
+                    "Version": 8,
                     "Guid": "f2b55ac9-29da-43f4-9a99-a2329412de45",
                     "Type": {
                       "Name": "@All",
@@ -137,6 +137,9 @@
                         "DefaultValue": {
                           "en-us": ""
                         },
+                        "Information": {
+                          "en-us": ""
+                        },
                         "InputType": {
                           "en-us": "string-dropdown"
                         },
@@ -144,12 +147,20 @@
                           "en-us": "Mode"
                         },
                         "Notes": {
-                          "en-us": ""
+                          "en-us": "<p>A preset from which to base your custom configuration.</p>"
                         },
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -183,7 +194,7 @@
                   },
                   {
                     "Id": 164754,
-                    "Version": 5,
+                    "Version": 7,
                     "Guid": "57c69b36-98d6-406b-a378-769554d7c7e7",
                     "Type": {
                       "Name": "@String",
@@ -203,7 +214,7 @@
                   },
                   {
                     "Id": 164755,
-                    "Version": 5,
+                    "Version": 7,
                     "Guid": "2df16e5a-df0a-48dc-8b2b-28cff2408ffd",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -212,13 +223,19 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": "default:Default WYSIWYG configuration\ntext:Text WYSIWYG - optimized for formatted text without images etc.\nrich:Rich Media / Images for long bodies such as Blogs"
+                          "en-us": "default:Default WYSIWYG configuration\ntext:Text WYSIWYG - optimized for formatted text without images etc.\ntext-basic:Text-Basic - Simplified text, without headings\ntext-minimal:Text-Minigal - Very reduced text without headings or bullets\ntext-plain:Text-Plain - basically not a wysiwyg\nrich:Rich Media / Images for long bodies such as Blogs BETA - NOT READY!"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ","
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
                           "en-us": true
                         }
@@ -332,7 +349,7 @@
                 "Metadata": [
                   {
                     "Id": 164750,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "5a7aec8e-adea-4724-b122-83a370cf1024",
                     "Type": {
                       "Name": "@All",
@@ -368,6 +385,7 @@
                         },
                         "Formulas": {
                           "*": [
+                            "75c5a65b-e2ce-455e-9f1e-1bcde7b63c74",
                             "eb12c7d9-2c4c-476e-bfb5-b9d1aff55854"
                           ]
                         },
@@ -459,7 +477,7 @@
             "Metadata": [
               {
                 "Id": 164748,
-                "Version": 2,
+                "Version": 4,
                 "Guid": "a376b4ec-1ae0-4295-a696-f7a8efe8cc87",
                 "Type": {
                   "Name": "ContentType",
@@ -467,6 +485,9 @@
                 },
                 "Attributes": {
                   "String": {
+                    "AdditionalSettings": {
+                      "en-us": ""
+                    },
                     "Description": {
                       "en-us": ""
                     },
@@ -474,10 +495,10 @@
                       "en-us": ""
                     },
                     "EditInstructions": {
-                      "en-us": "<p>Beta - v15</p>"
+                      "en-us": "<p>This is an advanced way to configure your wysiwyg, new / WIP v15.04.</p>\n<p>\uD83D\uDC49\uD83C\uDFFD Do consult the <a href=\"http://r.2sxc.org/string-wyswiyg\" target=\"_blank\" rel=\"noopener\">string-wysiwyg docs</a>.&nbsp;</p>"
                     },
                     "Label": {
-                      "en-us": "WYSIWYG Configuration"
+                      "en-us": "String WYSIWYG Configuration"
                     },
                     "ListInstructions": {
                       "en-us": ""
@@ -505,6 +526,34 @@
             ]
           },
           "Entities": [
+            {
+              "Id": 167715,
+              "Version": 1,
+              "Guid": "75c5a65b-e2ce-455e-9f1e-1bcde7b63c74",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "// new formula syntax - see https://r.2sxc.org/formulas\nv2((data, context) => {\n  return !context.debug;\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Disabled"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Disabled"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
             {
               "Id": 166481,
               "Version": 1,
@@ -539,7 +588,7 @@
       "Entities": [
         {
           "Id": 164758,
-          "Version": 3,
+          "Version": 4,
           "Guid": "d3dde02f-c1dc-43b8-a8b7-4be3c43eadd0",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -548,7 +597,7 @@
           "Attributes": {
             "String": {
               "Advanced": {
-                "en-us": "{\r\n  // The default to use if no inline/dialog, OR the shared values on inline/dialog\r\n  \"default\": {\r\n    \"menubar\": false,\r\n    \"toolbar\": {\r\n      \r\n    }\r\n  },\r\n  \"inline\": {\r\n\r\n  },\r\n  \"dialog\": {\r\n\r\n  }\r\n}"
+                "en-us": ""
               },
               "Mode": {
                 "en-us": "default"
@@ -559,7 +608,7 @@
             },
             "Boolean": {
               "CustomConfiguration": {
-                "en-us": false
+                "en-us": true
               }
             }
           },
@@ -593,7 +642,7 @@
         },
         {
           "Id": 164759,
-          "Version": 2,
+          "Version": 4,
           "Guid": "3e9dd123-ccef-4d81-80e7-4c6ae6f5ddc6",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -602,18 +651,18 @@
           "Attributes": {
             "String": {
               "Advanced": {
-                "en-us": "{\r\n  \"default\": {\r\n    \"toolbar\": \"undo redo paste pastetext removeformat | \"\r\n  }\r\n}"
+                "en-us": ""
               },
               "Mode": {
                 "en-us": "text-minimal"
               },
               "Title": {
-                "en-us": "Text - Only very basic formatting"
+                "en-us": "Text-Minimal - Only very basic formatting"
               }
             },
             "Boolean": {
               "CustomConfiguration": {
-                "en-us": false
+                "en-us": true
               }
             }
           },
@@ -647,7 +696,7 @@
         },
         {
           "Id": 166477,
-          "Version": 2,
+          "Version": 3,
           "Guid": "d8d6e212-4878-4483-be4a-3de865a85ee6",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -662,7 +711,7 @@
                 "en-us": "text"
               },
               "Title": {
-                "en-us": "Text - For Text Editing without Images/Media"
+                "en-us": "Text-Default - For Text Editing without Images/Media"
               }
             },
             "Boolean": {
@@ -701,7 +750,7 @@
         },
         {
           "Id": 166478,
-          "Version": 5,
+          "Version": 7,
           "Guid": "52d79da0-b10d-4f62-9838-2e17b2254a3e",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -710,13 +759,13 @@
           "Attributes": {
             "String": {
               "Advanced": {
-                "en-us": "{\r\n  \"features\": {\r\n    \"responsiveImages\": true,\r\n    \"contentDivisions\": true\r\n  }\r\n}"
+                "en-us": ""
               },
               "Mode": {
                 "en-us": "rich"
               },
               "Title": {
-                "en-us": "Rich Media - With Images and Layout (for Blogs, News etc.)"
+                "en-us": "Rich Media (BETA - not ready for production!) - With Images and Layout (for Blogs, News etc.)"
               }
             },
             "Boolean": {
@@ -755,7 +804,7 @@
         },
         {
           "Id": 166515,
-          "Version": 1,
+          "Version": 2,
           "Guid": "c2d17507-e076-4a93-a9f9-e94e7ecc7e96",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -770,7 +819,7 @@
                 "en-us": "text-basic"
               },
               "Title": {
-                "en-us": "Text - Basic without Headers"
+                "en-us": "Text-Basic - Like Text, but without Headers"
               }
             },
             "Boolean": {
@@ -803,6 +852,60 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "c2d17507-e076-4a93-a9f9-e94e7ecc7e96"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 167713,
+          "Version": 5,
+          "Guid": "df032556-2d8a-40d7-bc35-57ec9088f15d",
+          "Type": {
+            "Name": "StringWysiwygConfiguration",
+            "Id": "63a00a8a-39d8-410d-ae45-ab09ef07af5b"
+          },
+          "Attributes": {
+            "String": {
+              "Advanced": {
+                "en-us": ""
+              },
+              "Mode": {
+                "en-us": "text-plain"
+              },
+              "Title": {
+                "en-us": "Text-Plain - Really just text, basically not a WYSIWYG"
+              }
+            },
+            "Boolean": {
+              "CustomConfiguration": {
+                "en-us": true
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 167714,
+              "Version": 1,
+              "Guid": "0a4d1e62-2ca1-45e9-9e78-2ac548b8b5ed",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "fdc0d360-3e20-4794-ac20-9bb57899cd24"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "df032556-2d8a-40d7-bc35-57ec9088f15d"
               }
             }
           ]

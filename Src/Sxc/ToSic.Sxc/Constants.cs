@@ -11,13 +11,7 @@ namespace ToSic.Sxc
         /// Additional json-node for metadata in serialized entities, if user has edit rights
         /// </summary>
         public const string JsonEntityEditNodeName = "_2sxcEditInformation";
-        //public const string JsonModifiedNodeName = "Modified";
-        
-        /// <summary>
-        /// Additional JSON node with the real EntityId - in case the "Id" property is already taken
-        /// </summary>
-        public const string JsonEntityIdNodeName = "EntityId";
-        
+
         /// <summary>
         /// Wrapper tag which contains the context information.
         /// Usually just used in edit mode, but in rare cases also at runtime
@@ -46,5 +40,16 @@ namespace ToSic.Sxc
         public const int MaxLevelForStaticRender = CompatibilityLevel10;
 
         public const string Anonymous = "anonymous";
+
+        /// <summary>
+        /// Name of the web.config file which is copied to the 2sxc folder.
+        /// Probably only used in DNN
+        /// </summary>
+        public static readonly string WebConfigFileName = "web.config";
+
+        /// <summary>
+        /// Name of the template web.config file which is copied to each 2sxc-folder
+        /// </summary>
+        public static readonly string WebConfigTemplateFile = "WebConfigTemplate.config";
     }
 }

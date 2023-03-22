@@ -19,7 +19,9 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
+using ToSic.Sxc.Web.EditUi;
 using ToSic.Sxc.WebApi;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
@@ -123,8 +125,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 //endpoints.Map($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html"));
 
                 // Handle / Process URLs to Dialogs route for 2sxc UI
-                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html"));
-                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html"));
+                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", 
+                    context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html", EditUiResourceSettings.QuickDialog));
+                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/",
+                    context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi));
             });
         }
 

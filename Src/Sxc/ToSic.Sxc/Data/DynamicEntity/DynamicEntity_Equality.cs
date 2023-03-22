@@ -34,7 +34,9 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <returns></returns>
         [PrivateApi]
+#pragma warning disable RS1024 // Compare symbols correctly
         public override int GetHashCode() => WrapperEquality.GetHashCode(this);
+#pragma warning restore RS1024 // Compare symbols correctly
 
         /// <inheritdoc />
         [PrivateApi]

@@ -24,6 +24,8 @@ namespace ToSic.Sxc.Images
         public string ImgAltFallback { get; }
         public string ImgClass { get; }
 
+        public string PicClass { get; }
+
         internal ResponsiveParams(
             string method,
             object link,
@@ -31,7 +33,8 @@ namespace ToSic.Sxc.Images
             IResizeSettings settings = default,
             string imgAlt = default,
             string imgAltFallback = default,
-            string imgClass = default
+            string imgClass = default,
+            string picClass = default
             )
         {
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
@@ -43,6 +46,7 @@ namespace ToSic.Sxc.Images
             ImgAlt = imgAlt;
             ImgAltFallback = imgAltFallback;
             ImgClass = imgClass;
+            PicClass = picClass;
         }
     }
 }

@@ -30,6 +30,7 @@ namespace ToSic.Sxc.Startup
         {
             // basic environment, pages, modules etc.
             services.TryAddTransient<IEnvironmentInstaller, BasicEnvironmentInstaller>();
+            services.TryAddTransient<IPlatformAppInstaller, BasicEnvironmentInstaller>();
             services.TryAddTransient<IPlatformModuleUpdater, BasicModuleUpdater>();
             //services.TryAddTransient<IPagePublishingResolver, BasicPagePublishingResolver>();
             services.TryAddTransient<IPagePublishing, BasicPagePublishing>();
@@ -79,7 +80,6 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<UsersDataSourceProvider, UsersDataSourceProviderUnknown>();
             services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
             services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
-            services.TryAddTransient<AppFilesDataSourceProvider, AppFilesDataSourceProviderUnknown>();
 
             return services;
         }

@@ -81,7 +81,7 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            var block = GetBlock();
+            var block = GetBlockAndContext().LoadBlock();
             Log.A($"HasBlock: {block != null}");
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             // if it's null, use the log of this object
@@ -136,16 +136,16 @@ namespace ToSic.Sxc.WebApi
             try
             {
                 var routeAppPath = Services.AppFolderUtilities.GetAppFolder(Request, false);
-                var siteCtx = SharedContextResolver.Site();
-                var appState = SharedContextResolver.AppOrNull(routeAppPath)?.AppState;
+                var appState = SharedContextResolver.SetAppOrNull(routeAppPath)?.AppState;
 
                 if (appState != default)
                 {
+                    var siteCtx = SharedContextResolver.Site();
                     // Look up if page publishing is enabled - if module context is not available, always false
                     Log.A($"AppId: {appState.AppId}");
                     var app = Services.AppOverrideLazy.Value
                         .PreInit(siteCtx.Site)
-                        .Init(appState, Services.AppConfigDelegateLazy.Value.Build(siteCtx.UserMayEdit));
+                        .Init(appState, Services.AppConfigDelegateLazy.Value.Build(/*siteCtx.UserMayEdit*/));
                     _DynCodeRoot.AttachApp(app);
                     found = true;
                 }

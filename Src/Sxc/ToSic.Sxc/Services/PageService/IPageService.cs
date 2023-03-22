@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Services
     /// * Most commands were updated to return an empty string in v14.02 so that they could be used as inline razor (previously `void`)
     /// </remarks>
     [PublicApi]
-    public interface IPageService
+    public partial interface IPageService
     {
         /// <summary>
         /// How changes should be applied to the page.
@@ -159,95 +159,13 @@ namespace ToSic.Sxc.Services
 
         #endregion
 
-        #region Features
+        #region Testing Commands
 
         /// <summary>
-        /// Activate a feature on this page, such as `turnOn`, `2sxc.JsCore` etc.
-        /// For list of features, see [](xref:NetCode.Razor.Services.IPageServiceActivate).
+        /// This is for testing only, and not a real API. Should not be used outside of testing.
         /// </summary>
-        /// <param name="keys">One or more strings containing Page-Feature keys</param>
-        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.Activate(...)`</returns>
-        string Activate(params string[] keys);
-
-        /// <summary>
-        /// Activate a feature on this page, such as `turnOn`, `2sxc.JsCore` etc.
-        /// For list of features, see [](xref:NetCode.Razor.Services.IPageServiceActivate).
-        /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="condition">Condition to determine if activation should happen</param>
-        /// <param name="features">One or more strings containing Page-Feature keys</param>
-        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.Activate(...)`</returns>
-        /// <remarks>
-        /// * This overload with `condition` added in v15.03
-        /// </remarks>
-        string Activate(
-            string noParamOrder = Eav.Parameters.Protector,
-            bool condition = true,
-            params string[] features);
-
-        #endregion
-
-        #region Security
-
-        /// <summary>
-        /// Add common html attributes to a `script` or `link` tag to [enable optimizations](xref:Basics.Server.AssetOptimization.Index)
-        /// and [automatically whitelist in the Content Security Policy](xref:Abyss.Security.Csp.Parts#auto-white-listing-explicit)
-        /// </summary>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="optimize">Activate optimize, default is true</param>
-        /// <param name="priority">Optional priority of optimization. Must be more than 100 to have an effect.</param>
-        /// <param name="position">Optional position of the resource (`head`, `body`, `bottom`)</param>
-        /// <param name="whitelist">Automatically add to CSP-whitelist. This uses a random key to protect against XSS.</param>
-        /// <returns>The asset attributes in a format which will be preserved in HTML</returns>
-        /// <remarks>
-        /// History: Created in 2sxc 13.10
-        /// </remarks>
-        IHybridHtmlString AssetAttributes(
-            string noParamOrder = Eav.Parameters.Protector,
-            bool optimize = true,
-            int priority = 0,
-            string position = null, 
-            bool whitelist = true);
-
-        /// <summary>
-        /// Add a CSP rule where you also specify the name.
-        /// Best check the [CSP Guide](xref:Abyss.Security.Csp.Index).
-        ///
-        /// For an example, see [Coded CSP](xref:Abyss.Security.Csp.CodedRules)
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="values"></param>
-        /// <returns>Empty string, so it can be used on inline razor such as `@Kit.Page.AddCsp(...)`</returns>
-        string AddCsp(string name, params string[] values);
-
-        #endregion
-
-        #region TurnOn (new v15)
-
-        /// <summary>
-        /// Turn on some javascript code when all requirements have been met.
-        /// Uses [turnOn](xref:JsCode.TurnOn.Index).
-        ///
-        /// Will automatically activate the feature and set hidden data on the page for the turnOn JS to pick up.
-        /// </summary>
-        /// <param name="runOrSpecs">
-        /// * either a run `string` like `window.myObject.myJs()` (must always start with window)
-        /// * or a object containing all the parameters which turnOn requires
-        /// </param>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="require">
-        /// _optional_ One or more requirements which must be met before the code starts.
-        /// Can be one or many values and/or functions.
-        /// * a `string` such as `window.myObject` or `window.myObject.readyToStart()`
-        /// * a array of such strings
-        /// </param>
-        /// <param name="data">_optional_ any value such as a string, or an object - to pass into the run-command</param>
-        /// <returns>An empty string, just so you can use it directly in Razor like `@Kit.Page.TurnOn("...")`</returns>
-        /// <remarks>New in v15.</remarks>
-        string TurnOn(object runOrSpecs,
-            string noParamOrder = Eav.Parameters.Protector,
-            object require = default,
-            object data = default);
+        [PrivateApi]
+        void TestCdn(string cdnSource);
 
         #endregion
     }

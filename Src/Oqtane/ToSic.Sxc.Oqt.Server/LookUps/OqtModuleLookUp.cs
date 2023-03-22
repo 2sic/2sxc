@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
         {
             if (_alreadyTried) return null;
             _alreadyTried = true;
-            var ctx = _ctxResolver.BlockOrNull();
+            var ctx = _ctxResolver.BlockContextOrNull();
             var module = (OqtModule)ctx?.Module;
             return module?.GetContents();
         }

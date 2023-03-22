@@ -22,9 +22,7 @@ using ToSic.Eav.WebApi.App;
 using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using IApp = ToSic.Eav.Apps.IApp;
 
 namespace ToSic.Sxc.WebApi.App
 {
@@ -39,7 +37,7 @@ namespace ToSic.Sxc.WebApi.App
         public AppContent(Generator<Apps.App> app,
             EntityApi entityApi,
             LazySvc<IConvertToEavLight> entToDicLazy,
-            IContextResolver ctxResolver,
+            Sxc.Context.IContextResolver ctxResolver,
             Generator<MultiPermissionsTypes> typesPermissions,
             Generator<MultiPermissionsItems> itemsPermissions,
             LazySvc<AppManager> appManagerLazy,
@@ -59,10 +57,10 @@ namespace ToSic.Sxc.WebApi.App
 
         private readonly EntityApi _entityApi;
         private readonly LazySvc<IConvertToEavLight> _entToDicLazy;
-        private readonly IContextResolver _ctxResolver;
+        private readonly Sxc.Context.IContextResolver _ctxResolver;
         private readonly LazySvc<AppManager> _appManagerLazy;
         private readonly LazySvc<SimpleDataController> _dataControllerLazy;
-        private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState, showDrafts: false));
+        private AppManager AppManager => _appManager.Get(() => _appManagerLazy.Value.InitQ(AppState));
         private readonly GetOnce<AppManager> _appManager = new GetOnce<AppManager>();
 
         public AppContent Init(string appName)
@@ -208,28 +206,27 @@ namespace ToSic.Sxc.WebApi.App
             return wrapLog.ReturnTrue($"new ParentRelationship p:{parentGuid},f:{field},i:{index}");
         }
 
-        private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive)
+        private Target GetMetadata(Dictionary<string, object> newContentItemCaseInsensitive) => Log.Func($"count: {newContentItemCaseInsensitive.Count}", () =>
         {
-            var wrapLog = Log.Fn<Target>($"item dictionary key count: {newContentItemCaseInsensitive.Count}");
-
-            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor)) return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' key is missing");
+            if (!newContentItemCaseInsensitive.Keys.Contains(Attributes.JsonKeyMetadataFor))
+                return (null, $"'{Attributes.JsonKeyMetadataFor}' key is missing");
 
             var objectOrNull = newContentItemCaseInsensitive[Attributes.JsonKeyMetadataFor];
-            if (objectOrNull == null) return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is null");
+            if (objectOrNull == null) 
+                return (null, $"'{Attributes.JsonKeyMetadataFor}' value is null");
 
             if (!(objectOrNull is JsonObject metadataFor))
-                return wrapLog.ReturnNull($"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
+                return (null, $"'{Attributes.JsonKeyMetadataFor}' value is not JsonObject");
 
-            var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null)
-            {
-                KeyGuid = (Guid?)metadataFor[Attributes.GuidNiceName],
-                KeyNumber = (int?)metadataFor[Attributes.NumberNiceName],
-                KeyString = (string)metadataFor[Attributes.StringNiceName]
-            };
-            return wrapLog.Return(metaData,
-                $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
+            var metaData = new Target(GetTargetType(metadataFor[Attributes.TargetNiceName]?.AsValue()), null,
+            
+                keyGuid: (Guid?)metadataFor[Attributes.GuidNiceName],
+                keyNumber: (int?)metadataFor[Attributes.NumberNiceName],
+                keyString: (string)metadataFor[Attributes.StringNiceName]
+            );
+            return (metaData, $"new metadata g:{metaData.KeyGuid},n:{metaData.KeyNumber},s:{metaData.KeyString}");
 
-        }
+        });
 
         private static int GetTargetType(JsonValue target)
         {
@@ -244,13 +241,6 @@ namespace ToSic.Sxc.WebApi.App
             }
         }
 
-        /// <summary>
-        /// used for API calls to get the current app
-        /// </summary>
-        /// <returns></returns>
-        internal IApp GetApp(int appId, bool showDrafts) => _app.New().Init(appId, null, showDrafts);
-
-        // TODO: THIS SHOULD probably replace The GetApp above, as it's just an indirect way of getting the data-controller?
         private SimpleDataController DataController(IAppIdentity app) => _dataController ?? (_dataController = _dataControllerLazy.Value.Init(app.ZoneId, app.AppId));
         private SimpleDataController _dataController;
 
@@ -281,7 +271,7 @@ namespace ToSic.Sxc.WebApi.App
             if (contentType == "any")
                 throw new Exception("type any not allowed with id-only, requires guid");
 
-            var entityApi = _entityApi.Init(AppState.AppId, true);
+            var entityApi = _entityApi.Init(AppState.AppId/*, true*/);
             var itm = entityApi.AppRead.AppState.List.GetOrThrow(contentType, id);
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);
             entityApi.Delete(itm.Type.Name, id);
@@ -292,7 +282,7 @@ namespace ToSic.Sxc.WebApi.App
             Log.A($"delete guid:{guid}, type:{contentType}, path:{appPath}");
             // if app-path specified, use that app, otherwise use from context
 
-            var entityApi = _entityApi.Init(AppState.AppId, Context.UserMayEdit);
+            var entityApi = _entityApi.Init(AppState.AppId/*, Context.UserMayEdit*/);
             var itm = AppState.List.GetOrThrow(contentType == "any" ? null : contentType, guid);
 
             ThrowIfNotAllowedInItem(itm, Grants.Delete.AsSet(), AppState);

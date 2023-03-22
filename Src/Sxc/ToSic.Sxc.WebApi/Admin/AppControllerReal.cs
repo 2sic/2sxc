@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Configuration;
+using ToSic.Eav.DataSources.Sys;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
@@ -92,7 +93,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles)
             => _exportAppLazy.Value.SaveDataForVersionControl(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
-        public List<StackInfoDto> GetStack(int appId, string part, string key = null, Guid? view = null)
+        public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null)
             => _appStackBackendLazy.Value.GetAll(appId, part ?? ConfigurationConstants.RootNameSettings, key, view, null);
 
         public ImportResultDto Reset(int zoneId, int appId, string defaultLanguage, bool withPortalFiles) 

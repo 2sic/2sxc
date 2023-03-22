@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code
             var wrapLog = Log.Fn<IDynamicCodeRoot>($"{pageId}, {moduleId}");
             MakeSureLogIsInHistory();
             ActivateEditUi();
-            var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.GetBlock(pageId, moduleId);
+            var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.GetProvider(pageId, moduleId).LoadBlock();
             var codeRoot = _myScopedServices.CodeRootGenerator.New().InitDynCodeRoot(cmsBlock, Log, Constants.CompatibilityLevel12);
 
             return wrapLog.ReturnAsOk(codeRoot);

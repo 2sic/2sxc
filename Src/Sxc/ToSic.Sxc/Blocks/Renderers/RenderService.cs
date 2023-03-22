@@ -135,14 +135,13 @@ namespace ToSic.Sxc.Blocks
 
 
         /// <inheritdoc />
-        public virtual IRenderResult Module(int pageId, int moduleId)
+        public virtual IRenderResult Module(int pageId, int moduleId) => Log.Func($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}", () =>
         {
             MakeSureLogIsInHistory();
-            var wrapLog = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
-            var block = _Deps.Builder.Value.GetBlock(pageId, moduleId).BlockBuilder;
+            var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
             var result = block.Run(true);
-            return wrapLog.ReturnAsOk(result);
-        }
+            return (result, "ok");
+        });
 
         /// <summary>
         /// create edit-object which is necessary for context attributes

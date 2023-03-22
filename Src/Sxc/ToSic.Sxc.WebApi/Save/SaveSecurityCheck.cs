@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Save
         public IMultiPermissionCheck DoPreSaveSecurityCheck(int appId, IEnumerable<BundleWithHeader> items) =>
             Log.Func<IMultiPermissionCheck>(() =>
             {
-                var app = _appGen.New().Init(appId, null, Context.UserMayEdit);
+                var app = _appGen.New().Init(appId);
                 var permCheck = _multiPermissionsTypesGen.New()
                     .Init(Context, app, items.Select(i => i.Header).ToList());
                 if (!permCheck.EnsureAll(GrantSets.WriteSomething, out var error))

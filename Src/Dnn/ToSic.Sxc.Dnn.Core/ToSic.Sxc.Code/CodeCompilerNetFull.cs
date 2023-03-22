@@ -9,18 +9,19 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public class CodeCompilerNetFull: CodeCompiler
     {
-        protected override Assembly GetAssembly(string virtualPath, string className)
+        protected override (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className)
         {
-            var assembly = BuildManager.GetCompiledAssembly(virtualPath);
-            return assembly;
+            var x = BuildManager.CodeAssemblies;
+            var assembly = BuildManager.GetCompiledAssembly(relativePath);
+            return (assembly, null);
         }
 
-        protected override Type GetCsHtmlType(string virtualPath)
+        protected override (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath)
         {
-            var compiledType = BuildManager.GetCompiledType(virtualPath);
-            if (compiledType == null)
-                ErrorMessage = $"Couldn't create instance of {virtualPath}. Compiled type == null";
-            return compiledType;
+            var compiledType = BuildManager.GetCompiledType(relativePath);
+            var errMsg = (compiledType == null)
+                ? $"Couldn't create instance of {relativePath}. Compiled type == null" : null;
+            return (compiledType, errMsg);
         }
     }
 }

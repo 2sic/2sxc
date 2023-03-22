@@ -17,7 +17,7 @@ namespace ToSic.Sxc.LookUp
         /// </summary>
         public LookUpCmsBlock(string name, IBlock block): base(name, new Dictionary<string, string>
         {
-            { QueryConstants.ParamsShowDraftKey, block.Context.UserMayEdit.ToString() }
+            { QueryConstants.ParamsShowDraftsKey, block.Context.UserMayEdit.ToString() }
         })
         {
             Block = block;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
@@ -45,7 +46,7 @@ namespace ToSic.Sxc.Dnn
         /// Probably obsolete, but a bit risky to just remove
         /// We will only add it to ApiController but not to Api12, because no new code should ever use that.
         /// </remarks>
-        [PrivateApi] public IBlock Block => GetBlock();
+        [PrivateApi] public IBlock Block => GetBlockAndContext().LoadBlock();
 
         [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
 
@@ -86,9 +87,9 @@ namespace ToSic.Sxc.Dnn
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
             where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource

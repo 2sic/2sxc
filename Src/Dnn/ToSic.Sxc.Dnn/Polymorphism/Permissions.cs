@@ -12,14 +12,13 @@ namespace ToSic.Sxc.Polymorphism
 
         public const string ModeIsSuperUser = "IsSuperUser";
 
-        public string Edition(string parameters, ILog log)
+        public string Edition(string parameters, ILog log) => log.Func(() =>
         {
-            var wrapLog = log.Fn<string>();
             if (!string.Equals(parameters, ModeIsSuperUser, InvariantCultureIgnoreCase))
-                return wrapLog.ReturnNull("unknown param");
+                return (null, "unknown param");
             var isSuper = PortalSettings.Current?.UserInfo?.IsSuperUser ?? false;
             var result = isSuper ? "staging" : "live";
-            return wrapLog.ReturnAndLog(result);
-        }
+            return (result, result);
+        });
     }
 }

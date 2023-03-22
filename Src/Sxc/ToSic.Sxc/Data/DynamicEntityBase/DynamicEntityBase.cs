@@ -14,10 +14,10 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug
     {
-        protected DynamicEntityBase(DynamicEntityServices services) => _Services = services;
+        protected DynamicEntityBase(DynamicEntity.MyServices services) => _Services = services;
 
         // ReSharper disable once InconsistentNaming
-        public DynamicEntityServices _Services { get; }
+        public DynamicEntity.MyServices _Services { get; }
 
         // ReSharper disable once InconsistentNaming
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Data
         /// <returns></returns>
         protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Services, Debug);
 
-        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntityServices services, bool? debug)
+        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntity.MyServices services, bool? debug)
         {
             if (contents == null) return null;
             var result = new DynamicEntity(contents, services);

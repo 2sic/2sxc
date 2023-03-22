@@ -83,7 +83,7 @@ namespace ToSic.Sxc.Dnn.StartUp
         {
             // Core Runtime Context Objects
             services.TryAddScoped<IUser, DnnUser>();
-
+            services.TryAddScoped<DnnSecurity>();
             // Make sure that ISite and IZoneCultureResolver use the same singleton!
             services.TryAddScoped<ISite, DnnSite>();    // this must come first!
             services.TryAddScoped<IZoneCultureResolver>(x => x.GetRequiredService<ISite>());
@@ -110,6 +110,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<ILinkService, DnnLinkService>();
             services.TryAddTransient<IPlatformModuleUpdater, DnnModuleUpdater>();
             services.TryAddTransient<IEnvironmentInstaller, DnnEnvironmentInstaller>();
+            services.TryAddTransient<IPlatformAppInstaller, DnnPlatformAppInstaller>();
             services.TryAddTransient<DnnEnvironmentInstaller>(); // Dnn Only
             services.TryAddTransient<DnnInstallLogger>();
 
