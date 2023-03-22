@@ -31,7 +31,7 @@ namespace ToSic.Sxc.DataSources
         public Sites(MyServices services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
         {
             ConnectServices(sitesProvider);
-            ProvideOutRaw(sitesProvider.GetSitesInternal, options: SiteDataRaw.Options);
+            ProvideOutRaw(sitesProvider.GetSitesInternal, options: () => SiteDataRaw.Options);
         }
     }
 }
