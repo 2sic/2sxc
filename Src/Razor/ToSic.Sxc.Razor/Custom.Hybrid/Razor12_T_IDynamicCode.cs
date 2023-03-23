@@ -79,7 +79,7 @@ namespace Custom.Hybrid
 
         [PrivateApi]
         public IDataSource CreateSourceWip(string name,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = ToSic.Eav.Parameters.Protector,
             IDataSource source = null,
             object options = null)
             => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
