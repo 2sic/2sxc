@@ -36,7 +36,7 @@ namespace ToSic.Sxc.DataSources
         ConfigurationType = "" // TODO: ...
         )]
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP")]
-    public class Adam : DataSource
+    public class AdamFiles : DataSource
     {
         private readonly IDataFactory _dataFactory;
         private readonly AdamDataSourceProvider<int, int> _provider;
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.DataSources
         #region Constructor
 
         [PrivateApi]
-        public Adam(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataDataFactory) : base(services, "CDS.Adam")
+        public AdamFiles(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataDataFactory) : base(services, "CDS.Adam")
         {
             ConnectServices(
                 _provider = provider,
