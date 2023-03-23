@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Install
         /// </summary>
         public DnnEnvironmentInstaller(ILogStore logStore, DnnInstallLogger installLogger, LazySvc<IGlobalConfiguration> globalConfiguration) : base("Dnn.InstCo")
         {
-            logStore.Add(LogNames.LogStoreStartUp, Log);
+            logStore.Add(LogNames.LogStoreInstallation, Log);
             ConnectServices(
                 _installLogger = installLogger,
                 _globalConfiguration = globalConfiguration

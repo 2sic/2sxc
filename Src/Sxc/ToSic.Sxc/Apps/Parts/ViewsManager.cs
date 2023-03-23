@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Apps
             if (templateId.HasValue)
                 Parent.Entities.UpdateParts(templateId.Value, values);
             else
-                Parent.Entities.Create(Eav.Apps.Configuration.TemplateContentType, values);
+                Parent.Entities.Create(Eav.Apps.AppConstants.TemplateContentType, values);
         }
 
 

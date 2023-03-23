@@ -28,9 +28,9 @@ namespace ToSic.Sxc.Code
             // Ensure AppId is provided
             var realAppId = appId ?? throw new ArgumentException($"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
 
-            // todo: lookup zoneId if not provided
-            var realZoneId = zoneId ?? AppConstants.AutoLookupZone;
-            return App(new AppIdentity(zoneId ?? Eav.Constants.IdNotInitialized, realAppId), site, withUnpublished: withUnpublished);
+            // lookup zoneId if not provided
+            var realZoneId = zoneId ?? Services.AppStates.Value.IdentityOfApp(realAppId).ZoneId;
+            return App(new AppIdentity(realZoneId, realAppId), site, withUnpublished: withUnpublished);
         }
 
         public IApp AppOfSite() => AppOfSite(siteId: null);

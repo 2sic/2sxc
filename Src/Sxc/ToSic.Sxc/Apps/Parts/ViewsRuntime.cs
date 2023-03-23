@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Apps
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = Parent.Data;
 			var typeFilter = _typeFilterGenerator.New(source: dataSource);
-		    typeFilter.TypeName = Eav.Apps.Configuration.TemplateContentType;
+		    typeFilter.TypeName = Eav.Apps.AppConstants.TemplateContentType;
 		    return _viewDs = typeFilter;
 		}
 

@@ -11,7 +11,6 @@ namespace ToSic.Sxc.Code
     {
         protected override (Assembly Assembly, string ErrorMessages) GetAssembly(string relativePath, string className)
         {
-            var x = BuildManager.CodeAssemblies;
             var assembly = BuildManager.GetCompiledAssembly(relativePath);
             return (assembly, null);
         }

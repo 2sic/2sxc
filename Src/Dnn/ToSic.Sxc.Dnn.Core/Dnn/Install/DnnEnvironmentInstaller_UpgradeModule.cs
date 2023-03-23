@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using ToSic.Eav;
+using ToSic.Lib.Logging;
 using Exception = System.Exception;
 
 namespace ToSic.Sxc.Dnn.Install
@@ -13,6 +14,8 @@ namespace ToSic.Sxc.Dnn.Install
     {
         internal string UpgradeModule(string version, bool closeWhenDone)
         {
+            var l = Log.Fn<string>($"{nameof(version)}: {version}, {nameof(closeWhenDone)}: {closeWhenDone}");
+
             // Check if table "ToSIC_SexyContent_Templates" exists. 
             // If it's gone, then PROBABLY skip all upgrade-codes incl. 8.11!
             var sql = @"SELECT COUNT(*) FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ToSIC_SexyContent_Templates]') AND TYPE IN(N'U')";
@@ -33,7 +36,7 @@ namespace ToSic.Sxc.Dnn.Install
             _installLogger.LogStep(version, "UpgradeModule starting", false);
 
             // Abort upgrade if it's already done - if version is 01.00.00, the module has probably been uninstalled - continue in this case.
-            if (version != "01.00.00" && IsUpgradeComplete(version, "- Check on Start UpgradeModule"))
+            if (version != "01.00.00" && IsUpgradeComplete(version, true, "- Check on Start UpgradeModule"))
             {
                 _installLogger.LogStep(version, "Apparently trying to update this version, but this versions upgrade is apparently completed, will abort");
                 throw new Exception("2sxc upgrade for version " + version +
@@ -41,6 +44,7 @@ namespace ToSic.Sxc.Dnn.Install
             }
             _installLogger.LogStep(version, "version / upgrade-complete test passed");
 
+            l.A("Will check if IsUpgradeRunning");
             if (IsUpgradeRunning)
             {
                 _installLogger.LogStep(version, "Apparently upgrade is running, will abort");
@@ -148,7 +152,7 @@ namespace ToSic.Sxc.Dnn.Install
 
                     // Reset Upgrade complete so it's regenerated
                     UpgradeCompleteCache.Reset();
-                    var getNewStatus = UpgradeComplete();
+                    var getNewStatus = UpgradeComplete(true);
                     _installLogger.LogStep(version, $"updated upgrade-complete status to {getNewStatus}");
                 }
 
@@ -168,7 +172,9 @@ namespace ToSic.Sxc.Dnn.Install
             _installLogger.LogStep(version, "UpgradeModule done / returning");
             if (closeWhenDone)
                 _installLogger.CloseLogFiles();
-            return version;
+
+            
+            return l.ReturnAndLog(version);
         }
         
 

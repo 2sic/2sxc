@@ -33,12 +33,13 @@ namespace ToSic.Sxc.Services.CmsService
 
         #region Init
 
-        public CmsServiceStringWysiwyg Init(IDynamicField field, IContentType contentType, IContentTypeAttribute attribute, bool debug)
+        public CmsServiceStringWysiwyg Init(IDynamicField field, IContentType contentType, IContentTypeAttribute attribute, bool debug, object imageSettings)
         {
             Field = field;
             ContentType = contentType;
             Attribute = attribute;
             Debug = debug;
+            ImageSettings = imageSettings;
             return this;
         }
 
@@ -46,6 +47,7 @@ namespace ToSic.Sxc.Services.CmsService
         protected IContentType ContentType;
         protected IContentTypeAttribute Attribute;
         protected bool Debug;
+        protected object ImageSettings;
 
         #endregion
 
@@ -66,7 +68,7 @@ namespace ToSic.Sxc.Services.CmsService
             html = ProcessInnerContent(html);
 
             // prepare classes to add
-            var classes = WysiwygContainerClass + (Debug ? " " + "wysiwyg-debug" : "");
+            var classes = WysiwygContainerClass + (Debug ? $" {WysiwygDebugClass}" : "");
 
             // 3. Check Responsive Images
             // extract img tags from html using regex case insensitive
@@ -82,7 +84,7 @@ namespace ToSic.Sxc.Services.CmsService
                 var parts = _imageExtractor.ExtractProperties(originalImgTag);
 
                 // use the IImageService to create Picture tags for it
-                var picture = ServiceKit.Image.Picture(link: parts.src, factor: parts.factor, width: parts.width, imgAlt: parts.imgAlt,
+                var picture = ServiceKit.Image.Picture(link: parts.src, settings: ImageSettings ?? "Wysiwyg", factor: parts.factor, width: parts.width, imgAlt: parts.imgAlt,
                     imgClass: parts.imgClasses);
 
                 // re-attach an alt-attribute, class etc. from the original if it had it
@@ -96,7 +98,6 @@ namespace ToSic.Sxc.Services.CmsService
             // reconstruct the original html and return wrapped in the realContainer
             return (new CmsProcessed(true, html, classes), "wysiwyg changed");
         });
-        
 
         private string ProcessInnerContent(string html) => Log.Func(() =>
         {

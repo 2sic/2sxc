@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -73,20 +71,18 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsList(list);
 
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inStream);
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source);
 
-        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
-            where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
+        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source, options);
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(
-            string name,
+        public IDataSource CreateSourceWip(string name,
             string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = default,
-            IConfiguration configuration = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
+            IDataSource source = null,
+            object options = null)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
         #endregion
 

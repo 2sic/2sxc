@@ -43,9 +43,10 @@ namespace ToSic.Sxc.DataSources
         [Configuration(Field = FieldInstanceId, Fallback = "[" + InstanceLookupName + ":" + ModuleIdKey + "]")]
         public int? ModuleId
         {
-            get => int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?();
-            set => Configuration.SetThis(value);
+            get => _moduleId ?? (int.TryParse(Configuration.GetThis(), out var listId) ? listId : new int?());
+            set => _moduleId = value;
         }
+        private int? _moduleId;
 
         #region Constructor
 

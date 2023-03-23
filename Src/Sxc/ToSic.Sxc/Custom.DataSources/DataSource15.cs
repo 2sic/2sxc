@@ -51,10 +51,11 @@ namespace Custom.DataSources
         protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
 
 
-        protected void ProvideOut(Func<IEnumerable> getList,
+        protected void ProvideOut(
+            Func<IEnumerable> getList,
             string noParamOrder = Parameters.Protector,
             string name = DataSourceConstants.StreamDefaultName,
-            DataFactoryOptions options = default
+            Func<DataFactoryOptions> options = default
             )
             => _inner.BreachProvideOut(getList, name: name, options: options);
 
@@ -68,7 +69,7 @@ namespace Custom.DataSources
 
         #region Public IDataSource Implementation
 
-        public IDataSourceConfigurationManager Configuration => _inner.Configuration;
+        public IDataSourceConfiguration Configuration => _inner.Configuration;
 
         public DataSourceErrorHelper Error => _inner.Error;
 

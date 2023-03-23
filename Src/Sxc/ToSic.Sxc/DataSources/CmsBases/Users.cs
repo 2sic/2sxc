@@ -56,10 +56,10 @@ namespace ToSic.Sxc.DataSources
         [Configuration]
         public string UserIds
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _userIds ?? Configuration.GetThis();
+            set => _userIds = value;
         }
-
+        private string _userIds;
         /// <summary>
         /// Optional exclude Users (single value or comma-separated guids or integers) filter,
         /// exclude users based on guid or id
@@ -67,9 +67,10 @@ namespace ToSic.Sxc.DataSources
         [Configuration]
         public string ExcludeUserIds
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _excludeUserIds ?? Configuration.GetThis();
+            set => _excludeUserIds = value;
         }
+        private string _excludeUserIds;
 
         /// <summary>
         /// Optional IncludeRolesFilter (single value or comma-separated integers) filter,
@@ -78,9 +79,10 @@ namespace ToSic.Sxc.DataSources
         [Configuration]
         public string RoleIds
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _roleIds ?? Configuration.GetThis();
+            set => _roleIds = value;
         }
+        private string _roleIds;
 
         /// <summary>
         /// Optional ExcludeRolesFilter (single value or comma-separated integers) filter,
@@ -89,9 +91,10 @@ namespace ToSic.Sxc.DataSources
         [Configuration]
         public string ExcludeRoleIds
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _excludeRoleIds ?? Configuration.GetThis();
+            set => _excludeRoleIds = value;
         }
+        private string _excludeRoleIds;
 
         /// <summary>
         /// Optional SystemAdmins filter.
@@ -106,9 +109,10 @@ namespace ToSic.Sxc.DataSources
         [Configuration]
         public string IncludeSystemAdmins
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _includeSystemAdmins ?? Configuration.GetThis();
+            set => _includeSystemAdmins = value;
         }
+        private string _includeSystemAdmins;
 
         private static readonly string IncludeRequired = "required";
         private static readonly string IncludeOptional = true.ToString();
@@ -123,9 +127,10 @@ namespace ToSic.Sxc.DataSources
         [Configuration(Fallback = true)]
         public bool AddRoles
         {
-            get => Configuration.GetThis(true);
-            set => Configuration.SetThis(value);
+            get => _addRoles ?? Configuration.GetThis(true);
+            set => _addRoles = value;
         }
+        private bool? _addRoles;
 
         #endregion
 
@@ -218,7 +223,7 @@ namespace ToSic.Sxc.DataSources
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();
             // Get roles, use the current data source to provide aspects such as lookups etc.
-            var rolesDs = _rolesGenerator.New(source: this); // _dsFactory.Value.Create<Roles>(source: this);
+            var rolesDs = _rolesGenerator.New(source: this);
             // Set filter parameter to only get roles we'll need
             rolesDs.RoleIds = string.Join(",", roleIds);
             var roles = rolesDs.List;

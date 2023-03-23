@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.Install
             // Run upgrade again for all versions that do not have a corresponding logfile
             foreach (var upgradeVersion in UpgradeVersionList)
             {
-                var complete = IsUpgradeComplete(upgradeVersion, "- check for FinishAbortedUpgrade");
+                var complete = IsUpgradeComplete(upgradeVersion, true, "- check for FinishAbortedUpgrade");
                 _installLogger.LogStep("", "Status for version " + upgradeVersion + " is " + complete);
                 if (!complete)
                     UpgradeModule(upgradeVersion, false);

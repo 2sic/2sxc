@@ -6,6 +6,7 @@ using DotNetNuke.Entities.Modules;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Search;
@@ -160,17 +161,23 @@ namespace ToSic.SexyContent.Razor
         #region Data Source Stuff
         /// <inheritdoc />
         [Obsolete]
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IConfiguration configuration = null)
-            => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configuration);
+        public IDataSource CreateSource(string typeName = "", IDataSource source = null, ILookUpEngine lookUpEngine = null)
+            => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, source, lookUpEngine);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
+        [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
+        public T CreateSource<T>(IDataSource source, ILookUpEngine lookUpEngine = default)
             where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
+            => _DynCodeRoot.CreateSource<T>(source, null); // note 2023-03-22 2dm - ignoring the lookup engine, I don't think this was ever in use
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inStream);
+        public T CreateSource<T>(IDataSource source = null, object options = null)
+            where T : IDataSource
+            => throw new NotSupportedException("Use a newer Razor base class");
+
+        /// <inheritdoc />
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source);
 
         #endregion
 

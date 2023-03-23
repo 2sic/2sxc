@@ -5534,7 +5534,7 @@
                 "Metadata": [
                   {
                     "Id": 130668,
-                    "Version": 5,
+                    "Version": 6,
                     "Guid": "f0df036b-1ce2-4c6c-8e25-08f85608e42e",
                     "Type": {
                       "Name": "@All",
@@ -5543,25 +5543,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": "Content"
+                          "en-us": "Content"
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "string-dropdown"
+                          "en-us": "string-dropdown"
                         },
                         "Name": {
-                          "*": "Name / ItemIdentifier"
+                          "en-us": "Name / ItemIdentifier"
                         },
                         "Notes": {
-                          "*": "<p>Use the TT-Freetext option to create an own Identifier like News</p>"
+                          "en-us": "<p>Use the TT-Freetext option to create an own Identifier like News</p>"
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -5577,16 +5588,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": false
+                          "en-us": false
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -5594,7 +5605,7 @@
                   },
                   {
                     "Id": 130672,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "9db820ca-4625-4e8a-968a-38792a4cdfdf",
                     "Type": {
                       "Name": "@String",
@@ -5603,10 +5614,10 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": ""
+                          "en-us": ""
                         }
                       }
                     },
@@ -5614,7 +5625,7 @@
                   },
                   {
                     "Id": 130673,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "9629a7be-9978-49ab-bbea-5318c9414d30",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -5623,12 +5634,21 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "*": "Content (the typical full-width Image in the Content-Area):Content\nLightbox (images which open in a Lightbox):Lightbox\nSection (usually a full-width background / parallax):Section\nFull Screen images / Backgrounds:Screen"
+                          "en-us": "Content:Content (the typical full-width Image in the Content-Area)\nLightbox:Lightbox (images which open in a Lightbox)\nSection:Section (usually a full-width background / parallax)\nScreen:Full Screen images / Backgrounds\nWysiwyg:Wysiwyg - for images in the Wysiwyg Editor"
+                        },
+                        "DropdownValuesFormat": {
+                          "en-us": "value-label"
+                        },
+                        "Separator": {
+                          "en-us": ","
                         }
                       },
                       "Boolean": {
+                        "AllowMultiValue": {
+                          "en-us": false
+                        },
                         "EnableTextEntry": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -9567,7 +9587,7 @@
         },
         {
           "Id": 130677,
-          "Version": 2,
+          "Version": 3,
           "Guid": "89184eb0-1d4d-4429-8c38-c453f8aa149d",
           "Type": {
             "Name": "⚙️Images",
@@ -9576,7 +9596,7 @@
           "Attributes": {
             "String": {
               "SettingsIdentifier": {
-                "*": "Images"
+                "en-us": "Images"
               }
             },
             "Entity": {
@@ -9585,7 +9605,8 @@
                   "358ce0df-52bf-4877-bf32-19c3fb723c73",
                   "35d4e680-2f92-455a-90b7-4a5a936c287f",
                   "bdbff289-219d-46d6-b697-5d17050eebe9",
-                  "8affa267-ec04-408f-af93-48c0ae693e5c"
+                  "8affa267-ec04-408f-af93-48c0ae693e5c",
+                  "8c454005-9a76-48b2-a63d-7e92a731bb80"
                 ]
               }
             }
@@ -9979,6 +10000,75 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "052a5e27-40f8-40bf-bd97-35a6641e9df0"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 169969,
+          "Version": 1,
+          "Guid": "8c454005-9a76-48b2-a63d-7e92a731bb80",
+          "Type": {
+            "Name": "⚙️Image",
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+          },
+          "Attributes": {
+            "String": {
+              "Advanced": {
+                "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"2*, 1*, 3/4*, 1/2*\",\r\n    \"setWidth\": false,\r\n    \"attributes\": {\r\n      \"loading\": \"lazy\"\r\n    },\r\n    \"recipes\": [\r\n      {\r\n        \"name\": \"Bootstrap3\",\r\n        \"forCss\": \"bs3\",\r\n        \"attributes\": { \"class\": \"img-responsive\" },\r\n        \"setWidth\": false\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap4\",\r\n        \"forCss\": \"bs4\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap5\",\r\n        \"forCss\": \"bs5\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true,\r\n        \"setHeight\" : true,\r\n        \"recipes\": [\r\n          { \r\n            \"forFactor\": \"12/12\", \r\n            \"width\": 1230,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 100vw, 1230px\"\r\n            }\r\n          },\r\n          { \"forFactor\": \"11/12\", \"width\": 1100 },\r\n          { \"forFactor\": \"10/12\", \"width\": 1000 },\r\n          { \"forFactor\": \"9/12\", \"width\": 900 },\r\n          { \"forFactor\": \"8/12\", \"width\": 800 },\r\n          { \"forFactor\": \"7/12\", \"width\": 700 },\r\n          { \r\n            \"forFactor\": \"6/12\", \r\n            \"width\": 600, \r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 50vw, (max-width: 576px) 100vw, 600px\" \r\n              }\r\n          },\r\n          { \"forFactor\": \"5/12\", \"width\": 500 },\r\n          { \r\n            \"forFactor\": \"4/12\", \r\n            \"width\": 390,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 34vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 390px\"\r\n            }\r\n           },\r\n          { \r\n            \"forFactor\": \"3/12\", \r\n            \"width\": 285,\r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 25vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 285px\"\r\n              }\r\n          },\r\n          { \"forFactor\": \"2/12\", \"width\": 170 },\r\n          { \"forFactor\": \"1/12\", \"width\":  75 }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}"
+              },
+              "Format": {
+                "en-us": ""
+              },
+              "ItemIdentifier": {
+                "en-us": "Wysiwyg"
+              },
+              "ResizeMode": {
+                "en-us": "max"
+              },
+              "ScaleMode": {
+                "en-us": "both"
+              },
+              "SettingsIdentifier": {
+                "en-us": "Images.Wysiwyg"
+              }
+            },
+            "Number": {
+              "Height": {
+                "en-us": 1400
+              },
+              "Quality": {
+                "en-us": 75
+              },
+              "Width": {
+                "en-us": 1400
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 169970,
+              "Version": 1,
+              "Guid": "2987dbad-0186-4bc0-9684-685ddf64a1e2",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "48e9f943-45da-49b4-9ceb-2b91bb6a54be"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "8c454005-9a76-48b2-a63d-7e92a731bb80"
               }
             }
           ]

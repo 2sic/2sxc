@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.Configuration;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -34,7 +35,7 @@ namespace ToSic.Sxc.DataSources
 
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
-            var initialSource = dsFactory.CreateDefault(appIdentity: block, configuration: configLookUp);
+            var initialSource = dsFactory.CreateDefault(new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
             var moduleDataSource = dsFactory.Create<CmsBlock>(source: initialSource);
 
             moduleDataSource.OverrideView = view;
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.Create<Block>(appIdentity: block, source: viewDataSourceUpstream, configuration: configLookUp);
+            var viewDataSource = dsFactory.Create<Block>(source: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
 
             // Take Publish-Properties from the View-Template
             if (view != null)

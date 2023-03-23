@@ -48,9 +48,10 @@ namespace ToSic.Sxc.Dnn.DataSources
         [Configuration]
 		public string UserIds
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _userIds ?? Configuration.GetThis();
+            set => _userIds = value;
         }
+        private string _userIds;
 
         /// <summary>
         /// List of profile-properties to retrieve, comma-separated
@@ -58,9 +59,10 @@ namespace ToSic.Sxc.Dnn.DataSources
         [Configuration(Fallback = "DisplayName,Email,FirstName,LastName,Username")]
 		public string Properties
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _properties ?? Configuration.GetThis();
+            set => _properties = value;
         }
+        private string _properties;
 
 		/// <summary>
 		/// Gets or sets the Name of the ContentType to simulate
@@ -68,9 +70,10 @@ namespace ToSic.Sxc.Dnn.DataSources
 		[Configuration(Field = "ContentTypeName", Fallback = DnnUserProfileDataRaw.TypeName)]
 		public string ContentType
 		{
-			get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+			get => _contentType ?? Configuration.GetThis();
+            set => _contentType = value;
         }
+        private string _contentType;
 
 		/// <summary>
 		/// Gets or sets the Name of the Title Attribute of the DNN-UserInfo
@@ -78,9 +81,10 @@ namespace ToSic.Sxc.Dnn.DataSources
 		[Configuration(Field = "TitleFieldName", Fallback = "DisplayName")]
 		public string TitleField
 		{
-			get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+			get => _titleField ?? Configuration.GetThis();
+            set => _titleField = value;
         }
+        private string _titleField;
 
 		#endregion
 

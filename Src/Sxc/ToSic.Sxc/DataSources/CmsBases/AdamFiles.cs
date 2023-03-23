@@ -20,9 +20,9 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/> TODO
     /// </summary>
-    [PublicApi]
+    [PrivateApi("still wip / finishing specs etc.")]
     [VisualQuery(
         NiceName = "Adam",
         UiHint = "Files and folders in the Adam",
@@ -36,47 +36,43 @@ namespace ToSic.Sxc.DataSources
         ConfigurationType = "" // TODO: ...
         )]
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP")]
-    public class Adam : DataSource
+    public class AdamFiles : DataSource
     {
         private readonly IDataFactory _dataFactory;
         private readonly AdamDataSourceProvider<int, int> _provider;
 
         #region Configuration properties
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration]
-        public string EntityIds
-        {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
-        }
+        public string EntityIds => Configuration.GetThis();
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration]
-        public string EntityGuids
-        {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
-        }
+        public string EntityGuids => Configuration.GetThis();
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration]
-        public string Fields
-        {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
-        }
+        public string Fields => Configuration.GetThis();
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration(Fallback = "*.*")]
-        public string Filter
-        {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
-        }
+        public string Filter => Configuration.GetThis();
 
         #endregion
 
         #region Constructor
 
         [PrivateApi]
-        public Adam(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataDataFactory) : base(services, "CDS.Adam")
+        public AdamFiles(MyServices services, AdamDataSourceProvider<int, int> provider, IDataFactory dataDataFactory) : base(services, "CDS.Adam")
         {
             ConnectServices(
                 _provider = provider,

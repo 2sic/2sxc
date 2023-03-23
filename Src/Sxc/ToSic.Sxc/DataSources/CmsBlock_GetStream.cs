@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
@@ -102,7 +104,7 @@ namespace ToSic.Sxc.DataSources
             if (!In.ContainsKey(StreamDefaultName))
             {
                 l.A("In not attached, will auto-attach");
-                var publishing = _services.DataSourceFactory.Value.CreateDefault(appIdentity: this, configuration: Configuration.LookUpEngine);
+                var publishing = _services.DataSourceFactory.Value.CreateDefault(new DataSourceOptions(appIdentity: this, lookUp: Configuration.LookUpEngine));
                 Attach(publishing);
             }
 

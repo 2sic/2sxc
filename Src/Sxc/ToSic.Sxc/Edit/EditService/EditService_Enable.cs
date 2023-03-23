@@ -35,11 +35,11 @@ namespace ToSic.Sxc.Edit.EditService
             // Must activate the "public" one JsCms, not internal, so feature-tests will run
             if (api == true || forms == true) ps.Activate(BuiltInFeatures.JsCms.NameId);
 
-            if (styles.HasValue) ps.Activate(BuiltInFeatures.Toolbars.NameId);
+            if (styles == true) ps.Activate(BuiltInFeatures.Toolbars.NameId);
 
-            if (context.HasValue) ps.Activate(BuiltInFeatures.ContextModule.NameId);
+            if (context == true) ps.Activate(BuiltInFeatures.ContextModule.NameId);
 
-            if (autoToolbar.HasValue) ps.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
+            if (autoToolbar == true) ps.Activate(BuiltInFeatures.ToolbarsAuto.NameId);
 
             return (null, "ok");
         });

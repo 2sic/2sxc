@@ -46,21 +46,19 @@ namespace ToSic.Sxc.Code
 
         #region CreateSource
         /// <inheritdoc />
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inStream);
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default)
-            where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
+        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source, options);
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = default,
-            IConfiguration configuration = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
+        public IDataSource CreateSourceWip(string name,
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            IDataSource source = null,
+            object options = null)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
         #endregion
 

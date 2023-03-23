@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Code
         private ILookUpEngine _configurationProvider;
 
         [PrivateApi]
-        public ILookUpEngine ConfigurationProvider
+        public ILookUpEngine ConfigurationProvider // todo: rename to LookUpForDataSources
         {
             get
             {
@@ -41,41 +40,39 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IConfiguration configuration = default) where T : IDataSource
+        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
         {
-            configuration = configuration ?? ConfigurationProvider;
-
             // If no in-source was provided, make sure that we create one from the current app
-            inSource = inSource ?? DataSourceFactory.CreateDefault(appIdentity: App, configuration: ConfigurationProvider);
-            return DataSourceFactory.Create<T>(source: inSource, configuration: configuration);
+            source = source ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
+            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
+            return DataSourceFactory.Create<T>(source: source, options: typedOptions);
         }
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
         {
-            // if it has a source, then use this, otherwise it's null and that works too. Reason: some sources like DataTable or SQL won't have an upstream source
-            var src = CreateSource<T>(inStream.Source);
+            // if it has a source, then use this, otherwise it's null and then it uses the App-Default
+            // Reason: some sources like DataTable or SQL won't have an upstream source
+            var src = CreateSource<T>(source.Source);
             src.In.Clear();
-            src.Attach(DataSourceConstants.StreamDefaultName, inStream);
+            src.Attach(DataSourceConstants.StreamDefaultName, source);
             return src;
         }
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = Eav.Parameters.Protector,
-            IDataSource source = default,
-            IConfiguration configuration = default)
+        public IDataSource CreateSourceWip(string name,
+            string noParamOrder = ToSic.Eav.Parameters.Protector,
+            IDataSource source = null,
+            object options = null)
         {
             // VERY WIP
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
-            var configurationSourceNew = new ConfigurationWip
-            {
-                LookUpEngine = configuration?.GetLookupEngineWip() ?? ConfigurationProvider?.GetLookupEngineWip(),
-                Values = null // todo configuration
-            };
-            var ds = DataSourceFactory.Create(type, appIdentity: App, source: source, configuration: configurationSourceNew);
+
+            var finalConf2 =
+                new DataSourceOptions.Converter().Create(
+                    new DataSourceOptions(lookUp: ConfigurationProvider, appIdentity: App), options);
+            var ds = DataSourceFactory.Create(type, source: source, options: finalConf2);
 
             // if it supports all our known context properties, attach them
             if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
