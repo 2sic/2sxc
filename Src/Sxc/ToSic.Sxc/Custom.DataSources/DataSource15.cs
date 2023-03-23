@@ -69,7 +69,7 @@ namespace Custom.DataSources
 
         #region Public IDataSource Implementation
 
-        public IDataSourceConfigurationManager Configuration => _inner.Configuration;
+        public IDataSourceConfiguration Configuration => _inner.Configuration;
 
         public DataSourceErrorHelper Error => _inner.Error;
 
