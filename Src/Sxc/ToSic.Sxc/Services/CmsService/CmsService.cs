@@ -29,7 +29,8 @@ namespace ToSic.Sxc.Services.CmsService
             string noParamOrder = Eav.Parameters.Protector,
             object container = default,
             string classes = default,
-            bool debug = default
+            bool debug = default,
+            object imageSettings = default
         ) => Log.Func(l =>
         {
             // If it's not a field, we cannot find out more about the object
@@ -53,7 +54,9 @@ namespace ToSic.Sxc.Services.CmsService
                 // ...wysiwyg
                 if (attribute.InputType() == InputTypes.InputTypeWysiwyg)
                 {
-                    var htmlResult = _stringWysiwyg.New().Init(field, contentType, attribute, debug).Process();
+                    var htmlResult = _stringWysiwyg.New()
+                        .Init(field, contentType, attribute, debug, imageSettings)
+                        .Process();
                     return htmlResult.IsProcessed
                         ? (GetContainerAndWrap(container, htmlResult, classes), "ok")
                         : (GetContainerAndWrap(container, thing, classes), "not converted");

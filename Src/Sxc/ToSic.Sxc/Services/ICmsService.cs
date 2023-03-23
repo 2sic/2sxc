@@ -10,7 +10,8 @@ namespace ToSic.Sxc.Services
             string noParamOrder = Eav.Parameters.Protector,
             object container = default,
             string classes = default,
-            bool debug = default
+            bool debug = default,
+            object imageSettings = default
         );
     }
 }
