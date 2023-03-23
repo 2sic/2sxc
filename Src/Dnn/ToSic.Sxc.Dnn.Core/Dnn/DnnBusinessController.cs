@@ -100,12 +100,12 @@ namespace ToSic.Sxc.Dnn
         /// <returns></returns>
         public string UpgradeModule(string version)
         {
-            Log.A($"upgrade module - start for v:{version}");
+            var l = Log.Fn<string>($"upgrade module - start for v:{version}");
             var installer = ServiceProvider.Build<DnnEnvironmentInstaller>(Log);
             var res = installer.UpgradeModule(version, true);
             Log.A($"result:{res}");
             DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
-            return res;
+            return l.ReturnAndLog(res);
         }
 
         public override IList<SearchDocument> GetModifiedSearchDocuments(ModuleInfo moduleInfo, DateTime beginDate)
