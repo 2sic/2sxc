@@ -80,14 +80,14 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [NonAction]
-        public T CreateSource<T>(IDataSource inSource = null, object configuration = null)
+        public T CreateSource<T>(IDataSource source = null, object configuration = null)
             where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
+            => _DynCodeRoot.CreateSource<T>(source, configuration);
 
         /// <inheritdoc />
         [NonAction]
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inStream);
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source);
 
         [PrivateApi]
         [NonAction]

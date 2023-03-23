@@ -129,13 +129,12 @@ namespace ToSic.Sxc.Dnn
         #region Data Source Stuff
 
         /// <inheritdoc/>
-        public T CreateSource<T>(IDataSource inSource = null, object options = null)
-            where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, options);
+        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source, options);
 
         /// <inheritdoc/>
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inStream);
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source);
 
         #endregion
 

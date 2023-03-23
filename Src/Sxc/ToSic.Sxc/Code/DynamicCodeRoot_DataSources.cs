@@ -40,22 +40,22 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, object options = null) where T : IDataSource
+        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
         {
             // If no in-source was provided, make sure that we create one from the current app
-            inSource = inSource ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
+            source = source ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
             var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
-            return DataSourceFactory.Create<T>(source: inSource, options: typedOptions);
+            return DataSourceFactory.Create<T>(source: source, options: typedOptions);
         }
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
         {
             // if it has a source, then use this, otherwise it's null and then it uses the App-Default
             // Reason: some sources like DataTable or SQL won't have an upstream source
-            var src = CreateSource<T>(inStream.Source);
+            var src = CreateSource<T>(source.Source);
             src.In.Clear();
-            src.Attach(DataSourceConstants.StreamDefaultName, inStream);
+            src.Attach(DataSourceConstants.StreamDefaultName, source);
             return src;
         }
 

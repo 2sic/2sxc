@@ -47,9 +47,9 @@ namespace ToSic.SexyContent
         /// Create a source with initial stream to attach...
         /// </summary>
         /// <returns></returns>
-        T CreateSource<T>(IDataStream inStream) where T : IDataSource;
-        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine lookUpEngine = null);
-        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine lookUpEngine = default) where T : IDataSource;
+        T CreateSource<T>(IDataStream source) where T : IDataSource;
+        IDataSource CreateSource(string typeName = "", IDataSource source = null, ILookUpEngine lookUpEngine = null);
+        T CreateSource<T>(IDataSource source = null, ILookUpEngine lookUpEngine = default) where T : IDataSource;
         #endregion
 
     }

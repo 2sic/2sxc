@@ -46,13 +46,12 @@ namespace ToSic.Sxc.Code
 
         #region CreateSource
         /// <inheritdoc />
-        public T CreateSource<T>(IDataStream inStream) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inStream);
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, object options = null)
-            where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, options);
+        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source, options);
 
         [PrivateApi]
         public IDataSource CreateSourceWip(string name,

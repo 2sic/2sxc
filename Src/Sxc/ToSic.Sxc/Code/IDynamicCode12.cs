@@ -196,20 +196,20 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
         /// </summary>
-        /// <param name="inStream">The stream which will be the default In of the new data-source.</param>
+        /// <param name="source">The stream which will be the default In of the new data-source.</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        T CreateSource<T>(IDataStream inStream) where T : IDataSource;
+        T CreateSource<T>(IDataStream source) where T : IDataSource;
 
 
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
         /// </summary>
-        /// <param name="inSource">The data source which will be the default In of the new data-source.</param>
+        /// <param name="source">The data source which will be the default In of the new data-source.</param>
         /// <param name="options">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource;
+        T CreateSource<T>(IDataSource source = null, object options = default) where T : IDataSource;
 
         [PrivateApi]
         IDataSource CreateSourceWip(
