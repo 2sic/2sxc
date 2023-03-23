@@ -38,10 +38,15 @@ namespace ToSic.Sxc.Dnn.Install
             var complete = false;
             try
             {
-                if (alwaysLogToFile) _installLogger.LogStep(version, $"IsUpgradeComplete checking {note}", false);
-                var logFilePath = HostingEnvironment.MapPath($"{DnnConstants.LogDirectory}{version}.resources");
-                complete = File.Exists(logFilePath);
-                if (alwaysLogToFile || !complete) _installLogger.LogStep(version, $"IsUpgradeComplete: {complete}", false);
+                if (alwaysLogToFile) _installLogger.LogStep(version, $"{nameof(IsUpgradeComplete)} checking {note}", false);
+                var versionFilePath = HostingEnvironment.MapPath($"{DnnConstants.LogDirectory}{version}.resources");
+                l.A($"Checking file: '{versionFilePath}'");
+                complete = File.Exists(versionFilePath);
+                if (alwaysLogToFile || !complete)
+                {
+                    _installLogger.LogStep(version, $"File checked: '{versionFilePath}'");
+                    _installLogger.LogStep(version, $"{nameof(IsUpgradeComplete)}: {complete}", false);
+                }
             }
             catch (Exception ex)
             {
