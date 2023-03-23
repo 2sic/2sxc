@@ -42,72 +42,79 @@ namespace ToSic.Sxc.DataSources
         /// Include hidden pages.
         /// Default is `false`
         /// </summary>
+        /// <remarks>
+        /// * new in 15.04
+        /// * uses the [immutable convention](xref:NetCode.Conventions.Immutable)
+        /// </remarks>
         [Configuration]
-        public bool IncludeHidden
-        {
-            get => Configuration.GetThis(false);
-            set => Configuration.SetThis(value);
-        }
+        public bool IncludeHidden => Configuration.GetThis(false);
+
         /// <summary>
         /// Include deleted pages in the recycle bin.
         /// Default is `false`
         /// </summary>
+        /// <remarks>
+        /// * new in 15.04
+        /// * uses the [immutable convention](xref:NetCode.Conventions.Immutable)
+        /// </remarks>
         [Configuration]
-        public bool IncludeDeleted
-        {
-            get => Configuration.GetThis(false);
-            set => Configuration.SetThis(value);
-        }
+        public bool IncludeDeleted => Configuration.GetThis(false);
+
         /// <summary>
         /// Include admin pages such as site files.
         /// Default is `false`
         /// </summary>
+        /// <remarks>
+        /// * new in 15.04
+        /// * uses the [immutable convention](xref:NetCode.Conventions.Immutable)
+        /// </remarks>
         [Configuration]
-        public bool IncludeAdmin
-        {
-            get => Configuration.GetThis(false);
-            set => Configuration.SetThis(value);
-        }
+        public bool IncludeAdmin => Configuration.GetThis(false);
+
         /// <summary>
         /// Include system pages such as modules management.
         /// Default is `false`
         /// </summary>
+        /// <remarks>
+        /// * new in 15.04
+        /// * uses the [immutable convention](xref:NetCode.Conventions.Immutable)
+        /// </remarks>
         [Configuration]
-        public bool IncludeSystem
-        {
-            get => Configuration.GetThis(false);
-            set => Configuration.SetThis(value);
-        }
+        public bool IncludeSystem => Configuration.GetThis(false);
+
         /// <summary>
         /// Include link-reference pages (which are usually used in menus, and not themselves a real page).
         /// Default is `true`
         /// </summary>
+        /// <remarks>
+        /// * new in 15.04
+        /// * uses the [immutable convention](xref:NetCode.Conventions.Immutable)
+        /// </remarks>
         [Configuration]
-        public bool IncludeLinks
-        {
-            get => Configuration.GetThis(true);
-            set => Configuration.SetThis(value);
-        }
+        public bool IncludeLinks => Configuration.GetThis(true);
+
         /// <summary>
         /// Require that the current user has view permissions on all pages.
         /// Default is `true`
         /// </summary>
+        /// <remarks>
+        /// * new in 15.04
+        /// * uses the [immutable convention](xref:NetCode.Conventions.Immutable)
+        /// </remarks>
         [Configuration]
-        public bool RequireViewPermissions
-        {
-            get => Configuration.GetThis(true);
-            set => Configuration.SetThis(value);
-        }
+        public bool RequireViewPermissions => Configuration.GetThis(true);
+
         /// <summary>
         /// Require that the current user has edit permissions on all pages.
         /// Default is `false`
         /// </summary>
+        /// <remarks>
+        /// * new in 15.04
+        /// * uses the [immutable convention](xref:NetCode.Conventions.Immutable)
+        /// </remarks>
         [Configuration]
-        public bool RequireEditPermissions
-        {
-            get => Configuration.GetThis(false);
-            set => Configuration.SetThis(value);
-        }
+        public bool RequireEditPermissions => Configuration.GetThis(false);
+
         #endregion
 
         #region Constructor

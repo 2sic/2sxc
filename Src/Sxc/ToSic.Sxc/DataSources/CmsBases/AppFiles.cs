@@ -23,9 +23,9 @@ namespace ToSic.Sxc.DataSources
     ///
     /// As of now there are no parameters to set.
     ///
-    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/>
+    /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/> TODO
     /// </summary>
-    [PublicApi]
+    [PrivateApi("still wip / finishing specs etc.")]
     [VisualQuery(
         ConfigurationType = "", // TODO:
         NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
@@ -45,33 +45,30 @@ namespace ToSic.Sxc.DataSources
 
         #region Configuration properties
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration(Fallback = false)]
-        public bool OnlyFolders
-        {
-            get => Configuration.GetThis(false);
-            set => Configuration.SetThis(value);
-        }
+        public bool OnlyFolders => Configuration.GetThis(false);
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration(Fallback = false)]
-        public bool OnlyFiles
-        {
-            get => Configuration.GetThis(false);
-            set => Configuration.SetThis(value);
-        }
+        public bool OnlyFiles => Configuration.GetThis(false);
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration(Fallback = "/")]
-        public string Root
-        {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
-        }
+        public string Root => Configuration.GetThis();
 
+        /// <summary>
+        /// Uses the [immutable convention](xref:NetCode.Conventions.Immutable).
+        /// </summary>
         [Configuration(Fallback = "*.*")]
         public string Filter
-        {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
-        }
+        => Configuration.GetThis();
 
         #endregion
 

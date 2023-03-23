@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using ToSic.Eav.Core.Tests.LookUp;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.DataSources;
 using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
@@ -32,8 +33,11 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 3)]
         public void RolesWithIncludeFilter(string includeRolesFilter, int expected)
         {
-            var rolesDataSource = GenerateRolesDataSourceDataSource();
-            rolesDataSource.RoleIds = includeRolesFilter;
+            var rolesDataSource = GenerateRolesDataSourceDataSource(new
+            {
+                RoleIds = includeRolesFilter
+            });
+            //rolesDataSource.RoleIds = includeRolesFilter;
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 
@@ -45,8 +49,11 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataRow("a,b,c,-2,-1,4,4,5,6,4", 7)]
         public void RolesWithExcludeFilter(string excludeRolesFilter, int expected)
         {
-            var rolesDataSource = GenerateRolesDataSourceDataSource();
-            rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
+            var rolesDataSource = GenerateRolesDataSourceDataSource(new
+            {
+                ExcludeRoleIds = excludeRolesFilter
+            });
+            //rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 
@@ -56,13 +63,18 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataRow("3,4,5", "1,2,3", 2)]
         public void RolesWithIncludeExcludeFilter(string includeRolesFilter, string excludeRolesFilter, int expected)
         {
-            var rolesDataSource = GenerateRolesDataSourceDataSource();
-            rolesDataSource.RoleIds = includeRolesFilter;
-            rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
+            var rolesDataSource = GenerateRolesDataSourceDataSource(new
+            {
+                RoleIds = includeRolesFilter,
+                ExcludeRoleIds = excludeRolesFilter
+            });
+            //rolesDataSource.RoleIds = includeRolesFilter;
+            //rolesDataSource.ExcludeRoleIds = excludeRolesFilter;
             Assert.AreEqual(expected, rolesDataSource.List.ToList().Count);
         }
 
-        private Roles GenerateRolesDataSourceDataSource() 
-            => CreateDataSource<Roles>(new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes());
+        private Roles GenerateRolesDataSourceDataSource(object options = default) 
+            => CreateDataSourceNew<Roles>(new DataSourceOptions.Converter()
+                    .Create(new DataSourceOptions(lookUp: new LookUpTestData(GetService<DataBuilder>()).AppSetAndRes()), options));
     }
 }
