@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Code
             var realAppId = appId ?? throw new ArgumentException($"At least the {nameof(appId)} is required and must be a valid AppId", nameof(appId));
 
             // lookup zoneId if not provided
-            var realZoneId = zoneId ?? AppConstants.AutoLookupZone;
+            var realZoneId = zoneId ?? Services.AppStates.Value.IdentityOfApp(realAppId).ZoneId;
             return App(new AppIdentity(realZoneId, realAppId), site, withUnpublished: withUnpublished);
         }
 
