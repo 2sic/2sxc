@@ -50,23 +50,23 @@ namespace ToSic.Sxc.DataSources
         /// include roles based on roleId
         /// </summary>
         [Configuration]
-        public virtual string RoleIds
+        public string RoleIds
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _roleIds ?? Configuration.GetThis();
+            set => _roleIds = value;
         }
-
+        private string _roleIds;
         /// <summary>
         /// Optional (single value or comma-separated integers) filter,
         /// exclude roles based on roleId
         /// </summary>
         [Configuration]
-        public virtual string ExcludeRoleIds
+        public string ExcludeRoleIds
         {
-            get => Configuration.GetThis();
-            set => Configuration.SetThis(value);
+            get => _excludeRoleIds ?? Configuration.GetThis();
+            set => _excludeRoleIds = value;
         }
-
+        private string _excludeRoleIds;
         #endregion
 
 

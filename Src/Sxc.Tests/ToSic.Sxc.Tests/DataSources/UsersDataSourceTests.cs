@@ -170,9 +170,12 @@ namespace ToSic.Sxc.Tests.DataSources
         [DataRow("off", 17)]
         public void UsersWithSuperUserFilter(string superUserFilter, int expected)
         {
-            var usersDataSource = GenerateUsersDataSourceDataSource();
+            var usersDataSource = GenerateUsersDataSourceDataSource(new
+            {
+                IncludeSystemAdmins = superUserFilter
+            });
             //usersDataSource.IncludeSystemAdmins = superUserFilter;
-            usersDataSource.Configuration.Values[nameof(usersDataSource.IncludeSystemAdmins)] = superUserFilter;
+            //usersDataSource.Configuration.Values[nameof(usersDataSource.IncludeSystemAdmins)] = superUserFilter;
             Assert.AreEqual(expected, usersDataSource.List.ToList().Count);
         }
 
