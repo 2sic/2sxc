@@ -171,7 +171,7 @@ namespace ToSic.SexyContent.Razor
             => _DynCodeRoot.CreateSource<T>(inSource, null); // note 2023-03-22 2dm - ignoring the lookup engine, I don't think this was ever in use
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, object options = null)
             where T : IDataSource
             => throw new NotSupportedException("Use a newer Razor base class");
 

@@ -73,9 +73,9 @@ namespace Custom.Hybrid
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, object options = null)
             where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(inSource, configuration);
+            =>  _DynCodeRoot.CreateSource<T>(inSource, options);
 
         /// <inheritdoc />
 	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 

@@ -80,7 +80,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [NonAction]
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, object configuration = null)
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 

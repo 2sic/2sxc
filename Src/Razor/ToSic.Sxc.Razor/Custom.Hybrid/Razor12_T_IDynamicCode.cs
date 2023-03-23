@@ -74,9 +74,8 @@ namespace Custom.Hybrid
         public T CreateSource<T>(IDataStream inStream) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inStream);
 
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
-            where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, configuration);
+        public T CreateSource<T>(IDataSource inSource = null, object options = null) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, options);
 
         [PrivateApi]
         public IDataSource CreateSourceWip(string name,

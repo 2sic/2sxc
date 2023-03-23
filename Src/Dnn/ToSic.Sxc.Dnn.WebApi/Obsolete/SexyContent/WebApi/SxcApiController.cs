@@ -129,9 +129,9 @@ namespace ToSic.SexyContent.WebApi
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, null); // note 2023-03-22 2dm - ignoring the lookup engine, I don't think this was ever in use
 
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, object options = null)
             where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(inSource, configuration);
+            =>  _DynCodeRoot.CreateSource<T>(inSource, options);
 
 	    public T CreateSource<T>(IDataStream inStream) where T : IDataSource 
             => _DynCodeRoot.CreateSource<T>(inStream);
