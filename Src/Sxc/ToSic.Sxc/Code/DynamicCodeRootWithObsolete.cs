@@ -39,13 +39,13 @@ namespace ToSic.Sxc.Code
                 var catalog = _root.GetService<DataSourceCatalog>();
                 var type = catalog.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
                 configuration = configuration ?? _root.ConfigurationProvider;
-                var cnf2Wip = new DataSourceConfiguration(lookUp: configuration);
+                var cnf2Wip = new DataSourceOptions(lookUp: configuration);
                 if (inSource != null)
-                    return _root.DataSourceFactory.Create(type: type, source: inSource, configuration: cnf2Wip);
+                    return _root.DataSourceFactory.Create(type: type, source: inSource, options: cnf2Wip);
 
-                var initialSource = _root.DataSourceFactory.CreateDefault(new DataSourceConfiguration(appIdentity: _root.App, lookUp: _root.ConfigurationProvider));
+                var initialSource = _root.DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: _root.App, lookUp: _root.ConfigurationProvider));
                 return typeName != ""
-                    ? _root.DataSourceFactory.Create(type: type, source: initialSource, configuration: cnf2Wip)
+                    ? _root.DataSourceFactory.Create(type: type, source: initialSource, options: cnf2Wip)
                     : initialSource;
             }
             catch (Exception ex)

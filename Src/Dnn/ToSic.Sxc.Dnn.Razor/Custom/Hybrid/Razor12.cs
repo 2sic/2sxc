@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
-using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
@@ -101,7 +99,7 @@ namespace Custom.Hybrid
         #region Data Source Stuff
 
         /// <inheritdoc/>
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
@@ -114,8 +112,8 @@ namespace Custom.Hybrid
             string name,
             string noParamOrder = ToSic.Eav.Parameters.Protector,
             IDataSource source = default,
-            IDataSourceConfiguration configuration = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
+            object options = default)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
 
         #endregion

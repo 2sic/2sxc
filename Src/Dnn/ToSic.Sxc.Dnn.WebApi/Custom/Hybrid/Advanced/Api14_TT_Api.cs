@@ -66,7 +66,7 @@ namespace Custom.Hybrid.Advanced
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
             where T : IDataSource
             =>  _DynCodeRoot.CreateSource<T>(inSource, configuration);
 
@@ -79,8 +79,8 @@ namespace Custom.Hybrid.Advanced
             string name,
             string noParamOrder = ToSic.Eav.Parameters.Protector,
             IDataSource source = default,
-            IDataSourceConfiguration configuration = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, configuration: configuration);
+            object options = default)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
         #endregion
 

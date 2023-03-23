@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
@@ -41,11 +40,11 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default) where T : IDataSource
+        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default) where T : IDataSource
         {
             // If no in-source was provided, make sure that we create one from the current app
-            inSource = inSource ?? DataSourceFactory.CreateDefault(new DataSourceConfiguration(appIdentity: App, lookUp: ConfigurationProvider));
-            return DataSourceFactory.Create<T>(source: inSource, configuration: configuration ?? new DataSourceConfiguration(lookUp: ConfigurationProvider));
+            inSource = inSource ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
+            return DataSourceFactory.Create<T>(source: inSource, options: configuration ?? new DataSourceOptions(lookUp: ConfigurationProvider));
         }
 
         /// <inheritdoc />
@@ -59,20 +58,19 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = Eav.Parameters.Protector,
-            IDataSource source = default,
-            IDataSourceConfiguration configuration = default)
+        public IDataSource CreateSourceWip(string name,
+            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
+            IDataSource source = null,
+            object options = null)
         {
             // VERY WIP
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
-            var cnf2Wip = new DataSourceConfiguration(
-                lookUp: configuration?.LookUp ?? ConfigurationProvider,
-                values: configuration?.Values,
-                appIdentity: App);
-            var ds = DataSourceFactory.Create(type, source: source, configuration: cnf2Wip);
+
+            var finalConf2 =
+                new DataSourceOptions.Converter().Create(
+                    new DataSourceOptions(lookUp: ConfigurationProvider, appIdentity: App), options);
+            var ds = DataSourceFactory.Create(type, source: source, options: finalConf2);
 
             // if it supports all our known context properties, attach them
             if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);

@@ -194,7 +194,7 @@ namespace ToSic.Sxc.Code
         /// <param name="configuration">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default) where T : IDataSource;
+        T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default) where T : IDataSource;
         #endregion
 
         #region Context

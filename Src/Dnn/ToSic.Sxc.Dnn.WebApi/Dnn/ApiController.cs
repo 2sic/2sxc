@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Dnn
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, IDataSourceConfiguration configuration = default)
+        public T CreateSource<T>(IDataSource inSource = null, IDataSourceOptions configuration = default)
             where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configuration);
 

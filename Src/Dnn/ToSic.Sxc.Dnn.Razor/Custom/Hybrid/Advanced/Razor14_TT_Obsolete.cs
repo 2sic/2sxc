@@ -24,7 +24,7 @@ using ToSic.Eav.LookUp;
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
-        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IDataSourceConfiguration configuration = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, IDataSourceOptions configuration = null)
             => Obsolete10.CreateSourceString();
 
         #endregion
