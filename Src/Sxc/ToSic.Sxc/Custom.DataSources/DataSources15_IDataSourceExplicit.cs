@@ -37,9 +37,14 @@ namespace Custom.DataSources
         IDataSource IDataSourceConnection.DataSource => ((IDataSourceConnection)_inner).DataSource;
 
         string IDataSourceConnection.SourceStreamName => ((IDataSourceConnection)_inner).SourceStreamName;
+        string IDataSourceConnection.TargetStreamName => ((IDataSourceConnection)_inner).TargetStreamName;
 
         IDataStream IDataSourceConnection.Stream => ((IDataSourceConnection)_inner).Stream;
 
         bool IDataSourceConnection.HasMore => ((IDataSourceConnection)_inner).HasMore;
+        void IDataSourceTarget.Connect(IDataSourceConnection connections)
+        {
+            _inner.Connect(connections);
+        }
     }
 }
