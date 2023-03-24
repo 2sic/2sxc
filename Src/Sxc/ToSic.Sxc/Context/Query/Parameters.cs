@@ -30,15 +30,15 @@ namespace ToSic.Sxc.Context.Query
 
         #region Get (new v15.04)
 
-        public string Get(string key) => OriginalsAsDic.TryGetValue(key, out var value) ? value : null;
+        public string Get(string name) => OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
 
         public TValue Get<TValue>(string name) => Get<TValue>(name, fallback: default);
 
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        public T Get<T>(string key, string noParamOrder = Eav.Parameters.Protector, T fallback = default)
+        public TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default)
         {
-            if (!ContainsKey(key)) return fallback;
-            var temp = this[key];
+            if (!ContainsKey(name)) return fallback;
+            var temp = this[name];
             return temp.ConvertOrFallback(fallback);
         }
 

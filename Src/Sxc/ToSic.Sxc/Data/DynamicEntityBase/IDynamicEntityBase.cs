@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data
     /// This is minor cross-concerns aspect of Dynamic-Entity-like objects
     /// </summary>
     [PrivateApi]
-    public interface IDynamicEntityBase: ICanDebug, IGetAccessors<object>
+    public interface IDynamicEntityBase: ICanDebug
     {
         /* IMPORTANT: KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase and IDynamicStack */
         ///// <summary>
