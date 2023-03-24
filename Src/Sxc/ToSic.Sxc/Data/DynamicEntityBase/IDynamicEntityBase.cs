@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Conventions;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Data
