@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Custom.Hybrid;
 using DotNetNuke.Entities.Modules;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;

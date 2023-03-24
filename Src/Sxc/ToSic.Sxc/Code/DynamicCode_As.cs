@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -50,12 +49,6 @@ namespace ToSic.Sxc.Code
         public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source, options);
 
-        [PrivateApi]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
-            IDataSource source = null,
-            object options = null)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
         #endregion
 

@@ -106,15 +106,6 @@ namespace Custom.Hybrid
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
-        [PrivateApi]
-        public IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = default,
-            object options = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
-
-
         #endregion
 
 

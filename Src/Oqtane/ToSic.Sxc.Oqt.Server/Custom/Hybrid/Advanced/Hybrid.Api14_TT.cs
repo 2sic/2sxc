@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib;
+﻿using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
@@ -22,6 +21,14 @@ namespace Custom.Hybrid.Advanced
 
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
         private readonly GetOnce<TServiceKit> _kit = new();
+
+        [PrivateApi]
+        public IDataSource CreateSourceWip(
+            string name,
+            string noParamOrder = ToSic.Eav.Parameters.Protector,
+            IDataSource source = default,
+            object options = default)
+            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
     }
 }

@@ -211,12 +211,6 @@ namespace ToSic.Sxc.Code
         /// <returns>A typed DataSource object</returns>
         T CreateSource<T>(IDataSource source = null, object options = default) where T : IDataSource;
 
-        [PrivateApi]
-        IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = Eav.Parameters.Protector,
-            IDataSource source = default,
-            object options = default);
         #endregion
 
         #region Context

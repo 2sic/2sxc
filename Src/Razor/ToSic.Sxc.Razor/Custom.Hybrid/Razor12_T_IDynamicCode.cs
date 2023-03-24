@@ -77,13 +77,6 @@ namespace Custom.Hybrid
         public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source, options);
 
-        [PrivateApi]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = null,
-            object options = null)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
-
         #endregion
 
         #region Convert-Service

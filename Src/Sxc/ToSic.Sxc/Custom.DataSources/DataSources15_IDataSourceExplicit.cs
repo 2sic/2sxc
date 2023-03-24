@@ -34,5 +34,12 @@ namespace Custom.DataSources
 
         #endregion
 
+        IDataSource IDataSourceConnection.DataSource => ((IDataSourceConnection)_inner).DataSource;
+
+        string IDataSourceConnection.SourceStreamName => ((IDataSourceConnection)_inner).SourceStreamName;
+
+        IDataStream IDataSourceConnection.Stream => ((IDataSourceConnection)_inner).Stream;
+
+        bool IDataSourceConnection.HasMore => ((IDataSourceConnection)_inner).HasMore;
     }
 }
