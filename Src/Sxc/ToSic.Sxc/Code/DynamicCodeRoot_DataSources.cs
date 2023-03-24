@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Code
             // If no in-source was provided, make sure that we create one from the current app
             source = source ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
             var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
-            return DataSourceFactory.Create<T>(source: source, options: typedOptions);
+            return DataSourceFactory.Create<T>(links: source, options: typedOptions);
         }
 
         /// <inheritdoc />

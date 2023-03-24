@@ -4,6 +4,7 @@ using ToSic.Eav.Caching;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Caching;
+using ToSic.Eav.DataSources.Linking;
 using ToSic.Lib.Logging;
 
 // ReSharper disable once CheckNamespace
@@ -34,17 +35,9 @@ namespace Custom.DataSources
 
         #endregion
 
-        IDataSource IDataSourceConnection.DataSource => ((IDataSourceConnection)_inner).DataSource;
 
-        string IDataSourceConnection.SourceStreamName => ((IDataSourceConnection)_inner).SourceStreamName;
-        string IDataSourceConnection.TargetStreamName => ((IDataSourceConnection)_inner).TargetStreamName;
+        void IDataSourceTarget.Connect(IDataSourceLinkInfo connections) => _inner.Connect(connections);
 
-        IDataStream IDataSourceConnection.Stream => ((IDataSourceConnection)_inner).Stream;
-
-        bool IDataSourceConnection.HasMore => ((IDataSourceConnection)_inner).HasMore;
-        void IDataSourceTarget.Connect(IDataSourceConnection connections)
-        {
-            _inner.Connect(connections);
-        }
+        IDataSourceLinkInfo IDataSourceLink.Link => ((IDataSourceLink)_inner).Link;
     }
 }
