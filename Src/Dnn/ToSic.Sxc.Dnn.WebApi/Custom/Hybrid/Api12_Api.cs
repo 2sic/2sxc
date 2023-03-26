@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Linking;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
@@ -73,8 +74,8 @@ namespace Custom.Hybrid
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, options);
 
         /// <inheritdoc />
 	    public T CreateSource<T>(IDataStream source) where T : IDataSource 

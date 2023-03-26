@@ -36,8 +36,8 @@ namespace Custom.DataSources
         #endregion
 
 
-        void IDataSourceTarget.Connect(IDataSourceLinkInfo connections) => _inner.Connect(connections);
+        void IDataSourceTarget.Connect(IDataSourceLink connections) => _inner.Connect(connections);
 
-        IDataSourceLinkInfo IDataSourceLink.Link => ((IDataSourceLink)_inner).Link;
+        IDataSourceLink IDataSourceLinkable.Links => ((IDataSourceLinkable)_inner).Links;
     }
 }

@@ -15,6 +15,7 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid

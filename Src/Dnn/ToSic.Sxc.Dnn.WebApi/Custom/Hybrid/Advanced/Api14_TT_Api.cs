@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Linking;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -66,20 +68,20 @@ namespace Custom.Hybrid.Advanced
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource
+            =>  _DynCodeRoot.CreateSource<T>(inSource, options);
 
         /// <inheritdoc />
 	    public T CreateSource<T>(IDataStream source) where T : IDataSource 
             => _DynCodeRoot.CreateSource<T>(source);
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = default,
-            object options = default)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
+            => _DynCodeRoot.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
+
+        [PrivateApi]
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource 
+            => _DynCodeRoot.CreateDataSource<T>(noParamOrder: noParamOrder, attach: attach, options: options);
 
         #endregion
 
@@ -105,7 +107,7 @@ namespace Custom.Hybrid.Advanced
 
 
         /// <inheritdoc />
-        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = ToSic.Eav.Parameters.Protector,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,

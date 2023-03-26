@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Linking;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
@@ -19,6 +20,7 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -85,14 +87,27 @@ namespace ToSic.Sxc.Dnn
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, options);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
         #endregion
+
+        #region CreateDataSource - new in v15, don't use in this old deprecated base class
+
+        [PrivateApi]
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
+
+        [PrivateApi]
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = null, object options = default)
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
+
+        #endregion
+
 
         #region Content, Presentation & List
 

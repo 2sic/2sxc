@@ -1,10 +1,9 @@
 ﻿﻿using System;
 using System.Collections.Generic;
- using ToSic.Eav.Configuration;
  using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
-using ToSic.Lib.Documentation;
-using ToSic.Eav.LookUp;
+ using ToSic.Eav.DataSources.Linking;
+ using ToSic.Lib.Documentation;
  using ToSic.Sxc.Custom.Hybrid;
 
  // ReSharper disable once CheckNamespace
@@ -24,7 +23,7 @@ using ToSic.Eav.LookUp;
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
-        public IDataSource CreateSource(string typeName = "", IDataSource source = null, IDataSourceOptions configuration = null)
+        public IDataSource CreateSource(string typeName = "", IDataSourceLinkable attach = null, IDataSourceOptions configuration = null)
             => Obsolete10.CreateSourceString();
 
         #endregion

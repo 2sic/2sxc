@@ -6,6 +6,10 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
+using static ToSic.Eav.Parameters;
+using System;
+using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Linking;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -34,6 +38,18 @@ namespace Custom.Hybrid
         private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
         [PrivateApi] ILog IHasLog.Log => base.Log;
+
+        #endregion
+
+        #region CreateDataSource - new in v15, don't use in this old deprecated base class
+
+        [PrivateApi]
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
+
+        [PrivateApi]
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = null, object options = default)
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
 
         #endregion
 
