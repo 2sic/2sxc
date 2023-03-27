@@ -9,6 +9,7 @@ using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.DataSources.Queries;
