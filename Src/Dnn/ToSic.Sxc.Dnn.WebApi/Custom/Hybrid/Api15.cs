@@ -1,5 +1,7 @@
 ﻿using Custom.Hybrid.Advanced;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
@@ -21,7 +23,7 @@ namespace Custom.Hybrid
     /// </remarks>
     [WorkInProgressApi("still wip, for V15, but without Newtonsoft JSON")]
     [DnnLogExceptions]
-    public abstract class Api15: Api14<dynamic, ServiceKit14>, IDynamicCode12, IDynamicWebApi, IHasDynamicCodeRoot
+    public abstract class Api15: Api14<dynamic, ServiceKit14>, IDynamicCode12, IDynamicWebApi
     {
         protected Api15() : base("Hyb12") { }
         protected Api15(string logSuffix) : base(logSuffix) { }

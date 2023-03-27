@@ -101,7 +101,7 @@ namespace Custom.Hybrid
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
             return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                GetService<AppConfigDelegate>().Build(/*false*/));
+                GetService<AppConfigDelegate>().Build());
         });
 
         #region IHasLog
@@ -109,7 +109,6 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
         private readonly GetOnce<ICodeLog> _codeLog = new();
-
         [PrivateApi] ILog IHasLog.Log => base.Log;
 
         #endregion
