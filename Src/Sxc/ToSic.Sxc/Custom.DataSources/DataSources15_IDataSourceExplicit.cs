@@ -38,6 +38,6 @@ namespace Custom.DataSources
 
         void IDataSourceTarget.Connect(IDataSourceLink connections) => _inner.Connect(connections);
 
-        IDataSourceLink IDataSourceLinkable.Links => ((IDataSourceLinkable)_inner).Links;
+        IDataSourceLink IDataSourceLinkable.Link => ((IDataSourceLinkable)_inner).Link;
     }
 }
