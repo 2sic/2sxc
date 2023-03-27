@@ -38,7 +38,7 @@ namespace ToSic.Sxc.DataSources
         ConfigurationType = "" // TODO: ...
         )]
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP")]
-    public class AdamFiles : DataSource
+    public class AdamFiles : DataSourceBase
     {
         private readonly IDataFactory _dataFactory;
         private readonly AdamDataSourceProvider<int, int> _provider;

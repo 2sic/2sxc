@@ -25,9 +25,9 @@ namespace Custom.DataSources
         /// in the constructor, so we can be sure we can add more dependencies as we need them.
         /// </summary>
         [PrivateApi]
-        public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
+        public class MyServices: MyServicesBase<CustomDataSourceLight.MyServices>
         {
-            public MyServices(CustomDataSourceAdvanced.MyServices parentServices) : base(parentServices)
+            public MyServices(CustomDataSourceLight.MyServices parentServices) : base(parentServices)
             {
             }
         }

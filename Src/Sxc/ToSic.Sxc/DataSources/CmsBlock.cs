@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
         In = new []{DataSourceConstants.StreamDefaultName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
         NameIds = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
-    public sealed partial class CmsBlock : DataSource
+    public sealed partial class CmsBlock : DataSourceBase
     {
         [PrivateApi] internal const string InstanceLookupName = "module";
         [PrivateApi] internal const string ModuleIdKey = "Id";
@@ -52,13 +52,13 @@ namespace ToSic.Sxc.DataSources
 
         #region Constructor
 
-        public new class MyServices: MyServicesBase<DataSource.MyServices>
+        public new class MyServices: MyServicesBase<DataSourceBase.MyServices>
         {
             public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
             public LazySvc<IModule> ModuleLazy { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
 
-            public MyServices(DataSource.MyServices parentServices,
+            public MyServices(DataSourceBase.MyServices parentServices,
                 LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
                 LazySvc<IDataSourcesService> dataSourceFactory) : base(parentServices)
