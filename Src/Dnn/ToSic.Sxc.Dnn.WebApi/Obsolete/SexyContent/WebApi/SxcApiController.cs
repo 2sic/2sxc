@@ -122,16 +122,11 @@ namespace ToSic.SexyContent.WebApi
 
         #region CreateSource implementations
         [Obsolete]
-        public IDataSource CreateSource(string typeName = "", IDataSource links = null,
-	        ILookUpEngine lookUpEngine = null)
-	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, links, lookUpEngine);
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configurationProvider);
 
-        [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
-        public T CreateSource<T>(IDataSource links = null, ILookUpEngine lookUpEngine = default) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(links, lookUpEngine);
-
-        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
 	    public T CreateSource<T>(IDataStream source) where T : IDataSource 
             => _DynCodeRoot.CreateSource<T>(source);

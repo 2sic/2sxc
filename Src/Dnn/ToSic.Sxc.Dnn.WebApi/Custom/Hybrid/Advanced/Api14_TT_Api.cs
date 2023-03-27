@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Linking;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
@@ -68,20 +69,20 @@ namespace Custom.Hybrid.Advanced
         #region CreateSource implementations
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(inSource, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            =>  _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
 	    public T CreateSource<T>(IDataStream source) where T : IDataSource 
             => _DynCodeRoot.CreateSource<T>(source);
 
         [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
-            => _DynCodeRoot.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
-
-        [PrivateApi]
         public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource 
             => _DynCodeRoot.CreateDataSource<T>(noParamOrder: noParamOrder, attach: attach, options: options);
+
+        [PrivateApi]
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
+            => _DynCodeRoot.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
 
         #endregion
 

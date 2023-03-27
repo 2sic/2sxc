@@ -162,17 +162,13 @@ namespace ToSic.SexyContent.Razor
         #region Data Source Stuff
         /// <inheritdoc />
         [Obsolete]
-        public IDataSource CreateSource(string typeName = "", IDataSource links = null, ILookUpEngine lookUpEngine = null)
-            => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, links, lookUpEngine);
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+            => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configurationProvider);
 
         /// <inheritdoc />
         [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
-        public T CreateSource<T>(IDataSource links, ILookUpEngine lookUpEngine = default) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(links, lookUpEngine);
-
-        /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource
-            => throw new NotSupportedException("Use a newer Razor base class");
+        public T CreateSource<T>(IDataSource inSource = default, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream source) where T : IDataSource

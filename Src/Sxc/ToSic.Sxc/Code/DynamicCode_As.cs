@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Linking;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
@@ -49,8 +50,8 @@ namespace ToSic.Sxc.Code
             => _DynCodeRoot.CreateSource<T>(source);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(inSource, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
 
         #endregion

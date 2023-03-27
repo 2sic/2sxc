@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
-        public IDataSource CreateSource(string typeName = "", IDataSource links = null, ILookUpEngine lookUpEngine = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             => Obsolete10.CreateSourceString();
 
         #endregion

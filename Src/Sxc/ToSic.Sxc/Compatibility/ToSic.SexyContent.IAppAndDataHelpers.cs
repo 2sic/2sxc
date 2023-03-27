@@ -48,8 +48,8 @@ namespace ToSic.SexyContent
         /// </summary>
         /// <returns></returns>
         T CreateSource<T>(IDataStream source) where T : IDataSource;
-        IDataSource CreateSource(string typeName = "", IDataSource links = null, ILookUpEngine lookUpEngine = null);
-        T CreateSource<T>(IDataSource links = null, ILookUpEngine lookUpEngine = default) where T : IDataSource;
+        IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null);
+        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
         #endregion
 
     }

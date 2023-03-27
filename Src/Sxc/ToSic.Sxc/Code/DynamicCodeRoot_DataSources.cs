@@ -42,8 +42,8 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource inSource = null, object options = default) where T : IDataSource 
-            => CreateDataSource<T>(attach: inSource, options: options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource 
+            => CreateDataSource<T>(attach: inSource, options: configurationProvider);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
@@ -57,10 +57,20 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+        {
+            Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
+
+            // If no in-source was provided, make sure that we create one from the current app
+            attach = attach ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
+            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
+            return DataSourceFactory.Create<T>(attach: attach, options: typedOptions);
+        }
+
+        [PrivateApi]
         public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
         {
             Protect(noParamOrder, $"{nameof(name)}, {nameof(attach)}, {nameof(options)}");
-            // VERY WIP
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
 
@@ -72,16 +82,6 @@ namespace ToSic.Sxc.Code
             // if it supports all our known context properties, attach them
             if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
             return ds;
-        }
-
-        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
-        {
-            Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
-
-            // If no in-source was provided, make sure that we create one from the current app
-            attach = attach ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
-            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
-            return DataSourceFactory.Create<T>(attach: attach, options: typedOptions);
         }
 
         #endregion
