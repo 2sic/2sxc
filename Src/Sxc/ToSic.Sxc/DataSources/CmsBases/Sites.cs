@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 
