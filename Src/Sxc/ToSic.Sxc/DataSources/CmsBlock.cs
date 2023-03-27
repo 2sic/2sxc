@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
@@ -54,12 +55,12 @@ namespace ToSic.Sxc.DataSources
         {
             public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
             public LazySvc<IModule> ModuleLazy { get; }
-            public LazySvc<IDataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IDataSourcesService> DataSourceFactory { get; }
 
             public MyServices(DataSource.MyServices parentServices,
                 LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
-                LazySvc<IDataSourceFactory> dataSourceFactory) : base(parentServices)
+                LazySvc<IDataSourcesService> dataSourceFactory) : base(parentServices)
             {
                 ConnectServices(
                     LazyCmsRuntime = lazyCmsRuntime,

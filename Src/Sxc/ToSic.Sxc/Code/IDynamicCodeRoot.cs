@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.Code
         ILookUpEngine ConfigurationProvider { get; }
         
         [PrivateApi]
-        IDataSourceFactory DataSourceFactory { get; }
+        IDataSourcesService DataSourceFactory { get; }
 
         [PrivateApi]
         void AttachApp(IApp app);

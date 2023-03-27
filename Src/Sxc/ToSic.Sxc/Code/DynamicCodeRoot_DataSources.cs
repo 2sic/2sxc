@@ -3,6 +3,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.DataSources.Linking;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using static ToSic.Eav.Parameters;
@@ -36,8 +37,8 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public IDataSourceFactory DataSourceFactory => _dataSourceFactory.Get(() => Services.DataSourceFactory.Value);
-        private readonly GetOnce<IDataSourceFactory> _dataSourceFactory = new GetOnce<IDataSourceFactory>();
+        public IDataSourcesService DataSourceFactory => _dataSourceFactory.Get(() => Services.DataSourceFactory.Value);
+        private readonly GetOnce<IDataSourcesService> _dataSourceFactory = new GetOnce<IDataSourcesService>();
 
 
 

@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class MyServices: MyServicesBase
         {
-            public LazySvc<IDataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IDataSourcesService> DataSourceFactory { get; }
             public LazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
@@ -54,7 +55,7 @@ namespace ToSic.Sxc.Code
                 LazySvc<IContextOfApp> contextOfApp,
                 LazySvc<AdamManager> adamManager,
                 LazySvc<IConvertService> convertService,
-                LazySvc<IDataSourceFactory> dataSourceFactory)
+                LazySvc<IDataSourcesService> dataSourceFactory)
             {
                 ConnectServices(
                     ServiceProvider = serviceProvider,

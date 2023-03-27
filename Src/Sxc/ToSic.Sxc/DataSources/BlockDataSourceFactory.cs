@@ -4,6 +4,7 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
@@ -14,14 +15,14 @@ namespace ToSic.Sxc.DataSources
     {
         #region Constructor
 
-        public BlockDataSourceFactory(LazySvc<IDataSourceFactory> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
+        public BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
         {
             ConnectServices(
                 _dataSourceFactory = dataSourceFactory,
                 _queryLazy = queryLazy
             );
         }
-        private readonly LazySvc<IDataSourceFactory> _dataSourceFactory;
+        private readonly LazySvc<IDataSourcesService> _dataSourceFactory;
         private readonly LazySvc<Query> _queryLazy;
 
         #endregion
