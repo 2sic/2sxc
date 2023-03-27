@@ -25,9 +25,9 @@ namespace Custom.DataSources
         /// in the constructor, so we can be sure we can add more dependencies as we need them.
         /// </summary>
         [PrivateApi]
-        public class MyServices: MyServicesBase<CustomDataSourceLight.MyServices>
+        public class MyServices: MyServicesBase<CustomDataSource.MyServices>
         {
-            public MyServices(CustomDataSourceLight.MyServices parentServices) : base(parentServices)
+            public MyServices(CustomDataSource.MyServices parentServices) : base(parentServices)
             {
             }
         }
@@ -47,7 +47,7 @@ namespace Custom.DataSources
             _inner.BreachProvideOut(GetDefault);
         }
 
-        private readonly CustomDataSourceLight _inner;
+        private readonly CustomDataSource _inner;
 
         protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
 

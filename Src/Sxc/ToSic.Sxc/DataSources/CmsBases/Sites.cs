@@ -26,7 +26,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Sites",
         Type = DataSourceType.Source,
         UiHint = "Sites in this CMS")]
-    public class Sites: CustomDataSourceLight
+    public class Sites: CustomDataSource
     {
         [PrivateApi]
         public Sites(MyServices services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")
