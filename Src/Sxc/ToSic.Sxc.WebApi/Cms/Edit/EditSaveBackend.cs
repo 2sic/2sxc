@@ -167,9 +167,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var save = _saveBackendHelper;// new Eav.WebApi.SaveHelpers.SaveEntities(Log);
             save.UpdateGuidAndPublishedAndSaveMany(appMan, entitiesToSave, forceSaveAsDraft);
-
-            return save.GenerateIdList(appMan.Read.Entities, items);
-
+            var appState = appMan.Read.AppState;
+            return save.GenerateIdList(appMan.Read.Entities, items, appState);
         }
     }
 }

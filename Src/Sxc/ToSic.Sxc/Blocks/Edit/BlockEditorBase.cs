@@ -102,12 +102,12 @@ namespace ToSic.Sxc.Blocks.Edit
             var hasPresentation = presEntity != null;
 
             // make sure we really have the draft item an not the live one
-            var contDraft = contEntity.IsPublished ? contEntity.GetDraft() : contEntity;
+            var contDraft = contEntity.IsPublished ? AppManager.AppState.GetDraft(contEntity) : contEntity;
             AppManager.Entities.Publish(contDraft.RepositoryId);
-
+            
             if (hasPresentation)
             {
-                var presDraft = presEntity.IsPublished ? presEntity.GetDraft() : presEntity;
+                var presDraft = presEntity.IsPublished ? AppManager.AppState.GetDraft(presEntity) : presEntity;
                 AppManager.Entities.Publish(presDraft.RepositoryId);
             }
 

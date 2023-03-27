@@ -151,17 +151,17 @@ namespace ToSic.Sxc.Data
 
         #region Publishing / Draft Information
 
-        /// <summary>
-        /// Get the draft item of this item if this is a content-item which is published, and has a draft.
-        /// </summary>
-        /// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
-        new dynamic GetDraft();
+        ///// <summary>
+        ///// Get the draft item of this item if this is a content-item which is published, and has a draft.
+        ///// </summary>
+        ///// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
+        //new dynamic GetDraft(); // 2023-03-27 v15.06 remove GetDraft/GetPublished from Entity
 
-        /// <summary>
-        /// Get the published item of this item if this is a content-item which is draft, and has a published.
-        /// </summary>
-        /// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
-        new dynamic GetPublished();
+        ///// <summary>
+        ///// Get the published item of this item if this is a content-item which is draft, and has a published.
+        ///// </summary>
+        ///// <returns>Returns a dynamic entity if there is a draft, or null if there is no draft.</returns>
+        //new dynamic GetPublished(); // 2023-03-27 v15.06 remove GetDraft/GetPublished from Entity
 
         // This property would also work on the normal dynamic interface, but we want them to appear in the documentation so we're adding them
         /// <summary>
