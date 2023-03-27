@@ -2,7 +2,7 @@
 using System.Collections.Generic;
  using ToSic.Eav.Data;
  using ToSic.Eav.DataSource;
- using ToSic.Eav.DataSources;
+ using ToSic.Eav.LookUp;
  using ToSic.Lib.Documentation;
  using ToSic.Sxc.Custom.Hybrid;
 
@@ -23,7 +23,7 @@ using System.Collections.Generic;
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
-        public IDataSource CreateSource(string typeName = "", IDataSourceLinkable attach = null, IDataSourceOptions configuration = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource attach = null, ILookUpEngine configuration = null)
             => Obsolete10.CreateSourceString();
 
         #endregion

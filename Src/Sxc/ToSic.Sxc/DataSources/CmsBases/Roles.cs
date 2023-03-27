@@ -11,7 +11,7 @@ using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using static ToSic.Eav.DataSources.DataSourceConstants;
+using static ToSic.Eav.DataSource.DataSourceConstants;
 using static ToSic.Sxc.DataSources.RoleDataRaw;
 
 // Important Info to people working with this
