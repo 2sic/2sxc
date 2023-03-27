@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Blocks;
 

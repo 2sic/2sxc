@@ -2,8 +2,8 @@
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.DataSources.Catalog;
-using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;

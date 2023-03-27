@@ -12,7 +12,6 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
-using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
