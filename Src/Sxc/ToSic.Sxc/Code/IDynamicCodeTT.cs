@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.DataSources;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
@@ -11,17 +10,6 @@ namespace ToSic.Sxc.Code
     {
         [PrivateApi]
         TModel Model { get; }
-
-        #region DynamicCode New in v15 - probably available in v14 as well
-
-        [PrivateApi]
-        IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = Eav.Parameters.Protector,
-            IDataSource source = default,
-            object options = default);
-
-        #endregion
 
     }
 }

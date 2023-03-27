@@ -1,8 +1,10 @@
 ﻿using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Linking;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid.Advanced
@@ -16,11 +18,13 @@ namespace Custom.Hybrid.Advanced
         private readonly GetOnce<TServiceKit> _kit = new();
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = null,
-            object options = null)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
+        public new T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+            => _DynCodeRoot.CreateDataSource<T>(noParamOrder: noParamOrder, attach: attach, options: options);
+
+        [PrivateApi]
+        public new IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = null, object options = null)
+            => _DynCodeRoot.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
+
 
     }
 }

@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Linking;
+using ToSic.Eav.LookUp;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -46,11 +50,19 @@ namespace ToSic.Sxc.Code
             => _DynCodeRoot.CreateSource<T>(source);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
 
         #endregion
+
+        [PrivateApi]
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
+            => _DynCodeRoot.CreateDataSource(noParamOrder: name, attach: attach, options: options);
+
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource 
+            => _DynCodeRoot.CreateDataSource<T>(noParamOrder: noParamOrder, attach: attach, options: options);
+
 
         #region AsAdam
         /// <inheritdoc />

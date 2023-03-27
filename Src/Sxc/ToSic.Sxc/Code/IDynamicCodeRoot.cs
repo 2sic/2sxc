@@ -24,17 +24,5 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         void AttachApp(IApp app);
 
-
-        #region DynamicCode New in v15 - probably available in v14 as well
-
-        [PrivateApi]
-        IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = Eav.Parameters.Protector,
-            IDataSource source = default,
-            object options = default);
-
-        #endregion
-
     }
 }

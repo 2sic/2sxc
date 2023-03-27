@@ -1,9 +1,11 @@
 ﻿using System;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.DataSources.Catalog;
+using ToSic.Eav.DataSources.Linking;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -40,13 +42,8 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-        {
-            // If no in-source was provided, make sure that we create one from the current app
-            source = source ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
-            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
-            return DataSourceFactory.Create<T>(links: source, options: typedOptions);
-        }
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource 
+            => CreateDataSource<T>(attach: inSource, options: configurationProvider);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
@@ -60,24 +57,33 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = null,
-            object options = null)
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
         {
-            // VERY WIP
+            Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
+
+            // If no in-source was provided, make sure that we create one from the current app
+            attach = attach ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
+            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
+            return DataSourceFactory.Create<T>(attach: attach, options: typedOptions);
+        }
+
+        [PrivateApi]
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
+        {
+            Protect(noParamOrder, $"{nameof(name)}, {nameof(attach)}, {nameof(options)}");
             var catalog = GetService<DataSourceCatalog>();
             var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
 
             var finalConf2 =
                 new DataSourceOptions.Converter().Create(
                     new DataSourceOptions(lookUp: ConfigurationProvider, appIdentity: App), options);
-            var ds = DataSourceFactory.Create(type, source: source, options: finalConf2);
+            var ds = DataSourceFactory.Create(type, attach: attach as IDataSource, options: finalConf2);
 
             // if it supports all our known context properties, attach them
             if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
             return ds;
         }
+
         #endregion
     }
 }

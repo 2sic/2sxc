@@ -2,6 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -30,11 +31,8 @@ namespace ToSic.Sxc.Code
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         [PrivateApi]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = Eav.Parameters.Protector,
-            IDataSource source = null,
-            object options = null)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSource links = null, object options = null)
+            => _DynCodeRoot.CreateDataSource(noParamOrder: name, attach: links, options: options);
 
     }
 }

@@ -1,14 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.DataSources.Linking;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -74,8 +79,19 @@ namespace Custom.Hybrid
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+
+
+        #endregion
+
+        #region CreateDataSource new v15
+
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
+
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
 
         #endregion
 

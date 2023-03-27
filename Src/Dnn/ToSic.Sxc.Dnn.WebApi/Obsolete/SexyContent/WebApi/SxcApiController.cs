@@ -4,6 +4,7 @@ using ToSic.Eav.DataSources;
 using System.IO;
 using System.Linq;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.DataSources.Linking;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -25,6 +26,7 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -120,21 +122,26 @@ namespace ToSic.SexyContent.WebApi
 
         #region CreateSource implementations
         [Obsolete]
-        public IDataSource CreateSource(string typeName = "", IDataSource source = null,
-	        ILookUpEngine lookUpEngine = null)
-	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, source, lookUpEngine);
+        public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
+	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configurationProvider);
 
-        [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
-        public T CreateSource<T>(IDataSource source = null, ILookUpEngine lookUpEngine = default)
-            where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, null); // note 2023-03-22 2dm - ignoring the lookup engine, I don't think this was ever in use
-
-        public T CreateSource<T>(IDataSource source = null, object options = null)
-            where T : IDataSource
-            =>  _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
 	    public T CreateSource<T>(IDataStream source) where T : IDataSource 
             => _DynCodeRoot.CreateSource<T>(source);
+
+        #endregion
+
+        #region CreateDataSource - new in v15, don't use in this old deprecated base class
+
+        [PrivateApi]
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
+
+        [PrivateApi]
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = null, object options = default)
+            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
 
         #endregion
 

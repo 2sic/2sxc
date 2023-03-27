@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi("obsolete")]
         [Obsolete("you should use the CreateSource<T> instead. Deprecated ca. v4 (but not sure), changed to error in v15.")]
-        public IDataSource CreateSource(string typeName = "", IDataSource source = null, ILookUpEngine configuration = null)
+        public IDataSource CreateSource(string typeName = "", IDataSource links = null, ILookUpEngine configuration = null)
         {
             // 2023-03-12 2dm
             // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
@@ -38,12 +38,12 @@ namespace ToSic.Sxc.Code
                 var type = catalog.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
                 configuration = configuration ?? _root.ConfigurationProvider;
                 var cnf2Wip = new DataSourceOptions(lookUp: configuration);
-                if (source != null)
-                    return _root.DataSourceFactory.Create(type: type, source: source, options: cnf2Wip);
+                if (links != null)
+                    return _root.DataSourceFactory.Create(type: type, attach: links, options: cnf2Wip);
 
                 var initialSource = _root.DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: _root.App, lookUp: _root.ConfigurationProvider));
                 return typeName != ""
-                    ? _root.DataSourceFactory.Create(type: type, source: initialSource, options: cnf2Wip)
+                    ? _root.DataSourceFactory.Create(type: type, attach: initialSource, options: cnf2Wip)
                     : initialSource;
             }
             catch (Exception ex)
