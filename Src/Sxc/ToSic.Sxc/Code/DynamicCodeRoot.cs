@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -10,6 +9,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
+using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Code
     /// Note that other DynamicCode objects like RazorComponent or ApiController reference this object for all the interface methods of <see cref="IDynamicCode"/>.
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MyServices>, IDynamicCodeRoot, IDynamicCode
+    public abstract partial class DynamicCodeRoot : ServiceBase<DynamicCodeRoot.MyServices>, IDynamicCodeRoot
     {
         #region Constructor
 
@@ -38,6 +38,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class MyServices: MyServicesBase
         {
+            public LazySvc<DynamicCodeDataSources> DataSources { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
             public LazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
@@ -55,7 +56,8 @@ namespace ToSic.Sxc.Code
                 LazySvc<IContextOfApp> contextOfApp,
                 LazySvc<AdamManager> adamManager,
                 LazySvc<IConvertService> convertService,
-                LazySvc<IDataSourcesService> dataSourceFactory)
+                LazySvc<IDataSourcesService> dataSourceFactory,
+                LazySvc<DynamicCodeDataSources> dataSources)
             {
                 ConnectServices(
                     ServiceProvider = serviceProvider,
@@ -65,7 +67,8 @@ namespace ToSic.Sxc.Code
                     ContextOfApp = contextOfApp,
                     AdamManager = adamManager,
                     ConvertService = convertService,
-                    DataSourceFactory = dataSourceFactory
+                    DataSourceFactory = dataSourceFactory,
+                    DataSources = dataSources
                 );
             }
 
@@ -111,7 +114,6 @@ namespace ToSic.Sxc.Code
             var cLog = Log.Fn<IDynamicCodeRoot>();
 
             CompatibilityLevel = compatibility;
-            //((CmsContext)CmsContext).AttachContext(this);
             if (block == null)
                 return cLog.Return(this, "no block");
 

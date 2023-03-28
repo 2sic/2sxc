@@ -1,10 +1,9 @@
 ﻿using System;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Code.Helpers;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
@@ -12,38 +11,26 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         #region DataSource and ConfigurationProvider (for DS) section
-        private ILookUpEngine _configurationProvider;
 
         [PrivateApi]
-        public ILookUpEngine ConfigurationProvider // todo: rename to LookUpForDataSources
-        {
-            get
-            {
-                // check already retrieved
-                if (_configurationProvider != null) return _configurationProvider;
-
-                // check if we have a block-context, in which case the lookups also know about the module
-                _configurationProvider = Data?.Configuration?.LookUpEngine;
-                if (_configurationProvider != null) return _configurationProvider;
-
-                // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context
-                _configurationProvider = App?.ConfigurationProvider;
-                if (_configurationProvider != null) return _configurationProvider;
-
-                // show explanation what went wrong
-                throw new Exception("Tried to get Lookups for creating a data-source, but neither the module-context nor app is known.");
-            }
-        }
+        private ILookUpEngine LookUpForDataSources => _lookupEngine.Get(() =>
+            // check if we have a block-context, in which case the lookups also know about the module
+            Data?.Configuration?.LookUpEngine
+            // otherwise try to fallback to the App configuration provider, which has a lot, but not the module-context
+            ?? App?.ConfigurationProvider
+            // show explanation what went wrong
+            ?? throw new Exception("Tried to get Lookups for creating data-sources; neither module-context nor app is known.")
+        );
+        private readonly GetOnce<ILookUpEngine> _lookupEngine = new GetOnce<ILookUpEngine>();
 
         [PrivateApi]
-        public IDataSourcesService DataSourceFactory => _dataSourceFactory.Get(() => Services.DataSourceFactory.Value);
-        private readonly GetOnce<IDataSourcesService> _dataSourceFactory = new GetOnce<IDataSourcesService>();
-
+        public DynamicCodeDataSources DataSources => _dataSources.Get(() => Services.DataSources.Value.Setup(App, () => LookUpForDataSources));
+        private readonly GetOnce<DynamicCodeDataSources> _dataSources = new GetOnce<DynamicCodeDataSources>();
 
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource 
-            => CreateDataSource<T>(false, attach: inSource, options: configurationProvider);
+            => DataSources.CreateDataSource<T>(false, attach: inSource, options: configurationProvider);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
@@ -58,34 +45,11 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi]
         public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource 
-            => CreateDataSource<T>(true, noParamOrder: noParamOrder, attach: attach, options: options);
-
-        public T CreateDataSource<T>(bool immutable, string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
-        {
-            Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
-
-            // If no in-source was provided, make sure that we create one from the current app
-            attach = attach ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider, immutable: true));
-            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider, immutable: immutable), options);
-            return DataSourceFactory.Create<T>(attach: attach, options: typedOptions);
-        }
+            => DataSources.CreateDataSource<T>(true, noParamOrder: noParamOrder, attach: attach, options: options);
 
         [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
-        {
-            Protect(noParamOrder, $"{nameof(name)}, {nameof(attach)}, {nameof(options)}");
-            var catalog = GetService<DataSourceCatalog>();
-            var type = catalog.FindDataSourceInfo(name, App.AppId)?.Type;
-
-            var finalConf2 =
-                new DataSourceOptions.Converter().Create(
-                    new DataSourceOptions(lookUp: ConfigurationProvider, appIdentity: App, immutable: true), options);
-            var ds = DataSourceFactory.Create(type, attach: attach as IDataSource, options: finalConf2);
-
-            // if it supports all our known context properties, attach them
-            if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
-            return ds;
-        }
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default) 
+            => DataSources.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
 
         #endregion
     }

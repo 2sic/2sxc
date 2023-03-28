@@ -9,15 +9,18 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Helpers;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.DataSource
 {
-    public abstract partial class DataSource15: IDataSource, IAppIdentitySync
+    public abstract partial class DataSource15: ServiceBase<DataSource15.MyServices>, IDataSource, IAppIdentitySync
     {
         /// <summary>
         /// These are dependencies of DataSource15.
@@ -27,8 +30,13 @@ namespace Custom.DataSource
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSource.MyServices>
         {
-            public MyServices(CustomDataSource.MyServices parentServices) : base(parentServices)
+            public LazySvc<DynamicCodeDataSources> DataSources { get; }
+
+            public MyServices(CustomDataSource.MyServices parentServices, LazySvc<DynamicCodeDataSources> dataSources) : base(parentServices)
             {
+                ConnectServices(
+                    DataSources = dataSources
+                );
             }
         }
 
@@ -37,13 +45,16 @@ namespace Custom.DataSource
         /// </summary>
         /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.MyServices)</param>
         /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
-        protected DataSource15(MyServices services, string logName = default)
+        protected DataSource15(MyServices services, string logName = default): base(services, logName ?? "Cus.HybDs")
         {
             _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
             _inner.BreachProvideOut(GetDefault);
         }
-
         private readonly CustomDataSource _inner;
+
+        private DynamicCodeDataSources DataSources => _ds.Get(() =>
+            Services.DataSources.Value.Setup(this, () => _inner.Configuration.LookUpEngine));
+        private readonly GetOnce<DynamicCodeDataSources> _ds = new GetOnce<DynamicCodeDataSources>();
 
         protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
 
@@ -75,6 +86,14 @@ namespace Custom.DataSource
         public int AppId => _inner.AppId;
 
         #endregion
+
+        [PrivateApi]
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+            => DataSources.CreateDataSource<T>(true, noParamOrder: noParamOrder, attach: attach, options: options);
+
+        [PrivateApi]
+        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
+            => DataSources.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
 
 
 

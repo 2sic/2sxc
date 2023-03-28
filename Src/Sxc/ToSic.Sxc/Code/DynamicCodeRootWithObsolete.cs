@@ -32,19 +32,22 @@ namespace ToSic.Sxc.Code
             // Completely rewrote this, because I got rid of some old APIs in v15 on the DataFactory
             // This has never been tested but probably works, but we won't invest time to be certain.
 
+            var dataSources = ((DynamicCodeRoot)_root).DataSources;
+
             try
             {
                 // try to find with assembly name, or otherwise with GlobalName / previous names
-                var catalog = _root.GetService<DataSourceCatalog>();
-                var type = catalog.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
-                configuration = configuration ?? _root.ConfigurationProvider;
+                //var catalog = _root.GetService<DataSourceCatalog>();
+                var type = dataSources.Catalog.Value.FindDataSourceInfo(typeName, _root.App.AppId)?.Type;
+                configuration = configuration ?? dataSources.LookUpEngine; // _root.ConfigurationProvider;
                 var cnf2Wip = new DataSourceOptions(lookUp: configuration);
                 if (links != null)
-                    return _root.DataSourceFactory.Create(type: type, attach: links, options: cnf2Wip);
+                    return dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: links, options: cnf2Wip);
 
-                var initialSource = _root.DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: _root.App, lookUp: _root.ConfigurationProvider));
+                var initialSource = dataSources.DataSources.Value/* _root.DataSourceFactory*/
+                    .CreateDefault(new DataSourceOptions(appIdentity: _root.App, lookUp: dataSources.LookUpEngine/*_root.ConfigurationProvider*/));
                 return typeName != ""
-                    ? _root.DataSourceFactory.Create(type: type, attach: initialSource, options: cnf2Wip)
+                    ? dataSources.DataSources.Value/*_root.DataSourceFactory*/.Create(type: type, attach: initialSource, options: cnf2Wip)
                     : initialSource;
             }
             catch (Exception ex)
