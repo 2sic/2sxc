@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.DataSource.DataSourceConstants;
+using static ToSic.Sxc.Blocks.ViewParts;
 
 namespace ToSic.Sxc.Code
 {
@@ -12,34 +12,20 @@ namespace ToSic.Sxc.Code
         #region basic properties like Content, Header
 
         /// <inheritdoc />
-        public dynamic Content
-        {
-            get
-            {
-                if (_content != null || _contentTried) return _content;
-                _contentTried = true;
-                return _content = TryToBuildFirstOfStream(DataSourceConstants.StreamDefaultName);
-            }
-        }
-        private dynamic _content;
-        private bool _contentTried;
+        public dynamic Content => _contentGo.Get(() => TryToBuildFirstOfStream(StreamDefaultName));
+        private readonly GetOnce<object> _contentGo = new GetOnce<object>();
 
 
         /// <inheritdoc />
-		public dynamic Header
+        public dynamic Header => _header.Get(Log, l =>
         {
-            get
-            {
-                if (_header != null || _headerTried) return _header;
-                _headerTried = true;
-                _header = TryToBuildFirstOfStream(ViewParts.StreamHeader);
-                if (_header != null) return _header;
-                Log.A($"Header not yet found in {ViewParts.StreamHeader}, will try {ViewParts.StreamHeaderOld}");
-                return _header = TryToBuildFirstOfStream(ViewParts.StreamHeaderOld);
-            }
-        }
-        private dynamic _header;
-        private bool _headerTried;
+            var header = TryToBuildFirstOfStream(StreamHeader);
+            if (header != null) return header;
+            // If header isn't found, it could be that an old query is used which attached the stream to the old name
+            l.A($"Header not yet found in {StreamHeader}, will try {StreamHeaderOld}");
+            return TryToBuildFirstOfStream(StreamHeaderOld);
+        });
+        private readonly GetOnce<object> _header = new GetOnce<object>();
 
         private dynamic TryToBuildFirstOfStream(string sourceStream)
         {

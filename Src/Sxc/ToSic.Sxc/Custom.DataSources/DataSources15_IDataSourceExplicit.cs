@@ -32,6 +32,8 @@ namespace Custom.DataSource
 
         List<string> IDataSourceSource.CacheRelevantConfigurations => _inner.CacheRelevantConfigurations;
         ICacheKeyManager IDataSourceSource.CacheKey => _inner.CacheKey;
+        bool IDataSourceSource.Immutable => _inner.Immutable;
+
         ILog IHasLog.Log => _inner.Log;
 
         #endregion
