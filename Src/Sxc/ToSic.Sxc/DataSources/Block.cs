@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Apps;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
+#if NETFRAMEWORK
+using ToSic.Sxc.Compatibility;
+#endif
 
 namespace ToSic.Sxc.DataSources
 {
@@ -18,7 +22,10 @@ namespace ToSic.Sxc.DataSources
         [PrivateApi("older use case, probably don't publish")]
         public DataPublishing Publish { get; }= new DataPublishing();
 
-        internal void SetOut(Query querySource) => Out = querySource.Out;
+        internal void SetOut(Query querySource) => _querySource = querySource;
+        private Query _querySource;
+
+        public override IReadOnlyDictionary<string, IDataStream> Out => _querySource?.Out ?? base.Out;
 
         [PrivateApi("not meant for public use")]
         public Block(MyServices services, IAppStates appStates) : base(services, "Sxc.BlckDs") => _appStates = appStates;

@@ -104,7 +104,7 @@ namespace Custom.DataSource
 
         // The rest is all explicit implementation only
 
-        IDictionary<string, IDataStream> IDataSource.In => _inner.In;
+        IReadOnlyDictionary<string, IDataStream> IDataSource.In => _inner.In;
 
         // todo: attach must error - but only once the query has been optimized
         // note also that temporarily the old interface IDataTarget will already error

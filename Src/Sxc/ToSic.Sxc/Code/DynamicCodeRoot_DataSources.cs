@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Code
             // if it has a source, then use this, otherwise it's null and then it uses the App-Default
             // Reason: some sources like DataTable or SQL won't have an upstream source
             var src = CreateSource<T>(source.Source);
-            src.In.Clear();
+            //src.In.Clear();
             src.Attach(DataSourceConstants.StreamDefaultName, source);
             return src;
         }

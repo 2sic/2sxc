@@ -22,7 +22,7 @@ namespace Custom.DataSource
         long ITimestamped.CacheTimestamp => _inner.CacheTimestamp;
         bool ICacheExpiring.CacheChanged(long dependentTimeStamp) => _inner.CacheChanged(dependentTimeStamp);
         void ICanPurgeListCache.PurgeList(bool cascade) => _inner.PurgeList(cascade);
-        IDictionary<string, IDataStream> IDataSource.Out => _inner.Out;
+        IReadOnlyDictionary<string, IDataStream> IDataSource.Out => _inner.Out;
         IDataStream IDataSource.this[string outName] => _inner[outName];
         IDataStream IDataSource.GetStream(string name, string noParamOrder, bool nullIfNotFound,
             bool emptyIfNotFound) =>
