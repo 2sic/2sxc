@@ -36,6 +36,6 @@ namespace Custom.DataSource
 
         #endregion
 
-        IDataSourceLink IDataSourceLinkable.Link => ((IDataSourceLinkable)_inner).Link;
+        public IDataSourceLink Link => ((IDataSourceLinkable)_inner).Link;
     }
 }
