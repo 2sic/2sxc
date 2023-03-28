@@ -1,4 +1,4 @@
-﻿using Custom.DataSources;
+﻿using Custom.DataSource;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks;

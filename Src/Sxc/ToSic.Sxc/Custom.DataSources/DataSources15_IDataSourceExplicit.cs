@@ -4,11 +4,10 @@ using ToSic.Eav.Caching;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Caching;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.DataSources
+namespace Custom.DataSource
 {
     public abstract partial class DataSource15
     {

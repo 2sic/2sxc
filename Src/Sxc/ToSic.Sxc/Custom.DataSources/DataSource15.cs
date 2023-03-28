@@ -15,7 +15,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.DataSources
+namespace Custom.DataSource
 {
     public abstract partial class DataSource15: IDataSource, IAppIdentitySync
     {
@@ -35,12 +35,8 @@ namespace Custom.DataSources
         /// <summary>
         /// Constructor with the option to provide a log name.
         /// </summary>
-        /// <param name="services">
-        /// Services the object needs to work.
-        /// You don't need to worry about the details, just make sure it's provided in the constructor.
-        /// See MyServices convention TODO:
-        /// </param>
-        /// <param name="logName">Optional name to use in logs.</param>
+        /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.MyServices)</param>
+        /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
         protected DataSource15(MyServices services, string logName = default)
         {
             _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
@@ -82,17 +78,32 @@ namespace Custom.DataSources
 
 
 
-        #region IDataTarget - all public
+        #region IDataTarget - allmost all hidden
 
-        public IDictionary<string, IDataStream> In => _inner.In;
-
-        public void Attach(IDataSource dataSource) => _inner.Attach(dataSource);
-
-        public void Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
-
-        public void Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
-
+        /// <inheritdoc/>
         public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetIn(name);
+
+        // The rest is all explicit implementation only
+
+        IDictionary<string, IDataStream> IDataTarget.In => _inner.In;
+        IDictionary<string, IDataStream> IDataSourceTarget.In => _inner.In;
+
+        // todo: attach must error - but only once the query has been optimized
+        // note also that temporarily the old interface IDataTarget will already error
+        // but soon the new one must too
+        private static readonly string AttachNotSupported = $"Attach(...) is not supported on new data sources. Provide 'attach:' in CreateDataSource(...) instead";
+        void IDataTarget.Attach(IDataSource dataSource) => throw new NotSupportedException(AttachNotSupported);
+
+        void IDataSourceTarget.Attach(IDataSource dataSource) => _inner.Attach(dataSource);
+
+        void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => throw new NotSupportedException(AttachNotSupported);
+
+        void IDataSourceTarget.Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
+
+        void IDataTarget.Attach(string streamName, IDataStream dataStream) => throw new NotSupportedException(AttachNotSupported);
+
+        void IDataSourceTarget.Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
+
 
         #endregion
 
