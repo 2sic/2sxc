@@ -81,9 +81,9 @@ namespace Custom.DataSource
 
         public DataSourceErrorHelper Error => _inner.Error;
 
-        public int ZoneId => _inner.ZoneId;
+        int IZoneIdentity.ZoneId => _inner.ZoneId;
 
-        public int AppId => _inner.AppId;
+        int IAppIdentityLight.AppId => _inner.AppId;
 
         #endregion
 
@@ -104,25 +104,17 @@ namespace Custom.DataSource
 
         // The rest is all explicit implementation only
 
-        IDictionary<string, IDataStream> IDataTarget.In => _inner.In;
-        IDictionary<string, IDataStream> IDataSourceTarget.In => _inner.In;
+        IDictionary<string, IDataStream> IDataSource.In => _inner.In;
 
         // todo: attach must error - but only once the query has been optimized
         // note also that temporarily the old interface IDataTarget will already error
         // but soon the new one must too
         private static readonly string AttachNotSupported = $"Attach(...) is not supported on new data sources. Provide 'attach:' in CreateDataSource(...) instead";
-        void IDataTarget.Attach(IDataSource dataSource) => throw new NotSupportedException(AttachNotSupported);
+        void IDataTarget.Attach(IDataSource dataSource) => _inner.Attach(dataSource);
 
-        void IDataSourceTarget.Attach(IDataSource dataSource) => _inner.Attach(dataSource);
+        void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
 
-        void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => throw new NotSupportedException(AttachNotSupported);
-
-        void IDataSourceTarget.Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
-
-        void IDataTarget.Attach(string streamName, IDataStream dataStream) => throw new NotSupportedException(AttachNotSupported);
-
-        void IDataSourceTarget.Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
-
+        void IDataTarget.Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
 
         #endregion
 
