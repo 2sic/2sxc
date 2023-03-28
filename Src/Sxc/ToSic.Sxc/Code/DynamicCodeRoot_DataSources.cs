@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Catalog;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
@@ -44,7 +43,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource 
-            => CreateDataSource<T>(attach: inSource, options: configurationProvider);
+            => CreateDataSource<T>(false, attach: inSource, options: configurationProvider);
 
         /// <inheritdoc />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
@@ -58,13 +57,16 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
+        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource 
+            => CreateDataSource<T>(true, noParamOrder: noParamOrder, attach: attach, options: options);
+
+        public T CreateDataSource<T>(bool immutable, string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
         {
             Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
 
             // If no in-source was provided, make sure that we create one from the current app
-            attach = attach ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider));
-            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider), options);
+            attach = attach ?? DataSourceFactory.CreateDefault(new DataSourceOptions(appIdentity: App, lookUp: ConfigurationProvider, immutable: true));
+            var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: ConfigurationProvider, immutable: immutable), options);
             return DataSourceFactory.Create<T>(attach: attach, options: typedOptions);
         }
 
@@ -77,7 +79,7 @@ namespace ToSic.Sxc.Code
 
             var finalConf2 =
                 new DataSourceOptions.Converter().Create(
-                    new DataSourceOptions(lookUp: ConfigurationProvider, appIdentity: App), options);
+                    new DataSourceOptions(lookUp: ConfigurationProvider, appIdentity: App, immutable: true), options);
             var ds = DataSourceFactory.Create(type, attach: attach as IDataSource, options: finalConf2);
 
             // if it supports all our known context properties, attach them

@@ -28,14 +28,13 @@ namespace Custom.DataSource
             bool emptyIfNotFound) =>
             _inner.GetStream(name, noParamOrder, nullIfNotFound, emptyIfNotFound);
         IEnumerable<IEntity> IDataSourceSource.List => _inner.List;
+        public void Setup(IDataSourceOptions options, IDataSourceLinkable attach) => _inner.Setup(options, attach);
+
         List<string> IDataSourceSource.CacheRelevantConfigurations => _inner.CacheRelevantConfigurations;
         ICacheKeyManager IDataSourceSource.CacheKey => _inner.CacheKey;
         ILog IHasLog.Log => _inner.Log;
 
         #endregion
-
-
-        void IDataSourceTarget.Connect(IDataSourceLink connections) => _inner.Connect(connections);
 
         IDataSourceLink IDataSourceLinkable.Link => ((IDataSourceLinkable)_inner).Link;
     }
