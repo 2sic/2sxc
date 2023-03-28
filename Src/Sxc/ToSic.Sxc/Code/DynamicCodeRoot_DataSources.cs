@@ -2,7 +2,6 @@
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Catalog;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
