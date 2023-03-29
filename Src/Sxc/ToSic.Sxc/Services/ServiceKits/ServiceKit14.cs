@@ -47,8 +47,11 @@ namespace ToSic.Sxc.Services
 
 
         /// <summary>
-        /// The Edit service, same as the main Edit service
+        /// The Data service to get DataSources and similar.
         /// </summary>
+        /// <remarks>
+        /// * added in v15.06
+        /// </remarks>
         [PrivateApi("WIP not yet public for v15 - added v15.06")]
         public IDataService Data => _data.Get(GetService<IDataService>);
         private readonly GetOnce<IDataService> _data = new GetOnce<IDataService>();

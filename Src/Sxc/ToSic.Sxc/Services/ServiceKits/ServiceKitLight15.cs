@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Services
     /// In such scenarios, certain services like the <see cref="IPageService"/> would not be able to perform any real work.
     /// </summary>
     /// <remarks>
-    /// * History: Added v14.04
+    /// * History: Added v15.06
     /// </remarks>
     [PrivateApi]
     public class ServiceKitLight15 : ServiceBase
