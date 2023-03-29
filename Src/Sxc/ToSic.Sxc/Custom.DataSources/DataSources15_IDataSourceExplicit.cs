@@ -33,6 +33,7 @@ namespace Custom.DataSource
         List<string> IDataSource.CacheRelevantConfigurations => _inner.CacheRelevantConfigurations;
         ICacheKeyManager IDataSource.CacheKey => _inner.CacheKey;
         bool IDataSource.Immutable => _inner.Immutable;
+        void IDataSource.DoWhileOverrideImmutable(Action action) => _inner.DoWhileOverrideImmutable(action);
 
         ILog IHasLog.Log => _inner.Log;
 

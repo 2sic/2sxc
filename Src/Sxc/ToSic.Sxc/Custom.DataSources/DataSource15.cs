@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ToSic.Eav;
@@ -60,7 +59,7 @@ namespace Custom.DataSource
 
 
         protected void ProvideOut(
-            Func<IEnumerable> getList,
+            Func<object> getList,
             string noParamOrder = Parameters.Protector,
             string name = DataSourceConstants.StreamDefaultName,
             Func<DataFactoryOptions> options = default
