@@ -23,7 +23,7 @@ namespace ToSic.Sxc.DataSources
 
         public static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
 
-        public override Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(base.Attributes(options))
+        public override IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(base.Attributes(options))
         {
             { "Folders", new RawRelationship(key: $"FolderIn:{FullName}") },
             { "Files", new RawRelationship(key: $"FileIn:{FullName}") },

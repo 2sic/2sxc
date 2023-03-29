@@ -51,7 +51,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public virtual Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
+        public virtual IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
             { nameof(ReferenceId), ReferenceId },

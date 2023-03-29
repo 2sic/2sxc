@@ -117,7 +117,7 @@ namespace ToSic.Sxc.DataSources
         /// <summary>
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
-        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
+        public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             { nameof(Name), Name },
             { nameof(Url), Url },
