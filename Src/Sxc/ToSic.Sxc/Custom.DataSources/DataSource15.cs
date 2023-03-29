@@ -80,9 +80,9 @@ namespace Custom.DataSource
 
         public DataSourceErrorHelper Error => _inner.Error;
 
-        int IZoneIdentity.ZoneId => _inner.ZoneId;
+        public int ZoneId => _inner.ZoneId;
 
-        int IAppIdentityLight.AppId => _inner.AppId;
+        public int AppId => _inner.AppId;
 
         #endregion
 
