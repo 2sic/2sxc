@@ -330,7 +330,8 @@ namespace ToSic.Sxc.Search
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
                 .ForwardSlash();
             Log.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-            var instance = _codeCompiler.New().InstantiateClass(block.View.ViewController, null, path, true);
+            var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, serviceProvider: DnnStaticDi.GetGlobalServiceProvider(), 
+                className: null, relativePath: path, throwOnError: true);
             Log.A("got instance of compiled ViewController class");
 
             // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above

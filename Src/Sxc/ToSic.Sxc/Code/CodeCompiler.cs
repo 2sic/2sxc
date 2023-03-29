@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Code
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
 
-        internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true, IServiceProvider serviceProvider = null)
+        internal object InstantiateClass(string virtualPath, IServiceProvider serviceProvider, string className = null, string relativePath = null, bool throwOnError = true)
         {
             var l = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
 
