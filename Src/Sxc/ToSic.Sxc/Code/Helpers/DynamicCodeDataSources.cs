@@ -36,6 +36,8 @@ namespace ToSic.Sxc.Code.Helpers
         private readonly GetOnce<ILookUpEngine> _lookupEngine = new GetOnce<ILookUpEngine>();
         private Func<ILookUpEngine> _getLookup;
 
+        // note: this code is almost identical to the IDataService code, except that `immutable` is a parameter
+        // because old code left the DataSources to be mutable
         public T CreateDataSource<T>(bool immutable, string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
         {
             Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
@@ -44,22 +46,6 @@ namespace ToSic.Sxc.Code.Helpers
             attach = attach ?? DataSources.Value.CreateDefault(new DataSourceOptions(appIdentity: AppIdentity, lookUp: LookUpEngine, immutable: true));
             var typedOptions = new DataSourceOptions.Converter().Create(new DataSourceOptions(lookUp: LookUpEngine, immutable: immutable), options);
             return DataSources.Value.Create<T>(attach: attach, options: typedOptions);
-        }
-
-        [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
-        {
-            Protect(noParamOrder, $"{nameof(name)}, {nameof(attach)}, {nameof(options)}");
-            var type = Catalog.Value.FindDataSourceInfo(name, AppIdentity.AppId)?.Type;
-
-            var finalConf2 =
-                new DataSourceOptions.Converter().Create(
-                    new DataSourceOptions(lookUp: LookUpEngine, appIdentity: AppIdentity, immutable: true), options);
-            var ds = DataSources.Value.Create(type, attach: attach as IDataSource, options: finalConf2);
-
-            // if it supports all our known context properties, attach them
-            //if (ds is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
-            return ds;
         }
 
     }

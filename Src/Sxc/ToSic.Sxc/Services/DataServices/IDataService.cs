@@ -1,4 +1,7 @@
-﻿using ToSic.Eav.DataSource;
+﻿using System;
+using ToSic.Eav.Apps;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 
@@ -7,6 +10,9 @@ namespace ToSic.Sxc.Services
     [PrivateApi("not yet ready / public")]
     public interface IDataService
     {
+        [PrivateApi]
+        IDataService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup);
+
         #region CreateDataSource - new in v15 - make sure it's copied in identical form to IDynamicCode, ...
 
         /// <summary>

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Services
         /// <param name="codeRoot"></param>
         /// <param name="parentLog"></param>
         [PrivateApi]
-        public virtual void ConnectToRoot(IDynamicCodeRoot codeRoot, ILog parentLog)
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot, ILog parentLog)
         {
             // Avoid unnecessary reconnects
             if (_alreadyConnected) return;

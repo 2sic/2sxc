@@ -14,7 +14,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Helpers;
-using static ToSic.Eav.Parameters;
+using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.DataSource
@@ -29,12 +29,12 @@ namespace Custom.DataSource
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSource.MyServices>
         {
-            public LazySvc<DynamicCodeDataSources> DataSources { get; }
+            public ServiceKitLight15 Kit { get; }
 
-            public MyServices(CustomDataSource.MyServices parentServices, LazySvc<DynamicCodeDataSources> dataSources) : base(parentServices)
+            public MyServices(CustomDataSource.MyServices parentServices, LazySvc<DynamicCodeDataSources> dataSources, ServiceKitLight15 kit) : base(parentServices)
             {
                 ConnectServices(
-                    DataSources = dataSources
+                    Kit = kit
                 );
             }
         }
@@ -48,12 +48,11 @@ namespace Custom.DataSource
         {
             _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
             _inner.BreachProvideOut(GetDefault);
+            Kit = services.Kit.Setup(this, () => Configuration.LookUpEngine);
         }
         private readonly CustomDataSource _inner;
 
-        private DynamicCodeDataSources DataSources => _ds.Get(() =>
-            Services.DataSources.Value.Setup(this, () => _inner.Configuration.LookUpEngine));
-        private readonly GetOnce<DynamicCodeDataSources> _ds = new GetOnce<DynamicCodeDataSources>();
+        public ServiceKitLight15 Kit { get; }
 
         protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
 
@@ -85,15 +84,6 @@ namespace Custom.DataSource
         public int AppId => _inner.AppId;
 
         #endregion
-
-        [PrivateApi]
-        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
-            => DataSources.CreateDataSource<T>(true, noParamOrder: noParamOrder, attach: attach, options: options);
-
-        [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
-            => DataSources.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
-
 
 
         #region IDataTarget - allmost all hidden

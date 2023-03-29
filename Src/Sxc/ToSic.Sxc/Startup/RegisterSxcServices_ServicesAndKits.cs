@@ -61,6 +61,7 @@ namespace ToSic.Sxc.Startup
             // v14 Kits
             services.TryAddTransient<ServiceKit>();
             services.TryAddTransient<ServiceKit14>();
+            services.TryAddTransient<ServiceKitLight15>();
 
             // WIP v14
             services.TryAddTransient<IAdamService, AdamService>();
