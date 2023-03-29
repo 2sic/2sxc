@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="15.06.00">
+    <package name="2SexyContent" type="Module" version="15.07.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -64,7 +64,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>15.06.00</version>
+              <version>15.07.00</version>
             </script>
           </scripts>
         </component>
@@ -614,7 +614,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="15.06.00">
+    <package name="2SexyContent-App" type="Module" version="15.07.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
