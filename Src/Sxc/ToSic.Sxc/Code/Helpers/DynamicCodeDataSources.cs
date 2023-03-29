@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Catalog;

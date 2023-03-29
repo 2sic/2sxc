@@ -112,19 +112,6 @@ namespace Custom.Hybrid
 
         #endregion
 
-        #region CreateDataSource - new in v15, don't use in this old deprecated base class
-
-        [PrivateApi]
-        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
-            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
-
-        [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = null, object options = default)
-            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
-
-        #endregion
-
-
         #region Content, Header, etc. and List
         /// <inheritdoc/>
         public dynamic Content => _DynCodeRoot.Content;

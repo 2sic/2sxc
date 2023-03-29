@@ -71,6 +71,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ICmsService, CmsService>();
             services.TryAddTransient<CmsServiceStringWysiwyg>();
             services.TryAddTransient<CmsServiceImageExtractor>();
+            services.TryAddTransient<IDataService, DataService>();
 
             // v15 CustomDataSources - just the dependencies needed
             services.TryAddTransient<DataSource15.MyServices>();

@@ -17,14 +17,5 @@ namespace Custom.Hybrid.Advanced
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
         private readonly GetOnce<TServiceKit> _kit = new();
 
-        [PrivateApi]
-        public new T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
-            => _DynCodeRoot.CreateDataSource<T>(noParamOrder: noParamOrder, attach: attach, options: options);
-
-        [PrivateApi]
-        public new IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = null, object options = null)
-            => _DynCodeRoot.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
-
-
     }
 }

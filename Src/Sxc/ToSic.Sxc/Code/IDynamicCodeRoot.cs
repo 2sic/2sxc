@@ -15,11 +15,6 @@ namespace ToSic.Sxc.Code
         [PrivateApi("WIP")] IBlock Block { get; }
 
         [PrivateApi] DynamicCodeDataSources DataSources { get; }
-        //[PrivateApi]
-        //ILookUpEngine ConfigurationProvider { get; }
-
-        //[PrivateApi]
-        //IDataSourcesService DataSourceFactory { get; }
 
         [PrivateApi] void AttachApp(IApp app);
 

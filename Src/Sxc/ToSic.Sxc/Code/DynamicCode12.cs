@@ -31,9 +31,5 @@ namespace ToSic.Sxc.Code
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
-        [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSource links = null, object options = null)
-            => _DynCodeRoot.CreateDataSource(noParamOrder: name, attach: links, options: options);
-
     }
 }

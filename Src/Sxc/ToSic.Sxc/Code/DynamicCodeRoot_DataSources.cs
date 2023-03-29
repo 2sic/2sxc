@@ -4,7 +4,6 @@ using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code.Helpers;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -38,18 +37,9 @@ namespace ToSic.Sxc.Code
             // if it has a source, then use this, otherwise it's null and then it uses the App-Default
             // Reason: some sources like DataTable or SQL won't have an upstream source
             var src = CreateSource<T>(source.Source);
-            //src.In.Clear();
             src.Attach(DataSourceConstants.StreamDefaultName, source);
             return src;
         }
-
-        [PrivateApi]
-        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource 
-            => DataSources.CreateDataSource<T>(true, noParamOrder: noParamOrder, attach: attach, options: options);
-
-        [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default) 
-            => DataSources.CreateDataSource(noParamOrder: noParamOrder, name: name, attach: attach, options: options);
 
         #endregion
     }

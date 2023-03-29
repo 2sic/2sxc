@@ -85,16 +85,6 @@ namespace Custom.Hybrid
 
         #endregion
 
-        #region CreateDataSource new v15
-
-        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource
-            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
-
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
-            => throw new Exception(DynamicCodeConstants.ErrorCreateDataSourceRequiresV14);
-
-        #endregion
-
         #region Convert-Service
         [PrivateApi] public IConvertService Convert => _DynCodeRoot.Convert;
 

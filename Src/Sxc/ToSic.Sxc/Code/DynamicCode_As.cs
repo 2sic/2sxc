@@ -56,14 +56,6 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        [PrivateApi]
-        public IDataSource CreateDataSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default)
-            => _DynCodeRoot.CreateDataSource(noParamOrder: name, attach: attach, options: options);
-
-        public T CreateDataSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource 
-            => _DynCodeRoot.CreateDataSource<T>(noParamOrder: noParamOrder, attach: attach, options: options);
-
-
         #region AsAdam
         /// <inheritdoc />
         public IFolder AsAdam(IDynamicEntity entity, string fieldName)
