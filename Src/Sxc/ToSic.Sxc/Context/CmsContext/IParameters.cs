@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Conventions;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Context
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Context
     /// Has a special ToString() implementation, which gives you the parameters for re-use in other scenarios...?
     /// </summary>
     [PublicApi]
-    public interface IParameters: IReadOnlyDictionary<string, string>, IGetAccessors<string>
+    public interface IParameters: IReadOnlyDictionary<string, string>
     {
         /// <summary>
         /// ToString is especially implemented, to give you the parameters again as they were originally given on the page.
@@ -24,25 +23,37 @@ namespace ToSic.Sxc.Context
         /// <summary>
         /// Get a parameter.
         /// </summary>
-        /// <param name="key">the key/name in the url</param>
+        /// <param name="name">the key/name in the url</param>
         /// <returns>a string or null</returns>
         /// <remarks>
         /// Added v15.04
         /// </remarks>
-        new string Get(string key);
+        string Get(string name);
 
         /// <summary>
-        /// Get a parameter and convert to the needed type - or return the default/fallback.
+        /// Get a parameter and convert to the needed type - or return the default.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="key">Key/name of the parameter</param>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="name">Key/name of the parameter</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Added v15.04
+        /// </remarks>
+        TValue Get<TValue>(string name);
+
+        /// <summary>
+        /// Get a parameter and convert to the needed type - or return the fallback.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="name">Key/name of the parameter</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">Optional fallback value to use if not found</param>
         /// <returns></returns>
         /// <remarks>
         /// Added v15.04
         /// </remarks>
-        new T Get<T>(string key, string noParamOrder = Eav.Parameters.Protector, T fallback = default);
+        // ReSharper disable once MethodOverloadWithOptionalParameter
+        TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default);
 
         #endregion
 

@@ -1,5 +1,6 @@
-﻿using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 
 // Important Info to people working with this
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Sites",
         Type = DataSourceType.Source,
         UiHint = "Sites in this CMS")]
-    public class Sites: CustomDataSourceLight
+    public class Sites: CustomDataSource
     {
         [PrivateApi]
         public Sites(MyServices services, SitesDataSourceProvider sitesProvider) : base(services, logName: "CDS.Sites")

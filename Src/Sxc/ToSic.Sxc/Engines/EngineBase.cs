@@ -18,7 +18,7 @@ using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using IApp = ToSic.Sxc.Apps.IApp;
-using IDataSource = ToSic.Eav.DataSources.IDataSource;
+using IDataSource = ToSic.Eav.DataSource.IDataSource;
 
 namespace ToSic.Sxc.Engines
 {

@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
@@ -17,7 +18,7 @@ namespace Custom.Hybrid.Advanced
     /// <typeparam name="TModel">_not yet used_ - pls always use `dynamic`</typeparam>
     /// <typeparam name="TServiceKit">The ServiceKit provided on `Kit` - for now, use <see cref="ServiceKit14"/></typeparam>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("")]
-    public abstract partial class Api14<TModel, TServiceKit>: ApiCoreShim, IDynamicCode<TModel, TServiceKit>
+    public abstract partial class Api14<TModel, TServiceKit>: ApiCoreShim, IDynamicCode<TModel, TServiceKit>, IHasCodeLog
         where TModel : class
         where TServiceKit : ServiceKit
     {
@@ -30,6 +31,15 @@ namespace Custom.Hybrid.Advanced
 
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
         private readonly GetOnce<TServiceKit> _kit = new GetOnce<TServiceKit>();
+
+        #region IHasLog
+
+        /// <inheritdoc />
+        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
+        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
+        [PrivateApi] ILog IHasLog.Log => base.Log;
+
+        #endregion
 
     }
 }

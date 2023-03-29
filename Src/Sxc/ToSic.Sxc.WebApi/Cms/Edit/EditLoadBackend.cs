@@ -110,9 +110,11 @@ namespace ToSic.Sxc.WebApi.Cms
             // set published if some data already exists
             if (list.Any())
             {
-                result.IsPublished = list.First().Entity?.IsPublished ?? true; // Entity could be null (new), then true
+                var entity = list.First().Entity;
+                result.IsPublished = entity?.IsPublished ?? true; // Entity could be null (new), then true
                 // only set draft-should-branch if this draft already has a published item
-                if (!result.IsPublished) result.DraftShouldBranch = list.First().Entity?.GetPublished() != null;
+                if (!result.IsPublished)
+                    result.DraftShouldBranch = (entity == null ? null : entityApi.AppRead.AppState.GetPublished(entity)) != null;
             }
 
             // since we're retrieving data - make sure we're allowed to

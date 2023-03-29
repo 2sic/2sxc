@@ -8,8 +8,8 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
-using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
@@ -233,7 +233,7 @@ namespace ToSic.Sxc.Dnn.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
+        public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(Properties)
         {
             { Eav.Data.Attributes.TitleNiceName, Name },
             { nameof(Name), Name },

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ToSic.Eav;
@@ -7,16 +6,20 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Helpers;
+using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
-namespace Custom.DataSources
+namespace Custom.DataSource
 {
-    public abstract partial class DataSource15: IDataSource, IAppIdentitySync
+    public abstract partial class DataSource15: ServiceBase<DataSource15.MyServices>, IDataSource, IAppIdentitySync
     {
         /// <summary>
         /// These are dependencies of DataSource15.
@@ -24,35 +27,38 @@ namespace Custom.DataSources
         /// in the constructor, so we can be sure we can add more dependencies as we need them.
         /// </summary>
         [PrivateApi]
-        public class MyServices: MyServicesBase<CustomDataSourceAdvanced.MyServices>
+        public class MyServices: MyServicesBase<CustomDataSource.MyServices>
         {
-            public MyServices(CustomDataSourceAdvanced.MyServices parentServices) : base(parentServices)
+            public ServiceKitLight15 Kit { get; }
+
+            public MyServices(CustomDataSource.MyServices parentServices, LazySvc<DynamicCodeDataSources> dataSources, ServiceKitLight15 kit) : base(parentServices)
             {
+                ConnectServices(
+                    Kit = kit
+                );
             }
         }
 
         /// <summary>
         /// Constructor with the option to provide a log name.
         /// </summary>
-        /// <param name="services">
-        /// Services the object needs to work.
-        /// You don't need to worry about the details, just make sure it's provided in the constructor.
-        /// See MyServices convention TODO:
-        /// </param>
-        /// <param name="logName">Optional name to use in logs.</param>
-        protected DataSource15(MyServices services, string logName = default)
+        /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.MyServices)</param>
+        /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
+        protected DataSource15(MyServices services, string logName = default): base(services, logName ?? "Cus.HybDs")
         {
             _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
             _inner.BreachProvideOut(GetDefault);
+            Kit = services.Kit.Setup(this, () => Configuration.LookUpEngine);
         }
+        private readonly CustomDataSource _inner;
 
-        private readonly CustomDataSourceLight _inner;
+        public ServiceKitLight15 Kit { get; }
 
         protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
 
 
         protected void ProvideOut(
-            Func<IEnumerable> getList,
+            Func<object> getList,
             string noParamOrder = Parameters.Protector,
             string name = DataSourceConstants.StreamDefaultName,
             Func<DataFactoryOptions> options = default
@@ -80,18 +86,24 @@ namespace Custom.DataSources
         #endregion
 
 
+        #region IDataTarget - allmost all hidden
 
-        #region IDataTarget - all public
-
-        public IDictionary<string, IDataStream> In => _inner.In;
-
-        public void Attach(IDataSource dataSource) => _inner.Attach(dataSource);
-
-        public void Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
-
-        public void Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
-
+        /// <inheritdoc/>
         public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetIn(name);
+
+        // The rest is all explicit implementation only
+
+        IReadOnlyDictionary<string, IDataStream> IDataSource.In => _inner.In;
+
+        // todo: attach must error - but only once the query has been optimized
+        // note also that temporarily the old interface IDataTarget will already error
+        // but soon the new one must too
+        private static readonly string AttachNotSupported = $"Attach(...) is not supported on new data sources. Provide 'attach:' in CreateDataSource(...) instead";
+        void IDataTarget.Attach(IDataSource dataSource) => _inner.Attach(dataSource);
+
+        void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
+
+        void IDataTarget.Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
 
         #endregion
 

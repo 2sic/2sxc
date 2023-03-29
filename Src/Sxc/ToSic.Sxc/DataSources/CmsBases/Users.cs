@@ -7,12 +7,14 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.Data.Source;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Context.Raw;
-using static ToSic.Eav.DataSources.DataSourceConstants;
+using static ToSic.Eav.DataSource.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provider, that must be overriden in each platform
@@ -223,7 +225,7 @@ namespace ToSic.Sxc.DataSources
             // Get list of all role IDs which are to be used
             var roleIds = usersRaw.SelectMany(u => u.Roles).Distinct().ToList();
             // Get roles, use the current data source to provide aspects such as lookups etc.
-            var rolesDs = _rolesGenerator.New(source: this);
+            var rolesDs = _rolesGenerator.New(attach: this);
             // Set filter parameter to only get roles we'll need
             rolesDs.RoleIds = string.Join(",", roleIds);
             var roles = rolesDs.List;

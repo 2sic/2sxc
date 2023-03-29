@@ -184,7 +184,7 @@ namespace ToSic.Sxc.DataSources
         /// Data but without Id, Guid, Created, Modified
         /// </summary>
         [PrivateApi]
-        public Dictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
+        public IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>
         {
             // v14+
             { Eav.Data.Attributes.TitleNiceName, Title },

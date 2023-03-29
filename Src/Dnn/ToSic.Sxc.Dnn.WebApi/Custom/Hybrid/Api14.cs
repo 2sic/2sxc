@@ -26,22 +26,12 @@ namespace Custom.Hybrid
     public abstract class Api14: Api14<dynamic, ServiceKit14>, 
         IDynamicCode12, 
         IDynamicWebApi, 
-        IHasDynamicCodeRoot,
-        IHasCodeLog
+        IHasDynamicCodeRoot
     {
         protected Api14() : base("Hyb14") { }
 
         protected Api14(string logSuffix) : base(logSuffix) { }
 
-        #region IHasLog
-
-        /// <inheritdoc />
-        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
-        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
-
-        [PrivateApi] ILog IHasLog.Log => base.Log;
-
-        #endregion
 
     }
 }

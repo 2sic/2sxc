@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Configuration;
-using ToSic.Eav.DataSources;
-using ToSic.Lib.Logging;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
@@ -10,7 +9,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -190,12 +188,13 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
         /// </summary>
-        /// <param name="source">The data source which will be the default In of the new data-source.</param>
-        /// <param name="options">An alternate configuration provider for the DataSource</param>
+        /// <param name="inSource">The data source which will be the default In of the new data-source.</param>
+        /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        T CreateSource<T>(IDataSource source = null, object options = default) where T : IDataSource;
+        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
         #endregion
+
 
         #region Context
 

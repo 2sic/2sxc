@@ -1,8 +1,7 @@
-﻿using ToSic.Eav.DataSources;
-using ToSic.Eav.LookUp;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Helpers;
 
 namespace ToSic.Sxc.Code
 {
@@ -15,14 +14,9 @@ namespace ToSic.Sxc.Code
     {
         [PrivateApi("WIP")] IBlock Block { get; }
 
-        [PrivateApi]
-        ILookUpEngine ConfigurationProvider { get; }
-        
-        [PrivateApi]
-        IDataSourceFactory DataSourceFactory { get; }
+        [PrivateApi] DynamicCodeDataSources DataSources { get; }
 
-        [PrivateApi]
-        void AttachApp(IApp app);
-        
+        [PrivateApi] void AttachApp(IApp app);
+
     }
 }

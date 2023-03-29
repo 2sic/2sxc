@@ -6,10 +6,12 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Run;
+using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Apps.Paths;
@@ -55,7 +57,7 @@ namespace ToSic.Sxc.Apps
             if (_viewDs != null) return _viewDs;
 		    // ReSharper disable once RedundantArgumentDefaultValue
             var dataSource = Parent.Data;
-			var typeFilter = _typeFilterGenerator.New(source: dataSource);
+			var typeFilter = _typeFilterGenerator.New(attach: dataSource);
 		    typeFilter.TypeName = Eav.Apps.AppConstants.TemplateContentType;
 		    return _viewDs = typeFilter;
 		}

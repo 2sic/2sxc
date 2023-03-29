@@ -46,6 +46,16 @@ namespace ToSic.Sxc.Services
         private readonly GetOnce<ICss> _css = new GetOnce<ICss>();
 
 
+        /// <summary>
+        /// The Data service to get DataSources and similar.
+        /// </summary>
+        /// <remarks>
+        /// * added in v15.06
+        /// </remarks>
+        [PrivateApi("WIP not yet public for v15 - added v15.06")]
+        public IDataService Data => _data.Get(GetService<IDataService>);
+        private readonly GetOnce<IDataService> _data = new GetOnce<IDataService>();
+
         // Wait till we have a signature without the IEntity, but more an IHasEntity or something
         ///// <summary>
         ///// The TODO Service, 
@@ -105,8 +115,10 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
         /// </summary>
-        public new ILogService Log => _sysLog.Get(GetService<ILogService>);
+        public ILogService SystemLog => _sysLog.Get(GetService<ILogService>);
         private readonly GetOnce<ILogService> _sysLog = new GetOnce<ILogService>();
+        [PrivateApi("was the official name before v15.06, probably never used publicly, but should stay in for a while")]
+        public new ILogService Log => SystemLog;
 
 
         /// <summary>

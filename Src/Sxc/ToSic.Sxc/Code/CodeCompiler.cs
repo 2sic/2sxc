@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Code
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
 
-        internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
+        internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true, IServiceProvider serviceProvider = null)
         {
             var l = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
 
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Code
                 return null;
             }
 
-            var instance = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
+            var instance = serviceProvider.Build<object>(compiledType, Log);
             AttachRelativePath(virtualPath, instance);
             
             return l.Return(instance, $"found: {instance != null}");

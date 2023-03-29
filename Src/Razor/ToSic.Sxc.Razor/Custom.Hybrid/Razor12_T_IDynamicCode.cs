@@ -1,14 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -74,15 +79,9 @@ namespace Custom.Hybrid
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        [PrivateApi]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = null,
-            object options = null)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
         #endregion
 

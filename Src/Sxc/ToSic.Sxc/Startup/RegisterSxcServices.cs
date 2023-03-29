@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Context;
-using ToSic.Eav.DataSources.Catalog;
+using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -10,6 +10,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Edit;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -169,6 +170,9 @@ namespace ToSic.Sxc.Startup
 
             // v15 EditUi Resources
             services.TryAddTransient<EditUiResources>();
+
+            // v15
+            services.TryAddTransient<DynamicCodeDataSources>();
 
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need

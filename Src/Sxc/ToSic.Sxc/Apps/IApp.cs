@@ -72,16 +72,33 @@ namespace ToSic.Sxc.Apps
         string PhysicalPathShared { get; }
 #pragma warning restore CS0108, CS0114
 
+        ///// <summary>
+        ///// Path relative to the website root.
+        ///// In DNN this is usually the same as the url-path.
+        ///// In Oqtane it's very different. 
+        ///// </summary>
+        ///// <remarks>
+        ///// * Made public v15.06 but existed previously
+        ///// </remarks>
+        //[PrivateApi("not public, not sure if we should surface this")]
+        //new string RelativePath { get; }
+
+        ///// <summary>
+        ///// Path of the shared App relative to the website root.
+        ///// In DNN this is usually the same as the url-path.
+        ///// In Oqtane it's very different. 
+        ///// </summary>
+        ///// <remarks>
+        ///// * Made public v15.06 but existed previously
+        ///// </remarks>
+        //[PrivateApi("not public, not sure if we should surface this")]
+        //new string RelativePathShared { get; }
+
         /// <summary>
         /// The thumbnail path for the current app. 
         /// </summary>
         /// <returns>path + app-icon.png if there is an icon there. </returns>
         new string Thumbnail { get; }
 
-        //[PrivateApi("not public, not sure if we should surface this")]
-        //string RelativePath { get; }
-
-        //[PrivateApi("not public, not sure if we should surface this")]
-        //string RelativePathShared { get; }
     }
 }

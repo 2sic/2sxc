@@ -8,9 +8,10 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Caching.CachingMonitors;
 using ToSic.Eav.Context;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Catalog;
+using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Catalog;
-using ToSic.Eav.DataSources.Queries;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -39,10 +40,11 @@ namespace ToSic.Sxc.DataSources
         private readonly LazySvc<AppPaths> _appPathsLazy;
         private readonly LazySvc<CodeCompiler> _codeCompilerLazy;
 
-        public (List<DataSourceInfo> data, CacheItemPolicy policy) CreateAndReturnAppCache(int appId)
+        public (List<DataSourceInfo> data, CacheItemPolicy policy) CompileDynamicDataSources(int appId)
         {
             _logStore.Add(EavLogs.LogStoreAppDataSourcesLoader, Log);
-            var l = Log.Fn<(List<DataSourceInfo> data, CacheItemPolicy policy)>();
+            // Initial message for insights-overview
+            var l = Log.Fn<(List<DataSourceInfo> data, CacheItemPolicy policy)>($"{nameof(appId)}: {appId}", timer: true);
             var expiration = new TimeSpan(1, 0, 0);
             var policy = new CacheItemPolicy { SlidingExpiration = expiration };
             try

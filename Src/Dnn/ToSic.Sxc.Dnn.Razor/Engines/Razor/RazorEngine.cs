@@ -102,8 +102,9 @@ namespace ToSic.Sxc.Engines
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
         [PrivateApi]
-        public void Render(TextWriter writer) => Log.Do(message: "will render into TextWriter", action: l =>
+        public void Render(TextWriter writer)
         {
+            var l = Log.Fn(message: "will render into TextWriter");
             try
             {
                 Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
@@ -114,27 +115,28 @@ namespace ToSic.Sxc.Engines
                 ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
                 throw;
             }
-        });
+            l.Done();
+        }
 
         [PrivateApi]
         protected override string RenderTemplate()
         {
-            var wrapLog = Log.Fn<string>();
+            var l = Log.Fn<string>();
             var writer = new StringWriter();
             Render(writer);
-            return wrapLog.ReturnAsOk(writer.ToString());
+            return l.ReturnAsOk(writer.ToString());
         }
 
         private object CreateWebPageInstance()
         {
-            var wrapLog = Log.Fn<object>();
+            var l = Log.Fn<object>();
             try
             {
                 var compiledType = BuildManager.GetCompiledType(TemplatePath);
                 object objectValue = null;
                 if (compiledType != null)
                     objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
-                return wrapLog.ReturnAsOk(objectValue);
+                return l.ReturnAsOk(objectValue);
             }
             catch (Exception ex)
             {
@@ -146,8 +148,8 @@ namespace ToSic.Sxc.Engines
 
         private bool InitWebpage()
         {
-            var wrapLog = Log.Fn<bool>();
-            if (string.IsNullOrEmpty(TemplatePath)) return wrapLog.ReturnFalse("null path");
+            var l = Log.Fn<bool>();
+            if (string.IsNullOrEmpty(TemplatePath)) return l.ReturnFalse("null path");
 
             var objectValue = RuntimeHelpers.GetObjectValue(CreateWebPageInstance());
             // ReSharper disable once JoinNullCheckWithUsage
@@ -177,7 +179,7 @@ namespace ToSic.Sxc.Engines
                 oldPage.InstancePurpose = (InstancePurposes) Purpose;
 #pragma warning restore 618, CS0612
             InitHelpers(pageToInit, compatibility);
-            return wrapLog.ReturnTrue("ok");
+            return l.ReturnTrue("ok");
         }
 
         private void InitHelpers(RazorComponentBase webPage, int compatibility) => Log.Do(() =>

@@ -2,11 +2,13 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.VisualQuery;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using static ToSic.Eav.DataSource.DataSourceConstants;
 
 // Important Info to people working with this
 // It depends on abstract provder, that must be overriden in each platform
@@ -31,12 +33,12 @@ namespace ToSic.Sxc.DataSources
         Icon = Icons.Tree,
         Type = DataSourceType.Lookup,
         Audience = Audience.Advanced,
-        In = new[] { QueryConstants.InStreamDefaultRequired },
+        In = new[] { InStreamDefaultRequired },
         DynamicOut = false,
         ConfigurationType = "" // TODO: ...
         )]
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP")]
-    public class AdamFiles : DataSource
+    public class AdamFiles : DataSourceBase
     {
         private readonly IDataFactory _dataFactory;
         private readonly AdamDataSourceProvider<int, int> _provider;

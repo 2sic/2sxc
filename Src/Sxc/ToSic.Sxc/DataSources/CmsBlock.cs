@@ -1,11 +1,12 @@
 ﻿using System.Collections.Immutable;
-using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.VisualQuery;
+using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -30,7 +31,7 @@ namespace ToSic.Sxc.DataSources
         In = new []{DataSourceConstants.StreamDefaultName},
         HelpLink = "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.DataSources.CmsBlock.html",
         NameIds = new []{ "ToSic.SexyContent.DataSources.ModuleDataSource, ToSic.SexyContent" })]
-    public sealed partial class CmsBlock : DataSource
+    public sealed partial class CmsBlock : DataSourceBase
     {
         [PrivateApi] internal const string InstanceLookupName = "module";
         [PrivateApi] internal const string ModuleIdKey = "Id";
@@ -50,16 +51,16 @@ namespace ToSic.Sxc.DataSources
 
         #region Constructor
 
-        public new class MyServices: MyServicesBase<DataSource.MyServices>
+        public new class MyServices: MyServicesBase<DataSourceBase.MyServices>
         {
             public LazySvc<CmsRuntime> LazyCmsRuntime { get; }
             public LazySvc<IModule> ModuleLazy { get; }
-            public LazySvc<IDataSourceFactory> DataSourceFactory { get; }
+            public LazySvc<IDataSourcesService> DataSourceFactory { get; }
 
-            public MyServices(DataSource.MyServices parentServices,
+            public MyServices(DataSourceBase.MyServices parentServices,
                 LazySvc<CmsRuntime> lazyCmsRuntime,
                 LazySvc<IModule> moduleLazy,
-                LazySvc<IDataSourceFactory> dataSourceFactory) : base(parentServices)
+                LazySvc<IDataSourcesService> dataSourceFactory) : base(parentServices)
             {
                 ConnectServices(
                     LazyCmsRuntime = lazyCmsRuntime,
@@ -79,6 +80,11 @@ namespace ToSic.Sxc.DataSources
         }
         private readonly MyServices _services;
         #endregion
+
+        public override IDataSourceLink Link => _link.Get(() => new DataSourceLink(null, dataSource: this)
+            .AddStream(name: ViewParts.StreamHeader)
+            .AddStream(name: ViewParts.StreamHeaderOld));
+        private readonly GetOnce<IDataSourceLink> _link = new GetOnce<IDataSourceLink>();
 
 
         private IImmutableList<IEntity> GetContent()

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Configuration;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -50,15 +50,9 @@ namespace ToSic.Sxc.Code
             => _DynCodeRoot.CreateSource<T>(source);
 
         /// <inheritdoc />
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        [PrivateApi]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = "Rule: All params must be named (https://r.2sxc.org/named-params)",
-            IDataSource source = null,
-            object options = null)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
         #endregion
 

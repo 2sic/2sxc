@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.DevTools;
@@ -205,18 +207,12 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
         /// </summary>
-        /// <param name="source">The data source which will be the default In of the new data-source.</param>
-        /// <param name="options">An alternate configuration provider for the DataSource</param>
+        /// <param name="inSource">The data source which will be the default In of the new data-source.</param>
+        /// <param name="configurationProvider">An alternate configuration provider for the DataSource</param>
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
-        T CreateSource<T>(IDataSource source = null, object options = default) where T : IDataSource;
+        T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
 
-        [PrivateApi]
-        IDataSource CreateSourceWip(
-            string name,
-            string noParamOrder = Eav.Parameters.Protector,
-            IDataSource source = default,
-            object options = default);
         #endregion
 
         #region Context

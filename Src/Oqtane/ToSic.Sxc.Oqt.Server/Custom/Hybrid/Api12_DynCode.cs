@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
@@ -13,6 +15,7 @@ using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
+using static ToSic.Eav.Parameters;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -80,22 +83,13 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [NonAction]
-        public T CreateSource<T>(IDataSource source = null, object configuration = null)
-            where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, configuration);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc />
         [NonAction]
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
-
-        [PrivateApi]
-        [NonAction]
-        public IDataSource CreateSourceWip(string name,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
-            IDataSource source = null,
-            object options = null)
-            => _DynCodeRoot.CreateSourceWip(name, source: source, options: options);
 
         #endregion
 
@@ -124,7 +118,7 @@ namespace Custom.Hybrid
         /// See docs of official interface <see cref="IDynamicWebApi"/>
         /// </summary>
         [NonAction]
-        public ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Parameters.Protector,
+        public ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -159,7 +153,7 @@ namespace Custom.Hybrid
 
         [NonAction]
         public dynamic CreateInstance(string virtualPath,
-            string noParamOrder = Parameters.Protector,
+            string noParamOrder = Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true) =>

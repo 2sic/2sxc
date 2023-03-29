@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -17,11 +19,12 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Dnn
 {
     /// <summary>
-    /// The base class for Razor-Components in 2sxc 10+ <br/>
+    /// The base class for Razor-Components in 2sxc 10+ to 2sxc 11 - deprecated now<br/>
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
@@ -129,8 +132,8 @@ namespace ToSic.Sxc.Dnn
         #region Data Source Stuff
 
         /// <inheritdoc/>
-        public T CreateSource<T>(IDataSource source = null, object options = null) where T : IDataSource
-            => _DynCodeRoot.CreateSource<T>(source, options);
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
         /// <inheritdoc/>
         public T CreateSource<T>(IDataStream source) where T : IDataSource

@@ -1,9 +1,11 @@
 ﻿using ToSic.Eav.Configuration;
+using ToSic.Eav.DataSource;
+using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.DataSources.Queries;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
+using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
@@ -14,14 +16,14 @@ namespace ToSic.Sxc.DataSources
     {
         #region Constructor
 
-        public BlockDataSourceFactory(LazySvc<IDataSourceFactory> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
+        public BlockDataSourceFactory(LazySvc<IDataSourcesService> dataSourceFactory, LazySvc<Query> queryLazy): base("Sxc.BDsFct")
         {
             ConnectServices(
                 _dataSourceFactory = dataSourceFactory,
                 _queryLazy = queryLazy
             );
         }
-        private readonly LazySvc<IDataSourceFactory> _dataSourceFactory;
+        private readonly LazySvc<IDataSourcesService> _dataSourceFactory;
         private readonly LazySvc<Query> _queryLazy;
 
         #endregion
@@ -36,7 +38,7 @@ namespace ToSic.Sxc.DataSources
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
             var initialSource = dsFactory.CreateDefault(new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
-            var moduleDataSource = dsFactory.Create<CmsBlock>(source: initialSource);
+            var moduleDataSource = dsFactory.Create<CmsBlock>(attach: initialSource);
 
             moduleDataSource.OverrideView = view;
             moduleDataSource.UseSxcInstanceContentGroup = true;
@@ -47,7 +49,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.Create<Block>(source: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
+            var viewDataSource = dsFactory.Create<Block>(attach: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
 
             // Take Publish-Properties from the View-Template
             if (view != null)
