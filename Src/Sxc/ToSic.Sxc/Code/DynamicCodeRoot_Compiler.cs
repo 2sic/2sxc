@@ -1,4 +1,6 @@
-﻿using ToSic.Lib.Logging;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code
 {
@@ -19,7 +21,7 @@ namespace ToSic.Sxc.Code
 
             // Compile
             var compiler = Services.CodeCompilerLazy.Value;
-            var instance = compiler.InstantiateClass(virtualPath, name, relativePath, throwOnError);
+            var instance = compiler.InstantiateClass(virtualPath, name, relativePath, throwOnError, _serviceProvider ?? GetService<IServiceProvider>());
 
             // if it supports all our known context properties, attach them
             if (instance is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);
