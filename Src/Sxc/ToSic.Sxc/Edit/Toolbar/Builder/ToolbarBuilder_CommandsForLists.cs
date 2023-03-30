@@ -20,8 +20,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             [CallerMemberName] string methodName = default)
         {
             Protect(noParamOrder, "See docs", methodName);
-            var tweaks = tweak?.Invoke(new TweakButton());
             TargetCheck(target);
+            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
             var pars = PreCleanParams(operation, OprAuto, ui, null, null, parameters, null, tweaks: tweaks);
             var command = new ToolbarRuleForEntity(commandName, target, 
                 contentType: contentType,

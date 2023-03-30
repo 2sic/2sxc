@@ -1,19 +1,30 @@
 ﻿using System.Collections.Immutable;
+using ToSic.Sxc.Web.Url;
 using static ToSic.Eav.Parameters;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
     public class TweakButton: ITweakButton
     {
+        public IImmutableList<object> UiMerge { get; }
+        public IImmutableList<object> ParamsMerge { get; }
+
         internal TweakButton()
         {
             UiMerge = ImmutableList.Create<object>();
+            ParamsMerge = ImmutableList.Create<object>();
         }
 
-        private TweakButton(TweakButton original, IImmutableList<object> uiMerge = default)
+        private TweakButton(ITweakButton original, IImmutableList<object> uiMerge = default, IImmutableList<object> paramsMerge = default)
         {
             UiMerge = uiMerge ?? original.UiMerge;
+            ParamsMerge = paramsMerge ?? original.ParamsMerge;
         }
+
+        public static ITweakButton NoOp(ITweakButton btn) => btn;
+
+        #region UI
 
         public ITweakButton Note(
             string note,
@@ -48,10 +59,20 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public ITweakButton Class(string classes) => Ui("class", classes);
 
-        public ITweakButton Ui(object ui) => new TweakButton(this, UiMerge.Add(ui));
+        public ITweakButton Ui(object ui) => ui == null ? this : new TweakButton(this, UiMerge.Add(ui));
 
-        public ITweakButton Ui(string name, string value) => new TweakButton(this, UiMerge.Add($"{name}={value}"));
+        public ITweakButton Ui(string name, string value) => Ui($"{name}={value}");
 
-        public IImmutableList<object> UiMerge { get; }
+        #endregion
+
+        #region Params
+
+        public ITweakButton Parameters(object value) => value == null ? this : new TweakButton(this, paramsMerge: ParamsMerge.Add(value));
+        public ITweakButton Parameters(string name, string value) => Parameters($"{name}={value}");
+
+        public ITweakButton Prefill(object prefill) => prefill == null ? this : Parameters(new ObjectToUrl(PrefixPrefill).Serialize(prefill));
+
+        public ITweakButton Filter(object filter) => filter == null ? this : Parameters(new ObjectToUrl(PrefixFilters).Serialize(filter));
+        #endregion
     }
 }

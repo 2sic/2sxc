@@ -31,6 +31,13 @@ namespace ToSic.Sxc.Web.Url
 
         public string Serialize(object data) => SerializeInternal(data, Prefix);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="main"></param>
+        /// <param name="child"></param>
+        /// <param name="childPrefix">Prefix to use for the child - it is not the same as the Prefix of the main object! as that applies to all data, not child-data</param>
+        /// <returns></returns>
         public string SerializeWithChild(object main, object child, string childPrefix = null)
         {
             var asString = Serialize(main);

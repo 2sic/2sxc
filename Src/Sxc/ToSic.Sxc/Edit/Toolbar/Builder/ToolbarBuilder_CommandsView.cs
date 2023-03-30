@@ -28,8 +28,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         )
         {
-            var paramsWithCode = new ObjectToUrl().SerializeWithChild(parameters, (target as string).HasValue() ? "call=" + target : "", "");
-            return AddAdminAction("code", noParamOrder, ui, paramsWithCode, operation, target, tweak);
+            // If we don't have a tweak then create the params the classic way
+            if (tweak == null)
+            {
+                var paramsWithCode = new ObjectToUrl().SerializeWithChild(parameters, (target as string).HasValue() ? "call=" + target : "", "");
+                return AddAdminAction("code", noParamOrder, ui, paramsWithCode, operation, target, tweak);
+            }
+
+            // if we have a tweak, we must place the call into that to avoid an error that parameters & tweak are provided
+            ITweakButton ReTweak(ITweakButton _) => tweak(new TweakButton().Parameters("call", target?.ToString()));
+            return AddAdminAction("code", noParamOrder, ui, parameters, operation, target, ReTweak);
         }
 
         public IToolbarBuilder Fields(
@@ -41,7 +49,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null
         )
         {
-            var tweaks = tweak?.Invoke(new TweakButton());
+            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters);
             var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, null, tweaks: tweaks);
             return EntityRule("fields", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string).Builder;
         }

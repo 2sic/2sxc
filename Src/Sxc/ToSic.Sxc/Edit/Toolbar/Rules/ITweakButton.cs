@@ -15,8 +15,10 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// List of changes to apply to the UI parameter
         /// </summary>
-        [PrivateApi]
-        IImmutableList<object> UiMerge { get; }
+        [PrivateApi] IImmutableList<object> UiMerge { get; }
+        [PrivateApi] IImmutableList<object> ParamsMerge { get; }
+
+        #region UI
 
         /// <summary>
         /// Add a floating note to the button.
@@ -95,5 +97,18 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="value">The value which comes after the `=`</param>
         /// <returns></returns>
         ITweakButton Ui(string name, string value);
+
+        #endregion
+
+        #region Params
+
+        ITweakButton Parameters(object value);
+        ITweakButton Parameters(string name, string value);
+
+        ITweakButton Prefill(object prefill);
+
+        ITweakButton Filter(object filter);
+
+        #endregion
     }
 }

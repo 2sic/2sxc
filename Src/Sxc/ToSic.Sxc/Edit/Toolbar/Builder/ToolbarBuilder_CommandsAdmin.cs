@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
         private IToolbarBuilder AddAdminAction(
-            string commandName,
+            string verb,
             string noParamOrder,
             object ui,
             object parameters,
@@ -18,13 +18,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             )
         {
             Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
-            var tweaks = tweak?.Invoke(new TweakButton());
+            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
+            var uiTweaked = PrepareUi(ui, tweaks: tweaks?.UiMerge);
+            var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
             TargetCheck(target);
             return AddInternal(new ToolbarRuleCustom(
-                commandName,
+                verb,
                 operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),
-                ui: PrepareUi(ui, tweaks: tweaks?.UiMerge),
-                parameters: Utils.Par2Url.Serialize(parameters),
+                ui: uiTweaked,
+                parameters: paramsTweaked,
                 operationCode: operation.HasValue() ? null : target as string));
         }
         

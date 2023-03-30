@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -15,24 +15,26 @@ namespace ToSic.Sxc.Edit.Toolbar
             string link = default)
             => InfoLikeButton(
                 noParamOrder: noParamOrder,
-                commandName: "info",
-                parametersMerge: link != default ? new { link, } : null,
+                verb: "info",
+                paramsMergeInTweak: link != default ? new { link, } : null,
                 tweak: tweak
             );
 
 
         private IToolbarBuilder InfoLikeButton(
             string noParamOrder,
-            string commandName,
-            object parametersMerge,
-            Func<ITweakButton, ITweakButton> tweak
+            string verb,
+            object paramsMergeInTweak,
+            Func<ITweakButton, ITweakButton> tweak,
+            [CallerMemberName] string methodName = null
         )
         {
-            var tweaks = tweak?.Invoke(new TweakButton());
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-            var paramsWithMessage = new ObjectToUrl().SerializeWithChild(default, parametersMerge);
-            var pars = PreCleanParams(operation: default, defOp: OprNone, ui: null, uiMerge: null, uiMergePrefix: null, parameters: paramsWithMessage, prefill: null, tweaks: tweaks);
-            return EntityRule(commandName, null, pars).Builder;
+            Eav.Parameters.Protect(noParamOrder, "See docs", methodName: methodName);
+            var tweaks = RunTweaksOrErrorIfCombined(
+                tweak: tweak ?? TweakButton.NoOp, 
+                initial: paramsMergeInTweak == null ? null : new TweakButton().Parameters(paramsMergeInTweak));
+            var pars = PreCleanParams(operation: default, defOp: OprNone, ui: null, uiMerge: null, uiMergePrefix: null, parameters: null, prefill: null, tweaks: tweaks);
+            return EntityRule(verb, null, pars).Builder;
 
         }
     }
