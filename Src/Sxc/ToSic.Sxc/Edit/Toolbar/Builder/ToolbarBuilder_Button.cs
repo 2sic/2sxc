@@ -20,8 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters);
-            var pars = PreCleanParams(operation, OprNone, ui, null, null, parameters, null, tweaks);
+            var pars = PreCleanParams(tweak, defOp: OprNone, operation: operation, ui: ui, parameters: parameters);
 
             return EntityRule(name, target, pars).Builder;
         }

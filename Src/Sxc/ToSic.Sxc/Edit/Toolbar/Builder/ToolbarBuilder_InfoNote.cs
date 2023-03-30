@@ -11,14 +11,9 @@ namespace ToSic.Sxc.Edit.Toolbar
         [PrivateApi("WIP v15.04")]
         public IToolbarBuilder Info(
             string noParamOrder = Eav.Parameters.Protector,
-            Func<ITweakButton, ITweakButton> tweak = default,
-            string link = default)
-            => InfoLikeButton(
-                noParamOrder: noParamOrder,
-                verb: "info",
-                paramsMergeInTweak: link != default ? new { link, } : null,
-                tweak: tweak
-            );
+            string link = default,
+            Func<ITweakButton, ITweakButton> tweak = default
+        ) => InfoLikeButton(noParamOrder: noParamOrder, verb: "info", paramsMergeInTweak: link != default ? new { link, } : null, tweak: tweak);
 
 
         private IToolbarBuilder InfoLikeButton(
@@ -30,12 +25,10 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Eav.Parameters.Protect(noParamOrder, "See docs", methodName: methodName);
-            var tweaks = RunTweaksOrErrorIfCombined(
-                tweak: tweak ?? TweakButton.NoOp, 
-                initial: paramsMergeInTweak == null ? null : new TweakButton().Parameters(paramsMergeInTweak));
-            var pars = PreCleanParams(operation: default, defOp: OprNone, ui: null, uiMerge: null, uiMergePrefix: null, parameters: null, prefill: null, tweaks: tweaks);
+            tweak = tweak ?? TweakButton.NoOp; 
+            var initial = paramsMergeInTweak == null ? null : new TweakButton().Parameters(paramsMergeInTweak);
+            var pars = PreCleanParams(tweak, defOp: OprNone, initialButton: initial);
             return EntityRule(verb, null, pars).Builder;
-
         }
     }
 }

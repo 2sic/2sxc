@@ -96,18 +96,20 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="name">The name/key which comes before the `=`</param>
         /// <param name="value">The value which comes after the `=`</param>
         /// <returns></returns>
-        ITweakButton Ui(string name, string value);
+        ITweakButton Ui(string name, object value);
 
         #endregion
 
         #region Params
 
         ITweakButton Parameters(object value);
-        ITweakButton Parameters(string name, string value);
+        ITweakButton Parameters(string name, object value);
 
         ITweakButton Prefill(object prefill);
+        ITweakButton Prefill(string name, object value);
 
         ITweakButton Filter(object filter);
+        ITweakButton Filter(string name, object value);
 
         #endregion
     }

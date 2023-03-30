@@ -23,25 +23,25 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         private void ErrorIfTweakCombined(ITweakButton tweak, object ui, object parameters, object prefill, object filter, string methodName)
         {
+            // No tweak, nothing to check
             if (tweak == null) return;
-            if (parameters == null && ui == null && prefill == null && filter == null) return;
-            var prefix = $"You called .{methodName}(...) using the '{nameof(tweak)}:' parameter. ";
-            var notAllowedUse = "This is not allowed. When you use tweak, use";
-            if (ui != null)
-                throw new ArgumentException(
-                    $"{prefix}You also supplied a '{nameof(ui)}:'. {notAllowedUse} .{nameof(ITweakButton.Ui)}(...) or other methods.");
+            // If tweak exist, skip if nothing else was provided
+            if ((parameters ?? ui ?? prefill ?? filter) == null) return;
 
-            if (parameters != null)
-                throw new ArgumentException(
-                    $"{prefix}You also supplied a '{nameof(parameters)}:'. {notAllowedUse} .{nameof(ITweakButton.Parameters)}(...) or other methods.");
+            // Figure out what name to show and alternative options
+            (string Name, string Alternatives) err = ui != null
+                ? (nameof(ui), $".{nameof(ITweakButton.Ui)}(...), {nameof(ITweakButton.Show)}() or other methods")
+                : parameters != null
+                    ? (nameof(parameters), $".{nameof(ITweakButton.Parameters)}(...) or other methods")
+                    : prefill != null
+                        ? (nameof(prefill), $".{nameof(ITweakButton.Prefill)}(...)")
+                        : filter != null
+                            ? (nameof(filter), $".{nameof(ITweakButton.Filter)}(...)")
+                            : ("unknown", "unknown problem, pls contact us");
 
-            if (prefill != null)
-                throw new ArgumentException(
-                    $"{prefix}You also supplied a '{nameof(prefill)}:'. {notAllowedUse} .{nameof(ITweakButton.Prefill)}(...).");
-
-            if (filter != null)
-                throw new ArgumentException(
-                    $"{prefix}You also supplied a '{nameof(filter)}:'. {notAllowedUse} .{nameof(ITweakButton.Filter)}(...).");
+            throw new ArgumentException(
+                $"You called .{methodName}(...) using the '{nameof(tweak)}:' parameter. " +
+                $"You also supplied a '{err.Name}:'. This is not allowed. When you use 'tweak', use {err.Alternatives} instead.");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using ToSic.Lib.Logging;
 using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
@@ -18,31 +19,38 @@ namespace ToSic.Sxc.Edit.Toolbar
             public string Parameters;
         }
 
-        private (char Operation, string Ui, string Parameters) PreCleanParams(
-            string operation, 
+        private CleanedParams PreCleanParams(
+            Func<ITweakButton, ITweakButton> tweak,
             ToolbarRuleOps defOp, 
-            object ui, 
-            object uiMerge, 
-            string uiMergePrefix, 
-            object parameters, 
-            object prefill,
-            object filter = null,
-            ITweakButton tweaks = null)
+            string noParamOrder = Protector,
+            string operation = default, 
+            object ui = default, 
+            object uiMerge = default, 
+            string uiMergePrefix = default, 
+            object parameters = default, 
+            object prefill = default,
+            object filter = default,
+            ITweakButton initialButton = default,
+            [CallerMemberName] string methodName = default)
         {
+            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, initial: initialButton,
+                ui: ui, parameters: parameters, prefill: prefill, filter: filter, methodName: methodName);
+
             var paramsString = Utils.PrepareParams(parameters, tweaks);
             var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
-            return (
-                ToolbarRuleOperation.Pick(operation, defOp),
-                Ui: PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),
-                Parameters: Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
-            );
+            return new CleanedParams
+            {
+                Operation = ToolbarRuleOperation.Pick(operation, defOp),
+                Ui = PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),
+                Parameters = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
+            };
 
         }
 
         private (ToolbarRuleForEntity Rule, IToolbarBuilder Builder) EntityRule(
             string verb, 
             object target,
-            (char Operation, string Ui, string Parameters) pars,
+            CleanedParams pars,
             string [] propsSkip = null,
             string[] propsKeep = null,
             string contentType = null
@@ -67,13 +75,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters);
-
             // Set default operation based on what toolbar is used
             var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
             var defOp = isDefToolbar ? OprModify : OprAdd;
 
-            var pars = PreCleanParams(operation, defOp, ui, "show=true", "", parameters, null, tweaks: tweaks);
+            var pars = PreCleanParams(tweak, defOp: defOp, operation: operation, ui: ui, uiMerge: "show=true", parameters: parameters);
 
             return EntityRule("delete", target, pars, 
                 propsKeep: new[] { KeyTitle, KeyEntityId, KeyEntityGuid }).Builder;
@@ -88,9 +94,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
-            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
-
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
         }
 
@@ -104,8 +108,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
-            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
             return EntityRule("new", target, pars,
                 propsSkip: new[] { KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished },
@@ -121,8 +124,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null)
         {
             Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters);
-            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, null, tweaks: tweaks);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters);
 
             return EntityRule("publish", target, pars,
                 propsKeep: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule }).Builder;
@@ -142,8 +144,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string context = null) => Log.Func(() =>
         {
             Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
-            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
             // Note: DO NOT check the target, as here an IAsset is absolutely valid
             // TargetCheck(target);
@@ -177,8 +178,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string context = null)
         {
             Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
-            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
 
             return EntityRule("copy", target, pars, propsKeep: new[] { KeyEntityId, KeyContentType },
                 contentType: contentType).Builder;
@@ -198,8 +198,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Protect(noParamOrder, "See docs");
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, filter: filter);
-            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, null, filter, tweaks);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, filter: filter);
 
             return EntityRule("data", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string)
                 .Builder;

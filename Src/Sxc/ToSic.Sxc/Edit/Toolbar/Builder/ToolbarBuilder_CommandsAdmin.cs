@@ -14,8 +14,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation,
             object target,
             Func<ITweakButton, ITweakButton> tweak,
-            [CallerMemberName] string methodName = null
-            )
+            [CallerMemberName] string methodName = default
+        )
         {
             Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
             var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);

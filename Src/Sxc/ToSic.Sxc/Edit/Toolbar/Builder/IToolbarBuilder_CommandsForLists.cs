@@ -22,8 +22,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         IToolbarBuilder Add(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            Func<ITweakButton, ITweakButton> tweak = default,
             string contentType = null,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -47,8 +47,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         IToolbarBuilder AddExisting(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
-            Func<ITweakButton, ITweakButton> tweak = default,
             string contentType = null,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null

@@ -16,8 +16,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </remarks>
         IToolbarBuilder Info(
             string noParamOrder = Eav.Parameters.Protector,
-            Func<ITweakButton, ITweakButton> tweak = default,
-            string link = default
+            string link = default,
+            Func<ITweakButton, ITweakButton> tweak = default
         );
     }
 }

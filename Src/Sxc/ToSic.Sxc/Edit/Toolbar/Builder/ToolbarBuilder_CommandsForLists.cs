@@ -21,8 +21,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         {
             Protect(noParamOrder, "See docs", methodName);
             TargetCheck(target);
-            var tweaks = RunTweaksOrErrorIfCombined(tweak: tweak, ui: ui, parameters: parameters, methodName: methodName);
-            var pars = PreCleanParams(operation, OprAuto, ui, null, null, parameters, null, tweaks: tweaks);
+            var pars = PreCleanParams(tweak, defOp: OprAuto, operation: operation, ui: ui, parameters: parameters, methodName: methodName);
             var command = new ToolbarRuleForEntity(commandName, target, 
                 contentType: contentType,
                 ui: pars.Ui,
@@ -36,8 +35,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Add(
             object target = null,
             string noParamOrder = Protector,
-            Func<ITweakButton, ITweakButton> tweak = default,
             string contentType = null,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -46,8 +45,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder AddExisting(
             object target = null,
             string noParamOrder = Protector,
-            Func<ITweakButton, ITweakButton> tweak = default,
             string contentType = null,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
