@@ -1,8 +1,10 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
+﻿using System.Collections.Generic;
+
+namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial class ToolbarBuilder
     {
-        private string PrepareUi(object ui, object uiMerge = null, string uiMergePrefix = null) 
-            => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, _configuration?.Group);
+        private string PrepareUi(object ui, object uiMerge = default, string uiMergePrefix = default, IEnumerable<object> tweaks = default) 
+            => Utils.PrepareUi(ui, uiMerge, uiMergePrefix, _configuration?.Group, tweaks: tweaks);
     }
 }

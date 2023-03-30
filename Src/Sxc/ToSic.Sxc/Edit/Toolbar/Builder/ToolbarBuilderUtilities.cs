@@ -1,5 +1,6 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.Url;
 
@@ -50,11 +51,16 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui,
             object uiMerge = null,
             string uiMergePrefix = null,
-            string group = null // current button-group name which must be merged into the Ui parameter
+            string group = null, // current button-group name which must be merged into the Ui parameter
+            IEnumerable<object> tweaks = default
         )
         {
             var uiString = Ui2Url.SerializeWithChild(ui, uiMerge, uiMergePrefix);
             if (group.HasValue()) uiString = Ui2Url.SerializeWithChild(uiString, $"group={group}");
+
+            // new v15 - add UI tweaks - must come last / after group
+            if (tweaks != null) 
+                uiString = tweaks.Aggregate(uiString, (prev, t) => Ui2Url.SerializeWithChild(prev, t));
             return uiString;
         }
         private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);

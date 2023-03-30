@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ToSic.Lib.Logging;
+using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
@@ -10,7 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
 
-        private (char Operation, string Ui, string Parameters) PrecleanParams(
+        private (char Operation, string Ui, string Parameters) PreCleanParams(
             string operation, 
             ToolbarRuleOps defOp, 
             object ui, 
@@ -18,13 +20,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             string uiMergePrefix, 
             object parameters, 
             object prefill,
-            object filter = null)
+            object filter = null,
+            ITweakButton tweaks = null)
         {
             var paramsString = Utils.Par2Url.Serialize(parameters);
             var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
             return (
                 ToolbarRuleOperation.Pick(operation, defOp),
-                Ui: PrepareUi(ui, uiMerge, uiMergePrefix),
+                Ui: PrepareUi(ui, uiMerge, uiMergePrefix, tweaks: tweaks?.UiMerge),
                 Parameters: Utils.Filter2Url.SerializeWithChild(parsWithPrefill, filter, PrefixFilters)
             );
 
@@ -51,47 +54,52 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Delete(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null)
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
+            Protect(noParamOrder, "See docs");
+            var tweaks = tweak?.Invoke(new TweakButton());
 
             // Set default operation based on what toolbar is used
             var isDefToolbar = FindRule<ToolbarRuleToolbar>()?.IsDefault ?? false;
             var defOp = isDefToolbar ? OprModify : OprAdd;
 
-            var pars = PrecleanParams(operation, defOp, ui, "show=true", "", parameters, null);
+            var pars = PreCleanParams(operation, defOp, ui, "show=true", "", parameters, null, tweaks: tweaks);
 
             return EntityRule("delete", target, pars, 
                 propsKeep: new[] { KeyTitle, KeyEntityId, KeyEntityGuid }).Builder;
         }
 
-        public IToolbarBuilder Edit(
-            object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+        public IToolbarBuilder Edit(object target = null,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null)
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
+            Protect(noParamOrder, "See docs");
+            var tweaks = tweak?.Invoke(new TweakButton());
+            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
 
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
         }
 
         public IToolbarBuilder New(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null)
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
+            Protect(noParamOrder, "See docs");
+            var tweaks = tweak?.Invoke(new TweakButton());
+            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
 
             return EntityRule("new", target, pars,
                 propsSkip: new[] { KeyEntityGuid, KeyEntityId, KeyTitle, KeyPublished },
@@ -100,13 +108,15 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Publish(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null)
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, null);
+            Protect(noParamOrder, "See docs");
+            var tweaks = tweak?.Invoke(new TweakButton());
+            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, null, tweaks: tweaks);
 
             return EntityRule("publish", target, pars,
                 propsKeep: new[] { KeyEntityId, KeyPublished, KeyIndex, KeyUseModule }).Builder;
@@ -117,15 +127,16 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Metadata(
             object target,
             string contentTypes = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null,
             string context = null) => Log.Func(() =>
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-
+            Protect(noParamOrder, "See docs");
+            var tweaks = tweak?.Invoke(new TweakButton());
             // Note: DO NOT check the target, as here an IAsset is absolutely valid
             // TargetCheck(target);
 
@@ -133,7 +144,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var realContext = GenerateContext(target, context);
             var builder = this as IToolbarBuilder;
 
-            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
+            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
 
             var mdsToAdd = finalTypes
                 .Select(type => new ToolbarRuleMetadata(target, type,
@@ -149,7 +160,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <inheritdoc />
         public IToolbarBuilder Copy(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             string contentType = null,
             object ui = null,
             object parameters = null,
@@ -157,9 +169,9 @@ namespace ToSic.Sxc.Edit.Toolbar
             string operation = null,
             string context = null)
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-
-            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, prefill);
+            Protect(noParamOrder, "See docs");
+            var tweaks = tweak?.Invoke(new TweakButton());
+            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, prefill, tweaks: tweaks);
 
             return EntityRule("copy", target, pars, propsKeep: new[] { KeyEntityId, KeyContentType },
                 contentType: contentType).Builder;
@@ -170,16 +182,17 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Data(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object filter = null,
             object ui = null,
             object parameters = null,
             string operation = null
         )
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-
-            var pars = PrecleanParams(operation, OprAdd, ui, null, null, parameters, null, filter);
+            Protect(noParamOrder, "See docs");
+            var tweaks = tweak?.Invoke(new TweakButton());
+            var pars = PreCleanParams(operation, OprAdd, ui, null, null, parameters, null, filter, tweaks);
 
             return EntityRule("data", target, pars, propsKeep: new[] { KeyContentType }, contentType: target as string)
                 .Builder;

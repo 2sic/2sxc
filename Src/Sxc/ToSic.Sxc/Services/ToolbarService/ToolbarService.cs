@@ -5,6 +5,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Edit.Toolbar;
+using System;
 
 namespace ToSic.Sxc.Services
 {
@@ -43,11 +44,12 @@ namespace ToSic.Sxc.Services
         public IToolbarBuilder Metadata(object target,
             string contentTypes = null,
             string noParamOrder = Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string context = null
-        ) => Empty().Metadata(target, contentTypes, noParamOrder, ui, parameters, prefill, context: context);
+        ) => Empty().Metadata(target, contentTypes, noParamOrder, tweak, ui, parameters, prefill, context: context);
 
 
         private IToolbarBuilder ToolbarBuilder(string noParamOrder, string toolbarTemplate, object ui, object parameters, object prefill, string context, object target = null)

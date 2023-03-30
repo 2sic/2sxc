@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
+﻿using System;
+
+namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {
@@ -11,6 +13,7 @@
         /// see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="contentType"></param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -19,6 +22,7 @@
         IToolbarBuilder Add(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             string contentType = null,
             object ui = null,
             object parameters = null,
@@ -34,6 +38,7 @@
         /// see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="contentType"></param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
@@ -42,6 +47,7 @@
         IToolbarBuilder AddExisting(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             string contentType = null,
             object ui = null,
             object parameters = null,
@@ -57,6 +63,7 @@
         /// see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
@@ -64,6 +71,7 @@
         IToolbarBuilder List(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -78,6 +86,7 @@
         /// see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
@@ -85,6 +94,7 @@
         IToolbarBuilder MoveDown(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -99,6 +109,7 @@
         /// see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
@@ -106,6 +117,7 @@
         IToolbarBuilder MoveUp(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -121,6 +133,7 @@
         /// see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
@@ -128,6 +141,7 @@
         IToolbarBuilder Remove(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -142,6 +156,7 @@
         /// see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="operation">_optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation)</param>
@@ -149,6 +164,7 @@
         IToolbarBuilder Replace(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null

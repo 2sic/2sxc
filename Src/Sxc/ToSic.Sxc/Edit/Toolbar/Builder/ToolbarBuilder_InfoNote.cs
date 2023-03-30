@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
@@ -10,34 +11,27 @@ namespace ToSic.Sxc.Edit.Toolbar
         [PrivateApi("WIP v15.04")]
         public IToolbarBuilder Info(
             string noParamOrder = Eav.Parameters.Protector,
-            object note = default,
-            string link = default,
-            object ui = default,
-            object parameters = default,
-            string operation = default
-        ) => InfoLikeButton(
-            noParamOrder: noParamOrder,
-            commandName: "info",
-            ui: ui,
-            uiMerge: note is string ? new { note = new { note} } as object : new { note },
-            parameters: parameters,
-            parametersMerge: link != default ? new { link, } : null,
-            operation: operation
-        );
+            Func<ITweakButton, ITweakButton> tweak = default,
+            string link = default)
+            => InfoLikeButton(
+                noParamOrder: noParamOrder,
+                commandName: "info",
+                parametersMerge: link != default ? new { link, } : null,
+                tweak: tweak
+            );
+
 
         private IToolbarBuilder InfoLikeButton(
             string noParamOrder,
             string commandName,
-            object ui,
-            object uiMerge,
-            object parameters,
             object parametersMerge,
-            string operation
+            Func<ITweakButton, ITweakButton> tweak
         )
         {
+            var tweaks = tweak?.Invoke(new TweakButton());
             Eav.Parameters.Protect(noParamOrder, "See docs");
-            var paramsWithMessage = new ObjectToUrl().SerializeWithChild(parameters, parametersMerge);
-            var pars = PrecleanParams(operation: operation, defOp: OprNone, ui: ui, uiMerge: uiMerge, uiMergePrefix: null, parameters: paramsWithMessage, prefill: null);
+            var paramsWithMessage = new ObjectToUrl().SerializeWithChild(default, parametersMerge);
+            var pars = PreCleanParams(operation: default, defOp: OprNone, ui: null, uiMerge: null, uiMergePrefix: null, parameters: paramsWithMessage, prefill: null, tweaks: tweaks);
             return EntityRule(commandName, null, pars).Builder;
 
         }
