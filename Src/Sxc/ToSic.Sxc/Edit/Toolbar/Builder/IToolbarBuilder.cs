@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// To get a `ToolbarBuilder`, use the <see cref="Services.IToolbarService"/>.
     ///
     /// History
+    /// * uses the [](xref:NetCode.Conventions.Functional)
     /// * Added in 2sxc 13, just minimal API
     /// * massively enhanced in v14.04
     /// </remarks>

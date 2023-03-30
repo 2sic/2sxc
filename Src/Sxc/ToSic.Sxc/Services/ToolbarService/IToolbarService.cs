@@ -10,6 +10,7 @@ namespace ToSic.Sxc.Services
     /// </summary>
     /// <remarks>
     /// History
+    /// * uses the [](xref:NetCode.Conventions.Functional)
     /// * Added in 2sxc 13
     /// * parameter `target` added to `Default()` and `Empty()` in v14.03
     /// </remarks>

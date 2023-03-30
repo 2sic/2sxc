@@ -8,6 +8,9 @@ namespace ToSic.Sxc.Context
     ///
     /// Has a special ToString() implementation, which gives you the parameters for re-use in other scenarios...?
     /// </summary>
+    /// <remarks>
+    /// * uses the [](xref:NetCode.Conventions.Functional)
+    /// </remarks>
     [PublicApi]
     public interface IParameters: IReadOnlyDictionary<string, string>
     {
@@ -15,7 +18,6 @@ namespace ToSic.Sxc.Context
         /// ToString is especially implemented, to give you the parameters again as they were originally given on the page.
         /// </summary>
         /// <returns></returns>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("wip")]
         string ToString();
 
         #region Get (new v15.04)
