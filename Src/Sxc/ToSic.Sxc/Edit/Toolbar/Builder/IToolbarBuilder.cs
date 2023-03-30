@@ -18,6 +18,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// History
     /// * Added in 2sxc 13, just minimal API
     /// * massively enhanced in v14.04
+    /// * most commands extended with [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) in v15.07
     /// </remarks>
     [PublicApi]
     public partial interface IToolbarBuilder: IHybridHtmlString, IHasLog, INeedsDynamicCodeRoot

@@ -49,18 +49,21 @@ namespace ToSic.Sxc.Edit.Toolbar
                 if (foreground != default) color += $",{foreground}";
             }
 
+            // Remove hashes, because they break the URL api, and spaces, as they shouldn't be there
+            color = color?.Replace("#", "").Replace(" ", "");
+
             return Ui("color", color);
         }
 
-        public ITweakButton Tooltip(string title) => title.IsEmptyOrWs() ? this : Ui("title", title);
+        public ITweakButton Tooltip(string value) => value.IsEmptyOrWs() ? this : Ui("title", value);
 
-        public ITweakButton Group(string group) => group.IsEmptyOrWs() ? this : Ui("group", group);
+        public ITweakButton Group(string value) => value.IsEmptyOrWs() ? this : Ui("group", value);
 
-        public ITweakButton Icon(string icon) => icon.IsEmptyOrWs() ? this : Ui(new { icon });
+        public ITweakButton Icon(string value) => value.IsEmptyOrWs() ? this : Ui(new { icon = value });
 
-        public ITweakButton Class(string classes) => classes.IsEmptyOrWs() ? this : Ui("class", classes);
+        public ITweakButton Classes(string value) => value.IsEmptyOrWs() ? this : Ui("class", value);
 
-        public ITweakButton Ui(object ui) => ui == null ? this : new TweakButton(this, UiMerge.Add(ui));
+        public ITweakButton Ui(object value) => value == null ? this : new TweakButton(this, UiMerge.Add(value));
 
         public ITweakButton Ui(string name, object value) => (value ?? name) == null ? this : Ui($"{name}={value}");
 
@@ -71,11 +74,11 @@ namespace ToSic.Sxc.Edit.Toolbar
         public ITweakButton Parameters(object value) => value == null ? this : new TweakButton(this, paramsMerge: ParamsMerge.Add(value));
         public ITweakButton Parameters(string name, object value) => (value ?? name) == null ? this : Parameters($"{name}={value}");
 
-        public ITweakButton Prefill(object prefill) => prefill == null ? this : Parameters(new ObjectToUrl().SerializeChild(prefill, PrefixPrefill));
+        public ITweakButton Prefill(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixPrefill));
 
         public ITweakButton Prefill(string name, object value) => (value ?? name) == null ? this : Prefill($"{name}={value}");
 
-        public ITweakButton Filter(object filter) => filter == null ? this : Parameters(new ObjectToUrl().SerializeChild(filter, PrefixFilters));
+        public ITweakButton Filter(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixFilters));
         public ITweakButton Filter(string name, object value) => (value ?? name) == null ? this : Filter($"{name}={value}");
 
         #endregion

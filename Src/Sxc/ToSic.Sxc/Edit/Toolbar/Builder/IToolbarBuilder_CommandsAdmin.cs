@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="tweak">New feature v15.07 - WIP</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="tweak">New feature v15.07 - WIP</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="tweak">New feature v15.07 - WIP</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="tweak">New feature v15.07 - WIP</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="tweak">New feature v15.07 - WIP</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="tweak">New feature v15.07 - WIP</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -148,7 +148,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="tweak">New feature v15.07 - WIP</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
