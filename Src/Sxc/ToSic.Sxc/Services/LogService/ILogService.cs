@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Services
     /// As of now this service is still very simple, later we may add methods like `Warn()` or `Error()` but let's wait and see what's needed
     /// </remarks>
     [PublicApi]
-    public interface ILogService
+    public interface ISystemLogService
     {
         /// <summary>
         /// Add a general message to the log.

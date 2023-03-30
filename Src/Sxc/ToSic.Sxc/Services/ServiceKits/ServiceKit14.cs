@@ -115,10 +115,15 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
         /// </summary>
-        public ILogService SystemLog => _sysLog.Get(GetService<ILogService>);
-        private readonly GetOnce<ILogService> _sysLog = new GetOnce<ILogService>();
+        public ISystemLogService SystemLog => _sysLog.Get(GetService<ISystemLogService>);
+        private readonly GetOnce<ISystemLogService> _sysLog = new GetOnce<ISystemLogService>();
+
+        /// <summary>
+        /// Note that this was used in Mobius / Events in a few releases, so we can't just change it.
+        /// If we create a Kit15, this should be removed
+        /// </summary>
         [PrivateApi("was the official name before v15.06, probably never used publicly, but should stay in for a while")]
-        public new ILogService Log => SystemLog;
+        public new ISystemLogService Log => SystemLog;
 
 
         /// <summary>

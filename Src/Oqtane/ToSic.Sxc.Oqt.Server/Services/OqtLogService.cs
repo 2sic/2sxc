@@ -5,11 +5,11 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-    public class OqtLogService : ILogService
+    public class OqtSystemLogService : ISystemLogService
     {
         private readonly ILogManager _logManager;
 
-        public OqtLogService(ILogManager logManager)
+        public OqtSystemLogService(ILogManager logManager)
         {
             _logManager = logManager;
         }

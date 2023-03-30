@@ -3,7 +3,7 @@ using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Services
 {
-    public class DnnLogService : ILogService
+    public class DnnSystemLogService : ISystemLogService
     {
         public void Add(string title, string message)
         {

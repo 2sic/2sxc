@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<IRazorService, RazorServiceUnknown>();
 
             // v12.05
-            services.TryAddTransient<ILogService, LogServiceUnknown>();
+            services.TryAddTransient<ISystemLogService, SystemLogServiceUnknown>();
 
             // v12.05
             services.TryAddTransient<IMailService, MailServiceUnknown>();
