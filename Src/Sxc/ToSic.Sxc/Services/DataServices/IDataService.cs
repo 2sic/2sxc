@@ -1,19 +1,41 @@
-﻿using System;
-using ToSic.Eav.Apps;
+﻿using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
-    [PrivateApi("not yet ready / public")]
+    /// <summary>
+    /// WIP v15.07 - new services to create DataSources in Razor as well as external (skin) use.
+    /// </summary>
+    [WorkInProgressApi("not yet ready / public")]
     public interface IDataService
     {
-        [PrivateApi]
-        IDataService Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup);
-
         #region CreateDataSource - new in v15 - make sure it's copied in identical form to IDynamicCode, ...
+
+        /// <summary>
+        /// Spawn a new <see cref="IDataService"/> with specific configuration.
+        /// Uses the [Spawn New convention](xref:NetCode.Conventions.SpawnNew).
+        /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="appIdentity"></param>
+        /// <param name="zoneId"></param>
+        /// <param name="appId"></param>
+        /// <returns></returns>
+        IDataService New(string noParamOrder = Protector,
+            IAppIdentity appIdentity = default,
+            int zoneId = default,
+            int appId = default);
+
+        /// <summary>
+        /// Get the App DataSource containing the App Data.
+        /// The `Default` stream of this source has the data the current user is allowed to see.
+        /// So public users won't get draft data.
+        /// </summary>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        IDataSource GetAppSource(string noParamOrder = Protector, object options = null);
 
         /// <summary>
         /// Create a DataSource object using it's type.
@@ -26,7 +48,10 @@ namespace ToSic.Sxc.Services
         /// <remarks>WIP v15.06 BETA</remarks>
         /// <returns></returns>
         [PrivateApi]
-        T GetSource<T>(string noParamOrder = Protector, IDataSourceLinkable attach = null, object options = default) where T : IDataSource;
+        T GetSource<T>(string noParamOrder = Protector,
+            IDataSourceLinkable attach = default,
+            object options = default
+        ) where T : IDataSource;
 
         /// <summary>
         /// Create a DataSource object using it's name.
@@ -40,7 +65,11 @@ namespace ToSic.Sxc.Services
         /// <remarks>WIP v15.06 BETA</remarks>
         /// <returns></returns>
         [PrivateApi]
-        IDataSource GetSource(string noParamOrder = Protector, string name = default, IDataSourceLinkable attach = default, object options = default);
+        IDataSource GetSource(string noParamOrder = Protector,
+            string name = default,
+            IDataSourceLinkable attach = default,
+            object options = default
+        );
 
         #endregion
     }

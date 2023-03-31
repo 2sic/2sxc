@@ -74,7 +74,12 @@ namespace ToSic.Sxc.Services
         /// The Edit service, same as the main Edit service
         /// </summary>
         [PrivateApi("WIP not yet public for v15 - added v15.06")]
-        public IDataService Data => _data.Get(() => GetService<IDataService>().Setup(_appIdentity, _getLookup));
+        public IDataService Data => _data.Get(() =>
+        {
+            var dss = GetService<IDataService>();
+            (dss as DataService)?.Setup(_appIdentity, _getLookup);
+            return dss;
+        });
         private readonly GetOnce<IDataService> _data = new GetOnce<IDataService>();
 
         ///// <summary>
