@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Razor
         #endregion
 
         /// <inheritdoc/>
-        protected override string RenderTemplate() => Log.Func(() =>
+        protected override string RenderTemplate(object data) => Log.Func(() =>
         {
             var task = RenderTask();
             task.Wait();

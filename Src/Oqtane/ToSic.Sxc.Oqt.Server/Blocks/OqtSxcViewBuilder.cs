@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             {
                 #region Lightspeed output caching
                 if (OutputCache?.Existing != null) Log.A("Lightspeed hit - will use cached");
-                var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true);
+                var renderResult = OutputCache?.Existing?.Data ?? Block.BlockBuilder.Run(true, null);
                 finalMessage = OutputCache?.IsEnabled != true ? "" :
                     OutputCache?.Existing?.Data != null ? "⚡⚡" : "⚡⏳";
                 OutputCache?.Save(renderResult);
