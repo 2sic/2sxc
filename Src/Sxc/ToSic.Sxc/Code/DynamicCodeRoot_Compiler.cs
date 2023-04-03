@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
 
             // Compile
             var compiler = Services.CodeCompilerLazy.Value;
-            var instance = compiler.InstantiateClass(virtualPath, _serviceProvider, name, relativePath, throwOnError);
+            var instance = compiler.InstantiateClass(virtualPath, name, relativePath, throwOnError);
 
             // if it supports all our known context properties, attach them
             if (instance is INeedsDynamicCodeRoot needsRoot) needsRoot.ConnectToRoot(this);

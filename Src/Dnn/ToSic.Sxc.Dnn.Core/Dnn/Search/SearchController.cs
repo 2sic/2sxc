@@ -330,7 +330,7 @@ namespace ToSic.Sxc.Search
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
                 .ForwardSlash();
             Log.A($"compile ViewController class on path: {path}/{Block.View.ViewController}");
-            var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, serviceProvider: DnnStaticDi.GetGlobalServiceProvider(), 
+            var instance = _codeCompiler.New().InstantiateClass(virtualPath: block.View.ViewController, 
                 className: null, relativePath: path, throwOnError: true);
             Log.A("got instance of compiled ViewController class");
 
