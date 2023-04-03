@@ -45,9 +45,8 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
         /// <param name="options">Options how to build/construct the DataSource - especially parameters to set. See TODO: </param>
-        /// <remarks>WIP v15.06 BETA</remarks>
+        /// <remarks>WIP v15.07 BETA</remarks>
         /// <returns></returns>
-        [PrivateApi]
         T GetSource<T>(string noParamOrder = Protector,
             IDataSourceLinkable attach = default,
             object options = default
@@ -62,9 +61,8 @@ namespace ToSic.Sxc.Services
         /// <param name="name">The name of the DataSource type, which matches the file name and class in the `/DataSources/` folder.</param>
         /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
         /// <param name="options">Options how to build/construct the DataSource - especially parameters to set. See TODO: </param>
-        /// <remarks>WIP v15.06 BETA</remarks>
+        /// <remarks>WIP v15.07</remarks>
         /// <returns></returns>
-        [PrivateApi]
         IDataSource GetSource(string noParamOrder = Protector,
             string name = default,
             IDataSourceLinkable attach = default,

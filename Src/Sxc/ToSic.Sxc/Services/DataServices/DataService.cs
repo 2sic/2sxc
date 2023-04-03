@@ -95,7 +95,6 @@ namespace ToSic.Sxc.Services
             return appSource;
         }
 
-        // WIP - ATM the code is in _DynCodeRoot, but it should actually be moved here and removed there
         // IMPORTANT - this is different! from the _DynCodeRoot - as it shouldn't auto attach at all!
         public T GetSource<T>(string noParamOrder = Protector,
             IDataSourceLinkable attach = null, object options = null) where T : IDataSource
@@ -103,7 +102,6 @@ namespace ToSic.Sxc.Services
             Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
 
             // If no in-source was provided, make sure that we create one from the current app
-            //attach = attach ?? GetAppSource();
             var fullOptions = SafeOptions(options);
             return _dataSources.Value.Create<T>(attach: attach, options: fullOptions);
 

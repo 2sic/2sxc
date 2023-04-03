@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Services
     /// In such scenarios, certain services like the <see cref="IPageService"/> would not be able to perform any real work.
     /// </summary>
     /// <remarks>
-    /// * History: Added v15.06
+    /// * History: Added v15.06 - still WIP
     /// </remarks>
     [PrivateApi]
     public class ServiceKitLight15 : ServiceBase
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The Edit service, same as the main Edit service
         /// </summary>
-        [PrivateApi("WIP not yet public for v15 - added v15.06")]
+        [WorkInProgressApi("Still WIP v15.07")]
         public IDataService Data => _data.Get(() =>
         {
             var dss = GetService<IDataService>();
