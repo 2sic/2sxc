@@ -1,5 +1,8 @@
 {
   "files.associations": {
     "app.json": "jsonc"
-  }
+  },
+  "cSpell.words": [
+    "Oqtane"
+  ]
 }
