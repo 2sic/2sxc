@@ -1,6 +1,6 @@
-<img src="https://docs.2sxc.org/assets/logos/v14/2sxc-14-500.png" width="200px" align="right">
+<img src="https://docs.2sxc.org/assets/logos/v15/500.png" width="200px" align="right">
 
-# 2sxc 14 - CMS & App-Engine for DNN and Oqtane
+# 2sxc 15 - CMS & App-Engine for DNN and Oqtane
 
 > you can't use DNN  or Oqtane without 2sxc 😉
 

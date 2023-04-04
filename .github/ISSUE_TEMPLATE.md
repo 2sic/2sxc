@@ -1,6 +1,6 @@
 <!-- FILL OUT THE FOLLOWING INFORMATION WE MAY CLOSE YOUR ISSUE WITHOUT INVESTIGATING -->
 
-### I'm submitting a ...
+### I'm submitting a
 <!-- HINT: remove lines which don't apply  -->
 [x] bug report => search github for a similar issue before submitting
 [x] feature request
