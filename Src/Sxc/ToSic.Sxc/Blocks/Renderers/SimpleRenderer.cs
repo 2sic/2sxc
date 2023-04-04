@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             );
         }
 
-        public string Render(IBlock parentBlock, IEntity entity)
+        public string Render(IBlock parentBlock, IEntity entity, object data = default)
         {
             var l = Log.Fn<string>();
 
@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Blocks.Renderers
             // render it
             l.A("found, will render");
             var cb = _blkFrmEntGen.New().Init(parentBlock, entity);
-            var result = cb.BlockBuilder.Run(false);
+            var result = cb.BlockBuilder.Run(false, data);
 
             // Special: during Run() various things are picked up like header changes, activations etc.
             // Depending on the code flow, it could have picked up changes of other templates (not this one)
@@ -54,11 +54,11 @@ namespace ToSic.Sxc.Blocks.Renderers
         private const string WrapperMultiItems = "sc-content-block-list"; // tells quickE that it's an editable area
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
-        public string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName, Guid? newGuid, IEditService edit)
+        public string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName, Guid? newGuid, IEditService edit, object data = default)
         {
             var l = Log.Fn<string>();
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent._Services.BlockOrNull, subItem.Entity);
+            var inner = subItem == null ? "": Render(parent._Services.BlockOrNull, subItem.Entity, data: data);
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return l.Return(string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner}));
         }

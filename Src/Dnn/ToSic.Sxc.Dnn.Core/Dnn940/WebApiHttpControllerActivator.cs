@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Dispatcher;
-using Microsoft.Extensions.DependencyInjection;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.WebApi;
 
@@ -21,6 +20,8 @@ namespace ToSic.Sxc.Dnn940
         {
             // first try to just get it from the DI - if it's there
             // note that the PreviousActivator doesn't exist
+            // but skip for dynamically compiled controller type from a .cs file with IDynamicWebApi interface
+            // because this Activator can't create instance of controllerType with DI parameters in constructor
             if (!typeof(IDynamicWebApi).IsAssignableFrom(controllerType))
             {
                 var resultFromDnnActivator = PreviousActivator?.Create(request, controllerDescriptor, controllerType);

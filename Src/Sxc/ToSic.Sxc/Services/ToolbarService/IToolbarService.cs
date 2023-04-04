@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services
@@ -9,6 +10,7 @@ namespace ToSic.Sxc.Services
     /// </summary>
     /// <remarks>
     /// History
+    /// * uses the [](xref:NetCode.Conventions.Functional)
     /// * Added in 2sxc 13
     /// * parameter `target` added to `Default()` and `Empty()` in v14.03
     /// </remarks>
@@ -71,6 +73,7 @@ namespace ToSic.Sxc.Services
         /// <param name="target">The target object which should receive metadata. Must support <see cref="ToSic.Eav.Metadata.IHasMetadata"/> </param>
         /// <param name="contentTypes">Name of one or more content-types for which to generate the button(s). For many, use comma `,` to separate. If not specified, will try to lookup config (v14)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">New feature v15.07 - WIP</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="prefill">_optional_ prefill for the edit-UI, see [prefill guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Prefill)</param>
@@ -88,6 +91,7 @@ namespace ToSic.Sxc.Services
             object target,
             string contentTypes = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null,

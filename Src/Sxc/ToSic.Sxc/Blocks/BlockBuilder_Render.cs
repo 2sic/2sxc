@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ToSic.Lib;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -20,14 +19,14 @@ namespace ToSic.Sxc.Blocks
         public IRenderingHelper RenderingHelper => _rendHelp.Get(() => Services.RenderHelpGen.New().Init(Block));
         private readonly GetOnce<IRenderingHelper> _rendHelp = new GetOnce<IRenderingHelper>();
 
-        public IRenderResult Run(bool topLevel)
+        public IRenderResult Run(bool topLevel, object data)
         {
             // Cache Result on multiple runs
             if (_result != null) return _result;
             var wrapLog = Log.Fn<IRenderResult>(timer: true);
             try
             {
-                var (html, err) = RenderInternal();
+                var (html, err) = RenderInternal(data);
                 var result = new RenderResult
                 {
                     Html = html,
@@ -79,7 +78,7 @@ namespace ToSic.Sxc.Blocks
 
         private IRenderResult _result;
 
-        private (string Html, bool Error) RenderInternal()
+        private (string Html, bool Error) RenderInternal(object data)
         {
             var wrapLog = Log.Fn<(string, bool)>();
 
@@ -119,7 +118,7 @@ namespace ToSic.Sxc.Blocks
                         {
                             Log.A("standard case, found template, will render");
                             var engine = GetEngine();
-                            var renderEngineResult = engine.Render();
+                            var renderEngineResult = engine.Render(data);
                             body = renderEngineResult.Html;
                             // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                             // only set if true, because otherwise we may accidentally overwrite the previous setting

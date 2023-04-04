@@ -28,17 +28,20 @@ namespace ToSic.Sxc.Dnn.Services
             );
         }
 
-        public override IRenderResult Module(int pageId, int moduleId) => Log.Func($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}", () =>
+        public override IRenderResult Module(int pageId, int moduleId,
+            string noParamOrder = Eav.Parameters.Protector,
+            object data = null)
         {
-            var result = base.Module(pageId, moduleId);
+            var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
+            var result = base.Module(pageId, moduleId, noParamOrder, data);
 
             // this code should be executed in PreRender of page (ensure when calling) or it is too late
             if (HttpContext.Current?.Handler is Page dnnHandler) // detect if we are on the page
                 if (_context.New().Module.BlockIdentifier == null) // find if is in module (because in module it's already handled)
                     DnnPageProcess(dnnHandler, result);
 
-            return (result, "ok");
-        });
+            return l.ReturnAsOk(result);
+        }
 
         private void DnnPageProcess(Page dnnPage, IRenderResult result)
         {

@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks
     /// It's used for InnerContent, so that Razor-Code can easily render additional content blocks. <br/>
     /// See also [](xref:Basics.Cms.InnerContent.Index)
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice]
     [Obsolete("Deprecated in v12 - please use IRenderService instead - will not work in v12 Base classes like Razor12")]
     public class Render
     {
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Blocks
             IDynamicEntity item = null,
             string field = null,
             Guid? newGuid = null)
-            => RenderService(parent).One(parent, noParamOrder, item, field, newGuid);
+            => RenderService(parent).One(parent, noParamOrder, item, data: null, field: field, newGuid: newGuid);
 
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static Services.IRenderService RenderService(DynamicEntity parent)

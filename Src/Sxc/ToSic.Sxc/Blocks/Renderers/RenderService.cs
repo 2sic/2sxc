@@ -95,6 +95,7 @@ namespace ToSic.Sxc.Blocks
         public IHybridHtmlString One(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
+            object data = null,
             string field = null,
             Guid? newGuid = null)
         {
@@ -103,8 +104,8 @@ namespace ToSic.Sxc.Blocks
             MakeSureLogIsInHistory();
             var simpleRenderer = _Deps.SimpleRenderer.New();
             return new HybridHtmlString(field == null
-                ? simpleRenderer.Render(parent._Services.BlockOrNull, item.Entity) // without field edit-context
-                : simpleRenderer.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent))); // with field-edit-context data-list-context
+                ? simpleRenderer.Render(parent._Services.BlockOrNull, item.Entity, data: data) // without field edit-context
+                : simpleRenderer.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), data)); // with field-edit-context data-list-context
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace ToSic.Sxc.Blocks
             int max = 100,
             string merge = null)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(All), $"{nameof(field)},{nameof(merge)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(field)},{nameof(merge)}");
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
             MakeSureLogIsInHistory();
@@ -135,13 +136,19 @@ namespace ToSic.Sxc.Blocks
 
 
         /// <inheritdoc />
-        public virtual IRenderResult Module(int pageId, int moduleId) => Log.Func($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}", () =>
+        public virtual IRenderResult Module(
+            int pageId,
+            int moduleId,
+            string noParamOrder = Eav.Parameters.Protector,
+            object data = null)
         {
+            var l = Log.Fn<IRenderResult>($"{nameof(pageId)}: {pageId}, {nameof(moduleId)}: {moduleId}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(data)}");
             MakeSureLogIsInHistory();
             var block = _Deps.Builder.Value.GetProvider(pageId, moduleId).LoadBlock().BlockBuilder;
-            var result = block.Run(true);
-            return (result, "ok");
-        });
+            var result = block.Run(true, data);
+            return l.ReturnAsOk(result);
+        }
 
         /// <summary>
         /// create edit-object which is necessary for context attributes

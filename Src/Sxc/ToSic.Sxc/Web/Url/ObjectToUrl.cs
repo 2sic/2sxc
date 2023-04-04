@@ -29,8 +29,17 @@ namespace ToSic.Sxc.Web.Url
         public string KeyValueSeparator { get; set; } = "=";
 
 
-        public string Serialize(object data) => SerializeInternal(data, Prefix);
+        public string Serialize(object data) => Serialize(data, Prefix);
 
+        public string SerializeChild(object child, string prefix) => SerializeWithChild(null, child, prefix);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="main"></param>
+        /// <param name="child"></param>
+        /// <param name="childPrefix">Prefix to use for the child - it is not the same as the Prefix of the main object! as that applies to all data, not child-data</param>
+        /// <returns></returns>
         public string SerializeWithChild(object main, object child, string childPrefix = null)
         {
             var asString = Serialize(main);
@@ -45,7 +54,7 @@ namespace ToSic.Sxc.Web.Url
                 prefillAddOn = string.Join(UrlParts.ValuePairSeparator.ToString(), parts);
             }
             else
-                prefillAddOn = SerializeInternal(child, childPrefix);
+                prefillAddOn = Serialize(child, childPrefix);
 
             return UrlParts.ConnectParameters(asString, prefillAddOn);
         }
@@ -89,10 +98,10 @@ namespace ToSic.Sxc.Web.Url
                 ? new UrlValuePair(set.FullName,
                     set.Value is bool ? set.Value.ToString().ToLowerInvariant() : set.Value.ToString())
                 // Complex object, recursive serialize with current name as prefix
-                : new UrlValuePair(null, SerializeInternal(set.Value, set.FullName + DepthSeparator), true);
+                : new UrlValuePair(null, Serialize(set.Value, set.FullName + DepthSeparator), true);
         }
 
-        private string SerializeInternal(object data, string prefix)
+        private string Serialize(object data, string prefix)
         {
             // Case #1: Null, return that
             if (data == null) return null;

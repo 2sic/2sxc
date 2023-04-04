@@ -1,4 +1,6 @@
-﻿using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
+﻿using System;
+using System.Reflection;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -10,6 +12,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             string name,
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null,
@@ -17,7 +20,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Eav.Parameters.Protect(noParamOrder, "See docs");
-            var pars = PrecleanParams(operation, OprNone, ui, null, null, parameters, null);
+            var pars = PreCleanParams(tweak, defOp: OprNone, operation: operation, ui: ui, parameters: parameters);
 
             return EntityRule(name, target, pars).Builder;
         }

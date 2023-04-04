@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Blocks
         /// </param>
         /// <returns></returns>
         [PrivateApi]
-        IRenderResult Run(bool topLevel);
+        IRenderResult Run(bool topLevel, object data = default);
 
         [PrivateApi]
         IRenderingHelper RenderingHelper { get; }

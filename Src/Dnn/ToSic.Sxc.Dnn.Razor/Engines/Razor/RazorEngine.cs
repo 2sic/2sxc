@@ -102,12 +102,23 @@ namespace ToSic.Sxc.Engines
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
         [PrivateApi]
-        public void Render(TextWriter writer)
+        public void Render(TextWriter writer, object data)
         {
             var l = Log.Fn(message: "will render into TextWriter");
             try
             {
-                Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, null), writer, Webpage);
+                if (data != null && Webpage is ISetDynamicModel setDyn)
+                    setDyn.SetDynamicModel(data);
+            }
+            catch (Exception e)
+            {
+                l.E("Problem with setting dynamic model");
+                l.Ex(e);
+            }
+
+            try
+            {
+                Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, data), writer, Webpage);
             }
             catch (Exception maybeIEntityCast)
             {
@@ -119,11 +130,11 @@ namespace ToSic.Sxc.Engines
         }
 
         [PrivateApi]
-        protected override string RenderTemplate()
+        protected override string RenderTemplate(object data)
         {
             var l = Log.Fn<string>();
             var writer = new StringWriter();
-            Render(writer);
+            Render(writer, data);
             return l.ReturnAsOk(writer.ToString());
         }
 

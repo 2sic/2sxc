@@ -11,7 +11,7 @@ using ToSic.Sxc.WebApi;
 namespace Custom.Hybrid
 {
     /// <summary>
-    /// Base class for v14 Dynamic WebAPI files.
+    /// BETA Base class for v15 Dynamic WebAPI files.
     /// Will provide the <see cref="ServiceKit14"/> on property `Kit`.
     /// This contains all the popular services used in v14, so that your code can be lighter. 
     /// </summary>
@@ -25,7 +25,7 @@ namespace Custom.Hybrid
     [DnnLogExceptions]
     public abstract class Api15: Api14<dynamic, ServiceKit14>, IDynamicCode12, IDynamicWebApi
     {
-        protected Api15() : base("Hyb12") { }
+        protected Api15() : base("Hyb15") { }
         protected Api15(string logSuffix) : base(logSuffix) { }
 
     }

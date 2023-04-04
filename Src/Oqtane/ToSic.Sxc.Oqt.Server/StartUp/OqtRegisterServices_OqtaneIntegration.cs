@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         /// </summary>
         private static IServiceCollection AddSxcOqtIntegratedServices(this IServiceCollection services)
         {
-            services.TryAddTransient<ILogService, OqtLogService>();
+            services.TryAddTransient<ISystemLogService, OqtSystemLogService>();
             services.TryAddTransient<IMailService, OqtMailService>();
             services.TryAddTransient<IUsersService, OqtUsersService>();
             return services;

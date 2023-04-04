@@ -24,12 +24,12 @@ namespace ToSic.Sxc.Blocks
     public interface IRenderService: ToSic.Sxc.Services.IRenderService
     {
         [PrivateApi]
-#pragma warning disable CS0108, CS0114
+//#pragma warning disable CS0108, CS0114
         IHybridHtmlString One(DynamicEntity parent, string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null, string field = null, Guid? newGuid = null);
+            IDynamicEntity item = null, object data = null, string field = null, Guid? newGuid = null);
         [PrivateApi]
         IHybridHtmlString All(DynamicEntity parent, string noParamOrder = Eav.Parameters.Protector,
             string field = null, string apps = null, int max = 100, string merge = null);
-#pragma warning restore CS0108, CS0114
+//#pragma warning restore CS0108, CS0114
     }
 }

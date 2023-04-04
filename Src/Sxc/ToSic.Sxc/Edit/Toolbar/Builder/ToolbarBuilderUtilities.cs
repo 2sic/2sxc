@@ -1,5 +1,6 @@
-﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Web.Url;
 
@@ -15,6 +16,8 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// </summary>
     internal class ToolbarBuilderUtilities
     {
+        #region Parameters Processing
+
         /// <summary>
         /// Helper to process 'parameters' to url, ensuring lower-case etc. 
         /// </summary>
@@ -36,8 +39,19 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// Helper to process 'prefill' - should not change the case of the properties
         /// </summary>
-        public ObjectToUrl Prefill2Url => _pref2U.Get(() => new ObjectToUrl());
+        public ObjectToUrl Prefill2Url => _pref2U.Get(() => new ObjectToUrl(null));
         private readonly GetOnce<ObjectToUrl> _pref2U = new GetOnce<ObjectToUrl>();
+
+        public string PrepareParams(object parameters, ITweakButton tweaks = null)
+        {
+            var strParams = Par2Url.Serialize(parameters);
+            return MergeWithTweaks(strParams, tweaks?.ParamsMerge);
+        }
+
+        #endregion
+
+
+        #region UI Processing
 
         internal static ObjectToUrl GetUi2Url() => new ObjectToUrl(null, new UrlValueProcess[]
         {
@@ -50,15 +64,32 @@ namespace ToSic.Sxc.Edit.Toolbar
             object ui,
             object uiMerge = null,
             string uiMergePrefix = null,
-            string group = null // current button-group name which must be merged into the Ui parameter
+            string group = null, // current button-group name which must be merged into the Ui parameter
+            IEnumerable<object> tweaks = default
         )
         {
             var uiString = Ui2Url.SerializeWithChild(ui, uiMerge, uiMergePrefix);
             if (group.HasValue()) uiString = Ui2Url.SerializeWithChild(uiString, $"group={group}");
-            return uiString;
+            return MergeWithTweaks(uiString, tweaks);
         }
         private ObjectToUrl Ui2Url => _ui2Url.Get(GetUi2Url);
         private readonly GetOnce<ObjectToUrl> _ui2Url = new GetOnce<ObjectToUrl>();
 
+        #endregion
+
+        /// <summary>
+        ///  new v15 - add UI tweaks - must come last / after group
+        /// </summary>
+        /// <param name="previous"></param>
+        /// <param name="tweaks"></param>
+        /// <returns></returns>
+        private string MergeWithTweaks(string previous, IEnumerable<object> tweaks = null)
+        {
+            // new v15 - add UI tweaks - must come last / after group
+            if (tweaks != null) 
+                previous = tweaks.Aggregate(previous, (prev, t) => Ui2Url.SerializeWithChild(prev, t));
+            return previous;
+
+        }
     }
 }

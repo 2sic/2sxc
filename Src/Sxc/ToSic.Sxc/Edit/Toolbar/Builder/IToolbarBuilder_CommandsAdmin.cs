@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
+﻿using System;
+
+namespace ToSic.Sxc.Edit.Toolbar
 {
     public partial interface IToolbarBuilder
     {
@@ -8,6 +10,7 @@
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -18,6 +21,7 @@
         IToolbarBuilder App(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -29,6 +33,7 @@
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -39,6 +44,7 @@
         IToolbarBuilder AppImport(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -50,6 +56,7 @@
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -60,6 +67,7 @@
         IToolbarBuilder AppResources(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -71,6 +79,7 @@
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -81,6 +90,7 @@
         IToolbarBuilder AppSettings(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -92,6 +102,7 @@
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -102,6 +113,7 @@
         IToolbarBuilder Apps(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -113,6 +125,7 @@
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -123,6 +136,7 @@
         IToolbarBuilder System(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
@@ -134,6 +148,7 @@
         /// </summary>
         /// <param name="target">_not used ATM_ just here for API consistency</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
         /// <param name="operation">
         /// _optional_ change [what should happen](xref:ToSic.Sxc.Services.ToolbarBuilder.Operation).
         /// By default, the button will show based on conditions like permissions.
@@ -144,6 +159,7 @@
         IToolbarBuilder Insights(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null

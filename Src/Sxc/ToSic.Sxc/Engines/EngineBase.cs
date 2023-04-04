@@ -147,13 +147,13 @@ namespace ToSic.Sxc.Engines
         });
 
         [PrivateApi]
-        protected abstract string RenderTemplate();
+        protected abstract string RenderTemplate(object data);
 
         [PrivateApi]
         protected virtual void Init() {}
 
         /// <inheritdoc />
-        public RenderEngineResult Render()
+        public RenderEngineResult Render(object data)
         {
             var wrapLog = Log.Fn<RenderEngineResult>(timer: true);
             // call engine internal feature to optionally change what data is actually used or prepared for search...
@@ -168,7 +168,7 @@ namespace ToSic.Sxc.Engines
             if (renderStatus != RenderStatusType.Ok)
                 return wrapLog.Return(new RenderEngineResult(message, false, null), $"{nameof(renderStatus)} not OK");
 
-            var renderedTemplate = RenderTemplate();
+            var renderedTemplate = RenderTemplate(data);
             var depMan = Services.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
             return wrapLog.ReturnAsOk(result);

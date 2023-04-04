@@ -1,4 +1,7 @@
-﻿using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
+﻿using System;
+using System.Runtime.CompilerServices;
+using static ToSic.Eav.Parameters;
+using static ToSic.Sxc.Edit.Toolbar.EntityEditInfo;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -6,18 +9,19 @@ namespace ToSic.Sxc.Edit.Toolbar
     public partial class ToolbarBuilder
     {
         private IToolbarBuilder AddListAction(
-            string methodName, 
             string commandName,
             object target,
             string noParamOrder,
             string contentType,
             object ui,
             object parameters,
-            string operation)
+            string operation,
+            Func<ITweakButton, ITweakButton> tweak,
+            [CallerMemberName] string methodName = default)
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs", methodName);
+            Protect(noParamOrder, "See docs", methodName);
             TargetCheck(target);
-            var pars = PrecleanParams(operation, OprAuto, ui, null, null, parameters, null);
+            var pars = PreCleanParams(tweak, defOp: OprAuto, operation: operation, ui: ui, parameters: parameters, methodName: methodName);
             var command = new ToolbarRuleForEntity(commandName, target, 
                 contentType: contentType,
                 ui: pars.Ui,
@@ -30,61 +34,68 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public IToolbarBuilder Add(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             string contentType = null,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddListAction(nameof(Add), "add", target, noParamOrder, contentType, ui, parameters, operation);
+        ) => AddListAction("add", target, noParamOrder, contentType, ui, parameters, operation, tweak);
 
         public IToolbarBuilder AddExisting(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             string contentType = null,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddListAction(nameof(AddExisting), "add-existing", target, noParamOrder, contentType, ui, parameters, operation);
+        ) => AddListAction("add-existing", target, noParamOrder, contentType, ui, parameters, operation, tweak);
 
         public IToolbarBuilder List(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddListAction(nameof(List), "list", target, noParamOrder, null, ui, parameters, operation);
+        ) => AddListAction("list", target, noParamOrder, null, ui, parameters, operation, tweak);
 
 
         public IToolbarBuilder MoveDown(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddListAction(nameof(MoveDown), "movedown", target, noParamOrder, null, ui, parameters, operation);
+        ) => AddListAction("movedown", target, noParamOrder, null, ui, parameters, operation, tweak);
 
         public IToolbarBuilder MoveUp(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddListAction(nameof(MoveUp), "moveup", target, noParamOrder, null, ui, parameters, operation);
+        ) => AddListAction("moveup", target, noParamOrder, null, ui, parameters, operation, tweak);
 
         public IToolbarBuilder Remove(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddListAction(nameof(Remove), "remove", target, noParamOrder, null, ui, parameters, operation);
+        ) => AddListAction("remove", target, noParamOrder, null, ui, parameters, operation, tweak);
 
         public IToolbarBuilder Replace(
             object target = null,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             string operation = null
-        ) => AddListAction(nameof(Replace), "replace", target, noParamOrder, null, ui, parameters, operation);
+        ) => AddListAction("replace", target, noParamOrder, null, ui, parameters, operation, tweak);
     }
 }

@@ -169,7 +169,7 @@ namespace ToSic.Sxc.Dnn.StartUp
             services.TryAddTransient<IHttp, DnnHttp>();
 
             // v12.05
-            services.TryAddTransient<ILogService, DnnLogService>();
+            services.TryAddTransient<ISystemLogService, DnnSystemLogService>();
             services.TryAddTransient<IMailService, DnnMailService>();
 
             // v13

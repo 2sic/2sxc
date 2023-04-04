@@ -15,10 +15,14 @@ namespace ToSic.Sxc.Code
     [PrivateApi]
     public abstract class CodeCompiler: ServiceBase
     {
+        private readonly IServiceProvider _serviceProvider;
+
         #region Constructor / DI
 
-        internal CodeCompiler() : base("Sys.CsCmpl")
-        { }
+        internal CodeCompiler(IServiceProvider serviceProvider) : base("Sys.CsCmpl")
+        {
+            _serviceProvider = serviceProvider;
+        }
 
         #endregion
 
@@ -26,7 +30,7 @@ namespace ToSic.Sxc.Code
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
 
-        internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true, IServiceProvider serviceProvider = null)
+        internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
             var l = Log.Fn<object>($"{virtualPath}, {nameof(className)}:{className}, {nameof(relativePath)}:{relativePath}, {throwOnError}");
 
@@ -62,7 +66,7 @@ namespace ToSic.Sxc.Code
                 return null;
             }
 
-            var instance = serviceProvider.Build<object>(compiledType, Log);
+            var instance = _serviceProvider.Build<object>(compiledType, Log);
             AttachRelativePath(virtualPath, instance);
             
             return l.Return(instance, $"found: {instance != null}");

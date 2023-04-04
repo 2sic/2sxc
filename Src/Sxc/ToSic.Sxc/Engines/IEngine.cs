@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Engines
         /// Renders a template, returning a string with the rendered template.
         /// </summary>
         /// <returns>The string - usually HTML - which the engine created. </returns>
-        RenderEngineResult Render();
+        RenderEngineResult Render(object data);
 
 
 #if NETFRAMEWORK

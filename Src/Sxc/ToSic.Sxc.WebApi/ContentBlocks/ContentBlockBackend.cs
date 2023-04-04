@@ -62,7 +62,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
 
             // now return a rendered instance
             var newContentBlock = _entityBlockGenerator.New().Init(Block, entityId);
-            return newContentBlock.BlockBuilder.Run(true);
+            return newContentBlock.BlockBuilder.Run(true, null);
         }
 
         // todo: probably move to CmsManager.Block
@@ -146,7 +146,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
                 Block.View = template;
             }
 
-            var result = Block.BlockBuilder.Run(true);
+            var result = Block.BlockBuilder.Run(true, null);
             return callLog.ReturnAsOk(result);
         }
 

@@ -1,15 +1,12 @@
-﻿using System;
-using ToSic.Eav;
-using ToSic.Eav.Plumbing;
+﻿#if NETFRAMEWORK
+
+using System;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity
     {
-#if NETFRAMEWORK
         /// <inheritdoc />
         [Obsolete("use Edit.Toolbar instead")]
         [PrivateApi]
@@ -49,7 +46,8 @@ namespace ToSic.Sxc.Data
         [Obsolete("please use Get instead")]
         public object GetEntityValue(string field) => GetInternal(field);
 
-#endif
 
     }
 }
+
+#endif

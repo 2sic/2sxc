@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Services
     /// In such scenarios, certain services like the <see cref="IPageService"/> would not be able to perform any real work.
     /// </summary>
     /// <remarks>
-    /// * History: Added v15.06
+    /// * History: Added v15.06 - still WIP
     /// </remarks>
     [PrivateApi]
     public class ServiceKitLight15 : ServiceBase
@@ -73,8 +73,13 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The Edit service, same as the main Edit service
         /// </summary>
-        [PrivateApi("WIP not yet public for v15 - added v15.06")]
-        public IDataService Data => _data.Get(() => GetService<IDataService>().Setup(_appIdentity, _getLookup));
+        [WorkInProgressApi("Still WIP v15.07")]
+        public IDataService Data => _data.Get(() =>
+        {
+            var dss = GetService<IDataService>();
+            (dss as DataService)?.Setup(_appIdentity, _getLookup);
+            return dss;
+        });
         private readonly GetOnce<IDataService> _data = new GetOnce<IDataService>();
 
         ///// <summary>
@@ -129,8 +134,8 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
         /// </summary>
-        public ILogService SystemLog => _sysLog.Get(GetService<ILogService>);
-        private readonly GetOnce<ILogService> _sysLog = new GetOnce<ILogService>();
+        public ISystemLogService SystemLog => _sysLog.Get(GetService<ISystemLogService>);
+        private readonly GetOnce<ISystemLogService> _sysLog = new GetOnce<ISystemLogService>();
 
 
         ///// <summary>

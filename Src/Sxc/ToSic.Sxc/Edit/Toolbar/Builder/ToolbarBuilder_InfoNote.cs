@@ -1,5 +1,6 @@
-﻿using ToSic.Lib.Documentation;
-using ToSic.Sxc.Web.Url;
+﻿using System;
+using System.Runtime.CompilerServices;
+using ToSic.Lib.Documentation;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleOps;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -10,36 +11,24 @@ namespace ToSic.Sxc.Edit.Toolbar
         [PrivateApi("WIP v15.04")]
         public IToolbarBuilder Info(
             string noParamOrder = Eav.Parameters.Protector,
-            object note = default,
             string link = default,
-            object ui = default,
-            object parameters = default,
-            string operation = default
-        ) => InfoLikeButton(
-            noParamOrder: noParamOrder,
-            commandName: "info",
-            ui: ui,
-            uiMerge: note is string ? new { note = new { note} } as object : new { note },
-            parameters: parameters,
-            parametersMerge: link != default ? new { link, } : null,
-            operation: operation
-        );
+            Func<ITweakButton, ITweakButton> tweak = default
+        ) => InfoLikeButton(noParamOrder: noParamOrder, verb: "info", paramsMergeInTweak: link != default ? new { link, } : null, tweak: tweak);
+
 
         private IToolbarBuilder InfoLikeButton(
             string noParamOrder,
-            string commandName,
-            object ui,
-            object uiMerge,
-            object parameters,
-            object parametersMerge,
-            string operation
+            string verb,
+            object paramsMergeInTweak,
+            Func<ITweakButton, ITweakButton> tweak,
+            [CallerMemberName] string methodName = null
         )
         {
-            Eav.Parameters.Protect(noParamOrder, "See docs");
-            var paramsWithMessage = new ObjectToUrl().SerializeWithChild(parameters, parametersMerge);
-            var pars = PrecleanParams(operation: operation, defOp: OprNone, ui: ui, uiMerge: uiMerge, uiMergePrefix: null, parameters: paramsWithMessage, prefill: null);
-            return EntityRule(commandName, null, pars).Builder;
-
+            Eav.Parameters.Protect(noParamOrder, "See docs", methodName: methodName);
+            tweak = tweak ?? TweakButton.NoOp; 
+            var initial = paramsMergeInTweak == null ? null : new TweakButton().Parameters(paramsMergeInTweak);
+            var pars = PreCleanParams(tweak, defOp: OprNone, initialButton: initial);
+            return EntityRule(verb, null, pars).Builder;
         }
     }
 }
