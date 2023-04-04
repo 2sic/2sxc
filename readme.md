@@ -1,11 +1,13 @@
 <img src="https://docs.2sxc.org/assets/logos/v15/500.png" width="200px" align="right">
 
-# 2sxc 15 - CMS & App-Engine for DNN and Oqtane
+# 2sxc 15
+
+## Content Management, Dynamic Data, Dynamic Code & App Engine
 
 > you can't use DNN  or Oqtane without 2sxc 😉
 
 2sxc helps web designers and developers prepare great looking, animated and sexy content and applications in DNN (DotNetNuke) and Oqtane.
-In works in .net Framework and .net Core 5.
+In works in .net Framework and .net Core.
 
 Visit [2sxc.org](https://2sxc.org/) for more information.
 
@@ -21,7 +23,7 @@ Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
 1. 2sxc Dnn - containing everything which connects 2sxc to DNN
 1. 2sxc Oqtane - everything which implements 2sxc for Oqtane
 1. 2sxc Razor - contains the razor engine and also connects to DNN
-1. 2sxc WebApi - contains the webapi - also as part of the DNN infrastructure
+1. 2sxc WebApi - contains the WebApi - also as part of the DNN infrastructure
 1. 2sxc - the root project - containing installation / bundling and dependency injection for runtime
 
 # More Git Repos
@@ -35,9 +37,9 @@ This is just one repo of 2sxc - the full software also has another ca. 3 for
 # System Requirements for 2sxc
 
 1. DNN 9.6.1+ with .net Framework 4.8
-1. Oqtane 3.1+ with .net 6
+1. Oqtane 3.4.2+ with .net 6
 
 Older Versions
 
 * 2sxc 8 to 13 all work on DNN 7.4.2 - 9.10 or even later
-* Older versions of Oqtane - see [compatibility list](https://docs.2sxc.org/abyss/platforms/oqtane/install.html)
+* Older versions of Oqtane - see [compatibility list](https://r.2sxc.org/oqtane-install)
