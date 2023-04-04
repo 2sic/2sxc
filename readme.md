@@ -17,7 +17,7 @@ Visit [DNN & Razor Tutorials](https://2sxc.org/dnn-tutorials/) for tutorials.
 
 Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
 
-# Contents of this Repo
+## Contents of this Repo
 
 1. 2sxc Core - containing the main 2sxc code (not dependant on DNN)
 1. 2sxc Dnn - containing everything which connects 2sxc to DNN
@@ -26,7 +26,7 @@ Visit [2sxc Blogs](https://2sxc.org/en/blog) for news, updates, articles.
 1. 2sxc WebApi - contains the WebApi - also as part of the DNN infrastructure
 1. 2sxc - the root project - containing installation / bundling and dependency injection for runtime
 
-# More Git Repos
+## More Git Repos
 
 This is just one repo of 2sxc - the full software also has another ca. 3 for
 
@@ -34,7 +34,7 @@ This is just one repo of 2sxc - the full software also has another ca. 3 for
 1. [EAV-UI](https://github.com/2sic/eav-ui) Angular 12 UI layer for EAV data
 1. [2sxc-UI](https://github.com/2sic/2sxc-ui) In-page editing system and JS APIs
 
-# System Requirements for 2sxc
+## System Requirements for 2sxc
 
 1. DNN 9.6.1+ with .net Framework 4.8
 1. Oqtane 3.4.2+ with .net 6
