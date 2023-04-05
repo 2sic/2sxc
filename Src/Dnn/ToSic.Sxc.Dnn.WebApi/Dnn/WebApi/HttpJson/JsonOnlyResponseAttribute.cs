@@ -20,13 +20,13 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 
             // Remove the XML formatter
             formatters.Remove(controllerSettings.Formatters.XmlFormatter);
-            
-            // For older apis we need to leave NewtonsoftJson
-            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any())
-            {
-                // TODO: IF IT ALSO has a JsonFormatter, don't exit - so v14 can also work
+
+            // Get JsonFormatterAttribute from controller
+            var jsonFormatterAttribute = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<JsonFormatterAttribute>().FirstOrDefault();
+
+            // For older apis we need to leave NewtonsoftJson (when JsonFormatterAttribute is missing on controller)
+            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any() && jsonFormatterAttribute == null)
                 return;
-            }
 
             // For newer apis we need to use System.Text.Json, but generated per request
             // because of DI dependencies for EavJsonConvertors in new generated JsonOptions
@@ -34,9 +34,6 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             // Remove default JsonMediaTypeFormatter (Newtonsoft)
             formatters.OfType<JsonMediaTypeFormatter>().ToList()
                 .ForEach(f => controllerSettings.Formatters.Remove(f));
-
-            // Get JsonFormatterAttribute from controller
-            var jsonFormatterAttribute = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<JsonFormatterAttribute>().FirstOrDefault();
 
             // Add SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
             if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
@@ -47,15 +44,12 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
         {
             var controllerDescriptor = context.ControllerContext.ControllerDescriptor;
 
-            // For older apis we need to leave
-            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any())
-            {
-                // TODO: IF IT ALSO has a JsonFormatter, don't exit - so v14 can also work
-                return;
-            }
-
             // Get JsonFormatterAttribute from action method
             var jsonFormatterAttributeOnAction = context?.ActionDescriptor.GetCustomAttributes<JsonFormatterAttribute>().FirstOrDefault();
+
+            // For older apis we need to leave (when JsonFormatterAttribute is missing on action method)
+            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any() && jsonFormatterAttributeOnAction == null)
+                return;
 
             // Nothing to do when JsonFormatterAttribute is missing on action method
             if (jsonFormatterAttributeOnAction == null)
