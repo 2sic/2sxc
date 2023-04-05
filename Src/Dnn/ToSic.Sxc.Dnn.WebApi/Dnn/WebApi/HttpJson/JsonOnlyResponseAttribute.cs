@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Net.Http.Formatting;
 using System.Text.Json;
+using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using ToSic.Eav.Serialization;
@@ -13,7 +15,8 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 {
     public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfiguration
     {
-       
+        private const string JsonFormatterAttributeKey = "JsonFormatterAttributeOnController";
+
         public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
         {
             var formatters = controllerSettings.Formatters;
@@ -38,6 +41,10 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             // Add SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
             if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
                 formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(jsonFormatterAttribute, controllerDescriptor));
+
+            // Save JsonFormatterAttribute on controller in HttpContext.Items for later use in OnActionExecuting
+            if (jsonFormatterAttribute != null)
+                HttpContext.Current.Items[JsonFormatterAttributeKey] = jsonFormatterAttribute;
         }
 
         public override void OnActionExecuting(HttpActionContext context)
@@ -69,14 +76,17 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
         private SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(JsonFormatterAttribute jsonFormatterAttribute, HttpControllerDescriptor controllerDescriptor, HttpActionContext context = null)
         {
             // Build Eav to Json converters for api v15
-            var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, controllerDescriptor);
+            var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat ?? GetJsonFormatterAttribute()?.EntityFormat, controllerDescriptor);
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            SetCasing(jsonFormatterAttribute?.Casing, jsonSerializerOptions);
+            SetCasing(jsonFormatterAttribute?.Casing ?? GetJsonFormatterAttribute()?.Casing, jsonSerializerOptions);
 
             return new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions };
         }
+
+        private JsonFormatterAttribute GetJsonFormatterAttribute() => 
+            HttpContext.Current.Items.Contains(JsonFormatterAttributeKey) ? HttpContext.Current.Items[JsonFormatterAttributeKey] as JsonFormatterAttribute : null;
 
         private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, HttpControllerDescriptor controllerDescriptor)
         {
@@ -93,26 +103,27 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 
         private static void SetCasing(Casing? casing, JsonSerializerOptions jsonSerializerOptions)
         {
-            switch (casing)
-            {
-                case null:
-                case Casing.Default:
-                case Casing.Camel:
-                    jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-                    break;
-                case Casing.Pascal:
-                //case Casing.DictionaryDefault:
-                //case Casing.DictionaryCamel:
-                //case Casing.DictionaryPascal:
-                //case Casing.ObjectDefault:
-                //case Casing.ObjectCamel:
-                //case Casing.ObjectPascal:
-                default:
-                    jsonSerializerOptions.PropertyNamingPolicy = null;
-                    jsonSerializerOptions.DictionaryKeyPolicy = null;
-                    break;
-            }
+            if (casing == null
+                || casing == Casing.Default
+                || (casing & Casing.Camel) == Casing.Camel
+                || (casing & Casing.ObjectDefault) == Casing.ObjectDefault
+                || (casing & Casing.ObjectCamel) == Casing.ObjectCamel)
+                jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+
+            if (casing == null
+                || casing == Casing.Default
+                || (casing & Casing.Camel) == Casing.Camel
+                || (casing & Casing.DictionaryDefault) == Casing.DictionaryDefault
+                || (casing & Casing.DictionaryCamel) == Casing.DictionaryCamel)
+                jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+
+            if ((casing & Casing.Pascal) == Casing.Pascal
+                || (casing & Casing.ObjectPascal) == Casing.ObjectPascal)
+                jsonSerializerOptions.PropertyNamingPolicy = null;
+
+            if ((casing & Casing.Pascal) == Casing.Pascal
+                || (casing & Casing.DictionaryPascal) == Casing.DictionaryPascal)
+                jsonSerializerOptions.DictionaryKeyPolicy = null;
         }
     }
 }

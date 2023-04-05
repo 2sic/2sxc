@@ -18,12 +18,6 @@ namespace ToSic.Sxc.WebApi
     public class JsonFormatterAttribute : Attribute
     {
         /// <summary>
-        /// Automatically convert IEntity objects in the result to the preferred object structure. 
-        /// </summary>
-        // @STV TODO: - switch to EntityFormat
-        public bool AutoConvertEntity { get; set; } = true;
-
-        /// <summary>
         /// Specify how <see cref="IEntity"/> objects in the result should be formatted.
         /// Default is <see cref="WebApi.EntityFormat.Light"/>.
         /// </summary>
