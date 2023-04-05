@@ -20,7 +20,7 @@ namespace Custom.Hybrid
     /// </summary>
     [PublicApi("This is the official base class for v12+")]
     [DnnLogExceptions]
-    [UseOldNewtonsoftForHttpJson]
+    [DefaultToNewtonsoftForHttpJson]
     public abstract partial class Api12: ApiCoreShim, 
         IDynamicCode12, 
         IDynamicWebApi, 

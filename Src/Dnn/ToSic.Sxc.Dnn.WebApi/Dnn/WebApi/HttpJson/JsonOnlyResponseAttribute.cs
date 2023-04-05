@@ -22,8 +22,11 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             formatters.Remove(controllerSettings.Formatters.XmlFormatter);
             
             // For older apis we need to leave NewtonsoftJson
-            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<UseOldNewtonsoftForHttpJsonAttribute>().Any())
+            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any())
+            {
+                // TODO: IF IT ALSO has a JsonFormatter, don't exit - so v14 can also work
                 return;
+            }
 
             // For newer apis we need to use System.Text.Json, but generated per request
             // because of DI dependencies for EavJsonConvertors in new generated JsonOptions
@@ -45,8 +48,11 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             var controllerDescriptor = context.ControllerContext.ControllerDescriptor;
 
             // For older apis we need to leave
-            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<UseOldNewtonsoftForHttpJsonAttribute>().Any())
+            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any())
+            {
+                // TODO: IF IT ALSO has a JsonFormatter, don't exit - so v14 can also work
                 return;
+            }
 
             // Get JsonFormatterAttribute from action method
             var jsonFormatterAttributeOnAction = context?.ActionDescriptor.GetCustomAttributes<JsonFormatterAttribute>().FirstOrDefault();

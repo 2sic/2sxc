@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Dnn
     [PublicApi("This was the official base class before v12. Try to move away from it, go to the latest base class on Custom.Dnn.Api12")]
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
-    [UseOldNewtonsoftForHttpJson]
+    [DefaultToNewtonsoftForHttpJson]
     public abstract class ApiController : DynamicApiController, 
         IDnnDynamicWebApi, 
         IDynamicCode, 

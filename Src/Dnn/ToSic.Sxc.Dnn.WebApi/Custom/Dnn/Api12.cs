@@ -14,7 +14,7 @@ namespace Custom.Dnn
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode("This is the official base class for v12+")]
     [DnnLogExceptions]
-    [UseOldNewtonsoftForHttpJson]
+    [DefaultToNewtonsoftForHttpJson]
     public abstract class Api12 : Hybrid.Api12, IDnnDynamicWebApi, IDnnDynamicCodeAdditions
     {
         protected Api12() : base("Dnn12") { }

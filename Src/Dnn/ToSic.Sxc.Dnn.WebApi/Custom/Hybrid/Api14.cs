@@ -22,7 +22,7 @@ namespace Custom.Hybrid
     /// </remarks>
     [PublicApi]
     [DnnLogExceptions]
-    [UseOldNewtonsoftForHttpJson]
+    [DefaultToNewtonsoftForHttpJson]
     public abstract class Api14: Api14<dynamic, ServiceKit14>, 
         IDynamicCode12, 
         IDynamicWebApi, 
