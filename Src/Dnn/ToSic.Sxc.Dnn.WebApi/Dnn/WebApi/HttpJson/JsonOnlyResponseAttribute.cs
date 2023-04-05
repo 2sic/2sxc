@@ -69,18 +69,50 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
         private SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(JsonFormatterAttribute jsonFormatterAttribute, HttpControllerDescriptor controllerDescriptor, HttpActionContext context = null)
         {
             // Build Eav to Json converters for api v15
-            var eavJsonConverterFactory = (jsonFormatterAttribute?.AutoConvertEntity == false) ? null : 
-                controllerDescriptor.Configuration.DependencyResolver.GetService(typeof(EavJsonConverterFactory)) as EavJsonConverterFactory;
+            var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, controllerDescriptor);
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            if (jsonFormatterAttribute?.Casing == Casing.Camel)
-            {
-                jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            }
+            SetCasing(jsonFormatterAttribute?.Casing, jsonSerializerOptions);
 
             return new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions };
+        }
+
+        private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, HttpControllerDescriptor controllerDescriptor)
+        {
+            switch (entityFormat)
+            {
+                case null:
+                case EntityFormat.Light:
+                    return controllerDescriptor.Configuration.DependencyResolver.GetService(typeof(EavJsonConverterFactory)) as EavJsonConverterFactory;
+                case EntityFormat.None:
+                default:
+                    return null;
+            }
+        }
+
+        private static void SetCasing(Casing? casing, JsonSerializerOptions jsonSerializerOptions)
+        {
+            switch (casing)
+            {
+                case null:
+                case Casing.Default:
+                case Casing.Camel:
+                    jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                    break;
+                case Casing.Pascal:
+                //case Casing.DictionaryDefault:
+                //case Casing.DictionaryCamel:
+                //case Casing.DictionaryPascal:
+                //case Casing.ObjectDefault:
+                //case Casing.ObjectCamel:
+                //case Casing.ObjectPascal:
+                default:
+                    jsonSerializerOptions.PropertyNamingPolicy = null;
+                    jsonSerializerOptions.DictionaryKeyPolicy = null;
+                    break;
+            }
         }
     }
 }
