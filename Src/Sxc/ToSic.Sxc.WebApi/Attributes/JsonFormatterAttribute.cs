@@ -31,7 +31,7 @@ namespace ToSic.Sxc.WebApi
 
         /// <summary>
         /// Specify how resulting objects should be cased.
-        /// Default is <see cref="Casing.Camel"/>.
+        /// Default is <see cref="WebApi.Casing.Camel"/>.
         /// Will affect both normal object properties as well as Dictionary keys.
         /// </summary>
         public Casing Casing { get; set; } = Casing.Camel;
@@ -44,6 +44,7 @@ namespace ToSic.Sxc.WebApi
     /// Determines what casing to use when converting data to JSON.
     /// Can be used as flags, so you can say `Casing = Casing.CamelCase` or `Casing = Casing.ObjectPascal | Casing.DictionaryCamel`
     /// </summary>
+    [PublicApi]
     [Flags]
     public enum Casing
     {
@@ -79,6 +80,7 @@ namespace ToSic.Sxc.WebApi
     /// As of now it only has `None` and `Light`, in future we plan to extend this with other formats.
     /// Default is usually `Light`.
     /// </summary>
+    [PublicApi]
     public enum EntityFormat
     {
         /// <summary>

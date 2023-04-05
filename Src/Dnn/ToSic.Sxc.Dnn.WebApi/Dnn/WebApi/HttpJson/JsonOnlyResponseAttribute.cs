@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            if (jsonFormatterAttribute?.Casing == Casing.CamelCase)
+            if (jsonFormatterAttribute?.Casing == Casing.Camel)
             {
                 jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;

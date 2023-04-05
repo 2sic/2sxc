@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            if (jsonFormatterAttribute?.Casing == Casing.CamelCase)
+            if (jsonFormatterAttribute?.Casing == Casing.Camel)
             {
                 jsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
                 jsonSerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
