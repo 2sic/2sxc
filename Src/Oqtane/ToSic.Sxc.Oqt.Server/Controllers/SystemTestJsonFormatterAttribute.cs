@@ -12,7 +12,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Buffers;
 using System.Linq;
-using System.Text.Json;
 using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Serialization;
 using ToSic.Lib.DI;
@@ -78,7 +77,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            SetCasing(jsonFormatterAttribute?.Casing, jsonSerializerOptions);
+            JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
 
             return new(jsonSerializerOptions);
         }
@@ -96,30 +95,30 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
         }
 
-        private static void SetCasing(Casing? casing, JsonSerializerOptions jsonSerializerOptions)
-        {
-            if (casing == null
-                || casing == Casing.Default
-                || (casing & Casing.Camel) == Casing.Camel
-                || (casing & Casing.ObjectDefault) == Casing.ObjectDefault
-                || (casing & Casing.ObjectCamel) == Casing.ObjectCamel)
-                jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        //private static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)
+        //{
+        //    if (casing == Casing.Default
+        //        || (casing & Casing.Camel) == Casing.Camel
+        //        //|| (casing & Casing.ObjectDefault) == Casing.ObjectDefault
+        //        //|| (casing & Casing.ObjectCamel) == Casing.ObjectCamel
+        //        )
+        //        jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 
-            if (casing == null
-                || casing == Casing.Default
-                || (casing & Casing.Camel) == Casing.Camel
-                || (casing & Casing.DictionaryDefault) == Casing.DictionaryDefault
-                || (casing & Casing.DictionaryCamel) == Casing.DictionaryCamel)
-                jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+        //    if (casing == Casing.Default
+        //        || (casing & Casing.Camel) == Casing.Camel
+        //        || (casing & Casing.PropertyDefault) == Casing.PropertyDefault
+        //        || (casing & Casing.PropertyCamel) == Casing.PropertyCamel)
+        //        jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
 
-            if ((casing & Casing.Pascal) == Casing.Pascal
-                || (casing & Casing.ObjectPascal) == Casing.ObjectPascal)
-                jsonSerializerOptions.PropertyNamingPolicy = null;
+        //    if ((casing & Casing.Pascal) == Casing.Pascal
+        //        //|| (casing & Casing.ObjectPascal) == Casing.ObjectPascal
+        //        )
+        //        jsonSerializerOptions.PropertyNamingPolicy = null;
 
-            if ((casing & Casing.Pascal) == Casing.Pascal
-                || (casing & Casing.DictionaryPascal) == Casing.DictionaryPascal)
-                jsonSerializerOptions.DictionaryKeyPolicy = null;
-        }
+        //    if ((casing & Casing.Pascal) == Casing.Pascal
+        //        || (casing & Casing.PropertyPascal) == Casing.PropertyPascal)
+        //        jsonSerializerOptions.DictionaryKeyPolicy = null;
+        //}
     }
 
     public class SystemTextJsonBodyModelBinder : BodyModelBinder

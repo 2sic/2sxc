@@ -1,7 +1,5 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http.Formatting;
-using System.Text.Json;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
@@ -80,7 +78,7 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            SetCasing(jsonFormatterAttribute?.Casing ?? GetJsonFormatterAttribute()?.Casing, jsonSerializerOptions);
+            JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? GetJsonFormatterAttribute()?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
 
             return new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions };
         }
@@ -101,30 +99,40 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             }
         }
 
-        private static void SetCasing(Casing? casing, JsonSerializerOptions jsonSerializerOptions)
-        {
-            if (casing == null
-                || casing == Casing.Default
-                || (casing & Casing.Camel) == Casing.Camel
-                || (casing & Casing.ObjectDefault) == Casing.ObjectDefault
-                || (casing & Casing.ObjectCamel) == Casing.ObjectCamel)
-                jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        //private static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)
+        //{
+        //    // TODO: @STV
+        //    // 1. Make casing non-null in parameter - the caller must ensure that it's ?? Casing.Default or something
+        //    // 2. Use HasFlag - see code sample
+        //    // 3. Deduplicate - I believe ATM we have the identical code in DNN/Oqtane, that's bad - better move to static in Sxc.WebApi somewhere
+        //    if (casing.HasFlag(Casing.Camel))
+        //    {
 
-            if (casing == null
-                || casing == Casing.Default
-                || (casing & Casing.Camel) == Casing.Camel
-                || (casing & Casing.DictionaryDefault) == Casing.DictionaryDefault
-                || (casing & Casing.DictionaryCamel) == Casing.DictionaryCamel)
-                jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+        //    }
 
-            if ((casing & Casing.Pascal) == Casing.Pascal
-                || (casing & Casing.ObjectPascal) == Casing.ObjectPascal)
-                jsonSerializerOptions.PropertyNamingPolicy = null;
 
-            if ((casing & Casing.Pascal) == Casing.Pascal
-                || (casing & Casing.DictionaryPascal) == Casing.DictionaryPascal)
-                jsonSerializerOptions.DictionaryKeyPolicy = null;
-        }
+        //    if (casing == Casing.Default
+        //        || (casing & Casing.Camel) == Casing.Camel
+        //        //|| (casing & Casing.ObjectDefault) == Casing.ObjectDefault
+        //        //|| (casing & Casing.ObjectCamel) == Casing.ObjectCamel
+        //        )
+        //        jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+
+        //    if (casing == Casing.Default
+        //        || (casing & Casing.Camel) == Casing.Camel
+        //        || (casing & Casing.PropertyDefault) == Casing.PropertyDefault
+        //        || (casing & Casing.PropertyCamel) == Casing.PropertyCamel)
+        //        jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+
+        //    if ((casing & Casing.Pascal) == Casing.Pascal
+        //        //|| (casing & Casing.ObjectPascal) == Casing.ObjectPascal
+        //        )
+        //        jsonSerializerOptions.PropertyNamingPolicy = null;
+
+        //    if ((casing & Casing.Pascal) == Casing.Pascal
+        //        || (casing & Casing.PropertyPascal) == Casing.PropertyPascal)
+        //        jsonSerializerOptions.DictionaryKeyPolicy = null;
+        //}
     }
 }
 

@@ -43,30 +43,39 @@ namespace ToSic.Sxc.WebApi
     public enum Casing
     {
         /// <summary>
-        /// Leave casing as is.
-        /// Currently no real effect, will behave as CamelCase for now.
+        /// No casing configuration set.
+        /// Will behave as camelCase for everything.
         /// </summary>
-        Default = 0,
+        [PrivateApi("Hidden for now, as it doesn't really have an clear use")]
+        Unspecified = 0,
 
         /// <summary>
-        /// Set casing to use CamelCase for Attributes.
-        /// This is how conversion would have worked before v15, as the C# objects all use CamelCase internally.
+        /// Set casing to use camelCase for everything.
+        /// This is how most JavaScript code expects the data.
+        /// The opposite would be <see cref="Preserve"/>.
         /// </summary>
         Camel = 1 << 0,
 
         /// <summary>
-        /// Set casing to use pascalCase for Attributes.
-        /// This is how most modern JavaScript code expects the data to be.
+        /// Set casing to use original name for everything - usually PascalCase as is common in C#.
+        /// This is how conversion would have worked before v15, as the C# objects all use CamelCase internally.
+        /// The opposite would be <see cref="Camel"/>
         /// </summary>
-        Pascal = 1 << 2,
+        Preserve = 1 << 2,
 
-        DictionaryDefault = 1 << 8,
+        /// <summary>
+        /// Set casing of Dictionaries to be camelCase.
+        /// For example, Entity properties such as `Birthday` = `birthday`, `FirstName` = `firstName`.
+        /// This would be Camel case.
+        /// </summary>
         DictionaryCamel = 1 << 9,
-        DictionaryPascal = 1 << 10,
 
-        ObjectDefault = 1 << 16,
-        ObjectCamel = 1 << 17,
-        ObjectPascal = 1 << 18,
+        /// <summary>
+        /// Set casing of Dictionaries to be PascalCase.
+        /// For example, Entity properties such as `Birthday` = `Birthday`, `FirstName` = `firstName`.
+        /// This would be Camel case.
+        /// </summary>
+        DictionaryPreserve = 1 << 10,
     }
 
     /// <summary>
