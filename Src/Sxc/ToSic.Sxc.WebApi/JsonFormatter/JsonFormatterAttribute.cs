@@ -45,7 +45,7 @@ namespace ToSic.Sxc.WebApi
     {
         /// <summary>
         /// No casing configuration set.
-        /// Will behave as camelCase for everything.
+        /// Will preserve casing as it is, usually Pascal case (old behavior for 2sxc Apis).
         /// </summary>
         [PrivateApi("Hidden for now, as it doesn't matter to external users")]
         Unspecified = 0,

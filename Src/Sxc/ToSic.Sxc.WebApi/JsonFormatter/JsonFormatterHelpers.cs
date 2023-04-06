@@ -6,6 +6,7 @@ namespace ToSic.Sxc.WebApi
     {
         public static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)
         {
+            // this preserves casing (old behavior for 2sxc Apis)
             if (casing == Casing.Unspecified) return;
 
             var objectPreserve = casing.HasFlag(Casing.Preserve);
