@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Net.Http.Formatting;
-using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using ToSic.Eav.Serialization;
@@ -13,8 +12,6 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 {
     public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfiguration
     {
-        private const string JsonFormatterAttributeKey = "JsonFormatterAttributeOnController";
-
         public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
         {
             var formatters = controllerSettings.Formatters;
@@ -39,10 +36,6 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             // Add SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
             if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
                 formatters.Insert(0, SystemTextJsonMediaTypeFormatterFactory(jsonFormatterAttribute, controllerDescriptor));
-
-            // Save JsonFormatterAttribute on controller in HttpContext.Items for later use in OnActionExecuting
-            if (jsonFormatterAttribute != null)
-                HttpContext.Current.Items[JsonFormatterAttributeKey] = jsonFormatterAttribute;
         }
 
         public override void OnActionExecuting(HttpActionContext context)
@@ -74,17 +67,14 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
         private SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(JsonFormatterAttribute jsonFormatterAttribute, HttpControllerDescriptor controllerDescriptor, HttpActionContext context = null)
         {
             // Build Eav to Json converters for api v15
-            var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat ?? GetJsonFormatterAttribute()?.EntityFormat, controllerDescriptor);
+            var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, controllerDescriptor);
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? GetJsonFormatterAttribute()?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
+            JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
 
             return new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions };
         }
-
-        private JsonFormatterAttribute GetJsonFormatterAttribute() => 
-            HttpContext.Current.Items.Contains(JsonFormatterAttributeKey) ? HttpContext.Current.Items[JsonFormatterAttributeKey] as JsonFormatterAttribute : null;
 
         private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, HttpControllerDescriptor controllerDescriptor)
         {
@@ -98,41 +88,6 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
                     return null;
             }
         }
-
-        //private static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)
-        //{
-        //    // TODO: @STV
-        //    // 1. Make casing non-null in parameter - the caller must ensure that it's ?? Casing.Default or something
-        //    // 2. Use HasFlag - see code sample
-        //    // 3. Deduplicate - I believe ATM we have the identical code in DNN/Oqtane, that's bad - better move to static in Sxc.WebApi somewhere
-        //    if (casing.HasFlag(Casing.Camel))
-        //    {
-
-        //    }
-
-
-        //    if (casing == Casing.Default
-        //        || (casing & Casing.Camel) == Casing.Camel
-        //        //|| (casing & Casing.ObjectDefault) == Casing.ObjectDefault
-        //        //|| (casing & Casing.ObjectCamel) == Casing.ObjectCamel
-        //        )
-        //        jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-
-        //    if (casing == Casing.Default
-        //        || (casing & Casing.Camel) == Casing.Camel
-        //        || (casing & Casing.PropertyDefault) == Casing.PropertyDefault
-        //        || (casing & Casing.PropertyCamel) == Casing.PropertyCamel)
-        //        jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-
-        //    if ((casing & Casing.Pascal) == Casing.Pascal
-        //        //|| (casing & Casing.ObjectPascal) == Casing.ObjectPascal
-        //        )
-        //        jsonSerializerOptions.PropertyNamingPolicy = null;
-
-        //    if ((casing & Casing.Pascal) == Casing.Pascal
-        //        || (casing & Casing.PropertyPascal) == Casing.PropertyPascal)
-        //        jsonSerializerOptions.DictionaryKeyPolicy = null;
-        //}
     }
 }
 

@@ -94,31 +94,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
                     return null;
             }
         }
-
-        //private static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)
-        //{
-        //    if (casing == Casing.Default
-        //        || (casing & Casing.Camel) == Casing.Camel
-        //        //|| (casing & Casing.ObjectDefault) == Casing.ObjectDefault
-        //        //|| (casing & Casing.ObjectCamel) == Casing.ObjectCamel
-        //        )
-        //        jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-
-        //    if (casing == Casing.Default
-        //        || (casing & Casing.Camel) == Casing.Camel
-        //        || (casing & Casing.PropertyDefault) == Casing.PropertyDefault
-        //        || (casing & Casing.PropertyCamel) == Casing.PropertyCamel)
-        //        jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-
-        //    if ((casing & Casing.Pascal) == Casing.Pascal
-        //        //|| (casing & Casing.ObjectPascal) == Casing.ObjectPascal
-        //        )
-        //        jsonSerializerOptions.PropertyNamingPolicy = null;
-
-        //    if ((casing & Casing.Pascal) == Casing.Pascal
-        //        || (casing & Casing.PropertyPascal) == Casing.PropertyPascal)
-        //        jsonSerializerOptions.DictionaryKeyPolicy = null;
-        //}
     }
 
     public class SystemTextJsonBodyModelBinder : BodyModelBinder
