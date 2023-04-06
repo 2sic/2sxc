@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (background != default) noteProps[nameof(background)] = background;
             return Ui(new { note = noteProps });
         }
-
+        
         public ITweakButton Show(bool show = true) => Ui("show", show.ToString().ToLowerInvariant());
 
         public ITweakButton Color(string color = default, string noParamOrder = Protector, string background = default,
@@ -67,6 +67,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         public ITweakButton Icon(string value) => value.IsEmptyOrWs() ? this : Ui(new { icon = value });
 
         public ITweakButton Classes(string value) => value.IsEmptyOrWs() ? this : Ui("class", value);
+
+        public ITweakButton Position(int value) => Ui("pos", value);
 
         public ITweakButton Ui(object value) => value == null ? this : new TweakButton(this, UiMerge.Add(value));
 

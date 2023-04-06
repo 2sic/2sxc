@@ -95,6 +95,15 @@ namespace ToSic.Sxc.Edit.Toolbar
         ITweakButton Classes(string value);
 
         /// <summary>
+        /// Specify the position of the button.
+        /// `0` means in the very front, `1` is right after the first button, etc.
+        /// `-1` means the last button, `-2` is the second last, etc.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        ITweakButton Position(int value);
+
+        /// <summary>
         /// Add a general ui-rule for things which are not in the standard API.
         /// </summary>
         /// <param name="value">a string such as `this=that` or an object which will be parsed/serialized such as `new { this = 27 }`</param>
