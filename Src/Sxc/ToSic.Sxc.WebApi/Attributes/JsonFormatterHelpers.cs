@@ -6,6 +6,8 @@ namespace ToSic.Sxc.WebApi
     {
         public static void SetCasing(Casing casing, JsonSerializerOptions jsonSerializerOptions)
         {
+            if (casing == Casing.Unspecified) return;
+
             var objectPreserve = casing.HasFlag(Casing.Preserve);
             jsonSerializerOptions.PropertyNamingPolicy = objectPreserve ? null : JsonNamingPolicy.CamelCase;
 
