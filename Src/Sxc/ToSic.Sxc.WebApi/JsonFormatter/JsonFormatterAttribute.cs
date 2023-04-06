@@ -36,6 +36,7 @@ namespace ToSic.Sxc.WebApi
 
     /// <summary>
     /// Determines what casing to use when converting data to JSON.
+    /// This is for the <see cref="JsonFormatterAttribute"/>.
     /// Can be used as flags, so you can say `Casing = Casing.CamelCase` or `Casing = Casing.ObjectPascal | Casing.DictionaryCamel`
     /// </summary>
     [PublicApi]
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.WebApi
         /// No casing configuration set.
         /// Will behave as camelCase for everything.
         /// </summary>
-        [PrivateApi("Hidden for now, as it doesn't really have an clear use")]
+        [PrivateApi("Hidden for now, as it doesn't matter to external users")]
         Unspecified = 0,
 
         /// <summary>
@@ -80,6 +81,7 @@ namespace ToSic.Sxc.WebApi
 
     /// <summary>
     /// Formats to use for automatic Entity to JSON conversion.
+    /// This is for the <see cref="JsonFormatterAttribute"/>.
     /// As of now it only has `None` and `Light`, in future we plan to extend this with other formats.
     /// Default is usually `Light`.
     /// </summary>

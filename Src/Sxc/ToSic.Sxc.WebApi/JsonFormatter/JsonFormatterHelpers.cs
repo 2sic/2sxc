@@ -11,7 +11,8 @@ namespace ToSic.Sxc.WebApi
             var objectPreserve = casing.HasFlag(Casing.Preserve);
             jsonSerializerOptions.PropertyNamingPolicy = objectPreserve ? null : JsonNamingPolicy.CamelCase;
 
-            var dicPreserve = objectPreserve || casing.HasFlag(Casing.DictionaryPreserve);
+            var dicPreserve = (objectPreserve && !casing.HasFlag(Casing.DictionaryCamel))
+                              || casing.HasFlag(Casing.DictionaryPreserve);
             jsonSerializerOptions.DictionaryKeyPolicy = dicPreserve ? null : JsonNamingPolicy.CamelCase;
         }
     }
