@@ -3,19 +3,20 @@
     public class NameObjectSet
     {
 
-        public NameObjectSet(string name, object value, string prefix = null)
+        public NameObjectSet(string name, object value, string prefix = default)
         {
             Name = name;
             Value = value;
             Prefix = prefix;
         }
 
-        public NameObjectSet(NameObjectSet original, string name = null, object value = null, bool? keep = null)
+        public NameObjectSet(NameObjectSet original, string name = default, object value = default, bool? keep = default, string prefix = default)
         {
             Prefix = original?.Prefix;
             Name = name ?? original?.Name;
             Value = value ?? original?.Value;
             Keep = keep ?? original?.Keep ?? Keep;
+            Prefix = prefix ?? original?.Prefix;
         }
 
         public string Prefix { get; }

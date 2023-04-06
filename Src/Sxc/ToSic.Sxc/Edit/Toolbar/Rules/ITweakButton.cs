@@ -30,14 +30,16 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="note">The note/message</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="type">Optional type, like `info` (default), `warning`, `help`</param>
+        /// <param name="background">Background color.</param>
         /// <returns></returns>
         /// <remarks>
-        /// * Note is a new feature in v15.07
+        /// * New feature in v15.07
         /// </remarks>
         ITweakButton Note(
             string note = default,
             string noParamOrder = Protector,
-            string type = default
+            string type = default,
+            string background = default
         );
 
         /// <summary>
