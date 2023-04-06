@@ -1,7 +1,5 @@
 ﻿using Custom.Hybrid.Advanced;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
@@ -21,7 +19,7 @@ namespace Custom.Hybrid
     /// * The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
     /// * WIP: Would use System.Text.Json to process JSON in HTTP, not Newtonsoft
     /// </remarks>
-    [WorkInProgressApi("still wip, for V15, but without Newtonsoft JSON")]
+    [PrivateApi("still wip, for V15, but without Newtonsoft JSON")]
     [DnnLogExceptions]
     public abstract class Api15: Api14<dynamic, ServiceKit14>, IDynamicCode12, IDynamicWebApi
     {

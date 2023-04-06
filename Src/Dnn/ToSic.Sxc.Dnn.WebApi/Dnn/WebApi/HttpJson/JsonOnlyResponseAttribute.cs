@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Net.Http.Formatting;
-using System.Text.Json;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 using ToSic.Eav.Serialization;
@@ -13,16 +12,18 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
 {
     public class JsonOnlyResponseAttribute : ActionFilterAttribute, IControllerConfiguration
     {
-       
         public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
         {
             var formatters = controllerSettings.Formatters;
 
             // Remove the XML formatter
             formatters.Remove(controllerSettings.Formatters.XmlFormatter);
-            
-            // For older apis we need to leave NewtonsoftJson
-            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<UseOldNewtonsoftForHttpJsonAttribute>().Any())
+
+            // Get JsonFormatterAttribute from controller
+            var jsonFormatterAttribute = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<JsonFormatterAttribute>().FirstOrDefault();
+
+            // For older apis we need to leave NewtonsoftJson (when JsonFormatterAttribute is missing on controller)
+            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any() && jsonFormatterAttribute == null)
                 return;
 
             // For newer apis we need to use System.Text.Json, but generated per request
@@ -31,9 +32,6 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
             // Remove default JsonMediaTypeFormatter (Newtonsoft)
             formatters.OfType<JsonMediaTypeFormatter>().ToList()
                 .ForEach(f => controllerSettings.Formatters.Remove(f));
-
-            // Get JsonFormatterAttribute from controller
-            var jsonFormatterAttribute = GetCustomAttributes(controllerDescriptor.ControllerType).OfType<JsonFormatterAttribute>().FirstOrDefault();
 
             // Add SystemTextJsonMediaTypeFormatter with JsonSerializerOptions based on JsonFormatterAttribute from controller
             if (!formatters.OfType<SystemTextJsonMediaTypeFormatter>().Any())
@@ -44,12 +42,12 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
         {
             var controllerDescriptor = context.ControllerContext.ControllerDescriptor;
 
-            // For older apis we need to leave
-            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<UseOldNewtonsoftForHttpJsonAttribute>().Any())
-                return;
-
             // Get JsonFormatterAttribute from action method
             var jsonFormatterAttributeOnAction = context?.ActionDescriptor.GetCustomAttributes<JsonFormatterAttribute>().FirstOrDefault();
+
+            // For older apis we need to leave (when JsonFormatterAttribute is missing on action method)
+            if (GetCustomAttributes(controllerDescriptor.ControllerType).OfType<DefaultToNewtonsoftForHttpJsonAttribute>().Any() && jsonFormatterAttributeOnAction == null)
+                return;
 
             // Nothing to do when JsonFormatterAttribute is missing on action method
             if (jsonFormatterAttributeOnAction == null)
@@ -69,18 +67,26 @@ namespace ToSic.Sxc.Dnn.WebApi.HttpJson
         private SystemTextJsonMediaTypeFormatter SystemTextJsonMediaTypeFormatterFactory(JsonFormatterAttribute jsonFormatterAttribute, HttpControllerDescriptor controllerDescriptor, HttpActionContext context = null)
         {
             // Build Eav to Json converters for api v15
-            var eavJsonConverterFactory = (jsonFormatterAttribute?.AutoConvertEntity == false) ? null : 
-                controllerDescriptor.Configuration.DependencyResolver.GetService(typeof(EavJsonConverterFactory)) as EavJsonConverterFactory;
+            var eavJsonConverterFactory = GetEavJsonConverterFactory(jsonFormatterAttribute?.EntityFormat, controllerDescriptor);
 
             var jsonSerializerOptions = JsonOptions.UnsafeJsonWithoutEncodingHtmlOptionsFactory(eavJsonConverterFactory);
 
-            if (jsonFormatterAttribute?.Casing == Casing.CamelCase)
-            {
-                jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                jsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-            }
+            JsonFormatterHelpers.SetCasing(jsonFormatterAttribute?.Casing ?? Casing.Unspecified, jsonSerializerOptions);
 
             return new SystemTextJsonMediaTypeFormatter { JsonSerializerOptions = jsonSerializerOptions };
+        }
+
+        private static EavJsonConverterFactory GetEavJsonConverterFactory(EntityFormat? entityFormat, HttpControllerDescriptor controllerDescriptor)
+        {
+            switch (entityFormat)
+            {
+                case null:
+                case EntityFormat.Light:
+                    return controllerDescriptor.Configuration.DependencyResolver.GetService(typeof(EavJsonConverterFactory)) as EavJsonConverterFactory;
+                case EntityFormat.None:
+                default:
+                    return null;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Eav.Parameters;
@@ -30,11 +31,15 @@ namespace ToSic.Sxc.Edit.Toolbar
         public ITweakButton Note(
             string note,
             string noParamOrder = Protector,
-            string type = default
+            string type = default,
+            string background = default
         )
         {
             Protect(noParamOrder, $"{nameof(type)}");
-            return Ui(new { note = new { note, type } });
+            var noteProps = new Dictionary<string, object> { [nameof(note)] = note };
+            if (type != default) noteProps[nameof(type)] = type;
+            if (background != default) noteProps[nameof(background)] = background;
+            return Ui(new { note = noteProps });
         }
 
         public ITweakButton Show(bool show = true) => Ui("show", show.ToString().ToLowerInvariant());

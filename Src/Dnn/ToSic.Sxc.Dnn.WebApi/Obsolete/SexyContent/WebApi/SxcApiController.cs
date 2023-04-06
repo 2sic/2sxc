@@ -42,7 +42,7 @@ namespace ToSic.SexyContent.WebApi
     [DnnLogExceptions]
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
     [PrivateApi("This was the official base class a long time ago, Name & APIs must remain stable")]
-    [UseOldNewtonsoftForHttpJson]
+    [DefaultToNewtonsoftForHttpJson]
     public abstract partial class SxcApiController : 
         DynamicApiController, 
         IDnnDynamicWebApi,

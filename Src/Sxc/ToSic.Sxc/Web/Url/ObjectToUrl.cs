@@ -62,13 +62,11 @@ namespace ToSic.Sxc.Web.Url
         private UrlValuePair ValueSerialize(NameObjectSet set)
         {
             if (_preProcessors.SafeAny())
-            {
                 foreach (var pP in _preProcessors)
                 {
                     set = pP.Process(set);
                     if (!set.Keep) return null;
                 }
-            }
 
             if (set.Value == null) return null;
             if (set.Value is string strValue) return new UrlValuePair(set.FullName, strValue);
@@ -143,13 +141,41 @@ namespace ToSic.Sxc.Web.Url
             // Get all properties on the object
             var properties = data.GetType().GetProperties()
                 .Where(x => x.CanRead)
-                .Select(x => ValueSerialize(new NameObjectSet(x.Name, x.GetValue(data, null), prefix)))
+                .Select(x =>
+                {
+                    // Check if it's a key value pair (from a dictionary) - eg. on note
+                    var kvpPair = PropOfKvp(data);
+                    var preSerialize = kvpPair != null
+                        ? new NameObjectSet(kvpPair.Name, kvpPair.Value, prefix)
+                        : new NameObjectSet(x.Name, x.GetValue(data, null), prefix);
+                    return ValueSerialize(preSerialize);
+                })
                 .Where(x => x?.Value != null)
                 .ToList();
 
             // Concat all key/value pairs into a string separated by ampersand
             return properties;
 
+        }
+
+        // https://stackoverflow.com/questions/2729614/c-sharp-reflection-how-can-i-tell-if-object-o-is-of-type-keyvaluepair-and-then
+        private NameObjectSet PropOfKvp(object value)
+        {
+            if (value == null) return null;
+            var valueType = value.GetType();
+            if (!valueType.IsGenericType) return null;
+            
+            var baseType = valueType.GetGenericTypeDefinition();
+            if (baseType != typeof(KeyValuePair<,>)) return null;
+            
+            //var argTypes = baseType.GetGenericArguments();
+            // now process the values
+            if (!(valueType.GetProperty("Key")?.GetValue(value, null) is string kvpKey))
+                return null;
+
+            return !(valueType.GetProperty("Value")?.GetValue(value, null) is object kvpValue) 
+                ? null 
+                : new NameObjectSet(name: kvpKey, value: kvpValue);
         }
     }
 }
