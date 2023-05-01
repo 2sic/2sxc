@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Oqt.Content
             Name = name,
             Description = description,
             Categories = "Common",
-            Version = SharedAssemblyInfo.AssemblyVersion,
+            Version = "16.00.00", // Must be duplicated here, so Oqtane Client doesn't depend on server DLLs
             Owner = "2sic Internet Solutions",
             Url = "https://2sxc.org",
             Contact = "@iJungleboy",
