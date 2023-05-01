@@ -7,6 +7,7 @@ using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using static ToSic.Eav.DataSource.DataSourceOptions;
 using static ToSic.Eav.Parameters;
@@ -18,9 +19,11 @@ namespace ToSic.Sxc.Services
     {
         public DataService(LazySvc<IDataSourcesService> dataSources, LazySvc<DataSourceCatalog> catalog, LazySvc<IAppStates> appStates) : base("Sxc.DatSvc")
         {
-            _dataSources = dataSources;
-            _catalog = catalog;
-            _appStates = appStates;
+            ConnectServices(
+                _dataSources = dataSources,
+                _catalog = catalog,
+                _appStates = appStates
+            );
         }
         private readonly LazySvc<IDataSourcesService> _dataSources;
         private readonly LazySvc<DataSourceCatalog> _catalog;
@@ -69,6 +72,7 @@ namespace ToSic.Sxc.Services
 
         private IDataSourceOptions SafeOptions(object options, bool identityRequired = false)
         {
+            var l = Log.Fn<IDataSourceOptions>($"{nameof(options)}: {options}, {nameof(identityRequired)}: {identityRequired}");
             // Ensure we have a valid AppIdentity
             var appIdentity = _appIdentity ?? (options as IDataSourceOptions)?.AppIdentity
                 ?? (identityRequired
@@ -79,7 +83,8 @@ namespace ToSic.Sxc.Services
                 );
             // Convert to a pure identity, in case the original object was much more
             appIdentity = new AppIdentity(appIdentity);
-            return new Converter().Create(new DataSourceOptions(appIdentity: appIdentity, lookUp: LookUpEngine, immutable: true), options);
+            var opts = new Converter().Create(new DataSourceOptions(appIdentity: appIdentity, lookUp: LookUpEngine, immutable: true), options);
+            return l.Return(opts);
         }
 
         private ILookUpEngine LookUpEngine => _lookupEngine.Get(() => _getLookup?.Invoke());
@@ -89,22 +94,25 @@ namespace ToSic.Sxc.Services
 
         public IDataSource GetAppSource(string noParamOrder = Protector, object options = null)
         {
+            var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
             Protect(noParamOrder, $"{nameof(options)}");
             var fullOptions = SafeOptions(options, true);
             var appSource = _dataSources.Value.CreateDefault(fullOptions);
-            return appSource;
+            return l.Return(appSource);
         }
 
         // IMPORTANT - this is different! from the _DynCodeRoot - as it shouldn't auto attach at all!
         public T GetSource<T>(string noParamOrder = Protector,
             IDataSourceLinkable attach = null, object options = null) where T : IDataSource
         {
+            var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
             Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
 
             // If no in-source was provided, make sure that we create one from the current app
             var fullOptions = SafeOptions(options);
-            return _dataSources.Value.Create<T>(attach: attach, options: fullOptions);
+            var ds = _dataSources.Value.Create<T>(attach: attach, options: fullOptions);
 
+            return l.Return(ds);
         }
 
         public IDataSource GetSource(string noParamOrder = Protector,
@@ -112,13 +120,14 @@ namespace ToSic.Sxc.Services
             IDataSourceLinkable attach = null,
             object options = null)
         {
+            var l = Log.Fn<IDataSource>($"{nameof(name)}: {name}, {nameof(attach)}: {attach}, {nameof(options)}: {options}");
             Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
             // Do this first, to ensure AppIdentity is really known/set
             var safeOptions = SafeOptions(options);
             var type = _catalog.Value.FindDataSourceInfo(name, safeOptions.AppIdentity.AppId)?.Type;
 
-            var ds = _dataSources.Value.Create(type, attach: attach as IDataSource, options: safeOptions);
-            return ds;
+            var ds = _dataSources.Value.Create(type, attach: attach, options: safeOptions);
+            return l.Return(ds);
         }
     }
 }
