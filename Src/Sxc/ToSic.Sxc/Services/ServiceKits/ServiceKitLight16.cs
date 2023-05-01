@@ -20,11 +20,11 @@ namespace ToSic.Sxc.Services
     /// * History: Added v15.06 - still WIP
     /// </remarks>
     [PrivateApi]
-    public class ServiceKitLight15 : ServiceBase
+    public class ServiceKitLight16 : ServiceBase
     {
 
         [PrivateApi("Public constructor for DI")]
-        public ServiceKitLight15(IServiceProvider serviceProvider) : base("Sxc.Kit15")
+        public ServiceKitLight16(IServiceProvider serviceProvider) : base("Sxc.Kit15")
         {
             _serviceProvider = serviceProvider;
         }
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Services
         private TService GetService<TService>() => _serviceProvider.Build<TService>(Log);
 
         [PrivateApi]
-        internal ServiceKitLight15 Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
+        internal ServiceKitLight16 Setup(IAppIdentity appIdentity, Func<ILookUpEngine> getLookup)
         {
             _appIdentity = appIdentity;
             _getLookup = getLookup;

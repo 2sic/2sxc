@@ -8,18 +8,16 @@ using ToSic.Eav.Data.Build;
 using ToSic.Eav.Data.Raw;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.DataSource
 {
-    public abstract partial class DataSource15: ServiceBase<DataSource15.MyServices>, IDataSource, IAppIdentitySync
+    public abstract partial class DataSource16: ServiceBase<DataSource16.MyServices>, IDataSource, IAppIdentitySync
     {
         /// <summary>
         /// These are dependencies of DataSource15.
@@ -29,9 +27,9 @@ namespace Custom.DataSource
         [PrivateApi]
         public class MyServices: MyServicesBase<CustomDataSource.MyServices>
         {
-            public ServiceKitLight15 Kit { get; }
+            public ServiceKitLight16 Kit { get; }
 
-            public MyServices(CustomDataSource.MyServices parentServices, LazySvc<DynamicCodeDataSources> dataSources, ServiceKitLight15 kit) : base(parentServices)
+            public MyServices(CustomDataSource.MyServices parentServices, ServiceKitLight16 kit) : base(parentServices)
             {
                 ConnectServices(
                     Kit = kit
@@ -44,7 +42,7 @@ namespace Custom.DataSource
         /// </summary>
         /// <param name="services">All the needed services - see [](xref:NetCode.Conventions.MyServices)</param>
         /// <param name="logName">Optional name for logging such as `My.JsonDS`</param>
-        protected DataSource15(MyServices services, string logName = default): base(services, logName ?? "Cus.HybDs")
+        protected DataSource16(MyServices services, string logName = default): base(services, logName ?? "Cus.HybDs")
         {
             _inner = BreachExtensions.CustomDataSourceLight(services.ParentServices, this, logName ?? "Cus.HybDs");
             _inner.BreachProvideOut(GetDefault);
@@ -52,7 +50,7 @@ namespace Custom.DataSource
         }
         private readonly CustomDataSource _inner;
 
-        public ServiceKitLight15 Kit { get; }
+        public ServiceKitLight16 Kit { get; }
 
         protected virtual IEnumerable<IRawEntity> GetDefault() => new List<IRawEntity>();
 
