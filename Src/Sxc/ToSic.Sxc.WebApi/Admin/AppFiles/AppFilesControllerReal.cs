@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Paths;
 using ToSic.Eav.Context;
@@ -85,7 +86,7 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             };
             var wrapLog = Log.Fn<bool>($"create a#{assetFromTemplateDto.AppId}, path:{assetFromTemplateDto.Path}, global:{assetFromTemplateDto.Global}, key:{assetFromTemplateDto.TemplateKey}");
 
-            assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
+            EnsureRequiredFolder(assetFromTemplateDto);
 
             // ensure all .cshtml start with "_"
             // 2022-12-15 2dm - disabled, as we don't require this any more #2963
@@ -97,6 +98,20 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             var body = GetTemplateContent(assetFromTemplateDto);
 
             return wrapLog.Return(assetEditor.Create(body), "Created");
+        }
+
+        private static void EnsureRequiredFolder(AppFile assetFromTemplateDto)
+        {
+            assetFromTemplateDto.Path = assetFromTemplateDto.Path.Replace("/", "\\");
+
+            // ensure that DataSource is in DataSources folder
+            if (assetFromTemplateDto.TemplateKey == AssetTemplates.DataSourceHybrid.Key)
+            {
+                var directoryName = Path.GetDirectoryName(assetFromTemplateDto.Path) ?? string.Empty;
+                var fileName = Path.GetFileName(assetFromTemplateDto.Path) ?? string.Empty;
+                if (!directoryName.StartsWith(AssetTemplates.DataSourceHybrid.Folder) && !directoryName.Contains(AssetTemplates.DataSourceHybrid.Folder))
+                    assetFromTemplateDto.Path = Path.Combine(AssetTemplates.DataSourceHybrid.Folder, fileName);
+            }
         }
 
         /// <summary>
@@ -114,6 +129,8 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
             var defId = AssetTemplates.RazorHybrid.Key;
             if (purpose.Equals(AssetTemplates.ForApi, InvariantCultureIgnoreCase))
                 defId = AssetTemplates.ApiHybrid.Key;
+            if (purpose.Equals(AssetTemplates.ForDataSource, InvariantCultureIgnoreCase))
+                defId = AssetTemplates.DataSourceHybrid.Key;
             if (purpose.Equals(AssetTemplates.ForSearch, InvariantCultureIgnoreCase))
                 defId = AssetTemplates.DnnSearch.Key;
 
@@ -171,6 +188,8 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
                     Global = b,
                     TemplateKey = templateKey,
                 };
+
+                EnsureRequiredFolder(assetFromTemplateDto);
 
                 // ensure all .cshtml start with "_"
                 // 2022-12-15 2dm - disabled, as we don't require this any more #2963
