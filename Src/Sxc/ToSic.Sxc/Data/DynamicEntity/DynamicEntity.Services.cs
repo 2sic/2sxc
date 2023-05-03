@@ -1,10 +1,13 @@
-﻿using ToSic.Eav.Data;
+﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Services;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
 
 namespace ToSic.Sxc.Data
@@ -29,12 +32,14 @@ namespace ToSic.Sxc.Data
             }
 
             internal MyServices Init(IBlock blockOrNull, string[] dimensions, ILog log,
-                int compatibility = Constants.CompatibilityLevel10)
+                int compatibility = Constants.CompatibilityLevel10,
+                Func<ServiceKit14> kit = null)
             {
                 Dimensions = dimensions;
                 LogOrNull = log;
                 CompatibilityLevel = compatibility;
                 BlockOrNull = blockOrNull;
+                _getKit = kit;
                 return this;
             }
 
@@ -62,6 +67,10 @@ namespace ToSic.Sxc.Data
 
             internal IRenderService RenderService => _renderServiceGenerator.New();
             private readonly Generator<IRenderService> _renderServiceGenerator;
+
+            internal ServiceKit14 Kit => _kit.Get(() => _getKit?.Invoke());
+            private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
+            private Func<ServiceKit14> _getKit;
         }
     }
 }
