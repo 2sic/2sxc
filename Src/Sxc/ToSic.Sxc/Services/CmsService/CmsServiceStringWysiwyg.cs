@@ -51,15 +51,23 @@ namespace ToSic.Sxc.Services.CmsService
 
         #endregion
 
+        /// <summary>
+        /// The container Class - must usually be assigned, so that CSS inside it works
+        /// </summary>
         internal const string WysiwygContainerClass = "wysiwyg-container";
-        internal const string WysiwygDebugClass = "wysiwyg-debug";
-        private const string WysiwygCssPrefix = "wysiwyg";
 
-        internal CmsProcessed Process() => Log.Func(l =>
+        /// <summary>
+        /// Debug class to show debug borders etc. with CSS
+        /// </summary>
+        internal const string WysiwygDebugClass = "wysiwyg-debug";
+        private const string WysiwygCssPrefix = "wysiwyg";  // not used ATM
+
+        internal CmsProcessed Process()
         {
+            var l = Log.Fn<CmsProcessed>();
             var html = Field.Raw as string;
             if (string.IsNullOrWhiteSpace(html))
-                return (new CmsProcessed(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");
+                return l.Return(new CmsProcessed(false, null, null), "no html, treat as unknown, return null to let parent do wrapping with original");
 
             // 1. We got HTML, so first we must ensure the feature is activated
             ServiceKit.Page.Activate(BuiltInFeatures.CmsWysiwyg.NameId);
@@ -75,52 +83,53 @@ namespace ToSic.Sxc.Services.CmsService
             // and check if we have an img tags with data-cmsid="file:..." attributes
             var imgTags = RegexUtil.ImagesDetection.Value.Matches(html);
             if (imgTags.Count == 0)
-                return (new CmsProcessed(false, html, classes), "can't find img tags with data-cmsid, return HTML so classes are added");
+                return l.Return(new CmsProcessed(true, html, classes), "can't find img tags with data-cmsid, done");
+            l.A($"Found {imgTags.Count} images to process");
 
             foreach (var imgTag in imgTags)
             {
                 var originalImgTag = imgTag.ToString();
 
-                var parts = _imageExtractor.ExtractProperties(originalImgTag);
+                var imgProps = _imageExtractor.ExtractProperties(originalImgTag);
 
                 // use the IImageService to create Picture tags for it
-                var picture = ServiceKit.Image.Picture(link: parts.src, settings: ImageSettings ?? "Wysiwyg", factor: parts.factor, width: parts.width, imgAlt: parts.imgAlt,
-                    imgClass: parts.imgClasses);
+                var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: ImageSettings ?? "Wysiwyg", factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,
+                    imgClass: imgProps.ImgClasses);
 
                 // re-attach an alt-attribute, class etc. from the original if it had it
                 // TODO: @2DM - this could fail because of fluid API - picture.img isn't updated
-                var newImg = parts.otherAttributes.Aggregate(picture.Img, (img, attr) => img.Attr(attr.Key, attr.Value));
+                var newImg = imgProps.OtherAttributes.Aggregate(picture.Img, (img, attr) => img.Attr(attr.Key, attr.Value));
 
                 // replace the old img tag with the new one
-                html = html.Replace(originalImgTag, picture.Picture.Class(parts.picClasses).ToString());
+                html = html.Replace(originalImgTag, picture.Picture.Class(imgProps.PicClasses).ToString());
             }
 
             // reconstruct the original html and return wrapped in the realContainer
-            return (new CmsProcessed(true, html, classes), "wysiwyg changed");
-        });
+            return l.Return(new CmsProcessed(true, html, classes), "wysiwyg changed with images");
+        }
 
-        private string ProcessInnerContent(string html) => Log.Func(() =>
+        private string ProcessInnerContent(string html) 
         {
+            var l = Log.Fn<string>();
             // Sort attributes in the order they will be in
             var sortedFields = ContentType.Attributes.OrderBy(a => a.SortOrder).ToList();
             var index = sortedFields.IndexOf(Attribute);
             if (index == -1 || sortedFields.Count <= index + 1)
-                return (html, "can't check next attribute for content-blocks");
+                return l.Return(html, "can't check next attribute for content-blocks");
 
             var nextField = sortedFields[index + 1];
             var nextIsEntityField = nextField.Type == ValueTypes.Entity;
             var nextInputType = nextField.InputType();
             var nextHasContentBlocks = nextInputType.EqualsInsensitive(InputTypeForContentBlocksField);
             
-            // TODO: ACTIVATE RENDER
             if (!nextIsEntityField || !nextHasContentBlocks)
-                return (html, "next field is not content-block");
+                return l.Return(html, "no inner content; next field is not content-block");
 
             html = ServiceKit.Render
                 .All(Field.Parent as DynamicEntity, field: nextField.Name, merge: html)
                 .ToString();
 
-            return (html, "ok");
-        });
+            return l.ReturnAsOk(html);
+        }
     }
 }
