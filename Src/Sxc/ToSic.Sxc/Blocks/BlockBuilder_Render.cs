@@ -3,6 +3,7 @@ using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Blocks
         {
             // Cache Result on multiple runs
             if (_result != null) return _result;
-            var wrapLog = Log.Fn<IRenderResult>(timer: true);
+            var l = Log.Fn<IRenderResult>(timer: true);
             try
             {
                 var (html, err) = RenderInternal(data);
@@ -69,18 +70,18 @@ namespace ToSic.Sxc.Blocks
             }
             catch (Exception ex)
             {
-                Log.A("Error!");
-                Log.Ex(ex);
+                l.A("Error!");
+                l.Ex(ex);
             }
 
-            return wrapLog.Return(_result);
+            return l.Return(_result);
         }
 
         private IRenderResult _result;
 
         private (string Html, bool Error) RenderInternal(object data)
         {
-            var wrapLog = Log.Fn<(string, bool)>();
+            var l = Log.Fn<(string, bool)>();
 
             try
             {
@@ -173,11 +174,11 @@ namespace ToSic.Sxc.Blocks
 
                 #endregion
 
-                return wrapLog.Return((result, err));
+                return l.Return((result, err));
             }
             catch (Exception ex)
             {
-                return wrapLog.Return((RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true), "error");
+                return l.Return((RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true), "error");
             }
         }
 
@@ -207,15 +208,21 @@ namespace ToSic.Sxc.Blocks
         /// <summary>
         /// license ok state
         /// </summary>
-        protected bool LicenseOk => _licenseOk.Get(() => Services.LicenseService.Value.HaveValidLicense);
+        protected bool AnyLicenseOk => _licenseOk.Get(() => Services.LicenseService.Value.HaveValidLicense);
         private readonly GetOnce<bool> _licenseOk = new GetOnce<bool>();
 
         private string GenerateWarningMsgIfLicenseNotOk()
         {
-            if (LicenseOk) return null;
+            if (AnyLicenseOk) return null;
             
             Log.A("none of the licenses are valid");
-            var result = RenderingHelper.DesignWarningForSuperUserOnly("Registration is Invalid. Some features may be disabled because of this. Please reactivate the registration in Apps Management.", false, encodeMessage: false); // don't encode, as it contains special links
+            var warningLink = Tag.A("r.2sxc.org/license-warning").Href("https://r.2sxc.org/license-warning");
+            var appsManagementLink = Tag.A("System-Management").Href("#").On("click", "$2sxc(this).cms.run({ action: 'system' })");
+            var warningMsg = "Registration not valid so some features may be disabled. " +
+                             $"Please re-register in {appsManagementLink}. " +
+                             "<br>" +
+                             $"This is common after a major upgrade. See {warningLink}.";
+            var result = RenderingHelper.DesignWarningForSuperUserOnly(warningMsg, false, encodeMessage: false); // don't encode, as it contains special links
             return result;
         }
 
@@ -226,13 +233,13 @@ namespace ToSic.Sxc.Blocks
         /// <returns></returns>
         public IEngine GetEngine()
         {
-            var wrapLog = Log.Fn<IEngine>(timer: true);
-            if (_engine != null) return wrapLog.Return(_engine, "cached");
+            var l = Log.Fn<IEngine>(timer: true);
+            if (_engine != null) return l.Return(_engine, "cached");
             // edge case: view hasn't been built/configured yet, so no engine to find/attach
-            if (Block.View == null) return wrapLog.ReturnNull("no view");
+            if (Block.View == null) return l.ReturnNull("no view");
             _engine = Services.EngineFactory.CreateEngine(Block.View);
             _engine.Init(Block);
-            return wrapLog.Return(_engine, "created");
+            return l.Return(_engine, "created");
         }
         private IEngine _engine;
 

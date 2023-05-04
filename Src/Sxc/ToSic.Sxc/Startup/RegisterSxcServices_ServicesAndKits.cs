@@ -61,7 +61,7 @@ namespace ToSic.Sxc.Startup
             // v14 Kits
             services.TryAddTransient<ServiceKit>();
             services.TryAddTransient<ServiceKit14>();
-            services.TryAddTransient<ServiceKitLight15>();
+            services.TryAddTransient<ServiceKitLight16>();
 
             // WIP v14
             services.TryAddTransient<IAdamService, AdamService>();
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<IDataService, DataService>();
 
             // v15 CustomDataSources - just the dependencies needed
-            services.TryAddTransient<DataSource15.MyServices>();
+            services.TryAddTransient<DataSource16.MyServices>();
 
             return services;
         }

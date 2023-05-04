@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.ImportExport.Json.V1;
 
 namespace ToSic.Sxc.WebApi.ItemLists
 {
@@ -9,5 +10,6 @@ namespace ToSic.Sxc.WebApi.ItemLists
         public Guid Guid;
         public string Title;
         public string Type;
+        public JsonType TypeWip;
     }
 }

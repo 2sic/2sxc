@@ -25,6 +25,7 @@ namespace ToSic.Sxc.Apps.Assets
 
         internal const string ForTemplate = "Template";
         internal const string ForApi = "Api";
+        internal const string ForDataSource = "DataSource";
         private const string ForDocs = "Documentation";
         public const string ForCode = "Code";
         public const string ForSearch = "Search";
@@ -49,6 +50,7 @@ namespace ToSic.Sxc.Apps.Assets
             DnnCsCode,
             CsHybrid,
             ApiHybrid,
+            DataSourceHybrid,
             Token,
             DnnSearch,
             Markdown,
@@ -67,6 +69,7 @@ namespace ToSic.Sxc.Apps.Assets
 
 
         public const string CsApiTemplateControllerName = "PleaseRenameController";
+        public const string CsDataSourceName = "PleaseRename";
 
     }
 }

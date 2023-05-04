@@ -161,8 +161,10 @@ namespace ToSic.Sxc.Dnn
             LogTimer.Done(IsError ? "⚠️" : finalMessage);
         });
 
-        private IRenderResult RenderViewAndGatherJsCssSpecs() => Log.Func(timer: true, message: $"module {ModuleId} on page {TabId}", func: () =>
+        private IRenderResult RenderViewAndGatherJsCssSpecs()
         {
+            var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
+
             var result = new RenderResult();
             TryCatchAndLogToDnn(() =>
             {
@@ -171,8 +173,8 @@ namespace ToSic.Sxc.Dnn
 
                 if (result.Errors?.Any() ?? false)
                 {
-                    var warnings = result.Errors.Select(e =>
-                        Block.BlockBuilder.RenderingHelper.DesignError(e));
+                    var warnings = result.Errors
+                        .Select(e => Block.BlockBuilder.RenderingHelper.DesignError(e));
 
                     result.Html = string.Join("", warnings) + result.Html;
                 }
@@ -181,8 +183,8 @@ namespace ToSic.Sxc.Dnn
                 return true; // dummy result
             });
 
-            return result;
-        });
+            return l.ReturnAsOk(result);
+        }
 
 
 

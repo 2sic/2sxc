@@ -182,7 +182,7 @@ namespace ToSic.Sxc.Engines
                 compatibility = Constants.CompatibilityLevel10;
             }
 
-            if (pageToInit is IDynamicCode12)
+            if (pageToInit is ICompatibleToCode12)
                 compatibility = Constants.CompatibilityLevel12;
 
             if(pageToInit is SexyContentWebPage oldPage)

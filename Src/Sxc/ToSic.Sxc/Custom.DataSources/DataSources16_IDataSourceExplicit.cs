@@ -9,7 +9,7 @@ using ToSic.Lib.Logging;
 // ReSharper disable once CheckNamespace
 namespace Custom.DataSource
 {
-    public abstract partial class DataSource15
+    public abstract partial class DataSource16
     {
         #region Explicit IDataSource Implementation
 

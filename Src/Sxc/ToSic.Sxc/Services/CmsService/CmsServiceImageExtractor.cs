@@ -15,8 +15,7 @@ namespace ToSic.Sxc.Services.CmsService
             _valueConverter = valueConverter;
         }
 
-        public (string src, string factor, string imgAlt, string imgClasses, string picClasses, object width, Dictionary<string, string> otherAttributes)
-    ExtractProperties(string oldImgTag)
+        internal ImageProperties ExtractProperties(string oldImgTag)
         {
             string src = null;
             string factor = null;
@@ -58,7 +57,7 @@ namespace ToSic.Sxc.Services.CmsService
                 }
             }
 
-            return (src, factor, imgAlt, imgClasses, picClasses, width, otherAttributes);
+            return new ImageProperties() {Src = src, Factor = factor, ImgAlt = imgAlt, ImgClasses = imgClasses, PicClasses = picClasses, Width = width, OtherAttributes = otherAttributes};
         }
 
         public static string GetPictureClasses(string classes)
@@ -87,6 +86,17 @@ namespace ToSic.Sxc.Services.CmsService
                 default: return numString;
             }
             //return widthMatch.Success ? $"{widthMatch.Groups["num"].Value}/{widthMatch.Groups["all"].Value}" : null;
+        }
+
+        internal class ImageProperties
+        {
+            public string Src;
+            public string Factor;
+            public string ImgAlt;
+            public string ImgClasses;
+            public string PicClasses;
+            public object Width;
+            public Dictionary<string, string> OtherAttributes;
         }
     }
 }

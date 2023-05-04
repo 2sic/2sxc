@@ -5,8 +5,6 @@ using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
-using ToSic.Lib;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -33,7 +31,7 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
 
         internal DynamicEntity.MyServices DynamicEntityServices => _dynEntDependencies.Get(() => 
-            Services.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel));
+            Services.DynamicEntityDependencies.Value.Init(Block, CmsContext.SafeLanguagePriorityCodes(), Log, CompatibilityLevel, this.GetKit<ServiceKit14>));
         private readonly GetOnce<DynamicEntity.MyServices> _dynEntDependencies = new GetOnce<DynamicEntity.MyServices>();
 
         /// <inheritdoc />

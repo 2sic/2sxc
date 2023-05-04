@@ -30,6 +30,8 @@ namespace ToSic.Sxc.Apps.Assets
 
         public string Type { get; set; }
 
+        public string Folder { get; set; } = string.Empty;
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Body { get; set; }
 

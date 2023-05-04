@@ -82,7 +82,8 @@ namespace ToSic.Sxc.WebApi.Admin.AppFiles
 
             return _assetTemplates.GetTemplate(assetFromTemplateDto.TemplateKey)
                 .Replace(AssetTemplates.CsApiTemplateControllerName, nameWithoutExt)
-                .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt);
+                .Replace(AssetTemplates.CsCodeTemplateName, nameWithoutExt)
+                .Replace(AssetTemplates.CsDataSourceName, nameWithoutExt);
         }
 
         // 2022-12-15 2dm - disabled, as we don't require this any more #2963

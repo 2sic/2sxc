@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
+using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -113,6 +114,8 @@ namespace ToSic.Sxc.WebApi.Cms
                 Id = c?.EntityId ?? 0,
                 Guid = c?.EntityGuid ?? Guid.Empty,
                 Title = c?.GetBestTitle() ?? "",
+                Type = c?.Type.NameId,
+                TypeWip = c?.Type.NameId == null ? null : new JsonType(c)
             }).ToList();
 
             return list;

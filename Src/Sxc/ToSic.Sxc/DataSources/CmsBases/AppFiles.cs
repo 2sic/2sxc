@@ -5,7 +5,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.VisualQuery;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -26,7 +25,7 @@ namespace ToSic.Sxc.DataSources
     ///
     /// To figure out the properties returned and what they match up to, see <see cref="PageDataRaw"/> TODO
     /// </summary>
-    [PrivateApi("still wip / finishing specs etc.")]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("still wip / finishing specs etc.")]
     [VisualQuery(
         ConfigurationType = "", // TODO:
         NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",

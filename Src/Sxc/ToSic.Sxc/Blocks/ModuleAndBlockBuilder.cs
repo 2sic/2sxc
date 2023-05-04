@@ -12,7 +12,9 @@ namespace ToSic.Sxc.Blocks
 
         protected ModuleAndBlockBuilder(Generator<BlockFromModule> blockGenerator, string logPrefix): base($"{logPrefix}.BnMBld")
         {
-            _blockGenerator = blockGenerator;
+            ConnectServices(
+                _blockGenerator = blockGenerator
+            );
         }
 
         protected abstract IModule GetModuleImplementation(int pageId, int moduleId);
