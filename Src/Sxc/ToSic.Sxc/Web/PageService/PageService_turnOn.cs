@@ -1,4 +1,5 @@
-﻿using ToSic.Sxc.Web.PageFeatures;
+﻿using ToSic.Lib.Logging;
+using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.PageService
 {
@@ -10,6 +11,7 @@ namespace ToSic.Sxc.Web.PageService
             object require = default,
             object data = default)
         {
+            var l = Log.Fn<string>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
             // first activate the page feature
             Activate(BuiltInFeatures.TurnOn.NameId);
 
@@ -18,7 +20,7 @@ namespace ToSic.Sxc.Web.PageService
             _moduleService.Value.AddToMore(tag);
 
             // Then return empty string
-            return "";
+            return l.ReturnAsOk("");
         }
     }
 }

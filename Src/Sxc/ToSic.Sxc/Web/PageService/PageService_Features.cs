@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Helpers;
@@ -17,8 +18,11 @@ namespace ToSic.Sxc.Web.PageService
         private string _overrideCdnSource;
 
         /// <inheritdoc />
-        public string Activate(params string[] keys) => Log.Func(() =>
+        public string Activate(params string[] keys)
         {
+            keys = keys ?? Array.Empty<string>();
+            var l = Log.Fn<string>($"{nameof(keys)}: '{string.Join(",", keys)}'");
+
             // 1. Try to add manual resources from WebResources
             // This must happen in the IPageService which is per-module
             // The PageServiceShared cannot do this, because it doesn't have the WebResources which vary by module
@@ -26,15 +30,15 @@ namespace ToSic.Sxc.Web.PageService
                 keys = AddManualResources(keys);
 
             // 2. If any keys are left, they are probably preconfigured keys, so add them now
-            if (keys.Any())
-            {
-                var added = PageServiceShared.Activate(keys);
-                // also add to this specific module, as we need a few module-level features to activate in case...
-                _DynCodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
-            }
+            if (!keys.Any()) return l.ReturnAsOk("");
 
-            return ("", "ok");
-        });
+            l.A($"Remaining keys: {string.Join(",", keys)}");
+            var added = PageServiceShared.Activate(keys);
+            // also add to this specific module, as we need a few module-level features to activate in case...
+            _DynCodeRoot?.Block?.BlockFeatureKeys.AddRange(added);
+
+            return l.ReturnAsOk(""); // empty string, just so it can be used as `@Kit.Page.Activate(...)` and not produce anything
+        }
 
         /// <inheritdoc />
         public string Activate(
