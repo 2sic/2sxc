@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn
                 "13.00.00",
                 "15.00.00",
                 "15.02.00",
-                // TODO: ADD 16.00.00 once the real version is bigger than that
+                "16.00.00",
                 EavSystemInfo.VersionString,
             };
 
