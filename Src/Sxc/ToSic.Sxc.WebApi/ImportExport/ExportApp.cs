@@ -18,7 +18,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Eav.Run;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
@@ -92,7 +91,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         internal bool SaveDataForVersionControl(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withSiteFiles)
         {
             Log.A($"export for version control z#{zoneId}, a#{appId}, include:{includeContentGroups}, reset:{resetAppGuid}");
-            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             // Ensure feature available...
             SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
@@ -121,7 +120,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
 
         {
             Log.A($"export app z#{zoneId}, a#{appId}, incl:{includeContentGroups}, reset:{resetAppGuid}");
-            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);

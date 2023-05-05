@@ -18,7 +18,6 @@ using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Eav.WebApi.Validation;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -74,7 +73,7 @@ namespace ToSic.Sxc.WebApi.Views
         public THttpResponseType DownloadViewAsJson(int appId, int viewId)
         {
             var logCall = Log.Fn<THttpResponseType>($"{appId}, {viewId}");
-            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin, Log);
+            SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log);
             var app = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(_site.ZoneId, appId, _user, _site.ZoneId);
             var cms = _cmsManagerLazy.Value.Init(app);
             var bundle = new BundleEntityWithAssets

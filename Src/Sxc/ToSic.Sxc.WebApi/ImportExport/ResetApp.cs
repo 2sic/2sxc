@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.Apps.ImportExport.ImportHelpers;
@@ -11,7 +10,6 @@ using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Persistence.Logging;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
@@ -64,7 +62,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             Log.A($"Reset App {zoneId}/{appId}");
             var result = new ImportResultDto();
 
-            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin, Log);
+            SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log);
 
             // Ensure feature available...
             ExportApp.SyncWithSiteFilesVerifyFeaturesOrThrow(_features, withSiteFiles);
