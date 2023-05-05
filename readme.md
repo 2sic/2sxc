@@ -1,6 +1,6 @@
-<img src="https://docs.2sxc.org/assets/logos/v15/500.png" width="200px" align="right">
+<img src="https://docs.2sxc.org/assets/logos/vcurrent/500.png" width="200px" align="right">
 
-# 2sxc 15
+# 2sxc 16
 
 ## Content Management, Dynamic Data, Dynamic Code & App Engine
 
@@ -41,5 +41,5 @@ This is just one repo of 2sxc - the full software also has another ca. 3 for
 
 Older Versions
 
-* 2sxc 8 to 13 all work on DNN 7.4.2 - 9.10 or even later
-* Older versions of Oqtane - see [compatibility list](https://r.2sxc.org/oqtane-install)
+* DNN: 2sxc 8 to 13 all work on DNN 7.4.2 - 9.10 or even later
+* Oqtane: see [compatibility list](https://r.2sxc.org/oqtane-install)
