@@ -2,6 +2,7 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Catalog;
+using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
@@ -15,19 +16,25 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("not yet ready / public")]
-    public class DataService: ServiceForDynamicCode, IDataService
+    public partial class DataService: ServiceForDynamicCode, IDataService
     {
-        public DataService(LazySvc<IDataSourcesService> dataSources, LazySvc<DataSourceCatalog> catalog, LazySvc<IAppStates> appStates) : base("Sxc.DatSvc")
+        public DataService(
+            LazySvc<IDataSourcesService> dataSources,
+            LazySvc<DataSourceCatalog> catalog,
+            LazySvc<IAppStates> appStates,
+            LazySvc<QueryManager> queryManager) : base("Sxc.DatSvc")
         {
             ConnectServices(
                 _dataSources = dataSources,
                 _catalog = catalog,
-                _appStates = appStates
+                _appStates = appStates,
+                _queryManager = queryManager
             );
         }
         private readonly LazySvc<IDataSourcesService> _dataSources;
         private readonly LazySvc<DataSourceCatalog> _catalog;
         private readonly LazySvc<IAppStates> _appStates;
+        private readonly LazySvc<QueryManager> _queryManager;
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
@@ -57,7 +64,7 @@ namespace ToSic.Sxc.Services
                     appIdentity = _appIdentity;
             }
 
-            var newDs = new DataService(_dataSources, _catalog, _appStates);
+            var newDs = new DataService(_dataSources, _catalog, _appStates, _queryManager);
             if (_DynCodeRoot != null)
             {
                 newDs.ConnectToRoot(_DynCodeRoot);
@@ -70,7 +77,7 @@ namespace ToSic.Sxc.Services
             return newDs;
         }
 
-        private IDataSourceOptions SafeOptions(object options, bool identityRequired = false)
+        private IDataSourceOptions SafeOptions(object parameters, object options, bool identityRequired = false)
         {
             var l = Log.Fn<IDataSourceOptions>($"{nameof(options)}: {options}, {nameof(identityRequired)}: {identityRequired}");
             // Ensure we have a valid AppIdentity
@@ -84,6 +91,11 @@ namespace ToSic.Sxc.Services
             // Convert to a pure identity, in case the original object was much more
             appIdentity = new AppIdentity(appIdentity);
             var opts = new Converter().Create(new DataSourceOptions(appIdentity: appIdentity, lookUp: LookUpEngine, immutable: true), options);
+
+            // Check if parameters were supplied, if yes, they override any values in the existing options (16.01)
+            var values = new Converter().Values(parameters, false, true);
+            if (values != null) opts = new DataSourceOptions(opts, values: values);
+
             return l.Return(opts);
         }
 
@@ -92,42 +104,14 @@ namespace ToSic.Sxc.Services
         private Func<ILookUpEngine> _getLookup;
 
 
-        public IDataSource GetAppSource(string noParamOrder = Protector, object options = null)
+        public IDataSource GetAppSource(string noParamOrder = Protector, object parameters = default, object options = default)
         {
             var l = Log.Fn<IDataSource>($"{nameof(options)}: {options}");
-            Protect(noParamOrder, $"{nameof(options)}");
-            var fullOptions = SafeOptions(options, true);
+            Protect(noParamOrder, $"{nameof(parameters)}, {nameof(options)}");
+            var fullOptions = SafeOptions(parameters, options: options, identityRequired: true);
             var appSource = _dataSources.Value.CreateDefault(fullOptions);
             return l.Return(appSource);
         }
 
-        // IMPORTANT - this is different! from the _DynCodeRoot - as it shouldn't auto attach at all!
-        public T GetSource<T>(string noParamOrder = Protector,
-            IDataSourceLinkable attach = null, object options = null) where T : IDataSource
-        {
-            var l = Log.Fn<T>($"{nameof(attach)}: {attach}, {nameof(options)}: {options}");
-            Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
-
-            // If no in-source was provided, make sure that we create one from the current app
-            var fullOptions = SafeOptions(options);
-            var ds = _dataSources.Value.Create<T>(attach: attach, options: fullOptions);
-
-            return l.Return(ds);
-        }
-
-        public IDataSource GetSource(string noParamOrder = Protector,
-            string name = null,
-            IDataSourceLinkable attach = null,
-            object options = null)
-        {
-            var l = Log.Fn<IDataSource>($"{nameof(name)}: {name}, {nameof(attach)}: {attach}, {nameof(options)}: {options}");
-            Protect(noParamOrder, $"{nameof(attach)}, {nameof(options)}");
-            // Do this first, to ensure AppIdentity is really known/set
-            var safeOptions = SafeOptions(options);
-            var type = _catalog.Value.FindDataSourceInfo(name, safeOptions.AppIdentity.AppId)?.Type;
-
-            var ds = _dataSources.Value.Create(type, attach: attach, options: safeOptions);
-            return l.Return(ds);
-        }
     }
 }
