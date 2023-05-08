@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
-        /// <param name="options"></param>
+        /// <param name="options">Options how to build/construct the DataSource. See TODO: </param>
         /// <returns></returns>
         IDataSource GetAppSource(string noParamOrder = Protector, object parameters = default, object options = default);
 
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
-        /// <param name="options">Options how to build/construct the DataSource - especially parameters to set. See TODO: </param>
+        /// <param name="options">Options how to build/construct the DataSource. See TODO: </param>
         /// <remarks>WIP v15.07 BETA</remarks>
         /// <returns></returns>
         T GetSource<T>(string noParamOrder = Protector,
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Services
         /// <param name="name">The name of the DataSource type, which matches the file name and class in the `/DataSources/` folder.</param>
         /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
-        /// <param name="options">Options how to build/construct the DataSource - especially parameters to set. See TODO: </param>
+        /// <param name="options">Options how to build/construct the DataSource. See TODO: </param>
         /// <remarks>WIP v15.07</remarks>
         /// <returns></returns>
         IDataSource GetSource(string noParamOrder = Protector,
