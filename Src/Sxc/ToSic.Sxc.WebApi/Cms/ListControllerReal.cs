@@ -68,7 +68,9 @@ namespace ToSic.Sxc.WebApi.Cms
                 // determine versioning
                 var forceDraft = (ContextOfBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false;
                 // check field list (default to content-block fields)
-                var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
+                var fieldList = fields == null || fields == ViewParts.ContentLower
+                    ? ViewParts.ContentPair
+                    : fields.Split(',').Select(f => f.Trim()).ToArray();
                 action.Invoke(target, fieldList, forceDraft);
             });
         }
