@@ -68,5 +68,4 @@ namespace ToSic.Sxc.Oqt.Shared.Models
         public bool CspEnforced { get; set; }
         public IList<string> CspParameters { get; set; }
     }
-
 }

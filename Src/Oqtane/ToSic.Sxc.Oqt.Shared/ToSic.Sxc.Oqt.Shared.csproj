@@ -24,7 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+	  <Compile Include="..\..\Sxc\ToSic.Sxc.Shared\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+	  <!--<Compile Include="..\..\Sxc\ToSic.Sxc.Shared\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />-->
+	  <Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,9 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj" />
-    <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
+    <Folder Include="Sxc\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Shared\ToSic.Sxc.Shared.csproj" />
   </ItemGroup>
 
 </Project>

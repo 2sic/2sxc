@@ -8,6 +8,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Cms;
@@ -18,7 +19,10 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
+using OqtDebugService = ToSic.Sxc.Oqt.Server.Services.OqtDebugService;
+using OqtPageChangesSupportService = ToSic.Sxc.Oqt.Server.Services.OqtPageChangesSupportService;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
+using OqtPrerenderSupportService = ToSic.Sxc.Oqt.Server.Services.OqtPrerenderSupportService;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
@@ -42,6 +46,12 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.AddTransient<IPagePublishingGetSettings, OqtPagePublishingGetGetSettings>(); // #SwitchServicePagePublishingResolver #2749
 
             services.TryAddTransient<OqtModuleHelper>();
+
+            // v16 POC
+            services.TryAddScoped<IOqtDebugService, OqtDebugService>();
+            services.TryAddScoped<IOqtPageChangesSupportService, OqtPageChangesSupportService>();
+            //services.TryAddScoped<IOqtPageChangesService, OqtPageChangesService>();
+            services.TryAddScoped<IOqtPrerenderSupportService, OqtPrerenderSupportService>();
 
             return services;
         }

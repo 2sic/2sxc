@@ -1,24 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Oqtane.Modules;
 using Oqtane.Shared;
 using Oqtane.UI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.App;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
-using ToSic.Sxc.Web.Url;
-using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
-namespace ToSic.Sxc.Oqt.Client
+namespace ToSic.Sxc.Oqt.Client.Services
 {
-    public class OqtPageChangesHelper
+    public class OqtPageChangeService: IOqtPageChangeService, IService
     {
+        private readonly IOqtPageChangesSupportService _oqtPageChangesSupportService;
 
+        public OqtPageChangeService(IOqtPageChangesSupportService oqtPageChangesSupportService)
+        {
+            _oqtPageChangesSupportService = oqtPageChangesSupportService;
+        }
 
-        internal static async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
+        public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
         {
             var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
 
@@ -84,8 +85,9 @@ namespace ToSic.Sxc.Oqt.Client
                     "body");
         }
 
-
-        public static async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
+        public int ApplyHttpHeaders(OqtViewResultsDto result, ModuleProBase page) 
+            => _oqtPageChangesSupportService.ApplyHttpHeaders(result, page);
+        public async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
         {
             var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
 
@@ -121,8 +123,7 @@ namespace ToSic.Sxc.Oqt.Client
                 }
             }
         }
-
-        public static string UpdateProperty(string original, OqtPagePropertyChanges change, ModuleProBase page)
+        public string UpdateProperty(string original, OqtPagePropertyChanges change, ModuleProBase page)
         {
             var logPrefix = $"{nameof(UpdateProperty)}(original:{original}) - ";
 
@@ -140,7 +141,7 @@ namespace ToSic.Sxc.Oqt.Client
                 if (pos >= 0)
                 {
                     var suffixPos = pos + change.Placeholder.Length;
-                    var suffix = (suffixPos < original.Length ? original.Substring(suffixPos) : "");
+                    var suffix = suffixPos < original.Length ? original.Substring(suffixPos) : "";
                     var result2 = original.Substring(0, pos) + change.Value + suffix;
                     page?.Log($"{logPrefix}token replaced, UpdateTitle:{result2}");
                     return result2;
@@ -162,108 +163,7 @@ namespace ToSic.Sxc.Oqt.Client
             page?.Log($"{logPrefix}{change.Change}, UpdateTitle:{result3}");
             return result3;
         }
-
-        public static int ApplyHttpHeaders(OqtViewResultsDto result, LazySvc<IFeaturesService> featuresService, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
-        {
-            var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
-
-            page?.Log($"{logPrefix}stv#1 poc");
-            // Register CSP changes for applying once all modules have been prepared
-            // Note that in cached scenarios, CspEnabled is true, but it may have been turned off since
-            if (result.CspEnabled && featuresService.Value.IsEnabled(BuiltInFeatures.ContentSecurityPolicy.NameId))
-            {
-                page?.Log($"{logPrefix}Register CSP changes");
-                PageCsp(result.CspEnforced, httpContextAccessor, page).Add(result.CspParameters.Select(p => new CspParameters(UrlHelpers.ParseQueryString(p))).ToList());
-            }
-
-            var httpHeaders = result.HttpHeaders;
-
-            if (httpContextAccessor.HttpContext?.Response == null)
-            {
-                page?.Log($"{logPrefix}error, HttpResponse is null");
-                return 0;
-            }
-
-            if (httpContextAccessor.HttpContext.Response.HasStarted)
-            {
-                page?.Log($"{logPrefix}error, to late for adding http headers");
-                return 0;
-            }
-
-            if (httpHeaders?.Any() == true)
-            {
-                page?.Log($"{logPrefix}ok, no headers to add");
-                return 0;
-            }
-
-            // Register event to attach headers
-            httpContextAccessor.HttpContext.Response.OnStarting(async () =>
-            {
-                try
-                {
-                    foreach (var httpHeader in httpHeaders)
-                    {
-                        if (string.IsNullOrWhiteSpace(httpHeader.Name)) continue;
-
-                        // TODO: The CSP header can only exist once
-                        // So to do this well, we'll need to merge them in future, 
-                        // Ideally combining the existing one with any additional ones added here
-                        httpContextAccessor.HttpContext.Response.Headers[httpHeader.Name] = httpHeader.Value;
-                        page?.Log($"{logPrefix}{httpHeader.Name}={httpHeader.Value}");
-                    }
-                }
-                catch (Exception e)
-                {
-                    page?.Log($"{logPrefix}Exception: {e.Message}");
-                }
-            });
-            page?.Log($"{logPrefix}httpHeaders.Count: {httpHeaders.Count}");
-            return httpHeaders.Count;
-        }
-
-        private static CspOfPage PageCsp(bool enforced, IHttpContextAccessor httpContextAccessor, ModuleProBase page)
-        {
-            var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
-
-            var key = "2sxcPageLevelCsp";
-
-            // If it's already registered, then the add-on-sending has already been added too
-            // So we shouldn't repeat it, just return the cache which will be used later
-            if (httpContextAccessor.HttpContext.Items.ContainsKey(key))
-            {
-                var result = (CspOfPage)httpContextAccessor.HttpContext.Items[key];
-                page?.Log($"already registered {logPrefix}{key}={result}");
-                return result;
-            }
-
-            // Not yet registered. Create, and register for on-end of request
-            var pageLevelCsp = new CspOfPage();
-            httpContextAccessor.HttpContext.Items[key] = pageLevelCsp;
-
-            // Register event to attach headers once the request is done and all Apps have registered their Csp
-            if (!httpContextAccessor.HttpContext.Response.HasStarted)
-                httpContextAccessor.HttpContext.Response.OnStarting(() =>
-                {
-                    try
-                    {
-                        var headers = pageLevelCsp.CspHttpHeader();
-                        if (headers != null)
-                        {
-                            var key = pageLevelCsp.HeaderName(enforced);
-                            httpContextAccessor.HttpContext.Response.Headers[key] = headers;
-                            page?.Log($"{logPrefix}have headers {key}={headers}");
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        page?.Log($"{logPrefix}Exception: {e.Message}");
-                    }
-
-                    return Task.CompletedTask;
-                });
-            page?.Log($"not yet registered {logPrefix}{key}={pageLevelCsp}");
-            return pageLevelCsp;
-        }
+        public CspOfPage PageCsp(bool enforced, ModuleProBase page) 
+            => _oqtPageChangesSupportService.PageCsp(enforced, page);
     }
 }

@@ -128,7 +128,8 @@
     <Reference Include="ToSic.Imageflow.Dnn, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\Imageflow\Dnn\ToSic.Imageflow.Dnn.dll</HintPath>
-      <Private>False</Private><!-- this is important, otherwise it will be copied to the bin folder -->
+      <Private>False</Private>
+      <!-- this is important, otherwise it will be copied to the bin folder -->
     </Reference>
     <Reference Include="ToSic.Razor, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -140,7 +141,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
+    <Compile Include="..\..\Sxc\ToSic.Sxc.Shared\Properties\AssemblyInfoInherited.cs">
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
     <Compile Include="dist\CachedPageBase.cs">
@@ -263,6 +264,10 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj">
       <Project>{bc93efb1-d740-4617-9c90-d9167f9e4545}</Project>
       <Name>ToSic.Lib.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sxc\ToSic.Sxc.Shared\ToSic.Sxc.Shared.csproj">
+      <Project>{626db59e-c8ad-4339-b2cf-9180bd136f8b}</Project>
+      <Name>ToSic.Sxc.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToSic.Sxc.Dnn.WebApi\ToSic.Sxc.Dnn.WebApi.csproj">
       <Project>{8398fe44-7164-48cb-96cf-74ba9c270bd2}</Project>

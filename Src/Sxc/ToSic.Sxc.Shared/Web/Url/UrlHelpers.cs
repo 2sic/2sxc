@@ -36,6 +36,13 @@ namespace ToSic.Sxc.Web.Url
             return nvc;
         }
 
+        public static bool TryGetValue(NameValueCollection collection, string key, out string value)
+        {
+            value = collection[key];
+            return value != null;
+        }
+
+
         /// <summary>
         /// Converts a NameValueCollection to string.
         /// Used in link generations and especially also the <see cref="Context.Query.Parameters"/>

@@ -6,12 +6,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using ToSic.Lib.DI;
 using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.Url;
 using static System.StringComparison;
 using Runtime = Oqtane.Shared.Runtime;
@@ -23,9 +21,9 @@ namespace ToSic.Sxc.Oqt.App
     {
         #region Injected Services
 
-        [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
+        [Inject] public IOqtPageChangeService OqtPageChangeService { get; set; }
+        [Inject] public OqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
-        [Inject] public LazySvc<IFeaturesService> FeaturesService { get; set; }
 
         #endregion
 
@@ -101,11 +99,8 @@ namespace ToSic.Sxc.Oqt.App
 
         private void Csp()
         {
-            if (IsPreRendering() && ApplyCsp // executed only in prerender
-                && (HttpContextAccessor?.HttpContext?.Request?.Path.HasValue == true)
-                && !HttpContextAccessor.HttpContext.Request.Path.Value.Contains("/_blazor"))
-                if (ViewResults?.CspParameters?.Any() ?? false)
-                    OqtPageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor, this);
+            if (IsPreRendering() && ApplyCsp) // executed only in prerender
+                OqtPageChangeService.ApplyHttpHeaders(ViewResults, this);
 
             ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
         }
@@ -158,13 +153,13 @@ namespace ToSic.Sxc.Oqt.App
                 if (ViewResults.TemplateResources != null)
                 {
                     Log($"2.5: AttachScriptsAndStyles");
-                    await OqtPageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
+                    await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
                 }
 
                 if (ViewResults.PageProperties?.Any() ?? false)
                 {
                     Log($"2.6: UpdatePageProperties");
-                    await OqtPageChangesHelper.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
+                    await OqtPageChangeService.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
                 }
 
                 StateHasChanged();

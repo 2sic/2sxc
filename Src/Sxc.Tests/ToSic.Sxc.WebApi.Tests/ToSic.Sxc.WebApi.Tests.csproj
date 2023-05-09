@@ -69,7 +69,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
+    <Compile Include="..\..\Sxc\ToSic.Sxc.Shared\Properties\AssemblyInfoInherited.cs">
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
     <Compile Include="AdamTests\SecTestBasic.cs" />

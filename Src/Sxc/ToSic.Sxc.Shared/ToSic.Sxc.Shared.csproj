@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>net472;net6.0;</TargetFrameworks>
+	  <RootNamespace>ToSic.Sxc</RootNamespace>
+	  <AssemblyName>ToSic.Sxc.Shared</AssemblyName>
+	  <Deterministic>true</Deterministic>
+	  <FileAlignment>512</FileAlignment>
+	  <NoWarn>7035</NoWarn>
+	  <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
+	  <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+	  <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
+	  <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+	  <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+	  <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+	  <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+	  <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+	  <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+	  <!-- end: Don't generate... -->
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\ToSic.Sxc.Shared\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+		<Compile Include="..\ToSic.Sxc.Shared\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+		<Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+	</ItemGroup>
+
+</Project>

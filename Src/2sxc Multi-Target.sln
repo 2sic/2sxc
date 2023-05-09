@@ -113,6 +113,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dnn Tests", "Dnn Tests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Dnn.Tests", "Dnn.Tests\ToSic.Dnn.Tests\ToSic.Dnn.Tests.csproj", "{A29BB034-BAFC-4B2B-BF2B-58E1693E062C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToSic.Sxc.Shared", "Sxc\ToSic.Sxc.Shared\ToSic.Sxc.Shared.csproj", "{626DB59E-C8AD-4339-B2CF-9180BD136F8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1051,6 +1053,30 @@ Global
 		{A29BB034-BAFC-4B2B-BF2B-58E1693E062C}.Testing|Windows-x64.Build.0 = Debug|Any CPU
 		{A29BB034-BAFC-4B2B-BF2B-58E1693E062C}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
 		{A29BB034-BAFC-4B2B-BF2B-58E1693E062C}.Testing|Windows-x86.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|DNN.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|DNN.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|DNN.ActiveCfg = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|DNN.Build.0 = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|Any CPU.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|Any CPU.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|DNN.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|DNN.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|Windows-x64.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|Windows-x64.Build.0 = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|Windows-x86.ActiveCfg = Debug|Any CPU
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B}.Testing|Windows-x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1097,9 +1123,10 @@ Global
 		{BC93EFB1-D740-4617-9C90-D9167F9E4545} = {32E45183-6A02-41A2-A4D5-6CB58A6D39A9}
 		{2B1FE78B-9BB5-4B7D-9409-B2B5A3BF85A8} = {896200CD-54AF-462D-881C-0C7A43F0D6AF}
 		{A29BB034-BAFC-4B2B-BF2B-58E1693E062C} = {213B9552-34DA-492B-ABA8-E4085C57665B}
+		{626DB59E-C8AD-4339-B2CF-9180BD136F8B} = {5CD8015A-76D8-4633-8469-53B62A6C1894}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35;packages\Unity.2.1.505.0\lib\NET35
+		SolutionGuid = {705647E1-B5B1-4D94-888C-1D918095554C}
 	EndGlobalSection
 EndGlobal

@@ -5,7 +5,7 @@ using DotNetNuke.Entities.Tabs;
 using ToSic.Eav.Apps.Enums;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Cms.Publishing;
-using ToSic.Sxc.Services;
+using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 
 namespace ToSic.Sxc.Dnn.Cms
 {

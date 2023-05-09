@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.WebUtilities;
+using System.Collections.Specialized;
+using System.Web;
+using ToSic.Sxc.Web.Url;
 
 namespace ToSic.Sxc.Oqt.Client
 {
@@ -12,7 +14,7 @@ namespace ToSic.Sxc.Oqt.Client
         {
             var uri = navManager.ToAbsoluteUri(navManager.Uri);
 
-            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(key, out var valueFromQueryString))
+            if (UrlHelpers.TryGetValue(UrlHelpers.ParseQueryString(uri.Query), key, out var valueFromQueryString))
             {
                 if (typeof(T) == typeof(bool) && bool.TryParse(valueFromQueryString, out var valueAsBool))
                 {
@@ -42,5 +44,12 @@ namespace ToSic.Sxc.Oqt.Client
             value = default;
             return false;
         }
+
+        public static bool TryGetValue(NameValueCollection collection, string key, out string value)
+        {
+            value = collection[key];
+            return value != null;
+        }
+
     }
 }

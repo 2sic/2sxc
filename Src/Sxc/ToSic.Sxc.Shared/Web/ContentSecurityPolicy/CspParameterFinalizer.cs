@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
-using ToSic.Eav.Plumbing;
+//using ToSic.Eav.Plumbing;
 using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Web.ContentSecurityPolicy
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Web.ContentSecurityPolicy
             // Get the keys which should receive the all-src params
             // Note that most end with -src, but some have -src-elem or something, so we use .Contains
             var existingSrcKeys = copy.AllKeys
-                .Where(s => s.HasValue() && s.Contains(CspConstants.SuffixSrc));   
+                .Where(s => !string.IsNullOrWhiteSpace(s) && s.Contains(CspConstants.SuffixSrc));   
             foreach (var key in existingSrcKeys)
             foreach (var value in values)
                 copy.Add(key, value);
