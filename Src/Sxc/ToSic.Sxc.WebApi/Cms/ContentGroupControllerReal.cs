@@ -79,7 +79,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var wrapLog = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
             var typeNameOfField = FindTypeNameOnContentGroup(guid, part);
-            var result = _listController.Value.BuildReplaceList(guid, part, index, typeNameOfField);
+            var result = _listController.Value.GetListToReorder(guid, part, index, typeNameOfField);
             return wrapLog.Return(result);
         }
 
