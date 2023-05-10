@@ -114,60 +114,65 @@ namespace ToSic.Sxc.Oqt.App
             Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
 
             // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-            if (IsSafeToRunJs && NewDataArrived && PageState.Runtime == Runtime.Server && ViewResults != null)
+            if (IsSafeToRunJs && NewDataArrived && /*PageState.Runtime == Runtime.Server &&*/ ViewResults != null)
             {
                 Log($"2.1: NewDataArrived");
-                NewDataArrived = false;
-
-
-                #region 2sxc Standard Assets and Header
-
-                // Add Context-Meta first, because it should be available when $2sxc loads
-                if (ViewResults.SxcContextMetaName != null)
-                {
-                    Log($"2.2: RenderUri:{RenderedUri}");
-                    await SxcInterop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName, ViewResults.SxcContextMetaContents/*, "id"*/); // Oqtane.client 3.3.1
-                }
-
-                // Lets load all 2sxc js dependencies (js / styles)
-                // Not done the official Oqtane way, because that asks for the scripts before
-                // the razor component reported what it needs
-                if (ViewResults.SxcScripts != null)
-                    foreach (var resource in ViewResults.SxcScripts)
-                    {
-                        Log($"2.3: IncludeScript:{resource}");
-                        await SxcInterop.IncludeScript("", resource, "", "", "", "head");
-                    }
-
-                if (ViewResults.SxcStyles != null)
-                    foreach (var style in ViewResults.SxcStyles)
-                    {
-                        Log($"2.4: IncludeCss:{style}");
-                        await SxcInterop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
-                    }
-
-                #endregion
-
-                #region External resources requested by the razor template
-
-                if (ViewResults.TemplateResources != null)
-                {
-                    Log($"2.5: AttachScriptsAndStyles");
-                    await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
-                }
-
-                if (ViewResults.PageProperties?.Any() ?? false)
-                {
-                    Log($"2.6: UpdatePageProperties");
-                    await OqtPageChangeService.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
-                }
-
-                StateHasChanged();
-
-                #endregion
+                await RenderAssets();
             }
             
             Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
+        }
+
+        private async Task RenderAssets()
+        {
+            NewDataArrived = false;
+
+            #region 2sxc Standard Assets and Header
+
+            // Add Context-Meta first, because it should be available when $2sxc loads
+            if (ViewResults.SxcContextMetaName != null)
+            {
+                Log($"2.2: RenderUri:{RenderedUri}");
+                await SxcInterop.IncludeMeta("sxc-context-meta", "name", ViewResults.SxcContextMetaName,
+                    ViewResults.SxcContextMetaContents /*, "id"*/); // Oqtane.client 3.3.1
+            }
+
+            // Lets load all 2sxc js dependencies (js / styles)
+            // Not done the official Oqtane way, because that asks for the scripts before
+            // the razor component reported what it needs
+            if (ViewResults.SxcScripts != null)
+                foreach (var resource in ViewResults.SxcScripts)
+                {
+                    Log($"2.3: IncludeScript:{resource}");
+                    await SxcInterop.IncludeScript("", resource, "", "", "", "head");
+                }
+
+            if (ViewResults.SxcStyles != null)
+                foreach (var style in ViewResults.SxcStyles)
+                {
+                    Log($"2.4: IncludeCss:{style}");
+                    await SxcInterop.IncludeLink("", "stylesheet", style, "text/css", "", "", "");
+                }
+
+            #endregion
+
+            #region External resources requested by the razor template
+
+            if (ViewResults.TemplateResources != null)
+            {
+                Log($"2.5: AttachScriptsAndStyles");
+                await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
+            }
+
+            if (ViewResults.PageProperties?.Any() ?? false)
+            {
+                Log($"2.6: UpdatePageProperties");
+                await OqtPageChangeService.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
+            }
+
+            StateHasChanged();
+
+            #endregion
         }
     }
 }

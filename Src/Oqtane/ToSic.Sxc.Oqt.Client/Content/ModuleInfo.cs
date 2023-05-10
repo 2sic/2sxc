@@ -62,9 +62,8 @@ namespace ToSic.Sxc.Oqt.Content
             // DefaultAction = "",
             // SettingsType = "",
             PackageName = OqtConstants.PackageName, // "ToSic.Sxc.Oqtane"
-            Runtimes = "Server,WebAssembly",
+            Runtimes = "", // string.Empty is same as ALL ""Server,WebAssembly",
             Template = "", // "External" (not "internal") "Default Module Template"
-            
         };
 
         public ModuleDefinition ModuleDefinition => BuildModuleDefinition("Content", "Text/Image layouts using structured content");
