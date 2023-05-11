@@ -24,10 +24,6 @@ namespace ToSic.Sxc.Engines
     // ReSharper disable once UnusedMember.Global
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
-        //private RazorComponentBase _webpage;
-        //private readonly object _initLock = new object();
-        //private bool _webpageInitialized = false;
-
         #region Constructor / DI
 
         public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory) : base(helpers) =>
@@ -39,7 +35,6 @@ namespace ToSic.Sxc.Engines
         #endregion
 
 
-        // 2022-03-03 2dm trying to not fix the problem yet, but see more logging
         [PrivateApi]
         protected RazorComponentBase Webpage
         {
@@ -56,44 +51,22 @@ namespace ToSic.Sxc.Engines
             
         }
         private RazorComponentBase _webpage;
-        //protected RazorComponentBase Webpage
-        //{
-        //    get
-        //    {
-        //        if (_webpage != null) return _webpage;
-        //        // if Webpage is not initialized, we need to wait on its initialization.
-        //        Init();
-        //        return _webpage; // it will still return null when TemplatePath is empty
-        //    }
-        //    set => _webpage = value;
-        //}
 
         /// <inheritdoc />
         [PrivateApi]
         protected override void Init()
         {
-            // 2022-03-03 2dm trying to not fix the problem yet, but see more logging
-            //if (_webpageInitialized) return;
             try
             {
-                // 2022-03-03 2dm trying to not fix the problem yet, but see more logging
                 InitWebpage();
-
-                // 2022-03-03 STV code
-                //// ensure thread safe one-time initialization with lock (blocking)
-                //lock (_initLock)
-                //{
-                //    if (_webpageInitialized) return;
-                //    InitWebpage();
-                //    if (!string.IsNullOrEmpty(TemplatePath)) _webpageInitialized = true;
-                //}
             }
             // Catch web.config Error on DNNs upgraded to 7
             catch (ConfigurationErrorsException exc)
             {
-                var e = new Exception("Configuration Error: Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
-                Log.Ex(e);
-                throw e;
+                var e = new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc);
+                //old till 2023-05-11 " Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
+                // see https://web.archive.org/web/20131201093234/http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7
+                throw Log.Ex(e);
             }
         }
 
@@ -118,7 +91,8 @@ namespace ToSic.Sxc.Engines
 
             try
             {
-                Webpage.ExecutePageHierarchy(new WebPageContext(HttpContext, Webpage, data), writer, Webpage);
+                var page = Webpage; // access the property once only
+                page.ExecutePageHierarchy(new WebPageContext(HttpContext, page, data), writer, page);
             }
             catch (Exception maybeIEntityCast)
             {
