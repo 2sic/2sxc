@@ -30,6 +30,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             object parameters = default, 
             object prefill = default,
             object filter = default,
+            string fields = default,
             ITweakButton initialButton = default,
             [CallerMemberName] string methodName = default)
         {
@@ -38,6 +39,8 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             var paramsString = Utils.PrepareParams(parameters, tweaks);
             var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(paramsString, prefill, PrefixPrefill);
+            if (fields != default)
+                parsWithPrefill = Utils.Filter2Url.SerializeWithChild(parsWithPrefill, new { fields });
             return new CleanedParams
             {
                 Operation = ToolbarRuleOperation.Pick(operation, defOp),
@@ -88,13 +91,14 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Edit(object target = null,
             string noParamOrder = Protector,
             Func<ITweakButton, ITweakButton> tweak = default,
+            string fields = default,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null)
         {
             Protect(noParamOrder, "See docs");
-            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill, fields: fields);
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
         }
 

@@ -39,6 +39,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <param name="target">_optional_ entity-like target, see [target guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Target)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v15.07)</param>
+        /// <param name="fields">new feature, still WIP v16.0x</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="prefill">_optional_ prefill for the edit-UI, see [prefill guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Prefill)</param>
@@ -48,10 +49,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             Func<ITweakButton, ITweakButton> tweak = default,
-            object ui = null,
-            object parameters = null, 
-            object prefill = null,
-            string operation = null
+            string fields = default,
+            object ui = default,
+            object parameters = default, 
+            object prefill = default,
+            string operation = default
         );
 
         /// <summary>
