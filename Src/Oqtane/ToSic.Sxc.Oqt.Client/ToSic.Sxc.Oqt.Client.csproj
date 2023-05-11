@@ -19,6 +19,13 @@
 
   <ItemGroup>
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+    <!--<Compile Include="..\..\Sxc\ToSic.Sxc\Web\Url\UrlHelpers.cs" Link="Shared\UrlHelpers2.cs" />
+	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\UrlParts.cs" Link="Shared\UrlParts2.cs" />
+	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspOfPage.cs" Link="Shared\CspOfPage2.cs" />
+	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspParameters.cs" Link="Shared\CspParameters2.cs" />
+	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspConstants.cs" Link="Shared\CspConstants2.cs" />
+	<Compile Include="..\..\Sxc\ToSic.Sxc\Web\ContentSecurityPolicy\CspParameterFinalizer.cs" Link="Shared\CspParameterFinalizer2.cs" />
+	<Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\EavSystemInfo.cs" Link="Shared\EavSystemInfo.cs" />-->
   </ItemGroup>
 
   <ItemGroup>
@@ -28,13 +35,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.3" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.3" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
-    <PackageReference Include="Oqtane.Client" Version="3.4.3" />
-    <PackageReference Include="Oqtane.Shared" Version="3.4.3" />
+    <!--<PackageReference Include="Oqtane.Client" Version="3.4.3" />
+    <PackageReference Include="Oqtane.Shared" Version="3.4.3" />-->
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
-    <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Client\Oqtane.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 
