@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Web.JsContext
         public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf") => _jsLangCtx = jsLangCtx;
         private readonly JsContextLanguage _jsLangCtx;
 
-        public JsContextAll GetJsContext(string systemRootUrl, IBlock block)
+        public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode)
         {
             var l = Log.Fn<JsContextAll>();
             var ctx = block.Context;
@@ -56,7 +56,7 @@ namespace ToSic.Sxc.Web.JsContext
             l.A($"{nameof(autoToolbar)}: {autoToolbar}");
             Ui = new UiDto(autoToolbar);
 
-            error = new ErrorDto(block);
+            error = new ErrorDto(block, errorCode);
             return l.Return(this);
         }
     }

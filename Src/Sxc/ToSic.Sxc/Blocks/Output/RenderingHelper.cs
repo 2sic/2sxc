@@ -2,7 +2,6 @@
 using System.Text.Json;
 using System.Web;
 using ToSic.Eav.Apps.Environment;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
@@ -10,6 +9,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.JsContext;
+using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
 namespace ToSic.Sxc.Blocks.Output
 {
@@ -54,12 +54,13 @@ namespace ToSic.Sxc.Blocks.Output
             int contentBlockId = 0,
             bool editContext = false,
             string tag = Constants.DefaultContextTag,
-            // bool autoToolbar = false,
-            bool addLineBreaks = true)
+            bool addLineBreaks = true,
+            string errorCode = default
+            )
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(WrapInContext), $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
 
-            var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext);
+            var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, errorCode);
 
             var lineBreaks = addLineBreaks ? "\n" : "";
 
@@ -68,7 +69,7 @@ namespace ToSic.Sxc.Blocks.Output
                    $"{lineBreaks}</{tag}>";
         }
 
-        public string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos)
+        private string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, string errorCode)
         {
             var contextAttribs = "";
             if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
@@ -76,7 +77,7 @@ namespace ToSic.Sxc.Blocks.Output
             if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
             // optionally add editing infos
-            if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", UiContextInfos());
+            if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", UiContextInfos(errorCode));
             return contextAttribs;
         }
 
@@ -90,7 +91,7 @@ namespace ToSic.Sxc.Blocks.Output
             if (!Context.User.IsSystemAdmin)
                 msg = visitorAlternateError ?? DefaultVisitorError;
 
-            return DesignMessage(msg, addContextWrapper, encodeMessage);
+            return DesignMessage(msg, addContextWrapper, encodeMessage, true, ErrorGeneral);
         }
         public string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false, bool encodeMessage = true)
         {
@@ -99,20 +100,20 @@ namespace ToSic.Sxc.Blocks.Output
             if (!Context.User.IsSystemAdmin)
                 msgSuperUser = msgVisitors ?? DefaultVisitorError;
 
-            return DesignMessage(msgSuperUser, addContextWrapper, encodeMessage);
+            return DesignMessage(msgSuperUser, addContextWrapper, encodeMessage, true, ErrorGeneral);
         }
 
-        private string DesignMessage(string msg, bool addContextWrapper, bool encodeMessage)
+        private string DesignMessage(string msg, bool addContextWrapper, bool encodeMessage, bool isError, string errorCode)
         {
             if (encodeMessage)
                 msg = HttpUtility.HtmlEncode(msg);
 
-            // add dnn-error-div-wrapper
-            msg = $"<div class='dnnFormMessage dnnFormWarning'>{msg}</div>";
+            // add dnn-error-div-wrapper together with a special HTML marker so errors can handled better
+            msg = $"<div class='dnnFormMessage dnnFormWarning'>{ErrorHtmlMarker}{msg}</div>";
 
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
             if (addContextWrapper)
-                msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id);
+                msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id, errorCode: errorCode);
 
             return msg;
         }
@@ -120,10 +121,11 @@ namespace ToSic.Sxc.Blocks.Output
         public string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true)
         {
             if (!Context.User.IsSystemAdmin) return null;
-            return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage);
+            return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage, false, null);
         }
 
-        public string UiContextInfos() => JsonSerializer.Serialize(_jsContextAllGen.New().GetJsContext(AppRootPath, Block), JsonOptions.SafeJsonForHtmlAttributes);
+        public string UiContextInfos(string errorCode) 
+            => JsonSerializer.Serialize(_jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode), JsonOptions.SafeJsonForHtmlAttributes);
 
     }
 }

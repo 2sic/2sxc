@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Blocks.Output
             // Pre-Flush Assets, so each call gets its own list
             Assets = new List<IClientAsset>();
             var (template, include2SxcJs) = ExtractFromHtml(html, settings);
-            return new RenderEngineResult(template, include2SxcJs, Assets);
+            return new RenderEngineResult(template, include2SxcJs, Assets, null);
         }
 
         protected abstract (string Template, bool Include2sxcJs) ExtractFromHtml(string html, ClientAssetsExtractSettings settings);
