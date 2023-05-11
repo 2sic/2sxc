@@ -1,7 +1,7 @@
-using System.Linq;
 using Oqtane.Models;
 using Oqtane.Modules;
-using ToSic.Eav;
+using System.Linq;
+using ToSic.Sxc.Oqt.Client.Shared;
 using ToSic.Sxc.Oqt.Shared;
 
 // ReSharper disable once CheckNamespace
@@ -48,12 +48,12 @@ namespace ToSic.Sxc.Oqt.Content
             Name = name,
             Description = description,
             Categories = "Common",
-            Version = "16.00.01", // Must be duplicated here, so Oqtane Client doesn't depend on server DLLs
+            Version = EavSystemInfo.VersionString, // Must be duplicated here, so Oqtane Client doesn't depend on server DLLs
             Owner = "2sic Internet Solutions",
             Url = "https://2sxc.org",
             Contact = "@iJungleboy",
             License = "MIT",
-            Dependencies = "ToSic.Sxc.Oqtane.Shared",
+            Dependencies = "ToSic.Sxc.Oqtane.Shared,ToSic.Lib.Core",
             // PermissionNames = "",
             ServerManagerType = "ToSic.Sxc.Oqt.Server.Installation.SxcManager, ToSic.Sxc.Oqtane.Server",
             // ControlTypeRoutes = "",
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Oqt.Content
             // DefaultAction = "",
             // SettingsType = "",
             PackageName = OqtConstants.PackageName, // "ToSic.Sxc.Oqtane"
-            //Runtimes = "Server",
+            Runtimes = "", // string.Empty enables all runtimes
             Template = "", // "External" (not "internal") "Default Module Template"
 
         };

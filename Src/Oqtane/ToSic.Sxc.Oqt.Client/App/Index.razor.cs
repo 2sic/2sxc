@@ -6,15 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using ToSic.Lib.DI;
-using ToSic.Sxc.Oqt.Client;
 using ToSic.Sxc.Oqt.Client.Services;
+using ToSic.Sxc.Oqt.Client.Shared;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Oqt.Shared.Models;
-using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.Url;
+
 using static System.StringComparison;
-using Runtime = Oqtane.Shared.Runtime;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
@@ -25,7 +22,8 @@ namespace ToSic.Sxc.Oqt.App
 
         [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
-        [Inject] public LazySvc<IFeaturesService> FeaturesService { get; set; }
+        [Inject] public IOqtPageChangeService OqtPageChangeService { get; set; }
+        
 
         #endregion
 
@@ -51,7 +49,7 @@ namespace ToSic.Sxc.Oqt.App
         {
             await base.OnParametersSetAsync();
 
-            Log($"1: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            Log($"1: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
 
             // Call 2sxc engine only when is necessary to render control.
             if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
@@ -67,7 +65,7 @@ namespace ToSic.Sxc.Oqt.App
                 Log($"1.3: Csp");
             }
             
-            Log($"1 end: OnParametersSetAsync(Debug:{Debug},NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
         }
 
         /// <summary>
@@ -101,11 +99,8 @@ namespace ToSic.Sxc.Oqt.App
 
         private void Csp()
         {
-            if (IsPreRendering() && ApplyCsp // executed only in prerender
-                && (HttpContextAccessor?.HttpContext?.Request?.Path.HasValue == true)
-                && !HttpContextAccessor.HttpContext.Request.Path.Value.Contains("/_blazor"))
-                if (ViewResults?.CspParameters?.Any() ?? false)
-                    OqtPageChangesHelper.ApplyHttpHeaders(ViewResults, FeaturesService, HttpContextAccessor, this);
+            if (IsPreRendering() && ApplyCsp) // executed only in prerender
+                OqtPageChangeService.ApplyHttpHeaders(ViewResults, this);
 
             ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
         }
@@ -119,7 +114,7 @@ namespace ToSic.Sxc.Oqt.App
             Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
 
             // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-            if (IsSafeToRunJs && NewDataArrived && PageState.Runtime == Runtime.Server && ViewResults != null)
+            if (IsSafeToRunJs && NewDataArrived && ViewResults != null)
             {
                 Log($"2.1: NewDataArrived");
                 NewDataArrived = false;
@@ -158,13 +153,13 @@ namespace ToSic.Sxc.Oqt.App
                 if (ViewResults.TemplateResources != null)
                 {
                     Log($"2.5: AttachScriptsAndStyles");
-                    await OqtPageChangesHelper.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
+                    await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
                 }
 
                 if (ViewResults.PageProperties?.Any() ?? false)
                 {
                     Log($"2.6: UpdatePageProperties");
-                    await OqtPageChangesHelper.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
+                    await OqtPageChangeService.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
                 }
 
                 StateHasChanged();

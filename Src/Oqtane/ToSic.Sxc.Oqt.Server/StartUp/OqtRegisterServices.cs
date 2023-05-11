@@ -17,6 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddOqtaneLookUpsAndSources()               // Lookups / LookUp Engine
                 .AddSxcOqtIntegratedServices()              // Oqtane Integration like Logging & Send-Mail
                 .AddOqtaneInstallation()                    // Installation-complete checks and similar
+                .AddOqtaneBlazorWebAssemblySupport()        // Oqtane client Blazor WebAssembly support on Oqtane server
                 .AddOqtaneApiPlumbingAndHelpers()           // Things to make Oqtane APIs work
                 .AddSxcOqtApiParts()                        // Overrides etc. for Sxc Objects in the APIs
                 .AddSxcOqtDynCodeAndViews()                 // Stuff so the Dyn-Code and views work
