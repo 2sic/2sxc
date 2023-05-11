@@ -44,17 +44,19 @@ namespace ToSic.Sxc.Services
 
             // Do this first, to ensure AppIdentity is really known/set
             var safeOptions = SafeOptions(parameters, options: options);
+            var appId = safeOptions.AppIdentity.AppId;
 
-            var dsInfo = _catalog.Value.FindDataSourceInfo(name, safeOptions.AppIdentity.AppId);
+            var dsInfo = _catalog.Value.FindDataSourceInfo(name, appId);
             if (dsInfo == null)
                 throw new ArgumentException($"Tried to create DataSource with name '{name}' but it was not found. " +
                                             $"Either you a) mis-typed it, " +
-                                            $"b) it's not located in the 'DataSources' folder, " +
+                                            $"b) it's not located in the 'DataSources' folder of the app '{appId}', " +
                                             $"c) the class name is not 'public class {name}', " +
                                             $"d) the file name is not 'DataSources/{name}.cs'. ");
 
             if (dsInfo.ErrorOrNull != null && showErrors)
                 throw l.Ex(new Exception($"{ErrorIntro(name, "compile error")}\n" +
+                                         $"It could also be that the file name and class names don't match. \n" +
                                          $"Title: '{dsInfo.ErrorOrNull.Title}'; \n" +
                                          $"Message: {dsInfo.ErrorOrNull.Message}; \n" +
                                          $"Debug Info: {ErrorDebugMessage}"));
