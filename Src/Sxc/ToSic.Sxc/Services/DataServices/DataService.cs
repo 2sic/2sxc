@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Context;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Catalog;
 using ToSic.Eav.DataSource.Query;
@@ -18,12 +19,20 @@ namespace ToSic.Sxc.Services
     [PrivateApi("not yet ready / public")]
     public partial class DataService: ServiceForDynamicCode, IDataService
     {
+        private readonly LazySvc<IDataSourcesService> _dataSources;
+        private readonly LazySvc<DataSourceCatalog> _catalog;
+        private readonly LazySvc<IAppStates> _appStates;
+        private readonly LazySvc<QueryManager> _queryManager;
+        private readonly IUser _user;
+
         public DataService(
             LazySvc<IDataSourcesService> dataSources,
             LazySvc<DataSourceCatalog> catalog,
             LazySvc<IAppStates> appStates,
-            LazySvc<QueryManager> queryManager) : base("Sxc.DatSvc")
+            LazySvc<QueryManager> queryManager,
+            IUser user) : base("Sxc.DatSvc")
         {
+            _user = user;
             ConnectServices(
                 _dataSources = dataSources,
                 _catalog = catalog,
@@ -31,10 +40,6 @@ namespace ToSic.Sxc.Services
                 _queryManager = queryManager
             );
         }
-        private readonly LazySvc<IDataSourcesService> _dataSources;
-        private readonly LazySvc<DataSourceCatalog> _catalog;
-        private readonly LazySvc<IAppStates> _appStates;
-        private readonly LazySvc<QueryManager> _queryManager;
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
@@ -56,7 +61,7 @@ namespace ToSic.Sxc.Services
             // Make sure we have an AppIdentity if possible - or reuse the existing, though it could be null
             if (appIdentity == default)
             {
-                if (appId != 0)
+                if (appId != default)
                     appIdentity = zoneId == default
                         ? _appStates.Value.IdentityOfApp(appId)
                         : new AppIdentity(zoneId, appId);
@@ -64,7 +69,7 @@ namespace ToSic.Sxc.Services
                     appIdentity = _appIdentity;
             }
 
-            var newDs = new DataService(_dataSources, _catalog, _appStates, _queryManager);
+            var newDs = new DataService(_dataSources, _catalog, _appStates, _queryManager, _user);
             if (_DynCodeRoot != null)
             {
                 newDs.ConnectToRoot(_DynCodeRoot);

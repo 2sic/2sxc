@@ -71,7 +71,8 @@ namespace ToSic.Sxc.Services
             string name = default,
             IDataSourceLinkable attach = default,
             object parameters = default,
-            object options = default
+            object options = default,
+            bool? debug = default
         );
 
         /// <summary>
