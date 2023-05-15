@@ -32,11 +32,11 @@
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.3" />
-    <!--<PackageReference Include="Oqtane.Shared" Version="3.4.3" />-->
+    <PackageReference Include="Oqtane.Shared" Version="3.4.3" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>
