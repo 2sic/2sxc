@@ -20,12 +20,10 @@ namespace ToSic.Sxc.Oqt.App
     public partial class Index : ModuleProBase
     {
         #region Injected Services
-
         [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
         [Inject] public IOqtPageChangeService OqtPageChangeService { get; set; }
         [Inject] public IJSRuntime JsRuntime { get; set; }
-        
 
         #endregion
 

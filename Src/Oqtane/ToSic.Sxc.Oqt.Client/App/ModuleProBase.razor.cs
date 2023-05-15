@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client;
+using ToSic.Sxc.Oqt.Client.Services;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
@@ -18,6 +19,7 @@ namespace ToSic.Sxc.Oqt.App
         #region Injected Services
 
         [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public IOqtDebugStateService OqtDebugStateService { get; set; }
 
         #endregion
 
@@ -41,7 +43,11 @@ namespace ToSic.Sxc.Oqt.App
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            
+
+            var debugEnabled = await OqtDebugStateService.GetDebugAsync();
+            if (!debugEnabled && NavigationManager.TryGetQueryString<bool>("debug", out var debugInQueryString))
+                OqtDebugStateService.SetDebug(debugInQueryString);
+
             Log($"2sxc Blazor Logging Enabled");  // will only show if it's enabled
         }
         
@@ -67,7 +73,7 @@ namespace ToSic.Sxc.Oqt.App
         public void Log(params object[] message)
         {
             // If the url has a debug=true and we are the super-user
-            if (message == null || !message.Any() || !IsSuperUser) return;
+            if (message == null || !message.Any() || !OqtDebugStateService.IsDebugEnabled || !IsSuperUser) return;
 
             _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
             try
