@@ -7,6 +7,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client;
 
@@ -69,7 +70,25 @@ namespace ToSic.Sxc.Oqt.App
             // If the url has a debug=true and we are the super-user
             if (message == null || !message.Any() || !IsSuperUser) return;
 
-            _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
+            // check if we have hash: param and use it
+            var hash = message.FirstOrDefault(p => p is string && p?.ToString()?.StartsWith("hash:") == true)?.ToString();
+            if (!string.IsNullOrEmpty(hash))
+            {
+                // remove "hash:...." from message array
+                var messageList = message.ToList();
+                messageList.RemoveAll(p => p is string && p?.ToString()?.StartsWith("hash:") == true);
+                message = messageList.ToArray();                
+                
+                
+                hash = hash.Remove(0,5); // remove "hash:"
+
+                if (string.IsNullOrEmpty(hash)) return;
+
+                LogHash = hash;
+                _logPrefix = $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):Hash({LogHash})";
+            }
+
+            _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):Hash({LogHash})";
             try
             {
                 // log on web server
@@ -79,7 +98,7 @@ namespace ToSic.Sxc.Oqt.App
                 // log to browser console
                 if (IsSafeToRunJs)
                 {
-                    // first log messages from queue
+                    // first log messages from queue_logHash
                     var timeOut = 0;
                     while (!LogMessageQueue.IsEmpty && timeOut < 100)
                     {
@@ -118,6 +137,18 @@ namespace ToSic.Sxc.Oqt.App
         }
         private string _logPrefix;
         private const string ConsoleLogJs = "console.log";
+
+        public string LogHash { get ; set; } = GetRandomHash();
+        public static string GetRandomHash()
+        {
+            var random = new Random();
+            var hash = new StringBuilder();
+            for (var i = 0; i < 4; i++)
+                hash.Append((char)random.Next(97, 122));
+            return hash.ToString();
+        }
+
+        public string NewHash() => (LogHash = GetRandomHash());
 
         #endregion
     }

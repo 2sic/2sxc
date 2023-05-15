@@ -66,6 +66,12 @@
     <Compile Remove="StartUp\SxcRazorPage_IDynamicCode.cs" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+		<Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+		<Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+	</ItemGroup>
+
   <ItemGroup>
     <!-- stv - SQL scripts have to be included as embedded resources -->
     <!-- to be executed as part of oqtane installation or upgrade procedure -->
