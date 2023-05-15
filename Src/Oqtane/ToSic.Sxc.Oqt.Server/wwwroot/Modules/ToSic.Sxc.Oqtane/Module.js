@@ -2,6 +2,26 @@
 var ToSic = ToSic || {};
 ToSic.Sxc = ToSic.Sxc || {};
 ToSic.Sxc.Oqtane = {
+  registeredModules: new Map(),
+  registerReloadModule: function (dotNetObjectReference, moduleId) {
+    // console.log('stv: registerReloadModule', dotNetObjectReference, moduleId);
+    this.registeredModules.set(moduleId, dotNetObjectReference);
+  },
+  unregisterReloadModule: function (moduleId) {
+    // console.log('stv: unregisterReloadModule', moduleId)
+    // todo: avoid memory leaks
+    if (this.registeredModules.has(moduleId)) {
+      this.registeredModules.get(moduleId).dispose();
+      this.registeredModules.delete(moduleId);
+    }
+  },
+  async reloadModule(moduleId) {
+    // console.log('stv: reloadModule', moduleId);
+    if (this.registeredModules.has(moduleId)) {
+      // console.log('stv: reloadModule - found', moduleId);
+      await this.registeredModules.get(moduleId).invokeMethodAsync('ReloadModule');
+    }
+  },
   getTitleValue: function (title) {
     return document.title;
   },
