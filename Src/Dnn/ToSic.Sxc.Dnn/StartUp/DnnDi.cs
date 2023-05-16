@@ -19,6 +19,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Adam;
@@ -59,6 +60,7 @@ namespace ToSic.Sxc.Dnn.StartUp
                 .AddDnnSxcDataSources()
                 .AddDnnDataSources()
                 .AddDnnWebApi()
+                .AddDnnCompatibility()
                 .AddAdamWebApi<int, int>()
                 .AddSxcWebApi()
                 .AddSxcCore()
