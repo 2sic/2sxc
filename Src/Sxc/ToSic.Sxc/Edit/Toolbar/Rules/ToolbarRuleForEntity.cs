@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         private readonly UrlValueFilterNames _urlValueFilterNames = new UrlValueFilterNames(true, Array.Empty<string>());
 
 
-        protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as IEntityWrapper)?.Entity);
+        protected IEntity TargetEntity => _entity.Get(() => Target as IEntity ?? (Target as ICanBeEntity)?.Entity);
         private readonly GetOnce<IEntity> _entity = new GetOnce<IEntity>();
 
         internal EntityEditInfo EditInfo => _editInfo.Get(() => new EntityEditInfo(TargetEntity));

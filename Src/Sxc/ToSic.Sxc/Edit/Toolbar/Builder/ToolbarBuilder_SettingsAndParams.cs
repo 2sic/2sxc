@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             if (parameters != null || target == null) return (target, parameters);
 
             // Basically only keep the target as is, if it's a known target
-            if (target is IEntity || target is IEntityWrapper)
+            if (target is IEntity || target is ICanBeEntity)
                 return (target, null);
 
             return (null, target);
