@@ -1,5 +1,4 @@
 ﻿using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
@@ -9,7 +8,7 @@ namespace ToSic.Sxc.Data
         public dynamic Get(string name) => GetInternal(name);
 
         /// <inheritdoc/>
-        public TValue Get<TValue>(string name) => GetInternal(name).ConvertOrDefault<TValue>();
+        public TValue Get<TValue>(string name) => GetInternal(name, lookup: false).ConvertOrDefault<TValue>();
 
         /// <inheritdoc/>
         public TValue Get<TValue>(string name,
@@ -17,7 +16,7 @@ namespace ToSic.Sxc.Data
             string noParamOrder = Eav.Parameters.Protector,
             TValue fallback = default)
         {
-            return GetInternal(name).ConvertOrFallback(fallback);
+            return GetInternal(name, lookup: false).ConvertOrFallback(fallback);
         }
 
         /// <inheritdoc/>
