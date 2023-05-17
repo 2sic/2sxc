@@ -1,37 +1,18 @@
-﻿using Oqtane.Modules;
-using Oqtane.UI;
-using System;
+﻿using System;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-    public class OqtPrerenderService : IOqtPrerenderService, IService
-    {
-        private PageState _pageState;
-        private ModuleBase.Logger _logger;
-
-        public OqtPrerenderService()
-        { }
-
-        public IOqtPrerenderService Init(PageState pageState, ModuleBase.Logger logger)
-        {
-            _pageState = pageState;
-            _logger = logger;
-            return this;
-        }
-
+  public class OqtPrerenderService : IOqtPrerenderService
+  {
         public string GetSystemHtml()
         {
             try
             {
-                //if (Executed) return string.Empty;
-                //if (!PrerenderingEnabled()) return string.Empty;
-                //if (!HasQueryString()) return string.Empty;
-                //Executed = true;
                 return SystemHtml();
             }
-            catch (Exception e)
+            catch
             {
-                _logger.LogError(e, "PrerenderService");
                 return string.Empty;
             }
         }
@@ -41,17 +22,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
         private Version OqtaneVersion => _oqtaneVersion ??= GetOqtaneVersion();
         private Version _oqtaneVersion;
 
-        private static Version GetOqtaneVersion()
-        {
-            return Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new Version(1, 0);
-        }
-
-        //private bool Executed { get; set; } // to make sure it only runs once
-
-        //public bool PrerenderingEnabled() => _pageState.Site.RenderMode == "WebAssemblyPrerendered"; // The render mode for the site.
-
-        //// used for testing, just add to page url in query string ("?prerender")
-        //private bool HasQueryString() => _pageState.QueryString.ContainsKey(QueryStringKey);
-        //private const string QueryStringKey = "prerender";
+        private static Version GetOqtaneVersion() 
+            => Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new Version(1, 0);
     }
 }

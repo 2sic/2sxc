@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Collections.Specialized;
-using System.Web;
-using UrlHelpers = ToSic.Sxc.Oqt.Client.Shared.UrlHelpers;
+using UrlHelpers = ToSic.Sxc.Oqt.Shared.UrlHelpers;
 
 namespace ToSic.Sxc.Oqt.Client
 {
-    /// <summary>
-    /// https://chrissainty.com/working-with-query-strings-in-blazor/
-    /// </summary>
-    public static class NavigationManagerExtensions
+  /// <summary>
+  /// https://chrissainty.com/working-with-query-strings-in-blazor/
+  /// </summary>
+  public static class NavigationManagerExtensions
     {
         public static bool TryGetQueryString<T>(this NavigationManager navManager, string key, out T value)
         {

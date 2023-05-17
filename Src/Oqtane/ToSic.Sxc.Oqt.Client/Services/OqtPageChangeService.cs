@@ -1,17 +1,15 @@
-﻿using Oqtane.Modules;
-using Oqtane.Shared;
-using Oqtane.UI;
+﻿using Oqtane.Shared;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.App;
-using ToSic.Sxc.Oqt.Client.Shared;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-    public class OqtPageChangeService : IOqtPageChangeService, IService
-    {
+  public class OqtPageChangeService
+  {
         private readonly IOqtPageChangesSupportService _oqtPageChangesSupportService;
 
         public OqtPageChangeService(IOqtPageChangesSupportService oqtPageChangesSupportService)
@@ -19,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
             _oqtPageChangesSupportService = oqtPageChangesSupportService;
         }
 
-        public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
+        public async Task AttachScriptsAndStyles(OqtViewResultsDto viewResults, SxcInterop sxcInterop, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(AttachScriptsAndStyles)}(...) - ";
 
@@ -51,7 +49,6 @@ namespace ToSic.Sxc.Oqt.Client.Services
             // 2. Scripts - usually libraries etc.
             // Important: the IncludeClientScripts (IncludeScripts) works very different from LoadScript
             // it uses LoadJS and bundles
-            var bundleId = "module-bundle-" + pageState.ModuleId;
             var scripts = externalResources
                 .Where(r => r.ResourceType == ResourceType.Script)
                 .Select(a => new
@@ -85,9 +82,9 @@ namespace ToSic.Sxc.Oqt.Client.Services
                     "body");
         }
 
-        public int ApplyHttpHeaders(OqtViewResultsDto result, ModuleProBase page)
+        public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
             => _oqtPageChangesSupportService.ApplyHttpHeaders(result, page);
-        public async Task UpdatePageProperties(OqtViewResultsDto viewResults, PageState pageState, SxcInterop sxcInterop, ModuleProBase page)
+        public async Task UpdatePageProperties(OqtViewResultsDto viewResults, SxcInterop sxcInterop, ModuleProBase page)
         {
             var logPrefix = $"{nameof(UpdatePageProperties)}(...) - ";
 
@@ -123,7 +120,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
                 }
             }
         }
-        public string UpdateProperty(string original, OqtPagePropertyChanges change, ModuleProBase page)
+        public string UpdateProperty(string original, OqtPagePropertyChanges change, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(UpdateProperty)}(original:{original}) - ";
 
@@ -163,7 +160,7 @@ namespace ToSic.Sxc.Oqt.Client.Services
             page?.Log($"{logPrefix}{change.Change}, UpdateTitle:{result3}");
             return result3;
         }
-        public CspOfPage PageCsp(bool enforced, ModuleProBase page)
+        public object PageCsp(bool enforced, IOqtHybridLog page)
             => _oqtPageChangesSupportService.PageCsp(enforced, page) as CspOfPage;
     }
 }

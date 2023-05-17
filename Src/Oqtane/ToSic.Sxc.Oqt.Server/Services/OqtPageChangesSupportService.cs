@@ -3,18 +3,18 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Lib.DI;
-using ToSic.Sxc.Oqt.App;
-using ToSic.Sxc.Oqt.Client.Services;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.Url;
+using CspOfPage = ToSic.Sxc.Web.ContentSecurityPolicy.CspOfPage;
+using CspParameters = ToSic.Sxc.Web.ContentSecurityPolicy.CspParameters;
 
 //using BuiltInFeatures = ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-    public class OqtPageChangesSupportService : IOqtPageChangesSupportService
+  public class OqtPageChangesSupportService : IOqtPageChangesSupportService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LazySvc<IFeaturesService> _featuresService;
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
         }
 
 
-        public int ApplyHttpHeaders(OqtViewResultsDto result, ModuleProBase page)
+        public int ApplyHttpHeaders(OqtViewResultsDto result, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(ApplyHttpHeaders)}(...) - ";
 
@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Oqt.Server.Services
             return httpHeaders!.Count;
         }
 
-        public dynamic PageCsp(bool enforced, ModuleProBase page)
+        public dynamic PageCsp(bool enforced, IOqtHybridLog page)
         {
             var logPrefix = $"{nameof(PageCsp)}(enforced:{enforced}) - ";
 

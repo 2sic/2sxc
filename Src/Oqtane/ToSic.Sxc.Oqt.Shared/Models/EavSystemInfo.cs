@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace ToSic.Sxc.Oqt.Client.Shared
+namespace ToSic.Sxc.Oqt.Shared.Models
 {
     public class EavSystemInfo
     {

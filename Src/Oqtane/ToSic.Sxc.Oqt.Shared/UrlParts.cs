@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Oqt.Client.Shared
+namespace ToSic.Sxc.Oqt.Shared
 {
     [PrivateApi]
     public class UrlParts

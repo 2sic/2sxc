@@ -9,13 +9,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client;
-using ToSic.Sxc.Oqt.Client.Services;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
-    public class ModuleProBase: ModuleBase
-    {
+  public class ModuleProBase: ModuleBase, IOqtHybridLog
+  {
         #region Injected Services
 
         [Inject] public NavigationManager NavigationManager { get; set; }
@@ -38,7 +38,9 @@ namespace ToSic.Sxc.Oqt.App
         //{
         //    await base.OnInitializedAsync();
         //}
-        public bool IsPreRendering() => PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered"; // The render mode for the site.
+        public bool IsPreRendering() => 
+            (PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered") // The render mode for the site.
+            || PageState.QueryString.ContainsKey("prerender"); // used for testing, just add to page url in query string ("?prerender")
 
         protected override async Task OnParametersSetAsync()
         {

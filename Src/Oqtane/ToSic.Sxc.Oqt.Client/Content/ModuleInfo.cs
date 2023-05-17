@@ -1,8 +1,8 @@
 using Oqtane.Models;
 using Oqtane.Modules;
 using System.Linq;
-using ToSic.Sxc.Oqt.Client.Shared;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Shared.Models;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.Content

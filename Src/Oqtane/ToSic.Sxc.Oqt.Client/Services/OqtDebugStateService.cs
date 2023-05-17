@@ -1,11 +1,11 @@
-﻿using System.Text.Json;
+﻿using Microsoft.JSInterop;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.JSInterop;
-using Oqtane.Modules;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Client.Services
 {
-    public class OqtDebugStateService : IOqtDebugStateService, IService
+  public class OqtDebugStateService : IOqtDebugStateService
     {
         public const string DebugKey = "2sxcDebug";
         private readonly IJSRuntime _jsRuntime;

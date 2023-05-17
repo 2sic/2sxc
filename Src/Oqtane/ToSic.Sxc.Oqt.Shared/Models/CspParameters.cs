@@ -1,6 +1,6 @@
 ﻿using System.Collections.Specialized;
 
-namespace ToSic.Sxc.Oqt.Client.Shared
+namespace ToSic.Sxc.Oqt.Shared.Models
 {
     public class CspParameters : NameValueCollection
     {
