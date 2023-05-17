@@ -1,10 +1,10 @@
-﻿using ToSic.Eav.DataSources;
+﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid.Advanced
@@ -39,6 +39,14 @@ namespace Custom.Hybrid.Advanced
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
+        [PrivateApi("WIP")]
+        public ICmsEntity AsCms(object target) => _DynCodeRoot.AsCms(target);
+        [PrivateApi("WIP")]
+        public ITypedEntity AsTyped(object target) => _DynCodeRoot.AsTyped(target);
+        [PrivateApi("WIP")]
+        public IEnumerable<ICmsEntity> AsCmsList(object list) => _DynCodeRoot.AsCmsList(list);
+        [PrivateApi("WIP")]
+        public IEnumerable<ITypedEntity> AsTypedList(object list) => _DynCodeRoot.AsTypedList(list);
 
     }
 }

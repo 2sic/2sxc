@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -44,6 +43,19 @@ namespace Custom.Hybrid.Advanced
 
         /// <inheritdoc />
         public IBlockDataSource Data => _DynCodeRoot.Data;
+
+        #endregion
+
+        #region AsCms and AsTyped (new v16)
+
+        [PrivateApi("WIP")]
+        public ICmsEntity AsCms(object target) => _DynCodeRoot.AsCms(target);
+        [PrivateApi("WIP")]
+        public ITypedEntity AsTyped(object target) => _DynCodeRoot.AsTyped(target);
+        [PrivateApi("WIP")]
+        public IEnumerable<ICmsEntity> AsCmsList(object list) => _DynCodeRoot.AsCmsList(list);
+        [PrivateApi("WIP")]
+        public IEnumerable<ITypedEntity> AsTypedList(object list) => _DynCodeRoot.AsTypedList(list);
 
         #endregion
 

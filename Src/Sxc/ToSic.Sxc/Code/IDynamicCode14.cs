@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
@@ -284,6 +283,22 @@ namespace ToSic.Sxc.Code
         IDevTools DevTools { get; }
 
         #endregion
+
+        #endregion
+
+        #region Stuff Added in v16
+
+        [PrivateApi("WIP")]
+        ICmsEntity AsCms(object target);
+
+        [PrivateApi("WIP")]
+        ITypedEntity AsTyped(object target);
+
+        IEnumerable<ICmsEntity> AsCmsList(object list);
+
+        [PrivateApi("WIP")]
+        IEnumerable<ITypedEntity> AsTypedList(object list);
+
 
         #endregion
     }
