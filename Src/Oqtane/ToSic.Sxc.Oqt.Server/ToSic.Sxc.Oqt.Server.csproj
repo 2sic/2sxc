@@ -28,6 +28,11 @@
     <!--<PreserveCompilationReferences>true</PreserveCompilationReferences>
     <PreserveCompilationContext>true</PreserveCompilationContext>-->
   </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+        <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+        <Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+    </ItemGroup>
   <ItemGroup>
     <Compile Remove="Apps\**" />
     <Compile Remove="Contents\**" />
@@ -101,7 +106,6 @@
     <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc.Oqt.Client\ToSic.Sxc.Oqt.Client.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 

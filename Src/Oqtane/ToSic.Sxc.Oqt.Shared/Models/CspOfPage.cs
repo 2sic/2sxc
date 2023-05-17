@@ -4,7 +4,7 @@ using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 
-namespace ToSic.Sxc.Oqt.Client.Shared
+namespace ToSic.Sxc.Oqt.Shared.Models
 {
     // TODO: @STV - must become a DI class
     // But ATM Oqtane is using some static code for this, which has to be change first

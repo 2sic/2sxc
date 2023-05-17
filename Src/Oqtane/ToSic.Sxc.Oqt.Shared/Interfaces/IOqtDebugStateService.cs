@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ToSic.Sxc.Oqt.Client.Services;
+namespace ToSic.Sxc.Oqt.Shared.Interfaces;
 
 public interface IOqtDebugStateService
 {

@@ -1,6 +1,6 @@
-﻿namespace ToSic.Sxc.Oqt.Client.Shared
+﻿namespace ToSic.Sxc.Oqt.Shared
 {
-    internal class CspConstants
+  public class CspConstants
     {
         public const string LogPrefix = "Csp";
         public const string AllSrcName = "all-src";

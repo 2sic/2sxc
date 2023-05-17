@@ -1,29 +1,19 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Oqtane.Modules;
-using Oqtane.UI;
-using ToSic.Sxc.Oqt.Client.Services;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 namespace ToSic.Sxc.Oqt.Server.Services
 {
-    public class OqtPrerenderService : IOqtPrerenderService
+    public class OqtPrerenderService : ServiceBase, IOqtPrerenderService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OqtPrerenderService(IHttpContextAccessor httpContextAccessor)
+        public OqtPrerenderService(IHttpContextAccessor httpContextAccessor) : base($"{Constants.SxcLogName}.OqtPrerndSrv")
         {
             _httpContextAccessor = httpContextAccessor;
-        }
-
-        private PageState _pageState;
-        private ModuleBase.Logger _logger;
-
-        public IOqtPrerenderService Init(PageState pageState, ModuleBase.Logger logger)
-        {
-            _pageState = pageState;
-            _logger = logger;
-            return this;
         }
 
         public string GetSystemHtml()
@@ -31,14 +21,13 @@ namespace ToSic.Sxc.Oqt.Server.Services
             try
             {
                 if (Executed) return string.Empty;
-                if (!PrerenderingEnabled()) return string.Empty;
-                if (!HasUserAgentSignature() && !HasQueryString()) return string.Empty;
+                if (!HasUserAgentSignature()) return string.Empty;
                 Executed = true;
                 return SystemHtml();
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "PrerenderService");
+                Log.Ex(e);
                 return string.Empty;
             }
         }
@@ -48,28 +37,20 @@ namespace ToSic.Sxc.Oqt.Server.Services
         private Version OqtaneVersion => _oqtaneVersion ??= GetOqtaneVersion();
         private Version _oqtaneVersion;
 
-        private static Version GetOqtaneVersion()
-        {
-            return Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new Version(1, 0);
-        }
+        private static Version GetOqtaneVersion() 
+            => Version.TryParse(Oqtane.Shared.Constants.Version, out var ver) ? ver : new Version(1, 0);
 
         private bool Executed // for execution once per request
         {
             get => (_httpContextAccessor?.HttpContext?.Items[ExecutedKey] as bool?) ?? false;
             set
             {
-                if (_httpContextAccessor?.HttpContext != null) 
+                if (_httpContextAccessor?.HttpContext != null)
                     _httpContextAccessor.HttpContext.Items[ExecutedKey] = value;
             }
         }
 
         private const string ExecutedKey = "PrerenderServiceExecuted";
-
-        public bool PrerenderingEnabled() => _pageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
-
-        // used for testing, just add to page url in query string ("?prerender")
-        private bool HasQueryString() => _pageState.QueryString.ContainsKey(QueryStringKey);
-        private const string QueryStringKey = "prerender"; 
 
         private bool HasUserAgentSignature()
         {

@@ -8,10 +8,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client.Services;
-using ToSic.Sxc.Oqt.Client.Shared;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Oqt.Shared.Models;
-
 using static System.StringComparison;
 
 // ReSharper disable once CheckNamespace
@@ -20,9 +19,9 @@ namespace ToSic.Sxc.Oqt.App
     public partial class Index : ModuleProBase
     {
         #region Injected Services
-        [Inject] public IOqtSxcRenderService OqtSxcRenderService { get; set; }
+        [Inject] public OqtSxcRenderService OqtSxcRenderService { get; set; }
         [Inject] public IOqtPrerenderService OqtPrerenderService { get; set; }
-        [Inject] public IOqtPageChangeService OqtPageChangeService { get; set; }
+        [Inject] public OqtPageChangeService OqtPageChangeService { get; set; }
         [Inject] public IJSRuntime JsRuntime { get; set; }
 
         #endregion
@@ -62,7 +61,7 @@ namespace ToSic.Sxc.Oqt.App
                 Log($"1.2: Initialize2sxcContentBlock");
                 await Initialize2SxcContentBlock();
                 NewDataArrived = true;
-                ViewResults.SystemHtml = OqtPrerenderService.Init(PageState, logger).GetSystemHtml();
+                ViewResults.SystemHtml = IsPreRendering() ? OqtPrerenderService.GetSystemHtml() : string.Empty;
                 Csp();
                 Log($"1.3: Csp");
             }
@@ -177,13 +176,13 @@ namespace ToSic.Sxc.Oqt.App
             if (ViewResults.TemplateResources != null)
             {
                 Log($"2.5: AttachScriptsAndStyles");
-                await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, PageState, SxcInterop, this);
+                await OqtPageChangeService.AttachScriptsAndStyles(ViewResults, SxcInterop, this);
             }
 
             if (ViewResults.PageProperties?.Any() ?? false)
             {
                 Log($"2.6: UpdatePageProperties");
-                await OqtPageChangeService.UpdatePageProperties(ViewResults, PageState, SxcInterop, this);
+                await OqtPageChangeService.UpdatePageProperties(ViewResults, SxcInterop, this);
             }
 
             #endregion

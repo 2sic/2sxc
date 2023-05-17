@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+
 //using ToSic.Eav.Plumbing;
 
 //using ToSic.Razor.Html5;
 
-namespace ToSic.Sxc.Oqt.Client.Shared
+namespace ToSic.Sxc.Oqt.Shared.Models
 {
     public class CspParameterFinalizer : HelperBase
     {

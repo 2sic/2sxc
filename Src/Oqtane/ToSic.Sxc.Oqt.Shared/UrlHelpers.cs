@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace ToSic.Sxc.Oqt.Client.Shared
+namespace ToSic.Sxc.Oqt.Shared
 {
     public static partial class UrlHelpers
     {
@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Client.Shared
         /// </summary>
         /// <param name="nvc"></param>
         /// <returns></returns>
-        public static string NvcToString(this NameValueCollection nvc)
+        internal static string NvcToString(this NameValueCollection nvc)
             => NvcToString(nvc, "=", "&", "", "", true, null);
 
         private class KeyValuePairTemp
@@ -53,14 +53,14 @@ namespace ToSic.Sxc.Oqt.Client.Shared
             //public string[] AllValues;
         }
 
-        internal static string NvcToString(NameValueCollection nvc, string keyValueSeparator, string pairSeparator,
+        public static string NvcToString(NameValueCollection nvc, string keyValueSeparator, string pairSeparator,
             string terminator, string empty, bool repeatKeyForEachValue, string valueSeparator)
         {
             // Note 2dm: reworked this entire logic 2022-04-07, all tests passed, believe it's ok, but there is a minimal risk
             var allPairs = nvc.AllKeys
                 .SelectMany(key =>
                 {
-                    var values = nvc.GetValues(key);
+                    var values = nvc.GetValues((string) key);
                     var noValues = values == null || values.Length == 0;
                     if (!noValues)
                     {
@@ -166,7 +166,7 @@ namespace ToSic.Sxc.Oqt.Client.Shared
         {
             var newUrl = parts.ToLink(suffix: false);
             if (queryString.Count > 0)
-                newUrl += UrlParts.QuerySeparator + UrlHelpers.NvcToString(queryString);
+                newUrl += UrlParts.QuerySeparator + queryString.NvcToString();
 
             if (!string.IsNullOrWhiteSpace(parts.Fragment))
                 newUrl += UrlParts.FragmentSeparator + parts.Fragment;
