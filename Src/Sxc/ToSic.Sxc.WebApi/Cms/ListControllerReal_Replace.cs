@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
@@ -21,8 +23,8 @@ namespace ToSic.Sxc.WebApi.Cms
 
             void InternalSave(VersioningActionInfo _)
             {
-                var entity = CmsManagerOfBlock.AppState.List.One(guid)
-                             ?? throw new Exception($"Can't find item '{guid}'");
+                var entity = CmsManagerOfBlock.AppState.GetDraftOrKeep(CmsManagerOfBlock.AppState.List.One(guid))
+                             ?? throw l.Ex( new Exception($"Can't find item '{guid}'"));
 
                 // Make sure we have the correct casing for the field names
                 part = entity.Type[part].Name;
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             var listTemp = CmsManagerOfBlock.Read.Entities.Get(typeName);
 
-            var results = listTemp.ToDictionary(
+            var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
                 p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
@@ -77,16 +79,18 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private (List<IEntity> items, string typeName) FindItemAndFieldTypeName(Guid guid, string part)
         {
+            var l = Log.Fn<(List<IEntity>, string)>($"guid:{guid},part:{part}");
             var parent = Context.AppState.List.One(guid);
-            if (parent == null) throw new Exception($"No item found for {guid}");
-            if (!parent.Attributes.ContainsKey(part)) throw new Exception($"Could not find field {part} in item {guid}");
-            var itemList = parent.Children(part);
+            if (parent == null) throw l.Ex(new Exception($"No item found for {guid}"));
+            if (!parent.Attributes.ContainsKey(part)) throw l.Ex(new Exception($"Could not find field {part} in item {guid}"));
+            parent = Context.AppState.GetDraftOrKeep(parent);
+            var itemList = parent.Children(part).Select(Context.AppState.GetDraftOrKeep).ToList();
 
             // find attribute-type-name
             var attribute = parent.Type[part];
-            if (attribute == null) throw new Exception($"Attribute definition for '{part}' not found on the item {guid}");
+            if (attribute == null) throw l.Ex(new Exception($"Attribute definition for '{part}' not found on the item {guid}"));
             var typeNameForField = attribute.EntityFieldItemTypePrimary();
-            return (itemList, typeNameForField);
+            return l.ReturnAsOk((itemList, typeNameForField));
         }
 
 

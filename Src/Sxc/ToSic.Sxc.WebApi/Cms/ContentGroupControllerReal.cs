@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.DI;
@@ -106,9 +107,18 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             Log.A($"item list for:{guid}");
             var cg = Context.AppState.List.One(guid);
+            
+            // use draft if available
+            var repositoryId = cg?.RepositoryId;
+            cg = Context.AppState.GetDraftOrKeep(cg);
+            if (cg?.RepositoryId != repositoryId)
+                Log.A($"use draft with repositoryId:{repositoryId} for entity with repositoryId:{repositoryId}");
+            
             var itemList = cg.Children(part);
 
-            var list = itemList.Select((c, index) => new EntityInListDto
+            var list = itemList
+                .Select(Context.AppState.GetDraftOrKeep)
+                .Select((c, index) => new EntityInListDto
             {
                 Index = index,
                 Id = c?.EntityId ?? 0,

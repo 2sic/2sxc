@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -77,9 +78,9 @@ namespace ToSic.Sxc.WebApi.Cms
 
         private IEntity FindOrThrow(Guid? parent)
         {
-            var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value);
+            var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value); 
             if (target == null) throw new Exception($"Can't find parent {parent}");
-            return target;
+            return ContextOfBlock.AppState.GetDraftOrKeep(target);
         }
     }
 }
