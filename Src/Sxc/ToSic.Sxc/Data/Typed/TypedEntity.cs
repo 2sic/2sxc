@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Data
             _dynamicEntity = dynEntity;
         }
 
-        public int Id => Entity.EntityId;
+        public int EntityId => Entity.EntityId;
 
-        public Guid Guid => Entity.EntityGuid;
+        public Guid EntityGuid => Entity.EntityGuid;
 
         [PrivateApi]
         IEntity ICanBeEntity.Entity => Entity.Entity;

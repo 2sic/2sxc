@@ -288,13 +288,14 @@ namespace ToSic.Sxc.Code
 
         #region Stuff Added in v16
 
-        [PrivateApi("WIP")]
-        ICmsEntity AsCms(object target);
+        //[PrivateApi("WIP")]
+        //ICmsEntity AsCms(object target);
 
         [PrivateApi("WIP")]
         ITypedEntity AsTyped(object target);
 
-        IEnumerable<ICmsEntity> AsCmsList(object list);
+        //[PrivateApi("WIP")]
+        //IEnumerable<ICmsEntity> AsCmsList(object list);
 
         [PrivateApi("WIP")]
         IEnumerable<ITypedEntity> AsTypedList(object list);

@@ -17,12 +17,12 @@ namespace Custom.Hybrid.Advanced
         private readonly GetOnce<TServiceKit> _kit = new();
 
 
-        [PrivateApi("WIP")]
-        public ICmsEntity AsCms(object target) => _DynCodeRoot.AsCms(target);
+        //[PrivateApi("WIP")]
+        //public ICmsEntity AsCms(object target) => _DynCodeRoot.AsCms(target);
         [PrivateApi("WIP")]
         public ITypedEntity AsTyped(object target) => _DynCodeRoot.AsTyped(target);
-        [PrivateApi("WIP")]
-        public IEnumerable<ICmsEntity> AsCmsList(object list) => _DynCodeRoot.AsCmsList(list);
+        //[PrivateApi("WIP")]
+        //public IEnumerable<ICmsEntity> AsCmsList(object list) => _DynCodeRoot.AsCmsList(list);
         [PrivateApi("WIP")]
         public IEnumerable<ITypedEntity> AsTypedList(object list) => _DynCodeRoot.AsTypedList(list);
 
