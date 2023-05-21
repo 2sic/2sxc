@@ -7,6 +7,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services.CmsService
 {
@@ -56,7 +57,10 @@ namespace ToSic.Sxc.Services.CmsService
             // Add classes if we can
             if (Classes.HasValue()) tag = tag.Class(Classes);
             if (toolbar && _field != null)
-                tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, fields: _field.Name, tweak: b => b.Icon(EditFieldIcon)));
+                tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
+                    .Icon(EditFieldIcon)
+                    .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, _field.Name)
+                ));
             return tag.Wrap(contents);
         }
 

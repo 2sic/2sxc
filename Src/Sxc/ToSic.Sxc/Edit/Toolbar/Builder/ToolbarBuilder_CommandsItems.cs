@@ -88,19 +88,22 @@ namespace ToSic.Sxc.Edit.Toolbar
                 propsKeep: new[] { KeyTitle, KeyEntityId, KeyEntityGuid }).Builder;
         }
 
-        public IToolbarBuilder Edit(object target = null,
+        public IToolbarBuilder Edit(
+            object target = null,
             string noParamOrder = Protector,
             Func<ITweakButton, ITweakButton> tweak = default,
-            string fields = default,
+            //string fields = default,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null)
         {
             Protect(noParamOrder, "See docs");
-            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill, fields: fields);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill/*, fields: fields*/);
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
         }
+
+        internal const string BetaEditUiFieldsParamName = "fields";
 
         public IToolbarBuilder New(
             object target = null,
