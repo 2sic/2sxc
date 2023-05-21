@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Services.CmsService
                         .Process();
                     return htmlResult.IsProcessed
                         ? l.Return(cntHelper.Wrap(htmlResult, defaultToolbar: true), "wysiwyg, default w/toolbar")
-                        : l.Return(cntHelper.Wrap(value, defaultToolbar: false), "not converted, no toolbar");
+                        : l.Return(cntHelper.Wrap(value, defaultToolbar: true), "wysiwyg, not converted, w/toolbar");
                 }
 
                 // normal string, no toolbar by default
