@@ -6,10 +6,9 @@ namespace ToSic.Sxc.Edit
     {
         public const string MetaName = "_jsApi";
         public const string ExtensionPlaceholder = "e.x.t";
-        public static string JsApiJson(JsApi jsApi
-        ) =>
+        public static string JsApiJson(JsApi jsApi) =>
             "{"
-            + $"\"{nameof(JsApi.platform)}\": \"{jsApi.platform.ToLowerInvariant()}\","
+            + $"\"{nameof(JsApi.platform)}\": \"{jsApi.platform}\","
             + $"\"{nameof(JsApi.page)}\": {jsApi.page},"
             + $"\"{nameof(JsApi.root)}\": \"{jsApi.root}\","
             + $"\"{nameof(JsApi.api)}\": \"{jsApi.api}\","

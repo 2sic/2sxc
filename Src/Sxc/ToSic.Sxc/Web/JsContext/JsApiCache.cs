@@ -43,7 +43,7 @@ namespace ToSic.Sxc.Web.JsContext
             jsApi = new JsApi
             {
                 platform = platform.ToLowerInvariant(),
-                page = $"{pageId}",
+                page = pageId,
                 root = siteRoot.Invoke(),
                 api = apiRoot.Invoke(),
                 appApi = appApiRoot.Invoke(),
