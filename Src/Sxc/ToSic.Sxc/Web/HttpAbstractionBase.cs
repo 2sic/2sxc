@@ -35,10 +35,11 @@ namespace ToSic.Sxc.Web
                                         ?? new List<KeyValuePair<string, string>>();
             return _queryStringKeyValuePairs;
         }
-
         private List<KeyValuePair<string, string>> _queryStringKeyValuePairs;
 
         #endregion Request
+
+        //public abstract IDictionary<object, object> Items { get; }
 
     }
 }

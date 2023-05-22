@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
             var pageId = Parent?.Page.PageId ?? -1;
             var siteRoot = GetSiteRoot(_siteState);
             var rvt = AntiForgeryToken();
-            var result = OqtJsApi.GetJsApi(pageId, siteRoot, rvt);
+            var result = _jsApiService.GetJsApiJson(pageId, siteRoot, rvt);
             return wrapLog.ReturnAsOk(result);
         }
 

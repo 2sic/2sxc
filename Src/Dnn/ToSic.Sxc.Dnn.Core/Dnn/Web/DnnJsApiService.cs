@@ -1,41 +1,50 @@
 ﻿using DotNetNuke.Entities.Portals;
 using DotNetNuke.Framework;
-using System;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Helpers;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Edit;
+using ToSic.Sxc.Services;
+using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
-    public class DnnJsApi
+    public class DnnJsApiService : ServiceBase, IJsApiService
     {
         public const string PortalIdParamName = "portalId";
 
-        public static string GetJsApiJson(int? pageId = null, string siteRoot = null)
+        public DnnJsApiService(JsApiCache jsApiCache) : base("DnnJsAPi")
+        {
+            ConnectServices(_jsApiCache = jsApiCache);
+        }
+
+        private readonly JsApiCache _jsApiCache;
+
+        public string GetJsApiJson(int? pageId = null, string siteRoot = null, string rvt = null) 
+            => InpageCms.JsApiJson(GetJsApi(pageId, siteRoot, rvt));
+
+        public JsApi GetJsApi(int? pageId = null, string siteRoot = null, string rvt = null)
         {
             // pageId and siteRoot are normally null when called from razor, api, custom cs
             // pageId and siteRoot are provided only in very special case for EditUI in /DesktopModules/.../...aspx
 
-            siteRoot = siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
-            var apiRoots = GetApiRoots(siteRoot);
+            string SiteRootFn() => siteRoot ?? ServicesFramework.GetServiceFrameworkRoot();
 
-            var json = InpageCms.JsApiJson(
+            return _jsApiCache.JsApiJson(
                 platform: PlatformType.Dnn.ToString(),
                 pageId: pageId ?? PortalSettings.Current.ActiveTab.TabID,
-                siteRoot: siteRoot,
-                apiRoot: apiRoots.SiteApiRoot,
-                appApiRoot: apiRoots.AppApiRoot,
-                uiRoot: VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
+                siteRoot: SiteRootFn,
+                apiRoot: () => GetApiRoots(SiteRootFn()).SiteApiRoot,
+                appApiRoot: () => GetApiRoots(SiteRootFn()).AppApiRoot,
+                uiRoot: () => VirtualPathUtility.ToAbsolute(DnnConstants.SysFolderRootVirtual),
                 rvtHeader: DnnConstants.AntiForgeryTokenHeaderName,
-                rvt: AntiForgeryToken(),
+                rvt: AntiForgeryToken,
                 dialogQuery: $"{PortalIdParamName}={PortalSettings.Current.PortalId}"
-                );
-
-            return json;
+            );
         }
 
         internal static (string SiteApiRoot, string AppApiRoot) GetApiRoots(string siteRoot = null)

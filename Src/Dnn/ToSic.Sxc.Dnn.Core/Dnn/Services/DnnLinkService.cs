@@ -68,7 +68,7 @@ namespace ToSic.Sxc.Dnn.Services
             if (!path.PrefixSlash().ToLowerInvariant().Contains("/api/"))
                 throw new ArgumentException("Error, path should have \"api\" part in it.");
 
-            var apiRoot = DnnJsApi.GetApiRoots().AppApiRoot.TrimLastSlash();
+            var apiRoot = DnnJsApiService.GetApiRoots().AppApiRoot.TrimLastSlash();
 
             var relativePath = $"{apiRoot}/app/{App.Folder}/{path}";    
 

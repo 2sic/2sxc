@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 
@@ -22,7 +21,7 @@ namespace ToSic.Sxc.Dnn.DnnWebForms.Skins
         {
             // this is temp solution, because it was required for 2sxc module instance created in skin
             if (!_isEdit) return;
-            new DnnJsApiHeader().AddHeaders();
+            this.GetScopedService<DnnJsApiHeader>().AddHeaders();
         }
     }
 }

@@ -81,6 +81,9 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<RolesDataSourceProvider, RolesDataSourceProviderUnknown>();
             services.TryAddTransient<SitesDataSourceProvider, SitesDataSourceProviderUnknown>();
 
+            // v16
+            services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
+
             return services;
         }
     }

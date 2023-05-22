@@ -43,6 +43,5 @@ namespace ToSic.Sxc.Dnn.Web
             original.Remove(skinSrc);
             return original;
         }
-
     }
 }

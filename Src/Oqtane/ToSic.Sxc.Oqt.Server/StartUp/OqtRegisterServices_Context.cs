@@ -2,8 +2,10 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Context;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
@@ -27,6 +29,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             //services.TryAddTransient<IZoneCultureResolver>(x => x.GetRequiredService<ISite>()); // eventual alternative to line above
 
             services.TryAddScoped<OqtSecurity>();
+            services.TryAddScoped<IJsApiService, OqtJsApiService>();
 
             return services;
         }

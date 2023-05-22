@@ -148,7 +148,8 @@
     <Compile Include="Dnn\Install\DnnEnvironmentInstaller_UpgradeModule.cs" />
     <Compile Include="Dnn\Install\DnnPlatformAppInstaller.cs" />
     <Compile Include="Dnn\Services\DnnRenderService.cs" />
-    <Compile Include="Dnn\Web\DnnJsApi.cs" />
+    <Compile Include="Dnn\StartUpDnn.cs" />
+    <Compile Include="Dnn\Web\DnnJsApiService.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnSitesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnPagesDsProvider.cs" />
     <Compile Include="ToSic.Sxc.DataSources\DnnRolesDsProvider.cs" />

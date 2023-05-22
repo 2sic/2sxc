@@ -96,6 +96,7 @@ namespace ToSic.Sxc.Startup
             // JS UI Context
             services.TryAddTransient<JsContextAll>();
             services.TryAddTransient<JsContextLanguage>();
+            services.TryAddScoped<JsApiCache>(); // v16.01
 
             // Adam stuff
             services.TryAddTransient<AdamMetadataMaker>();

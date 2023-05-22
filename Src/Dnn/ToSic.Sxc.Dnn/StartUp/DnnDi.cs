@@ -58,6 +58,7 @@ namespace ToSic.Sxc.Dnn.StartUp
 
             services.AddDnn()
                 .AddDnnSxcDataSources()
+                //.AddDnnCore()
                 .AddDnnDataSources()
                 .AddDnnWebApi()
                 .AddDnnCompatibility()
@@ -163,6 +164,8 @@ namespace ToSic.Sxc.Dnn.StartUp
             // new in v12.02 - RazorBlade DI
             services.TryAddScoped<DnnPageChanges>();
             services.TryAddTransient<DnnClientResources>();
+            services.TryAddScoped<DnnJsApiHeader>(); // v16.01
+            services.TryAddScoped<IJsApiService, DnnJsApiService>(); // v16.01
 
             // v12.04 - proper DI for SearchController
             services.TryAddTransient<SearchController>();

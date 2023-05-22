@@ -1,4 +1,6 @@
 ﻿#if !NETFRAMEWORK
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
@@ -26,8 +28,9 @@ namespace ToSic.Sxc.DotNet
                 return _queryStringValues = paramList;
             }
         }
-
         private NameValueCollection _queryStringValues;
+
+        //public override IDictionary<object, object> Items => Current.Items;
 
 
     }

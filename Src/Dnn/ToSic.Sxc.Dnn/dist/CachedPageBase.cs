@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.EditUi;
 
@@ -35,17 +36,18 @@ namespace ToSic.Sxc.Dnn.dist
             var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
 
             // portalId should be provided in query string (because of DNN special handling of aspx pages in DesktopModules)
-            var portalIdString = Request.QueryString[DnnJsApi.PortalIdParamName];
+            var portalIdString = Request.QueryString[DnnJsApiService.PortalIdParamName];
             var siteId = portalIdString.HasValue() ? Convert.ToInt32(portalIdString) : GetSiteId(pageId);
-            var addOn = $"&{DnnJsApi.PortalIdParamName}={siteId}";
+            var addOn = $"&{DnnJsApiService.PortalIdParamName}={siteId}";
 
             var siteRoot = GetSiteRoot(pageId, siteId);
-
-            var content = DnnJsApi.GetJsApiJson(pageId, siteRoot);
 
             var sp = HttpContext.Current.GetScope().ServiceProvider;
             var editUiResources = sp.GetService<EditUiResources>();
             var assets = editUiResources.GetResources(true, siteId, settings);
+
+            var dnnJsApi = sp.GetService<IJsApiService>();
+            var content = dnnJsApi.GetJsApiJson(pageId, siteRoot);
 
             var customHeaders = assets.HtmlHead;
             return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders, "");

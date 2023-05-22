@@ -1,4 +1,6 @@
 ﻿#if NETFRAMEWORK
+using System.Collections;
+using System.Collections.Generic;
 using System.Web;
 using System.Collections.Specialized;
 using ToSic.Sxc.Web;
@@ -25,10 +27,10 @@ namespace ToSic.Sxc.DotNet
                     : Request.QueryString;
             }
         }
-
         private NameValueCollection _queryStringValues;
         #endregion Request
 
+        //public override IDictionary<object, object> Items => (IDictionary<object, object>)Current.Items;
     }
 }
 #endif

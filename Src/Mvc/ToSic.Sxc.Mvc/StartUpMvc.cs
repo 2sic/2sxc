@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
@@ -8,6 +9,7 @@ using ToSic.Sxc.Mvc.Run;
 using ToSic.Sxc.Mvc.Web;
 using ToSic.Sxc.Mvc.WebApi.Adam;
 using ToSic.Sxc.Mvc.WebApi.Context;
+using ToSic.Sxc.Web.JsContext;
 using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Mvc
@@ -34,6 +36,9 @@ namespace ToSic.Sxc.Mvc
             //sc.AddTransient<XmlExporter, DnnXmlExporter>();
             //sc.AddTransient<IAppFileSystemLoader, DnnAppFileSystemLoader>();
             //sc.AddTransient<IAppRepositoryLoader, DnnAppFileSystemLoader>();
+
+            // v16
+            services.AddScoped<JsApiCache>();
 
             return services;
         }
