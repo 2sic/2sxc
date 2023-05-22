@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Services
         /// <param name="attach">Attach in-stream to the query (not yet implemented)</param>
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
         /// <returns></returns>
-        /// <remarks>New 16.01 (should have been in 16.00 but was forgotten)</remarks>
+        /// <remarks>New 16.01</remarks>
         IDataSource GetQuery(
             string name = default,
             string noParamOrder = Protector,
