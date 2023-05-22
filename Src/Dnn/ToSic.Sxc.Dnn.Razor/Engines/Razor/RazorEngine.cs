@@ -167,17 +167,18 @@ namespace ToSic.Sxc.Engines
             return l.ReturnTrue("ok");
         }
 
-        private void InitHelpers(RazorComponentBase webPage, int compatibility) => Log.Do(() =>
+        private void InitHelpers(RazorComponentBase webPage, int compatibility)
         {
+            var l = Log.Fn($"{nameof(compatibility)}: {compatibility}");
             var dynCode = _codeRootFactory.BuildDynamicCodeRoot(webPage);
-            // only do this if not already initialized
-            //if (dynCode.Block != null)
             dynCode.InitDynCodeRoot(Block, Log, compatibility);
             webPage.ConnectToRoot(dynCode);
 
             // New in 10.25 - ensure jquery is not included by default
-            if (compatibility > Constants.MaxLevelForAutoJQuery) CompatibilityAutoLoadJQueryAndRvt = false;
-        });
+            if (compatibility > Constants.MaxLevelForAutoJQuery)
+                CompatibilityAutoLoadJQueryAndRvt = false;
+            l.Done();
+        }
 
     }
 }

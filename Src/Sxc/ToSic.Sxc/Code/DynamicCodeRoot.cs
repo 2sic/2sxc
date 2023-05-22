@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Code
         public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)
         {
             this.LinkLog(parentLog ?? block?.Log);
-            var cLog = Log.Fn<IDynamicCodeRoot>();
+            var cLog = Log.Fn<IDynamicCodeRoot>($"{nameof(compatibility)}: {compatibility}");
 
             CompatibilityLevel = compatibility;
             if (block == null)
