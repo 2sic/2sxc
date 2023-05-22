@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Data
+﻿using System;
+
+namespace ToSic.Sxc.Data
 {
     public partial class TypedEntity
     {
@@ -9,6 +11,8 @@
         // ReSharper disable once MethodOverloadWithOptionalParameter
         public TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default) 
             => DynEntity.Get(name, noParamOrder, fallback);
+
+        public DateTime DateTime(string name, DateTime fallback = default) => DynEntity.Get(name, fallback: fallback);
 
         public string String(string name, string fallback = default) => DynEntity.Get(name, fallback: fallback);
 

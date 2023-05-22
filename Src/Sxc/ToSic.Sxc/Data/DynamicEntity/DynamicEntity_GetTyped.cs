@@ -1,9 +1,12 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity
     {
+        public DateTime DateTime(string name, DateTime fallback = default) => Get(name, fallback: fallback);
+
         [PrivateApi]
         public string String(string name, string fallback = default) => Get(name, fallback: fallback);
 

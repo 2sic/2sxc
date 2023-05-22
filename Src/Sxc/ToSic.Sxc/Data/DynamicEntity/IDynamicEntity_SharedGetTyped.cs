@@ -1,9 +1,34 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System;
 
 namespace ToSic.Sxc.Data
 {
     public partial interface IDynamicEntity
     {
+        // Important: Shared definitions
+        // These properties in this file are shared amongst ITypedEntity and IDynamicEntity
+        // Make sure they always stay in sync
+
+        /// <summary>
+        /// Get a property and return the value as a `bool`.
+        /// If conversion fails, will return default `false` or what is specified in the `fallback`.
+        /// </summary>
+        /// <param name="name">property name</param>
+        /// <param name="fallback">_optional_ fallback if conversion fails</param>
+        /// <returns>Value as `bool`</returns>
+        /// <remarks>Added in 16.01</remarks>
+        bool Bool(string name, bool fallback = default);
+
+
+        /// <summary>
+        /// Get a property and return the value as a `DateTime`.
+        /// If conversion fails, will return default `0001-01-01` or what is specified in the `fallback`.
+        /// </summary>
+        /// <param name="name">property name</param>
+        /// <param name="fallback">_optional_ fallback if conversion fails</param>
+        /// <returns>Value as `DateTime`</returns>
+        /// <remarks>Added in 16.01</remarks>
+        DateTime DateTime(string name, DateTime fallback = default);
+
         /// <summary>
         /// Get a property and return the value as a `string`.
         /// If conversion fails, will return default `null` or what is specified in the `fallback`.
@@ -12,8 +37,11 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `string`</returns>
         /// <remarks>Added in 16.01</remarks>
-        [PrivateApi]
         string String(string name, string fallback = default);
+
+        #region Numbers
+
+
 
 
         /// <summary>
@@ -24,19 +52,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `int`</returns>
         /// <remarks>Added in 16.01</remarks>
-        [PrivateApi]
         int Int(string name, int fallback = default);
-
-        /// <summary>
-        /// Get a property and return the value as a `bool`.
-        /// If conversion fails, will return default `false` or what is specified in the `fallback`.
-        /// </summary>
-        /// <param name="name">property name</param>
-        /// <param name="fallback">_optional_ fallback if conversion fails</param>
-        /// <returns>Value as `bool`</returns>
-        /// <remarks>Added in 16.01</remarks>
-        [PrivateApi]
-        bool Bool(string name, bool fallback = default);
 
 
         /// <summary>
@@ -47,7 +63,6 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `long`</returns>
         /// <remarks>Added in 16.01</remarks>
-        [PrivateApi]
         long Long(string name, long fallback = default);
 
         /// <summary>
@@ -58,7 +73,6 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `float`</returns>
         /// <remarks>Added in 16.01</remarks>
-        [PrivateApi]
         float Float(string name, float fallback = default);
 
 
@@ -70,7 +84,6 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `decimal`</returns>
         /// <remarks>Added in 16.01</remarks>
-        [PrivateApi]
         decimal Decimal(string name, decimal fallback = default);
 
         /// <summary>
@@ -81,7 +94,8 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `double`</returns>
         /// <remarks>Added in 16.01</remarks>
-        [PrivateApi]
         double Double(string name, double fallback = default);
+
+        #endregion
     }
 }
