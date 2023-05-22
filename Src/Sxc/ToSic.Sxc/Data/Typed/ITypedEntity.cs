@@ -6,8 +6,8 @@ using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
 {
-    [PrivateApi("WIP")]
-    public interface ITypedEntity: ICanBeEntity
+    [WorkInProgressApi("WIP")]
+    public partial interface ITypedEntity: ICanBeEntity
     {
         int EntityId { get; }
         Guid EntityGuid { get; }
@@ -17,12 +17,12 @@ namespace ToSic.Sxc.Data
         IDynamicField Field(string name);
         object Get(string name);
         TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default);
-        string String(string name, string fallback = default);
-        int Int(string name, int fallback = default);
-        bool Bool(string name, bool fallback = default);
-        long Long(string name, long fallback = default);
-        decimal Decimal(string name, decimal fallback = default);
-        double Double(string name, double fallback = default);
+
+
+
+
+
+
         string Link(string name);
 
         #region parents / children

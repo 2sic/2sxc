@@ -18,6 +18,8 @@
 
         public long Long(string name, long fallback = default) => DynEntity.Get(name, fallback: fallback);
 
+        public float Float(string name, float fallback = default) => DynEntity.Get(name, fallback: fallback);
+
         public decimal Decimal(string name, decimal fallback = default) => DynEntity.Get(name, fallback: fallback);
 
         public double Double(string name, double fallback = default) => DynEntity.Get(name, fallback: fallback);
