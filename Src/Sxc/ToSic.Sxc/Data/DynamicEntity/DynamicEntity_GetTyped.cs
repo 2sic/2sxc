@@ -27,5 +27,9 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         public double Double(string name, double fallback = default) => Get(name, fallback: fallback);
+
+        [PrivateApi]
+        public string Url(string name) => Get(name, convertLinks: true) as string;
+
     }
 }

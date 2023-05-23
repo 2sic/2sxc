@@ -47,14 +47,11 @@ namespace Custom.Hybrid.Advanced
 
         #region AsCms and AsTyped (new v16)
 
-        //[PrivateApi("WIP")]
-        //public ICmsEntity AsCms(object target) => _DynCodeRoot.AsCms(target);
-        [PrivateApi("WIP")]
-        public ITypedEntity AsTyped(object target) => _DynCodeRoot.AsTyped(target);
-        //[PrivateApi("WIP")]
-        //public IEnumerable<ICmsEntity> AsCmsList(object list) => _DynCodeRoot.AsCmsList(list);
-        [PrivateApi("WIP")]
-        public IEnumerable<ITypedEntity> AsTypedList(object list) => _DynCodeRoot.AsTypedList(list);
+        /// <inheritdoc />
+        public ITypedEntity AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTyped(target);
+
+        /// <inheritdoc />
+        public IEnumerable<ITypedEntity> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
 
         #endregion
 

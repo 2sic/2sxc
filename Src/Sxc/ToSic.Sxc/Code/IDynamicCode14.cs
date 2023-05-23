@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Code
     /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
     /// </summary>
     [PrivateApi("WIP v14.02")]
-    public interface IDynamicCode14<out TModel, out TServiceKit> : ICompatibleToCode12, IDynamicCode<TModel, TServiceKit>
+    public partial interface IDynamicCode14<out TModel, out TServiceKit> : ICompatibleToCode12, IDynamicCode<TModel, TServiceKit>
         where TModel : class
         where TServiceKit : ServiceKit
     {
@@ -232,8 +232,6 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-
-
         #region Stuff added by DynamicCode12
 
         /// <summary>
@@ -285,21 +283,5 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        #region Stuff Added in v16
-
-        //[PrivateApi("WIP")]
-        //ICmsEntity AsCms(object target);
-
-        [PrivateApi("WIP")]
-        ITypedEntity AsTyped(object target);
-
-        //[PrivateApi("WIP")]
-        //IEnumerable<ICmsEntity> AsCmsList(object list);
-
-        [PrivateApi("WIP")]
-        IEnumerable<ITypedEntity> AsTypedList(object list);
-
-
-        #endregion
     }
 }

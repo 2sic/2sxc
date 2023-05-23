@@ -97,5 +97,13 @@ namespace ToSic.Sxc.Data
         double Double(string name, double fallback = default);
 
         #endregion
+
+        /// <summary>
+        /// Get a url from a field. This will auto-convert values such as `file:72` or `page:14`.
+        /// </summary>
+        /// <param name="name">The field name.</param>
+        /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
+        string Url(string name);
+
     }
 }

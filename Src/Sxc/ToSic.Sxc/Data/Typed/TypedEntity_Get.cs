@@ -28,6 +28,6 @@ namespace ToSic.Sxc.Data
 
         public double Double(string name, double fallback = default) => DynEntity.Get(name, fallback: fallback);
 
-        public string Link(string name) => DynEntity.Get(name, convertLinks: true) as string;
+        public string Url(string name) => DynEntity.Get(name, convertLinks: true) as string;
     }
 }

@@ -23,32 +23,25 @@ namespace ToSic.Sxc.DataSources
     {
         #region New v16
 
-
-
         [PrivateApi]
-        public IEntity Default => _default.Get(() => TryToGetFirstOfStream(StreamDefaultName));
+        public IEntity Content => _default.Get(() => TryToGetFirstOfStream(_blockSource, StreamDefaultName));
         private readonly GetOnce<IEntity> _default = new GetOnce<IEntity>();
+
         [PrivateApi]
-        public IEntity BlockHeader => _header.Get(() => TryToGetFirstOfStream(ViewParts.StreamHeader));
+        public IEntity Header => _header.Get(() => TryToGetFirstOfStream(_blockSource, ViewParts.StreamHeader));
         private readonly GetOnce<IEntity> _header = new GetOnce<IEntity>();
 
         [PrivateApi]
-        internal IEntity TryToGetFirstOfStream(string sourceStream)
+        internal IEntity TryToGetFirstOfStream(IDataSource source, string streamName)
         {
-            var wrapLog = Log.Fn<IEntity>(sourceStream);
-            var list = GetStream(sourceStream, nullIfNotFound: true)?.List?.ToList();
+            var wrapLog = Log.Fn<IEntity>(streamName);
+            var list = source.GetStream(streamName, nullIfNotFound: true)?.List?.ToList();
             if (list == null) return wrapLog.ReturnNull("stream not found");
 
             return list.Any()
                 ? wrapLog.Return(list.FirstOrDefault(), "found")
                 : wrapLog.ReturnNull("first is null");
         }
-
-        #region Cms DataSource
-
-        
-
-        #endregion
 
         #endregion
 
@@ -58,6 +51,8 @@ namespace ToSic.Sxc.DataSources
 
         internal void SetOut(Query querySource) => _querySource = querySource;
         private Query _querySource;
+        internal void SetBlock(CmsBlock blockSource) => _blockSource = blockSource;
+        private CmsBlock _blockSource;
 
         public override IReadOnlyDictionary<string, IDataStream> Out => _querySource?.Out ?? base.Out;
 
