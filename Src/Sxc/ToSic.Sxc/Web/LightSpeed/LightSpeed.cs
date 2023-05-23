@@ -80,8 +80,6 @@ namespace ToSic.Sxc.Web.LightSpeed
             var appPathsToMonitor = _features.IsEnabled(LightSpeedOutputCacheAppFileChanges.NameId)
                 ? _appPaths.Get(() =>AppPaths(dependentAppsStates))
                 : null;
-
-            // Add to cache, and instruct it to reduce the stats when removed
             var cacheKey = Ocm.Add(CacheKey, Fresh, duration, _features, dependentAppsStates, appPathsToMonitor,
                 (x) => LightSpeedStats.Remove(AppState.AppId, data.Size));
             Log.A($"LightSpeed Cache Key: {cacheKey}");
@@ -161,9 +159,7 @@ namespace ToSic.Sxc.Web.LightSpeed
         private int? UserIdOrAnon => _userId.Get(() => _block.Context.User.IsAnonymous ? (int?)null : _block.Context.User.Id);
         private readonly GetOnce<int?> _userId = new GetOnce<int?>();
 
-        private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplateId.HasValue == true 
-            ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}:{_block.Configuration.View?.Edition}"
-            : null);
+        private string ViewKey => _viewKey.Get(() => _block.Configuration?.PreviewTemplateId.HasValue == true ? $"{_block.Configuration.AppId}:{_block.Configuration.View?.Id}" : null);
         private readonly GetOnce<string> _viewKey = new GetOnce<string>();
 
         public OutputCacheItem Existing => _existing.Get(ExistingGenerator);
