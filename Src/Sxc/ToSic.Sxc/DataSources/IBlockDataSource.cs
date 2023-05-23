@@ -1,8 +1,5 @@
-﻿using System;
-using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
+﻿using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.DataSources
@@ -18,9 +15,9 @@ namespace ToSic.Sxc.DataSources
         DataPublishing Publish { get; }
 
 #if NETFRAMEWORK
-        [Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
+        [System.Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
         [PrivateApi]
-        CacheWithGetContentType Cache { get; }
+        Compatibility.CacheWithGetContentType Cache { get; }
 #endif
     }
 }
