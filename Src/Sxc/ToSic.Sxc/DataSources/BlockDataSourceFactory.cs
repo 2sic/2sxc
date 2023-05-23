@@ -6,6 +6,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Services;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
 
 namespace ToSic.Sxc.DataSources
@@ -28,9 +29,9 @@ namespace ToSic.Sxc.DataSources
 
 
         [PrivateApi]
-        internal IBlockDataSource GetBlockDataSource(IBlock block, ILookUpEngine configLookUp)
+        internal IContextData GetBlockDataSource(IBlock block, ILookUpEngine configLookUp)
         {
-            var wrapLog = Log.Fn<IBlockDataSource>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
+            var wrapLog = Log.Fn<IContextData>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
             var view = block.View;
 
             // Get ModuleDataSource
@@ -53,6 +54,7 @@ namespace ToSic.Sxc.DataSources
             if (view != null)
             {
                 // Note: Deprecated feature in v13, remove ca. 14 - should warn
+                // TODO: #WarnDeprecated
                 viewDataSource.Publish.Enabled = view.PublishData;
                 viewDataSource.Publish.Streams = view.StreamsToPublish;
 

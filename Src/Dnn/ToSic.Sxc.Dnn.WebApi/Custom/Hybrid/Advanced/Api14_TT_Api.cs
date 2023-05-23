@@ -7,7 +7,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -27,7 +26,7 @@ namespace Custom.Hybrid.Advanced
         public IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
 
 
         #region AsDynamic implementations

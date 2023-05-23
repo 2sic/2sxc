@@ -1,4 +1,5 @@
-﻿using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
@@ -11,6 +12,7 @@ namespace ToSic.Sxc.DataSources
     [PublicApi_Stable_ForUseInYourCode]
     public interface IBlockDataSource: IDataSource
     {
+
         [PrivateApi("older use case, will probably become obsolete some day")]
         DataPublishing Publish { get; }
 

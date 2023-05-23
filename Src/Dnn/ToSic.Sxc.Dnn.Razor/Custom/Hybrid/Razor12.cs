@@ -6,7 +6,6 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
@@ -55,7 +54,7 @@ namespace Custom.Hybrid
         public new IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
 
         #endregion
 

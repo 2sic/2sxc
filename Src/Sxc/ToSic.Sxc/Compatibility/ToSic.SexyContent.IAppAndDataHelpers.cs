@@ -5,6 +5,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 
 // ReSharper disable once CheckNamespace
@@ -19,7 +20,7 @@ namespace ToSic.SexyContent
     public interface IAppAndDataHelpers
     {
         IApp App { get; }
-        IBlockDataSource Data { get; }
+        IContextData Data { get; }
 
         /// <summary>
         /// Transform a IEntity to a DynamicEntity as dynamic object

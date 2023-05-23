@@ -13,7 +13,6 @@ using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -25,7 +24,6 @@ using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -74,7 +72,7 @@ namespace ToSic.SexyContent.WebApi
         public IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
 
 
         #region AsDynamic implementations

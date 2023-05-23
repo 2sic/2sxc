@@ -16,7 +16,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
@@ -149,7 +148,7 @@ namespace ToSic.Sxc.Dnn.Cms
 
         }
 
-        private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IBlockDataSource data, string key)
+        private IEnumerable<IEntity> TryToAddStream(IEnumerable<IEntity> list, IContextData data, string key)
         {
             var cont = data.GetStream(key, nullIfNotFound: true)?.List.ToImmutableList(); //  data.Out.ContainsKey(key) ? data[key]?.List?.ToImmutableList() : null;
             Log.A($"TryToAddStream(..., ..., key:{key}), found:{cont != null} add⋮{cont?.Count ?? 0}" );

@@ -6,7 +6,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -62,8 +61,8 @@ namespace ToSic.Sxc.Code
         /// The data prepared for the current Code. Usually user data which was manually added to the instance, but can also be a query.
         /// </summary>
         /// <returns>
-        /// An <see cref="IBlockDataSource"/> which is as <see cref="IDataSource"/>.</returns>
-        IBlockDataSource Data { get; }
+        /// An <see cref="IContextData"/> which is as <see cref="IDataSource"/>.</returns>
+        IContextData Data { get; }
 
         #region Content and Header
         /// <summary>
