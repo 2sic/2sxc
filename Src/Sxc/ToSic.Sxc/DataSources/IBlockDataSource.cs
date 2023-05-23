@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Data;
-using ToSic.Eav.DataSource;
+﻿using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Data;
 
@@ -9,7 +8,7 @@ namespace ToSic.Sxc.DataSources
     /// This marks data sources which are meant for Blocks (Modules, Content-Block Instances). <br/>
     /// They have some internal functionality which isn't published as of now.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PrivateApi("used to be PublicApi_Stable_ForUseInYourCode till 16.01, but replaced by IContextData")]
     public interface IBlockDataSource: IDataSource
     {
 

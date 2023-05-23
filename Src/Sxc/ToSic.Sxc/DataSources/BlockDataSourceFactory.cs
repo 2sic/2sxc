@@ -29,7 +29,7 @@ namespace ToSic.Sxc.DataSources
 
 
         [PrivateApi]
-        internal IContextData GetBlockDataSource(IBlock block, ILookUpEngine configLookUp)
+        internal IContextData GetContextDataSource(IBlock block, ILookUpEngine configLookUp)
         {
             var wrapLog = Log.Fn<IContextData>($"mid:{block.Context.Module.Id}, userMayEdit:{block.Context.UserMayEdit}, view:{block.View?.Name}");
             var view = block.View;
@@ -37,41 +37,42 @@ namespace ToSic.Sxc.DataSources
             // Get ModuleDataSource
             var dsFactory = _dataSourceFactory.Value;
             var initialSource = dsFactory.CreateDefault(new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
-            var moduleDataSource = dsFactory.Create<CmsBlock>(attach: initialSource);
+            var blockDataSource = dsFactory.Create<CmsBlock>(attach: initialSource);
 
-            moduleDataSource.OverrideView = view;
-            moduleDataSource.UseSxcInstanceContentGroup = true;
+            blockDataSource.OverrideView = view;
+            blockDataSource.UseSxcInstanceContentGroup = true;
 
-            // If the Template has a Data-Pipeline, use an empty upstream, else use the ModuleDataSource created above
+            // If the Template has a Data-Pipeline, use an empty upstream to attach later, else use the ModuleDataSource created above
             var viewDataSourceUpstream = view?.Query == null
-                ? moduleDataSource
+                ? blockDataSource
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var viewDataSource = dsFactory.Create<Block>(attach: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
+            var contextDataSource = dsFactory.Create<Block>(attach: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
+            contextDataSource.SetBlock(blockDataSource);
 
             // Take Publish-Properties from the View-Template
             if (view != null)
             {
                 // Note: Deprecated feature in v13, remove ca. 14 - should warn
                 // TODO: #WarnDeprecated
-                viewDataSource.Publish.Enabled = view.PublishData;
-                viewDataSource.Publish.Streams = view.StreamsToPublish;
+                contextDataSource.Publish.Enabled = view.PublishData;
+                contextDataSource.Publish.Streams = view.StreamsToPublish;
 
                 Log.A($"use template, & query#{view.Query?.Id}");
                 // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
                 if (view.Query != null)
                 {
                     Log.A("Generate query");
-                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, viewDataSource);
+                    var query = _queryLazy.Value.Init(block.App.ZoneId, block.App.AppId, view.Query.Entity, configLookUp, contextDataSource);
                     Log.A("attaching");
-                    viewDataSource.SetOut(query);
+                    contextDataSource.SetOut(query);
                 }
             }
             else
                 Log.A("no template override");
 
-            return wrapLog.ReturnAsOk(viewDataSource);
+            return wrapLog.ReturnAsOk(contextDataSource);
         }
     }
 }
