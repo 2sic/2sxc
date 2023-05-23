@@ -106,27 +106,19 @@ namespace ToSic.Sxc.WebApi.Cms
         public List<EntityInListDto> ItemList(Guid guid, string part)
         {
             Log.A($"item list for:{guid}");
-            var cg = Context.AppState.List.One(guid);
-            
-            // use draft if available
-            var repositoryId = cg?.RepositoryId;
-            cg = Context.AppState.GetDraftOrKeep(cg);
-            if (cg?.RepositoryId != repositoryId)
-                Log.A($"use draft with repositoryId:{repositoryId} for entity with repositoryId:{repositoryId}");
-            
+            var cg = Context.AppState.GetDraftOrPublished(guid);
             var itemList = cg.Children(part);
-
             var list = itemList
                 .Select(Context.AppState.GetDraftOrKeep)
                 .Select((c, index) => new EntityInListDto
-            {
-                Index = index,
-                Id = c?.EntityId ?? 0,
-                Guid = c?.EntityGuid ?? Guid.Empty,
-                Title = c?.GetBestTitle() ?? "",
-                Type = c?.Type.NameId,
-                TypeWip = c?.Type.NameId == null ? null : new JsonType(c)
-            }).ToList();
+                {
+                    Index = index,
+                    Id = c?.EntityId ?? 0,
+                    Guid = c?.EntityGuid ?? Guid.Empty,
+                    Title = c?.GetBestTitle() ?? "",
+                    Type = c?.Type.NameId,
+                    TypeWip = c?.Type.NameId == null ? null : new JsonType(c)
+                }).ToList();
 
             return list;
         }
@@ -140,8 +132,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             _publishing.Value.DoInsidePublishing(Context, args =>
             {
-                var entity = CmsManager.Read.AppState.List.One(guid);
-
+                var entity = CmsManager.Read.AppState.GetDraftOrPublished(guid);
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
                 CmsManager.Entities.FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);

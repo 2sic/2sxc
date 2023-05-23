@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
@@ -23,7 +22,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             void InternalSave(VersioningActionInfo _)
             {
-                var entity = CmsManagerOfBlock.AppState.GetDraftOrKeep(CmsManagerOfBlock.AppState.List.One(guid))
+                var entity = CmsManagerOfBlock.AppState.GetDraftOrPublished(guid)
                              ?? throw l.Ex( new Exception($"Can't find item '{guid}'"));
 
                 // Make sure we have the correct casing for the field names
@@ -80,10 +79,9 @@ namespace ToSic.Sxc.WebApi.Cms
         private (List<IEntity> items, string typeName) FindItemAndFieldTypeName(Guid guid, string part)
         {
             var l = Log.Fn<(List<IEntity>, string)>($"guid:{guid},part:{part}");
-            var parent = Context.AppState.List.One(guid);
+            var parent = Context.AppState.GetDraftOrPublished(guid);
             if (parent == null) throw l.Ex(new Exception($"No item found for {guid}"));
             if (!parent.Attributes.ContainsKey(part)) throw l.Ex(new Exception($"Could not find field {part} in item {guid}"));
-            parent = Context.AppState.GetDraftOrKeep(parent);
             var itemList = parent.Children(part).Select(Context.AppState.GetDraftOrKeep).ToList();
 
             // find attribute-type-name
