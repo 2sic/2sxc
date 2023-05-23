@@ -3,8 +3,9 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
-    public partial class DynamicEntity
+    public abstract partial class DynamicEntityBase
     {
+        [PrivateApi]
         public DateTime DateTime(string name, DateTime fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
@@ -30,6 +31,5 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         public string Url(string name) => Get(name, convertLinks: true) as string;
-
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITypedEntity
+    public partial interface IDynamicStack
     {
         // Important: Shared definitions
         // These properties are shared: ITypedEntity, IDynamicEntity, IDynamicEntityBase, IDynamicStack
@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data
 
         #region Numbers
 
-        
+
 
 
         /// <summary>

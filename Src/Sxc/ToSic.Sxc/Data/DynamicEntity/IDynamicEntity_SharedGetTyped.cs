@@ -5,7 +5,7 @@ namespace ToSic.Sxc.Data
     public partial interface IDynamicEntity
     {
         // Important: Shared definitions
-        // These properties in this file are shared amongst ITypedEntity and IDynamicEntity
+        // These properties are shared: ITypedEntity, IDynamicEntity, IDynamicEntityBase, IDynamicStack
         // Make sure they always stay in sync
 
         /// <summary>

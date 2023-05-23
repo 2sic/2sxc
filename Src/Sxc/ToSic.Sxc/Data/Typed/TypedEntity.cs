@@ -38,11 +38,11 @@ namespace ToSic.Sxc.Data
         public IDynamicField Field(string name) => new DynamicField(Dyn, name);
 
         // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
-        public TypedEntity Presentation => _presentation.Get(() =>
+        public ITypedEntity Presentation => _presentation.Get(() =>
         {
             var dynPres = DynEntity.Presentation;
             return dynPres == null ? null : new TypedEntity(dynPres);
         });
-        private readonly GetOnce<TypedEntity> _presentation = new GetOnce<TypedEntity>();
+        private readonly GetOnce<ITypedEntity> _presentation = new GetOnce<ITypedEntity>();
     }
 }

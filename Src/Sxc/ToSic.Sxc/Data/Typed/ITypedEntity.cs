@@ -1,69 +1,48 @@
 ﻿using System;
-using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
 {
-    [WorkInProgressApi("WIP")]
+    /// <summary>
+    /// A typed object to access data.
+    /// Previously Razor code always used `dynamic` <see cref="IDynamicEntity"/> objects.
+    /// This had some disadvantages when working with LINQ or advanced toolbars.
+    /// </summary>
+    /// <remarks>
+    /// Introduced in 2sxc 16.01
+    /// </remarks>
+    [PublicApi]
     public partial interface ITypedEntity: ICanBeEntity
     {
         int EntityId { get; }
         Guid EntityGuid { get; }
+
+        /// <summary>
+        /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
+        /// This actually is a classic <see cref="IDynamicEntity"/>.
+        ///
+        /// Example: `Dyn.FirstName` will just work - and return the first name or `null` if not found.
+        /// 
+        /// </summary>
         dynamic Dyn { get; }
-        TypedEntity Presentation { get; }
+
+        /// <summary>
+        /// The presentation item or `null` if it doesn't exist.
+        /// </summary>
+        ITypedEntity Presentation { get; }
+
         //IDynamicMetadata Metadata { get; }
+
+
         IDynamicField Field(string name);
         object Get(string name);
         TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default);
 
 
 
-        #region parents / children
 
-        /// <summary>
-        /// A **typed** list of entities which point to this item. Important for LINQ style querying or just
-        /// working with various lists. Note that for getting child items of this item you
-        /// can just use the properties, like content.Authors. <br/>
-        /// Please check the tutorials on 2sxc.org/dnn-tutorials/ for more info. 
-        /// </summary>
-        /// <param name="type">Optional type filter - would only return items of this type. </param>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
-        /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
-        /// <remarks>Note that the parameter-order is reversed to the Children()</remarks>
-        IEnumerable<ITypedEntity> Parents(
-            string type = null,
-            string noParamOrder = Eav.Parameters.Protector,
-            string field = null);
-
-        /// <summary>
-        /// A **typed** list of sub-items. Important for LINQ style querying or just
-        /// working with various lists. Note that for getting child items of this item you
-        /// can just use the properties, like content.Authors. <br/>
-        /// But using Children("Authors", typeName) gives you the ability to restrict to a type.  <br/>
-        /// Please check the tutorials on 2sxc.org/dnn-tutorials/ for more info. 
-        /// </summary>
-        /// <param name="type">Optional type filter - would only return items of this type. </param>
-        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
-        /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
-        /// <remarks>Note that the parameter-order is reversed to the Parents()</remarks>
-        IEnumerable<ITypedEntity> Children(
-            string field = null,
-            string noParamOrder = Eav.Parameters.Protector,
-            string type = null);
-
-        /// <summary>
-        /// A single item from a field.
-        /// If the field doesn't exist or is empty, will return null.
-        /// </summary>
-        /// <param name="field">Name of the field</param>
-        /// <returns></returns>
-        ITypedEntity Child(string field);
-
-        #endregion 
 
 
         /// <summary>
