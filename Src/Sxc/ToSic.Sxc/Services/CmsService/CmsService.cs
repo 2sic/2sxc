@@ -60,8 +60,9 @@ namespace ToSic.Sxc.Services.CmsService
                 // ...wysiwyg
                 if (inputType == InputTypes.InputTypeWysiwyg)
                 {
+                    var fieldAdam = _DynCodeRoot.AsAdam(field.Parent.Entity, field.Name);
                     var htmlResult = _stringWysiwyg.New()
-                        .Init(field, contentType, attribute, debug, imageSettings)
+                        .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
                         .Process();
                     return htmlResult.IsProcessed
                         ? l.Return(cntHelper.Wrap(htmlResult, defaultToolbar: true), "wysiwyg, default w/toolbar")

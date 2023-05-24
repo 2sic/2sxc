@@ -3,6 +3,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Utils;
@@ -33,10 +34,11 @@ namespace ToSic.Sxc.Services.CmsService
 
         #region Init
 
-        public CmsServiceStringWysiwyg Init(IDynamicField field, IContentType contentType, IContentTypeAttribute attribute, bool debug, object imageSettings)
+        public CmsServiceStringWysiwyg Init(IDynamicField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object imageSettings)
         {
             Field = field;
             ContentType = contentType;
+            Folder = folder;
             Attribute = attribute;
             Debug = debug;
             ImageSettings = imageSettings;
@@ -48,6 +50,7 @@ namespace ToSic.Sxc.Services.CmsService
         protected IContentTypeAttribute Attribute;
         protected bool Debug;
         protected object ImageSettings;
+        protected IFolder Folder;
 
         #endregion
 
@@ -90,7 +93,7 @@ namespace ToSic.Sxc.Services.CmsService
             {
                 var originalImgTag = imgTag.ToString();
 
-                var imgProps = _imageExtractor.ExtractProperties(originalImgTag);
+                var imgProps = _imageExtractor.ExtractProperties(originalImgTag, Field.Parent.EntityGuid, Folder);
 
                 // use the IImageService to create Picture tags for it
                 var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: ImageSettings ?? "Wysiwyg", factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,
