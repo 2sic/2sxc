@@ -48,44 +48,52 @@ namespace ToSic.Sxc.Services.CmsService
 
         public IHtmlTag Wrap(object contents, bool defaultToolbar)
         {
+            var l = Log.Fn<IHtmlTag>($"{nameof(defaultToolbar)}: {defaultToolbar}");
             var tag = GetContainer(_container);
-            var toolbar = _toolbar ?? defaultToolbar;
+            tag = tag.Wrap(contents);
             // If tag is not a real tag (no name) then it also can't have classes or toolbars; just finish and return
             if (!tag.TagName.HasValue())
-                return tag.Wrap(contents);
+                return l.Return(tag, "no tag name, stop here");
 
             // Add classes if we can
             if (Classes.HasValue()) tag = tag.Class(Classes);
+            var toolbar = _toolbar ?? defaultToolbar;
             if (toolbar && _field != null)
-                tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
+            {
+                l.A("Will add toolbar");
+                tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
                     .Icon(EditFieldIcon)
                     .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, _field.Name)
                 ));
-            return tag.Wrap(contents);
+                return l.Return(tag, "added toolbar");
+            }
+
+            return l.Return(tag, "no toolbar added");
         }
 
         private const string EditFieldIcon =
             "<svg xmlns=\"http://www.w3.org/2000/svg\" height=\"48\" viewBox=\"0 96 960 960\" width=\"48\"><path d=\"M180 1044q-24 0-42-18t-18-42V384q0-24 18-42t42-18h405l-60 60H180v600h600V636l60-60v408q0 24-18 42t-42 18H180Zm300-360Zm182-352 43 42-285 284v86h85l286-286 42 42-303 304H360V634l302-302Zm171 168L662 332l100-100q17-17 42.311-17T847 233l84 85q17 18 17 42.472T930 402l-97 98Z\"/></svg>";
 
-        private IHtmlTag GetContainer(object container) => Log.Func(l =>
+        private IHtmlTag GetContainer(object container)
         {
-            // Already an ITag
-            if (container is IHtmlTag iTagContainer)
-                return (iTagContainer, "container is Blade tag");
-
-            if (container is string tagName)
+            var l = Log.Fn<IHtmlTag>();
+            switch (container)
             {
-                if (tagName.IsEmpty())
-                    return (Tag.RawHtml(), "no container, return empty tag");
-                if (!tagName.Contains(" "))
-                    return (Tag.Custom(tagName), "was a tag name, created tag");
-                throw new ArgumentException("Must be a tag name like 'div' or a RazorBlade Html Tag object",
-                    nameof(container));
+                // Already an ITag
+                case IHtmlTag iTagContainer:
+                    return l.Return(iTagContainer, "container is pre-built RazorBlade tag");
+                case string tagName when tagName.IsEmpty():
+                    return l.Return(Tag.RawHtml(), "no container, return empty tag");
+                case string tagName when !tagName.Contains(" "):
+                    return l.Return(Tag.Custom(tagName), "was a tag name, created tag");
+                case string tagName:
+                    throw l.Ex(new ArgumentException($"Must be a tag name like 'div' or a RazorBlade Html Tag object but got '{tagName}'",
+                        nameof(container)));
+                default:
+                    // Nothing to do, just return an empty tag which can be filled...
+                    return l.Return(Tag.Div(), "no container, return div tag");
             }
-
-            // Nothing to do, just return an empty tag which can be filled...
-            return (Tag.Div(), "no container, return div tag");
-        });
+        }
 
     }
 }
