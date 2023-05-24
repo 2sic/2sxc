@@ -8,8 +8,12 @@ using ToSic.Sxc.Oqt.Server.Installation;
 using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.Oqt.Server.Services;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using OqtPageChangesSupportService = ToSic.Sxc.Oqt.Server.Services.OqtPageChangesSupportService;
+using OqtPrerenderService = ToSic.Sxc.Oqt.Server.Services.OqtPrerenderService;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
@@ -64,6 +68,17 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // Installation: Verify the Razor Helper DLLs are available
             services.TryAddSingleton<GlobalTypesCheck>();
+
+            return services;
+        }
+        private static IServiceCollection AddOqtaneBlazorWebAssemblySupport(this IServiceCollection services)
+        {
+            services.Replace(ServiceDescriptor.Scoped<IOqtDebugStateService, OqtDebugStateService>());
+            //services.TryAddScoped<IOqtPageChangesSupportService, OqtPageChangesSupportService>();
+            services.Replace(ServiceDescriptor.Scoped<IOqtPageChangesSupportService, OqtPageChangesSupportService>());
+            //services.TryAddScoped<IOqtPrerenderService, OqtPrerenderService> ();
+            services.Replace(ServiceDescriptor.Scoped<IOqtPrerenderService, OqtPrerenderService>());
+            //services.TryAddScoped<IOqtSxcRenderService, OqtSxcRenderService>();
 
             return services;
         }

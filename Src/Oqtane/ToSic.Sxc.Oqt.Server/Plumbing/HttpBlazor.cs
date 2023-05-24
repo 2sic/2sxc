@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
@@ -64,5 +65,7 @@ namespace ToSic.Sxc.Oqt.Server.Plumbing
             original.Remove("authmoduleid");
             return original;
         }
+
+        //public override IDictionary<object, object> Items => Current.Items;
     }
 }

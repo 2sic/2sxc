@@ -1,4 +1,5 @@
-﻿using Oqtane.Models;
+﻿using System.Collections.Generic;
+using Oqtane.Models;
 using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
@@ -92,7 +93,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                     SxcScripts = PageOutput.Scripts().ToList(),
                     SxcStyles = PageOutput.Styles().ToList(),
                     PageProperties = PageOutput.GetOqtPagePropertyChangesList(renderResult.PageChanges),
-                    HttpHeaders = renderResult.HttpHeaders,
+                    HttpHeaders = ConvertHttpHeaders(renderResult.HttpHeaders),
                     CspEnabled = renderResult.CspEnabled,
                     CspEnforced = renderResult.CspEnforced,
                     CspParameters = renderResult.CspParameters.Select(c => c.NvcToString())
@@ -109,6 +110,10 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
 
             return ret;
         }
+
+        // convert System.Collections.Generic.IList<ToSic.Sxc.Web.PageService.HttpHeader> to System.Collections.Generic.IList<ToSic.Sxc.Oqt.Shared.HttpHeader>
+        private static IList<HttpHeader> ConvertHttpHeaders(IList<Web.PageService.HttpHeader> httpHeaders) 
+            => httpHeaders.Select(httpHeader => new HttpHeader(httpHeader.Name, httpHeader.Value)).ToList();
 
         internal Alias Alias;
         internal Site Site;

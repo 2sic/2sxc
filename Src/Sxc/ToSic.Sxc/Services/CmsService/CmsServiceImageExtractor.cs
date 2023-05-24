@@ -1,21 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.DI;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Utils;
 
 namespace ToSic.Sxc.Services.CmsService
 {
     public class CmsServiceImageExtractor
     {
-        private readonly LazySvc<IValueConverter> _valueConverter;
-        public CmsServiceImageExtractor(LazySvc<IValueConverter> valueConverter)
-        {
-            _valueConverter = valueConverter;
-        }
-
-        internal ImageProperties ExtractProperties(string oldImgTag)
+        internal ImageProperties ExtractProperties(string oldImgTag, Guid guid, IFolder folder)
         {
             string src = null;
             string factor = null;
@@ -34,7 +29,8 @@ namespace ToSic.Sxc.Services.CmsService
                 switch (key.ToLowerInvariant())
                 {
                     case "data-cmsid":
-                        src = _valueConverter.Value.ToValue(value); // convert 'file:22' to real value 'folder/image.png'
+                        var parts = new LinkParts(value, true);
+                        src = parts.IsMatch ? $"{folder.Url}{parts.Name}" : value;
                         break;
                     case "src":
                         src = src ?? value; // should not overwrite data-cmsid
@@ -57,7 +53,11 @@ namespace ToSic.Sxc.Services.CmsService
                 }
             }
 
-            return new ImageProperties() {Src = src, Factor = factor, ImgAlt = imgAlt, ImgClasses = imgClasses, PicClasses = picClasses, Width = width, OtherAttributes = otherAttributes};
+            return new ImageProperties
+            {
+                Src = src, Factor = factor, ImgAlt = imgAlt, ImgClasses = imgClasses, PicClasses = picClasses,
+                Width = width, OtherAttributes = otherAttributes
+            };
         }
 
         public static string GetPictureClasses(string classes)
@@ -85,7 +85,6 @@ namespace ToSic.Sxc.Services.CmsService
                 case "75": return "3/4";
                 default: return numString;
             }
-            //return widthMatch.Success ? $"{widthMatch.Groups["num"].Value}/{widthMatch.Groups["all"].Value}" : null;
         }
 
         internal class ImageProperties

@@ -53,5 +53,7 @@ namespace ToSic.Sxc.Adam
         #endregion
 
         Folder<TFolderId, TFileId> Get(string path);
+
+        //string GetUrl(string folderPath);
     }
 }

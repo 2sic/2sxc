@@ -12,7 +12,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -20,7 +19,6 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -54,7 +52,7 @@ namespace ToSic.Sxc.Dnn
         public IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
 
 
         #region AsDynamic implementations

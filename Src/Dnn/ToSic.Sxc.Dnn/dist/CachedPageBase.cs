@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.EditUi;
 
@@ -17,8 +18,8 @@ namespace ToSic.Sxc.Dnn.dist
 {
     public class CachedPageBase : CDefault // HACK: inherits dnn default.aspx to preserve correct language cookie
     {
-        private const int UnknownPortalId = -1;
-
+        private const int UnknownSiteId = -1;
+        private const int UnknownPageId = -1;
         protected string PageOutputCached(string virtualPath, EditUiResourceSettings settings)
         {
             var key = CacheKey(virtualPath);
@@ -30,37 +31,25 @@ namespace ToSic.Sxc.Dnn.dist
                 Cache.Insert(key, html, new CacheDependency(path));
             }
 
+            // portalId should be provided in query string (because of DNN special handling of aspx pages in DesktopModules)
+            var portalIdString = Request.QueryString[DnnJsApiService.PortalIdParamName];
+            var siteId = portalIdString.HasValue() ? Convert.ToInt32(portalIdString) : UnknownSiteId;
+            var addOn = $"&{DnnJsApiService.PortalIdParamName}={siteId}";
+
             // pageId should be provided in query string
             var pageIdString = Request.QueryString[HtmlDialog.PageIdInUrl];
-            var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : -1;
-
-            // portalId should be provided in query string (because of DNN special handling of aspx pages in DesktopModules)
-            var portalIdString = Request.QueryString[DnnJsApi.PortalIdParamName];
-            var siteId = portalIdString.HasValue() ? Convert.ToInt32(portalIdString) : GetSiteId(pageId);
-            var addOn = $"&{DnnJsApi.PortalIdParamName}={siteId}";
-
+            var pageId = pageIdString.HasValue() ? Convert.ToInt32(pageIdString) : UnknownPageId;
             var siteRoot = GetSiteRoot(pageId, siteId);
-
-            var content = DnnJsApi.GetJsApiJson(pageId, siteRoot);
 
             var sp = HttpContext.Current.GetScope().ServiceProvider;
             var editUiResources = sp.GetService<EditUiResources>();
             var assets = editUiResources.GetResources(true, siteId, settings);
 
+            var dnnJsApi = sp.GetService<IJsApiService>();
+            var content = dnnJsApi.GetJsApiJson(pageId, siteRoot);
+
             var customHeaders = assets.HtmlHead;
             return HtmlDialog.UpdatePlaceholders(html, content, pageId, addOn, customHeaders, "");
-        }
-
-        private static int GetSiteId(int pageId)
-        {
-            try
-            {
-                return PortalController.GetPortalDictionary().ContainsKey(pageId) ? PortalController.GetPortalDictionary()[pageId] : UnknownPortalId;
-            }
-            catch
-            {
-                return UnknownPortalId;
-            }
         }
 
         private static string CacheKey(string virtualPath) => $"2sxc-edit-ui-page-{virtualPath}";
@@ -82,8 +71,8 @@ namespace ToSic.Sxc.Dnn.dist
         private static string GetSiteRoot(int pageId, int portalId)
         {
             // this is fallback
-            if (pageId == -1) return ServicesFramework.GetServiceFrameworkRoot();
-            if (portalId == -1) portalId = GetSiteId(pageId);
+            if (pageId == UnknownPageId) return ServicesFramework.GetServiceFrameworkRoot();
+            if (portalId == UnknownSiteId) portalId = PortalController.GetPortalDictionary()[pageId];
 
             //var cultureCode = LocaleController.Instance.GetCurrentLocale(portalId).Code;
             var cultureCode = System.Threading.Thread.CurrentThread.CurrentCulture.ToString();

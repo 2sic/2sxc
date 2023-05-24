@@ -256,6 +256,9 @@ namespace ToSic.Sxc.Oqt.Server.Adam
         #endregion
 
         #region OqtToAdam
+
+        public string GetUrl(string folderPath) => _adamPaths.Url(folderPath.ForwardSlash());
+
         private Folder<int, int> OqtToAdam(Folder f)
             => new(AdamContext)
             {
@@ -267,7 +270,7 @@ namespace ToSic.Sxc.Oqt.Server.Adam
                 Name = f.Name,
                 Created = f.CreatedOn,
                 Modified = f.ModifiedOn,
-                Url = _adamPaths.Url(f.Path.ForwardSlash()),
+                Url = GetUrl(f.Path), // _adamPaths.Url(f.Path.ForwardSlash()),
                 PhysicalPath = _adamPaths.PhysicalPath(f.Path),
             };
 

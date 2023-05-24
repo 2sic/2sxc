@@ -20,8 +20,9 @@ namespace ToSic.Sxc.Dnn.Web
         /// <summary>
         /// DI Constructor
         /// </summary>
-        public DnnClientResources(): base($"{DnnConstants.LogName}.JsCss")
+        public DnnClientResources(DnnJsApiHeader dnnJsApiHeader) : base($"{DnnConstants.LogName}.JsCss")
         {
+            ConnectServices(Header = dnnJsApiHeader);
         }
         
         public DnnClientResources Init(Page page, bool? forcePre1025Behavior, IBlockBuilder blockBuilder)
@@ -29,7 +30,6 @@ namespace ToSic.Sxc.Dnn.Web
             _forcePre1025Behavior = forcePre1025Behavior;
             Page = page;
             BlockBuilder = blockBuilder as BlockBuilder;
-            Header = new DnnJsApiHeader(Log);
             return this;
         }
         protected BlockBuilder BlockBuilder;

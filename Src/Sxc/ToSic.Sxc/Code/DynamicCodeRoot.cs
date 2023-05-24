@@ -12,7 +12,6 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -111,7 +110,7 @@ namespace ToSic.Sxc.Code
         public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)
         {
             this.LinkLog(parentLog ?? block?.Log);
-            var cLog = Log.Fn<IDynamicCodeRoot>();
+            var cLog = Log.Fn<IDynamicCodeRoot>($"{nameof(compatibility)}: {compatibility}");
 
             CompatibilityLevel = compatibility;
             if (block == null)
@@ -129,7 +128,7 @@ namespace ToSic.Sxc.Code
         public IApp App { get; private set; }
 
         /// <inheritdoc />
-        public IBlockDataSource Data { get; private set; }
+        public IContextData Data { get; private set; }
 
         /// <inheritdoc />
         // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided

@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Context
 
             try
             {
-                var roots = DnnJsApi.GetApiRoots();
+                var roots = DnnJsApiService.GetApiRoots();
                 appDto.Api = roots.AppApiRoot;
             } catch { /* ignore */ }
             return appDto;

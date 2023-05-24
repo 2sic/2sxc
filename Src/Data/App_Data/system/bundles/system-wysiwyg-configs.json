@@ -123,7 +123,7 @@
                 "Metadata": [
                   {
                     "Id": 164751,
-                    "Version": 8,
+                    "Version": 9,
                     "Guid": "f2b55ac9-29da-43f4-9a99-a2329412de45",
                     "Type": {
                       "Name": "@All",
@@ -194,7 +194,7 @@
                   },
                   {
                     "Id": 164754,
-                    "Version": 7,
+                    "Version": 8,
                     "Guid": "57c69b36-98d6-406b-a378-769554d7c7e7",
                     "Type": {
                       "Name": "@String",
@@ -214,7 +214,7 @@
                   },
                   {
                     "Id": 164755,
-                    "Version": 7,
+                    "Version": 8,
                     "Guid": "2df16e5a-df0a-48dc-8b2b-28cff2408ffd",
                     "Type": {
                       "Name": "@string-dropdown",
@@ -223,7 +223,7 @@
                     "Attributes": {
                       "String": {
                         "DropdownValues": {
-                          "en-us": "default:Default WYSIWYG configuration\ntext:Text WYSIWYG - optimized for formatted text without images etc.\ntext-basic:Text-Basic - Simplified text, without headings\ntext-minimal:Text-Minigal - Very reduced text without headings or bullets\ntext-plain:Text-Plain - basically not a wysiwyg\nrich:Rich Media / Images for long bodies such as Blogs BETA - NOT READY!"
+                          "en-us": "default:Default WYSIWYG configuration\ntext:Text WYSIWYG - optimized for formatted text without images etc.\ntext-basic:Text-Basic - Simplified text, without headings\ntext-minimal:Text-Minigal - Very reduced text without headings or bullets\ntext-plain:Text-Plain - basically not a wysiwyg\nrich:Rich Media / Images for long bodies such as Blogs"
                         },
                         "DropdownValuesFormat": {
                           "en-us": "value-label"
@@ -238,6 +238,87 @@
                         },
                         "EnableTextEntry": {
                           "en-us": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  }
+                ]
+              },
+              {
+                "Name": "MessageModeRich",
+                "Type": "Empty",
+                "InputType": "empty-message",
+                "IsTitle": false,
+                "Metadata": [
+                  {
+                    "Id": 171650,
+                    "Version": 3,
+                    "Guid": "bd265ac7-08bb-4162-a856-bb2981cc430d",
+                    "Type": {
+                      "Name": "@All",
+                      "Id": "@All"
+                    },
+                    "Attributes": {
+                      "String": {
+                        "CustomJavaScript": {
+                          "en-us": ""
+                        },
+                        "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
+                          "en-us": ""
+                        },
+                        "InputType": {
+                          "en-us": "empty-message"
+                        },
+                        "Name": {
+                          "en-us": "MessageModeRich"
+                        },
+                        "Notes": {
+                          "en-us": "<p>To learn about the new rich mode and how the Razor much be modified to support this, see <a href=\"https://r.2sxc.org/wysiwyg-rich\" target=\"_blank\" rel=\"noopener\">r.2sxc.org/wysiwyg-rich</a>.</p>"
+                        },
+                        "Placeholder": {
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
+                        "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
+                        }
+                      },
+                      "Entity": {
+                        "Errors": {
+                          "*": []
+                        },
+                        "Formulas": {
+                          "*": [
+                            "c842ce13-f28b-4104-97d3-209bcf3a312a"
+                          ]
+                        },
+                        "Warnings": {
+                          "*": []
+                        }
+                      },
+                      "Boolean": {
+                        "Disabled": {
+                          "en-us": false
+                        },
+                        "DisableTranslation": {
+                          "en-us": false
+                        },
+                        "Required": {
+                          "en-us": false
+                        },
+                        "VisibleInEditUI": {
+                          "en-us": false
                         }
                       }
                     },
@@ -581,6 +662,34 @@
                 }
               },
               "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 171651,
+              "Version": 1,
+              "Guid": "c842ce13-f28b-4104-97d3-209bcf3a312a",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  return data.Mode == 'rich';\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Visible"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Visible"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
             }
           ]
         }
@@ -750,7 +859,7 @@
         },
         {
           "Id": 166478,
-          "Version": 7,
+          "Version": 8,
           "Guid": "52d79da0-b10d-4f62-9838-2e17b2254a3e",
           "Type": {
             "Name": "StringWysiwygConfiguration",
@@ -765,7 +874,7 @@
                 "en-us": "rich"
               },
               "Title": {
-                "en-us": "Rich Media (BETA - not ready for production!) - With Images and Layout (for Blogs, News etc.)"
+                "en-us": "Rich Media (new 16.01) - With Images and Layout (for Blogs, News etc.)"
               }
             },
             "Boolean": {

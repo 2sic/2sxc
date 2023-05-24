@@ -4,14 +4,18 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Edit;
+using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Dnn.Web
 {
     [PrivateApi]
     public class DnnJsApiHeader: HelperBase
     {
-        public DnnJsApiHeader(ILog parentLog = null) : base(parentLog, "Dnn.JsApiH")
+        private readonly IJsApiService _dnnJsApiService;
+
+        public DnnJsApiHeader(IJsApiService dnnJsApiService, ILog parentLog = null) : base(parentLog, "Dnn.JsApiH")
         {
+            _dnnJsApiService = dnnJsApiService;
         }
 
         public bool AddHeaders() => Log.Func(() =>
@@ -19,7 +23,7 @@ namespace ToSic.Sxc.Dnn.Web
             // ensure we only do this once
             if (MarkAddedAndReturnIfAlreadyDone()) return (false, "already");
 
-            var json = DnnJsApi.GetJsApiJson();
+            var json = _dnnJsApiService.GetJsApiJson();
             if (json == null) return (false, "no path");
 
 #pragma warning disable CS0618

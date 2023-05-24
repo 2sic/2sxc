@@ -33,9 +33,10 @@ namespace ToSic.Sxc.Services
         /// So public users won't get draft data.
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="options"></param>
+        /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+        /// <param name="options">Options how to build/construct the DataSource. </param>
         /// <returns></returns>
-        IDataSource GetAppSource(string noParamOrder = Protector, object options = null);
+        IDataSource GetAppSource(string noParamOrder = Protector, object parameters = default, object options = default);
 
         /// <summary>
         /// Create a DataSource object using it's type.
@@ -44,11 +45,13 @@ namespace ToSic.Sxc.Services
         /// <typeparam name="T">The type of DataSource, usually from [](xref:ToSic.Eav.DataSources) or [](xref:ToSic.Sxc.DataSources)</typeparam>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
-        /// <param name="options">Options how to build/construct the DataSource - especially parameters to set. See TODO: </param>
+        /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+        /// <param name="options">Options how to build/construct the DataSource. </param>
         /// <remarks>WIP v15.07 BETA</remarks>
         /// <returns></returns>
         T GetSource<T>(string noParamOrder = Protector,
             IDataSourceLinkable attach = default,
+            object parameters = default,
             object options = default
         ) where T : IDataSource;
 
@@ -60,13 +63,33 @@ namespace ToSic.Sxc.Services
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="name">The name of the DataSource type, which matches the file name and class in the `/DataSources/` folder.</param>
         /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
-        /// <param name="options">Options how to build/construct the DataSource - especially parameters to set. See TODO: </param>
+        /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+        /// <param name="options">Options how to build/construct the DataSource. </param>
+        /// <param name="debug">Determines if exceptions should be shown. Default is only for Developers.</param>
         /// <remarks>WIP v15.07</remarks>
         /// <returns></returns>
         IDataSource GetSource(string noParamOrder = Protector,
             string name = default,
             IDataSourceLinkable attach = default,
-            object options = default
+            object parameters = default,
+            object options = default,
+            bool? debug = default
+        );
+
+        /// <summary>
+        /// Get a Query from the current App.
+        /// </summary>
+        /// <param name="name">Name of the query</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="attach">Attach in-stream to the query (not yet implemented)</param>
+        /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
+        /// <returns></returns>
+        /// <remarks>New 16.01</remarks>
+        IDataSource GetQuery(
+            string name = default,
+            string noParamOrder = Protector,
+            IDataSourceLinkable attach = default,
+            object parameters = default
         );
 
         #endregion

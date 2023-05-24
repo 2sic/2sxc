@@ -75,7 +75,7 @@ namespace ToSic.Sxc.WebApi.Save
 
                 if (bundle.First().Header.Parent == null) continue;
 
-                var parent = CmsManager.Read.AppState.List.One(bundle.First().Header.GetParentEntityOrError());
+                var parent = CmsManager.Read.AppState.GetDraftOrPublished(bundle.First().Header.GetParentEntityOrError());
                 var targetIsContentBlock = parent.Type.Name == BlocksRuntime.BlockTypeName;
                 
                 var primaryItem = targetIsContentBlock ? FindContentItem(bundle) : bundle.First();

@@ -10,8 +10,16 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 
         public string Message { get; }
 
-        internal ErrorDto(IBlock cb)
+        internal ErrorDto(IBlock cb, string errorCode)
         {
+            // New mechanism in 16.01
+            if (errorCode != null)
+            {
+                Type = errorCode;
+                return;
+            }
+
+            // should probably be removed, if new mechanism works, because it should already set the error code into the string
             if (cb.DataIsMissing)
                 Type = "DataIsMissing";
         }

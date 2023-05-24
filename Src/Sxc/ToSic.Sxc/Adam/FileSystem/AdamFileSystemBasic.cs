@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Adam
 
 
         public int MaxUploadKb() => MaxUploadKbDefault;
-
+        public string GetUrl(string folderPath) => _adamPaths.Url(folderPath.ForwardSlash());
 
 
         #region Helpers

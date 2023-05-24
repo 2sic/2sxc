@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Environment;
 using ToSic.Eav.Data;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.WebApi.ItemLists;
 
 namespace ToSic.Sxc.WebApi.Cms
@@ -11,19 +14,27 @@ namespace ToSic.Sxc.WebApi.Cms
     public partial class ListControllerReal
     {
 
-        public void Replace(Guid guid, string part, int index, int entityId, bool add = false) => Log.Do($"target:{guid}, part:{part}, index:{index}, id:{entityId}", ()=>
+        public void Replace(Guid guid, string part, int index, int entityId, bool add)
         {
+            var isContentPair = ViewParts.ContentLower.EqualsInsensitive(part);
+
+            var l = Log.Fn($"target:{guid}, {nameof(part)}:{part}, {nameof(isContentPair)}: {isContentPair}, {nameof(index)}:{index}, {nameof(entityId)}:{entityId}, {nameof(add)}: {add}");
+
             void InternalSave(VersioningActionInfo _)
             {
-                var entity = CmsManagerOfBlock.AppState.List.One(guid);
-                if (entity == null) throw new Exception($"Can't find item '{guid}'");
+                var entity = CmsManagerOfBlock.AppState.GetDraftOrPublished(guid)
+                             ?? throw l.Ex( new Exception($"Can't find item '{guid}'"));
 
                 // Make sure we have the correct casing for the field names
                 part = entity.Type[part].Name;
 
                 var forceDraft = Context.Publishing.ForceDraft;
                 if (add)
-                    CmsManagerOfBlock.Entities.FieldListAdd(entity, new[] { part }, index, new int?[] { entityId }, forceDraft, false);
+                {
+                    var fields = isContentPair ? ViewParts.ContentPair : new[] { part };
+                    var values = isContentPair ? new int?[] { entityId, null } : new int?[] { entityId };
+                    CmsManagerOfBlock.Entities.FieldListAdd(entity, fields, index, values, forceDraft, false);
+                }
                 else
                     CmsManagerOfBlock.Entities.FieldListReplaceIfModified(entity, new[] { part }, index, new int?[] { entityId },
                         forceDraft);
@@ -31,12 +42,13 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // use dnn versioning - this is always part of page
             _versioning.New().DoInsidePublishing(Context, InternalSave);
-        });
+            l.Done();
+        }
 
 
-        internal ReplacementListDto BuildReplaceList(Guid guid, string part, int index, string typeName)
+        internal ReplacementListDto GetListToReorder(Guid guid, string part, int index, string typeName)
         {
-            var wrapLog = Log.Fn<ReplacementListDto>($"{nameof(typeName)}:{typeName}, {nameof(part)}:{part}, {nameof(index)}:{index}");
+            var l = Log.Fn<ReplacementListDto>($"{nameof(typeName)}:{typeName}, {nameof(part)}:{part}, {nameof(index)}:{index}");
 
             var (existingItemsInField, typeNameOfField) = FindItemAndFieldTypeName(guid, part);
 
@@ -44,13 +56,13 @@ namespace ToSic.Sxc.WebApi.Cms
 
             // if no type was defined in this set, then return an empty list as there is nothing to choose from
             if (string.IsNullOrEmpty(typeName))
-                return wrapLog.ReturnNull("no type name, so no data");
+                return l.ReturnNull("no type name, so no data");
 
             var ct = Context.AppState.GetContentType(typeName);
 
             var listTemp = CmsManagerOfBlock.Read.Entities.Get(typeName);
 
-            var results = listTemp.ToDictionary(
+            var results = listTemp.Select(Context.AppState.GetDraftOrKeep).ToDictionary(
                 p => p.EntityId,
                 p => p.GetBestTitle() ?? "");
 
@@ -60,22 +72,23 @@ namespace ToSic.Sxc.WebApi.Cms
                 : null;
 
             var result = new ReplacementListDto { SelectedId = selectedId, Items = results, ContentTypeName = ct.NameId };
-            return wrapLog.Return(result);
+            return l.Return(result);
         }
 
 
         private (List<IEntity> items, string typeName) FindItemAndFieldTypeName(Guid guid, string part)
         {
-            var parent = Context.AppState.List.One(guid);
-            if (parent == null) throw new Exception($"No item found for {guid}");
-            if (!parent.Attributes.ContainsKey(part)) throw new Exception($"Could not find field {part} in item {guid}");
-            var itemList = parent.Children(part);
+            var l = Log.Fn<(List<IEntity>, string)>($"guid:{guid},part:{part}");
+            var parent = Context.AppState.GetDraftOrPublished(guid);
+            if (parent == null) throw l.Ex(new Exception($"No item found for {guid}"));
+            if (!parent.Attributes.ContainsKey(part)) throw l.Ex(new Exception($"Could not find field {part} in item {guid}"));
+            var itemList = parent.Children(part).Select(Context.AppState.GetDraftOrKeep).ToList();
 
             // find attribute-type-name
             var attribute = parent.Type[part];
-            if (attribute == null) throw new Exception($"Attribute definition for '{part}' not found on the item {guid}");
+            if (attribute == null) throw l.Ex(new Exception($"Attribute definition for '{part}' not found on the item {guid}"));
             var typeNameForField = attribute.EntityFieldItemTypePrimary();
-            return (itemList, typeNameForField);
+            return l.ReturnAsOk((itemList, typeNameForField));
         }
 
 

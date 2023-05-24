@@ -191,7 +191,7 @@ namespace ToSic.Sxc.WebApi.App
             if (!parentGuid.HasValue) 
                 return wrapLog.ReturnFalse($"'{SaveApiAttributes.ParentRelParent}' guid is missing");
 
-            var parentEntity = AppState.List.One(parentGuid.Value);
+            var parentEntity = AppState.GetDraftOrPublished(parentGuid.Value);
             if (parentEntity == null) 
                 return wrapLog.ReturnFalse("Parent entity is missing");
 

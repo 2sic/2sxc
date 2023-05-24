@@ -3,15 +3,19 @@ using Microsoft.AspNetCore.Html;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Edit;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Web.JsContext;
 
 namespace ToSic.Sxc.Mvc.Web
 {
     public class MvcPageProperties: HasLog
     {
+        private readonly JsApiCache _jsApiCache;
+
         #region Constructor and DI
 
-        public MvcPageProperties() : base("Mvc.PgProp")
+        public MvcPageProperties(JsApiCache jsApiCache) : base("Mvc.PgProp")
         {
+            _jsApiCache = jsApiCache;
         }
 
         #endregion
@@ -51,7 +55,17 @@ namespace ToSic.Sxc.Mvc.Web
             var pageId = 0;
             var siteRoot = MvcConstants.SiteRoot;
             var apiRoot = siteRoot + WebApi.WebApiConstants.WebApiRoot + "/";
-            var json = InpageCms.JsApiJson(pageId, siteRoot, apiRoot, apiRoot,AntiForgeryToken(), MvcConstants.UiRoot);
+            var jsApiJson = _jsApiCache.JsApiJson(
+                platform: "MVC", 
+                pageId: pageId, 
+                siteRoot: () => siteRoot, 
+                apiRoot: () => apiRoot, 
+                appApiRoot: () => apiRoot,
+                uiRoot: () => "TODO",
+                rvtHeader: "TODO",
+                rvt: AntiForgeryToken,
+                dialogQuery: MvcConstants.UiRoot);
+            var json = InpageCms.JsApiJson(jsApiJson);
 
             var meta = Tag.Meta().Name(InpageCms.MetaName).Content(json).ToString();
 

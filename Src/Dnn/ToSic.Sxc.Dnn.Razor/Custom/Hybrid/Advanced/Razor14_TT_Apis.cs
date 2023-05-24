@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -43,7 +41,17 @@ namespace Custom.Hybrid.Advanced
         public new IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
+
+        #endregion
+
+        #region AsCms and AsTyped (new v16)
+
+        /// <inheritdoc />
+        public ITypedEntity AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTyped(target);
+
+        /// <inheritdoc />
+        public IEnumerable<ITypedEntity> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
 
         #endregion
 

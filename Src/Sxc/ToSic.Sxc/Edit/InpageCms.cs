@@ -1,33 +1,22 @@
-﻿namespace ToSic.Sxc.Edit
+﻿using ToSic.Sxc.Web.JsContext;
+
+namespace ToSic.Sxc.Edit
 {
     public class InpageCms
     {
         public const string MetaName = "_jsApi";
         public const string ExtensionPlaceholder = "e.x.t";
-
-        public static string JsApiJson(string platform,
-            int pageId, 
-            string siteRoot, 
-            string apiRoot, 
-            string appApiRoot,
-            string uiRoot, 
-            string rvtHeader, 
-            string rvt,
-            string dialogQuery = null // these are any platform specific url query params to the dialog; can be null
-        )
-        {
-            var json = "{"
-                       + $"\"platform\": \"{platform.ToLowerInvariant()}\","
-                       + $"\"page\": {pageId},"
-                       + $"\"root\": \"{siteRoot}\","
-                       + $"\"api\": \"{apiRoot}\","
-                       + $"\"appApi\": \"{appApiRoot}\", "
-                       + $"\"uiRoot\": \"{uiRoot}\", "
-                       + $"\"rvtHeader\": \"{rvtHeader}\", "
-                       + $"\"rvt\": \"{rvt}\","
-                       + $"\"dialogQuery\": \"{dialogQuery}\""
-                       + "}";
-            return json;
-        }
+        public static string JsApiJson(JsApi jsApi) =>
+            "{"
+            + $"\"{nameof(JsApi.platform)}\": \"{jsApi.platform}\","
+            + $"\"{nameof(JsApi.page)}\": {jsApi.page},"
+            + $"\"{nameof(JsApi.root)}\": \"{jsApi.root}\","
+            + $"\"{nameof(JsApi.api)}\": \"{jsApi.api}\","
+            + $"\"{nameof(JsApi.appApi)}\": \"{jsApi.appApi}\", "
+            + $"\"{nameof(JsApi.uiRoot)}\": \"{jsApi.uiRoot}\", "
+            + $"\"{nameof(JsApi.rvtHeader)}\": \"{jsApi.rvtHeader}\", "
+            + $"\"{nameof(JsApi.rvt)}\": \"{jsApi.rvt}\","
+            + $"\"{nameof(JsApi.dialogQuery)}\": \"{jsApi.dialogQuery}\""
+            + "}";
     }
 }

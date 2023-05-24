@@ -155,7 +155,7 @@ namespace ToSic.Sxc.Engines
         /// <inheritdoc />
         public RenderEngineResult Render(object data)
         {
-            var wrapLog = Log.Fn<RenderEngineResult>(timer: true);
+            var l = Log.Fn<RenderEngineResult>(timer: true);
             // call engine internal feature to optionally change what data is actually used or prepared for search...
 #if NETFRAMEWORK
 #pragma warning disable CS0618
@@ -163,15 +163,15 @@ namespace ToSic.Sxc.Engines
 #pragma warning restore CS0618
 #endif
             // check if rendering is possible, or throw exceptions...
-            var (renderStatus, message) = CheckExpectedNoRenderConditions();
+            var (renderStatus, message, errorCode) = CheckExpectedNoRenderConditions();
 
             if (renderStatus != RenderStatusType.Ok)
-                return wrapLog.Return(new RenderEngineResult(message, false, null), $"{nameof(renderStatus)} not OK");
+                return l.Return(new RenderEngineResult(message, false, null, errorCode), $"{nameof(renderStatus)} not OK");
 
             var renderedTemplate = RenderTemplate(data);
             var depMan = Services.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate);
-            return wrapLog.ReturnAsOk(result);
+            return l.ReturnAsOk(result);
         }
 
         private void CheckExpectedTemplateErrors()
@@ -183,13 +183,13 @@ namespace ToSic.Sxc.Engines
                 throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
         }
 
-        private (RenderStatusType RenderStatus, string Message) CheckExpectedNoRenderConditions()
+        private (RenderStatusType RenderStatus, string Message, string ErrorCode) CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
                 Block.Configuration.Content.All(e => e == null))
-                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate);
+                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, BlockBuildingConstants.ErrorDataIsMissing);
 
-            return (RenderStatusType.Ok, null);
+            return (RenderStatusType.Ok, null, null);
         }
 
         // todo: refactor - this should go somewhere, I just don't know where :)

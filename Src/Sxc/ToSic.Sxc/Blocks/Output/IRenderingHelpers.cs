@@ -15,9 +15,10 @@ namespace ToSic.Sxc.Blocks.Output
             int contentBlockId = 0, 
             bool editContext = false, 
             string tag = "div",
-            bool addLineBreaks = true);
+            bool addLineBreaks = true,
+            string errorCode = default);
 
-        string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);
+        //string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);
 
         string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null, string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true);
 

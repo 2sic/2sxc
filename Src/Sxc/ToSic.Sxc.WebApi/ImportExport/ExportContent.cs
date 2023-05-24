@@ -8,7 +8,6 @@ using ToSic.Eav.Security;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
-using ToSic.Eav.WebApi.Security;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
@@ -88,7 +87,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
             string templateIdsString)
         {
             Log.A($"export content z#{zoneId}, a#{appId}, ids:{entityIdsString}, templId:{templateIdsString}");
-            SecurityHelpers.ThrowIfNotAdmin(_user.IsSiteAdmin, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
+            SecurityHelpers.ThrowIfNotSiteAdmin(_user, Log); // must happen inside here, as it's opened as a new browser window, so not all headers exist
 
             var contextZoneId = _site.ZoneId;
             var currentApp = _impExpHelpers.New().GetAppAndCheckZoneSwitchPermissions(zoneId, appId, _user, contextZoneId);

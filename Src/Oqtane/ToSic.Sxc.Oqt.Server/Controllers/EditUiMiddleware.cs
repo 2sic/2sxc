@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Antiforgery;
 using Oqtane.Repository;
 using ToSic.Sxc.Oqt.Server.Blocks.Output;
 using ToSic.Sxc.Oqt.Server.Plumbing;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.EditUi;
 
@@ -60,8 +61,10 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             var siteRoot = OqtPageOutput.GetSiteRoot(siteStateInitializer?.InitializedState);
             var antiForgery = sp.GetRequiredService<IAntiforgery>();
             var tokenSet = antiForgery.GetAndStoreTokens(context);
-            var rsvt = tokenSet.RequestToken;
-            var content = OqtJsApi.GetJsApi(pageId, siteRoot, rsvt);
+            var rvt = tokenSet.RequestToken;
+
+            var oqtJsApi = sp.GetRequiredService<IJsApiService>();
+            var content = oqtJsApi.GetJsApiJson(pageId, siteRoot, rvt);
 
             // New feature to get resources
             var htmlHead = "";
@@ -73,7 +76,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
             }
             catch { /* ignore */ }
 
-            html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", htmlHead, $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rsvt}\" >");
+            html = HtmlDialog.UpdatePlaceholders(html, content, pageId, "", htmlHead, $"<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"{rvt}\" >");
 
             var bytes = Encoding.Default.GetBytes(html);
 

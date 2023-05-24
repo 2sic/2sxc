@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -95,7 +91,7 @@ namespace ToSic.Sxc.Dnn
         public new IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
 
         #endregion
 

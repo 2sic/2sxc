@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using ToSic.Lib.Documentation;
@@ -38,5 +39,10 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <returns></returns>
         List<KeyValuePair<string, string>> QueryStringKeyValuePairs();
+
+        ///// <summary>
+        ///// Items collection from HttpContext
+        ///// </summary>
+        //IDictionary<object, object> Items { get; }
     }
 }

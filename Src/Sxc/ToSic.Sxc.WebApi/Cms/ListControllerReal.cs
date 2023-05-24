@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
@@ -68,16 +69,18 @@ namespace ToSic.Sxc.WebApi.Cms
                 // determine versioning
                 var forceDraft = (ContextOfBlock as IContextOfBlock)?.Publishing.ForceDraft ?? false;
                 // check field list (default to content-block fields)
-                var fieldList = fields?.Split(',').Select(f => f.Trim()).ToArray() ?? ViewParts.ContentPair;
+                var fieldList = fields == null || fields == ViewParts.ContentLower
+                    ? ViewParts.ContentPair
+                    : fields.Split(',').Select(f => f.Trim()).ToArray();
                 action.Invoke(target, fieldList, forceDraft);
             });
         }
 
         private IEntity FindOrThrow(Guid? parent)
         {
-            var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value);
+            var target = parent == null ? CtxResolver.BlockRequired().Configuration.Entity : ContextOfBlock.AppState.List.One(parent.Value); 
             if (target == null) throw new Exception($"Can't find parent {parent}");
-            return target;
+            return ContextOfBlock.AppState.GetDraftOrKeep(target);
         }
     }
 }

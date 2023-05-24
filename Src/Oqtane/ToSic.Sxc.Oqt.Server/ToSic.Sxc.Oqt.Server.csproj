@@ -28,6 +28,11 @@
     <!--<PreserveCompilationReferences>true</PreserveCompilationReferences>
     <PreserveCompilationContext>true</PreserveCompilationContext>-->
   </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
+        <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+        <Compile Include="..\..\..\..\eav-server\ToSic.Eav.Core\Properties\SharedAssemblyInfo.cs" Link="Properties\SharedAssemblyInfo.cs" />
+    </ItemGroup>
   <ItemGroup>
     <Compile Remove="Apps\**" />
     <Compile Remove="Contents\**" />
@@ -67,12 +72,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs" Link="Properties\AssemblyInfoInherited.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <!-- stv - SQL scripts have to be included as embedded resources -->
-	  <!-- to be executed as part of oqtane installation or upgrade procedure -->
+    <!-- to be executed as part of oqtane installation or upgrade procedure -->
     <EmbeddedResource Include="Scripts\ToSic.Sxc.0.0.1.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.00.00.sql" />
     <EmbeddedResource Include="Scripts\ToSic.Sxc.12.02.01.sql" />
@@ -91,8 +92,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
     <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.3" />
-    <PackageReference Include="Oqtane.Server" Version="3.4.2" />
-    <PackageReference Include="Oqtane.Shared" Version="3.4.2" />
+    <PackageReference Include="Oqtane.Server" Version="3.4.3" />
+    <PackageReference Include="Oqtane.Shared" Version="3.4.3" />
     <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.0.4" />
   </ItemGroup>
 
@@ -100,10 +101,11 @@
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Core\ToSic.Eav.Core.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.ImportExport\ToSic.Eav.ImportExport.csproj" />
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Lib.Core\ToSic.Lib.Core.csproj" />
+    <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Server\Oqtane.Server.csproj" />
+    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />-->
     <ProjectReference Include="..\..\Razor\ToSic.Sxc.Razor\ToSic.Sxc.Razor.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc.WebApi\ToSic.Sxc.WebApi.csproj" />
     <ProjectReference Include="..\..\Sxc\ToSic.Sxc\ToSic.Sxc.csproj" />
-    <ProjectReference Include="..\ToSic.Sxc.Oqt.Client\ToSic.Sxc.Oqt.Client.csproj" />
     <ProjectReference Include="..\ToSic.Sxc.Oqt.Shared\ToSic.Sxc.Oqt.Shared.csproj" />
   </ItemGroup>
 

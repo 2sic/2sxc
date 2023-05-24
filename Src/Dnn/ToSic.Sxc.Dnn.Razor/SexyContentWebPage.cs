@@ -5,7 +5,6 @@ using Custom.Hybrid;
 using DotNetNuke.Entities.Modules;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.SexyContent.Engines;
@@ -18,7 +17,6 @@ using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
@@ -29,7 +27,7 @@ using ToSic.Sxc.Web;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
-using static ToSic.Eav.Parameters;
+
 // ReSharper disable InheritdocInvalidUsage
 
 // ReSharper disable once CheckNamespace
@@ -84,7 +82,7 @@ namespace ToSic.SexyContent.Razor
         public new IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
 
         public RazorPermissions Permissions => new RazorPermissions(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
 

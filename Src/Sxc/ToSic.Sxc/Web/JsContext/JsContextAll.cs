@@ -5,6 +5,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Edit.ClientContextInfo;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Web.JsContext
@@ -23,11 +24,20 @@ namespace ToSic.Sxc.Web.JsContext
         // ReSharper disable once InconsistentNaming
         public ErrorDto error;
         public UiDto Ui;
+        public JsApi JsApi;
 
-        public JsContextAll(JsContextLanguage jsLangCtx) : base("Sxc.CliInf") => _jsLangCtx = jsLangCtx;
+        public JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService) : base("Sxc.CliInf")
+        {
+            ConnectServices(
+                _jsLangCtx = jsLangCtx,
+                _jsApiService = jsApiService
+                );
+        }
+
         private readonly JsContextLanguage _jsLangCtx;
+        private readonly IJsApiService _jsApiService;
 
-        public JsContextAll GetJsContext(string systemRootUrl, IBlock block)
+        public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode)
         {
             var l = Log.Fn<JsContextAll>();
             var ctx = block.Context;
@@ -55,8 +65,12 @@ namespace ToSic.Sxc.Web.JsContext
 
             l.A($"{nameof(autoToolbar)}: {autoToolbar}");
             Ui = new UiDto(autoToolbar);
+            JsApi = _jsApiService.GetJsApi(pageId: Environment.PageId,
+                siteRoot: null,
+                rvt: null
+            );
 
-            error = new ErrorDto(block);
+            error = new ErrorDto(block, errorCode);
             return l.Return(this);
         }
     }

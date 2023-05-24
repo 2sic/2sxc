@@ -1,13 +1,10 @@
 ﻿using Custom.Hybrid.Advanced;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
-using IHasLog = ToSic.Lib.Logging.IHasLog;
-using ILog = ToSic.Lib.Logging.ILog;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -23,7 +20,7 @@ namespace Custom.Hybrid
     [PublicApi]
     [DnnLogExceptions]
     [DefaultToNewtonsoftForHttpJson]
-    public abstract class Api14: Api14<dynamic, ServiceKit14>, 
+    public abstract class Api14: Api14<dynamic, ServiceKit14>,
         IDynamicCode12, 
         IDynamicWebApi, 
         IHasDynamicCodeRoot

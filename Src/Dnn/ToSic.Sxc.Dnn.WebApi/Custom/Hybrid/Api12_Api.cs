@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -27,7 +25,7 @@ namespace Custom.Hybrid
         public IApp App => _DynCodeRoot.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot.Data;
+        public IContextData Data => _DynCodeRoot.Data;
 
         #region File
 

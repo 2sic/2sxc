@@ -2,6 +2,7 @@
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 
 namespace ToSic.Sxc.Dnn
@@ -41,7 +42,8 @@ namespace ToSic.Sxc.Dnn
                             msg = renderingHelper.WrapInContext(msg,
                                 instanceId: Block.ParentId,
                                 contentBlockId: Block.ContentBlockId,
-                                editContext: true);
+                                editContext: true,
+                                errorCode: BlockBuildingConstants.ErrorGeneral);
                     }
                     catch { /* ignore */ }
 

@@ -4,7 +4,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Code
         public IApp App => _DynCodeRoot?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot?.Data;
+        public IContextData Data => _DynCodeRoot?.Data;
 
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();

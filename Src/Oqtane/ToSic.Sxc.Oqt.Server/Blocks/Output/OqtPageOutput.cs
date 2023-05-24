@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
-using Oqtane.Shared;
 using ToSic.Eav.Helpers;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
-using ToSic.Sxc.Edit;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.PageFeatures;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks.Output
@@ -18,16 +17,18 @@ namespace ToSic.Sxc.Oqt.Server.Blocks.Output
     {
         #region Constructor and DI
 
-        public OqtPageOutput(SiteState siteState, IBlockResourceExtractor blockResourceExtractor) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
+        public OqtPageOutput(SiteState siteState, IBlockResourceExtractor blockResourceExtractor, IJsApiService jsApiService) : base($"{OqtConstants.OqtLogPrefix}.AssHdr")
         {
             ConnectServices(
                 _siteState = siteState,
-                _blockResourceExtractor = blockResourceExtractor
+                _blockResourceExtractor = blockResourceExtractor,
+                _jsApiService = jsApiService
             );
         }
 
         private readonly SiteState _siteState;
         private readonly IBlockResourceExtractor _blockResourceExtractor;
+        private readonly IJsApiService _jsApiService;
         
         public void Init(OqtSxcViewBuilder parent, IRenderResult renderResult)
         {

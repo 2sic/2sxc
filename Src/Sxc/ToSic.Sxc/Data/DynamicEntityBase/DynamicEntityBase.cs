@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using static System.StringComparer;
 
 namespace ToSic.Sxc.Data
 {
@@ -20,7 +19,7 @@ namespace ToSic.Sxc.Data
         public DynamicEntity.MyServices _Services { get; }
 
         // ReSharper disable once InconsistentNaming
-        protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+        protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(InvariantCultureIgnoreCase);
 
 
         public abstract PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path);

@@ -1,10 +1,9 @@
-﻿using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
+﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid.Advanced
@@ -16,6 +15,13 @@ namespace Custom.Hybrid.Advanced
     {
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
         private readonly GetOnce<TServiceKit> _kit = new();
+
+
+        /// <inheritdoc />
+        public ITypedEntity AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTyped(target);
+
+        /// <inheritdoc />
+        public IEnumerable<ITypedEntity> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
 
     }
 }

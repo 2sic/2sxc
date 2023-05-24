@@ -11,7 +11,8 @@ namespace ToSic.Sxc.Services
             object container = default,
             string classes = default,
             bool debug = default,
-            object imageSettings = default
+            object imageSettings = default,
+            bool? toolbar = default
         );
     }
 }

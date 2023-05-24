@@ -1,8 +1,4 @@
-﻿using System;
-using ToSic.Lib.Logging;
-using ToSic.Lib.Services;
-
-namespace ToSic.Sxc.Adam
+﻿namespace ToSic.Sxc.Adam
 {
     /// <summary>
     /// The ADAM Navigator creates a folder object for an entity/field combination
@@ -12,7 +8,12 @@ namespace ToSic.Sxc.Adam
     {
         public FolderOfField(AdamManager<TFolderId, TFileId> adamManager, AdamStorageOfField<TFolderId, TFileId> adamStorageOfField) : base(adamManager)
         {
-            if (!AdamManager.Exists(adamStorageOfField.Root)) return;
+            if (!AdamManager.Exists(adamStorageOfField.Root))
+            {
+                // WIP - maybe still provide some basic info?
+                //Url = adamStorageOfField.Manager.AdamFs.GetUrl(adamStorageOfField.Root);
+                return;
+            }
 
             var f = AdamManager.Folder(adamStorageOfField.Root);
             if (f == null) return;

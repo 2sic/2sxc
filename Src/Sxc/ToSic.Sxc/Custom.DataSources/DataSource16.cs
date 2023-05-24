@@ -93,6 +93,9 @@ namespace Custom.DataSource
         /// <inheritdoc/>
         public IImmutableList<IEntity> TryGetIn(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetIn(name);
 
+        /// <inheritdoc/>
+        public IImmutableList<IEntity> TryGetOut(string name = DataSourceConstants.StreamDefaultName) => _inner.TryGetOut(name);
+
         // The rest is all explicit implementation only
 
         IReadOnlyDictionary<string, IDataStream> IDataSource.In => _inner.In;

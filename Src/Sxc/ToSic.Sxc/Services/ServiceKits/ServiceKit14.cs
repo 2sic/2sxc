@@ -28,8 +28,8 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The CMS Service - WIP
         /// </summary>
-        [WorkInProgressApi("Still WIP v15.07")]
-        public ICmsService Cms => _cms.Get(GetService<ICmsService>);
+        [PrivateApi("Not yet for public use, as API is not yet public")]
+        internal ICmsService Cms => _cms.Get(GetService<ICmsService>);
         private readonly GetOnce<ICmsService> _cms = new GetOnce<ICmsService>();
 
         /// <summary>

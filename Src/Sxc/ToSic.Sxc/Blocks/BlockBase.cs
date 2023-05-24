@@ -9,6 +9,7 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.LookUp;
 using App = ToSic.Sxc.Apps.App;
@@ -145,7 +146,7 @@ namespace ToSic.Sxc.Blocks
             set => Log.Setter(() =>
             {
                 _view = value;
-                _dataSource = null; // reset this if the view changed...
+                _data.Reset(); // reset this if the view changed...
             });
         }
         private IView _view;
@@ -158,17 +159,13 @@ namespace ToSic.Sxc.Blocks
 
 
 
-        public IBlockDataSource Data => _data.Get(Log, l =>
+        public IContextData Data => _data.Get(Log, l =>
         {
-            if (_dataSource != null) return _dataSource;
             l.A($"About to load data source with possible app configuration provider. App is probably null: {App}");
-            _dataSource = Services.BdsFactoryLazy.Value.GetBlockDataSource(this, App?.ConfigurationProvider);
-            return _dataSource;
+            var dataSource = Services.BdsFactoryLazy.Value.GetContextDataSource(this, App?.ConfigurationProvider);
+            return dataSource;
         });
-        private readonly GetOnce<IBlockDataSource> _data = new GetOnce<IBlockDataSource>();
-
-        // ReSharper disable once InconsistentNaming
-        protected IBlockDataSource _dataSource;
+        private readonly GetOnce<IContextData> _data = new GetOnce<IContextData>();
 
         public BlockConfiguration Configuration { get; protected set; }
         

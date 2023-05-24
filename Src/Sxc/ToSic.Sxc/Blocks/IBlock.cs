@@ -4,9 +4,8 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.DataSources;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
-using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
 
 namespace ToSic.Sxc.Blocks
@@ -50,9 +49,9 @@ namespace ToSic.Sxc.Blocks
         IApp App { get; }
 
         /// <summary>
-        /// The <see cref="IBlockDataSource"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
+        /// The <see cref="IContextData"/> which delivers data for this block (will be used by the <see cref="IEngine"/> together with the View)
         /// </summary>
-        IBlockDataSource Data { get; }
+        IContextData Data { get; }
 
         [PrivateApi("might rename this some time")]
         bool IsContentApp { get; }

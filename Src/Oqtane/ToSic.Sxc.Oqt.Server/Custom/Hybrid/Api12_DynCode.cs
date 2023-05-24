@@ -2,16 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using ToSic.Eav;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
@@ -40,7 +37,7 @@ namespace Custom.Hybrid
         public IApp App => _DynCodeRoot?.App;
 
         /// <inheritdoc />
-        public IBlockDataSource Data => _DynCodeRoot?.Data;
+        public IContextData Data => _DynCodeRoot?.Data;
 
         #region AsDynamic implementations
         /// <inheritdoc/>

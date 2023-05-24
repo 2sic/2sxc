@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
 using Oqtane.Modules;
 using Oqtane.Security;
@@ -10,33 +9,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ToSic.Sxc.Oqt.Client;
+using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Oqt.App
 {
-    public class ModuleProBase: ModuleBase
-    {
+  public class ModuleProBase: ModuleBase, IOqtHybridLog
+  {
         #region Injected Services
 
         [Inject] public NavigationManager NavigationManager { get; set; }
-        [Inject] public IHttpContextAccessor HttpContextAccessor { get; set; }
+        [Inject] public IOqtDebugStateService OqtDebugStateService { get; set; }
 
         #endregion
 
         #region Shared Variables
-
-        //public static bool Debug;
-
-        public bool Debug // persist state across circuits (blazor server only)
-        {
-            get => (HttpContextAccessor?.HttpContext?.Items[DebugKey] as bool?) ?? false;
-            set
-            {
-                if (HttpContextAccessor?.HttpContext != null)
-                    HttpContextAccessor.HttpContext.Items[DebugKey] = value;
-            }
-        }
-        private const string DebugKey = "Debug";
 
         public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Host);
         private bool? _isSuperUser;
@@ -51,15 +38,18 @@ namespace ToSic.Sxc.Oqt.App
         //{
         //    await base.OnInitializedAsync();
         //}
-        public bool IsPreRendering() => PageState.Site.RenderMode == "ServerPrerendered"; // The render mode for the site.
+        public bool IsPreRendering() => 
+            (PageState.Site.RenderMode is "ServerPrerendered" or "WebAssemblyPrerendered") // The render mode for the site.
+            || PageState.QueryString.ContainsKey("prerender"); // used for testing, just add to page url in query string ("?prerender")
 
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
 
-            if (NavigationManager.TryGetQueryString<bool>("debug", out var debugInQueryString))
-                Debug = debugInQueryString;
-            
+            var debugEnabled = await OqtDebugStateService.GetDebugAsync();
+            if (!debugEnabled && NavigationManager.TryGetQueryString<bool>("debug", out var debugInQueryString))
+                OqtDebugStateService.SetDebug(debugInQueryString);
+
             Log($"2sxc Blazor Logging Enabled");  // will only show if it's enabled
         }
         
@@ -85,7 +75,7 @@ namespace ToSic.Sxc.Oqt.App
         public void Log(params object[] message)
         {
             // If the url has a debug=true and we are the super-user
-            if (message == null || !message.Any() || !Debug || !IsSuperUser) return;
+            if (message == null || !message.Any() || !OqtDebugStateService.IsDebugEnabled || !IsSuperUser) return;
 
             _logPrefix ??= $"2sxc:Page({PageState?.Page?.PageId}):Mod({ModuleState?.ModuleId}):";
             try

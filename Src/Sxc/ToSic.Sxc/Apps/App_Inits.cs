@@ -1,9 +1,11 @@
-﻿using ToSic.Sxc.Blocks;
+﻿using ToSic.Lib.Documentation;
+using ToSic.Sxc.Blocks;
 
 namespace ToSic.Sxc.Apps
 {
     public partial class App
     {
+        [PrivateApi]
         public IApp Init(int appId, IBlock optionalBlock = null)
         {
             var appStates = _appStates.New();

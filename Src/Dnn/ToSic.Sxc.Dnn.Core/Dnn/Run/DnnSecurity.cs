@@ -8,6 +8,7 @@ using DotNetNuke.Security.Roles;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Context.Raw;
+using static ToSic.Sxc.Dnn.DnnSxcSettings;
 
 namespace ToSic.Sxc.Dnn.Run
 {
@@ -27,7 +28,12 @@ namespace ToSic.Sxc.Dnn.Run
         /// </summary>
         /// <param name="portalId"></param>
         /// <returns></returns>
-        internal bool PortalHasDesignersGroup(int portalId) => PortalHasGroup(portalId, DnnSxcSettings.DnnGroupSxcDesigners);
+        internal bool PortalHasExplicitAdminGroups(int portalId)
+            => PortalHasGroup(portalId, DnnGroupSxcDesigners) || PortalHasGroup(portalId, DnnGroupSxcAdmins);
+
+        internal bool IsExplicitAdmin(UserInfo user)
+            => !IsAnonymous(user) && (user.IsInRole(DnnGroupSxcDesigners) || user.IsInRole(DnnGroupSxcAdmins));
+
 
         internal bool PortalHasGroup(int portalId, string groupName) => _roleController.Value.GetRoleByName(portalId, groupName) != null;
 
@@ -63,17 +69,13 @@ namespace ToSic.Sxc.Dnn.Run
             // Non-SuperUsers must be Admin AND in the group SxcAppAdmins
             if (!user.IsInRole(portal.AdministratorRoleName ?? "Administrators")) return new DnnSiteAdminPermissions(false);
 
-            var hasSpecialGroup = PortalHasGroup(portal.PortalId, DnnSxcSettings.DnnGroupSxcDesigners);
-            if (hasSpecialGroup && IsDesigner(user)) return new DnnSiteAdminPermissions(true);
-
-            hasSpecialGroup = hasSpecialGroup || PortalHasGroup(portal.PortalId, DnnSxcSettings.DnnGroupSxcAdmins);
-            if (hasSpecialGroup && user.IsInRole(DnnSxcSettings.DnnGroupSxcAdmins)) return new DnnSiteAdminPermissions(true);
+            var hasSpecialGroup = PortalHasExplicitAdminGroups(portal.PortalId);
+            if (hasSpecialGroup && IsExplicitAdmin(user)) return new DnnSiteAdminPermissions(true);
 
             // If the special group doesn't exist, then the admin-state (which is true - since he got here) is valid
             return new DnnSiteAdminPermissions(true, !hasSpecialGroup);
         }
 
-        internal bool IsDesigner(UserInfo user) => !IsAnonymous(user) && user.IsInRole(DnnSxcSettings.DnnGroupSxcDesigners);
 
         internal List<int> RoleList(UserInfo user, int? portalId = null) =>
             IsAnonymous(user) ? new List<int>() : user.Roles

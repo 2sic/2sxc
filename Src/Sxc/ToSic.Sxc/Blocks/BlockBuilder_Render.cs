@@ -7,6 +7,8 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
+using static ToSic.Sxc.Blocks.BlockBuildingConstants;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Blocks
@@ -91,7 +93,7 @@ namespace ToSic.Sxc.Blocks
 
                 // do pre-check to see if system is stable & ready
                 var (body, err) = GenerateErrorMsgIfInstallationNotOk();
-
+                var errorCode = err ? ErrorInstallationNotOk : null;
                 #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
                 {
@@ -104,9 +106,9 @@ namespace ToSic.Sxc.Blocks
                                   "but the content / apps have not been imported yet" +
                                   " - check 2sxc.org/help?tag=export-import - " +
                                   $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
-                            body = RenderingHelper.DesignErrorMessage(new Exception(msg),
-                                true);
+                            body = RenderingHelper.DesignErrorMessage(new Exception(msg), true);
                         err = true;
+                        errorCode = ErrorDataIsMissing;
                     }
                 }
                 #endregion
@@ -121,6 +123,9 @@ namespace ToSic.Sxc.Blocks
                             var engine = GetEngine();
                             var renderEngineResult = engine.Render(data);
                             body = renderEngineResult.Html;
+                            errorCode = renderEngineResult.ErrorCode ?? errorCode;
+                            if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
+                                errorCode = ErrorGeneral;
                             // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (renderEngineResult.ActivateJsApi)
@@ -138,6 +143,7 @@ namespace ToSic.Sxc.Blocks
                     {
                         body = RenderingHelper.DesignErrorMessage(ex, true);
                         err = true;
+                        errorCode = ErrorRendering;
                     }
                 #endregion
 
@@ -162,7 +168,8 @@ namespace ToSic.Sxc.Blocks
                     ? RenderingHelper.WrapInContext(body,
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
-                        editContext: addEditCtx)
+                        editContext: addEditCtx, 
+                        errorCode: errorCode)
                     : body;
                 #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.ImportExport.Json.V1;
 using ToSic.Lib.DI;
@@ -79,7 +80,7 @@ namespace ToSic.Sxc.WebApi.Cms
         {
             var wrapLog = Log.Fn<ReplacementListDto>($"target:{guid}, part:{part}, index:{index}");
             var typeNameOfField = FindTypeNameOnContentGroup(guid, part);
-            var result = _listController.Value.BuildReplaceList(guid, part, index, typeNameOfField);
+            var result = _listController.Value.GetListToReorder(guid, part, index, typeNameOfField);
             return wrapLog.Return(result);
         }
 
@@ -105,18 +106,19 @@ namespace ToSic.Sxc.WebApi.Cms
         public List<EntityInListDto> ItemList(Guid guid, string part)
         {
             Log.A($"item list for:{guid}");
-            var cg = Context.AppState.List.One(guid);
+            var cg = Context.AppState.GetDraftOrPublished(guid);
             var itemList = cg.Children(part);
-
-            var list = itemList.Select((c, index) => new EntityInListDto
-            {
-                Index = index,
-                Id = c?.EntityId ?? 0,
-                Guid = c?.EntityGuid ?? Guid.Empty,
-                Title = c?.GetBestTitle() ?? "",
-                Type = c?.Type.NameId,
-                TypeWip = c?.Type.NameId == null ? null : new JsonType(c)
-            }).ToList();
+            var list = itemList
+                .Select(Context.AppState.GetDraftOrKeep)
+                .Select((c, index) => new EntityInListDto
+                {
+                    Index = index,
+                    Id = c?.EntityId ?? 0,
+                    Guid = c?.EntityGuid ?? Guid.Empty,
+                    Title = c?.GetBestTitle() ?? "",
+                    Type = c?.Type.NameId,
+                    TypeWip = c?.Type.NameId == null ? null : new JsonType(c)
+                }).ToList();
 
             return list;
         }
@@ -130,8 +132,7 @@ namespace ToSic.Sxc.WebApi.Cms
 
             _publishing.Value.DoInsidePublishing(Context, args =>
             {
-                var entity = CmsManager.Read.AppState.List.One(guid);
-
+                var entity = CmsManager.Read.AppState.GetDraftOrPublished(guid);
                 var sequence = list.Select(i => i.Index).ToArray();
                 var fields = part == ViewParts.ContentLower ? ViewParts.ContentPair : new[] {part};
                 CmsManager.Entities.FieldListReorder(entity, fields, sequence, Context.Publishing.ForceDraft);

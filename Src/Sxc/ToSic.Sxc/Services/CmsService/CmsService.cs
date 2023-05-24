@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -30,75 +27,55 @@ namespace ToSic.Sxc.Services.CmsService
             object container = default,
             string classes = default,
             bool debug = default,
-            object imageSettings = default
-        ) => Log.Func(l =>
+            object imageSettings = default,
+            bool? toolbar = default
+        )
         {
+            var field = thing as IDynamicField;
+            var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
+            // Initialize the container helper, as we'll use it a few times
+            var cntHelper = new CmsServiceContainerHelper(_DynCodeRoot, field, container, classes, toolbar, Log);
+
             // If it's not a field, we cannot find out more about the object
             // In that case, just wrap the result in the container and return it
-            if (!(thing is IDynamicField field))
-                return (GetContainerAndWrap(container, thing, classes), "No field, will just treat as value");
+            if (field is null)
+                return l.Return(cntHelper.Wrap(thing, defaultToolbar: false), "No field, will just treat as value");
 
             // Get Content type and field information
+            var value = field.Raw as object;
             var contentType = field.Parent.Entity.Type;
             if (contentType == null)
-                return (GetContainerAndWrap(container, thing, classes), "can't find content-type, treat as value");
+                return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "can't find content-type, treat as value");
 
             var attribute = contentType[field.Name];
             if (attribute == null)
-                return (GetContainerAndWrap(container, thing, classes), "no attribute info, treat as value");
+                return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "no attribute info, treat as value");
 
             // Now we handle all kinds of known special treatments
             // Start with strings...
             if (attribute.Type == ValueTypes.String)
             {
+                var inputType = attribute.InputType();
+                if (debug) l.A($"Field type is: {ValueTypes.String}:{inputType}");
                 // ...wysiwyg
-                if (attribute.InputType() == InputTypes.InputTypeWysiwyg)
+                if (inputType == InputTypes.InputTypeWysiwyg)
                 {
+                    var fieldAdam = _DynCodeRoot.AsAdam(field.Parent.Entity, field.Name);
                     var htmlResult = _stringWysiwyg.New()
-                        .Init(field, contentType, attribute, debug, imageSettings)
+                        .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
                         .Process();
                     return htmlResult.IsProcessed
-                        ? (GetContainerAndWrap(container, htmlResult, classes), "ok")
-                        : (GetContainerAndWrap(container, thing, classes), "not converted");
+                        ? l.Return(cntHelper.Wrap(htmlResult, defaultToolbar: true), "wysiwyg, default w/toolbar")
+                        : l.Return(cntHelper.Wrap(value, defaultToolbar: true), "wysiwyg, not converted, w/toolbar");
                 }
+
+                // normal string, no toolbar by default
+                return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "string, default no toolbar");
             }
 
             // Fallback...
-            return (GetContainerAndWrap(container, thing, classes), "nothing else hit, will treat as value");
-        });
-
-        private IHtmlTag GetContainerAndWrap(object container, CmsProcessed result, string classes)
-        {
-            classes = string.Join(" ", new[] { classes, result.Classes }.Where(x => x.HasValue()));
-            return GetContainerAndWrap(container ?? result.DefaultTag, result.Contents, classes);
+            return l.Return(cntHelper.Wrap(value, defaultToolbar: false), "nothing else hit, will treat as value");
         }
-
-        private IHtmlTag GetContainerAndWrap(object container, object contents, string classes)
-        {
-            var tag = GetContainer(container);
-            if (classes.HasValue()) tag = tag.Class(classes);
-            return tag.Wrap(contents);
-        }
-
-        private IHtmlTag GetContainer(object container) => Log.Func(l =>
-        {
-            // Already an ITag
-            if (container is IHtmlTag iTagContainer)
-                return (iTagContainer, "container is Blade tag");
-
-            if (container is string tagName)
-            {
-                if (tagName.IsEmpty())
-                    return (Tag.RawHtml(), "no container, return empty tag");
-                if (!tagName.Contains(" "))
-                    return (Tag.Custom(tagName), "was a tag name, created tag");
-                throw new ArgumentException("Must be a tag name like 'div' or a RazorBlade Html Tag object",
-                    nameof(container));
-            }
-
-            // Nothing to do, just return an empty tag which can be filled...
-            return (Tag.Div(), "no container, return div tag");
-        });
-
+        
     }
 }
