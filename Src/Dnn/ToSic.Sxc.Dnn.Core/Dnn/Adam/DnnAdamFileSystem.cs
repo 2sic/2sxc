@@ -180,6 +180,8 @@ namespace ToSic.Sxc.Dnn.Adam
                                                     "Probably the DNN file system is out of sync. " +
                                                     "Re-Sync in the DNN files recursively (in Admin - Files) and the error should go away. ";
 
+        public string GetUrl(string folderPath) => AdamManager.Site.ContentPath + folderPath;
+
         private Folder<int, int> DnnToAdam(IFolderInfo dnnFolderInfo) => Log.Func(() =>
         {
             if (dnnFolderInfo == null) throw new ArgumentNullException(nameof(dnnFolderInfo), ErrorDnnObjectNull);
@@ -194,7 +196,7 @@ namespace ToSic.Sxc.Dnn.Adam
                 Name = dnnFolderInfo.DisplayName,
                 Created = dnnFolderInfo.CreatedOnDate,
                 Modified = dnnFolderInfo.LastModifiedOnDate,
-                Url = AdamManager.Site.ContentPath + dnnFolderInfo.FolderPath,
+                Url = GetUrl(dnnFolderInfo.FolderPath), // AdamManager.Site.ContentPath + dnnFolderInfo.FolderPath,
                 PhysicalPath = dnnFolderInfo.PhysicalPath,
             };
             return folder;
