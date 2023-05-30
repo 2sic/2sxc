@@ -2,9 +2,9 @@
 
 namespace ToSic.Sxc.Data
 {
-    public partial class TypedEntity: IHasMetadata
+    public partial class TypedItem: IHasMetadata
     {
-        public IDynamicMetadata Metadata => DynEntity.Metadata;
+        //public IDynamicMetadata Metadata => DynEntity.Metadata;
 
         IMetadataOf IHasMetadata.Metadata => Entity?.Metadata;
 

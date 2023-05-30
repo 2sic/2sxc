@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav;
 using static ToSic.Sxc.Code.IDynamicCodeRoot16AsExtensions;
 
 namespace ToSic.Sxc.Data
 {
-    public partial class TypedEntity
+    public partial class TypedItem
     {
-        public IEnumerable<ITypedEntity> Parents(
+        /// <inheritdoc />
+        public IEnumerable<ITypedItem> Parents(
             string type = null,
             string noParamOrder = Parameters.Protector,
             string field = null)
@@ -17,7 +17,8 @@ namespace ToSic.Sxc.Data
             return AsTypedList(DynEntity.Parents(type, field), _Services, 3, _Services.LogOrNull);
         }
 
-        public IEnumerable<ITypedEntity> Children(
+        /// <inheritdoc />
+        public IEnumerable<ITypedItem> Children(
             string field = null,
             string noParamOrder = Parameters.Protector,
             string type = null)
@@ -26,6 +27,7 @@ namespace ToSic.Sxc.Data
             return AsTypedList(DynEntity.Children(field, type), _Services, 3, _Services.LogOrNull);
         }
 
-        public ITypedEntity Child(string field) => Children(field).FirstOrDefault();
+        /// <inheritdoc />
+        public ITypedItem Child(string field) => Children(field).FirstOrDefault();
     }
 }

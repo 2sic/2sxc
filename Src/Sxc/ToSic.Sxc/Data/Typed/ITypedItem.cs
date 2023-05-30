@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
     /// Introduced in 2sxc 16.01
     /// </remarks>
     [PublicApi]
-    public partial interface ITypedEntity: ICanBeEntity
+    public partial interface ITypedItem: ICanBeEntity
     {
         int EntityId { get; }
         Guid EntityGuid { get; }
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// The presentation item or `null` if it doesn't exist.
         /// </summary>
-        ITypedEntity Presentation { get; }
+        ITypedItem Presentation { get; }
 
         //IDynamicMetadata Metadata { get; }
 

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a wrapper.
     /// </summary>
     /// <remarks>
-    /// Introduced in v16.01 to simplify the API when using <see cref="ITypedEntity"/>s.
+    /// Introduced in v16.01 to simplify the API when using <see cref="ITypedItem"/>s.
     /// </remarks>
     [PublicApi]
     public interface IContextData: IBlockDataSource
