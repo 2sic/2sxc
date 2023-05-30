@@ -56,6 +56,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         protected override void Init()
         {
+            var l = Log.Fn();
             try
             {
                 InitWebpage();
@@ -66,8 +67,9 @@ namespace ToSic.Sxc.Engines
                 var e = new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc);
                 //old till 2023-05-11 " Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
                 // see https://web.archive.org/web/20131201093234/http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7
-                throw Log.Ex(e);
+                throw l.Done(e);
             }
+            l.Done();
         }
 
         [PrivateApi]

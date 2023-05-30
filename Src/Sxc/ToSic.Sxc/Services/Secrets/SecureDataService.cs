@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.Eav.Security.Encryption;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -86,7 +85,7 @@ namespace ToSic.Sxc.Services
             }
             catch (Exception ex)
             {
-                throw l.Ex(ex);
+                throw l.Done(ex);
             }
         });
 

@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Services.CmsService
                 case string tagName when !tagName.Contains(" "):
                     return l.Return(Tag.Custom(tagName), "was a tag name, created tag");
                 case string tagName:
-                    throw l.Ex(new ArgumentException($"Must be a tag name like 'div' or a RazorBlade Html Tag object but got '{tagName}'",
+                    throw l.Done(new ArgumentException($"Must be a tag name like 'div' or a RazorBlade Html Tag object but got '{tagName}'",
                         nameof(container)));
                 default:
                     // Nothing to do, just return an empty tag which can be filled...

@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Code
         {
             var l = log.Fn<ITypedItem>();
             if (recursions <= 0)
-                throw l.Ex(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
+                throw l.Done(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
 
             ITypedItem convertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Code
                 case null:
                     return l.ReturnNull("null");
                 case string _:
-                    throw l.Ex(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
+                    throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
                 case ITypedItem alreadyCmsItem:
                     return l.Return(alreadyCmsItem, "already ok");
                 case IDynamicEntity dynEnt:
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Code
                     // retry conversion
                     return l.Return(AsTyped(enumFirst, services, recursions - 1, log));
                 default:
-                    throw l.Ex(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
+                    throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
             }
 
         }
@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Code
         {
             var l = log.Fn<IEnumerable<ITypedItem>>();
             if (recursions <= 0)
-                throw l.Ex(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
+                throw l.Done(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
 
             switch (list)
             {
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Code
                 case IEnumerable asEnumerable when !(asEnumerable is string):
                     return l.Return(asEnumerable.Cast<object>().Select(e => AsTyped(e, services, MaxRecursions, log)), "IEnumerable");
                 default:
-                    throw l.Ex(new ArgumentException($"Type '{list.GetType()}' cannot be converted to {nameof(IEnumerable<ITypedItem>)}"));
+                    throw l.Done(new ArgumentException($"Type '{list.GetType()}' cannot be converted to {nameof(IEnumerable<ITypedItem>)}"));
             }
         }
 

@@ -118,7 +118,7 @@ namespace ToSic.Sxc.WebApi.App
             if (query == null)
             {
                 var msg = $"query '{name}' not found";
-                throw l.Ex(new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found"));
+                throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.NotFound, msg, "query not found"));
             }
 
             var permissionChecker = _appPermissionCheck.New()
@@ -131,7 +131,7 @@ namespace ToSic.Sxc.WebApi.App
             if (!(readExplicitlyAllowed || isAdmin))
             {
                 var msg = $"Request not allowed. User does not have read permissions for query '{name}'";
-                throw l.Ex(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed"));
+                throw l.Done(new HttpExceptionAbstraction(HttpStatusCode.Unauthorized, msg, "Request not allowed"));
             }
 
             _dataConverter.WithGuid = includeGuid;

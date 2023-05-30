@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn
             {
                 const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
                 if (errorIfNotFound)
-                    throw l.Ex(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg));
+                    throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg));
                 return (null, "not found, maybe error");
             }
 
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Dnn
             {
                 const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
                                    "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-                throw l.Ex(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg));
+                throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg));
             }
 
             return (appFolder, "ok");

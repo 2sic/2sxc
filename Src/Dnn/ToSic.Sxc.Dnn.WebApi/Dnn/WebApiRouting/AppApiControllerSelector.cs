@@ -134,12 +134,12 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             catch (Exception e)
             {
                 var msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
-                throw l.Ex(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg));
+                throw l.Done(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg));
             }
 
             var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
                            $"We checked the virtual path '{controllerPath}'";
-            throw l.Ex(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal));
+            throw l.Done(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal));
         }
 
         private static string GetEdition(IHttpRouteData routeData)
