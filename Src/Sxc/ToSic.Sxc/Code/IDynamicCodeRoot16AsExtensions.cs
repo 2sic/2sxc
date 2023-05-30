@@ -26,9 +26,10 @@ namespace ToSic.Sxc.Code
             if (recursions <= 0)
                 throw l.Done(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
 
-            ITypedItem convertOrNullAndLog(IEntity e, string typeName) => e == null
+            ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
                 : l.Return(new TypedItem(e, services), typeName);
+
             switch (target)
             {
                 case null:
@@ -44,11 +45,11 @@ namespace ToSic.Sxc.Code
                 case ICanBeEntity canBeEntity:
                     return l.Return(new TypedItem(canBeEntity.Entity, services), nameof(ICanBeEntity));
                 case IDataSource ds:
-                    return convertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataSource));
+                    return ConvertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataSource));
                 case IDataStream ds:
-                    return convertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataStream));
+                    return ConvertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataStream));
                 case IEnumerable<IEntity> entList:
-                    return convertOrNullAndLog(entList.FirstOrDefault(), nameof(IEnumerable<IEntity>));
+                    return ConvertOrNullAndLog(entList.FirstOrDefault(), nameof(IEnumerable<IEntity>));
                 case IEnumerable enumerable:
                     var enumFirst = enumerable.Cast<object>().FirstOrDefault();
                     if (enumFirst is null) return l.ReturnNull($"{nameof(IEnumerable)} with null object");
@@ -92,7 +93,7 @@ namespace ToSic.Sxc.Code
                 case ICanBeEntity _:
                     var converted = AsTyped(list, services, MaxRecursions, log);
                     return converted != null
-                        ? l.Return(new List<ITypedItem>() { converted }, "single item to list")
+                        ? l.Return(new List<ITypedItem> { converted }, "single item to list")
                         : l.Return(new List<ITypedItem>(), "typed but converted to null; empty list");
                 // Check for IEnumerable but make sure it's not a string
                 case IEnumerable asEnumerable when !(asEnumerable is string):
