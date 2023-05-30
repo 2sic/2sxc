@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Data
         public Guid EntityGuid => Entity.EntityGuid;
 
         [PrivateApi]
-        IEntity ICanBeEntity.Entity => Entity.Entity;
+        IEntity ICanBeEntity.Entity => Entity;
         protected readonly IEntity Entity;
 
         /// <inheritdoc />

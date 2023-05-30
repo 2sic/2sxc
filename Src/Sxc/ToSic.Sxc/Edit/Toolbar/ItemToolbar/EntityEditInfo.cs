@@ -18,8 +18,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             isPublished = entity.IsPublished;
             title = entity.GetBestTitle();
             entityGuid = entity.EntityGuid;
+
             var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
-            //if (entity is IHasEditingData editingData)
             if (editDecorator != null)
             {
                 sortOrder = editDecorator.SortOrder;
