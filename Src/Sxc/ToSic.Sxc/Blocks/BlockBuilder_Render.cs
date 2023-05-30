@@ -30,9 +30,8 @@ namespace ToSic.Sxc.Blocks
             try
             {
                 var (html, err) = RenderInternal(data);
-                var result = new RenderResult
+                var result = new RenderResult(html)
                 {
-                    Html = html,
                     IsError = err,
                     ModuleId = Block.ParentId,
                     CanCache = !err && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),

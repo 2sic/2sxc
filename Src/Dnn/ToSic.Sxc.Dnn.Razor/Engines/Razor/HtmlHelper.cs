@@ -5,6 +5,7 @@ using System.Web.WebPages;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
@@ -93,7 +94,7 @@ namespace ToSic.Sxc.Engines.Razor
                 // Show a nice / ugly error depending on user permissions
                 // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
                 var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(compileException, isFirstOccurrence);
-                var htmlError = new HybridHtmlString(nice);
+                var htmlError = Tag.Custom(nice);
                 return htmlError;
             }
         }

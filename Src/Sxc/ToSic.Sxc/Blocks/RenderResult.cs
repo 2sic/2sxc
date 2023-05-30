@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Web;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using ToSic.Sxc.Web.PageFeatures;
@@ -10,8 +11,11 @@ namespace ToSic.Sxc.Blocks
 {
     /// <inheritdoc />
     [PrivateApi]
-    public class RenderResult : HybridHtmlString, IRenderResult
+    public class RenderResult : TagText, IRenderResult
     {
+        public RenderResult(string html) : base(null)
+            => Html = html;
+
         /// <inheritdoc />
         public string Html { get; set; }
 

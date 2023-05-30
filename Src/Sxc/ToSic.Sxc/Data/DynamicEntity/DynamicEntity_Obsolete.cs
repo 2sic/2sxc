@@ -2,6 +2,7 @@
 
 using System;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
 {
@@ -34,7 +35,7 @@ namespace ToSic.Sxc.Data
 
         [Obsolete]
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
-        public System.Web.IHtmlString Render()
+        public IHtmlTag Render()
         {
             if (_Services.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
                 throw new Exception("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");

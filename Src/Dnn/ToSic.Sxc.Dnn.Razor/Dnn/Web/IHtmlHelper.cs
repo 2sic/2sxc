@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Dnn.Web
 {
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Dnn.Web
         /// This mimics the .net core API Html.Partial() in DNN
         /// </summary>
         /// <param name="path">path/file of razor, like "../shared/_list-item.cshtml"</param>
-        /// <param name="data"></param>
+        /// <param name="data">TODO new v16.00</param>
         /// <returns></returns>
         IHtmlString Partial(string path, params object[] data);
     }

@@ -1,8 +1,8 @@
 ﻿using System;
 using ToSic.Lib.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
-using ToSic.Sxc.Web;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Edit.EditService
@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Edit.EditService
         private readonly string innerContentAttribute = "data-list-context";
 
         /// <inheritdoc />
-        public IHybridHtmlString Toolbar(
+        public IHtmlTag Toolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Edit.EditService
             => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
         /// <inheritdoc/>
-        public IHybridHtmlString TagToolbar(
+        public IHtmlTag TagToolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Edit.EditService
             object toolbar = null)
             => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
-        private IHybridHtmlString ToolbarInternal(
+        private IHtmlTag ToolbarInternal(
             bool inTag,
             object target,
             string noParamOrder,
@@ -44,10 +44,11 @@ namespace ToSic.Sxc.Edit.EditService
             object condition,
             object prefill,
             object settings,
-            object toolbar) => Log.Func($"enabled:{Enabled}; inline{inTag}", l =>
+            object toolbar)
         {
-            if (!Enabled) return (null, "not enabled");
-            if (!IsConditionOk(condition)) return (null, "condition false");
+            var l = Log.Fn<IHtmlTag>($"enabled:{Enabled}; inline{inTag}");
+            if (!Enabled) return l.ReturnNull("not enabled");
+            if (!IsConditionOk(condition)) return l.ReturnNull("condition false");
 
             Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar",
                 $"{nameof(actions)},{nameof(contentType)},{nameof(condition)},{nameof(prefill)},{nameof(settings)},{nameof(toolbar)}");
@@ -56,7 +57,7 @@ namespace ToSic.Sxc.Edit.EditService
             ItemToolbarBase itmToolbar;
             if (target is IToolbarBuilder tlbBuilder)
             {
-                Log.A("Using new modern Item-Toolbar, will ignore all other parameters.");
+                l.A("Using new modern Item-Toolbar, will ignore all other parameters.");
                 itmToolbar = new ItemToolbarV14(null, tlbBuilder);
             }
             else
@@ -64,25 +65,25 @@ namespace ToSic.Sxc.Edit.EditService
                 // ensure that internally we always process it as an entity
                 var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
                 if (target != null && eTarget == null)
-                    Log.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
+                    l.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
                 if (toolbar is IToolbarBuilder tlbBuilder2)
                 {
-                    Log.A("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
+                    l.A("Using new modern Item-Toolbar with an entity, will ignore all other parameters.");
                     itmToolbar = new ItemToolbarV14(eTarget, tlbBuilder2);
                 }
                 else
                 {
-                    Log.A("Using classic mode, with all parameters.");
+                    l.A("Using classic mode, with all parameters.");
                     itmToolbar = ItemToolbarPicker.ItemToolbar(eTarget, actions, contentType,
                         prefill: prefill, settings: settings, toolbar: toolbar);
                 }
             }
 
             var result = inTag
-                ? new HybridHtmlString(itmToolbar.ToolbarAsAttributes())
-                : new HybridHtmlString(itmToolbar.ToolbarAsTag);
-            return (result, "ok");
-        });
+                ? Tag.RawHtml(itmToolbar.ToolbarAsAttributes())
+                : Tag.RawHtml(itmToolbar.ToolbarAsTag);
+            return l.Return(result, "ok");
+        }
 
         private bool IsConditionOk(object condition) => Log.Func(() =>
         {

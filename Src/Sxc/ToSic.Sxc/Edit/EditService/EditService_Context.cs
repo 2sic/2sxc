@@ -5,6 +5,8 @@ using ToSic.Eav.Apps;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
 
@@ -15,7 +17,7 @@ namespace ToSic.Sxc.Edit.EditService
         #region Context Attributes
 
         /// <inheritdoc/>
-        public IHybridHtmlString ContextAttributes(IDynamicEntity target,
+        public IHtmlTag ContextAttributes(IDynamicEntity target,
             string noParamOrder = Parameters.Protector,
             string field = null,
             string contentType = null,
@@ -40,12 +42,12 @@ namespace ToSic.Sxc.Edit.EditService
                 type = contentType ?? AppConstants.ContentGroupRefTypeName,
             }, JsonOptions.SafeJsonForHtmlAttributes);
 
-            return new HybridHtmlString(innerContentAttribute + "='" + serialized + "'");
+            return Build.Attribute(innerContentAttribute, serialized); // new HybridHtmlString(innerContentAttribute + "='" + serialized + "'");
         }
 
         /// <inheritdoc/>
         [PrivateApi]
-        public IHybridHtmlString WrapInContext(object content,
+        public IHtmlTag WrapInContext(object content,
             string noParamOrder = Parameters.Protector,
             string tag = Constants.DefaultContextTag,
             bool full = false,
@@ -58,7 +60,7 @@ namespace ToSic.Sxc.Edit.EditService
 
             var renderingHelper = _renderHelper.Value;
 
-            return new HybridHtmlString(
+            return Tag.RawHtml(
                renderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
                         ? instanceId

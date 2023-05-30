@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Web;
@@ -33,7 +34,10 @@ namespace ToSic.Sxc.Services
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <param name="data">Data to give the Razor as `DynamicModel` - new 15.07</param>
         /// <returns></returns>
-        IHybridHtmlString One(
+        /// <remarks>
+        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        IHtmlTag One(
             DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
@@ -52,7 +56,10 @@ namespace ToSic.Sxc.Services
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
-        IHybridHtmlString All(
+        /// <remarks>
+        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        IHtmlTag All(
             DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,

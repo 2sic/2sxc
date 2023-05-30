@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Serialization;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Web;
 using IEntity = ToSic.Eav.Data.IEntity;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -58,7 +59,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected override string ToolbarJson => ToolbarObjJson();
 
-        private IHybridHtmlString AttributeSettings() => Build.Attribute(JsonSettingsNodeName, SettingsJson);
+        private IHtmlTag AttributeSettings() => Build.Attribute(JsonSettingsNodeName, SettingsJson);
 
         public override string ToolbarAsAttributes() =>
             Build.Attribute(ToolbarAttributeName,

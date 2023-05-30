@@ -1,5 +1,6 @@
 ﻿using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Code;
@@ -40,11 +41,11 @@ namespace ToSic.Sxc.Edit.EditService
         #region Attribute-helper
 
         /// <inheritdoc/>
-        public IHybridHtmlString Attribute(string name, string value)
+        public IHtmlTag Attribute(string name, string value)
             => !Enabled ? null : Build.Attribute(name, value);
 
         /// <inheritdoc/>
-        public IHybridHtmlString Attribute(string name, object value)
+        public IHtmlTag Attribute(string name, object value)
             => !Enabled ? null : Build.Attribute(name, _jsonService.ToJson(value));
 
         #endregion Attribute Helper

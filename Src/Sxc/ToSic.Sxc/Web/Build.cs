@@ -1,5 +1,5 @@
-using System.Web;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Web
 {
@@ -19,11 +19,12 @@ namespace ToSic.Sxc.Web
         /// ...because it makes the html hard to work with when debugging
         /// so we just manually replace all apos to make sure it doesn't create invalid html
         /// </remarks>
-        public static IHybridHtmlString Attribute(string name, string value)
-            => new HybridHtmlString($" {name}='{MinimalHtmlAttributeEncode(value)}'");
+        public static IHtmlTag Attribute(string name, string value)
+            //=> new HybridHtmlString($" {name}='{MinimalHtmlAttributeEncode(value)}'");
+            => Tag.RawHtml($" {Tag.Attr(name, value)} "); // $"{name}='{MinimalHtmlAttributeEncode(value)}'");
 
-        private static string MinimalHtmlAttributeEncode(string value) => value?
-            //.Replace("\"", "&quot;")
-            .Replace("'", "&apos;");
+        //private static string MinimalHtmlAttributeEncode(string value) => value?
+        //    //.Replace("\"", "&quot;")
+        //    .Replace("'", "&apos;");
     }
 }

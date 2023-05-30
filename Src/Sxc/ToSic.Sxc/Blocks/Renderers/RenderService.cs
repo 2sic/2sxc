@@ -3,6 +3,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -89,10 +90,11 @@ namespace ToSic.Sxc.Blocks
         /// <param name="parent">The parent-item containing the content-blocks and providing edit-context</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="item">The content-block item to render. Optional, by default the same item is used as the context.</param>
+        /// <param name="data">TODO V16.00</param>
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        public IHybridHtmlString One(DynamicEntity parent,
+        public IHtmlTag One(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             object data = null,
@@ -103,7 +105,7 @@ namespace ToSic.Sxc.Blocks
             item = item ?? parent;
             MakeSureLogIsInHistory();
             var simpleRenderer = _Deps.SimpleRenderer.New();
-            return new HybridHtmlString(field == null
+            return Tag.Custom(field == null
                 ? simpleRenderer.Render(parent._Services.BlockOrNull, item.Entity, data: data) // without field edit-context
                 : simpleRenderer.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), data)); // with field-edit-context data-list-context
         }
@@ -118,7 +120,10 @@ namespace ToSic.Sxc.Blocks
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
-        public IHybridHtmlString All(DynamicEntity parent,
+        /// <remarks>
+        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        public IHtmlTag All(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,
@@ -129,7 +134,7 @@ namespace ToSic.Sxc.Blocks
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
             MakeSureLogIsInHistory();
-            return new HybridHtmlString(merge == null
+            return Tag.Custom(merge == null
                     ? _Deps.SimpleRenderer.New().RenderListWithContext(parent, field, apps, max, GetEdit(parent))
                     : _Deps.InTextRenderer.New().RenderMerge(parent, field, merge, GetEdit(parent)));
         }

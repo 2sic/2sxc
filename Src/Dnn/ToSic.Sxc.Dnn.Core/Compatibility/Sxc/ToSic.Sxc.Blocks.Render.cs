@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Data;
 using static ToSic.Sxc.Compatibility.Obsolete;
 using IHtmlString = System.Web.IHtmlString;
@@ -27,7 +28,10 @@ namespace ToSic.Sxc.Blocks
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        public static IHtmlString One(DynamicEntity parent,
+        /// <remarks>
+        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        public static IHtmlTag One(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             string field = null,
@@ -64,7 +68,10 @@ namespace ToSic.Sxc.Blocks
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
-        public static IHtmlString All(DynamicEntity parent,
+        /// <remarks>
+        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        public static IHtmlTag All(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,

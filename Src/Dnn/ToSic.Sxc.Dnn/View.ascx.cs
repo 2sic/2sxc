@@ -165,7 +165,7 @@ namespace ToSic.Sxc.Dnn
         {
             var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
 
-            var result = new RenderResult();
+            var result = new RenderResult(null);
             TryCatchAndLogToDnn(() =>
             {
                 if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
