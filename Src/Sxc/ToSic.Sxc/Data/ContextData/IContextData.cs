@@ -34,6 +34,7 @@ namespace ToSic.Sxc.Data
         /// * This `Data.Content` is an IEntity, which is different from the root `Content` object
         /// * This `Data.Content` is always the module/block content, never query data
         /// </remarks>
+        [PrivateApi("Naming not final")]
         IEntity Content { get; }
 
         /// <summary>
@@ -48,6 +49,7 @@ namespace ToSic.Sxc.Data
         /// * New in v16.01
         /// * This `Data.Header` is an IEntity, which is different from the root `Header` object
         /// </remarks>
+        [PrivateApi("Naming not final")]
         IEntity Header { get; }
 
         [PrivateApi("maybe just add for docs")]
