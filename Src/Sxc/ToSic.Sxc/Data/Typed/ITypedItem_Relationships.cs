@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITypedEntity
+    public partial interface ITypedItem
     {
         #region parents / children
 
@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data
         /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         /// <remarks>Note that the parameter-order is reversed to the Children()</remarks>
-        IEnumerable<ITypedEntity> Parents(
+        IEnumerable<ITypedItem> Parents(
             string type = null,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null);
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Data
         /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         /// <remarks>Note that the parameter-order is reversed to the Parents()</remarks>
-        IEnumerable<ITypedEntity> Children(
+        IEnumerable<ITypedItem> Children(
             string field = null,
             string noParamOrder = Eav.Parameters.Protector,
             string type = null);
@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="field">Name of the field</param>
         /// <returns></returns>
-        ITypedEntity Child(string field);
+        ITypedItem Child(string field);
 
         #endregion 
     }

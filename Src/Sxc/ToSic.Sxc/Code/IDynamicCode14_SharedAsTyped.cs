@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code
         #region Stuff Added in v16
 
         /// <summary>
-        /// Convert something to a <see cref="ITypedEntity"/>.
+        /// Convert something to a <see cref="ITypedItem"/>.
         /// This works for all kinds of <see cref="IEntity"/>s,
         /// <see cref="IDynamicEntity"/>s as well as Lists/IEnumerables of those.
         /// 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <returns></returns>
         /// <remarks>New in v16.01</remarks>
-        ITypedEntity AsTyped(
+        ITypedItem AsTyped(
             object target,
             string noParamOrder = Eav.Parameters.Protector
         );
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Code
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <returns></returns>
         /// <remarks>New in v16.01</remarks>
-        IEnumerable<ITypedEntity> AsTypedList(
+        IEnumerable<ITypedItem> AsTypedList(
             object list,
             string noParamOrder = Eav.Parameters.Protector
         );

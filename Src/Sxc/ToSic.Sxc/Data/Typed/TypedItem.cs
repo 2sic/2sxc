@@ -6,18 +6,18 @@ using ToSic.Lib.Helpers;
 
 namespace ToSic.Sxc.Data
 {
-    [PrivateApi("WIP v16")]
-    public partial class TypedEntity : Wrapper<IEntity>, ITypedEntity
+    [PrivateApi]
+    public partial class TypedItem : Wrapper<IEntity>, ITypedItem
     {
         // ReSharper disable once InconsistentNaming
         protected readonly DynamicEntity.MyServices _Services;
 
-        internal TypedEntity(IEntity baseEntity, DynamicEntity.MyServices dynamicEntityServices) : base(baseEntity)
+        internal TypedItem(IEntity baseEntity, DynamicEntity.MyServices dynamicEntityServices) : base(baseEntity)
         {
             _Services = dynamicEntityServices;
             Entity = baseEntity;
         }
-        internal TypedEntity(IDynamicEntity dynEntity) : this(dynEntity.Entity, dynEntity._Services)
+        internal TypedItem(IDynamicEntity dynEntity) : this(dynEntity.Entity, dynEntity._Services)
         {
             _dynamicEntity = dynEntity;
         }
@@ -30,19 +30,22 @@ namespace ToSic.Sxc.Data
         IEntity ICanBeEntity.Entity => Entity.Entity;
         protected readonly IEntity Entity;
 
+        /// <inheritdoc />
         public dynamic Dyn => DynEntity;
         // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
         protected IDynamicEntity DynEntity => _dynamicEntity ?? (_dynamicEntity = new DynamicEntity(Entity, _Services));
         private IDynamicEntity _dynamicEntity;
 
+        /// <inheritdoc />
         public IDynamicField Field(string name) => new DynamicField(Dyn, name);
 
         // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
-        public ITypedEntity Presentation => _presentation.Get(() =>
+        /// <inheritdoc />
+        public ITypedItem Presentation => _presentation.Get(() =>
         {
             var dynPres = DynEntity.Presentation;
-            return dynPres == null ? null : new TypedEntity(dynPres);
+            return dynPres == null ? null : new TypedItem(dynPres);
         });
-        private readonly GetOnce<ITypedEntity> _presentation = new GetOnce<ITypedEntity>();
+        private readonly GetOnce<ITypedItem> _presentation = new GetOnce<ITypedItem>();
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
 {
-    public partial class TypedEntity
+    public partial class TypedItem
     {
-        [PrivateApi("WIP not yet released")]
+        /// <inheritdoc />
         public IHtmlTag Html(
             string name,
             string noParamOrder = Eav.Parameters.Protector,
