@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
 {
@@ -30,6 +31,10 @@ namespace ToSic.Sxc.Data
         public double Double(string name, double fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        public string Url(string name) => Get(name, convertLinks: true) as string;
+        public string Url(string name)
+        {
+            var url = Get(name, convertLinks: true) as string;
+            return Tags.SafeUrl(url).ToString();
+        }
     }
 }

@@ -37,6 +37,6 @@ namespace ToSic.Sxc.Data
         public double Double(string name, double fallback = default) => DynEntity.Get(name, fallback: fallback);
 
         /// <inheritdoc />
-        public string Url(string name) => DynEntity.Get(name, convertLinks: true) as string;
+        public string Url(string name) => DynEntity.Url(name);
     }
 }
