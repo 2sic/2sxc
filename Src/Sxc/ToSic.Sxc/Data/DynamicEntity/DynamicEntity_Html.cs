@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
             if (_Services.CompatibilityLevel < Constants.CompatibilityLevel12)
                 throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Hybrid14 or newer.");
 
-            return _Services.Kit.Cms.Show(Field(name), container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
+            return _Services.Kit.Cms.Html(Field(name), container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
         }
     }
 }

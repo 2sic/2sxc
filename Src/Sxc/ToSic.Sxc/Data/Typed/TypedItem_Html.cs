@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
@@ -21,7 +22,8 @@ namespace ToSic.Sxc.Data
 
             Eav.Parameters.Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(debug)}...");
 
-            return _Services.Kit.Cms.Show(Field(name), container: container, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
+            var result = _Services.Kit.Cms.Html(Field(name), container: container, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
+            return result;
         }
 
     }
