@@ -53,22 +53,26 @@ namespace ToSic.Sxc.Services.CmsService
             tag = tag.Wrap(contents);
             // If tag is not a real tag (no name) then it also can't have classes or toolbars; just finish and return
             if (!tag.TagName.HasValue())
-                return l.Return(tag, "no tag name, stop here");
+                return l.Return(tag, "no wrapper tag, stop here");
 
             // Add classes if we can
             if (Classes.HasValue()) tag = tag.Class(Classes);
-            var toolbar = _toolbar ?? defaultToolbar;
-            if (toolbar && _field != null)
-            {
-                l.A("Will add toolbar");
-                tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
-                    .Icon(EditFieldIcon)
-                    .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, _field.Name)
-                ));
-                return l.Return(tag, "added toolbar");
-            }
 
-            return l.Return(tag, "no toolbar added");
+            // Add Toolbar if relevant
+            if (_field.Parent.IsDemoItem)
+                return l.Return(tag, "demo-item, so no toolbar");
+
+            var toolbar = _toolbar ?? defaultToolbar;
+            if (!toolbar || _field == null)
+                return l.Return(tag, "no toolbar added");
+
+            l.A("Will add toolbar");
+            tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
+                .Icon(EditFieldIcon)
+                .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, _field.Name)
+            ));
+            return l.Return(tag, "added toolbar");
+
         }
 
         private const string EditFieldIcon =
