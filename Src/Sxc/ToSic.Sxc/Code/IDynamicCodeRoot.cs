@@ -2,6 +2,7 @@
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.Helpers;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code
 {
@@ -18,5 +19,8 @@ namespace ToSic.Sxc.Code
 
         [PrivateApi] void AttachApp(IApp app);
 
+
+        new DynamicStack Resources { get; }
+        new DynamicStack Settings { get; }
     }
 }

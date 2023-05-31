@@ -1,7 +1,7 @@
 ﻿using ToSic.Eav.Apps;
 using ToSic.Eav.Configuration;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Configuration.ConfigurationConstants;
 
@@ -11,40 +11,29 @@ namespace ToSic.Sxc.Code
     {
         /// <inheritdoc />
         [PublicApi]
-        public dynamic Resources
+        public DynamicStack Resources => _resources.Get(() =>
         {
-            get
-            {
-                if (_resources != null) return _resources;
-                var appState = ((App)_DynCodeRoot.App).AppState;
+            var appState = ((App)_DynCodeRoot.App).AppState;
+            return new DynamicStack(RootNameResources, DynamicEntityServices,
+                Services.SettingsStack.Init(appState)
+                    .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
+        });
+        private readonly GetOnce<DynamicStack> _resources = new GetOnce<DynamicStack>();
 
-                return _resources = new DynamicStack(
-                    RootNameResources,
-                    DynamicEntityServices,
-                    Services.SettingsStack.Init(appState)
-                        .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
-            }
-        }
-
-        private DynamicStack _resources;
 
         /// <inheritdoc />
         [PublicApi]
-        public dynamic Settings
+        public DynamicStack Settings => _settings.Get(() =>
         {
-            get
-            {
-                if (_settings != null) return _settings;
-                var appState = ((App)_DynCodeRoot.App).AppState;
+            var appState = ((App)_DynCodeRoot.App).AppState;
+            return new DynamicStack(RootNameSettings, DynamicEntityServices,
+                Services.SettingsStack.Init(appState)
+                    .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
 
-                return _settings = new DynamicStack(
-                    RootNameSettings,
-                    DynamicEntityServices,
-                    Services.SettingsStack.Init(appState)
-                        .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
-            }
-        }
+        });
+        private readonly GetOnce<DynamicStack> _settings = new GetOnce<DynamicStack>();
 
-        private DynamicStack _settings;
+        dynamic IDynamicCode12.Resources => Resources;
+        dynamic IDynamicCode12.Settings => Settings;
     }
 }

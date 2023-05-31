@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Images
@@ -11,9 +10,13 @@ namespace ToSic.Sxc.Images
         #region Constructor and Inits
 
         public ImageService(ImgResizeLinker imgLinker, IFeaturesService features) : base(Constants.SxcLogName + ".ImgSvc")
-            => ConnectServices(Features = features,
+        {
+            ConnectServices(
+                Features = features,
                 ImgLinker = imgLinker
             );
+        }
+
         internal ImgResizeLinker ImgLinker { get; }
         internal IFeaturesService Features { get; }
 
@@ -44,7 +47,7 @@ namespace ToSic.Sxc.Images
 
         private dynamic GetCodeRootSettingsByName(string strName) => Log.Func($"{strName}", () =>
         {
-            var result = (_DynCodeRoot?.Settings?.Images as ICanGetByName)?.Get(strName);
+            var result = _DynCodeRoot?.Settings?.Get("Settings.Images" + "." + strName); ///*.Images*/ as ICanGetByName)?.Get(strName);
             return ((object)result, $"found: {result != null}");
         }, enabled: Debug, message: $"code root: {_DynCodeRoot != null}");
 
