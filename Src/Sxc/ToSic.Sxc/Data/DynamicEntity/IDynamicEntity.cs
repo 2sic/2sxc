@@ -109,17 +109,6 @@ namespace ToSic.Sxc.Data
         #endregion
 
 
-        /// <summary>
-        /// Many templates show demo data.
-        /// If the template code must know if it's the demo item or
-        /// real data, use `.IsDemoItem`.
-        /// </summary>
-        /// <returns>
-        /// True if this is the item configured in the view-settings, false if not.
-        /// </returns>
-        /// <remarks>New in 10.07</remarks>
-        bool IsDemoItem { get; }
-
         #region parents / children
 
         /// <summary>

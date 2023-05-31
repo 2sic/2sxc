@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface IDynamicEntity
+    public partial interface ITypedItem
     {
         /// <summary>
         /// Many templates show demo data.

@@ -47,5 +47,7 @@ namespace ToSic.Sxc.Data
             return dynPres == null ? null : new TypedItem(dynPres);
         });
         private readonly GetOnce<ITypedItem> _presentation = new GetOnce<ITypedItem>();
+
+        public bool IsDemoItem => DynEntity.IsDemoItem;
     }
 }
