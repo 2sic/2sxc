@@ -24,6 +24,11 @@ namespace ToSic.Sxc.Edit.Toolbar
             ParamsMerge = paramsMerge ?? original.ParamsMerge;
         }
 
+        /// <summary>
+        /// Helper to create an empty TweakButton function as fallback when not provided.
+        /// </summary>
+        /// <param name="btn"></param>
+        /// <returns></returns>
         public static ITweakButton NoOp(ITweakButton btn) => btn;
 
         #region UI
@@ -77,6 +82,10 @@ namespace ToSic.Sxc.Edit.Toolbar
         #endregion
 
         #region Params
+
+        public ITweakButton FormParameters(object value) => value == null ? this : Parameters(new ObjectToUrl().SerializeChild(value, PrefixForm));
+
+        public ITweakButton FormParameters(string name, object value) => (value ?? name) == null ? this : FormParameters($"{name}={value}");
 
         public ITweakButton Parameters(object value) => value == null ? this : new TweakButton(this, paramsMerge: ParamsMerge.Add(value));
         public ITweakButton Parameters(string name, object value) => (value ?? name) == null ? this : Parameters($"{name}={value}");

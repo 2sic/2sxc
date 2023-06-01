@@ -9,6 +9,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     public class ToolbarRuleForEntity: ToolbarRuleTargeted
     {
         public const string PrefixPrefill = "prefill:";
+        public const string PrefixForm = "form:";
         public const string PrefixFilters = "filter:";
 
         internal ToolbarRuleForEntity(
