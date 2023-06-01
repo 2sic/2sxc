@@ -12,7 +12,7 @@ using static ToSic.Sxc.Blocks.RenderService;
 
 namespace ToSic.Sxc.Services.CmsService
 {
-    public class CmsServiceStringWysiwyg: ServiceForDynamicCode
+    internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
     {
 
         #region Constructor / DI

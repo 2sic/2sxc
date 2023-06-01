@@ -8,7 +8,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
-    public partial class DataService
+    internal partial class DataService
     {
 
         // IMPORTANT - this is different! from the _DynCodeRoot - as it shouldn't auto attach at all!

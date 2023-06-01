@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Services
     /// To encrypt other values, use the SecureDataTest.DumpEncryptedValue() code and get the encrypted value from the Trace
     /// </summary>
     [PrivateApi("Hide implementation")]
-    public class SecureDataService: ServiceBase, ISecureDataService
+    internal class SecureDataService: ServiceBase, ISecureDataService
     {
         public readonly AesCryptographyService Aes;
 

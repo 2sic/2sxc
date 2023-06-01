@@ -4,7 +4,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.Services
 {
-    public class FeaturesService: ServiceBase, IFeaturesService, ICanDebug
+    internal class FeaturesService: ServiceBase, IFeaturesService, ICanDebug
     {
         public FeaturesService(Eav.Configuration.IFeaturesInternal root) : base($"{Constants.SxcLogName}.FeatSv")
             => _root = root;

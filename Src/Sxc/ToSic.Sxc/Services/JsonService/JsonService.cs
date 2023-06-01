@@ -5,7 +5,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    public class JsonService: IJsonService
+    internal class JsonService: IJsonService
     {
         /// <inheritdoc />
         public T To<T>(string json) => JsonSerializer.Deserialize<T>(json, JsonOptions.SafeJsonForHtmlAttributes);

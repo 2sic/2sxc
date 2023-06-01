@@ -10,7 +10,7 @@ using ToSic.Sxc.Utils;
 
 namespace ToSic.Sxc.Services.CmsService
 {
-    public class CmsServiceImageExtractor: ServiceBase
+    internal class CmsServiceImageExtractor: ServiceBase
     {
         public CmsServiceImageExtractor() : base("Sxc.ImgExt")
         {

@@ -4,7 +4,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Mock / Unknown implementation")]
-    public class SystemLogServiceUnknown : ISystemLogService
+    internal class SystemLogServiceUnknown : ISystemLogService
     {
         public SystemLogServiceUnknown(WarnUseOfUnknown<SystemLogServiceUnknown> _)
         {

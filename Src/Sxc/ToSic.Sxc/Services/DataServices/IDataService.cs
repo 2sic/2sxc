@@ -6,9 +6,12 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services
 {
     /// <summary>
-    /// WIP v15.07 - new services to create DataSources in Razor as well as external (skin) use.
+    /// Services to create DataSources in Razor as well as external (skin) use.
     /// </summary>
-    [WorkInProgressApi("not yet ready / public")]
+    /// <remarks>
+    /// New in v16.00
+    /// </remarks>
+    [PublicApi]
     public interface IDataService
     {
         #region CreateDataSource - new in v15 - make sure it's copied in identical form to IDynamicCode, ...
@@ -22,6 +25,7 @@ namespace ToSic.Sxc.Services
         /// <param name="zoneId"></param>
         /// <param name="appId"></param>
         /// <returns></returns>
+        [PrivateApi]
         IDataService New(string noParamOrder = Protector,
             IAppIdentity appIdentity = default,
             int zoneId = default,
@@ -36,6 +40,7 @@ namespace ToSic.Sxc.Services
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
         /// <param name="options">Options how to build/construct the DataSource. </param>
         /// <returns></returns>
+        [PublicApi]
         IDataSource GetAppSource(string noParamOrder = Protector, object parameters = default, object options = default);
 
         /// <summary>
@@ -47,8 +52,8 @@ namespace ToSic.Sxc.Services
         /// <param name="attach">Link to one or more other DataSources / streams to attach upon creation.</param>
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
         /// <param name="options">Options how to build/construct the DataSource. </param>
-        /// <remarks>WIP v15.07 BETA</remarks>
-        /// <returns></returns>
+        /// <remarks>new v16.00</remarks>
+        [PublicApi]
         T GetSource<T>(string noParamOrder = Protector,
             IDataSourceLinkable attach = default,
             object parameters = default,
@@ -66,8 +71,8 @@ namespace ToSic.Sxc.Services
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
         /// <param name="options">Options how to build/construct the DataSource. </param>
         /// <param name="debug">Determines if exceptions should be shown. Default is only for Developers.</param>
-        /// <remarks>WIP v15.07</remarks>
-        /// <returns></returns>
+        /// <remarks>new v16.00</remarks>
+        [PublicApi]
         IDataSource GetSource(string noParamOrder = Protector,
             string name = default,
             IDataSourceLinkable attach = default,
@@ -85,6 +90,7 @@ namespace ToSic.Sxc.Services
         /// <param name="parameters">Parameters to use - as anonymous object like `new { Count = 7, Filter = 3 }`</param>
         /// <returns></returns>
         /// <remarks>New 16.01</remarks>
+        [PublicApi]
         IDataSource GetQuery(
             string name = default,
             string noParamOrder = Protector,

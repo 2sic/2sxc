@@ -9,7 +9,7 @@ using System;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    public class ToolbarService: ServiceForDynamicCode, IToolbarService
+    internal class ToolbarService: ServiceForDynamicCode, IToolbarService
     {
         #region Constructor & Init
 

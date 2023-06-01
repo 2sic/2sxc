@@ -6,7 +6,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
-    public partial class DataService
+    internal partial class DataService
     {
         public IDataSource GetQuery(string name = default,
             string noParamOrder = Parameters.Protector,

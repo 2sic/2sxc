@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run.Unknown;
 using ToSic.Lib.DI;
@@ -7,7 +6,7 @@ using ToSic.Lib.DI;
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services
 {
-    public class MailServiceUnknown : MailServiceBase
+    internal class MailServiceUnknown : MailServiceBase
     {
         public MailServiceUnknown(WarnUseOfUnknown<MailServiceUnknown> _, LazySvc<IUser> userLazy) : base(userLazy)
         { }

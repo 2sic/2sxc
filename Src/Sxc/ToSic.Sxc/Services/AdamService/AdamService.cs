@@ -8,7 +8,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("hide implementation")]
-    public class AdamService: IAdamService, INeedsDynamicCodeRoot
+    internal class AdamService: IAdamService, INeedsDynamicCodeRoot
     {
         #region Constructor etc.
 
