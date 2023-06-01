@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Eav.Parameters.Protect(noParamOrder, nameof(ui));
-            return AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
+            return this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
         }
 
         public IToolbarBuilder For(object target) => With(target: target);
@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             // auto-add other UI params such as the previous group
             return name.StartsWith("-")
                 // It's a remove-group rule
-                ? AddInternal($"-group={name.Substring(1)}") 
+                ? this.AddInternal($"-group={name.Substring(1)}") 
                 // It's an add group - set the current group and add the button-rule
                 : With(group: name).AddInternal($"+group={name}");
         }

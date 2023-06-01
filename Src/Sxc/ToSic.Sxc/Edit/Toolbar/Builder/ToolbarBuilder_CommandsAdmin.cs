@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             var uiTweaked = PrepareUi(ui, tweaks: tweaks?.UiMerge);
             var paramsTweaked = Utils.PrepareParams(parameters, tweaks);
             TargetCheck(target);
-            return AddInternal(new ToolbarRuleCustom(
+            return this.AddInternal(new ToolbarRuleCustom(
                 verb,
                 operation: ToolbarRuleOperation.Pick(operation, ToolbarRuleOps.OprAuto),
                 ui: uiTweaked,

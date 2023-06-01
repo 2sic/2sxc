@@ -42,20 +42,6 @@ namespace ToSic.Sxc.Edit.Toolbar
         IToolbarBuilder AsJson(
             object target = null
         );
-
-
-
-        /// <summary>
-        /// Add one or more rules (as strings or ToolbarRule objects) according to the conventions of the [js toolbar](xref:JsCode.Toolbars.Simple)
-        /// </summary>
-        /// <param name="rules"></param>
-        /// <returns>a _new_ toolbar builder - see [guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Index)</returns>
-        /// <remarks>
-        /// History
-        /// * Added in 2sxc 13
-        /// </remarks>
-        [PrivateApi("Would confuse people, since they cannot create ToolbarRule objects")]
-        IToolbarBuilder AddInternal(params object[] rules);
-
+        
     }
 }

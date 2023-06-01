@@ -23,20 +23,22 @@ namespace ToSic.Sxc.Services
         public IToolbarBuilder Default(
             object target = null,
             string noParamOrder = Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null
-        ) => ToolbarBuilder(noParamOrder, ToolbarRuleToolbar.Default, ui, parameters, prefill, null, target: target);
+        ) => ToolbarBuilder(noParamOrder: noParamOrder, tweak: tweak, toolbarTemplate: ToolbarRuleToolbar.Default, ui: ui, parameters: parameters, prefill: prefill, context: null, target: target);
 
 
         /// <inheritdoc />
         public IToolbarBuilder Empty(
             object target = null,
             string noParamOrder = Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null
-        ) => ToolbarBuilder(noParamOrder, ToolbarRuleToolbar.Empty, ui, parameters, prefill, null, target: target);
+        ) => ToolbarBuilder(noParamOrder: noParamOrder, tweak: tweak, toolbarTemplate: ToolbarRuleToolbar.Empty, ui: ui, parameters: parameters, prefill: prefill, context: null, target: target);
 
 
         /// <inheritdoc />
@@ -48,17 +50,22 @@ namespace ToSic.Sxc.Services
             object parameters = null,
             object prefill = null,
             string context = null
-        ) => Empty().Metadata(target, contentTypes, noParamOrder, tweak, ui, parameters, prefill, context: context);
+        ) => Empty().Metadata(target: target, contentTypes: contentTypes, noParamOrder: noParamOrder, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill, context: context);
 
 
-        private IToolbarBuilder ToolbarBuilder(string noParamOrder, string toolbarTemplate, object ui, object parameters, object prefill, string context, object target = null)
+        private IToolbarBuilder ToolbarBuilder(
+            string noParamOrder,
+            string toolbarTemplate,
+            Func<ITweakButton, ITweakButton> tweak,
+            object ui,
+            object parameters, object prefill, string context, object target = null)
         {
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
             // The following lines must be just as this, because it's a functional object, where each call may return a new copy
             var tlb = _toolbarGenerator.New();
             tlb.ConnectToRoot(_DynCodeRoot);
-            tlb = tlb.Toolbar(toolbarTemplate, target, ui, parameters, prefill);
+            tlb = tlb.Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
 
             if (_defaultUi.HasValue())
                 tlb = tlb.Settings(ui: _defaultUi);

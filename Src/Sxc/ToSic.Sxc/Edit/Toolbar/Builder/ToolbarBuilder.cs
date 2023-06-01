@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
@@ -43,7 +44,7 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// Clone-constructor
         /// </summary>
-        private ToolbarBuilder(ToolbarBuilder parent): this(parent.Services)
+        internal ToolbarBuilder(ToolbarBuilder parent): this(parent.Services)
         {
             this.LinkLog(parent.Log);
             _currentAppIdentity = parent._currentAppIdentity;
@@ -79,14 +80,16 @@ namespace ToSic.Sxc.Edit.Toolbar
         public IToolbarBuilder Toolbar(
             string toolbarTemplate,
             object target = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null
         )
         {
-            var updated = AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
-            if (target != null || parameters != null || prefill != null) 
-                updated = updated.Parameters(target, parameters: parameters, prefill: prefill);
+            var updated = this.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
+            if (new[] { target, parameters, prefill, tweak }.Any(x => x != null))
+                updated = updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill);
             return updated;
         }
 

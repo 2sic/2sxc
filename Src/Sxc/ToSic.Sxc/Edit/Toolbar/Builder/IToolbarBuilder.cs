@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Web;
@@ -27,6 +28,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         IToolbarBuilder Toolbar(
             string toolbarTemplate,
             object target = null,
+            string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = null,
             object parameters = null,
             object prefill = null
