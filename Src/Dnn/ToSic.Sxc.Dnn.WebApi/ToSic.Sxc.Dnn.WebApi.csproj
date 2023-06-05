@@ -111,7 +111,6 @@
     </Compile>
     <Compile Include="Custom\Dnn\Api12.cs" />
     <Compile Include="Custom\Hybrid\Advanced\Api14_TT_AsTyped.cs" />
-    <Compile Include="Custom\Hybrid\Api15.cs" />
     <Compile Include="Custom\Hybrid\Api14.cs" />
     <Compile Include="Dnn\WebApi\Admin\AppInternalsController.cs" />
     <Compile Include="Dnn\WebApi\HttpJson\JsonOnlyResponseAttribute.cs" />

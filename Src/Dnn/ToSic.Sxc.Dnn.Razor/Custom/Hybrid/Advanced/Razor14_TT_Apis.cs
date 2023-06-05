@@ -67,7 +67,6 @@ namespace Custom.Hybrid.Advanced
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
         /// <inheritdoc/>
-        [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
 
         #endregion
@@ -124,6 +123,9 @@ namespace Custom.Hybrid.Advanced
 
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
+
+        /// <inheritdoc />
+        public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
 
         #endregion
 

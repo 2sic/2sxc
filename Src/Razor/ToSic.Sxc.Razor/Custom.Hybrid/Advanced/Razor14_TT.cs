@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -22,6 +23,10 @@ namespace Custom.Hybrid.Advanced
 
         /// <inheritdoc />
         public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
+
+
+        /// <inheritdoc />
+        public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
 
     }
 }

@@ -105,6 +105,17 @@ namespace ToSic.Sxc.Code
         /// <returns>An Adam object for navigating the assets</returns>
         IFolder AsAdam(IEntity entity, string fieldName);
 
+        /// <summary>
+        /// Provides an Adam instance for this item and field
+        /// </summary>
+        /// <param name="item">The typed item</param>
+        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        /// <returns>An Adam object for navigating the assets</returns>
+        /// <remarks>
+        /// New in v16.02
+        /// </remarks>
+        IFolder AsAdam(ITypedItem item, string fieldName);
+
         #endregion
 
         #region Linking

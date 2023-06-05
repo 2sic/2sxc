@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Data;
@@ -19,7 +20,7 @@ namespace Custom.Hybrid.Advanced
     /// </remarks>
     /// <typeparam name="TModel">_not yet used_ - pls always use `dynamic`</typeparam>
     /// <typeparam name="TServiceKit">The ServiceKit provided on `Kit` - for now, use <see cref="ServiceKit14"/></typeparam>
-    [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v14.07")]
+    [InternalApi_DoNotUse_MayChangeWithoutNotice]
     public abstract class Code14<TModel, TServiceKit>: DynamicCode, IDynamicCode14<TModel, TServiceKit>
         where TModel : class
         where TServiceKit : ServiceKit
@@ -44,6 +45,10 @@ namespace Custom.Hybrid.Advanced
 
         /// <inheritdoc />
         public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
+
+
+        /// <inheritdoc />
+        public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
 
     }
 }

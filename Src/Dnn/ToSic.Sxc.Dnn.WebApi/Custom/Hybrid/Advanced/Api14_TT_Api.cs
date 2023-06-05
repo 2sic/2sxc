@@ -96,6 +96,8 @@ namespace Custom.Hybrid.Advanced
         /// <inheritdoc />
         public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
 
+        /// <inheritdoc />
+        public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
 
         /// <inheritdoc />
         public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Protector,
