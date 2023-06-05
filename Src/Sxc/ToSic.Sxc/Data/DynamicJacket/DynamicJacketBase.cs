@@ -59,7 +59,9 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         public dynamic Get(string name) => FindValueOrNull(name, StringComparison.InvariantCultureIgnoreCase, null);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Count array items or object properties
+        /// </summary>
         public int Count => UnwrappedContents is IList<JsonNode> jArray
             ? jArray.Count
             : UnwrappedContents is JsonObject jObject ? jObject.Count : 0;
