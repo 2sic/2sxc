@@ -6,7 +6,7 @@ namespace ToSic.Sxc.Data
     {
         public object Get(string name) => DynEntity.Get(name);
 
-        TValue Get<TValue>(string name) => DynEntity.Get<TValue>(name);
+        public TValue Get<TValue>(string name) => DynEntity.Get<TValue>(name);
 
         // ReSharper disable once MethodOverloadWithOptionalParameter
         public TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default) 

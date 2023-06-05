@@ -37,7 +37,6 @@ namespace ToSic.Sxc.Data
 
         IDynamicField Field(string name);
         object Get(string name);
-        TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default);
 
     }
 }
