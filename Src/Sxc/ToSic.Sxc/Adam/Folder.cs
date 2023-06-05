@@ -9,7 +9,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder
+    public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder, IFolderTyped
     {
         public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;
 
@@ -17,12 +17,17 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
+        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetDynamic(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
         private IDynamicMetadata _metadata;
+
+        [JsonIgnore]
+        IMetadataTyped IHasMetadata<IMetadataTyped>.Metadata => _typedMd ?? (_typedMd = new MetadataTyped(Metadata, AdamManager.TypedItemHelpers));
+        private IMetadataTyped _typedMd;
 
         /// <inheritdoc />
         [JsonIgnore]
         public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
+
 
         /// <inheritdoc />
         public string Url { get; set; }
@@ -37,6 +42,12 @@ namespace ToSic.Sxc.Adam
                                                || AdamManager.AdamFs.GetFolders(this).Any()).Value;
         private bool? _hasChildren;
 
+
+        [JsonIgnore]
+        IEnumerable<IFileTyped> IFolderTyped.Files => Files.Cast<IFileTyped>();
+
+        [JsonIgnore]
+        IEnumerable<IFolderTyped> IFolderTyped.Folders => Folders.Cast<IFolderTyped>();
 
         /// <inheritdoc />
         public IEnumerable<IFolder> Folders => _folders ?? (_folders = AdamManager.AdamFs.GetFolders(this)); 
@@ -54,6 +65,5 @@ namespace ToSic.Sxc.Adam
             => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
                 CmsMetadata.FolderPrefix + SysId, Name));
         private IMetadataOf _metadataOf;
-
     }
 }

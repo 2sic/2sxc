@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Oqt.Server.Run
 
         protected override void PostContextInit(IContextOfApp appContext)
         {
-            AdamManager.Init(appContext, Constants.CompatibilityLevel10);
+            AdamManager.Init(appContext, null, Constants.CompatibilityLevel10);
         }
 
 

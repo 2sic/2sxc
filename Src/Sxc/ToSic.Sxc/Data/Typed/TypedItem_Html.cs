@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
@@ -11,7 +10,6 @@ namespace ToSic.Sxc.Data
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             object container = default,
-            //string classes = default,
             bool? toolbar = default,
             object imageSettings = default,
             bool debug = default
@@ -25,6 +23,5 @@ namespace ToSic.Sxc.Data
             var result = _Services.Kit.Cms.Html(Field(name), container: container, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
             return result;
         }
-
     }
 }

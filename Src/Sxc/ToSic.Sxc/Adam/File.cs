@@ -14,7 +14,8 @@ namespace ToSic.Sxc.Adam
 #pragma warning disable 618
         AdamFile, 
 #pragma warning restore 618
-        IFile
+        IFile,
+        IFileTyped
     {
         public File(AdamManager adamManager) => AdamManager = adamManager;
         private AdamManager AdamManager { get; }
@@ -24,8 +25,12 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         [JsonIgnore]
         public IDynamicMetadata Metadata => _metadata 
-            ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
+            ?? (_metadata = AdamManager.MetadataMaker.GetDynamic(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
         private IDynamicMetadata _metadata;
+
+        [JsonIgnore]
+        IMetadataTyped IHasMetadata<IMetadataTyped>.Metadata => _typedMd ?? (_typedMd = new MetadataTyped(Metadata, AdamManager.TypedItemHelpers));
+        private IMetadataTyped _typedMd;
 
         /// <summary>
         /// Attach metadata recommendations
@@ -41,6 +46,7 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         [JsonIgnore]
         public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
+
 
         #endregion
 

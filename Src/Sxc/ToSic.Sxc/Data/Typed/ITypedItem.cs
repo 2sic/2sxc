@@ -32,7 +32,13 @@ namespace ToSic.Sxc.Data
         /// </summary>
         ITypedItem Presentation { get; }
 
-        //IDynamicMetadata Metadata { get; }
+        /// <summary>
+        /// Metadata of the current item, with special features.
+        /// </summary>
+        /// <remarks>
+        /// Added in 16.02
+        /// </remarks>
+        IMetadataTyped Metadata { get; }
 
 
         IDynamicField Field(string name);

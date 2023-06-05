@@ -8,6 +8,7 @@ using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Data;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Adam
 
         #region Init
 
-        public virtual AdamManager Init(IContextOfApp ctx, int compatibility)
+        public virtual AdamManager Init(IContextOfApp ctx, TypedItem.MyHelpers typedHelpers, int compatibility)
         {
             AppContext = ctx;
 
@@ -52,12 +53,15 @@ namespace ToSic.Sxc.Adam
             Site = AppContext.Site;
             AppRuntime.InitQ(AppContext.AppState);
             CompatibilityLevel = compatibility;
+            TypedItemHelpers = typedHelpers;
             return callLog.Return(this, "ready");
         }
         
         public IContextOfApp AppContext { get; private set; }
 
         public ISite Site { get; private set; }
+
+        internal TypedItem.MyHelpers TypedItemHelpers { get; private set; }
         
         #endregion
 

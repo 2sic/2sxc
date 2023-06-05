@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
             string field = null)
         {
             Parameters.Protect(noParamOrder, $"{nameof(field)}");
-            return AsTypedList(DynEntity.Parents(type, field), _Services, 3, _Services.LogOrNull);
+            return AsTypedList(DynEntity.Parents(type, field), _typedHelpers, 3, _Services.LogOrNull);
         }
 
         /// <inheritdoc />
@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
             string type = null)
         {
             Parameters.Protect(noParamOrder, $"{nameof(type)}");
-            return AsTypedList(DynEntity.Children(field, type), _Services, 3, _Services.LogOrNull);
+            return AsTypedList(DynEntity.Children(field, type), _typedHelpers, 3, _Services.LogOrNull);
         }
 
         /// <inheritdoc />

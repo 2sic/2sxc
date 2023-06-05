@@ -125,6 +125,13 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
+        #region TypedHelpers
+
+        internal TypedItem.MyHelpers TypedItemHelpers => _tIHelpers.Get(() => AdamManager.TypedItemHelpers);
+        private readonly GetOnce<TypedItem.MyHelpers> _tIHelpers = new GetOnce<TypedItem.MyHelpers>();
+
+        #endregion
+
         #region Adam
 
         /// <inheritdoc />
@@ -144,7 +151,7 @@ namespace ToSic.Sxc.Code
         /// <exception cref="Exception"></exception>
         private AdamManager GetAdamManager()
         {
-            //if(_contextOfApp != null) return _contextOfApp;
+            
             IContextOfApp contextOfApp = Block?.Context;
             if (contextOfApp == null)
             {
@@ -154,7 +161,9 @@ namespace ToSic.Sxc.Code
                 contextOfApp.ResetApp(App);
             }
 
-            return Services.AdamManager.Value.Init(contextOfApp, CompatibilityLevel);
+            var adamManager = Services.AdamManager.Value;
+            var helpers = new TypedItem.MyHelpers(adamManager, DynamicEntityServices);
+            return adamManager.Init(contextOfApp, helpers, CompatibilityLevel);
         }
 
         #endregion

@@ -5,6 +5,7 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
 {
@@ -28,9 +29,9 @@ namespace ToSic.Sxc.Adam
             );
         }
 
-        public override AdamManager Init(IContextOfApp ctx, int compatibility)
+        public override AdamManager Init(IContextOfApp ctx, TypedItem.MyHelpers typedHelpers, int compatibility)
         {
-            base.Init(ctx, compatibility);
+            base.Init(ctx, typedHelpers, compatibility);
             AdamFs = _adamFsLazy.Value;
             return this;
         }
