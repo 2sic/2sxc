@@ -4,11 +4,11 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -94,7 +94,7 @@ namespace ToSic.Sxc.Blocks
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        public IHtmlTag One(DynamicEntity parent,
+        public IRawHtmlString One(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             object data = null,
@@ -121,9 +121,9 @@ namespace ToSic.Sxc.Blocks
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
         /// <remarks>
-        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
-        public IHtmlTag All(DynamicEntity parent,
+        public IRawHtmlString All(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,

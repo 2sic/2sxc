@@ -1,8 +1,8 @@
-﻿using ToSic.Sxc.Web;
+﻿using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public class ToolbarRuleBase: HybridHtmlString
+    public class ToolbarRuleBase: RawHtmlString
     {
 
         protected ToolbarRuleBase(): base(string.Empty) {}

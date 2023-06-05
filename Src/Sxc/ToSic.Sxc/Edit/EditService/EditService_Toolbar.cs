@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
@@ -12,7 +13,7 @@ namespace ToSic.Sxc.Edit.EditService
         private readonly string innerContentAttribute = "data-list-context";
 
         /// <inheritdoc />
-        public IHtmlTag Toolbar(
+        public IRawHtmlString Toolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -24,7 +25,7 @@ namespace ToSic.Sxc.Edit.EditService
             => ToolbarInternal(false, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
         /// <inheritdoc/>
-        public IHtmlTag TagToolbar(
+        public IRawHtmlString TagToolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -35,7 +36,7 @@ namespace ToSic.Sxc.Edit.EditService
             object toolbar = null)
             => ToolbarInternal(true, target, noParamOrder, actions, contentType, condition, prefill, settings, toolbar);
 
-        private IHtmlTag ToolbarInternal(
+        private IRawHtmlString ToolbarInternal(
             bool inTag,
             object target,
             string noParamOrder,
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Edit.EditService
             object settings,
             object toolbar)
         {
-            var l = Log.Fn<IHtmlTag>($"enabled:{Enabled}; inline{inTag}");
+            var l = Log.Fn<IRawHtmlString>($"enabled:{Enabled}; inline{inTag}");
             if (!Enabled) return l.ReturnNull("not enabled");
             if (!IsConditionOk(condition)) return l.ReturnNull("condition false");
 
@@ -80,8 +81,8 @@ namespace ToSic.Sxc.Edit.EditService
             }
 
             var result = inTag
-                ? Tag.RawHtml(itmToolbar.ToolbarAsAttributes())
-                : Tag.RawHtml(itmToolbar.ToolbarAsTag);
+                ? new RawHtmlString(itmToolbar.ToolbarAsAttributes())
+                : new RawHtmlString(itmToolbar.ToolbarAsTag);
             return l.Return(result, "ok");
         }
 

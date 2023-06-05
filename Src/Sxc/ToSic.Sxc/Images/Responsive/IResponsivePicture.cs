@@ -1,7 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Razor.Html5;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Images
 {
@@ -12,7 +11,7 @@ namespace ToSic.Sxc.Images
     /// History: Released 2sxc 13.10
     /// </remarks>
     [PublicApi("WIP")]
-    public interface IResponsivePicture: IHybridHtmlString, IResponsiveImage
+    public interface IResponsivePicture: IRawHtmlString, IResponsiveImage
     {
         /// <summary>
         /// The `picture` tag with everything automatically included.

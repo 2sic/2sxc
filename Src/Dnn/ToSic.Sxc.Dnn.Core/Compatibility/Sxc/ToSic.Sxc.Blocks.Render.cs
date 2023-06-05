@@ -1,9 +1,8 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
-using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 using static ToSic.Sxc.Compatibility.Obsolete;
-using IHtmlString = System.Web.IHtmlString;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Blocks
@@ -29,9 +28,9 @@ namespace ToSic.Sxc.Blocks
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
         /// <remarks>
-        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
-        public static IHtmlTag One(DynamicEntity parent,
+        public static IRawHtmlString One(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             string field = null,
@@ -69,9 +68,9 @@ namespace ToSic.Sxc.Blocks
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
         /// <remarks>
-        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
-        public static IHtmlTag All(DynamicEntity parent,
+        public static IRawHtmlString All(DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,

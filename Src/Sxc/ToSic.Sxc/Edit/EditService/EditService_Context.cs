@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Edit.EditService
         #region Context Attributes
 
         /// <inheritdoc/>
-        public IHtmlTag ContextAttributes(IDynamicEntity target,
+        public IRawHtmlString ContextAttributes(IDynamicEntity target,
             string noParamOrder = Parameters.Protector,
             string field = null,
             string contentType = null,
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Edit.EditService
 
         /// <inheritdoc/>
         [PrivateApi]
-        public IHtmlTag WrapInContext(object content,
+        public IRawHtmlString WrapInContext(object content,
             string noParamOrder = Parameters.Protector,
             string tag = Constants.DefaultContextTag,
             bool full = false,
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Edit.EditService
 
             var renderingHelper = _renderHelper.Value;
 
-            return Tag.RawHtml(
+            return new RawHtmlString(
                renderingHelper.WrapInContext(content.ToString(),
                     instanceId: instanceId > 0
                         ? instanceId

@@ -1,9 +1,8 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
-using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Services
 {
@@ -35,9 +34,9 @@ namespace ToSic.Sxc.Services
         /// <param name="data">Data to give the Razor as `DynamicModel` - new 15.07</param>
         /// <returns></returns>
         /// <remarks>
-        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
-        IHtmlTag One(
+        IRawHtmlString One(
             DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
@@ -57,9 +56,9 @@ namespace ToSic.Sxc.Services
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
         /// <remarks>
-        /// * Changed result object to `IHtmlTag` in v16.02 from `IHybridHtmlString`
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
-        IHtmlTag All(
+        IRawHtmlString All(
             DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,

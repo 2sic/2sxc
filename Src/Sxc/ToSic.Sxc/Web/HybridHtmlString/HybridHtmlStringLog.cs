@@ -1,9 +1,10 @@
 ﻿using ToSic.Lib.Logging;
+using ToSic.Razor.Markup;
 
 
 namespace ToSic.Sxc.Web
 {
-    public abstract class HybridHtmlStringLog: HybridHtmlString, IHasLog
+    public abstract class HybridHtmlStringLog: RawHtmlString, IHasLog
     {
         protected HybridHtmlStringLog(string logName)
         {

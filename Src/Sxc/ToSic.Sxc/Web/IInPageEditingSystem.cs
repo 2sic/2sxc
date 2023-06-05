@@ -2,6 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
@@ -69,9 +70,9 @@ namespace ToSic.Sxc.Web
         /// 1. Added in 2sxc 8.04
         /// 1. `condition` added in 2sxc 12.05
         /// 1. option to just use a ToolbarBuilder as first parameter or `toolbar` parameter added in v13 - this will skip all other parameters
-        /// 1. Enhanced to return `IHtmlTag` instead of `IHybridHtmlString` in 16.02
+        /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
         /// </remarks>
-        IHtmlTag Toolbar(
+        IRawHtmlString Toolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -123,9 +124,9 @@ namespace ToSic.Sxc.Web
         /// 1. Added in 2sxc 9.40
         /// 1. `condition` added in 2sxc 12.05
         /// 1. option to just use a ToolbarBuilder as first parameter or `toolbar` parameter added in v13 - this will skip all other parameters
-        /// 1. Enhanced to return `IHtmlTag` instead of `IHybridHtmlString` in 16.02
+        /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
         /// </remarks>
-        IHtmlTag TagToolbar(
+        IRawHtmlString TagToolbar(
             object target = null,
             string noParamOrder = Eav.Parameters.Protector,
             string actions = null,
@@ -149,14 +150,14 @@ namespace ToSic.Sxc.Web
         /// <param name="newGuid">the guid of a new item - use null for auto-generate</param>
         /// <param name="apps">Beta / WIP</param>
         /// <param name="max">Beta / WIP</param>
-        /// <returns>An <see cref="IHtmlTag"/> object containing an html-attribute to add to the wrapper of the inner content</returns>
+        /// <returns>An <see cref="IRawHtmlString"/> object containing an html-attribute to add to the wrapper of the inner content</returns>
         /// <remarks>
         /// **History** <br/>
         /// 1. Introduced in 2sxc 8.4
         /// 1. Enhanced with apps and max in 10.27
-        /// 1. Enhanced to return `IHtmlTag` instead of `IHybridHtmlString` in 16.02
+        /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
         /// </remarks>
-        IHtmlTag ContextAttributes(
+        IRawHtmlString ContextAttributes(
             IDynamicEntity target, 
             string noParamOrder = Eav.Parameters.Protector, 
             string field = null, 
@@ -180,10 +181,10 @@ namespace ToSic.Sxc.Web
         /// <remarks>
         /// **History** <br/>
         /// 1. Introduced in 2sxc 8.4
-        /// 1. Enhanced to return `IHtmlTag` instead of `IHybridHtmlString` in 16.02
+        /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
         /// </remarks>
         [PrivateApi]
-        IHtmlTag WrapInContext(object content,
+        IRawHtmlString WrapInContext(object content,
             string noParamOrder = Eav.Parameters.Protector,
             string tag = Constants.DefaultContextTag,
             bool full = false,
@@ -232,7 +233,7 @@ namespace ToSic.Sxc.Web
         /// <param name="name">the attribute name, used for ...=</param>
         /// <param name="value">the attribute value, used for ="..."</param>
         /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
-        IHtmlTag Attribute(string name, string value);
+        IRawHtmlString Attribute(string name, string value);
 
         /// <summary>
         /// Generate an HTML attribute by converting the value to JSON
@@ -241,7 +242,7 @@ namespace ToSic.Sxc.Web
         /// <param name="name">the attribute name, used for ...=</param>
         /// <param name="value">the attribute value, used for ="..."</param>
         /// <returns>A string but as HtmlString, so it can be used with @Attribute(...)</returns>
-        IHtmlTag Attribute(string name, object value);
+        IRawHtmlString Attribute(string name, object value);
 
     }
 }

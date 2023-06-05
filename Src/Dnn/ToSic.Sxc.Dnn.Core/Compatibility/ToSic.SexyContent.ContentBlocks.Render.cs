@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 
 // ReSharper disable once CheckNamespace
@@ -9,7 +9,7 @@ namespace ToSic.SexyContent.ContentBlocks
     public static class Render
     {
         [Obsolete]
-        public static IHtmlTag One(DynamicEntity context,
+        public static IRawHtmlString One(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             string field = null,
@@ -17,7 +17,7 @@ namespace ToSic.SexyContent.ContentBlocks
             => Sxc.Blocks.Render.One(context, noParamOrder, item: item, field: field, newGuid: newGuid);
 
         [Obsolete]
-        public static IHtmlTag All(DynamicEntity context,
+        public static IRawHtmlString All(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string merge = null)

@@ -7,12 +7,12 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
-    public partial class ToolbarBuilder: HybridHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
+    public partial class ToolbarBuilder: RawHtmlString, IEnumerable<string>, IToolbarBuilder, INeedsDynamicCodeRoot
     {
 
         #region Constructors and Init

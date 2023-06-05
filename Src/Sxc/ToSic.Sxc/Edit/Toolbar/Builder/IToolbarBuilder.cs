@@ -1,8 +1,8 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Edit.Toolbar
     /// * most commands extended with [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) in v15.07
     /// </remarks>
     [PublicApi]
-    public partial interface IToolbarBuilder: IHybridHtmlString, IHasLog, INeedsDynamicCodeRoot
+    public partial interface IToolbarBuilder: IRawHtmlString, IHasLog, INeedsDynamicCodeRoot
     {
         [PrivateApi("internal use only")]
         IToolbarBuilder Toolbar(

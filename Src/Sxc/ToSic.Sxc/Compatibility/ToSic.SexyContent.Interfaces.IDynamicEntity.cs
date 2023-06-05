@@ -1,7 +1,7 @@
 ﻿#if NETFRAMEWORK
 using System;
 using ToSic.Lib.Documentation;
-using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 // ReSharper disable once CheckNamespace
@@ -25,13 +25,12 @@ namespace ToSic.SexyContent.Interfaces
 
 
         /// <summary>
-        /// Note: changed to `IHtmlTag` in 16.02
+        /// Note: changed to `IRawHtmlString` in 16.02
         /// </summary>
         /// <returns></returns>
         [Obsolete]
         [PrivateApi]
-        IHtmlTag Render();
-        //System.Web.IHtmlString
+        IRawHtmlString Render();
 #endif
 
         IEntity Entity { get; }
