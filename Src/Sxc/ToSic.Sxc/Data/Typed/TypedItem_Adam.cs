@@ -6,8 +6,8 @@ namespace ToSic.Sxc.Data
     public partial class TypedItem
     {
         /// <inheritdoc />
-        public IFolderTyped Folder(string name) => _adamCache.Get(name, () => _typedHelpers.AdamManager.Folder(Entity, name) as IFolderTyped);
-        private readonly GetOnceNamed<IFolderTyped> _adamCache = new GetOnceNamed<IFolderTyped>();
+        public ITypedFolder Folder(string name) => _adamCache.Get(name, () => _typedHelpers.AdamManager.Folder(Entity, name) as ITypedFolder);
+        private readonly GetOnceNamed<ITypedFolder> _adamCache = new GetOnceNamed<ITypedFolder>();
 
         // TODO: MUST handle all edge cases first
         // Eg. Hyperlink field should return the file which was selected, not any first file in the folder

@@ -6,9 +6,9 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("Hide implementation")]
-    public class MetadataTyped: TypedItem, IMetadataTyped
+    public class TypedMetadata: TypedItem, ITypedMetadata
     {
-        internal MetadataTyped(IDynamicMetadata dynamicMetadata, TypedItem.MyHelpers helpers): base(dynamicMetadata, helpers)
+        internal TypedMetadata(IDynamicMetadata dynamicMetadata, TypedItem.MyHelpers helpers): base(dynamicMetadata, helpers)
         {
             _dynamicMetadata = dynamicMetadata;
         }

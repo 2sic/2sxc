@@ -8,8 +8,8 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     [WorkInProgressApi("Still WIP v16.02")]
 
-    public interface IFileTyped :
-        IAssetTyped,
+    public interface ITypedFile :
+        ITypedAsset,
         IFile
     {
     }

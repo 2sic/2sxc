@@ -9,7 +9,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Adam
 {
 
-    public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder, IFolderTyped
+    public class Folder<TFolderId, TFileId> : Eav.Apps.Assets.Folder<TFolderId, TFileId>, IFolder, ITypedFolder
     {
         public Folder(AdamManager<TFolderId, TFileId> adamManager) => AdamManager = adamManager;
 
@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Adam
         private IDynamicMetadata _metadata;
 
         [JsonIgnore]
-        IMetadataTyped IHasMetadata<IMetadataTyped>.Metadata => _typedMd ?? (_typedMd = new MetadataTyped(Metadata, AdamManager.TypedItemHelpers));
-        private IMetadataTyped _typedMd;
+        ITypedMetadata IHasMetadata<ITypedMetadata>.Metadata => _typedMd ?? (_typedMd = new TypedMetadata(Metadata, AdamManager.TypedItemHelpers));
+        private ITypedMetadata _typedMd;
 
         /// <inheritdoc />
         [JsonIgnore]
@@ -44,10 +44,10 @@ namespace ToSic.Sxc.Adam
 
 
         [JsonIgnore]
-        IEnumerable<IFileTyped> IFolderTyped.Files => Files.Cast<IFileTyped>();
+        IEnumerable<ITypedFile> ITypedFolder.Files => Files.Cast<ITypedFile>();
 
         [JsonIgnore]
-        IEnumerable<IFolderTyped> IFolderTyped.Folders => Folders.Cast<IFolderTyped>();
+        IEnumerable<ITypedFolder> ITypedFolder.Folders => Folders.Cast<ITypedFolder>();
 
         /// <inheritdoc />
         public IEnumerable<IFolder> Folders => _folders ?? (_folders = AdamManager.AdamFs.GetFolders(this)); 

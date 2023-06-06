@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using ToSic.Eav.Context;
+using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Logging;
@@ -88,7 +89,7 @@ namespace ToSic.Sxc.Code
 
 
         /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) => ((IDynamicEntity)dynamicEntity).Entity;
+        public IEntity AsEntity(object dynamicEntity) => ((ICanBeEntity)dynamicEntity).Entity;
 
         #endregion
 
