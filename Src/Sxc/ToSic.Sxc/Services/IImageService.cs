@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Services
         /// What should be in this, can be:
         /// 
         /// - a string url, in which case it would be used if `url` is not specified
-        /// - a <see cref="IDynamicField"/> in which case it would be used if `field` is not specified
+        /// - a <see cref="IField"/> in which case it would be used if `field` is not specified
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
@@ -189,7 +189,7 @@ namespace ToSic.Sxc.Services
         ///     What should be in this, can be:
         /// 
         ///     - a string url, in which case it would be used if `url` is not specified
-        ///     - a <see cref="IDynamicField"/> in which case it would be used if `field` is not specified
+        ///     - a <see cref="IField"/> in which case it would be used if `field` is not specified
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
@@ -246,7 +246,7 @@ namespace ToSic.Sxc.Services
         ///     What should be in this, can be:
         /// 
         ///     - a string url, in which case it would be used if `url` is not specified
-        ///     - a <see cref="IDynamicField"/> in which case it would be used if `field` is not specified
+        ///     - a <see cref="IField"/> in which case it would be used if `field` is not specified
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">

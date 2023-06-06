@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.Logging;
@@ -6,6 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Services;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
@@ -33,13 +35,15 @@ namespace ToSic.Sxc.Data
 
             internal MyServices Init(IBlock blockOrNull, string[] dimensions, ILog log,
                 int compatibility = Constants.CompatibilityLevel10,
-                Func<ServiceKit14> kit = null)
+                Func<ServiceKit14> kit = null, 
+                Func<AdamManager> getAdamManager = null)
             {
                 Dimensions = dimensions;
                 LogOrNull = log;
                 CompatibilityLevel = compatibility;
                 BlockOrNull = blockOrNull;
                 _getKit = kit;
+                _getAdamManager = getAdamManager;
                 return this;
             }
 
@@ -71,6 +75,11 @@ namespace ToSic.Sxc.Data
             internal ServiceKit14 Kit => _kit.Get(() => _getKit?.Invoke());
             private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
             private Func<ServiceKit14> _getKit;
+
+
+            internal AdamManager AdamManager => _adamManager.Get(() => _getAdamManager?.Invoke());
+            private readonly GetOnce<AdamManager> _adamManager = new GetOnce<AdamManager>();
+            private Func<AdamManager> _getAdamManager;
         }
     }
 }

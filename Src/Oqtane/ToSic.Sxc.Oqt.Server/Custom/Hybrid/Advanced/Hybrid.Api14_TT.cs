@@ -23,8 +23,5 @@ namespace Custom.Hybrid.Advanced
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
         private readonly GetOnce<TServiceKit> _kit = new();
 
-        /// <inheritdoc />
-        public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
-
     }
 }

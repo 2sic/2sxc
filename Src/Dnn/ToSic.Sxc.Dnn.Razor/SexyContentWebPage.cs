@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Custom.Hybrid;
 using DotNetNuke.Entities.Modules;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -232,11 +233,7 @@ namespace ToSic.SexyContent.Razor
         #region Adam 
 
         /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
-
-
-        /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
+        public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         #endregion
 

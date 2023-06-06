@@ -7,7 +7,11 @@ namespace ToSic.Sxc.Code
     public partial class DynamicCodeRoot
     {
         [PrivateApi]
-        public void AttachApp(IApp app) => App = app;
+        public void AttachApp(IApp app)
+        {
+            if (app is App typed) typed.AddDynamicEntityServices(DynamicEntityServices);
+            App = app;
+        }
 
         [PrivateApi]
         public int CompatibilityLevel { get; private set; }

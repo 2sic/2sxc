@@ -6,10 +6,8 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity: IHasMetadata
     {
         /// <inheritdoc />
-        public IDynamicMetadata Metadata 
-            => _dynamicMetadata ?? (_dynamicMetadata = new DynamicMetadata(Entity?.Metadata, Entity, _Services));
-
-        private DynamicMetadata _dynamicMetadata;
+        public IMetadata Metadata => _metadata ?? (_metadata = new Metadata(Entity?.Metadata, Entity, _Services));
+        private Metadata _metadata;
 
         /// <summary>
         /// Explicit implementation, so it's not really available on DynamicEntity, only when cast to IHasMetadata

@@ -133,7 +133,7 @@ namespace ToSic.Sxc.Web
             object settings = default,
             object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicField field = default,
+            IField field = default,
             object width = default,
             object height = default,
             object quality = default,

@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
         /// True if this is the item configured in the view-settings, false if not.
         /// </returns>
         /// <remarks>New in 10.07 on IDynamicEntity, new in 16.02 on ITypedEntity</remarks>
-        bool IsDemoItem { get; }
+        new bool IsDemoItem { get; }
 
         /// <summary>
         /// Show a field in the expected / best possible way.
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Data
         /// * Added in 2sxc 16.01
         /// * Only works on Razor files inheriting from Hybrid14 or newer
         /// </remarks>
-        IHtmlTag Html(
+        new IHtmlTag Html(
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             object container = default,

@@ -15,8 +15,7 @@ namespace ToSic.Sxc.Data
     [PublicApi]
     public partial interface ITypedItem: ICanBeEntity
     {
-        int EntityId { get; }
-        Guid EntityGuid { get; }
+
 
         /// <summary>
         /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
@@ -38,10 +37,10 @@ namespace ToSic.Sxc.Data
         /// <remarks>
         /// Added in 16.02
         /// </remarks>
-        IMetadataTyped Metadata { get; }
+        IMetadata Metadata { get; }
 
 
-        IDynamicField Field(string name);
+        IField Field(string name);
         object Get(string name);
 
     }

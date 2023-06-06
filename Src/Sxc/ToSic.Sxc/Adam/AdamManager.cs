@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Adam
 
         #region Init
 
-        public virtual AdamManager Init(IContextOfApp ctx, TypedItem.MyHelpers typedHelpers, int compatibility)
+        public virtual AdamManager Init(IContextOfApp ctx, DynamicEntity.MyServices dynEntServices, int compatibility)
         {
             AppContext = ctx;
 
@@ -53,7 +53,7 @@ namespace ToSic.Sxc.Adam
             Site = AppContext.Site;
             AppRuntime.InitQ(AppContext.AppState);
             CompatibilityLevel = compatibility;
-            TypedItemHelpers = typedHelpers;
+            DynamicEntityServices = dynEntServices;
             return callLog.Return(this, "ready");
         }
         
@@ -61,8 +61,8 @@ namespace ToSic.Sxc.Adam
 
         public ISite Site { get; private set; }
 
-        internal TypedItem.MyHelpers TypedItemHelpers { get; private set; }
-        
+        internal DynamicEntity.MyServices DynamicEntityServices { get; private set; }
+
         #endregion
 
 

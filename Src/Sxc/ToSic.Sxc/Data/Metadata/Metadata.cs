@@ -9,9 +9,9 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("Hide implementation")]
-    public class DynamicMetadata: DynamicEntity, IDynamicMetadata
+    public class Metadata: DynamicEntity, IMetadata
     {
-        internal DynamicMetadata(IMetadataOf metadata, IEntity parentOrNull, MyServices services)
+        internal Metadata(IMetadataOf metadata, IEntity parentOrNull, MyServices services)
             : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, services)
         {
             _metadata = metadata;
@@ -22,9 +22,9 @@ namespace ToSic.Sxc.Data
 
         IMetadataOf IHasMetadata.Metadata => _metadata;
 
-        public bool HasType(string typeName) => _metadata.HasType(typeName);
+        public bool HasType(string type) => _metadata.HasType(type);
 
-        public IEnumerable<IEntity> OfType(string typeName) => _metadata.OfType(typeName);
+        public IEnumerable<IEntity> OfType(string type) => _metadata.OfType(type);
 
         [PrivateApi("Internal")]
         public override PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
@@ -24,9 +25,9 @@ namespace ToSic.Sxc.Blocks.Renderers
         static readonly Regex InlineCbDetector = new Regex("<hr[^>]+sxc[^>]+>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
         static readonly Regex  GuidExtractor = new Regex("guid=\\\"([^\\\"]*)\\\"", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
 
-        public string RenderMerge(DynamicEntity parent, string field, string textTemplate, IEditService edit)
+        public string RenderMerge(IBlock block, IEntity parent, string field, string textTemplate, IEditService edit)
         {
-            var l = Log.Fn<string>($"{nameof(parent)}: {parent?.EntityId}, {nameof(field)}: '{field}'");
+            var l = Log.Fn<string>($"{nameof(parent)}: {parent.EntityId}, {nameof(field)}: '{field}'");
             // do basic checking
             if (!InlineCbDetector.IsMatch(textTemplate))
                 return l.Return(textTemplate, "no inner content");
@@ -40,6 +41,7 @@ namespace ToSic.Sxc.Blocks.Renderers
 
             l.A($"Found {matches.Count} inner content placeholders");
 
+            //var items = parent.Children(field);
             var items = parent.Children(field);
 
             foreach (Match curMatch in matches)
@@ -63,11 +65,9 @@ namespace ToSic.Sxc.Blocks.Renderers
                     if (!Guid.TryParse(likelyGuid, out var guid))
                         return "Marker can't be converted to guid, won't process";
 
-                    var subItem = items.Any()
-                        ? items.FirstOrDefault(i => i.EntityGuid == guid) as DynamicEntity
-                        : null;
+                    var subItem = items.FirstOrDefault(i => i.EntityGuid == guid);
 
-                    var contents = _simpleRenderer.RenderWithEditContext(parent, subItem, field, guid, edit);
+                    var contents = _simpleRenderer.RenderWithEditContext(block, parent, subItem, field, guid, edit);
 
                     result.Append(contents);
                     return "done";

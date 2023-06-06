@@ -1,5 +1,12 @@
-﻿using ToSic.Sxc.Data;
+﻿using System.Dynamic;
+using System.Linq;
+using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
+using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid.Advanced
@@ -13,9 +20,26 @@ namespace Custom.Hybrid.Advanced
         /// New in v12
         /// </remarks>
         public dynamic DynamicModel => _dynamicModel ?? (_dynamicModel = new DynamicReadDictionary<object, dynamic>(PageData));
-        private dynamic _dynamicModel;
+        private DynamicObject _dynamicModel;
 
-        void ISetDynamicModel.SetDynamicModel(object data) => _dynamicModel = new DynamicReadObject(data, false, false);
+        void ISetDynamicModel.SetDynamicModel(object data)
+        {
+            _overridePageData = data;
+            _dynamicModel = new DynamicReadObject(data, false, false);
+        }
 
+        [PrivateApi("WIP v16.02")]
+        public ITypedModel TypedModel => _typedModel.Get(() =>
+        {
+            if (_overridePageData != null)
+                return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot, this.Path);
+
+            var stringDic = PageData?
+                .Where(pair => pair.Key is string)
+                .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
+            return new TypedModel(stringDic, _DynCodeRoot, this.Path);
+        });
+        private readonly GetOnce<ITypedModel> _typedModel = new GetOnce<ITypedModel>();
+        private object _overridePageData;
     }
 }

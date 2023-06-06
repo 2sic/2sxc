@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ToSic.Sxc.Adam;
+﻿using ToSic.Sxc.Adam;
 
 namespace ToSic.Sxc.Data
 {
@@ -12,22 +11,20 @@ namespace ToSic.Sxc.Data
         /// <param name="name"></param>
         /// <returns>The Folder object</returns>
         /// <remarks>Added in 16.02</remarks>
-        IFolderTyped Folder(string name);
+        IFolder Folder(string name);
 
-        ///// <summary>
-        ///// All the sub-folders of this field, if any.
-        ///// </summary>
-        ///// <param name="name"></param>
-        ///// <returns>A list of folders, or an empty list (TODO: VERIFY) if no subfolders</returns>
-        ///// <remarks>Added in 16.02</remarks>
-        //IEnumerable<IFolderTyped> Folders(string name);
-
-        ///// <summary>
-        ///// All the files in the main folder of this field, if any.
-        ///// </summary>
-        ///// <param name="name"></param>
-        ///// <returns>A list of files, or an empty list (TODO: VERIFY) if no files</returns>
-        ///// <remarks>Added in 16.02</remarks>
-        //IEnumerable<IFileTyped> Files(string name);
+        /// <summary>
+        /// Get the file of the current field.
+        /// There are a few scenarios:
+        /// 
+        /// 1. If it's a file/hyperlink field pointing to a file such as `file:27` it will retrieve the file itself.
+        /// 1. If it's a file/hyperlink field pointing to a url such as `http://xyz` it will return `null`.
+        /// 1. If it's a library field, it will just take the first file, as there is no value referencing a specific field
+        /// 1. If it's any other field, will return `null`
+        /// </summary>
+        /// <param name="name"></param>
+        /// <remarks>Added in 16.02</remarks>
+        /// <returns></returns>
+        IFile File(string name);
     }
 }

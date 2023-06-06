@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Context
 
         [PrivateApi("WIP")]
 #pragma warning disable CS0108, CS0114
-        IDynamicMetadata Metadata { get; }
+        IMetadata Metadata { get; }
 #pragma warning restore CS0108, CS0114
     }
 }

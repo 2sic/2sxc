@@ -31,16 +31,17 @@ namespace ToSic.Sxc.Adam
         internal AdamStorage<TFolderId, TFileId> AdamRoot;
 
         // TODO: @2dm #AdamTyped
-        public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid, bool usePortalRoot, TypedItem.MyHelpers typedHelpers)
+        public override AdamContext Init(IContextOfApp context, string contentType, string fieldName, Guid entityGuid,
+            bool usePortalRoot, DynamicEntity.MyServices dynEntServices)
         {
             var logCall = Log.Fn<AdamContext>($"..., usePortalRoot: {usePortalRoot}");
-            AdamManager.Init(context, typedHelpers, Constants.CompatibilityLevel10);
+            AdamManager.Init(context, dynEntServices, Constants.CompatibilityLevel10);
             AdamRoot = usePortalRoot
                 ? _siteStoreGenerator.New() as AdamStorage<TFolderId, TFileId>
                 : _fieldStoreGenerator.New().InitItemAndField(entityGuid, fieldName);
             AdamRoot.Init(AdamManager);
 
-            base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, typedHelpers);
+            base.Init(context, contentType, fieldName, entityGuid, usePortalRoot, dynEntServices);
             
             return logCall.Return(this);
         }

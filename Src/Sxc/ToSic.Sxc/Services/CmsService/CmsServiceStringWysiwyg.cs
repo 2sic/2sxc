@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Services.CmsService
 
         #region Init
 
-        public CmsServiceStringWysiwyg Init(IDynamicField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object imageSettings)
+        public CmsServiceStringWysiwyg Init(IField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object imageSettings)
         {
             var l = Log.Fn<CmsServiceStringWysiwyg>();
             Field = field;
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Services.CmsService
             return l.ReturnAsOk(this);
         }
 
-        protected IDynamicField Field;
+        protected IField Field;
         protected IContentType ContentType;
         protected IContentTypeAttribute Attribute;
         protected bool Debug;
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Services.CmsService
                 return l.Return(html, "no inner content; next field is not content-block");
 
             html = ServiceKit.Render
-                .All(Field.Parent as DynamicEntity, field: nextField.Name, merge: html)
+                .All(Field.Parent, field: nextField.Name, merge: html)
                 .ToString();
 
             return l.ReturnAsOk(html);

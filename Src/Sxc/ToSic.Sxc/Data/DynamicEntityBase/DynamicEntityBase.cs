@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Data
         protected DynamicEntityBase(DynamicEntity.MyServices services) => _Services = services;
 
         // ReSharper disable once InconsistentNaming
+        [PrivateApi("Private, but public for debugging in emergencies")]
         public DynamicEntity.MyServices _Services { get; }
 
         // ReSharper disable once InconsistentNaming

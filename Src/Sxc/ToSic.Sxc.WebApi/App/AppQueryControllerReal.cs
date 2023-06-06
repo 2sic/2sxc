@@ -70,7 +70,7 @@ namespace ToSic.Sxc.WebApi.App
             // If no app available from context, check if an app-id was supplied in url
             // Note that it may only be an app from the current portal
             // and security checks will run internally
-            var app = _app.New().Init(appCtx.AppState.AppId, maybeBlock);
+            var app = _app.New().InitWithOptionalBlock(appCtx.AppState.AppId, maybeBlock);
 
             var result = BuildQueryAndRun(app, name, stream, includeGuid, appCtx, more);
             return result;
@@ -92,10 +92,10 @@ namespace ToSic.Sxc.WebApi.App
 
             var appCtx = _ctxResolver.SetAppOrGetBlock(appPath);
             
-            var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build(/*appCtx.UserMayEdit*/));
+            var queryApp = _app.New().Init(appCtx.AppState, _appConfigDelegate.New().Build());
 
             // now just run the default query check and serializer
-            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, /*appCtx.UserMayEdit,*/ more);
+            var result = BuildQueryAndRun(queryApp, name, stream, false, appCtx, more);
             return result;
         });
 

@@ -16,19 +16,20 @@ namespace ToSic.Sxc.DataSources
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
     /// </summary>
     [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
-    public partial class Block : PassThrough, IContextData
+    internal partial class ContextData : PassThrough, IContextData
     {
+        [PrivateApi("not meant for public use")]
+        public ContextData(MyServices services, IAppStates appStates) : base(services, "Sxc.BlckDs") => _appStates = appStates;
+        private readonly IAppStates _appStates;
+
         #region New v16
 
-        [PrivateApi]
         public IEnumerable<IEntity> MyContent => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _myContent = new GetOnce<IEnumerable<IEntity>>();
 
-        [PrivateApi]
         public IEnumerable<IEntity> MyData => _myData.Get(() => GetStream(emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _myData = new GetOnce<IEnumerable<IEntity>>();
 
-        [PrivateApi]
         public IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
 
@@ -44,10 +45,6 @@ namespace ToSic.Sxc.DataSources
         private CmsBlock _blockSource;
 
         public override IReadOnlyDictionary<string, IDataStream> Out => _querySource?.Out ?? base.Out;
-
-        [PrivateApi("not meant for public use")]
-        public Block(MyServices services, IAppStates appStates) : base(services, "Sxc.BlckDs") => _appStates = appStates;
-        private readonly IAppStates _appStates;
 
 
     }
