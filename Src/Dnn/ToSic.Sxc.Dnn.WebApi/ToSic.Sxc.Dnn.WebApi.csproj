@@ -95,8 +95,74 @@
     <PackageReference Include="DotNetNuke.Web" Version="9.6.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
+      <Version>5.2.3</Version>
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="6.0.0">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <!-- docfx v2.6+ support start 
+     dotnet build doesn't resolve PackageReference correctly for old style projects https://github.com/dotnet/msbuild/issues/5250
+     manually Reference each dependent assembly from PackageReference and keep it is sync -->
+    <Reference Include="Dnn.ClientDependency">
+      <HintPath>..\..\packages\Dnn.ClientDependency.1.9.10\lib\net45\ClientDependency.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Abstractions">
+      <HintPath>..\..\packages\DotNetNuke.Abstractions.9.6.1\lib\netstandard2.0\DotNetNuke.Abstractions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Core">
+      <HintPath>..\..\packages\DotNetNuke.Core.9.6.1\lib\net45\DotNetNuke.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.Web.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.WebUtility">
+      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.WebUtility.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.Client">
+      <HintPath>..\..\packages\DotNetNuke.Web.Client.9.6.1\lib\net45\DotNetNuke.Web.Client.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.Client">
+      <HintPath>..\..\packages\Microsoft.Aspnet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.Core">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.WebHost">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\..\packages\system.collections.immutable\6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Text.Json">
+      <HintPath>..\..\packages\system.text.json\6.0.0\lib\net461\System.Text.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>..\..\packages\system.threading.tasks.extensions\4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- docfx support end -->
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -217,13 +283,6 @@
   <ItemGroup>
     <None Include="Custom\readme.md" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost">
-      <Version>5.2.3</Version>
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

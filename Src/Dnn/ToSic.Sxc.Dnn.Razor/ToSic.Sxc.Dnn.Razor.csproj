@@ -114,6 +114,14 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <!-- docfx v2.6+ support start 
+     dotnet build doesn't resolve PackageReference correctly for old style projects https://github.com/dotnet/msbuild/issues/5250
+     manually Reference each dependent assembly from PackageReference and keep it is sync -->
+    <Reference Include="DotNetNuke.Core">
+      <HintPath>..\..\packages\DotNetNuke.Core.9.6.1\lib\net45\DotNetNuke.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- docfx support end -->
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />

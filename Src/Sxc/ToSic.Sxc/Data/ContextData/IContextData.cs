@@ -81,6 +81,6 @@ namespace ToSic.Sxc.Data
         IEnumerable<IEntity> MyHeader { get; }
 
         [PrivateApi("maybe just add for docs")]
-        IReadOnlyDictionary<string, IDataStream> Out { get; }
+        new IReadOnlyDictionary<string, IDataStream> Out { get; }
     }
 }

@@ -63,7 +63,7 @@
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dnn.ClientDependency" Version="1.9.2">
+    <PackageReference Include="Dnn.ClientDependency" Version="1.9.10">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="DotNetNuke.Abstractions" Version="9.6.1">
@@ -81,8 +81,61 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <!-- docfx v2.6+ support start 
+     dotnet build doesn't resolve PackageReference correctly for old style projects https://github.com/dotnet/msbuild/issues/5250
+     manually Reference each dependent assembly from PackageReference and keep it is sync -->
+    <Reference Include="Dnn.ClientDependency">
+      <HintPath>..\..\packages\Dnn.ClientDependency.1.9.10\lib\net45\ClientDependency.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Abstractions">
+      <HintPath>..\..\packages\DotNetNuke.Abstractions.9.6.1\lib\netstandard2.0\DotNetNuke.Abstractions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Core">
+      <HintPath>..\..\packages\DotNetNuke.Core.9.6.1\lib\net45\DotNetNuke.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.Web.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.WebUtility">
+      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.WebUtility.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.Client">
+      <HintPath>..\..\packages\DotNetNuke.Web.Client.9.6.1\lib\net45\DotNetNuke.Web.Client.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.Core">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.WebHost">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\..\packages\system.collections.immutable\6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- docfx support end -->
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.configuration" />
@@ -105,11 +158,6 @@
     <Reference Include="ToSic.Razor.Dnn">
       <HintPath>..\ToSic.Sxc.Dnn\razorblade\bin\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
-      <ExcludeAssets>runtime</ExcludeAssets>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">

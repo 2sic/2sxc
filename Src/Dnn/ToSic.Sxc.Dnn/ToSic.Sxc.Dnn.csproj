@@ -99,16 +99,83 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="MSBuildTasks" Version="1.5.0.235">
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
+      <ExcludeAssets>runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="MSBuildTasks">
+      <Version>1.5.0.235</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <!-- docfx v2.6+ support start 
+     dotnet build doesn't resolve PackageReference correctly for old style projects https://github.com/dotnet/msbuild/issues/5250
+     manually Reference each dependent assembly from PackageReference and keep it is sync -->
+    <Reference Include="Dnn.ClientDependency">
+      <HintPath>..\..\packages\Dnn.ClientDependency.1.9.10\lib\net45\ClientDependency.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Abstractions">
+      <HintPath>..\..\packages\DotNetNuke.Abstractions.9.6.1\lib\netstandard2.0\DotNetNuke.Abstractions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Core">
+      <HintPath>..\..\packages\DotNetNuke.Core.9.6.1\lib\net45\DotNetNuke.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.DependencyInjection">
+      <HintPath>..\..\packages\DotNetNuke.DependencyInjection.9.6.1\lib\netstandard2.0\DotNetNuke.DependencyInjection.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web">
+      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.Web.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.WebUtility">
+      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.WebUtility.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DotNetNuke.Web.Client">
+      <HintPath>..\..\packages\DotNetNuke.Web.Client.9.6.1\lib\net45\DotNetNuke.Web.Client.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection">
+      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.2.1.1\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.Client">
+      <HintPath>..\..\packages\Microsoft.Aspnet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.Core">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.WebApi.WebHost">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\newtonsoft.json\13.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\..\packages\system.collections.immutable\6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- docfx support end -->
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>koi\bin\Connect.Dnn.Koi.dll</HintPath>
@@ -324,13 +391,6 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MSBuildTasks">
-      <Version>1.5.0.235</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -347,7 +407,7 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
-  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -366,60 +426,61 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>@Echo Configuration='$(Configuration)'
-@Echo StartWith ='$(Configuration.StartsWith('Debug'))'
-@Echo Platform ='$(Platform)'
-@set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
-@REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
-@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
-@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\dnn9102-farm\Website\bin\" /y /i
-@REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\_Test\2sxc-evoq\2sxc-evoq910611-t01\Website\bin\" /y /i
+    <PostBuildEvent>
+      @Echo Configuration='$(Configuration)'
+      @Echo StartWith ='$(Configuration.StartsWith('Debug'))'
+      @Echo Platform ='$(Platform)'
+      @set BuildTarget=%25Dev2sxcDnnRoot%25DesktopModules\ToSIC_SexyContent
+      @REM set BuildTarget=C:\Projects\2sxc-dnn742-target\Website\DesktopModules\ToSIC_SexyContent
+      @REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\TestWebsites\Evoq 9.1.0\bin\" /y /i
+      @REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\dnn9102-farm\Website\bin\" /y /i
+      @REM xcopy "$(TargetDir)ToSic.*.*" "C:\Projects\_Test\2sxc-evoq\2sxc-evoq910611-t01\Website\bin\" /y /i
 
-@REM Copy Imageflow and dependecies
-robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
-if exist $(TargetDir)runtimes\win-x64\native\imageflow.dll (
-	@Echo delete: $(TargetDir)runtimes\win-x64\native\imageflow.dll
-	del $(TargetDir)runtimes\win-x64\native\imageflow.dll
-	rename $(TargetDir)runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
-)
-if exist $(TargetDir)runtimes\win-x86\native\imageflow.dll (
-	@Echo delete: $(TargetDir)runtimes\win-x86\native\imageflow.dll
-	del $(TargetDir)runtimes\win-x86\native\imageflow.dll
-	rename $(TargetDir)runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
-)
+      @REM Copy Imageflow and dependecies
+      robocopy $(ProjectDir)Extensions\Imageflow\bin $(Dev2sxcDnnRoot)bin /S
+      if exist $(TargetDir)runtimes\win-x64\native\imageflow.dll (
+      @Echo delete: $(TargetDir)runtimes\win-x64\native\imageflow.dll
+      del $(TargetDir)runtimes\win-x64\native\imageflow.dll
+      rename $(TargetDir)runtimes\win-x64\native\imageflow.dll.pending imageflow.dll
+      )
+      if exist $(TargetDir)runtimes\win-x86\native\imageflow.dll (
+      @Echo delete: $(TargetDir)runtimes\win-x86\native\imageflow.dll
+      del $(TargetDir)runtimes\win-x86\native\imageflow.dll
+      rename $(TargetDir)runtimes\win-x86\native\imageflow.dll.pending imageflow.dll
+      )
 
-@REM Copy the data folders
-robocopy "$(ProjectDir)..\..\Data\App_Data\ " "%25BuildTarget%25\App_Data\ " /MIR /XO /XF "%25BuildTarget%25\App_Data\system-custom\configurations\features.json" /XF "%25BuildTarget%25\App_Data\system-custom\configurations\default.license.json"
-robocopy "$(ProjectDir)..\..\..\..\2sxc-dev-materials\App_Data\ " "%25BuildTarget%25\App_Data\ " /s
-robocopy /mir "$(ProjectDir)..\..\Data\assets\ " "%25BuildTarget%25\assets\ "
+      @REM Copy the data folders
+      robocopy "$(ProjectDir)..\..\Data\App_Data\ " "%25BuildTarget%25\App_Data\ " /MIR /XO /XF "%25BuildTarget%25\App_Data\system-custom\configurations\features.json" /XF "%25BuildTarget%25\App_Data\system-custom\configurations\default.license.json"
+      robocopy "$(ProjectDir)..\..\..\..\2sxc-dev-materials\App_Data\ " "%25BuildTarget%25\App_Data\ " /s
+      robocopy /mir "$(ProjectDir)..\..\Data\assets\ " "%25BuildTarget%25\assets\ "
 
-@REM Add the DNN specific content-types
-robocopy /s "$(ProjectDir)..\..\Data-Dnn\App_Data\system\ " "%25BuildTarget%25\App_Data\system\ "
+      @REM Add the DNN specific content-types
+      robocopy /s "$(ProjectDir)..\..\Data-Dnn\App_Data\system\ " "%25BuildTarget%25\App_Data\system\ "
 
-@REM Copy DNN JavaScripts and Bridge
-robocopy /mir "$(ProjectDir)ClientScripts\ " "%25BuildTarget%25\ClientScripts\ "
-robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
+      @REM Copy DNN JavaScripts and Bridge
+      robocopy /mir "$(ProjectDir)ClientScripts\ " "%25BuildTarget%25\ClientScripts\ "
+      robocopy /mir "$(ProjectDir)DnnWebForms\ " "%25BuildTarget%25\DnnWebForms\ "
 
-@REM Copy 2sxc JS stuff
-robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
-robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
-robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
+      @REM Copy 2sxc JS stuff
+      robocopy /mir "$(Dev2sxcAssets)\js\ " "%25BuildTarget%25\js\ "
+      robocopy /mir "$(Dev2sxcAssets)\dist\ " "%25BuildTarget%25\dist\ "
+      robocopy /mir "$(Dev2sxcAssets)\system\ " "%25BuildTarget%25\system\ "
 
-robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S
-robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
-robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
-robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "
+      robocopy "$(ProjectDir)dist\ " "%25BuildTarget%25\dist\ " "Default.aspx" /S
+      robocopy /mir "$(ProjectDir)Extensions\ " "%25BuildTarget%25\Extensions\ "
+      robocopy /mir "$(ProjectDir)ImportExport\ " "%25BuildTarget%25\ImportExport\ "
+      robocopy /mir "$(ProjectDir)App_LocalResources\ " "%25BuildTarget%25\App_LocalResources\ "
 
-xcopy "$(ProjectDir)View.ascx" "%25BuildTarget%25\" /y
-xcopy "$(ProjectDir)icon.png" "%25BuildTarget%25\" /y
-xcopy "$(ProjectDir)icon-app.png" "%25BuildTarget%25\" /y
-xcopy "$(ProjectDir)WebConfigTemplate.config" "%25BuildTarget%25\" /y
+      xcopy "$(ProjectDir)View.ascx" "%25BuildTarget%25\" /y
+      xcopy "$(ProjectDir)icon.png" "%25BuildTarget%25\" /y
+      xcopy "$(ProjectDir)icon-app.png" "%25BuildTarget%25\" /y
+      xcopy "$(ProjectDir)WebConfigTemplate.config" "%25BuildTarget%25\" /y
 
-@echo Copied all files to this DNN target: '%25Dev2sxcDnnRoot%25'
-@echo So DesktopModules Folder is '%25BuildTarget%25'
-@echo To change your path to DNN set the environment variable Dev2sxcDnnRoot to your DNN Root and restart visual studio
+      @echo Copied all files to this DNN target: '%25Dev2sxcDnnRoot%25'
+      @echo So DesktopModules Folder is '%25BuildTarget%25'
+      @echo To change your path to DNN set the environment variable Dev2sxcDnnRoot to your DNN Root and restart visual studio
 
-</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- Run the DNN Package Builder after every build -->
   <Import Project="BuildScripts\ModulePackage.Targets" />
