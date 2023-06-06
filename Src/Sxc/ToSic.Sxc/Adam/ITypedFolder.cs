@@ -8,18 +8,18 @@ namespace ToSic.Sxc.Adam
     /// This simple interface assumes that it uses int-IDs.
     /// </summary>
     [WorkInProgressApi("Still WIP v16.02")]
-    public interface IFolderTyped: IFolder, IAssetTyped
+    public interface ITypedFolder: IFolder, ITypedAsset
     {
         /// <summary>
         /// Get the files in this folder
         /// </summary>
         /// <returns>A list of files in this folder as <see cref="IFile"/></returns>
-        new IEnumerable<IFileTyped> Files { get; }
+        new IEnumerable<ITypedFile> Files { get; }
 
         /// <summary>
         /// Get the sub-folders in this folder
         /// </summary>
         /// <returns>A list of folders inside this folder - as <see cref="IFolder"/>.</returns>
-        new IEnumerable<IFolderTyped> Folders { get; }
+        new IEnumerable<ITypedFolder> Folders { get; }
     }
 }

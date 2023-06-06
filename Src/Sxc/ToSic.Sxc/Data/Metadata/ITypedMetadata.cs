@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
     /// Added in v16.02
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.02")]
-    public interface IMetadataTyped : ITypedItem, IHasMetadata
+    public interface ITypedMetadata : ITypedItem, IHasMetadata
     {
         bool HasType(string typeName);
 

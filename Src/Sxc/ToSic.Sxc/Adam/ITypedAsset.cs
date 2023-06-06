@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Adam
     /// Special interface - same as <see cref="IAsset"/> except that the metadata is typed.
     /// </summary>
     [WorkInProgressApi("Still WIP v16.02")]
-    public interface IAssetTyped : IAsset, IHasMetadata<IMetadataTyped>
+    public interface ITypedAsset : IAsset, IHasMetadata<ITypedMetadata>
     {
     }
 }
