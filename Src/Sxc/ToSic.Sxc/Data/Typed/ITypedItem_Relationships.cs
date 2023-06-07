@@ -18,9 +18,9 @@ namespace ToSic.Sxc.Data
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         /// <remarks>Note that the parameter-order is reversed to the Children()</remarks>
         IEnumerable<ITypedItem> Parents(
-            string type = null,
+            string type = default,
             string noParamOrder = Eav.Parameters.Protector,
-            string field = null);
+            string field = default);
 
         /// <summary>
         /// A **typed** list of sub-items. Important for LINQ style querying or just
@@ -35,9 +35,9 @@ namespace ToSic.Sxc.Data
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         /// <remarks>Note that the parameter-order is reversed to the Parents()</remarks>
         IEnumerable<ITypedItem> Children(
-            string field = null,
+            string field = default,
             string noParamOrder = Eav.Parameters.Protector,
-            string type = null);
+            string type = default);
 
         /// <summary>
         /// A single item from a field.

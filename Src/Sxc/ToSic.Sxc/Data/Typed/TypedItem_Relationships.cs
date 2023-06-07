@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using ToSic.Eav;
-using static ToSic.Sxc.Code.IDynamicCodeRoot16AsExtensions;
 
 namespace ToSic.Sxc.Data
 {
@@ -11,23 +9,17 @@ namespace ToSic.Sxc.Data
         public IEnumerable<ITypedItem> Parents(
             string type = null,
             string noParamOrder = Parameters.Protector,
-            string field = null)
-        {
-            Parameters.Protect(noParamOrder, $"{nameof(field)}");
-            return AsTypedList(DynEntity.Parents(type, field), _typedHelpers, 3, _Services.LogOrNull);
-        }
+            string field = null) =>
+            (DynEntity as ITypedItem).Parents(type, noParamOrder, field);
 
         /// <inheritdoc />
         public IEnumerable<ITypedItem> Children(
             string field = null,
             string noParamOrder = Parameters.Protector,
-            string type = null)
-        {
-            Parameters.Protect(noParamOrder, $"{nameof(type)}");
-            return AsTypedList(DynEntity.Children(field, type), _typedHelpers, 3, _Services.LogOrNull);
-        }
+            string type = null) =>
+            (DynEntity as ITypedItem).Children(field, noParamOrder, type);
 
         /// <inheritdoc />
-        public ITypedItem Child(string field) => Children(field).FirstOrDefault();
+        public ITypedItem Child(string field) => (DynEntity as ITypedItem).Child(field);
     }
 }

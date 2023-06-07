@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
@@ -158,7 +159,7 @@ namespace ToSic.Sxc.Web
         /// 1. Enhanced to return `IRawHtmlString` instead of `IHybridHtmlString` in 16.02
         /// </remarks>
         IRawHtmlString ContextAttributes(
-            IDynamicEntity target, 
+            ICanBeEntity target, 
             string noParamOrder = Eav.Parameters.Protector, 
             string field = null, 
             string contentType = null,

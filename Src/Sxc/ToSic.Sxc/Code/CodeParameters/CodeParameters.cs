@@ -114,13 +114,16 @@ namespace ToSic.Sxc.Code
             if (ok) return typed;
 
             // Flatten list if necessary
-            if (untyped is IEnumerable<ITypedFile> list) return list.First();
-            return fallback;
+            return untyped is IEnumerable<ITypedFile> list ? list.First() : fallback;
         }
 
         public IEnumerable<ITypedFile> Files(string name, string noParamOrder = Protector, IEnumerable<ITypedFile> fallback = default, bool required = false)
         {
-            return GetInternal(name, noParamOrder, fallback, required);
+            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
+            if (ok) return typed;
+
+            // Wrap into list if necessary
+            return untyped is ITypedFile item ? new List<ITypedFile> { item } : fallback;
         }
 
         public ITypedFolder Folder(string name, string noParamOrder = Protector, ITypedFolder fallback = default, bool required = false) 
@@ -132,8 +135,7 @@ namespace ToSic.Sxc.Code
             if (ok) return typed;
 
             // Wrap into list if necessary
-            if (untyped is ITypedFolder item) return new List<ITypedFolder> {item};
-            return fallback;
+            return untyped is ITypedFolder item ? new List<ITypedFolder> { item } : fallback;
         }
 
         #endregion

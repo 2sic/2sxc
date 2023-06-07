@@ -26,6 +26,7 @@ namespace ToSic.Sxc.Data
         SexyContent.Interfaces.IDynamicEntity,
 #endif
         IEntityWrapper, IDynamicEntityBase, ISxcDynamicObject, ICanDebug
+        // , ITypedItem - it can't inherit from this, because otherwise some commands like Parents() with no parameters or just one would be ambiguous
     {
         /// <summary>
         /// The underlying entity which provides all the data for the DynamicEntity

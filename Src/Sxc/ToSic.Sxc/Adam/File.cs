@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Adam
         private IDynamicMetadata _metadata;
 
         [JsonIgnore]
-        ITypedMetadata IHasMetadata<ITypedMetadata>.Metadata => _typedMd ?? (_typedMd = new TypedMetadata(Metadata, AdamManager.TypedItemHelpers));
+        ITypedMetadata IHasMetadata<ITypedMetadata>.Metadata => _typedMd ?? (_typedMd = new TypedMetadata(Metadata));
         private ITypedMetadata _typedMd;
 
         /// <summary>

@@ -29,9 +29,9 @@ namespace ToSic.Sxc.Adam
             );
         }
 
-        public override AdamManager Init(IContextOfApp ctx, TypedItem.MyHelpers typedHelpers, int compatibility)
+        public override AdamManager Init(IContextOfApp ctx, DynamicEntity.MyServices dynEntServices, int compatibility)
         {
-            base.Init(ctx, typedHelpers, compatibility);
+            base.Init(ctx, dynEntServices, compatibility);
             AdamFs = _adamFsLazy.Value;
             return this;
         }

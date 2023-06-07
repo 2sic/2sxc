@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
     /// Added in v13
     /// </remarks>
     [PublicApi]
-    public interface IDynamicMetadata: IDynamicEntity, IHasMetadata
+    public interface IDynamicMetadata: IDynamicEntity, IHasMetadata, ITypedMetadata
     {
         bool HasType(string typeName);
 

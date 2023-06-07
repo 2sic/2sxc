@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data
     [PrivateApi("Hide implementation")]
     public class TypedMetadata: TypedItem, ITypedMetadata
     {
-        internal TypedMetadata(IDynamicMetadata dynamicMetadata, TypedItem.MyHelpers helpers): base(dynamicMetadata, helpers)
+        internal TypedMetadata(IDynamicMetadata dynamicMetadata) : base(dynamicMetadata)
         {
             _dynamicMetadata = dynamicMetadata;
         }
