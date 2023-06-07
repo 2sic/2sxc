@@ -10,12 +10,11 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity: ITypedItem
     {
-        private ITypedMetadata _metadata;
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AdamManager.Folder(Entity, name) as ITypedFolder);
-        private readonly GetOnceNamed<ITypedFolder> _adamCache = new GetOnceNamed<ITypedFolder>();
+        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AdamManager.Folder(Entity, name) as IFolder);
+        private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         // TODO: MUST handle all edge cases first
         // Eg. Hyperlink field should return the file which was selected, not any first file in the folder
@@ -28,9 +27,6 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         [PrivateApi]
         ITypedItem ITypedItem.Presentation => Presentation;
-
-        [PrivateApi]
-        ITypedMetadata ITypedItem.Metadata => _metadata;
 
         /// <inheritdoc />
 #pragma warning disable CS1066

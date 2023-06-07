@@ -11,14 +11,15 @@ namespace ToSic.Sxc.Data
     /// Behaves like a normal DynamicEntity, but has additional commands to detect if specific Metadata exists
     /// </summary>
     /// <remarks>
-    /// Added in v13
+    /// * Added in v13
+    /// * Renamed in v16.02 from `IDynamicMetadata` to `
     /// </remarks>
     [PublicApi]
-    public interface IDynamicMetadata: IDynamicEntity, IHasMetadata, ITypedMetadata
+    public interface IDynamicMetadata: IDynamicEntity, IHasMetadata
     {
+        // ReSharper disable once UnusedMember.Global
         bool HasType(string typeName);
 
         IEnumerable<IEntity> OfType(string typeName);
-
     }
 }

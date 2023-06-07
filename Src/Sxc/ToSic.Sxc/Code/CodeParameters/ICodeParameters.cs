@@ -31,10 +31,10 @@ namespace ToSic.Sxc.Code
         Guid Guid(string name, string noParamOrder = Protector, Guid fallback = default, bool required = false);
         bool Bool(string name, string noParamOrder = Protector, bool fallback = default, bool required = false);
         DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool required = false);
-        ITypedFile File(string name, string noParamOrder = Protector, ITypedFile fallback = default, bool required = false);
-        IEnumerable<ITypedFile> Files(string name, string noParamOrder = Protector, IEnumerable<ITypedFile> fallback = default, bool required = false);
-        ITypedFolder Folder(string name, string noParamOrder = Protector, ITypedFolder fallback = default, bool required = false);
-        IEnumerable<ITypedFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<ITypedFolder> fallback = default, bool required = false);
+        IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool required = false);
+        IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool required = false);
+        IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = default, bool required = false);
+        IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool required = false);
 
         #region Item / Entity
 
