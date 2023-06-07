@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Context
             _parent = parent;
         }
 
-        public IDynamicMetadata Metadata => _dynMeta.Get(() => new DynamicMetadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
-        private readonly GetOnce<IDynamicMetadata> _dynMeta = new GetOnce<IDynamicMetadata>();
+        public IMetadata Metadata => _dynMeta.Get(() => new Metadata((this as IHasMetadata).Metadata, null, _parent.DEDeps));
+        private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
         IMetadataOf IHasMetadata.Metadata => _md.Get(GetMetadataOf);
         private readonly GetOnce<IMetadataOf> _md = new GetOnce<IMetadataOf>();

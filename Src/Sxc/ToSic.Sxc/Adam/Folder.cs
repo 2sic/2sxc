@@ -17,18 +17,8 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetDynamic(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
-        private IDynamicMetadata _metadata;
-
-        //[JsonIgnore]
-        //ITypedMetadata IHasMetadata<ITypedMetadata>.Metadata => _typedMd ?? (_typedMd = new TypedMetadata(Metadata));
-        //private ITypedMetadata _typedMd;
-
-        //[JsonIgnore]
-        //IEnumerable<ITypedFile> ITypedFolder.Files => Files.Cast<ITypedFile>();
-
-        //[JsonIgnore]
-        //IEnumerable<ITypedFolder> ITypedFolder.Folders => Folders.Cast<ITypedFolder>();
+        public IMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetDynamic(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
+        private IMetadata _metadata;
 
         /// <inheritdoc />
         [JsonIgnore]

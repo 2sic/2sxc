@@ -37,8 +37,8 @@ namespace ToSic.Sxc.Data
         public string Url => Value as string;
 
 
-        public IDynamicMetadata Metadata => _dynMeta.Get(() => new DynamicMetadata(MetadataOfItem, Parent.Entity, Parent._Services));
-        private readonly GetOnce<IDynamicMetadata> _dynMeta = new GetOnce<IDynamicMetadata>();
+        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfItem, Parent.Entity, Parent._Services));
+        private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
 
         /// <inheritdoc />

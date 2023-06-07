@@ -51,9 +51,7 @@ namespace ToSic.Sxc.Context
         /// Added in v13.12
         /// </remarks>
         // actually Added in v12.10; changed from IMetadataOf to IDynamicMetadata in 13.12
-#pragma warning disable CS0108, CS0114
-        IDynamicMetadata Metadata { get; }
-#pragma warning restore CS0108, CS0114
+        new IMetadata Metadata { get; }
 
         /// <summary>
         /// The path to this view.
