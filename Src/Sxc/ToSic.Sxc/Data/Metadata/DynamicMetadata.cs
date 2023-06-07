@@ -9,7 +9,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data
 {
     [PrivateApi("Hide implementation")]
-    public class DynamicMetadata: DynamicEntity, IDynamicMetadata, ITypedMetadata
+    public class DynamicMetadata: DynamicEntity, IDynamicMetadata
     {
         internal DynamicMetadata(IMetadataOf metadata, IEntity parentOrNull, MyServices services)
             : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, services)

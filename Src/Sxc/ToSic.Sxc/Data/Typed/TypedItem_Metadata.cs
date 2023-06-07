@@ -5,8 +5,8 @@ namespace ToSic.Sxc.Data
 {
     public partial class TypedItem: IHasMetadata
     {
-        public ITypedMetadata Metadata => _typedMd.Get(() => new TypedMetadata(DynEntity.Metadata));
-        private readonly GetOnce<ITypedMetadata> _typedMd = new GetOnce<ITypedMetadata>();
+        public IDynamicMetadata Metadata => _typedMd.Get(() => DynEntity.Metadata);
+        private readonly GetOnce<IDynamicMetadata> _typedMd = new GetOnce<IDynamicMetadata>();
 
         IMetadataOf IHasMetadata.Metadata => Entity?.Metadata;
 

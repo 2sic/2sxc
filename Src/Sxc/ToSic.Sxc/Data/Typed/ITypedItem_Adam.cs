@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name"></param>
         /// <returns>The Folder object</returns>
         /// <remarks>Added in 16.02</remarks>
-        ITypedFolder Folder(string name);
+        IFolder Folder(string name);
 
     }
 }

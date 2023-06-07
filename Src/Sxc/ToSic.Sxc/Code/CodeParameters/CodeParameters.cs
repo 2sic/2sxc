@@ -108,34 +108,35 @@ namespace ToSic.Sxc.Code
 
         #region Adam
 
-        public ITypedFile File(string name, string noParamOrder = Protector, ITypedFile fallback = default, bool required = false)
+        public IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool required = false)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             if (ok) return typed;
 
             // Flatten list if necessary
-            return untyped is IEnumerable<ITypedFile> list ? list.First() : fallback;
+            return untyped is IEnumerable<IFile> list ? list.First() : fallback;
         }
 
-        public IEnumerable<ITypedFile> Files(string name, string noParamOrder = Protector, IEnumerable<ITypedFile> fallback = default, bool required = false)
+        public IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool required = false)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             if (ok) return typed;
 
             // Wrap into list if necessary
-            return untyped is ITypedFile item ? new List<ITypedFile> { item } : fallback;
+            return untyped is IFile item ? new List<IFile> { item } : fallback;
         }
 
-        public ITypedFolder Folder(string name, string noParamOrder = Protector, ITypedFolder fallback = default, bool required = false) 
+        // todo: @2dm incomplete!
+        public IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = null, bool required = false) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public IEnumerable<ITypedFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<ITypedFolder> fallback = default, bool required = false)
+        public IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = null, bool required = false)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             if (ok) return typed;
 
             // Wrap into list if necessary
-            return untyped is ITypedFolder item ? new List<ITypedFolder> { item } : fallback;
+            return untyped is IFolder item ? new List<IFolder> { item } : fallback;
         }
 
         #endregion

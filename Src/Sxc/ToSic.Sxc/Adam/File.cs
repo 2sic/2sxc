@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
-using ToSic.SexyContent.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
@@ -12,10 +11,9 @@ namespace ToSic.Sxc.Adam
 {
     public class File<TFolderId, TFileId> : Eav.Apps.Assets.File<TFolderId, TFileId>,
 #pragma warning disable 618
-        AdamFile, 
+        ToSic.SexyContent.Adam.AdamFile, 
 #pragma warning restore 618
-        IFile,
-        ITypedFile
+        IFile
     {
         public File(AdamManager adamManager) => AdamManager = adamManager;
         private AdamManager AdamManager { get; }
@@ -28,9 +26,9 @@ namespace ToSic.Sxc.Adam
             ?? (_metadata = AdamManager.MetadataMaker.GetDynamic(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
         private IDynamicMetadata _metadata;
 
-        [JsonIgnore]
-        ITypedMetadata IHasMetadata<ITypedMetadata>.Metadata => _typedMd ?? (_typedMd = new TypedMetadata(Metadata));
-        private ITypedMetadata _typedMd;
+        //[JsonIgnore]
+        //ITypedMetadata IHasMetadata<ITypedMetadata>.Metadata => _typedMd ?? (_typedMd = new TypedMetadata(Metadata));
+        //private ITypedMetadata _typedMd;
 
         /// <summary>
         /// Attach metadata recommendations
