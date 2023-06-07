@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid.Advanced
@@ -28,6 +30,21 @@ namespace Custom.Hybrid.Advanced
         /// <inheritdoc />
         public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
 
-        public ICodeParameters Parameters { get; }
+
+        internal override void UpdateModel(object data) => _overridePageData = data;
+        private object _overridePageData;
+
+        [PrivateApi("WIP v16.02")]
+        public ITypedModel TypedModel => _parameters.Get(() =>
+        {
+            if (_overridePageData != null)
+                return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot);
+
+            var stringDic = Model?.ObjectToDictionary() ?? new Dictionary<string, object>(InvariantCultureIgnoreCase);
+            return new TypedModel(stringDic, _DynCodeRoot);
+        });
+        private readonly GetOnce<ITypedModel> _parameters = new();
+
+
     }
 }

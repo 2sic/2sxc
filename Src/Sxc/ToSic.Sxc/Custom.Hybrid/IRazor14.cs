@@ -22,7 +22,7 @@ namespace Custom.Hybrid
         string Path { get; }
 
         [PrivateApi("WIP v16.02")]
-        ICodeParameters Parameters { get; }
+        ITypedModel TypedModel { get; }
 
     }
 }
