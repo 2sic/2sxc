@@ -11,15 +11,13 @@ namespace ToSic.Sxc.Data
     {
         // ReSharper disable once InconsistentNaming
         protected readonly DynamicEntity.MyServices _Services;
-        private readonly MyHelpers _typedHelpers;
 
-        internal TypedItem(IEntity baseEntity, MyHelpers typedHelpers) : base(baseEntity)
+        internal TypedItem(IEntity baseEntity, DynamicEntity.MyServices services) : base(baseEntity)
         {
-            _Services = typedHelpers.Services;
+            _Services = services;
             Entity = baseEntity;
-            _typedHelpers = typedHelpers;
         }
-        internal TypedItem(IDynamicEntity dynEntity, MyHelpers typedHelpers) : this(dynEntity.Entity, typedHelpers)
+        internal TypedItem(IDynamicEntity dynEntity) : this(dynEntity.Entity, dynEntity._Services)
         {
             _dynamicEntity = dynEntity;
         }
@@ -43,12 +41,13 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once ConvertToNullCoalescingCompoundAssignment
         /// <inheritdoc />
-        public ITypedItem Presentation => _presentation.Get(() =>
-        {
-            var dynPres = DynEntity.Presentation;
-            return dynPres == null ? null : new TypedItem(dynPres, _typedHelpers);
-        });
-        private readonly GetOnce<ITypedItem> _presentation = new GetOnce<ITypedItem>();
+        public ITypedItem Presentation => (DynEntity as ITypedItem).Presentation;
+        //    _presentation.Get(() =>
+        //{
+        //    var dynPres = DynEntity.Presentation;
+        //    return dynPres == null ? null : new TypedItem((IDynamicEntity)dynPres);
+        //});
+        //private readonly GetOnce<ITypedItem> _presentation = new GetOnce<ITypedItem>();
 
         public bool IsDemoItem => DynEntity.IsDemoItem;
     }

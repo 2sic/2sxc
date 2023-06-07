@@ -28,5 +28,6 @@ namespace Custom.Hybrid.Advanced
         /// <inheritdoc />
         public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
 
+        public ICodeParameters Parameters { get; }
     }
 }

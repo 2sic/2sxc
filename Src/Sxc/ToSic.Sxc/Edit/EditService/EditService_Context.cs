@@ -2,6 +2,7 @@
 using System.Text.Json;
 using ToSic.Eav;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Serialization;
 using ToSic.Lib.Documentation;
@@ -17,8 +18,8 @@ namespace ToSic.Sxc.Edit.EditService
         #region Context Attributes
 
         /// <inheritdoc/>
-        public IRawHtmlString ContextAttributes(IDynamicEntity target,
-            string noParamOrder = Parameters.Protector,
+        public IRawHtmlString ContextAttributes(ICanBeEntity target,
+            string noParamOrder = "Params must be named (https://r.2sxc.org/named-params)",
             string field = null,
             string contentType = null,
             Guid? newGuid = null,
@@ -37,8 +38,8 @@ namespace ToSic.Sxc.Edit.EditService
                 field,
                 guid = newGuid.ToString(),
                 max,
-                parent = target.EntityId,
-                parentGuid = target.EntityGuid,
+                parent = target.Entity.EntityId,
+                parentGuid = target.Entity.EntityGuid,
                 type = contentType ?? AppConstants.ContentGroupRefTypeName,
             }, JsonOptions.SafeJsonForHtmlAttributes);
 

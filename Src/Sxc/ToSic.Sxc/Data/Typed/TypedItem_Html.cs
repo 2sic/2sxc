@@ -15,13 +15,14 @@ namespace ToSic.Sxc.Data
             bool debug = default
         )
         {
-            if (_Services.CompatibilityLevel < Constants.CompatibilityLevel12)
-                throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Hybrid14 or newer.");
+            return DynEntity.Html(name: name, noParamOrder: noParamOrder, container: container, toolbar: toolbar, imageSettings: imageSettings, debug: debug);
+            //if (_Services.CompatibilityLevel < Constants.CompatibilityLevel12)
+            //    throw new NotSupportedException($"{nameof(Html)}(...) not supported in older Razor templates. Use Hybrid14 or newer.");
 
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(debug)}...");
+            //Eav.Parameters.Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(debug)}...");
 
-            var result = _Services.Kit.Cms.Html(Field(name), container: container, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
-            return result;
+            //var result = _Services.Kit.Cms.Html(Field(name), container: container, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
+            //return result;
         }
     }
 }
