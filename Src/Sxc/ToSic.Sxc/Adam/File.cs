@@ -22,13 +22,9 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IDynamicMetadata Metadata => _metadata 
+        public IMetadata Metadata => _metadata 
             ?? (_metadata = AdamManager.MetadataMaker.GetDynamic(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
-        private IDynamicMetadata _metadata;
-
-        //[JsonIgnore]
-        //ITypedMetadata IHasMetadata<ITypedMetadata>.Metadata => _typedMd ?? (_typedMd = new TypedMetadata(Metadata));
-        //private ITypedMetadata _typedMd;
+        private IMetadata _metadata;
 
         /// <summary>
         /// Attach metadata recommendations

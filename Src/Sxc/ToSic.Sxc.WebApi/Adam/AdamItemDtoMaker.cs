@@ -77,7 +77,7 @@ namespace ToSic.Sxc.WebApi.Adam
             return item;
         }
 
-        private IEnumerable<MetadataOfDto> GetMetadataOf(IDynamicMetadata md)
+        private IEnumerable<MetadataOfDto> GetMetadataOf(IMetadata md)
         {
             if (md == null) return null;
 

@@ -37,11 +37,11 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal IDynamicMetadata GetDynamic(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
+        internal IMetadata GetDynamic(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
         {
             var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, manager.AppRuntime.AppState);
             mdInit?.Invoke(mdOf);
-            return new DynamicMetadata(mdOf, null, DynamicEntityDependencies(manager));
+            return new Metadata(mdOf, null, DynamicEntityDependencies(manager));
         }
 
         private DynamicEntity.MyServices DynamicEntityDependencies(AdamManager manager) =>

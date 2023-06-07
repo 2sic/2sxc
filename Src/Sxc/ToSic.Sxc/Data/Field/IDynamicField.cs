@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Data
         ///
         /// The object will never be null, but it can of course not have any data if there is no metadata. 
         /// </summary>
-        new IDynamicMetadata Metadata { get; }
+        new IMetadata Metadata { get; }
 
 
         [PrivateApi("Internal use only, may change at any time")]

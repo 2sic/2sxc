@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
         /// <remarks>
         /// Added in 16.02
         /// </remarks>
-        /*ITypedMetadata*/ IDynamicMetadata Metadata { get; }
+        IMetadata Metadata { get; }
 
 
         IDynamicField Field(string name);

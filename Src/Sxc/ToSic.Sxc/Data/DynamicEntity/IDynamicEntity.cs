@@ -81,9 +81,10 @@ namespace ToSic.Sxc.Data
         /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
         /// </summary>
         /// <remarks>
-        /// Added in v13
+        /// * Added in v13
+        /// * Changed type name to `IMetadata` from `IDynamicMetadata` in 16.02; same type, different type name
         /// </remarks>
-        IDynamicMetadata Metadata { get; }
+        IMetadata Metadata { get; }
 
 
 

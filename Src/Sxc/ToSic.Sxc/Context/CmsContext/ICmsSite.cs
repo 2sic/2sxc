@@ -51,9 +51,7 @@ namespace ToSic.Sxc.Context
         /// <remarks>
         /// Added in v13.12
         /// </remarks>
-#pragma warning disable CS0108, CS0114
-        IDynamicMetadata Metadata { get; }
-#pragma warning restore CS0108, CS0114
+        new IMetadata Metadata { get; }
 
         [PrivateApi]
         ICmsSite Init(CmsContext parent, AppState appState);
