@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
-    public interface ICodeParameters
+    [WorkInProgressApi("WIP v16.02")]
+    public interface ITypedModel
     {
         #region Get
 

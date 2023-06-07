@@ -29,17 +29,17 @@ namespace Custom.Hybrid.Advanced
         }
 
         [PrivateApi("WIP v16.02")]
-        public ICodeParameters Parameters => _parameters.Get(() =>
+        public ITypedModel TypedModel => _typedModel.Get(() =>
         {
             if (_overridePageData != null)
-                return new CodeParameters(_overridePageData.ObjectToDictionary(), _DynCodeRoot);
+                return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot);
 
             var stringDic = PageData?
                 .Where(pair => pair.Key is string)
                 .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
-            return new CodeParameters(stringDic, _DynCodeRoot);
+            return new TypedModel(stringDic, _DynCodeRoot);
         });
-        private readonly GetOnce<ICodeParameters> _parameters = new GetOnce<ICodeParameters>();
+        private readonly GetOnce<ITypedModel> _typedModel = new GetOnce<ITypedModel>();
         private object _overridePageData;
     }
 }

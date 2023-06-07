@@ -11,12 +11,12 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
-    public class CodeParameters : ICodeParameters
+    public class TypedModel : ITypedModel
     {
         private readonly IDynamicCodeRoot _codeRoot;
         private readonly IDictionary<string, object> _paramsDictionary;
 
-        public CodeParameters(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot)
+        public TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot)
         {
             _codeRoot = codeRoot;
             _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
