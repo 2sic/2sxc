@@ -1,7 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,11 +11,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc.Dnn</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn</AssemblyName>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
+    <TargetFramework>net472</TargetFramework>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <SccProjectName>SAK</SccProjectName>
@@ -30,8 +25,6 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
@@ -77,6 +70,16 @@
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Release\ToSic.Sxc.Dnn.xml</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugOqtane|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <NoWarn>1591</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <PropertyGroup>
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
   </PropertyGroup>
@@ -105,7 +108,7 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.1">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="MSBuildTasks">
@@ -116,66 +119,6 @@
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <!-- docfx v2.6+ support start 
-     dotnet build doesn't resolve PackageReference correctly for old style projects https://github.com/dotnet/msbuild/issues/5250
-     manually Reference each dependent assembly from PackageReference and keep it is sync -->
-    <Reference Include="Dnn.ClientDependency">
-      <HintPath>..\..\packages\Dnn.ClientDependency.1.9.10\lib\net45\ClientDependency.Core.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Abstractions">
-      <HintPath>..\..\packages\DotNetNuke.Abstractions.9.6.1\lib\netstandard2.0\DotNetNuke.Abstractions.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Core">
-      <HintPath>..\..\packages\DotNetNuke.Core.9.6.1\lib\net45\DotNetNuke.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.DependencyInjection">
-      <HintPath>..\..\packages\DotNetNuke.DependencyInjection.9.6.1\lib\netstandard2.0\DotNetNuke.DependencyInjection.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Web">
-      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.Web.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.WebUtility">
-      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.WebUtility.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Web.Client">
-      <HintPath>..\..\packages\DotNetNuke.Web.Client.9.6.1\lib\net45\DotNetNuke.Web.Client.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.2.1.1\lib\net461\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.Client">
-      <HintPath>..\..\packages\Microsoft.Aspnet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.Core">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.WebHost">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\newtonsoft.json\13.0.1\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>..\..\packages\system.collections.immutable\6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <!-- docfx support end -->
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>koi\bin\Connect.Dnn.Koi.dll</HintPath>
@@ -208,106 +151,6 @@
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
-      <Link>Properties\AssemblyInfoInherited.cs</Link>
-    </Compile>
-    <Compile Include="dist\CachedPageBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\ng-edit\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="dist\quickDialog\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="DnnBusinessController.cs" />
-    <Compile Include="Polymorphism\Permissions.cs" />
-    <Compile Include="StartUp\CompilerDependencies.cs" />
-    <Compile Include="StartUp\DnnDi.cs" />
-    <Compile Include="StartUp\DnnStartUpRegistrations.cs" />
-    <Compile Include="StartUp\StartupDnn9.cs" />
-    <Compile Include="StartUp\StartupDnn.cs" />
-    <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.cs">
-      <DependentUpon>QuickEdit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="DnnWebForms\Skins\QuickEdit.ascx.designer.cs">
-      <DependentUpon>QuickEdit.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="View.ascx.cs">
-      <DependentUpon>View.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="View.ascx.designer.cs">
-      <DependentUpon>View.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View.ascx.Errors.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="View.ascx.Logging.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="View.ascx.menu.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="View.ascx.Standalone.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include=".gitignore" />
-    <Content Include="dist\ng-edit\Default.aspx" />
-    <Content Include="dist\quickDialog\Default.aspx" />
-    <Content Include="DnnPackageBuilder\Cleanup\flush.txt" />
-    <Content Include="razorblade-old\bin\Connect.Razor.dll" />
-    <Content Include="ClientScripts\ModuleEditor.js" />
-    <Content Include="DnnPackageBuilder\license.txt" />
-    <Content Include="DnnPackageBuilder\ReleaseNotes.txt" />
-    <Content Include="Extensions\404.png" />
-    <Content Include="DnnWebForms\Skins\QuickEdit.ascx" />
-    <Content Include="DnnPackageBuilder\icon-app.png" />
-    <Content Include="DnnPackageBuilder\icon.png" />
-    <Content Include="Extensions\Thumbnailer.aspx" />
-    <Content Include="Extensions\ToSic_vCard\vCard.ashx" />
-    <Content Include="koi\bin\Connect.Dnn.Koi.dll" />
-    <Content Include="koi\bin\Connect.Koi.dll" />
-    <Content Include="koi\License.txt" />
-    <Content Include="koi\ReleaseNotes.txt" />
-    <Content Include="razorblade-old\bin\Connect.Razor.Dnn.dll" />
-    <Content Include="razorblade-old\License.txt" />
-    <Content Include="razorblade-old\ReleaseNotes.txt" />
-    <Content Include="ImportExport\Instructions\App installation instructions.txt" />
-    <Content Include="ImportExport\Instructions\License.txt" />
-    <Content Include="ImportExport\Instructions\ReleaseNotes.txt" />
-    <Content Include="razorblade\bin\ToSic.Razor.dll" />
-    <Content Include="razorblade\bin\ToSic.Razor.Dnn.dll" />
-    <Content Include="razorblade\License.txt" />
-    <Content Include="razorblade\ReleaseNotes.txt" />
-    <Content Include="View.ascx" />
-    <Content Include="WebConfigTemplate.config" />
-    <Content Include="web-Deploy.config" />
-    <Content Include="ImportExport\Instructions\2sxc_App_ByUnknown_NameUnknown.dnn" />
-    <Content Include="ImportExport\Instructions\Online help to install this app.url" />
-    <Content Include="ImportExport\readme.md" />
-    <Content Include="Upgrade\readme.md" />
-    <Content Include="razorblade-old\Resources.zip" />
-    <Content Include="razorblade\Resources.zip" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\View.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
       <Project>{fa1b4495-6b85-400f-a5e3-0e292ccbfae2}</Project>
@@ -356,6 +199,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\View.ascx.resx" />
+    <Content Include="App_LocalResources\View.ascx.de-DE.resx" />
     <Content Include="BuildScripts\ModulePackage.Targets">
       <SubType>Designer</SubType>
     </Content>
@@ -391,24 +240,14 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugOqtane|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <NoWarn>1591</NoWarn>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!--<Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />-->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -484,13 +323,6 @@
   </PropertyGroup>
   <!-- Run the DNN Package Builder after every build -->
   <Import Project="BuildScripts\ModulePackage.Targets" />
-  <!--<Import Project="..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\eav-server\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
-  </Target>-->
   <Target Name="TestMessages" BeforeTargets="PrepareForBuild">
     <Message Text="Debug Messages created by 2dm" Importance="High">
     </Message>

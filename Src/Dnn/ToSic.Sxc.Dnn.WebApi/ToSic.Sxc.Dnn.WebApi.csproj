@@ -1,6 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,6 +7,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn.WebApi</AssemblyName>
+    <TargetFramework>net472</TargetFramework>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -107,62 +106,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <!-- docfx v2.6+ support start 
-     dotnet build doesn't resolve PackageReference correctly for old style projects https://github.com/dotnet/msbuild/issues/5250
-     manually Reference each dependent assembly from PackageReference and keep it is sync -->
-    <Reference Include="Dnn.ClientDependency">
-      <HintPath>..\..\packages\Dnn.ClientDependency.1.9.10\lib\net45\ClientDependency.Core.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Abstractions">
-      <HintPath>..\..\packages\DotNetNuke.Abstractions.9.6.1\lib\netstandard2.0\DotNetNuke.Abstractions.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Core">
-      <HintPath>..\..\packages\DotNetNuke.Core.9.6.1\lib\net45\DotNetNuke.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Web">
-      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.Web.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.WebUtility">
-      <HintPath>..\..\packages\DotNetNuke.Web.9.6.1\lib\net45\DotNetNuke.WebUtility.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="DotNetNuke.Web.Client">
-      <HintPath>..\..\packages\DotNetNuke.Web.Client.9.6.1\lib\net45\DotNetNuke.Web.Client.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.Client">
-      <HintPath>..\..\packages\Microsoft.Aspnet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.Core">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.WebHost">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>..\..\packages\system.collections.immutable\6.0.0\lib\net461\System.Collections.Immutable.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="System.Text.Json">
-      <HintPath>..\..\packages\system.text.json\6.0.0\lib\net461\System.Text.Json.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="System.Threading.Tasks.Extensions">
-      <HintPath>..\..\packages\system.threading.tasks.extensions\4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <!-- docfx support end -->
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -176,71 +119,6 @@
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
-    <Compile Include="Custom\Dnn\Api12.cs" />
-    <Compile Include="Custom\Hybrid\Advanced\Api14_TT_AsTyped.cs" />
-    <Compile Include="Custom\Hybrid\Api14.cs" />
-    <Compile Include="Dnn\WebApi\Admin\AppInternalsController.cs" />
-    <Compile Include="Dnn\WebApi\HttpJson\JsonOnlyResponseAttribute.cs" />
-    <Compile Include="Dnn\WebApi\HttpJson\UseOldNewtonsoftForHttpJsonAttribute.cs" />
-    <Compile Include="JsonFormatters.cs" />
-    <Compile Include="Dnn\StartUpDnnWebApi.cs" />
-    <Compile Include="System.Text.Json.Formatter.cs" />
-    <Compile Include="WebApi\ApiCoreShim.cs" />
-    <Compile Include="Custom\Hybrid\Api12_Api.cs" />
-    <Compile Include="Custom\Hybrid\Advanced\Api14_TT_Api.cs" />
-    <Compile Include="Custom\Hybrid\Api12.cs" />
-    <Compile Include="WebApi\ApiCoreShim_DynamicWebApi.cs" />
-    <Compile Include="WebApi\ApiCoreShim_Obsolete.cs" />
-    <Compile Include="WebApi\ApiCoreShim_Responses.cs" />
-    <Compile Include="Custom\Hybrid\Advanced\Api14_TT.cs" />
-    <Compile Include="Dnn\Providers\ModifiedTabAndModuleInfoProvider.cs" />
-    <Compile Include="Dnn\WebApi\Adam\DnnAdamSecurityChecks.cs" />
-    <Compile Include="Dnn\ApiController.cs" />
-    <Compile Include="Dnn\DnnAppFolderUtilities.cs" />
-    <Compile Include="Dnn\WebApi\Admin\AppPartsController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\DnnApiInspector.cs" />
-    <Compile Include="Dnn\WebApi\Admin\FieldController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\FeatureController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\ApiExplorerController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\ZoneController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\CodeController.cs" />
-    <Compile Include="Dnn\WebApi\Cms\BlockController.cs" />
-    <Compile Include="Dnn\WebApi\Cms\ListController.cs" />
-    <Compile Include="Dnn\WebApi\IDnnDynamicWebApi.cs" />
-    <Compile Include="Dnn\WebApi\Cms\HistoryController.cs" />
-    <Compile Include="Dnn\WebApi\Context\DnnUiContextBuilder.cs" />
-    <Compile Include="Dnn\WebApi\Context\DnnContextDtoExtensions.cs" />
-    <Compile Include="Dnn\WebApiRouting\Route.cs" />
-    <Compile Include="Dnn\WebApiRouting\RouteParts.cs" />
-    <Compile Include="Dnn\WebApi\Sys\InsightsController.cs" />
-    <Compile Include="Dnn\WebApi\Sys\LicenseController.cs" />
-    <Compile Include="Dnn\WebApi\Sys\InstallController.cs" />
-    <Compile Include="Dnn\WebApi\Sys\LogController.cs" />
-    <Compile Include="Obsolete\SexyContent\WebApi\SxcApiController_NotImplemented.cs" />
-    <Compile Include="WebApi\DynamicApiController.cs" />
-    <Compile Include="Dnn\WebApi\Cms\EditController.cs" />
-    <Compile Include="WebApi\SxcApiControllerBase.cs" />
-    <Compile Include="Dnn\WebApi\Logging\DnnLogWebApi.cs" />
-    <Compile Include="Dnn\WebApi\Adam\AdamController.cs" />
-    <Compile Include="Dnn\WebApiRouting\AppApiControllerSelector.cs" />
-    <Compile Include="Dnn\WebApi\Admin\AppFilesController.cs" />
-    <Compile Include="Dnn\WebApi\App\AppDataController.cs" />
-    <Compile Include="Dnn\WebApi\App\AppQueryController.cs" />
-    <Compile Include="Dnn\WebApi\Cms\ContentGroupController.cs" />
-    <Compile Include="Dnn\WebApi\DnnApiControllerWithFixes.cs" />
-    <Compile Include="Dnn\WebApi\ModuleController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\TypeController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\EntityController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\MetadataController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\QueryController.cs" />
-    <Compile Include="Dnn\WebApi\GetDnnBlock.cs" />
-    <Compile Include="Dnn\WebApi\Admin\AppController.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Dnn\WebApiRouting\RouteMapper.cs" />
-    <Compile Include="Obsolete\SexyContent\WebApi\SxcApiController.cs" />
-    <Compile Include="Dnn\WebApi\Logging\DnnLogExceptions.cs" />
-    <Compile Include="Dnn\WebApi\Admin\DialogController.cs" />
-    <Compile Include="Dnn\WebApi\Admin\ViewController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
@@ -283,12 +161,4 @@
   <ItemGroup>
     <None Include="Custom\readme.md" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
