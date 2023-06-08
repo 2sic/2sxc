@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Code
             if (Data == null || Block.View == null) return wrapLog.ReturnNull("no data/block");
             if (!Data.Out.ContainsKey(sourceStream)) return wrapLog.ReturnNull("stream not found");
 
-            var list = Data[sourceStream].List;
+            var list = Data[sourceStream].List.ToList();
             return !list.Any()
                 ? wrapLog.ReturnNull("first is null") 
                 : wrapLog.Return(new DynamicEntity(list, null, null, null, DynamicEntityServices), "found");
