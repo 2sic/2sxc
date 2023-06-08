@@ -32,12 +32,12 @@ namespace Custom.Hybrid.Advanced
         public ITypedModel TypedModel => _typedModel.Get(() =>
         {
             if (_overridePageData != null)
-                return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot);
+                return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot, this.Path);
 
             var stringDic = PageData?
                 .Where(pair => pair.Key is string)
                 .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
-            return new TypedModel(stringDic, _DynCodeRoot);
+            return new TypedModel(stringDic, _DynCodeRoot, this.Path);
         });
         private readonly GetOnce<ITypedModel> _typedModel = new GetOnce<ITypedModel>();
         private object _overridePageData;
