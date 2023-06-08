@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -61,6 +62,9 @@ namespace ToSic.Sxc.Services.CmsService
             // Add Toolbar if relevant
             if (_field.Parent.IsDemoItem)
                 return l.Return(tag, "demo-item, so no toolbar");
+
+            if (_field.Parent.Entity.GetDecorator<CmsEditDecorator>()?.EnableEdit == false)
+                return l.Return(tag, "decorator no-edit");
 
             var toolbar = _toolbar ?? defaultToolbar;
             if (!toolbar || _field == null)
