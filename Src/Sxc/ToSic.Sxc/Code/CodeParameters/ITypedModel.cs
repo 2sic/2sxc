@@ -4,6 +4,7 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Edit.Toolbar;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
@@ -210,6 +211,9 @@ namespace ToSic.Sxc.Code
         /// <param name="required">If required (default), throw error if not found. If automatically `false` if a `fallback` is not `null`.</param>
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default);
+
+
+        IToolbarBuilder Toolbar(string name, string noParamOrder = Protector, IToolbarBuilder fallback = default, bool? required = default);
 
         #endregion
 

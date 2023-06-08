@@ -7,6 +7,7 @@ using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Edit.Toolbar;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
@@ -108,9 +109,6 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
         public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
-
         #region Numbers
 
         public int Int(string name, string noParamOrder = Protector, int fallback = default, bool? required = default) 
@@ -127,6 +125,11 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
 
         #endregion
 
+        #region Standard value types
+
+        public string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default) 
+            => GetInternal(name, noParamOrder, fallback, required);
+
         public Guid Guid(string name, string noParamOrder = Protector, Guid fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
@@ -136,12 +139,8 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
         public DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsEntity(untyped);
-        }
+        #endregion
+
 
         #region Adam
 
@@ -178,6 +177,14 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
 
         #endregion
 
+        #region Entity and Item(s)
+
+        public IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool? required = default)
+        {
+            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
+            // Try to convert, in case it's an IEntity or something; could also result in error
+            return ok ? typed : _codeRoot.AsEntity(untyped);
+        }
 
         public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default)
         {
@@ -192,5 +199,18 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
             // Try to convert, in case it's an IEntity or something; could also result in error
             return ok ? typed : _codeRoot.AsTypedList(untyped);
         }
+
+        #endregion
+
+        #region Toolbar
+
+        public IToolbarBuilder Toolbar(string name, string noParamOrder = Protector, IToolbarBuilder fallback = default, bool? required = default)
+        {
+            var (typed, _, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
+            // Try to convert, in case it's an IEntity or something; could also result in error
+            return ok ? typed : fallback;
+        }
+
+        #endregion
     }
 }
