@@ -16,14 +16,16 @@ namespace ToSic.Sxc.Data
             _Services = services;
             Entity = baseEntity;
         }
-        internal TypedItem(IDynamicEntity dynEntity) : this(dynEntity.Entity, dynEntity._Services)
-        {
-            _dynamicEntity = dynEntity;
-        }
+        //internal TypedItem(IDynamicEntity dynEntity) : this(dynEntity.Entity, dynEntity._Services)
+        //{
+        //    _dynamicEntity = dynEntity;
+        //}
 
         public int EntityId => Entity.EntityId;
 
         public Guid EntityGuid => Entity.EntityGuid;
+        public string EntityTitle { get; }
+        public string EntityType { get; }
 
         [PrivateApi]
         IEntity ICanBeEntity.Entity => Entity;

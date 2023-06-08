@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Code
 
             ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
-                : l.Return(new TypedItem(e, services), typeName);
+                : l.Return(new DynamicEntity(e, services), typeName);
 
             switch (target)
             {
@@ -41,9 +41,9 @@ namespace ToSic.Sxc.Code
                 //case IDynamicEntity dynEnt:
                 //    return l.Return(new TypedItem(dynEnt), nameof(IDynamicEntity));
                 case IEntity entity:
-                    return l.Return(new TypedItem(entity, services), nameof(IEntity));
+                    return ConvertOrNullAndLog(entity, nameof(IEntity));
                 case ICanBeEntity canBeEntity:
-                    return l.Return(new TypedItem(canBeEntity.Entity, services), nameof(ICanBeEntity));
+                    return ConvertOrNullAndLog(canBeEntity.Entity, nameof(ICanBeEntity));
                 case IDataSource ds:
                     return ConvertOrNullAndLog(ds.List.FirstOrDefault(), nameof(IDataSource));
                 case IDataStream ds:
