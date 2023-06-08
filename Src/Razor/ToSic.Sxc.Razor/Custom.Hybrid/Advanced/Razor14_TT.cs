@@ -38,10 +38,10 @@ namespace Custom.Hybrid.Advanced
         public ITypedModel TypedModel => _parameters.Get(() =>
         {
             if (_overridePageData != null)
-                return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot);
+                return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot, Path);
 
             var stringDic = Model?.ObjectToDictionary() ?? new Dictionary<string, object>(InvariantCultureIgnoreCase);
-            return new TypedModel(stringDic, _DynCodeRoot);
+            return new TypedModel(stringDic, _DynCodeRoot, Path);
         });
         private readonly GetOnce<ITypedModel> _parameters = new();
 

@@ -14,23 +14,56 @@ namespace ToSic.Sxc.Code
     public class TypedModel : ITypedModel
     {
         private readonly IDynamicCodeRoot _codeRoot;
+        private readonly string _razorFileName;
         private readonly IDictionary<string, object> _paramsDictionary;
 
-        public TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot)
+        public TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot, string razorFileName)
         {
             _codeRoot = codeRoot;
+            _razorFileName = razorFileName;
             _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
         }
 
+        #region Check if parameters were supplied
+
+        public bool HasAll(params string[] names)
+        {
+            if (names == null || names.Length == 0) return true;
+            return names.All(n => _paramsDictionary.ContainsKey(n));
+        }
+
+        public bool HasAny(params string[] names)
+        {
+            if (names == null || names.Length == 0) return true;
+            return names.Any(n => _paramsDictionary.ContainsKey(n));
+        }
+
+        public string RequireAny(params string[] names)
+        {
+            if (HasAny(names)) return null;
+            throw new ArgumentException(RequireMsg("one or more", "none", names));
+        }
+        public string RequireAll(params string[] names)
+        {
+            if (HasAll(names)) return null;
+            throw new ArgumentException(RequireMsg("all", "not all", names));
+        }
+
+        private string RequireMsg(string requires, string but, string[] names) =>
+            $"Partial Razor '{_razorFileName}' requires {requires} of the following parameters, but {but} were provided: " +
+            string.Join(", ", (names ?? Array.Empty<string>()).Select(s => $"'{s}'"));
+
+        #endregion
+
         #region Get and GetInternal
 
-        public object Get(string name, string noParamOrder = Protector, bool required = false) 
+        public object Get(string name, string noParamOrder = Protector, bool? required = default) 
             => GetInternal(name, noParamOrder, required);
 
-        public T Get<T>(string name, string noParamOrder = Protector, T fallback = default, bool required = false) 
+        public T Get<T>(string name, string noParamOrder = Protector, T fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        private T GetInternal<T>(string name, string noParamOrder, T fallback, bool required, [CallerMemberName] string cName = default)
+        private T GetInternal<T>(string name, string noParamOrder, T fallback, bool? required, [CallerMemberName] string cName = default)
         {
             var found = GetInternal(name, noParamOrder, required, cName: cName);
             
@@ -42,20 +75,21 @@ namespace ToSic.Sxc.Code
             return typeof(T).IsInterface ? fallback : found.ConvertOrFallback(fallback);
         }
 
-        private object GetInternal(string name, string noParamOrder = Protector, bool required = false, [CallerMemberName] string cName = default)
+        private object GetInternal(string name, string noParamOrder = Protector, bool? required = default, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, "required, fallback", cName);
 
             if (_paramsDictionary.TryGetValue(name, out var result))
                 return result;
-            if (!required)
+            if (required == false)
                 return null;
 
-            throw new ArgumentException($"Tried to get CodeParameters {nameof(cName)}('{name}', ..., required=true)" +
-                                        " but parameters not provided.", nameof(name));
+            var call = $"{nameof(TypedModel)}.{nameof(cName)}(\"{name}\")";
+            throw new ArgumentException($@"Tried to get parameter with {call} but parameter '{name}' not provided. 
+Either change the calling Html.Partial(...) or use {call.Replace(")", ", required: false)")} to make it optional.", nameof(name));
         }
 
-        public (T typed, object untyped, bool ok) GetInternalForInterface<T>(string name, string noParamOrder, T fallback, bool required = false,
+        public (T typed, object untyped, bool ok) GetInternalForInterface<T>(string name, string noParamOrder, T fallback, bool? required = default,
             [CallerMemberName] string cName = default) where T : class
         {
             var maybe = GetInternal(name, noParamOrder, required, cName);
@@ -68,38 +102,38 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool required = false) 
+        public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public string String(string name, string noParamOrder = Protector, string fallback = default, bool required = false) 
+        public string String(string name, string noParamOrder = Protector, string fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
         #region Numbers
 
-        public int Int(string name, string noParamOrder = Protector, int fallback = default, bool required = false) 
+        public int Int(string name, string noParamOrder = Protector, int fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public float Float(string name, string noParamOrder = Protector, float fallback = default, bool required = false) 
+        public float Float(string name, string noParamOrder = Protector, float fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public double Double(string name, string noParamOrder = Protector, double fallback = default, bool required = false) 
+        public double Double(string name, string noParamOrder = Protector, double fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default, bool required = false) 
+        public decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
         #endregion
 
-        public Guid Guid(string name, string noParamOrder = Protector, Guid fallback = default, bool required = false) 
+        public Guid Guid(string name, string noParamOrder = Protector, Guid fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public bool Bool(string name, string noParamOrder = Protector, bool fallback = default, bool required = false) 
+        public bool Bool(string name, string noParamOrder = Protector, bool fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool required = false) 
+        public DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool required = false)
+        public IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             // Try to convert, in case it's an IEntity or something; could also result in error
@@ -108,7 +142,7 @@ namespace ToSic.Sxc.Code
 
         #region Adam
 
-        public IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool required = false)
+        public IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             if (ok) return typed;
@@ -117,7 +151,7 @@ namespace ToSic.Sxc.Code
             return untyped is IEnumerable<IFile> list ? list.First() : fallback;
         }
 
-        public IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool required = false)
+        public IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             if (ok) return typed;
@@ -127,10 +161,10 @@ namespace ToSic.Sxc.Code
         }
 
         // todo: @2dm incomplete!
-        public IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = null, bool required = false) 
+        public IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = null, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        public IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = null, bool required = false)
+        public IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = null, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             if (ok) return typed;
@@ -142,14 +176,14 @@ namespace ToSic.Sxc.Code
         #endregion
 
 
-        public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool required = false)
+        public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             // Try to convert, in case it's an IEntity or something; could also result in error
             return ok ? typed : _codeRoot.AsTyped(untyped);
         }
 
-        public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool required = false)
+        public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             // Try to convert, in case it's an IEntity or something; could also result in error
