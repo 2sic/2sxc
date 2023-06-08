@@ -42,7 +42,8 @@ namespace ToSic.Sxc.Services
 
 
         /// <inheritdoc />
-        public IToolbarBuilder Metadata(object target,
+        public IToolbarBuilder Metadata(
+            object target,
             string contentTypes = null,
             string noParamOrder = Parameters.Protector,
             Func<ITweakButton, ITweakButton> tweak = default,
@@ -52,19 +53,22 @@ namespace ToSic.Sxc.Services
             string context = null
         ) => Empty().Metadata(target: target, contentTypes: contentTypes, noParamOrder: noParamOrder, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill, context: context);
 
-
         private IToolbarBuilder ToolbarBuilder(
             string noParamOrder,
             string toolbarTemplate,
             Func<ITweakButton, ITweakButton> tweak,
             object ui,
-            object parameters, object prefill, string context, object target = null)
+            object parameters,
+            object prefill,
+            string context,
+            object target)
         {
             var callLog = Log.Fn<IToolbarBuilder>($"{nameof(toolbarTemplate)}:{toolbarTemplate}");
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "Toolbar", $"{nameof(ui)}");
             // The following lines must be just as this, because it's a functional object, where each call may return a new copy
             var tlb = _toolbarGenerator.New();
             tlb.ConnectToRoot(_DynCodeRoot);
+
             tlb = tlb.Toolbar(toolbarTemplate: toolbarTemplate, target: target, tweak: tweak, ui: ui, parameters: parameters, prefill: prefill);
 
             if (_defaultUi.HasValue())
@@ -75,11 +79,7 @@ namespace ToSic.Sxc.Services
         }
 
 
-        internal void _setDemoDefaults(string defaultUi)
-        {
-            _defaultUi = defaultUi;
-        }
-
+        internal void _setDemoDefaults(string defaultUi) => _defaultUi = defaultUi;
         private string _defaultUi;
     }
 }

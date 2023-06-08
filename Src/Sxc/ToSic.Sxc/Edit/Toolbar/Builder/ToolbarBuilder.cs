@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -44,14 +45,14 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <summary>
         /// Clone-constructor
         /// </summary>
-        internal ToolbarBuilder(ToolbarBuilder parent): this(parent.Services)
+        internal ToolbarBuilder(ToolbarBuilder parent, IEnumerable<ToolbarRuleBase> replaceRules = null) : this(parent.Services)
         {
             this.LinkLog(parent.Log);
             _currentAppIdentity = parent._currentAppIdentity;
-            _codeRoot = parent._codeRoot;
+            _DynCodeRoot = parent._DynCodeRoot;
             _configuration = parent._configuration;
             _utils = parent._utils;
-            Rules.AddRange(parent.Rules);
+            Rules.AddRange(replaceRules ?? parent.Rules);
         }
 
         public ILog Log { get; } = new Log(Constants.SxcLogName + ".TlbBld");
@@ -61,11 +62,11 @@ namespace ToSic.Sxc.Edit.Toolbar
         public void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
             if (codeRoot == null) return;
-            _codeRoot = codeRoot;
+            _DynCodeRoot = codeRoot;
             _currentAppIdentity = codeRoot.App;
             Services.ToolbarButtonHelper.Value.MainAppIdentity = _currentAppIdentity;
         }
-        private IDynamicCodeRoot _codeRoot;
+        private IDynamicCodeRoot _DynCodeRoot;
 
         #endregion
 
@@ -76,20 +77,24 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public List<ToolbarRuleBase> Rules { get; } = new List<ToolbarRuleBase>();
 
-
         public IToolbarBuilder Toolbar(
             string toolbarTemplate,
-            object target = null,
+            object target = default,
             string noParamOrder = Eav.Parameters.Protector,
             Func<ITweakButton, ITweakButton> tweak = default,
-            object ui = null,
-            object parameters = null,
-            object prefill = null
+            object ui = default,
+            object parameters = default,
+            object prefill = default
+            //ICanBeEntity root = default,
+            //bool? autoDemoMode = default
         )
         {
             var updated = this.AddInternal(new ToolbarRuleToolbar(toolbarTemplate, ui: PrepareUi(ui)));
             if (new[] { target, parameters, prefill, tweak }.Any(x => x != null))
                 updated = updated.Parameters(target, tweak: tweak, parameters: parameters, prefill: prefill);
+
+            //if (root != default || autoDemoMode != default)
+            //    updated = ((ToolbarBuilder)updated).With(root: root, autoDemoMode: autoDemoMode);
             return updated;
         }
 
