@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
@@ -37,9 +38,9 @@ namespace ToSic.Sxc.Services
         /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
         IRawHtmlString One(
-            DynamicEntity parent,
+            ITypedItem parent,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null,
+            ICanBeEntity item = null,
             object data = null,
             string field = null,
             Guid? newGuid = null
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Services
         /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
         IRawHtmlString All(
-            DynamicEntity parent,
+            ITypedItem parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,
