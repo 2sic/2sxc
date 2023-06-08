@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Services
             var strParams = ParametersToString(parameters);
 
             // If the url should be expanded to have a full root or something, do this first
-            url = url ?? field?.Parent.Get(field.Name) as string;
+            url = url ?? field?.Parent.Get<string>(field.Name);
             var expandedUrl = ExpandUrlIfNecessary(type, url);
 
             // Get the image-url(s) as needed

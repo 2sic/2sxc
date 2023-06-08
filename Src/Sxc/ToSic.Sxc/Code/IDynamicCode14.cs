@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
@@ -89,21 +90,21 @@ namespace ToSic.Sxc.Code
 
         #region AsAdam
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
-        IFolder AsAdam(IDynamicEntity entity, string fieldName);
+        ///// <summary>
+        ///// Provides an Adam instance for this item and field
+        ///// </summary>
+        ///// <param name="entity">The entity, often Content or similar</param>
+        ///// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        ///// <returns>An Adam object for navigating the assets</returns>
+        //IFolder AsAdam(IDynamicEntity entity, string fieldName);
 
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
-        IFolder AsAdam(IEntity entity, string fieldName);
+        ///// <summary>
+        ///// Provides an Adam instance for this item and field
+        ///// </summary>
+        ///// <param name="entity">The entity, often Content or similar</param>
+        ///// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
+        ///// <returns>An Adam object for navigating the assets</returns>
+        //IFolder AsAdam(IEntity entity, string fieldName);
 
         /// <summary>
         /// Provides an Adam instance for this item and field
@@ -112,9 +113,9 @@ namespace ToSic.Sxc.Code
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         /// <remarks>
-        /// New in v16.02
+        /// * Changed main type to be ICanBeEntity in v16.02
         /// </remarks>
-        IFolder AsAdam(ITypedItem item, string fieldName);
+        IFolder AsAdam(ICanBeEntity item, string fieldName);
 
         #endregion
 

@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Eav.LookUp;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Data;
 using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
-using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Code
 {
@@ -58,12 +55,8 @@ namespace ToSic.Sxc.Code
 
         #region AsAdam
         /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName)
-            => _DynCodeRoot?.AsAdam(entity, fieldName);
+        public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
 
-        /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName)
-            => _DynCodeRoot?.AsAdam(entity, fieldName);
         #endregion
     }
 }
