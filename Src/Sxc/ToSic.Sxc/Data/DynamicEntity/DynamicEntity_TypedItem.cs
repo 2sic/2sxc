@@ -14,6 +14,14 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         [PrivateApi]
         IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AdamManager.Folder(Entity, name));
+
+        IFile ITypedItem.File(string name)
+        {
+            ThrowIfKitNotAvailable();
+            var file = _Services.Kit.Adam.File(Field(name));
+            return file ?? (this as ITypedItem).Folder(name).Files.FirstOrDefault();
+        }
+
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         // TODO: MUST handle all edge cases first
