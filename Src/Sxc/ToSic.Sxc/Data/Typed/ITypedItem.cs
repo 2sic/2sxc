@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Data
         IMetadata Metadata { get; }
 
 
-        IDynamicField Field(string name);
+        IField Field(string name);
         object Get(string name);
 
     }

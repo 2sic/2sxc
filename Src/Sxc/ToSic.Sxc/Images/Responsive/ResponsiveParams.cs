@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Images
         /// <summary>
         /// The field used for this responsive output - can be null!
         /// </summary>
-        public IDynamicField Field { get; }
+        public IField Field { get; }
         public IResizeSettings Settings { get; }
         public string ImgAlt { get; }
         public string ImgAltFallback { get; }
@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Images
             Parameters.ProtectAgainstMissingParameterNames(noParamOrder, method,
                 $"{nameof(link)}, {nameof(settings)}, factor, {nameof(imgAlt)}, {nameof(imgClass)}, recipe");
 
-            Field = link as IDynamicField;
+            Field = link as IField;
             Link = (IHasLink)Field ?? new HasLink(link as string);
             Settings = settings;
             ImgAlt = imgAlt;

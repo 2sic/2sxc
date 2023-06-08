@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Services.CmsService
             bool? toolbar = default
         )
         {
-            var field = thing as IDynamicField;
+            var field = thing as IField;
             var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
             // Initialize the container helper, as we'll use it a few times
             var cntHelper = new CmsServiceContainerHelper(_DynCodeRoot, field, container, classes, toolbar, Log);
