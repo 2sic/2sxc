@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Data;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -10,7 +11,9 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? condition = null,
             Func<bool> conditionFunc = null,
             bool? force = null,
-            string group = null
+            string group = null,
+            ICanBeEntity root = default,
+            bool? autoDemoMode = default
         )
         {
             Mode = mode ?? original?.Mode;
@@ -18,6 +21,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             ConditionFunc = conditionFunc ?? original?.ConditionFunc;
             Force = force ?? original?.Force;
             Group = group ?? original?.Group;
+            Root = root ?? original?.Root;
+            AutoDemoMode = autoDemoMode ?? original?.AutoDemoMode ?? default;
         }
 
         public readonly string Mode = null;
@@ -26,9 +31,14 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public readonly Func<bool> ConditionFunc = null;
 
+        // Doesn't seem to be in use ATM
         public readonly bool? Force = null;
 
         public readonly string Group = null;
+
+        public readonly ICanBeEntity Root = default;
+
+        public readonly bool AutoDemoMode = default;
 
         // 2022-08-17 2dm - was an idea, but won't work in current infrastructure,
         // because the object doesn't always exist when this code is needed
