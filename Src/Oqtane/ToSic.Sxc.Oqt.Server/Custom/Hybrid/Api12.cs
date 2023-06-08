@@ -98,8 +98,7 @@ namespace Custom.Hybrid
         {
             var app = GetService<ToSic.Sxc.Apps.App>();
             app.PreInit(site);
-            return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId),
-                GetService<AppConfigDelegate>().Build());
+            return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId), GetService<AppConfigDelegate>().Build());
         });
 
         #region IHasLog

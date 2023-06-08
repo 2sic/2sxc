@@ -100,5 +100,6 @@ namespace ToSic.Sxc.Apps
         /// <returns>path + app-icon.png if there is an icon there. </returns>
         new string Thumbnail { get; }
 
+
     }
 }

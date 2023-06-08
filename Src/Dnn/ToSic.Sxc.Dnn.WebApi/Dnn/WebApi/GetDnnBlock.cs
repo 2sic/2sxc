@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                         block = FindInnerContentParentBlock(block, blockId, blockIds);
                     }
 
-                    block = _blockFromEntity.New().Init(block, blockId);
+                    block = _blockFromEntity.New().Init(block, null, blockId);
                 }
             }
 
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                     var id = int.Parse(parentIds[0]);
                     if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
                     if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
-                    parent = _blockFromEntity.New().Init(parent, cbid);
+                    parent = _blockFromEntity.New().Init(parent, null, cbid);
                 }
             }
 
