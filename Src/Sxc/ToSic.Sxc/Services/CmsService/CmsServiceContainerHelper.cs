@@ -17,10 +17,10 @@ namespace ToSic.Sxc.Services.CmsService
         private readonly object _container;
         private string Classes { get; set; }
         private readonly bool? _toolbar;
-        private readonly IDynamicField _field;
+        private readonly IField _field;
 
         public CmsServiceContainerHelper(IDynamicCodeRoot dynCodeRoot,
-            IDynamicField field,
+            IField field,
             object container,
             string classes,
             bool? toolbar,

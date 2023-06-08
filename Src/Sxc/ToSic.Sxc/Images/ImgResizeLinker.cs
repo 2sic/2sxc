@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Images
             object settings = default,
             object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicField field = default,  // todo
+            IField field = default,  // todo
             object width = default,
             object height = default,
             object quality = default,
@@ -71,7 +71,7 @@ namespace ToSic.Sxc.Images
             return wrapLog.Return(result, "built:" + result);
         }
         
-        public OneResize ImageOnly(string url, ResizeSettings settings, IDynamicField field)
+        public OneResize ImageOnly(string url, ResizeSettings settings, IField field)
         {
             var wrapLog = Log.Fn<OneResize>();
             var srcSetSettings = settings.Find(SrcSetType.Img, _features.Value.IsEnabled(ImageServiceUseFactors), _koi.Value.Framework);
@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Images
         }
         
 
-        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IDynamicField field = null)
+        public string SrcSet(string url, ResizeSettings settings, SrcSetType srcSetType, IField field = null)
         {
             var wrapLog = Log.Fn<string>();
 
@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Images
 
 
 
-        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IDynamicField field, RecipeVariant partDef = null)
+        private OneResize ConstructUrl(string url, ResizeSettings resizeSettings, Recipe srcSetSettings, IField field, RecipeVariant partDef = null)
         {
             var one = DimGen.ResizeDimensions(resizeSettings, srcSetSettings, partDef);
             one.Recipe = srcSetSettings;

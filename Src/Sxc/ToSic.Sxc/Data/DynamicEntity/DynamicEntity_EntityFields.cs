@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        public IDynamicField Field(string name) => new DynamicField(this, name);
+        public IField Field(string name) => new Field(this, name, _Services);
 
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;

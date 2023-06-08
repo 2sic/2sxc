@@ -1,51 +1,55 @@
 ﻿using System.IO;
-using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Data;
 using ToSic.Eav.Metadata;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Images;
 
 namespace ToSic.Sxc.Data
 {
-    public class DynamicField: IDynamicField
+    [PrivateApi]
+    public class Field: IField
     {
 
-        internal DynamicField(IDynamicEntity parent, string name)
+        internal Field(IDynamicEntity parent, string name, DynamicEntity.MyServices services)
         {
-            Parent = parent;
+            _parent = parent;
+            _services = services;
             Name = name;
         }
+        private readonly IDynamicEntity _parent;
+        private readonly DynamicEntity.MyServices _services;
 
         /// <inheritdoc />
         public string Name { get; }
 
-        public IDynamicEntity Parent { get; }
+        public ITypedItem Parent => _parent;
 
         /// <inheritdoc />
-        public dynamic Raw => _raw.Get(() => Parent.Get(Name, convertLinks: false));
+        public object Raw => _raw.Get(() => _parent.Get(Name, convertLinks: false));
         private readonly GetOnce<object> _raw = new GetOnce<object>();
 
 
         /// <inheritdoc />
-        public dynamic Value => _value.Get(() => Parent.Get(Name, convertLinks: true));
+        public object Value => _value.Get(() => _parent.Get(Name, convertLinks: true));
         private readonly GetOnce<object> _value = new GetOnce<object>();
 
         /// <inheritdoc />
-        public string Url => Value as string;
+        public string Url => _url ?? (_url = Parent.Url(Name));
+        private string _url;
 
 
-        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfItem, Parent.Entity, Parent._Services));
+        public IMetadata Metadata => _dynMeta.Get(() => new Metadata(MetadataOfItem, Parent.Entity, _services));
         private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
 
         /// <inheritdoc />
-        public IMetadataOf MetadataOfItem => _itemMd.Get(() =>
+        private IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
                 if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
-                var app = Parent._Services?.BlockOrNull?.Context?.AppState;
+                var app = _services?.BlockOrNull?.Context?.AppState;
                 var md = app?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
 
                 // Optionally add image-metadata recommendations
@@ -65,7 +69,7 @@ namespace ToSic.Sxc.Data
         public ImageDecorator ImageDecoratorOrNull => _imgDec2.Get(() =>
         {
             var decItem = MetadataOfItem?.FirstOrDefaultOfType(ImageDecorator.TypeNameId);
-            return decItem != null ? new ImageDecorator(decItem, Parent._Services.Dimensions) : null;
+            return decItem != null ? new ImageDecorator(decItem, _services.Dimensions) : null;
         });
         private readonly GetOnce<ImageDecorator> _imgDec2 = new GetOnce<ImageDecorator>();
         

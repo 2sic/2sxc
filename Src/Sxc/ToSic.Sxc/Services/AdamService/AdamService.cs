@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Services
         }
 
         /// <inheritdoc />
-        public IFile File(IDynamicField field) => File(field?.Raw as string);
+        public IFile File(IField field) => File(field?.Raw as string);
 
         /// <inheritdoc />
         public IFolder Folder(int id)
@@ -45,6 +45,6 @@ namespace ToSic.Sxc.Services
         }
 
         /// <inheritdoc />
-        public IFolder Folder(IDynamicField field) => _codeRoot?.AsAdam(field.Parent, field.Name);
+        public IFolder Folder(IField field) => _codeRoot?.AsAdam(field.Parent, field.Name);
     }
 }

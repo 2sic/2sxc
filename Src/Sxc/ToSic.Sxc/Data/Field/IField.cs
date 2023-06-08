@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps.Decorators;
-using ToSic.Eav.Metadata;
+﻿using ToSic.Eav.Metadata;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Images;
 
@@ -16,9 +15,12 @@ namespace ToSic.Sxc.Data
     /// </summary>
     /// <remarks>
     /// * Created in v13.10
+    /// * In v16.02 renamed from `IDynamicField` to `IField` as it's not dynamic any more
+    ///     Kind of a breaking change, but shouldn't affect any code out there as the type name is not used
+    /// * In 16.02 changed types of `Value` and `Raw` to `object` - previously `dynamic`
     /// </remarks>
-    [PublicApi]
-    public interface IDynamicField: IHasLink, IHasMetadata
+    [InternalApi_DoNotUse_MayChangeWithoutNotice("This is just FYI so you see how it works; you shouldn't use any of these properties in your code")]
+    public interface IField: IHasLink, IHasMetadata
     {
         /// <summary>
         /// The field name
@@ -28,21 +30,21 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// The parent object of this field
         /// </summary>
-        IDynamicEntity Parent { get; }
+        ITypedItem Parent { get; }
 
         /// <summary>
         /// The raw value of the field, without any modifications.
         /// If the value is `file:22` then Raw will also return `file:22`.
         /// To get the value as a link, use <see cref="Value"/>
         /// </summary>
-        dynamic Raw { get; }
+        object Raw { get; }
 
         /// <summary>
         /// The value of the field with modifications.
         /// For example, `file:22` would be converted to the real link.
         /// To get the raw value, use <see cref="Raw"/>
         /// </summary>
-        dynamic Value { get; }
+        object Value { get; }
 
 
         /// <summary>

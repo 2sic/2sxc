@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Data
         /// <remarks>
         /// History: Added in v13.10
         /// </remarks>
-        IDynamicField Field(string name);
+        IField Field(string name);
 
 
 

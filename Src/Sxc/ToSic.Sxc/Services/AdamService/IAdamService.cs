@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="field"></param>
         /// <returns>The file object or null if not found or something else went wrong.</returns>
-        IFile File(IDynamicField field);
+        IFile File(IField field);
 
 
         /// <summary>
@@ -44,6 +44,6 @@ namespace ToSic.Sxc.Services
         /// </summary>
         /// <param name="field">The Field information object for which to get the folder</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        IFolder Folder(IDynamicField field);
+        IFolder Folder(IField field);
     }
 }
