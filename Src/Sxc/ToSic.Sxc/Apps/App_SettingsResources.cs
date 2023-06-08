@@ -4,6 +4,8 @@ using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Services.CmsService;
+
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 namespace ToSic.Sxc.Apps
@@ -30,7 +32,11 @@ namespace ToSic.Sxc.Apps
             }
         }
 #endif
-        private dynamic MakeDynProperty(IEntity contents) => new DynamicEntity(contents, DynamicEntityServices);
+        private dynamic MakeDynProperty(IEntity contents)
+        {
+            var wrapped = CmsEditDecorator.Wrap(contents, false);
+            return new DynamicEntity(wrapped, DynamicEntityServices);
+        }
 
         internal void AddDynamicEntityServices(DynamicEntity.MyServices services) => _dynEntServices = services;
 
