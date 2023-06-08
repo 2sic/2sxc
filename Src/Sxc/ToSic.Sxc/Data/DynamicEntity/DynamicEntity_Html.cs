@@ -23,11 +23,16 @@ namespace ToSic.Sxc.Data
             
             Protect(noParamOrder, $"{nameof(container)}, {nameof(imageSettings)}, {nameof(toolbar)}, {nameof(debug)}...");
 
+            ThrowIfKitNotAvailable();
+
+            return _Services.Kit.Cms.Html(Field(name), container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
+        }
+
+        private void ThrowIfKitNotAvailable()
+        {
             if (_Services.Kit == null)
                 throw new NotSupportedException(
                     $"Trying to use {nameof(Html)} in a scenario where the {nameof(_Services.Kit)} is not available.");
-
-            return _Services.Kit.Cms.Html(Field(name), container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
         }
     }
 }
