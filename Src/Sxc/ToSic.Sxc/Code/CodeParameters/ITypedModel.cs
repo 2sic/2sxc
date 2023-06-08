@@ -213,6 +213,14 @@ namespace ToSic.Sxc.Code
         IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default);
 
 
+        /// <summary>
+        /// Will get the value being a toolbar as specified.
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">If required (default), throw error if not found. If automatically `false` if a `fallback` is not `null`.</param>
+        /// <returns>typed result if found, `null` if not found</returns>
         IToolbarBuilder Toolbar(string name, string noParamOrder = Protector, IToolbarBuilder fallback = default, bool? required = default);
 
         #endregion

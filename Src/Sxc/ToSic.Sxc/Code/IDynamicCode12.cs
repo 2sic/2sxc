@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Provides an Adam instance for this item and field
         /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
+        /// <param name="item">The entity, often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
         IFolder AsAdam(ICanBeEntity item, string fieldName);
