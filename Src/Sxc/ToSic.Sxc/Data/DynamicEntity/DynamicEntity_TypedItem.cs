@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ToSic.Eav;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
+using static ToSic.Eav.Parameters;
 using static ToSic.Sxc.Code.IDynamicCodeRoot16AsExtensions;
 
 namespace ToSic.Sxc.Data
@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AdamManager.Folder(Entity, name) as IFolder);
+        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AdamManager.Folder(Entity, name));
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         // TODO: MUST handle all edge cases first
@@ -30,19 +30,19 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
 #pragma warning disable CS1066
-        IEnumerable<ITypedItem> ITypedItem.Parents(string type = default, string noParamOrder = Parameters.Protector, string field = default)
+        IEnumerable<ITypedItem> ITypedItem.Parents(string type = default, string noParamOrder = Protector, string field = default)
 #pragma warning restore CS1066
         {
-            Parameters.Protect(noParamOrder, $"{nameof(field)}");
+            Protect(noParamOrder, $"{nameof(field)}");
             return AsTypedList(Parents(type, field), _Services, 3, _Services.LogOrNull);
         }
 
         /// <inheritdoc />
 #pragma warning disable CS1066
-        IEnumerable<ITypedItem> ITypedItem.Children(string field = default, string noParamOrder = Parameters.Protector, string type = default)
+        IEnumerable<ITypedItem> ITypedItem.Children(string field = default, string noParamOrder = Protector, string type = default)
 #pragma warning restore CS1066
         {
-            Parameters.Protect(noParamOrder, $"{nameof(type)}");
+            Protect(noParamOrder, $"{nameof(type)}");
             return AsTypedList(Children(field, type), _Services, 3, _Services.LogOrNull);
         }
 

@@ -15,8 +15,7 @@ namespace ToSic.Sxc.Data
     [PublicApi]
     public partial interface ITypedItem: ICanBeEntity
     {
-        int EntityId { get; }
-        Guid EntityGuid { get; }
+
 
         /// <summary>
         /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.

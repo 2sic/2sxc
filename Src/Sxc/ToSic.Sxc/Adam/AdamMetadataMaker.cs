@@ -2,6 +2,7 @@
 using ToSic.Eav.Context;
 using ToSic.Eav.Metadata;
 using ToSic.Lib.DI;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Adam
@@ -27,13 +28,6 @@ namespace ToSic.Sxc.Adam
         //internal IEnumerable<IEntity> GetMetadata(AppRuntime app, ITarget mdId)
         //    => app.Metadata.Get(mdId.TargetType, mdId.KeyString);
 
-        //internal ITypedMetadata GetTyped(AdamManager manager, string key, string title,
-        //    Action<IMetadataOf> mdInit = null)
-        //{
-        //    var dyn = GetDynamic(manager, key, title, mdInit);
-        //    return new TypedMetadata(dyn, manager.TypedItemHelpers);
-        //}
-
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
@@ -45,10 +39,11 @@ namespace ToSic.Sxc.Adam
         }
 
         private DynamicEntity.MyServices DynamicEntityDependencies(AdamManager manager) =>
-            _myDeps
-            ?? (_myDeps = _deGenerator.New()
-                .Init(null, (manager.AppContext?.Site).SafeLanguagePriorityCodes(), null, manager.CompatibilityLevel, null, () => manager));
-        private DynamicEntity.MyServices _myDeps;
+            _myDeps.Get(() => manager.DynamicEntityServices ?? _deGenerator.New()
+                .Init(null, (manager.AppContext?.Site).SafeLanguagePriorityCodes(), manager.Log,
+                    manager.CompatibilityLevel, null, () => manager));
+
+        private readonly GetOnce<DynamicEntity.MyServices> _myDeps = new GetOnce<DynamicEntity.MyServices>();
 
 
     }

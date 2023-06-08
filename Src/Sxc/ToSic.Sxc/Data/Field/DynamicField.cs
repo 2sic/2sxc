@@ -26,12 +26,12 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         public dynamic Raw => _raw.Get(() => Parent.Get(Name, convertLinks: false));
-        private readonly GetOnce<dynamic> _raw = new GetOnce<dynamic>();
+        private readonly GetOnce<object> _raw = new GetOnce<object>();
 
 
         /// <inheritdoc />
         public dynamic Value => _value.Get(() => Parent.Get(Name, convertLinks: true));
-        private readonly GetOnce<dynamic> _value = new GetOnce<dynamic>();
+        private readonly GetOnce<object> _value = new GetOnce<object>();
 
         /// <inheritdoc />
         public string Url => Value as string;
