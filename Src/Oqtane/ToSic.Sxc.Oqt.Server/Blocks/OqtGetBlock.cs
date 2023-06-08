@@ -80,7 +80,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
                 return wrapLog.Return(new(ctx, () => block)/* block*/, "found block");
 
             Log.A($"Inner Content: {contentBlockId}");
-            var entityBlock = _blkFromEntGen.New().Init(block, contentBlockId);
+            var entityBlock = _blkFromEntGen.New().Init(block, null, contentBlockId);
             return wrapLog.Return(new(entityBlock.Context, () => entityBlock)/* entityBlock*/, "found inner block");
         }
 

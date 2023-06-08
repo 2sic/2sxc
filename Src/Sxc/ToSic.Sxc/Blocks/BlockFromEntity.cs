@@ -28,28 +28,16 @@ namespace ToSic.Sxc.Blocks
         }
         private readonly LazySvc<AppFinder> _appFinderLazy;
 
-        public BlockFromEntity Init(IBlock parent, IEntity blockEntity)
+        public BlockFromEntity Init(IBlock parent, IEntity blockEntity, int contentBlockId = -1)
         {
             var ctx = parent.Context.Clone(Log) as IContextOfBlock;
             base.Init(ctx, parent);
-            var wrapLog = Log.Fn<BlockFromEntity>($"{nameof(blockEntity)}:{blockEntity.EntityId}", timer: true);
-            return wrapLog.Return(CompleteInit(parent, blockEntity));
-        }
+            var l = Log.Fn<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}; {nameof(blockEntity)}:{blockEntity?.EntityId}", timer: true);
+            blockEntity = blockEntity ?? GetBlockEntity(parent, contentBlockId);
 
-        public BlockFromEntity Init(IBlock parent, int contentBlockId)
-        {
-            var ctx = parent.Context.Clone(Log) as IContextOfBlock;
-            base.Init(ctx, parent);
-            var wrapLog = Log.Fn<BlockFromEntity>($"{nameof(contentBlockId)}:{contentBlockId}");
-            var blockEntity = GetBlockEntity(parent, contentBlockId);
-            return wrapLog.Return(CompleteInit(parent, blockEntity));
-        }
-        
-        private BlockFromEntity CompleteInit(IBlock parent, IEntity blockEntity)
-        {
-            var wrapLog = Log.Fn<BlockFromEntity>();
             Entity = blockEntity;
             Parent = parent;
+
             var blockId = LoadBlockDefinition(parent.ZoneId, blockEntity, Log);
             Context.ResetApp(blockId);
 
@@ -58,8 +46,10 @@ namespace ToSic.Sxc.Blocks
             AppId = blockId.AppId;
 
             CompleteInit(parent.BlockBuilder, blockId, -blockEntity.EntityId);
-            return wrapLog.ReturnAsOk(this);
+
+            return l.Return(this);
         }
+
         #endregion
 
 

@@ -61,7 +61,7 @@ namespace ToSic.Sxc.WebApi.ContentBlocks
             var entityId = NewBlock(parentId, field, index, app, guid);
 
             // now return a rendered instance
-            var newContentBlock = _entityBlockGenerator.New().Init(Block, entityId);
+            var newContentBlock = _entityBlockGenerator.New().Init(Block, null, entityId);
             return newContentBlock.BlockBuilder.Run(true, null);
         }
 

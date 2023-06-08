@@ -1,10 +1,10 @@
-﻿using ToSic.Lib.Documentation;
+﻿#if NETFRAMEWORK
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
 {
-    public partial class Block
+    internal partial class ContextData
     {
-#if NETFRAMEWORK
 #pragma warning disable 618
         [System.Obsolete("Old property on this data source, should really not be used at all. Must add warning in v13, and remove ca. v15")]
         [PrivateApi]
@@ -21,6 +21,6 @@ namespace ToSic.Sxc.DataSources
         [System.Obsolete]
         private Compatibility.CacheWithGetContentType _cache;
 #pragma warning restore 618
-#endif
     }
 }
+#endif
