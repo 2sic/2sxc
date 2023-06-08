@@ -162,11 +162,16 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
             return untyped is IFile item ? new List<IFile> { item } : fallback;
         }
 
-        // todo: @2dm incomplete!
-        public IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = null, bool? required = default) 
-            => GetInternal(name, noParamOrder, fallback, required);
+        public IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = default, bool? required = default)
+        {
+            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
+            if (ok) return typed;
 
-        public IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = null, bool? required = default)
+            // Flatten list if necessary
+            return untyped is IEnumerable<IFolder> list ? list.First() : fallback;
+        }
+
+        public IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             if (ok) return typed;
