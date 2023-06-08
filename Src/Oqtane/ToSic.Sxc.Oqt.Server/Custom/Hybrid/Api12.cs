@@ -4,7 +4,6 @@ using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
-using ToSic.Lib;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -15,7 +14,6 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid

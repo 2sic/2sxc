@@ -27,10 +27,6 @@ namespace Custom.Hybrid.Advanced
         public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
 
 
-        /// <inheritdoc />
-        public IFolder AsAdam(ITypedItem item, string fieldName) => _DynCodeRoot.AsAdam(item.Entity, fieldName);
-
-
         internal override void UpdateModel(object data) => _overridePageData = data;
         private object _overridePageData;
 

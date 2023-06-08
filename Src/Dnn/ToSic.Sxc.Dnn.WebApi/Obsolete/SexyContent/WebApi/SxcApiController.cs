@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -162,12 +163,7 @@ namespace ToSic.SexyContent.WebApi
         #region Adam
 
         /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName)
-	        => _DynCodeRoot.AsAdam(AsEntity(entity), fieldName);
-
-        /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
-
+        public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         /// <summary>
         /// Save a file from a stream (usually an upload from the browser) into an adam-field
