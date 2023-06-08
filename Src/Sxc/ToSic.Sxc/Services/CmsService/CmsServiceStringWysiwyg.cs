@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Services.CmsService
                 return l.Return(html, "no inner content; next field is not content-block");
 
             html = ServiceKit.Render
-                .All(Field.Parent as DynamicEntity, field: nextField.Name, merge: html)
+                .All(Field.Parent, field: nextField.Name, merge: html)
                 .ToString();
 
             return l.ReturnAsOk(html);

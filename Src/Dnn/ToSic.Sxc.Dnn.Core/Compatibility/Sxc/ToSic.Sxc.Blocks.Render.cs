@@ -1,4 +1,5 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
@@ -30,31 +31,32 @@ namespace ToSic.Sxc.Blocks
         /// <remarks>
         /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
-        public static IRawHtmlString One(DynamicEntity parent,
+        public static IRawHtmlString One(
+            DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null,
+            ICanBeEntity item = null,
             string field = null,
             Guid? newGuid = null)
             => RenderService(parent).One(parent, noParamOrder, item, data: null, field: field, newGuid: newGuid);
 
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static Services.IRenderService RenderService(DynamicEntity parent)
         {
+            var services = parent._Services;
             // First do version checks -should not be allowed if compatibility is too low
-            if (parent._Services.CompatibilityLevel > Constants.MaxLevelForStaticRender)
+            if (services.CompatibilityLevel > Constants.MaxLevelForStaticRender)
                 throw new Exception(
                     "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
 
 
-            var block = parent._Services.BlockOrNull;
+            var block = services.BlockOrNull;
             Warning13To15(
                 "DeprecatedStaticRender",
                 $"View:{block?.View?.Id}",
                 "https://r.2sxc.org/brc-13-static-render",
-                (log) => LogBlockDetails(block, log));
+                log => LogBlockDetails(block, log));
 
 
-            return parent._Services.RenderService;
+            return services.RenderService;
         }
 
         /// <summary>
@@ -70,7 +72,8 @@ namespace ToSic.Sxc.Blocks
         /// <remarks>
         /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
         /// </remarks>
-        public static IRawHtmlString All(DynamicEntity parent,
+        public static IRawHtmlString All(
+            DynamicEntity parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,

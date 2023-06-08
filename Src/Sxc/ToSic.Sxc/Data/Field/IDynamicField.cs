@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
     /// 
     /// </summary>
     /// <remarks>
-    /// History: Created in v13.10
+    /// * Created in v13.10
     /// </remarks>
     [PublicApi]
     public interface IDynamicField: IHasLink, IHasMetadata
