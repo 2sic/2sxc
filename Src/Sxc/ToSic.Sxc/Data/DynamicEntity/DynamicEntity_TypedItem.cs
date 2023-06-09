@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
@@ -14,6 +16,7 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         [PrivateApi]
         IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AdamManager.Folder(Entity, name));
+        private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         IFile ITypedItem.File(string name)
         {
@@ -22,12 +25,17 @@ namespace ToSic.Sxc.Data
             return file ?? (this as ITypedItem).Folder(name).Files.FirstOrDefault();
         }
 
-        private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
+        [PrivateApi]
+        int ITypedItem.Id => EntityId;
 
-        // TODO: MUST handle all edge cases first
-        // Eg. Hyperlink field should return the file which was selected, not any first file in the folder
-        //public IFile File(string name) => Folder(name).Files.FirstOrDefault();
+        [PrivateApi]
+        Guid ITypedItem.Guid => EntityGuid;
 
+        [PrivateApi]
+        string ITypedItem.Title => EntityTitle;
+
+        [PrivateApi]
+        IContentType ITypedItem.Type => Entity?.Type;
 
         [PrivateApi]
         dynamic ITypedItem.Dyn => this;
@@ -38,6 +46,7 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
 #pragma warning disable CS1066
+        [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Parents(string type = default, string noParamOrder = Protector, string field = default)
 #pragma warning restore CS1066
         {
@@ -47,6 +56,7 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
 #pragma warning disable CS1066
+        [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Children(string field = default, string noParamOrder = Protector, string type = default)
 #pragma warning restore CS1066
         {
@@ -55,6 +65,7 @@ namespace ToSic.Sxc.Data
         }
 
         /// <inheritdoc />
+        [PrivateApi]
         ITypedItem ITypedItem.Child(string field) => (this as ITypedItem).Children(field).FirstOrDefault();
     }
 }
