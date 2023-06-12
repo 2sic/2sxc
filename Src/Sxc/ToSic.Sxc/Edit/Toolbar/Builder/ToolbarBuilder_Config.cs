@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -15,7 +16,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? force = default,
             string group = default,
             ICanBeEntity root = default,
-            bool? autoDemoMode = default
+            bool? autoDemoMode = default,
+            string demoMessage = default
         )
         {
             Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
@@ -32,7 +34,8 @@ namespace ToSic.Sxc.Edit.Toolbar
                 force: force, 
                 group: group,
                 root: root,
-                autoDemoMode: autoDemoMode
+                autoDemoMode: autoDemoMode,
+                demoMessage: demoMessage
             );
             return clone;
         }
@@ -47,7 +50,12 @@ namespace ToSic.Sxc.Edit.Toolbar
         }
 
         public IToolbarBuilder For(object target) => With(target: target);
-        public IToolbarBuilder DetectDemo(ICanBeEntity root) => With(root: root);
+
+        public IToolbarBuilder DetectDemo(
+            ICanBeEntity root,
+            string noParamOrder = Protector,
+            string message = default)
+            => With(root: root, demoMessage: message);
 
         public IToolbarBuilder Condition(bool condition) => With(condition: condition);
 

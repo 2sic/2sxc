@@ -13,7 +13,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             bool? force = null,
             string group = null,
             ICanBeEntity root = default,
-            bool? autoDemoMode = default
+            bool? autoDemoMode = default,
+            string demoMessage = default
         )
         {
             Mode = mode ?? original?.Mode;
@@ -23,6 +24,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             Group = group ?? original?.Group;
             Root = root ?? original?.Root;
             AutoDemoMode = autoDemoMode ?? original?.AutoDemoMode ?? default;
+            DemoMessage = demoMessage ?? original?.DemoMessage;
         }
 
         public readonly string Mode = null;
@@ -37,6 +39,8 @@ namespace ToSic.Sxc.Edit.Toolbar
         public readonly string Group = null;
 
         public readonly ICanBeEntity Root = default;
+
+        public readonly string DemoMessage = default;
 
         public readonly bool AutoDemoMode = default;
 
