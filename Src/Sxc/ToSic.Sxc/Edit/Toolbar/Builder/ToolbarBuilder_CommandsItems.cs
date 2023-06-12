@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
         }
 
-        internal const string BetaEditUiFieldsParamName = "fields";
+        internal const string BetaEditUiFieldsParamName = "uifields";
 
         public IToolbarBuilder New(
             object target = null,
