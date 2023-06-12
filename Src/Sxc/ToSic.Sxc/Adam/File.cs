@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         [JsonIgnore]
         public IMetadata Metadata => _metadata 
-            ?? (_metadata = AdamManager.MetadataMaker.GetDynamic(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
+            ?? (_metadata = AdamManager.MetadataMaker.Get(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
         private IMetadata _metadata;
 
         /// <summary>

@@ -3,6 +3,7 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.AsConverter;
 
 namespace ToSic.Sxc.Code
 {
@@ -22,5 +23,12 @@ namespace ToSic.Sxc.Code
 
         new DynamicStack Resources { get; }
         new DynamicStack Settings { get; }
+
+        #region AsConverter (internal)
+
+        [PrivateApi("internal use only")]
+        AsConverterService AsC { get; }
+
+        #endregion
     }
 }

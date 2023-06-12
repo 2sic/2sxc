@@ -9,7 +9,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -200,6 +199,6 @@ namespace ToSic.Sxc.Code
         ICmsContext CmsContext { get; }
 
         #endregion
-        
+
     }
 }

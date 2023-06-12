@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.Edit.EditService;
 using ToSic.Sxc.Edit.Toolbar;
 using ToSic.Sxc.Images;
@@ -76,6 +77,9 @@ namespace ToSic.Sxc.Startup
 
             // v15 CustomDataSources - just the dependencies needed
             services.TryAddTransient<DataSource16.MyServices>();
+
+            // v16 AsConverter
+            services.TryAddTransient<AsConverterService>();
 
             return services;
         }

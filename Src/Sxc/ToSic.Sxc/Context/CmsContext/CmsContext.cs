@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Context
         //public void ConnectToRoot(IDynamicCodeRoot codeRoot) => CodeRoot = codeRoot;
         //protected IDynamicCodeRoot CodeRoot;
 
-        internal DynamicEntity.MyServices DEDeps => (_DynCodeRoot as DynamicCodeRoot)?.DynamicEntityServices;
+        internal DynamicEntity.MyServices DEDeps => _DynCodeRoot?.AsC.DynamicEntityServices;
 
         private AppState SiteAppState => _siteAppState.Get(() => _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log));
         private readonly GetOnce<AppState> _siteAppState = new GetOnce<AppState>();

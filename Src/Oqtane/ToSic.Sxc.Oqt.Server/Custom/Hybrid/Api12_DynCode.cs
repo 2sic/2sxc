@@ -42,7 +42,7 @@ namespace Custom.Hybrid
         #region AsDynamic implementations
         /// <inheritdoc/>
         [NonAction]
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsC.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc />
         [NonAction]

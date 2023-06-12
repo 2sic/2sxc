@@ -5,30 +5,28 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data;
 
-namespace ToSic.Sxc.Code
+namespace ToSic.Sxc.Data.AsConverter
 {
-    // ReSharper disable once InconsistentNaming
-    public static class IDynamicCodeRoot16AsExtensions
+    public partial class AsConverterService
     {
         public const int MaxRecursions = 3;
 
         #region AsTyped Implementations
 
-        
-        public static ITypedItem AsTyped(this IDynamicCodeRoot dynCode, object target)
-            => AsTyped(target, ((DynamicCodeRoot)dynCode).DynamicEntityServices, MaxRecursions, dynCode.Log);
 
-        private static ITypedItem AsTyped(object target, DynamicEntity.MyServices services, int recursions, ILog log)
+        public ITypedItem AsTyped(object target)
+            => AsTyped(target, MaxRecursions);
+
+        private ITypedItem AsTyped(object target, int recursions)
         {
-            var l = log.Fn<ITypedItem>();
+            var l = Log.Fn<ITypedItem>();
             if (recursions <= 0)
                 throw l.Done(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
 
             ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
-                : l.Return(new DynamicEntity(e, services), typeName);
+                : l.Return(new DynamicEntity(e, DynamicEntityServices), typeName);
 
             switch (target)
             {
@@ -54,19 +52,19 @@ namespace ToSic.Sxc.Code
                     var enumFirst = enumerable.Cast<object>().FirstOrDefault();
                     if (enumFirst is null) return l.ReturnNull($"{nameof(IEnumerable)} with null object");
                     // retry conversion
-                    return l.Return(AsTyped(enumFirst, services, recursions - 1, log));
+                    return l.Return(AsTyped(enumFirst, recursions - 1));
                 default:
                     throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
             }
 
         }
 
-        public static IEnumerable<ITypedItem> AsTypedList(this IDynamicCodeRoot dynCode, object list) 
-            => AsTypedList(list, ((DynamicCodeRoot)dynCode).DynamicEntityServices, MaxRecursions, dynCode.Log);
+        public IEnumerable<ITypedItem> AsTypedList(object list)
+            => AsTypedList(list, MaxRecursions);
 
-        internal static IEnumerable<ITypedItem> AsTypedList(object list, DynamicEntity.MyServices services, int recursions, ILog log)
+        internal IEnumerable<ITypedItem> AsTypedList(object list, int recursions)
         {
-            var l = log.Fn<IEnumerable<ITypedItem>>();
+            var l = Log.Fn<IEnumerable<ITypedItem>>();
             if (recursions <= 0)
                 throw l.Done(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
 
@@ -77,27 +75,27 @@ namespace ToSic.Sxc.Code
                 case IEnumerable<ITypedItem> alreadyOk:
                     return l.Return(alreadyOk, "already matches type");
                 case IDataSource dsEntities:
-                    return l.Return(AsTypedList(dsEntities.List, services, recursions -1, log), "DataSource - convert list");
+                    return l.Return(AsTypedList(dsEntities.List, recursions - 1), "DataSource - convert list");
                 case IDataStream dataStream:
-                    return l.Return(AsTypedList(dataStream.List, services, recursions - 1, log), "DataSource - convert list");
+                    return l.Return(AsTypedList(dataStream.List, recursions - 1), "DataSource - convert list");
                 case IEnumerable<IEntity> iEntities:
-                    return l.Return(iEntities.Select(e => AsTyped(e, services, MaxRecursions, log)), "IEnum<IEntity>");
+                    return l.Return(iEntities.Select(e => AsTyped(e, MaxRecursions)), "IEnum<IEntity>");
                 //case IEnumerable<IDynamicEntity> dynIDynEnt:
                 //    return l.Return(dynIDynEnt.Select(e => AsTyped(e, services, MaxRecursions, log)), "IEnum<DynEnt>");
                 case IEnumerable<dynamic> dynEntities:
-                    return l.Return(dynEntities.Select(e => AsTyped(e as object, services, MaxRecursions, log)), "IEnum<dynamic>");
+                    return l.Return(dynEntities.Select(e => AsTyped(e as object, MaxRecursions)), "IEnum<dynamic>");
                 // Variations of single items - should be converted to list
                 case IEntity _:
                 case IDynamicEntity _:
                 case ITypedItem _:
                 case ICanBeEntity _:
-                    var converted = AsTyped(list, services, MaxRecursions, log);
+                    var converted = AsTyped(list, MaxRecursions);
                     return converted != null
                         ? l.Return(new List<ITypedItem> { converted }, "single item to list")
                         : l.Return(new List<ITypedItem>(), "typed but converted to null; empty list");
                 // Check for IEnumerable but make sure it's not a string
                 case IEnumerable asEnumerable when !(asEnumerable is string):
-                    return l.Return(asEnumerable.Cast<object>().Select(e => AsTyped(e, services, MaxRecursions, log)), "IEnumerable");
+                    return l.Return(asEnumerable.Cast<object>().Select(e => AsTyped(e, MaxRecursions)), "IEnumerable");
                 default:
                     throw l.Done(new ArgumentException($"Type '{list.GetType()}' cannot be converted to {nameof(IEnumerable<ITypedItem>)}"));
             }

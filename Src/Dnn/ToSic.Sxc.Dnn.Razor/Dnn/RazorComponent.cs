@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Dnn
         #region AsDynamic in many variations
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc/>
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);

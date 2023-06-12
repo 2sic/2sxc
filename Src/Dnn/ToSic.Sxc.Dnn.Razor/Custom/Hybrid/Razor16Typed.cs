@@ -18,21 +18,20 @@ namespace Custom.Hybrid
     /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
     /// </remarks>
     [WorkInProgressApi("WIP 16.02 - not final")]
-    public abstract class Razor16Strict: Razor14<dynamic, ServiceKit14> 
- // public abstract class Razor16Typed : Razor14<dynamic, ServiceKit14>
+    public abstract class Razor16Typed: Razor14<dynamic, ServiceKit14> 
     {
-        public new ITypedObject Settings => _DynCodeRoot.Settings;
+        public new ITypedThing Settings => _DynCodeRoot.Settings;
 
-        public new ITypedObject Resources => _DynCodeRoot.Resources;
-
-        [PrivateApi("Hide as it's nothing that should be used")]
-        public new object Content => throw new NotSupportedException($"{nameof(Content)} isn't supported in v16 strict. Use Data.MyContent instead.");
+        public new ITypedThing Resources => _DynCodeRoot.Resources;
 
         [PrivateApi("Hide as it's nothing that should be used")]
-        public new object Header => throw new NotSupportedException($"{nameof(Header)} isn't supported in v16 strict. Use Data.MyHeader instead.");
+        public new object Content => throw new NotSupportedException($"{nameof(Content)} isn't supported in v16 typed. Use Data.MyContent instead.");
 
         [PrivateApi("Hide as it's nothing that should be used")]
-        public new object DynamicModel => throw new NotSupportedException($"{nameof(Header)} isn't supported in v16 strict. Use TypedModel instead.");
+        public new object Header => throw new NotSupportedException($"{nameof(Header)} isn't supported in v16 typed. Use Data.MyHeader instead.");
+
+        [PrivateApi("Hide as it's nothing that should be used")]
+        public new object DynamicModel => throw new NotSupportedException($"{nameof(Header)} isn't supported in v16 typed. Use TypedModel instead.");
 
         //public ITypedItem MyItem => AsTyped(Data.MyContent);
 
@@ -43,9 +42,9 @@ namespace Custom.Hybrid
 
         public new IAppTyped App => (IAppTyped)base.App;
 
-        public ITypedObject Merge(params object[] items)
+        public ITypedThing Merge(params object[] items)
         {
-            var mergedDyn = ((DynamicCodeRoot)_DynCodeRoot).MergeTyped(items);
+            var mergedDyn = _DynCodeRoot.AsC.MergeTyped(items);
             return mergedDyn;
         }
 
@@ -55,7 +54,7 @@ namespace Custom.Hybrid
         /// <param name="json"></param>
         /// <param name="fallback"></param>
         /// <returns></returns>
-        public ITypedObject AsTyped(string json, string fallback = default) => base.AsDynamic(json, fallback);
+        public ITypedThing AsThing(string json, string fallback = default) => base.AsDynamic(json, fallback);
 
 
     }

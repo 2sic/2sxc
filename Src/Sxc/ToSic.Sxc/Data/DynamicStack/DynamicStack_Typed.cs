@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data
 {
-    public partial class DynamicStack: ITypedObject
+    public partial class DynamicStack: ITypedThing
     {
         /// <summary>
         /// This error is used a lot, when accessing primary properties of ITypedItem, since it's simply not supported.

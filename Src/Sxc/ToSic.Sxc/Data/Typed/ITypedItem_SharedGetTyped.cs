@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITypedItem: ITypedObject
+    public partial interface ITypedItem: ITypedThing
     {
         //// Important: Shared definitions
         //// These properties are shared: ITypedEntity, IDynamicEntity, IDynamicEntityBase, IDynamicStack

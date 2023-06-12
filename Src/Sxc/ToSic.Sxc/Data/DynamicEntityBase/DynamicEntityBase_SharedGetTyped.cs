@@ -6,51 +6,65 @@ using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract partial class DynamicEntityBase: ITypedObject
+    public abstract partial class DynamicEntityBase: ITypedThing
     {
         [PrivateApi]
-        IRawHtmlString ITypedObject.Attribute(string name, string noParamOrder = Eav.Parameters.Protector, string attribute = default)
+        IRawHtmlString ITypedThing.Attribute(string name, string noParamOrder = Eav.Parameters.Protector, string attribute = default)
         {
             if (attribute != default)
-                return Tag.Attr(attribute, (this as ITypedObject).String(name));
+                return Tag.Attr(attribute, (this as ITypedThing).String(name));
 
-            var value = (this as ITypedObject).String(name);
+            var value = (this as ITypedThing).String(name);
             return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
         }
 
         [PrivateApi]
-        dynamic ITypedObject.Dyn => this;
+        dynamic ITypedThing.Dyn => this;
 
 
         [PrivateApi]
-        DateTime ITypedObject.DateTime(string name, DateTime fallback = default) => Get(name, fallback: fallback);
+        DateTime ITypedThing.DateTime(string name, DateTime fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        string ITypedObject.String(string name, string fallback = default) => Get(name, fallback: fallback);
+        string ITypedThing.String(string name, string fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        int ITypedObject.Int(string name, int fallback = default) => Get(name, fallback: fallback);
+        int ITypedThing.Int(string name, int fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        bool ITypedObject.Bool(string name, bool fallback = default) => Get(name, fallback: fallback);
+        bool ITypedThing.Bool(string name, bool fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        long ITypedObject.Long(string name, long fallback = default) => Get(name, fallback: fallback);
+        long ITypedThing.Long(string name, long fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        float ITypedObject.Float(string name, float fallback = default) => Get(name, fallback: fallback);
+        float ITypedThing.Float(string name, float fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        decimal ITypedObject.Decimal(string name, decimal fallback = default) => Get(name, fallback: fallback);
+        decimal ITypedThing.Decimal(string name, decimal fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        double ITypedObject.Double(string name, double fallback = default) => Get(name, fallback: fallback);
+        double ITypedThing.Double(string name, double fallback = default) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        string ITypedObject.Url(string name, string fallback = default)
+        string ITypedThing.Url(string name, string fallback = default)
         {
             var url = Get(name, convertLinks: true) as string;
             return Tags.SafeUrl(url).ToString();
         }
+
+        #region Thing
+
+        //[PrivateApi]
+        //ITypedThing Thing(string name, object fallback = default)
+        //{
+        //    var inner = Get(name, fallback: fallback);
+            
+        //    if (inner is null) return null;
+        //    if (inner is string innerStr)
+        //        return DynamicJacket.AsDynamicJacket(innerStr, fallback as string);
+        //}
+
+        #endregion
     }
 }

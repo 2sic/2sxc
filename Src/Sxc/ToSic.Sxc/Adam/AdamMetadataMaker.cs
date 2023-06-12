@@ -12,12 +12,13 @@ namespace ToSic.Sxc.Adam
     /// </summary>
     public class AdamMetadataMaker
     {
-        public AdamMetadataMaker(Generator<DynamicEntity.MyServices> deGenerator)
-        {
-            _deGenerator = deGenerator;
-        }
+        //public AdamMetadataMaker(Generator<DynamicEntity.MyServices> deGenerator)
+        //{
+        //    _deGenerator = deGenerator;
+        //}
+        //private readonly Generator<DynamicEntity.MyServices> _deGenerator;
 
-        private readonly Generator<DynamicEntity.MyServices> _deGenerator;
+
 
         ///// <summary>
         ///// Find the first metadata entity for this file/folder
@@ -31,19 +32,22 @@ namespace ToSic.Sxc.Adam
         /// <summary>
         /// Get the first metadata entity of an item - or return a fake one instead
         /// </summary>
-        internal IMetadata GetDynamic(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
+        internal IMetadata Get(AdamManager manager, string key, string title, Action<IMetadataOf> mdInit = null)
         {
             var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, manager.AppRuntime.AppState);
             mdInit?.Invoke(mdOf);
-            return new Metadata(mdOf, null, DynamicEntityDependencies(manager));
+            return new Metadata(mdOf, null, manager.AsC.DynamicEntityServices);// DynamicEntityDependencies(manager));
         }
 
-        private DynamicEntity.MyServices DynamicEntityDependencies(AdamManager manager) =>
-            _myDeps.Get(() => manager.DynamicEntityServices ?? _deGenerator.New()
-                .Init(null, (manager.AppContext?.Site).SafeLanguagePriorityCodes(), manager.Log,
-                    manager.CompatibilityLevel, null, () => manager));
+        //private DynamicEntity.MyServices DynamicEntityDependencies(AdamManager manager) =>
+        //    _myDeps.Get(() =>
+        //    {
+        //        return manager.AsC.DynamicEntityServices ?? _deGenerator.New()
+        //            .Init(null, (manager.AppContext?.Site).SafeLanguagePriorityCodes(), manager.Log,
+        //                manager.CompatibilityLevel, null, () => manager);
+        //    });
 
-        private readonly GetOnce<DynamicEntity.MyServices> _myDeps = new GetOnce<DynamicEntity.MyServices>();
+        //private readonly GetOnce<DynamicEntity.MyServices> _myDeps = new GetOnce<DynamicEntity.MyServices>();
 
 
     }

@@ -1,17 +1,16 @@
 ﻿using System;
 using ToSic.Eav.Apps;
-using ToSic.Eav.Context;
 using ToSic.Eav.Services;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
@@ -38,37 +37,41 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public class MyServices: MyServicesBase
         {
+            public AsConverterService AsConverter => _asConverter.Value;
+            private readonly LazySvc<AsConverterService> _asConverter;
             public LazySvc<DynamicCodeDataSources> DataSources { get; }
             public LazySvc<IDataSourcesService> DataSourceFactory { get; }
             public LazySvc<IConvertService> ConvertService { get; }
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
-            public LazySvc<DynamicEntity.MyServices> DynamicEntityDependencies { get; }
-            public LazySvc<IContextOfApp> ContextOfApp { get; }
-            public LazySvc<AdamManager> AdamManager { get; }
+            //public LazySvc<DynamicEntity.MyServices> DynamicEntityDependencies { get; }
+            //public LazySvc<IContextOfApp> ContextOfApp { get; }
+            //public LazySvc<AdamManager> AdamManager { get; }
 
             public MyServices(
                 IServiceProvider serviceProvider,
                 LazySvc<CodeCompiler> codeCompilerLazy,
                 AppSettingsStack settingsStack,
-                LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
-                LazySvc<IContextOfApp> contextOfApp,
-                LazySvc<AdamManager> adamManager,
+                //LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
+                //LazySvc<IContextOfApp> contextOfApp,
+                //LazySvc<AdamManager> adamManager,
                 LazySvc<IConvertService> convertService,
                 LazySvc<IDataSourcesService> dataSourceFactory,
-                LazySvc<DynamicCodeDataSources> dataSources)
+                LazySvc<DynamicCodeDataSources> dataSources,
+                LazySvc<AsConverterService> asConverter)
             {
                 ConnectServices(
                     ServiceProvider = serviceProvider,
                     CodeCompilerLazy = codeCompilerLazy,
                     SettingsStack = settingsStack,
-                    DynamicEntityDependencies = dynamicEntityDependencies,
-                    ContextOfApp = contextOfApp,
-                    AdamManager = adamManager,
+                    //DynamicEntityDependencies = dynamicEntityDependencies,
+                    //ContextOfApp = contextOfApp,
+                    //AdamManager = adamManager,
                     ConvertService = convertService,
                     DataSourceFactory = dataSourceFactory,
-                    DataSources = dataSources
+                    DataSources = dataSources,
+                    _asConverter = asConverter
                 );
             }
 

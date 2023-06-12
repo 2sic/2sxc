@@ -40,10 +40,10 @@ namespace Custom.Hybrid.Advanced
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         /// <inheritdoc />
-        public ITypedItem AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTyped(target);
+        public ITypedItem AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsTyped(target);
 
         /// <inheritdoc />
-        public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
+        public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsTypedList(list);
 
     }
 }
