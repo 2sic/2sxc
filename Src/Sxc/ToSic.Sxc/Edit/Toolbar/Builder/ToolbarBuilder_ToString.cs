@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Data;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Edit.Toolbar
@@ -43,20 +46,29 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             // Implement Demo-Mode with info-button only
             var rules = new List<ToolbarRuleBase>();
-            void AddRuleIfFound<T>() where T : ToolbarRuleBase
+            bool AddRuleIfFound<T>(Func<T, T> tweak = null) where T : ToolbarRuleBase
             {
                 var possibleParams = FindRule<T>();
-                if (possibleParams != null) rules.Add(possibleParams);
+                if (possibleParams == null) return false;
+                var tweaked = tweak?.Invoke(possibleParams);
+                rules.Add(tweaked ?? possibleParams);
+                return true;
             }
 
-            AddRuleIfFound<ToolbarRuleToolbar>();
+            if (!AddRuleIfFound<ToolbarRuleToolbar>(t => new ToolbarRuleToolbar(Empty, t.Ui)))
+                rules.Add(new ToolbarRuleToolbar(Empty));
             AddRuleIfFound<ToolbarRuleForParams>();
             AddRuleIfFound<ToolbarRuleSettings>();
                 
             var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
-            tlb = tlb.Info(tweak: b => b.Note(_DynCodeRoot.Resources.Get<string>("Toolbar.IsDemoSubItem")));
+            var keyOrMessage = _configuration?.DemoMessage;
+            var message = keyOrMessage == null
+                ? _DynCodeRoot.Resources.Get<string>($"{ConfigurationConstants.RootNameResources}.Toolbar.IsDemoSubItem")
+                : keyOrMessage.StartsWith($"{ConfigurationConstants.RootNameResources}.")
+                    ? _DynCodeRoot.Resources.Get<string>(keyOrMessage)
+                    : keyOrMessage;
+            tlb = tlb.Info(tweak: b => b.Note(message));
             return ((ToolbarBuilder)tlb).Render();
-
         }
 
         private bool ShouldUseDemoMode()
