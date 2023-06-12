@@ -35,10 +35,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         new string EntityTitle { get; }
 
-        /// <summary>
-        /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
-        /// </summary>
-        [PrivateApi]
-        new string EntityType { get; }
+        ///// <summary>
+        ///// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
+        ///// </summary>
+        //[PrivateApi]
+        //new string EntityType { get; }
     }
 }

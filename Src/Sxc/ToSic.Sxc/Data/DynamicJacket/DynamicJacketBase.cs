@@ -2,13 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Text.Json.Nodes;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Debug;
 using ToSic.Eav.Data.PropertyLookup;
-using ToSic.Lib.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
+using static System.StringComparison;
 
 namespace ToSic.Sxc.Data
 {
@@ -16,26 +15,15 @@ namespace ToSic.Sxc.Data
     /// Base class for DynamicJackets. You won't use this, just included in the docs. <br/>
     /// To check if something is an array or an object, use "IsArray"
     /// </summary>
-    /// <typeparam name="T">The underlying type, either a JObject or a JToken</typeparam>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("just use the objects from AsDynamic, don't use this directly")]
-    public abstract class DynamicJacketBase<T>: DynamicObject, IReadOnlyList<object>, IWrapper<T>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
+    public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
     {
-        [PrivateApi]
-        protected T UnwrappedContents;
-        public T GetContents() => UnwrappedContents;
 
         /// <summary>
         /// Check if it's an array.
         /// </summary>
         /// <returns>True if an array/list, false if an object.</returns>
         public abstract bool IsList { get; }
-
-        /// <summary>
-        /// Primary constructor expecting a internal data object
-        /// </summary>
-        /// <param name="originalData">the original data we're wrapping</param>
-        [PrivateApi]
-        protected DynamicJacketBase(T originalData) => UnwrappedContents = originalData;
 
         /// <summary>
         /// Enable enumeration. When going through objects (properties) it will return the keys, not the values. <br/>
@@ -50,21 +38,13 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        /// <summary>
-        /// If the object is just output, it should show the underlying json string
-        /// </summary>
-        /// <returns>the inner json string</returns>
-        public override string ToString() => UnwrappedContents.ToString();
-
         /// <inheritdoc />
-        public dynamic Get(string name) => FindValueOrNull(name, StringComparison.InvariantCultureIgnoreCase, null);
+        public dynamic Get(string name) => FindValueOrNull(name, InvariantCultureIgnoreCase, null);
 
         /// <summary>
         /// Count array items or object properties
         /// </summary>
-        public int Count => UnwrappedContents is IList<JsonNode> jArray
-            ? jArray.Count
-            : UnwrappedContents is JsonObject jObject ? jObject.Count : 0;
+        public abstract int Count { get; }
 
         /// <summary>
         /// Not yet implemented accessor - must be implemented by the inheriting class.
@@ -93,7 +73,7 @@ namespace ToSic.Sxc.Data
         public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
             path = path.KeepOrNew().Add("DynJacket", specs.Field);
-            var result = FindValueOrNull(specs.Field, StringComparison.InvariantCultureIgnoreCase, specs.LogOrNull);
+            var result = FindValueOrNull(specs.Field, InvariantCultureIgnoreCase, specs.LogOrNull);
             return new PropReqResult(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
         }
 

@@ -197,6 +197,12 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
             // Try to convert, in case it's an IEntity or something; could also result in error
             return ok ? typed : _codeRoot.AsTyped(untyped);
         }
+        public ITypedObject Typed(string name, string noParamOrder = Protector, ITypedObject fallback = default, bool? required = default)
+        {
+            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
+            // Try to convert, in case it's an IEntity or something; could also result in error
+            return ok ? typed : _codeRoot.AsTyped(untyped);
+        }
 
         public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
         {

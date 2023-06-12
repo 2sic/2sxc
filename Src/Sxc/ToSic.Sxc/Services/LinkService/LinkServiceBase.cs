@@ -132,7 +132,7 @@ namespace ToSic.Sxc.Services
             )
         {
             // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(width)},{nameof(height)}," +
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(width)},{nameof(height)}," +
                 $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
 
             // If params were given, ensure it can be used as string, as it could also be a params-object

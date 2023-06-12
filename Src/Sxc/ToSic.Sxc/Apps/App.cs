@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Apps
             Generator<AppConfigDelegate> appConfigDelegate) 
             : base(services, "App.SxcApp")
         {
-            this.ConnectServices(
+            ConnectServices(
                 _globalPaths = globalPaths,
                 _appPathsLazy = appPathsLazy,
                 _dynEntSvcLazy = dynamicEntityDependenciesLazy,

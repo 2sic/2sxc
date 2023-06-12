@@ -41,8 +41,7 @@ namespace ToSic.Sxc.Images
             AdvancedSettings advanced = default
         ) => Log.Func(l =>
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(BuildResizeSettings)}",
-                $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(settings)},{nameof(factor)},{nameof(width)}, ...");
 
             // check common mistakes
             if (aspectRatio != null && height != null)
