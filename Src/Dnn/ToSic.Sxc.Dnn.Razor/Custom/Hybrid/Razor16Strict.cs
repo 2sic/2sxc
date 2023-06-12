@@ -48,6 +48,16 @@ namespace Custom.Hybrid
             var mergedDyn = ((DynamicCodeRoot)_DynCodeRoot).MergeTyped(items);
             return mergedDyn;
         }
+
+        /// <summary>
+        /// Convert a json ... TODO - different from AsTyped(IEntity...)
+        /// </summary>
+        /// <param name="json"></param>
+        /// <param name="fallback"></param>
+        /// <returns></returns>
+        public ITypedObject AsTyped(string json, string fallback = default) => base.AsDynamic(json, fallback);
+
+
     }
 
 

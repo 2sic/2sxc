@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Data
         /// <remarks>
         /// Added in 2sxc 11.01
         /// </remarks>
-        public string Field { get; set; }
+        public string Field { get; }
 
         /// <summary>
         /// The parent item which has the list containing this item.

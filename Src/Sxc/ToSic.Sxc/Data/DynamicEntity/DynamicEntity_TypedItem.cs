@@ -58,7 +58,13 @@ namespace ToSic.Sxc.Data
 #pragma warning restore CS1066
         {
             Protect(noParamOrder, $"{nameof(type)}");
-            return AsTypedList(Children(field, type), _Services, 3, _Services.LogOrNull);
+            var dynChildren = Children(field, type);
+            var list = AsTypedList(dynChildren, _Services, 3, _Services.LogOrNull).ToList();
+            if (list.Any()) return list;
+
+            // Generate a marker/placeholder to remember what field this is etc.
+            var fakeEntity = PlaceHolder(Entity.AppId, Entity, field);
+            return new ListTypedItems(list, fakeEntity);
         }
 
         /// <inheritdoc />

@@ -1,8 +1,7 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
-using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -64,7 +63,7 @@ namespace ToSic.Sxc.Edit.EditService
             else
             {
                 // ensure that internally we always process it as an entity
-                var eTarget = target as IEntity ?? (target as IDynamicEntity)?.Entity;
+                var eTarget = target as IEntity ?? (target as ICanBeEntity)?.Entity;
                 if (target != null && eTarget == null)
                     l.W("Creating toolbar - it seems the object provided was neither null, IEntity nor DynamicEntity");
                 if (toolbar is IToolbarBuilder tlbBuilder2)
