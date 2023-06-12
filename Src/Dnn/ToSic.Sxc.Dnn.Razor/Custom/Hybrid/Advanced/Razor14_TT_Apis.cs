@@ -49,17 +49,17 @@ namespace Custom.Hybrid.Advanced
         #region AsCms and AsTyped (new v16)
 
         /// <inheritdoc />
-        public ITypedItem AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTyped(target);
+        public ITypedItem AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsTyped(target);
 
         /// <inheritdoc />
-        public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsTypedList(list);
+        public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsTypedList(list);
 
         #endregion
 
         #region AsDynamic in many variations
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsDynamicFromJson(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc/>
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);

@@ -6,7 +6,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Adam;
 using static ToSic.Eav.Parameters;
-using static ToSic.Sxc.Code.IDynamicCodeRoot16AsExtensions;
 
 namespace ToSic.Sxc.Data
 {
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AdamManager.Folder(Entity, name));
+        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name)); // .AdamManager.Folder(Entity, name));
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         IFile ITypedItem.File(string name)
@@ -48,7 +47,7 @@ namespace ToSic.Sxc.Data
 #pragma warning restore CS1066
         {
             Protect(noParamOrder, $"{nameof(field)}");
-            return AsTypedList(Parents(type, field), _Services, 3, _Services.LogOrNull);
+            return _Services.AsC.AsTypedList(Parents(type, field));
         }
 
         /// <inheritdoc />
@@ -59,7 +58,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(type)}");
             var dynChildren = Children(field, type);
-            var list = AsTypedList(dynChildren, _Services, 3, _Services.LogOrNull).ToList();
+            var list = _Services.AsC.AsTypedList(dynChildren).ToList();
             if (list.Any()) return list;
 
             // Generate a marker/placeholder to remember what field this is etc.

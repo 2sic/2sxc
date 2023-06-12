@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code
         public DynamicStack Resources => _resources.Get(() =>
         {
             var appState = ((App)_DynCodeRoot.App).AppState;
-            return new DynamicStack(RootNameResources, DynamicEntityServices,
+            return new DynamicStack(RootNameResources, AsC.DynamicEntityServices,
                 Services.SettingsStack.Init(appState)
                     .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
         });
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Code
         public DynamicStack Settings => _settings.Get(() =>
         {
             var appState = ((App)_DynCodeRoot.App).AppState;
-            return new DynamicStack(RootNameSettings, DynamicEntityServices,
+            return new DynamicStack(RootNameSettings, AsC.DynamicEntityServices,
                 Services.SettingsStack.Init(appState)
                     .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
 

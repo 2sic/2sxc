@@ -4,7 +4,7 @@ using ToSic.Lib.Documentation;
 namespace ToSic.Sxc.Data
 {
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.02")]
-    public partial interface ITypedObject
+    public partial interface ITypedThing
     {
         /// <summary>
         /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
@@ -117,5 +117,11 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
         string Url(string name, string fallback = default);
+
+        #region Thing
+
+        
+
+        #endregion
     }
 }

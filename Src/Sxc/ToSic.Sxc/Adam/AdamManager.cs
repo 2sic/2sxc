@@ -9,6 +9,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.AsConverter;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -23,19 +24,29 @@ namespace ToSic.Sxc.Adam
     /// </remarks>
     public abstract class AdamManager: ServiceBase, ICompatibilityLevel
     {
+        private readonly LazySvc<AsConverterService> _asConverter;
+
         #region Constructor for inheritance
 
-        protected AdamManager(LazySvc<AppRuntime> appRuntimeLazy, LazySvc<AdamMetadataMaker> metadataMakerLazy, AdamConfiguration adamConfiguration, string logName) : base(logName ?? "Adm.Managr")
+        protected AdamManager(
+            LazySvc<AppRuntime> appRuntimeLazy,
+            LazySvc<AdamMetadataMaker> metadataMakerLazy,
+            LazySvc<AsConverterService> asConverter,
+            AdamConfiguration adamConfiguration,
+            string logName) : base(logName ?? "Adm.Managr")
         {
             ConnectServices(
                 _appRuntimeLazy = appRuntimeLazy,
                 _metadataMakerLazy = metadataMakerLazy,
-                _adamConfiguration = adamConfiguration
+                _adamConfiguration = adamConfiguration,
+                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(AppContext?.Site, CompatibilityLevel, this))
             );
         }
         
-        public AdamMetadataMaker MetadataMaker => _metadataMakerLazy.Value;
+        public AdamMetadataMaker MetadataMaker => _adamMetadataMaker ?? (_adamMetadataMaker = _metadataMakerLazy.Value);
+        private AdamMetadataMaker _adamMetadataMaker;
         private readonly LazySvc<AdamMetadataMaker> _metadataMakerLazy;
+
         private readonly AdamConfiguration _adamConfiguration;
 
         public AppRuntime AppRuntime => _appRuntimeLazy.Value;
@@ -45,7 +56,7 @@ namespace ToSic.Sxc.Adam
 
         #region Init
 
-        public virtual AdamManager Init(IContextOfApp ctx, DynamicEntity.MyServices dynEntServices, int compatibility)
+        public virtual AdamManager Init(IContextOfApp ctx, AsConverterService asc, int compatibility)
         {
             AppContext = ctx;
 
@@ -53,7 +64,7 @@ namespace ToSic.Sxc.Adam
             Site = AppContext.Site;
             AppRuntime.InitQ(AppContext.AppState);
             CompatibilityLevel = compatibility;
-            DynamicEntityServices = dynEntServices;
+            _asc = asc;
             return callLog.Return(this, "ready");
         }
         
@@ -61,8 +72,8 @@ namespace ToSic.Sxc.Adam
 
         public ISite Site { get; private set; }
 
-        internal DynamicEntity.MyServices DynamicEntityServices { get; private set; }
-
+        internal AsConverterService AsC => _asc ?? (_asc = _asConverter.Value);
+        private AsConverterService _asc;
         #endregion
 
 

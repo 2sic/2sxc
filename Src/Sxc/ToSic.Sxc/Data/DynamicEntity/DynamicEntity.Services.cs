@@ -1,5 +1,4 @@
 ﻿using System;
-using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.Logging;
@@ -9,6 +8,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.Services;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
 
@@ -34,16 +34,19 @@ namespace ToSic.Sxc.Data
             }
 
             internal MyServices Init(IBlock blockOrNull, string[] dimensions, ILog log,
+                AsConverterService asConverter,
                 int compatibility = Constants.CompatibilityLevel10,
-                Func<ServiceKit14> kit = null, 
-                Func<AdamManager> getAdamManager = null)
+                Func<ServiceKit14> kit = null
+                //Func<AdamManager> getAdamManager = null
+            )
             {
                 Dimensions = dimensions;
                 LogOrNull = log;
                 CompatibilityLevel = compatibility;
                 BlockOrNull = blockOrNull;
+                AsC = asConverter;
                 _getKit = kit;
-                _getAdamManager = getAdamManager;
+                //_getAdamManager = getAdamManager;
                 return this;
             }
 
@@ -55,6 +58,7 @@ namespace ToSic.Sxc.Data
 
             internal int CompatibilityLevel { get; private set; }
 
+            internal AsConverterService AsC { get; private set; }
 
             /// <summary>
             /// The ValueConverter is used to parse links in the format like "file:72"
@@ -77,9 +81,9 @@ namespace ToSic.Sxc.Data
             private Func<ServiceKit14> _getKit;
 
 
-            internal AdamManager AdamManager => _adamManager.Get(() => _getAdamManager?.Invoke());
-            private readonly GetOnce<AdamManager> _adamManager = new GetOnce<AdamManager>();
-            private Func<AdamManager> _getAdamManager;
+            //internal AdamManager AdamManager => _adamManager.Get(() => _getAdamManager?.Invoke());
+            //private readonly GetOnce<AdamManager> _adamManager = new GetOnce<AdamManager>();
+            //private Func<AdamManager> _getAdamManager;
         }
     }
 }

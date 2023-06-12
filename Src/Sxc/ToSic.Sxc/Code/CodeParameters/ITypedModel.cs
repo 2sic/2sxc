@@ -212,7 +212,7 @@ namespace ToSic.Sxc.Code
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default);
 
-        ITypedObject Typed(string name, string noParamOrder = Protector, ITypedObject fallback = default,
+        ITypedThing Typed(string name, string noParamOrder = Protector, ITypedThing fallback = default,
             bool? required = default);
 
         /// <summary>

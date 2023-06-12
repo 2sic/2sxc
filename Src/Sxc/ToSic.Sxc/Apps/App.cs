@@ -8,6 +8,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.LookUp;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -21,6 +22,8 @@ namespace ToSic.Sxc.Apps
     [PublicApi_Stable_ForUseInYourCode]
     public partial class App : EavApp, IApp
     {
+        private readonly LazySvc<AsConverterService> _asConverter;
+
         #region DI Constructors
         [PrivateApi]
         public App(MyServices services, 
@@ -28,7 +31,8 @@ namespace ToSic.Sxc.Apps
             LazySvc<AppPaths> appPathsLazy, 
             LazySvc<DynamicEntity.MyServices> dynamicEntityDependenciesLazy,
             Generator<IAppStates> appStates,
-            Generator<AppConfigDelegate> appConfigDelegate) 
+            Generator<AppConfigDelegate> appConfigDelegate, 
+            LazySvc<AsConverterService> asConverter)
             : base(services, "App.SxcApp")
         {
             ConnectServices(
@@ -36,7 +40,8 @@ namespace ToSic.Sxc.Apps
                 _appPathsLazy = appPathsLazy,
                 _dynEntSvcLazy = dynamicEntityDependenciesLazy,
                 _appStates = appStates,
-                _appConfigDelegate = appConfigDelegate
+                _appConfigDelegate = appConfigDelegate,
+                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(Site))
             );
         }
 
