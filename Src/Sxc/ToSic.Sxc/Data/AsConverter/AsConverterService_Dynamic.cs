@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data.AsConverter
 
         #region Dynamic
 
-        internal DynamicEntity AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
+        public DynamicEntity AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
 
         public IEnumerable<dynamic> AsDynamicList(object list)
         {

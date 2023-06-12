@@ -46,7 +46,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [NonAction]
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.AsDynamic(entity);
 
         /// <inheritdoc />
         [NonAction]
@@ -55,10 +55,10 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         [NonAction]
         [PublicApi("Careful - still Experimental in 12.02")]
-        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+        public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsC.MergeDynamic(entities);
 
         /// <inheritdoc />
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot?.AsC.AsEntity(dynamicEntity);
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [NonAction]
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.AsDynamicList(list);
 
         #endregion
 
