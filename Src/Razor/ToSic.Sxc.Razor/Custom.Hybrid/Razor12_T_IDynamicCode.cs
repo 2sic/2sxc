@@ -5,6 +5,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -46,7 +47,7 @@ namespace Custom.Hybrid
         #region AsDynamic in many variations
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc/>
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);

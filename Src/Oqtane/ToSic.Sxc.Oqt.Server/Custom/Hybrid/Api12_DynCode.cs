@@ -14,7 +14,6 @@ using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Adam;
 using static ToSic.Eav.Parameters;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
@@ -43,7 +42,7 @@ namespace Custom.Hybrid
         #region AsDynamic implementations
         /// <inheritdoc/>
         [NonAction]
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot?.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc />
         [NonAction]

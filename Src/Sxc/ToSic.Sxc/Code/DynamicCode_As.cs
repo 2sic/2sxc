@@ -3,7 +3,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Code
@@ -15,7 +14,7 @@ namespace ToSic.Sxc.Code
         #region AsDynamic and AsEntity
 
         /// <inheritdoc />
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot?.AsDynamic(json, fallback);
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc />
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsDynamic(entity);

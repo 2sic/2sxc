@@ -1,7 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
-using ToSic.Eav.Serialization;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Logging;
+using static ToSic.Eav.Serialization.JsonOptions;
 
 namespace ToSic.Sxc.Data
 {
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Data
         private const string JsonErrorCode = "error";
 
         [PrivateApi]
-        public static object AsDynamicJacket(string json, string fallback = EmptyJson) => WrapIfJObjectUnwrapIfJValue(AsJsonNode(json, fallback));
+        internal static DynamicJacketBase AsDynamicJacket(string json, string fallback = default, ILog log = default) => TryToConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson), log).Jacket;
 
         [PrivateApi]
         private static JsonNode AsJsonNode(string json, string fallback = EmptyJson)
@@ -33,9 +34,9 @@ namespace ToSic.Sxc.Data
                         switch (firstChar)
                         {
                             case JObjStart:
-                                return JsonNode.Parse(json, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions)?.AsObject();
+                                return JsonNode.Parse(json, JsonNodeDefaultOptions, JsonDocumentDefaultOptions)?.AsObject();
                             case JArrayStart:
-                                return JsonNode.Parse(json, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions)?.AsArray();
+                                return JsonNode.Parse(json, JsonNodeDefaultOptions, JsonDocumentDefaultOptions)?.AsArray();
                         }
                     }
                 }
@@ -47,7 +48,37 @@ namespace ToSic.Sxc.Data
             // fallback
             return fallback == null
                 ? null
-                : JsonNode.Parse(fallback, JsonOptions.JsonNodeDefaultOptions, JsonOptions.JsonDocumentDefaultOptions);
+                : JsonNode.Parse(fallback, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
+        }
+
+        internal static (DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind) TryToConvertToJacket(object original, ILog log = default)
+        {
+            var l = log.Fn<(DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind)>();
+            if (!(original is JsonNode jsonNode))
+                return l.Return((null, false, JsonValueKind.Undefined), "not json node");
+
+            switch (jsonNode)
+            {
+                case JsonArray jArray:
+                    return l.Return((new DynamicJacketList(jArray), true, JsonValueKind.Array), "array");
+                case JsonObject jResult: // it's another complex object, so return another wrapped reader
+                    return l.Return((new DynamicJacket(jResult), true, JsonValueKind.Object), "obj");
+                case JsonValue jValue: // it's a simple value - so we want to return the underlying real value
+                    {
+                        var je = jValue.GetValue<JsonElement>();
+                        switch (je.ValueKind)
+                        {
+                            case JsonValueKind.Object:
+                                return l.Return((new DynamicJacket(JsonObject.Create(je)), true, JsonValueKind.Object), "val obj");
+                            case JsonValueKind.Array:
+                                return l.Return((new DynamicJacketList(JsonArray.Create(je)), true, JsonValueKind.Array), "val array");
+                            default:
+                                return l.Return((null, false, JsonValueKind.Undefined), "val not handled");
+                        }
+                    }
+                default: // it's something else, let's just return that
+                    return l.Return((null, false, JsonValueKind.Undefined), $"{nameof(jsonNode)} not handled");
+            }
         }
 
         /// <summary>
@@ -61,12 +92,15 @@ namespace ToSic.Sxc.Data
         {
             if (!(original is JsonNode jsonNode)) return original;
 
+            var maybeJacket = TryToConvertToJacket(original, null);
+            if (maybeJacket.Ok) return maybeJacket.Jacket;
+
             switch (jsonNode)
             {
-                case JsonArray jArray:
-                    return new DynamicJacketList(jArray);
-                case JsonObject jResult: // it's another complex object, so return another wrapped reader
-                    return new DynamicJacket(jResult);
+                //case JsonArray jArray:
+                //    return new DynamicJacketList(jArray);
+                //case JsonObject jResult: // it's another complex object, so return another wrapped reader
+                //    return new DynamicJacket(jResult);
                 case JsonValue jValue: // it's a simple value - so we want to return the underlying real value
                 {
                     var je = jValue.GetValue<JsonElement>();
@@ -89,10 +123,10 @@ namespace ToSic.Sxc.Data
                         case JsonValueKind.Null:
                         case JsonValueKind.Undefined:
                                 return null;
-                        case JsonValueKind.Object:
-                            return new DynamicJacket(JsonObject.Create(je));
-                        case JsonValueKind.Array:
-                            return new DynamicJacketList(JsonArray.Create(je));
+                        //case JsonValueKind.Object:
+                        //    return new DynamicJacket(JsonObject.Create(je));
+                        //case JsonValueKind.Array:
+                        //    return new DynamicJacketList(JsonArray.Create(je));
                         default:
                             return jValue.AsValue();
                     }

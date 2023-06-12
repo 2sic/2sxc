@@ -37,9 +37,6 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IContentType ITypedItem.Type => Entity?.Type;
 
-        [PrivateApi]
-        dynamic ITypedItem.Dyn => this;
-
         /// <inheritdoc />
         [PrivateApi]
         ITypedItem ITypedItem.Presentation => Presentation;
