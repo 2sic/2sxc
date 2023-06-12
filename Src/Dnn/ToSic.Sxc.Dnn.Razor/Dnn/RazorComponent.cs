@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Dnn
         public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc/>
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
 
         /// <inheritdoc/>
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
@@ -115,13 +115,13 @@ namespace ToSic.Sxc.Dnn
 
         #region AsEntity
         /// <inheritdoc/>
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsEntity(dynamicEntity);
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
         #endregion
 
         #region AsList
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsC.AsDynamicList(list);
 
         #endregion
 

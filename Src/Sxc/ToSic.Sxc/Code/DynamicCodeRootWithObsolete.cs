@@ -97,14 +97,14 @@ namespace ToSic.Sxc.Code
                 var el = new Element
                 {
                     EntityId = e.EntityId,
-                    Content = _root.AsDynamic(e)
+                    Content = _root.AsC.AsDynamic(e)
                 };
 
                 var editDecorator = e.GetDecorator<EntityInBlockDecorator>();
 
                 if (editDecorator != null)
                 {
-                    el.Presentation = editDecorator.Presentation == null ? null : _root.AsDynamic(editDecorator.Presentation);
+                    el.Presentation = editDecorator.Presentation == null ? null : _root.AsC.AsDynamic(editDecorator.Presentation);
                     el.SortOrder = editDecorator.SortOrder;
                 }
 
