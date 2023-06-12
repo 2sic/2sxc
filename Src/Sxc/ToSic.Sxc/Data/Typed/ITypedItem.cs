@@ -30,7 +30,5 @@ namespace ToSic.Sxc.Data
 
 
         IField Field(string name);
-        object Get(string name);
-
     }
 }

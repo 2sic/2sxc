@@ -12,6 +12,7 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -117,7 +118,7 @@ namespace ToSic.Sxc.Code
                 return cLog.Return(this, "no block");
 
             Block = block;
-            Data = block.Data;
+            Data = ((ContextData)block.Data).Init(this);
             AttachApp(block.App);
 
 

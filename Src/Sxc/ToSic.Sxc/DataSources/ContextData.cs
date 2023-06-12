@@ -7,6 +7,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.DataSources
@@ -18,9 +19,27 @@ namespace ToSic.Sxc.DataSources
     [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
     internal partial class ContextData : PassThrough, IContextData
     {
+        #region Constructor and Init
+
+#if NETFRAMEWORK
         [PrivateApi("not meant for public use")]
         public ContextData(MyServices services, IAppStates appStates) : base(services, "Sxc.BlckDs") => _appStates = appStates;
         private readonly IAppStates _appStates;
+#else
+        [PrivateApi("not meant for public use")]
+        public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
+        {
+        }
+#endif
+
+        public IContextData Init(IDynamicCodeRoot dynCodeRoot)
+        {
+            _DynCodeRoot = dynCodeRoot;
+            return this;
+        }
+        private IDynamicCodeRoot _DynCodeRoot;
+
+#endregion
 
         #region New v16
 
@@ -32,6 +51,12 @@ namespace ToSic.Sxc.DataSources
 
         public IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
+
+        public ITypedItem MyItem => _myItem.Get(() => _DynCodeRoot.AsTyped(MyContent));
+        private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
+
+        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _DynCodeRoot.AsTypedList(MyContent));
+        private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
         #endregion
 
