@@ -197,7 +197,7 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
             // Try to convert, in case it's an IEntity or something; could also result in error
             return ok ? typed : _codeRoot.AsC.AsTyped(untyped);
         }
-        public ITypedThing Typed(string name, string noParamOrder = Protector, ITypedThing fallback = default, bool? required = default)
+        public ITypedRead Typed(string name, string noParamOrder = Protector, ITypedRead fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             // Try to convert, in case it's an IEntity or something; could also result in error

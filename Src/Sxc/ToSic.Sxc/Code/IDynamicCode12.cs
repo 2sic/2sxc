@@ -8,7 +8,6 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 // Disable warnings that properties should be marked as new

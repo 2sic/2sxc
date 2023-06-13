@@ -2,7 +2,7 @@
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITypedThing
+    public partial interface ITypedRead
     {
         IRawHtmlString Attribute(string name, string noParamOrder = ToSic.Eav.Parameters.Protector, string attribute = default);
     }

@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data.AsConverter
         {
             var l = Log.Fn<object>();
             var typed = AsTypedInternal(dynObject);
-            if (typed != null) return l.Return(typed, nameof(ITypedThing));
+            if (typed != null) return l.Return(typed, nameof(ITypedRead));
 
             switch (dynObject)
             {
