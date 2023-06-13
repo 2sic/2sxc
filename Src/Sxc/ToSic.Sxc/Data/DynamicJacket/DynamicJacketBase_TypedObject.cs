@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicJacketBase: ITypedRead
     {
         [PrivateApi]
-        IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder = Eav.Parameters.Protector, string attribute = default)
+        IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder, string attribute)
         {
             if (attribute != default)
                 return Tag.Attr(attribute, (this as ITypedRead).String(name));

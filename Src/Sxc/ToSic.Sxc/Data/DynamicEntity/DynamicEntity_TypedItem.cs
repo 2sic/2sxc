@@ -41,20 +41,16 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedItem.Presentation => Presentation;
 
         /// <inheritdoc />
-#pragma warning disable CS1066
         [PrivateApi]
-        IEnumerable<ITypedItem> ITypedItem.Parents(string type = default, string noParamOrder = Protector, string field = default)
-#pragma warning restore CS1066
+        IEnumerable<ITypedItem> ITypedItem.Parents(string type, string noParamOrder, string field)
         {
             Protect(noParamOrder, $"{nameof(field)}");
             return _Services.AsC.AsTypedList(Parents(type, field));
         }
 
         /// <inheritdoc />
-#pragma warning disable CS1066
         [PrivateApi]
-        IEnumerable<ITypedItem> ITypedItem.Children(string field = default, string noParamOrder = Protector, string type = default)
-#pragma warning restore CS1066
+        IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type)
         {
             Protect(noParamOrder, $"{nameof(type)}");
             var dynChildren = Children(field, type);
