@@ -64,6 +64,8 @@ namespace ToSic.Sxc.Data
             }
         }
 
+
+
         public int Count => _entities?.Length ?? 1;
 
 

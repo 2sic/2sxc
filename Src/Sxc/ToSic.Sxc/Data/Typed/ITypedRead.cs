@@ -3,15 +3,25 @@ using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
+    /// <summary>
+    /// This describes a wrapper around an anonymous or JSON object which will
+    /// have typed Methods to read properties like `.String(propName)`.
+    ///
+    /// It's usually the result of a `Read(something)` command.
+    ///
+    /// It's meant to help Razor etc. access unknown or dynamic objects in a typed way.
+    /// </summary>
+    /// <remarks>
+    /// New in 16.02.
+    /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.02")]
-    public partial interface ITypedThing
+    public partial interface ITypedRead
     {
         /// <summary>
         /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
         /// This is _often_ (but not always) a <see cref="IDynamicEntity"/>.
         ///
         /// Example: `Dyn.FirstName` might just work - and return the first name or `null` if not found.
-        /// 
         /// </summary>
         dynamic Dyn { get; }
 

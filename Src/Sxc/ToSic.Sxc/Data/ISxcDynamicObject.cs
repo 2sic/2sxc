@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Data
     /// Mainly to ensure that they are not re-converted if they already are such dynamic objects
     /// </summary>
     [PrivateApi]
-    public interface ISxcDynamicObject: ITypedThing
+    public interface ISxcDynamicObject: ITypedRead
     {
     }
 }
