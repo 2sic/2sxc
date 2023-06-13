@@ -13,11 +13,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder, string attribute)
         {
-            if (attribute != default)
-                return Tag.Attr(attribute, (this as ITypedRead).String(name));
-
             var value = (this as ITypedRead).String(name);
-            return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
+            return attribute != default 
+                ? Tag.Attr(attribute, value)
+                : value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
         }
 
         TValue ITypedRead.Get<TValue>(string name)
@@ -51,6 +50,10 @@ namespace ToSic.Sxc.Data
 
         double ITypedRead.Double(string name, double fallback) => Get(name, fallback: fallback);
 
-        string ITypedRead.Url(string name, string fallback) => Get(name, fallback: fallback);
+        string ITypedRead.Url(string name, string fallback)
+        {
+            var url = Get(name, fallback: fallback);
+            return Tags.SafeUrl(url).ToString();
+        }
     }
 }

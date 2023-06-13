@@ -123,7 +123,10 @@ namespace ToSic.Sxc.Data
         #endregion
 
         /// <summary>
-        /// Get a url from a field. This will auto-convert values such as `file:72` or `page:14`.
+        /// Get a url from a field.
+        /// It will do sanitation / url-corrections for special characters etc.
+        /// 
+        /// On TypedItems it will also auto-convert values such as `file:72` or `page:14`.
         /// </summary>
         /// <param name="name">The field name.</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
