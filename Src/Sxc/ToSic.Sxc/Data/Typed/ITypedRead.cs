@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -15,6 +16,7 @@ namespace ToSic.Sxc.Data
     /// New in 16.02.
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.02")]
+    [JsonConverter(typeof(DynamicJsonConverter))] // we'll have to keep an eye on it for scenarios where ITypedItem also inherits from ITypedRead, and could have some surprises. But since the DynamicEntity was never meant to become json, probably there is no code out there that tries to do this. 
     public partial interface ITypedRead
     {
         /// <summary>
