@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,6 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ToSic.Sxc</RootNamespace>
     <AssemblyName>ToSic.Sxc.Dnn.Razor</AssemblyName>
+    <TargetFramework>net472</TargetFramework>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -136,35 +136,6 @@
     <Compile Include="..\..\Sxc\ToSic.Sxc\Properties\AssemblyInfoInherited.cs">
       <Link>Properties\AssemblyInfoInherited.cs</Link>
     </Compile>
-    <Compile Include="Compatibility\Dnn8Bugs.cs" />
-    <Compile Include="Custom\Dnn\Razor12.cs" />
-    <Compile Include="Custom\Dnn\Razor12Code.cs" />
-    <Compile Include="Custom\Hybrid\Razor14.cs" />
-    <Compile Include="Custom\Hybrid\Advanced\Razor14_TT_Obsolete.cs" />
-    <Compile Include="Custom\Hybrid\Advanced\Razor14_TT_DynamicModel.cs" />
-    <Compile Include="Custom\Hybrid\Advanced\Razor14_TT_Apis.cs" />
-    <Compile Include="Custom\Hybrid\Razor12_DynamicModel.cs" />
-    <Compile Include="Custom\Hybrid\Advanced\Razor14_TT.cs" />
-    <Compile Include="Dnn\IDnnRazor.cs" />
-    <Compile Include="Dnn\IDnnRazor11.cs" />
-    <Compile Include="Dnn\RazorCodeManager.cs" />
-    <Compile Include="Dnn\RazorComponent.NewNotAvailable.cs" />
-    <Compile Include="Dnn\RazorComponentCode.cs" />
-    <Compile Include="Dnn\RazorComponent_Code.cs" />
-    <Compile Include="Dnn\Web\IDnnRazorCustomize.cs" />
-    <Compile Include="Dnn\Web\IHtmlHelper.cs" />
-    <Compile Include="Dnn\RazorComponent.cs" />
-    <Compile Include="Engines\Razor\RazorEngine_Callbacks.cs" />
-    <Compile Include="Custom\Hybrid\Razor12.cs" />
-    <Compile Include="Custom\Hybrid\Razor12_Obsolete.cs" />
-    <Compile Include="Web\RazorComponentBase.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engines\Razor\HtmlHelper.cs" />
-    <Compile Include="Engines\Razor\RazorEngine.cs" />
-    <Compile Include="Compatibility\RazorPermissions\RazorPermissions.cs" />
-    <Compile Include="SexyContentWebPage.cs" />
-    <Compile Include="SexyContentWebPageOfT.cs" />
-    <Compile Include="Web\RazorComponentBase_RenderPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\eav-server\ToSic.Eav.Apps\ToSic.Eav.Apps.csproj">
@@ -196,17 +167,4 @@
       <Name>ToSic.Sxc</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Custom\readme.md" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
 </Project>

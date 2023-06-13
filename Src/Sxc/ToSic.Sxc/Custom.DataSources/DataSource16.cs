@@ -70,7 +70,7 @@ namespace Custom.DataSource
 
         #region CodeLog
 
-        public ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log));
+        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(_inner.Log));
         private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
         #endregion
@@ -106,7 +106,7 @@ namespace Custom.DataSource
         private static readonly string AttachNotSupported = $"Attach(...) is not supported on new data sources. Provide 'attach:' in CreateDataSource(...) instead";
         void IDataTarget.Attach(IDataSource dataSource) => _inner.Attach(dataSource);
 
-        void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName = DataSourceConstants.StreamDefaultName) => _inner.Attach(streamName, dataSource, sourceName);
+        void IDataTarget.Attach(string streamName, IDataSource dataSource, string sourceName) => _inner.Attach(streamName, dataSource, sourceName ?? DataSourceConstants.StreamDefaultName);
 
         void IDataTarget.Attach(string streamName, IDataStream dataStream) => _inner.Attach(streamName, dataStream);
 
