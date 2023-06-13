@@ -52,10 +52,10 @@ namespace ToSic.Sxc.DataSources
         public IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
 
-        public ITypedItem MyItem => _myItem.Get(() => _DynCodeRoot.AsC.AsTyped(MyContent));
+        public ITypedItem MyItem => _myItem.Get(() => _DynCodeRoot.AsC.AsItem(MyContent));
         private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
 
-        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _DynCodeRoot.AsC.AsTypedList(MyContent));
+        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _DynCodeRoot.AsC.AsItems(MyContent));
         private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
         #endregion

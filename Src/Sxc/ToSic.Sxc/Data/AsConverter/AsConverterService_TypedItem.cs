@@ -15,14 +15,14 @@ namespace ToSic.Sxc.Data.AsConverter
         #region AsTyped Implementations
 
 
-        public ITypedItem AsTyped(object target)
+        public ITypedItem AsItem(object target)
             => AsTyped(target, MaxRecursions);
 
         private ITypedItem AsTyped(object target, int recursions)
         {
             var l = Log.Fn<ITypedItem>();
             if (recursions <= 0)
-                throw l.Done(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
+                throw l.Done(new Exception($"Conversion with {nameof(AsItem)} failed, max recursions reached"));
 
             ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
@@ -59,14 +59,14 @@ namespace ToSic.Sxc.Data.AsConverter
 
         }
 
-        public IEnumerable<ITypedItem> AsTypedList(object list)
-            => AsTypedList(list, MaxRecursions);
+        public IEnumerable<ITypedItem> AsItems(object list)
+            => AsItemList(list, MaxRecursions);
 
-        internal IEnumerable<ITypedItem> AsTypedList(object list, int recursions)
+        internal IEnumerable<ITypedItem> AsItemList(object list, int recursions)
         {
             var l = Log.Fn<IEnumerable<ITypedItem>>();
             if (recursions <= 0)
-                throw l.Done(new Exception($"Conversion with {nameof(AsTyped)} failed, max recursions reached"));
+                throw l.Done(new Exception($"Conversion with {nameof(AsItem)} failed, max recursions reached"));
 
             switch (list)
             {
@@ -75,9 +75,9 @@ namespace ToSic.Sxc.Data.AsConverter
                 case IEnumerable<ITypedItem> alreadyOk:
                     return l.Return(alreadyOk, "already matches type");
                 case IDataSource dsEntities:
-                    return l.Return(AsTypedList(dsEntities.List, recursions - 1), "DataSource - convert list");
+                    return l.Return(AsItemList(dsEntities.List, recursions - 1), "DataSource - convert list");
                 case IDataStream dataStream:
-                    return l.Return(AsTypedList(dataStream.List, recursions - 1), "DataSource - convert list");
+                    return l.Return(AsItemList(dataStream.List, recursions - 1), "DataSource - convert list");
                 case IEnumerable<IEntity> iEntities:
                     return l.Return(iEntities.Select(e => AsTyped(e, MaxRecursions)), "IEnum<IEntity>");
                 //case IEnumerable<IDynamicEntity> dynIDynEnt:

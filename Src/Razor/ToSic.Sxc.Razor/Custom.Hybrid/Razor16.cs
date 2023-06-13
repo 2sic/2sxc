@@ -53,7 +53,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
-            => _DynCodeRoot.AsC.AsTypedList(list);
+            => _DynCodeRoot.AsC.AsItems(list);
 
         #endregion
 

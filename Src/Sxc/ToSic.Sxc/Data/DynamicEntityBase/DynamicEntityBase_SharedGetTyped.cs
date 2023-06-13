@@ -69,13 +69,13 @@ namespace ToSic.Sxc.Data
             if (inner is string innerStr)
                 return DynamicJacket.AsDynamicJacket(innerStr, fallback as string);
             if (inner is ICanBeEntity)
-                return _Services.AsC.AsTyped(inner);
+                return _Services.AsC.AsItem(inner);
             if (inner is IEnumerable innerEnum)
             {
                 var first = innerEnum.Cast<object>().FirstOrDefault();
                 if (first == null) return null;
                 if (first is ITypedRead t2) return t2;
-                if (first is ICanBeEntity) return _Services.AsC.AsTyped(first);
+                if (first is ICanBeEntity) return _Services.AsC.AsItem(first);
             }
             // todo: case object - rewrap into read
             // todo: use shared conversion code for this

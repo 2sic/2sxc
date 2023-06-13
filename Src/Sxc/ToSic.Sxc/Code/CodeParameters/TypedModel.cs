@@ -195,20 +195,20 @@ Either change the calling Html.Partial(...) or use {call.Replace(")", ", require
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsC.AsTyped(untyped);
+            return ok ? typed : _codeRoot.AsC.AsItem(untyped);
         }
         public ITypedRead Typed(string name, string noParamOrder = Protector, ITypedRead fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsC.AsTyped(untyped);
+            return ok ? typed : _codeRoot.AsC.AsItem(untyped);
         }
 
         public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
         {
             var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsC.AsTypedList(untyped);
+            return ok ? typed : _codeRoot.AsC.AsItems(untyped);
         }
 
         #endregion

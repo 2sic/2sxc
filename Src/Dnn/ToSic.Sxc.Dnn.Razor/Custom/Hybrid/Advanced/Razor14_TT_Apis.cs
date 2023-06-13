@@ -47,10 +47,10 @@ namespace Custom.Hybrid.Advanced
         #region AsCms and AsTyped (new v16)
 
         /// <inheritdoc />
-        public ITypedItem AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsTyped(target);
+        public ITypedItem AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsItem(target);
 
         /// <inheritdoc />
-        public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsTypedList(list);
+        public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsItems(list);
 
         #endregion
 
