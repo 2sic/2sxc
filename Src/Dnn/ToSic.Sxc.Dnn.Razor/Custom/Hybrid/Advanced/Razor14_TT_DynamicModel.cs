@@ -28,6 +28,7 @@ namespace Custom.Hybrid.Advanced
             _dynamicModel = new DynamicReadObject(data, false, false);
         }
 
+        // TODO: MOVE TO V16
         [PrivateApi("WIP v16.02")]
         public ITypedModel TypedModel => _typedModel.Get(() =>
         {

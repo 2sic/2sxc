@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Code;
@@ -25,7 +26,7 @@ namespace Custom.Hybrid.Advanced
         where TServiceKit : ServiceKit
     {
         [PrivateApi("Not yet ready")]
-        public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TServiceKit> root) ? default : root.Model;
+        public TModel Model => throw new NotImplementedException($"Property {nameof(Model)} doesn't work in Code");// !(_DynCodeRoot is IDynamicCode<TModel, TServiceKit> root) ? default : root.Model;
 
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
         private readonly GetOnce<TServiceKit> _kit = new GetOnce<TServiceKit>();
