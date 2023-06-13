@@ -49,7 +49,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)
-            => _DynCodeRoot.AsC.AsTyped(target);
+            => _DynCodeRoot.AsC.AsItem(target);
 
         /// <inheritdoc />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)

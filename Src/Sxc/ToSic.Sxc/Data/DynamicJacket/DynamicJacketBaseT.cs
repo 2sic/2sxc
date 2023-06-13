@@ -91,7 +91,7 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi("Internal")]
-        public PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
+        public new PropReqResult FindPropertyInternal(PropReqSpecs specs, PropertyLookupPath path)
         {
             path = path.KeepOrNew().Add("DynJacket", specs.Field);
             var result = FindValueOrNull(specs.Field, InvariantCultureIgnoreCase, specs.LogOrNull);

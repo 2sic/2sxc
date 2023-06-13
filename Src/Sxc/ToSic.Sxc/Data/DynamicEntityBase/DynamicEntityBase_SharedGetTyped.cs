@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicEntityBase: ITypedRead
     {
         [PrivateApi]
-        IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder = Eav.Parameters.Protector, string attribute = default)
+        IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder, string attribute)
         {
             if (attribute != default)
                 return Tag.Attr(attribute, (this as ITypedRead).String(name));
@@ -26,31 +26,31 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        DateTime ITypedRead.DateTime(string name, DateTime fallback = default) => Get(name, fallback: fallback);
+        DateTime ITypedRead.DateTime(string name, DateTime fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        string ITypedRead.String(string name, string fallback = default) => Get(name, fallback: fallback);
+        string ITypedRead.String(string name, string fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        int ITypedRead.Int(string name, int fallback = default) => Get(name, fallback: fallback);
+        int ITypedRead.Int(string name, int fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        bool ITypedRead.Bool(string name, bool fallback = default) => Get(name, fallback: fallback);
+        bool ITypedRead.Bool(string name, bool fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        long ITypedRead.Long(string name, long fallback = default) => Get(name, fallback: fallback);
+        long ITypedRead.Long(string name, long fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        float ITypedRead.Float(string name, float fallback = default) => Get(name, fallback: fallback);
+        float ITypedRead.Float(string name, float fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        decimal ITypedRead.Decimal(string name, decimal fallback = default) => Get(name, fallback: fallback);
+        decimal ITypedRead.Decimal(string name, decimal fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        double ITypedRead.Double(string name, double fallback = default) => Get(name, fallback: fallback);
+        double ITypedRead.Double(string name, double fallback) => Get(name, fallback: fallback);
 
         [PrivateApi]
-        string ITypedRead.Url(string name, string fallback = default)
+        string ITypedRead.Url(string name, string fallback)
         {
             var url = Get(name, convertLinks: true) as string;
             return Tags.SafeUrl(url).ToString();

@@ -31,6 +31,6 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
         /// </summary>
-        new string EntityType { get; }
+        string EntityType { get; }
     }
 }
