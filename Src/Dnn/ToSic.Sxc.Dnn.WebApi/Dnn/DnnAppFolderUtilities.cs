@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Dnn
             {
                 const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
                 if (errorIfNotFound)
-                    throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, _errorHelp.Value));
+                    throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, getBlockException, msg, _errorHelp.Value));
                 return (null, "not found, maybe error");
             }
 
@@ -74,18 +74,11 @@ namespace ToSic.Sxc.Dnn
             {
                 const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
                                    "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-                throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg, _errorHelp.Value));
+                throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.BadRequest, new Exception(msg), msg, _errorHelp.Value));
             }
 
             return (appFolder, "ok");
         });
 
-        internal static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, CodeErrorHelpService errorHelp)
-        {
-            var helpText = errorHelp.HelpText(e);
-            var exception = new Exception(msg + helpText, e);
-            DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
-            return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));
-        }
     }
 }
