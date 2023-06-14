@@ -8,6 +8,7 @@ using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks.Problems;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.DataSources;
@@ -60,12 +61,12 @@ namespace ToSic.Sxc.Blocks
 
         protected bool CompleteInit(IBlockBuilder rootBuilderOrNull, IBlockIdentifier blockId, int blockNumberUnsureIfNeeded)
         {
-            var wrapLog = Log.Fn<bool>();
+            var l = Log.Fn<bool>();
 
             ParentId = Context.Module.Id;
             ContentBlockId = blockNumberUnsureIfNeeded;
 
-            Log.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
+            l.A($"parent#{ParentId}, content-block#{ContentBlockId}, z#{ZoneId}, a#{AppId}");
 
             // 2020-09-04 2dm - new change, moved BlockBuilder up so it's never null - may solve various issues
             // but may introduce new ones
@@ -76,21 +77,20 @@ namespace ToSic.Sxc.Blocks
             if (AppId == AppConstants.AppIdNotFound || AppId == Eav.Constants.NullId)
             {
                 DataIsMissing = true;
-                return wrapLog.ReturnTrue("stop: app & data are missing");
+                return l.ReturnTrue("stop: app & data are missing");
             }
 
             // If no app yet, stop now with BlockBuilder created
             if (AppId == Eav.Constants.AppIdEmpty)
-                return wrapLog.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+                return l.ReturnTrue($"stop a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
 
-            Log.A("Real app specified, will load App object with Data");
+            l.A("Real app specified, will load App object with Data");
 
             // Get App for this block
-            Log.A("About to create app");
             App = Services.AppLazy.Value
                 .PreInit(Context.Site)
                 .Init(this, Services.AppConfigDelegateLazy.Value.BuildForNewBlock(Context, this));
-            Log.A("App created");
+            l.A("App created");
 
             // note: requires EditAllowed, which isn't ready till App is created
             var cms = Services.CmsLazy.Value.InitQ(App);
@@ -102,12 +102,12 @@ namespace ToSic.Sxc.Blocks
             {
                 DataIsMissing = true;
                 App = null;
-                return wrapLog.ReturnTrue($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+                return l.ReturnTrue($"DataIsMissing a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
             }
 
             // use the content-group template, which already covers stored data + module-level stored settings
             View = new BlockViewLoader(Log).PickView(this, Configuration.View, Context, cms);
-            return wrapLog.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
+            return l.ReturnTrue($"ok a:{AppId}, container:{Context.Module.Id}, content-group:{Configuration?.Id}");
         }
 
         #endregion
@@ -128,6 +128,7 @@ namespace ToSic.Sxc.Blocks
         public int ParentId { get; protected set; }
 
         public bool DataIsMissing { get; private set; }
+        public List<ProblemReport> Problems { get; } = new List<ProblemReport>();
 
         public int ContentBlockId { get; protected set; }
         

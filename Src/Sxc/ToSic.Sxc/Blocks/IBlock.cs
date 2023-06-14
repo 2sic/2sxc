@@ -3,6 +3,7 @@ using ToSic.Eav.Apps;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps.Blocks;
+using ToSic.Sxc.Blocks.Problems;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
@@ -24,6 +25,9 @@ namespace ToSic.Sxc.Blocks
 
         [PrivateApi]
         bool DataIsMissing { get; }
+
+        [PrivateApi]
+        List<ProblemReport> Problems { get; }
 
         [PrivateApi]
         int ContentBlockId { get; }

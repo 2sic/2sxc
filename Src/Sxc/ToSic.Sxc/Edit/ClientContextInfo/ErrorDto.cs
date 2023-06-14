@@ -1,5 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Blocks.Problems;
+using static System.Text.Json.Serialization.JsonIgnoreCondition;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo
 {
@@ -8,20 +12,23 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         [JsonPropertyName("type")]
         public string Type { get; }
 
-        public string Message { get; }
+        [JsonPropertyName("problems")]
+        [JsonIgnore(Condition = WhenWritingDefault)]
+        public IEnumerable<ProblemReport> Problems { get; }
 
-        internal ErrorDto(IBlock cb, string errorCode)
+        internal ErrorDto(IBlock block, string errorCode)
         {
             // New mechanism in 16.01
-            if (errorCode != null)
-            {
-                Type = errorCode;
-                return;
-            }
+            Type = errorCode;
 
-            // should probably be removed, if new mechanism works, because it should already set the error code into the string
-            if (cb.DataIsMissing)
-                Type = "DataIsMissing";
+            if (!block.Context.User.IsSiteAdmin) return;
+
+            // New problems report in 16.02
+            var problems = new List<ProblemReport>(block.Problems);
+            var additional = new ProblemSuggestions().AddSuggestions(block, errorCode);
+            problems.AddRange(additional);
+
+            Problems = problems.Any() ? problems : null;
         }
     }
 }

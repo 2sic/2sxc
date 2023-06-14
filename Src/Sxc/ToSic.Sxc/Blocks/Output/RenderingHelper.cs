@@ -19,15 +19,17 @@ namespace ToSic.Sxc.Blocks.Output
 
         public RenderingHelper(
             ILinkPaths linkPaths,
-            IEnvironmentLogger errorLogger,
+            LazySvc<IEnvironmentLogger> errorLogger,
             Generator<JsContextAll> jsContextAllGen) : base("Sxc.RndHlp")
-            => ConnectServices(_linkPaths = linkPaths,
+        {
+            ConnectServices(_linkPaths = linkPaths,
                 _errorLogger = errorLogger,
                 _jsContextAllGen = jsContextAllGen
             );
+        }
 
         private readonly ILinkPaths _linkPaths;
-        private readonly IEnvironmentLogger _errorLogger;
+        private readonly LazySvc<IEnvironmentLogger> _errorLogger;
         private readonly Generator<JsContextAll> _jsContextAllGen;
 
         public IRenderingHelper Init(IBlock block)
@@ -81,29 +83,30 @@ namespace ToSic.Sxc.Blocks.Output
             return contextAttribs;
         }
 
-        public string DesignErrorMessage(Exception ex, bool addToEventLog, string visitorAlternateError = null,
+        private const string ErrPrefix = "Error:";
+        private const string WarnPrefix = "Warning:";
+
+        public string DesignErrorMessage(Exception ex, bool addToEventLog, string msgVisitors = null,
             string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true)
         {
-            const string prefix = "Error: ";
-            var msg = prefix + ex + additionalInfo;
-            if (addToEventLog) _errorLogger?.LogException(ex);
+            if (addToEventLog) _errorLogger.Value.LogException(ex);
+            return DesignError($"{ex}{additionalInfo}", msgVisitors, addContextWrapper, encodeMessage);
 
-            if (!Context.User.IsSystemAdmin)
-                msg = visitorAlternateError ?? DefaultVisitorError;
+            //var msg = Context.User.IsSystemAdmin
+            //    ? $"{ErrPrefix} {ex}{additionalInfo}"
+            //    : msgVisitors ?? DefaultVisitorError;
 
-            return DesignMessage(msg, addContextWrapper, encodeMessage, true, ErrorGeneral);
+            //return DesignMessage(msg, addContextWrapper, encodeMessage, ErrorGeneral);
         }
         public string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false, bool encodeMessage = true)
         {
-            msgSuperUser = "Error: " + msgSuperUser;
-
-            if (!Context.User.IsSystemAdmin)
-                msgSuperUser = msgVisitors ?? DefaultVisitorError;
-
-            return DesignMessage(msgSuperUser, addContextWrapper, encodeMessage, true, ErrorGeneral);
+            var msg = Context.User.IsSystemAdmin
+                ? $"{ErrPrefix} {msgSuperUser}"
+                : msgVisitors ?? DefaultVisitorError;
+            return DesignMessage(msg, addContextWrapper, encodeMessage, ErrorGeneral);
         }
 
-        private string DesignMessage(string msg, bool addContextWrapper, bool encodeMessage, bool isError, string errorCode)
+        private string DesignMessage(string msg, bool addContextWrapper, bool encodeMessage, string errorCode)
         {
             if (encodeMessage)
                 msg = HttpUtility.HtmlEncode(msg);
@@ -118,14 +121,15 @@ namespace ToSic.Sxc.Blocks.Output
             return msg;
         }
 
-        public string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true)
+        public string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true) =>
+            Context.User.IsSystemAdmin 
+                ? DesignMessage($"{WarnPrefix} {warning}", addContextWrapper, encodeMessage, null) 
+                : null;
+
+        public string UiContextInfos(string errorCode)
         {
-            if (!Context.User.IsSystemAdmin) return null;
-            return DesignMessage($"Warning: {warning}", addContextWrapper, encodeMessage, false, null);
+            var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode);
+            return JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
         }
-
-        public string UiContextInfos(string errorCode) 
-            => JsonSerializer.Serialize(_jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode), JsonOptions.SafeJsonForHtmlAttributes);
-
     }
 }
