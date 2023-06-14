@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             throw new ArgumentException(
                 $"You called .{methodName}(...) using the '{nameof(tweak)}:' parameter. " +
-                $"You also supplied a '{err.Name}:'. This is not allowed. When you use 'tweak', use {err.Alternatives} instead. See https://r.2sxc.org/tweak-buttons");
+                $"You also supplied a '{err.Name}:'. This is not allowed. When you use 'tweak', use {err.Alternatives} instead. See https://go.2sxc.org/tweak-buttons");
         }
     }
 }

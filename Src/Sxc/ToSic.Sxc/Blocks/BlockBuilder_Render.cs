@@ -96,10 +96,10 @@ namespace ToSic.Sxc.Blocks
                 #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
                 {
-                    Log.A("pre-init innerContent content is empty so no errors, will build");
+                    l.A("pre-init innerContent content is empty so no errors, will build");
                     if (Block.DataIsMissing)
                     {
-                        Log.A("content-block is missing data - will show error or just stop if not-admin-user");
+                        l.A("content-block is missing data - will show error or just stop if not-admin-user");
                         var blockId = Block.Configuration?.BlockIdentifierOrNull;
                         var msg = "Data is missing. This is common when a site is copied " +
                                   "but the content / apps have not been imported yet" +
@@ -222,7 +222,7 @@ namespace ToSic.Sxc.Blocks
             if (AnyLicenseOk) return null;
             
             Log.A("none of the licenses are valid");
-            var warningLink = Tag.A("r.2sxc.org/license-warning").Href("https://r.2sxc.org/license-warning");
+            var warningLink = Tag.A("go.2sxc.org/license-warning").Href("https://go.2sxc.org/license-warning");
             var appsManagementLink = Tag.A("System-Management").Href("#").On("click", "$2sxc(this).cms.run({ action: 'system' })");
             var warningMsg = "Registration not valid so some features may be disabled. " +
                              $"Please re-register in {appsManagementLink}. " +

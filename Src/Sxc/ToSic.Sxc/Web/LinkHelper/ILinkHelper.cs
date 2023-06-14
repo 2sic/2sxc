@@ -70,7 +70,7 @@ namespace ToSic.Sxc.Web
         /// </summary>
         /// <param name="url">The image url. Use an empty string if you want to just get the params for re-use.</param>
         /// <param name="settings">
-        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        /// - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="Images.IResizeSettings"/> object containing all settings.
         ///   If this is provided, only `factor` will still be respected, all other settings like `width` on this command will be ignored.

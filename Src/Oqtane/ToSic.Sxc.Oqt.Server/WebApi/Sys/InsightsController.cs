@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [ApiController]
     public class InsightsController : OqtControllerBase<InsightsControllerReal>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         public InsightsController(): base(InsightsControllerReal.LogSuffix) { }
 

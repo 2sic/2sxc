@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ApiController]
     public class EditController: OqtStatefulControllerBase<EditControllerReal>, IEditController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         public EditController() : base(EditControllerReal.LogSuffix) { }
 

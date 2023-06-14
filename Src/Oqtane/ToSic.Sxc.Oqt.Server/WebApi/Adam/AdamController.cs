@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
     public class AdamController : OqtStatefulControllerBase<AdamControllerReal<int>>, IAdamController<int>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         public AdamController(): base("Adam") { }
 

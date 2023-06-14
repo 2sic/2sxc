@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.EditService
 
         /// <inheritdoc/>
         public IRawHtmlString ContextAttributes(ICanBeEntity target,
-            string noParamOrder = "Params must be named (https://r.2sxc.org/named-params)",
+            string noParamOrder = "Params must be named (https://go.2sxc.org/named-params)",
             string field = null,
             string contentType = null,
             Guid? newGuid = null,

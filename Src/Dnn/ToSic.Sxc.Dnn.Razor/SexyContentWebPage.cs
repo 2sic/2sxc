@@ -126,13 +126,13 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         public IEnumerable<dynamic> AsList(object list)
-            => throw new Exception("AsList is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://r.2sxc.org/RazorComponent");
+            => throw new Exception("AsList is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
         public dynamic Resources
-            => throw new Exception("Resources is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://r.2sxc.org/RazorComponent");
+            => throw new Exception("Resources is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
         public dynamic Settings
-            => throw new Exception("Settings is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://r.2sxc.org/RazorComponent");
+            => throw new Exception("Settings is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
         #endregion
 
@@ -187,7 +187,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         public dynamic Header => throw new Exception("The header property is a new feature in 2sxc 10.20. " +
                                                      "To use it, change your template type to inherit from " +
-                                                     nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+                                                     nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 
 #pragma warning disable 618
         [Obsolete("Use Header instead")]
@@ -205,7 +205,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc/>
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
             => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
-                                   + nameof(RazorComponent) + " see https://r.2sxc.org/RazorComponent");
+                                   + nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 
         #endregion
 

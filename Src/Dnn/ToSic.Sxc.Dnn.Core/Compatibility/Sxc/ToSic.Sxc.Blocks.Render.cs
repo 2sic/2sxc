@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Blocks
             Warning13To15(
                 "DeprecatedStaticRender",
                 $"View:{block?.View?.Id}",
-                "https://r.2sxc.org/brc-13-static-render",
+                "https://go.2sxc.org/brc-13-static-render",
                 log => LogBlockDetails(block, log));
 
 

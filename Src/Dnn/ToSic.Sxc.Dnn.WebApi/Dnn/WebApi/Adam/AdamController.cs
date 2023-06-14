@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [ValidateAntiForgeryToken]
     public class AdamController : SxcApiControllerBase<AdamControllerReal<int>>, IAdamController<int>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         public AdamController() : base("Adam") { }
 

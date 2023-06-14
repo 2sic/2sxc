@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     public class DialogController : OqtStatefulControllerBase<DialogControllerReal>, IDialogController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         public DialogController() : base(DialogControllerReal.LogSuffix) { }
         

@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+    // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
     public class HistoryControllerReal : ServiceBase, IHistoryController
     {

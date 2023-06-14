@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Oqt.Server.Installation
     {
         private static bool? _hotReloadEnabledCheckedAndError;
 
-        private static string errorMessage = "Warning: You must run Oqtane without Hot-Reload to install Apps. See https://r.2sxc.org/oqt-hr";
+        private static string errorMessage = "Warning: You must run Oqtane without Hot-Reload to install Apps. See https://go.2sxc.org/oqt-hr";
 
         internal static void Check()
         {

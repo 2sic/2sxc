@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Services
         /// Construct custom Resize-Settings as needed, either based on existing settings or starting from scratch
         /// </summary>
         /// <param name="settings">
-        /// - A standardized Image-Settings object like `Settings.Images.Content` used as a template - see http://r.2sxc.org/settings
+        /// - A standardized Image-Settings object like `Settings.Images.Content` used as a template - see https://go.2sxc.org/settings
         /// - The `string` name of a template settings , like "Content" or "Screen"
         /// - a `bool` true/false - if true, the normal "Content" configuration is used as a template, if false, no initial configuration is used
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Services
         ///// </summary>
         ///// <param name="url">The image url</param>
         ///// <param name="settings">
-        /////     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        /////     - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
         /////     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /////     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
         /////     Note: If you need to construct very custom settings, use <see cref="ResizeSettings">ResizeSettings</see> to create them
@@ -134,7 +134,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
-        /// - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        /// - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
         /// - The name of a settings configuration, like "Content" or "Screen"
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
@@ -193,7 +193,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
-        ///     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        ///     - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
         ///     - The name of a settings configuration, like "Content" or "Screen"
         ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
@@ -250,7 +250,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
-        ///     - A standardized Image-Settings object like Settings.Images.Content - see http://r.2sxc.org/settings
+        ///     - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
         ///     - The name of a settings configuration, like "Content" or "Screen"
         ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
         ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.

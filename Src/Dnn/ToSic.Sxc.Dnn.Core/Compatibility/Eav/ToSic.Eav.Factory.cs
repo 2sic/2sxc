@@ -13,7 +13,7 @@ namespace ToSic.Eav
     /// If possible avoid using this, as it's a workaround for code which is outside of the normal Dependency Injection and therefor a bad pattern.
     /// </summary>
     [PublicApi("Careful - obsolete!")]
-    [Obsolete("Deprecated, please use Dnn 9 DI instead https://r.2sxc.org/brc-13-eav-factory")]
+    [Obsolete("Deprecated, please use Dnn 9 DI instead https://go.2sxc.org/brc-13-eav-factory")]
 	public class Factory
 	{
         [Obsolete("Not used any more, but keep for API consistency in case something calls ActivateNetCoreDi")]
@@ -22,16 +22,16 @@ namespace ToSic.Eav
 
         [PrivateApi("Removed v13.02 - should not be in use, completely remove ca. July 2022")]
 	    public static void ActivateNetCoreDi(ServiceConfigurator configure) =>
-            Killed13(nameof(ActivateNetCoreDi), "", "https://r.2sxc.org/brc-13-eav-factory-startup");
+            Killed13(nameof(ActivateNetCoreDi), "", "https://go.2sxc.org/brc-13-eav-factory-startup");
 
         /// <summary>
         /// Dependency Injection resolver with a known type as a parameter.
         /// </summary>
         /// <typeparam name="T">The type / interface we need.</typeparam>
-        [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://r.2sxc.org/brc-13-eav-factory")]
+        [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://go.2sxc.org/brc-13-eav-factory")]
         public static T Resolve<T>()
         {
-            Warning13To15("Factory.Resolve<T>", typeof(T).FullName, "https://r.2sxc.org/brc-13-eav-factory");
+            Warning13To15("Factory.Resolve<T>", typeof(T).FullName, "https://go.2sxc.org/brc-13-eav-factory");
             return DnnStaticDi.StaticBuild<T>();
         }
     }

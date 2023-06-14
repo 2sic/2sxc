@@ -21,7 +21,7 @@ namespace ToSic.Sxc.DataSources
     [VisualQuery(
         ConfigurationType = "",
         NameId = "a11c28fb-7d8d-40a2-a22c-50beaa019e41",
-        HelpLink = "https://r.2sxc.org/ds-sites",
+        HelpLink = "https://go.2sxc.org/ds-sites",
         Icon = Icons.Globe,
         NiceName = "Sites",
         Type = DataSourceType.Source,

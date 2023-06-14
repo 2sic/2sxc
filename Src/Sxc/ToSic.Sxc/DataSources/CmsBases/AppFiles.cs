@@ -29,7 +29,7 @@ namespace ToSic.Sxc.DataSources
     [VisualQuery(
         ConfigurationType = "", // TODO:
         NameId = "3fe6c215-4c37-45c1-8883-b4b2a47162a7",
-        HelpLink = "https://r.2sxc.org/ds-appfiles",
+        HelpLink = "https://go.2sxc.org/ds-appfiles",
         Icon = Icons.Tree,
         NiceName = "AppFiles",
         Type = DataSourceType.Source,

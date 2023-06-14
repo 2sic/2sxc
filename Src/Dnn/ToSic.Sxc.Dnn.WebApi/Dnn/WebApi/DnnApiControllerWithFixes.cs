@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [DnnLogWebApi, JsonOnlyResponse]
     public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
 

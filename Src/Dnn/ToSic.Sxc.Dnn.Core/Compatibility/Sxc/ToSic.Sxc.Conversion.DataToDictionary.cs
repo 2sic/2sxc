@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Conversion
         public DataToDictionary() : base(DnnStaticDi.StaticBuild<MyServices>())
         {
             Compatibility.Obsolete.Warning13To15(nameof(DataToDictionary), "",
-                "https://r.2sxc.org/brc-13-conversion");
+                "https://go.2sxc.org/brc-13-conversion");
         }
 
         /// <summary>

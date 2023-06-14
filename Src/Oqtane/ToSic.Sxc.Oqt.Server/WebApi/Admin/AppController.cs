@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     public class AppController : OqtStatefulControllerBase<AppControllerReal<IActionResult>>, IAppController<IActionResult>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         public AppController(): base(AppControllerReal<IActionResult>.LogSuffix) { }
 

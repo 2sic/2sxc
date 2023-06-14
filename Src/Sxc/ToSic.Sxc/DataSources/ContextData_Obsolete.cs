@@ -13,7 +13,7 @@ namespace ToSic.Sxc.DataSources
             get
             {
                 if (_cache != null) return _cache;
-                Compatibility.Obsolete.Warning13To15("Data.Cache", "", "https://r.2sxc.org/brc-13-datasource-cache");
+                Compatibility.Obsolete.Warning13To15("Data.Cache", "", "https://go.2sxc.org/brc-13-datasource-cache");
                 return _cache = new Compatibility.CacheWithGetContentType(_appStates.Get(this));
             }
         }

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Adam",
         UiHint = "Files and folders in the Adam",
         NameId = "ee1d0cb6-5086-4d59-b16a-d0dc7b594bf2",
-        HelpLink = "https://r.2sxc.org/ds-adam",
+        HelpLink = "https://go.2sxc.org/ds-adam",
         Icon = Icons.Tree,
         Type = DataSourceType.Lookup,
         Audience = Audience.Advanced,
