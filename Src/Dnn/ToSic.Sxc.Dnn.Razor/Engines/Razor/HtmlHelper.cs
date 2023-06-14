@@ -78,15 +78,6 @@ namespace ToSic.Sxc.Engines.Razor
 
                 // Report if first time
                 var nice = TryToLogAndReWrapError(compileException, isFirstOccurrence, "Special exception handling - only show message");
-                //if (isFirstOccurrence)
-                //    _page.Log?.GetContents().Ex(compileException);
-                //IsError = true;
-                //_page.Log?.GetContents().A("Special exception handling - only show message");
-
-                // Show a nice / ugly error depending on user permissions
-                // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
-                //var exRewraped = _page._DynCodeRoot.GetService<CodeErrorHelpService>().AddHelpIfKnownError(compileException, false);
-                //var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(exRewraped, isFirstOccurrence);
                 var htmlError = Tag.Custom(nice);
                 return htmlError;
             }

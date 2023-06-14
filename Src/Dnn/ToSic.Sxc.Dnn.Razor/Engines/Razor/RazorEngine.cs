@@ -95,8 +95,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception e)
             {
-                l.E("Problem with setting dynamic model");
-                l.Ex(e);
+                l.Ex("Problem with setting dynamic model", e);
             }
 
             try

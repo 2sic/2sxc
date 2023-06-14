@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.Code.Errors
 {
@@ -18,6 +17,10 @@ namespace ToSic.Sxc.Code.Errors
             "error CS0246: The type or namespace name 'DynamicEntity' could not be found",
             "ErrDynamicEntity");
 
+        public static CodeError MethodOnObjectNotFound = new CodeError("Method on Object not found",
+            "Cannot perform runtime binding on a null reference",
+            "ErrBindingOnNullReference");
+
         public static List<CodeError> InvalidCastExceptions = new List<CodeError>
         {
             IEntityOnEavNamespace
@@ -29,41 +32,23 @@ namespace ToSic.Sxc.Code.Errors
             DynamicEntity,
         };
 
-        public static string FindAdditionalText(Exception ex, List<CodeError> errorList)
+        public static List<CodeError> Runtime = new List<CodeError>(InvalidCastExceptions)
+        {
+            MethodOnObjectNotFound,
+        };
+        public static CodeError FindHelp(Exception ex, List<CodeError> errorList)
         {
             var msg = ex?.Message;
             if (msg == null) return null;
             foreach (var help in errorList)
                 if (msg.Contains(help.Detect))
-                    return help.ShowMessage;
+                    return help;
 
             return null;
         }
+        public static string FindAdditionalText(Exception ex, List<CodeError> errorList) => FindHelp(ex, errorList)?.Message;
     }
 
 
-    internal readonly struct CodeError
-    {
-        public const string ErrHelpPre = "Error in your code. ";// "***** Probably https://go.2sxc.org/";
-        public const string ErrHelpLink = "***** Probably https://go.2sxc.org/{0} can help! ***** \n";
-        public const string ErrHelpSuf = /*" can help! ***** \n " +*/ "What follows is the internal error: ";
 
-        public CodeError(string name, string detect, string linkCode, string message = null)
-        {
-            Name = name;
-            Detect = detect;
-            _message = message;
-            _linkCode = linkCode;
-        }
-        /// <summary>
-        /// Name for internal use to better understand what this is for
-        /// </summary>
-        public readonly string Name;
-        public readonly string Detect;
-        private readonly string _message;
-        private readonly string _linkCode;
-        private string Link => _linkCode.HasValue() ? string.Format(ErrHelpLink, _linkCode) : "";
-
-        public string ShowMessage => $"{ErrHelpPre} {_message} {Link} {ErrHelpSuf}";
-    }
 }

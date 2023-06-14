@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CSharp.RuntimeBinder;
+using System;
 #if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
 #else
@@ -12,24 +13,28 @@ namespace ToSic.Sxc.Code.Errors
     {
         public Exception AddHelpIfKnownError(Exception ex)
         {
-            var additionalMsg = HelpText(ex);
-            return additionalMsg == null 
+            var help = FindHelp(ex);
+            return help == null 
                 ? ex 
-                : new ExceptionWithHelp(additionalMsg, ex);
+                : new ExceptionWithHelp(help, ex);
         }
 
-        public string HelpText(Exception ex)
+        internal CodeError FindHelp(Exception ex)
         {
-            // Check if we already wrapped it
-            if (ex is ExceptionWithHelp) return null;
-
-            if (ex is InvalidCastException)
-                return CodeErrorsDatabase.FindAdditionalText(ex, CodeErrorsDatabase.InvalidCastExceptions);
-
-            if (ex is HttpCompileException)
-                return CodeErrorsDatabase.FindAdditionalText(ex, CodeErrorsDatabase.HttpCompileExceptions);
-
-            return null;
+            switch (ex)
+            {
+                // Check if we already wrapped it
+                case ExceptionWithHelp _:
+                    return null;
+                case RuntimeBinderException _:
+                    return CodeErrorsDatabase.FindHelp(ex, CodeErrorsDatabase.Runtime);
+                case InvalidCastException _:
+                    return CodeErrorsDatabase.FindHelp(ex, CodeErrorsDatabase.InvalidCastExceptions);
+                case HttpCompileException _:
+                    return CodeErrorsDatabase.FindHelp(ex, CodeErrorsDatabase.HttpCompileExceptions);
+                default:
+                    return null;
+            }
         }
         
     }
