@@ -5,11 +5,13 @@ using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Errors;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Web;
@@ -26,11 +28,17 @@ namespace ToSic.Sxc.Engines
     {
         #region Constructor / DI
 
-        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory) : base(helpers) =>
-            ConnectServices(
-                _codeRootFactory = codeRootFactory
-            );
+        private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly DnnCodeRootFactory _codeRootFactory;
+
+        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp) : base(helpers)
+        {
+            ConnectServices(
+                _codeRootFactory = codeRootFactory,
+                _errorHelp = errorHelp
+            );
+        }
+
 
         #endregion
 
@@ -98,9 +106,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception maybeIEntityCast)
             {
-                l.Ex(maybeIEntityCast);
-                ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
-                throw;
+                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast));
             }
             l.Done();
         }
@@ -127,9 +133,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception ex)
             {
-                Log.Ex(ex);
-                ErrorHelp.AddHelpIfKnownError(ex);
-                throw;
+                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(ex));
             }
         }
 

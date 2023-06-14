@@ -17,6 +17,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Errors;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 
@@ -130,16 +131,16 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                     return l.ReturnAsOk(HttpControllerDescriptor(request, sharedControllerFolder, sharedControllerPath, controllerTypeName));
 
                 l.A("path not found in shared, error will be thrown in a moment");
+
+                var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
+                               $"We checked the virtual path '{controllerPath}'";
+                throw l.Done(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal, sp.Build<CodeErrorHelpService>()));
             }
             catch (Exception e)
             {
                 var msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
-                throw l.Done(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg));
+                throw l.Done(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.InternalServerError, e, msg, sp.Build<CodeErrorHelpService>()));
             }
-
-            var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
-                           $"We checked the virtual path '{controllerPath}'";
-            throw l.Done(DnnAppFolderUtilities.ReportToLogAndThrow(request, HttpStatusCode.NotFound, new Exception(), msgFinal));
         }
 
         private static string GetEdition(IHttpRouteData routeData)

@@ -6,6 +6,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Errors;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Razor
@@ -18,16 +19,18 @@ namespace ToSic.Sxc.Razor
 
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
+        private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly LazySvc<DynamicCodeRoot> _dynCodeRootLazy;
         public IRazorRenderer RazorRenderer { get; }
 
         #region Constructor / DI
 
-        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(services)
+        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy, LazySvc<CodeErrorHelpService> errorHelp) : base(services)
         {
             ConnectServices(
                 _dynCodeRootLazy = dynCodeRootLazy,
-                RazorRenderer = razorRenderer
+                RazorRenderer = razorRenderer,
+                _errorHelp = errorHelp
             );
         }
         
@@ -63,8 +66,7 @@ namespace ToSic.Sxc.Razor
             }
             catch (Exception maybeIEntityCast)
             {
-                ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
-                throw;
+                throw _errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast);
             }
 
             // WIP https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs#L397-L404

@@ -9,20 +9,22 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApiRouting;
+using ToSic.Sxc.Code.Errors;
 
 namespace ToSic.Sxc.Dnn
 {
     public class DnnAppFolderUtilities: ServiceBase
     {
+        private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly Generator<AppFolder> _appFolder;
         private readonly Generator<DnnGetBlock> _dnnGetBlock;
 
-        public DnnAppFolderUtilities(Generator<AppFolder> appFolder, Generator<DnnGetBlock> dnnGetBlock) : base($"{DnnConstants.LogName}.AppFld")
+        public DnnAppFolderUtilities(Generator<AppFolder> appFolder, Generator<DnnGetBlock> dnnGetBlock, LazySvc<CodeErrorHelpService> errorHelp) : base($"{DnnConstants.LogName}.AppFld")
         {
+            _errorHelp = errorHelp;
             ConnectServices(
                 _appFolder = appFolder,
                 _dnnGetBlock = dnnGetBlock
@@ -64,7 +66,7 @@ namespace ToSic.Sxc.Dnn
             {
                 const string msg = errPrefix + "Trying to find app name, unexpected error - possibly bad/invalid headers. " + errSuffix;
                 if (errorIfNotFound)
-                    throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg));
+                    throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, getBlockException, msg, _errorHelp.Value));
                 return (null, "not found, maybe error");
             }
 
@@ -72,15 +74,15 @@ namespace ToSic.Sxc.Dnn
             {
                 const string msg = errPrefix + "App name is unknown - tried to check name in url (.../app/[app-name]/...) " +
                                    "and tried app-detection using url-params/headers pageid/moduleid. " + errSuffix;
-                throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg));
+                throw l.Done(ReportToLogAndThrow(request, HttpStatusCode.BadRequest, new Exception(msg), msg, _errorHelp.Value));
             }
 
             return (appFolder, "ok");
         });
 
-        internal static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg)
+        internal static HttpResponseException ReportToLogAndThrow(HttpRequestMessage request, HttpStatusCode code, Exception e, string msg, CodeErrorHelpService errorHelp)
         {
-            var helpText = ErrorHelp.HelpText(e);
+            var helpText = errorHelp.HelpText(e);
             var exception = new Exception(msg + helpText, e);
             DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
             return new HttpResponseException(request.CreateErrorResponse(code, exception.Message, e));

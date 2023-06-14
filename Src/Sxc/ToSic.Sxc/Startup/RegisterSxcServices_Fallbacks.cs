@@ -5,6 +5,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Errors;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Polymorphism;
@@ -83,6 +84,7 @@ namespace ToSic.Sxc.Startup
 
             // v16
             services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
+            services.TryAddTransient<CodeErrorHelpService>();
 
             return services;
         }
