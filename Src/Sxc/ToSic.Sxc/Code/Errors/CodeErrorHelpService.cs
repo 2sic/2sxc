@@ -25,11 +25,11 @@ namespace ToSic.Sxc.Code.Errors
                 case ExceptionWithHelp _:
                     return null;
                 case RuntimeBinderException _:
-                    return CodeErrorsList.FindHelp(ex, CodeErrorsList.ListRuntime);
+                    return CodeHelpList.FindHelp(ex, CodeHelpList.ListRuntime);
                 case InvalidCastException _:
-                    return CodeErrorsList.FindHelp(ex, CodeErrorsList.ListInvalidCast);
+                    return CodeHelpList.FindHelp(ex, CodeHelpList.ListInvalidCast);
                 case HttpCompileException _:
-                    return CodeErrorsList.FindHelp(ex, CodeErrorsList.ListHttpCompile);
+                    return CodeHelpList.FindHelp(ex, CodeHelpList.ListHttpCompile);
                 default:
                     return null;
             }

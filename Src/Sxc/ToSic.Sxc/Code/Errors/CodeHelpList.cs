@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ToSic.Sxc.Code.Errors
 {
-    internal class CodeErrorsList
+    internal class CodeHelpList
     {
         public static CodeHelp IEntityOnEavNamespace = new CodeHelp("ToSic.Eav.IEntity",
             "error CS0234: The type or namespace name 'IEntity' does not exist in the namespace 'ToSic.Eav",
