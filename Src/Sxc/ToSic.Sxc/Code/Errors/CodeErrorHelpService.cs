@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Code.Errors
             return help == null ? ex : new ExceptionWithHelp(help, ex);
         }
 
-        internal CodeError FindHelp(Exception ex)
+        internal CodeHelp FindHelp(Exception ex)
         {
             switch (ex)
             {

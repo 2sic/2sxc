@@ -8,6 +8,6 @@ namespace ToSic.Sxc.Code.Errors
 {
     public interface IExceptionWithHelp
     {
-        CodeError Help { get; }
+        CodeHelp Help { get; }
     }
 }

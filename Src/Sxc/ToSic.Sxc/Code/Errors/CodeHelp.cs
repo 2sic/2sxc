@@ -2,14 +2,14 @@
 
 namespace ToSic.Sxc.Code.Errors
 {
-    public class CodeError
+    public class CodeHelp
     {
         public const string ErrHelpPre = "Error in your code. ";
         public const string ErrHelpLink = "https://go.2sxc.org/{0}";
         public const string ErrLinkMessage = "***** Probably {0} can help! ***** \n";
         public const string ErrHelpSuf = "What follows is the internal error: ";
 
-        public CodeError(string name, string detect, string linkCode, string uiMessage = null)
+        public CodeHelp(string name, string detect, string linkCode, string uiMessage = null)
         {
             Name = name;
             Detect = detect;

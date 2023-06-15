@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Problems;
-using ToSic.Sxc.Code.Errors;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
 
 namespace ToSic.Sxc.Edit.ClientContextInfo

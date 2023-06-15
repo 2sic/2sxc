@@ -8,12 +8,12 @@ namespace ToSic.Sxc.Engines
         //public RenderStatusType RenderStatus = RenderStatusType.Error;
         //public bool ShouldLog => RenderStatus != RenderStatusType.Ok;
 
-        public RenderingException(CodeError help, string message = default) : base(message ?? help.UiMessage)
+        public RenderingException(CodeHelp help, string message = default) : base(message ?? help.UiMessage)
         {
             Help = help;
         }
         //public RenderingException(string message, Exception innerException) : base(message, innerException) { }
-        public RenderingException(CodeError help, Exception innerException) : base("Rendering Exception",
+        public RenderingException(CodeHelp help, Exception innerException) : base("Rendering Exception",
             innerException)
         {
             Help = help;
@@ -30,6 +30,6 @@ namespace ToSic.Sxc.Engines
         //    RenderStatus = renderStat;
         //}
 
-        public CodeError Help { get; }
+        public CodeHelp Help { get; }
     }
 }

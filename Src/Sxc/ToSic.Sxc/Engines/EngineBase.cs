@@ -86,7 +86,7 @@ namespace ToSic.Sxc.Engines
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-                throw new RenderingException(new CodeError("Template File Not Found", "",
+                throw new RenderingException(new CodeHelp("Template File Not Found", "",
                     "err-template-not-found", $"The template file '{templatePath}' does not exist."));
 
             Template = view;
@@ -186,10 +186,10 @@ namespace ToSic.Sxc.Engines
                 throw new RenderingException(ErrHelpTypeMissing);
         }
 
-        private static CodeError ErrHelpConfigMissing = new CodeError("Template Config missing", "",
+        private static CodeHelp ErrHelpConfigMissing = new CodeHelp("Template Config missing", "",
             "err-view-config-missing", "Template Configuration Missing");
 
-        private static CodeError ErrHelpTypeMissing = new CodeError("Content Type Missing", "", "err-view-type-missing", 
+        private static CodeHelp ErrHelpTypeMissing = new CodeHelp("Content Type Missing", "", "err-view-type-missing", 
             "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
         private (RenderStatusType RenderStatus, string Message, string ErrorCode, Exception exOrNull) CheckExpectedNoRenderConditions()
@@ -197,7 +197,7 @@ namespace ToSic.Sxc.Engines
             if (Template.ContentType != "" && Template.ContentItem == null &&
                 Block.Configuration.Content.All(e => e == null))
             {
-                var ex = new ExceptionWithHelp(new CodeError(ErrorDataIsMissing, "", "err-block-data-missing"));
+                var ex = new ExceptionWithHelp(new CodeHelp(ErrorDataIsMissing, "", "err-block-data-missing"));
                 return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, ErrorDataIsMissing, ex);
             }
 
@@ -237,7 +237,7 @@ namespace ToSic.Sxc.Engines
                     $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
         }
 
-        private static CodeError ErrorHelpNotAuthorized = new CodeError("Not authorized", "",
+        private static CodeHelp ErrorHelpNotAuthorized = new CodeHelp("Not authorized", "",
             "http://2sxc.org/help?tag=view-permissions",
             "This view is not accessible for the current user. To give access, change permissions in the view settings.");
     }

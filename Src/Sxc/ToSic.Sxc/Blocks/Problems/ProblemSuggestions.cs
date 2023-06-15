@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Blocks.Problems
             var suggestions = new List<ProblemReport>();
 
             // Add suggestions for any exceptions in the code
-            if ((exOrNull as IExceptionWithHelp)?.Help is CodeError help)
+            if ((exOrNull as IExceptionWithHelp)?.Help is CodeHelp help)
             {
                 var problem = new ProblemReport
                 {
