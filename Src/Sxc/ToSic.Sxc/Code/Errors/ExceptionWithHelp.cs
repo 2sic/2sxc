@@ -2,14 +2,14 @@
 
 namespace ToSic.Sxc.Code.Errors
 {
-    public class ExceptionWithHelp: Exception
+    public class ExceptionWithHelp: Exception, IExceptionWithHelp
     {
-        internal ExceptionWithHelp(CodeError help, Exception inner) : base(help.Message, inner)
+        internal ExceptionWithHelp(CodeError help, Exception inner = null) : base(help.ErrorMessage, inner)
         {
             Help = help;
         }
 
-        internal CodeError Help;
+        public CodeError Help { get; }
 
         public ExceptionWithHelp(string message, Exception inner): base(message, inner)
         { }

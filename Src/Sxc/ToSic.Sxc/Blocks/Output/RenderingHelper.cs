@@ -57,12 +57,13 @@ namespace ToSic.Sxc.Blocks.Output
             bool editContext = false,
             string tag = Constants.DefaultContextTag,
             bool addLineBreaks = true,
-            string errorCode = default
-            )
+            string errorCode = default,
+            Exception exOrNull = default
+        )
         {
             Eav.Parameters.Protect(noParamOrder, $"{nameof(instanceId)},{nameof(contentBlockId)},{nameof(editContext)},{nameof(tag)},{nameof(addLineBreaks)}");
 
-            var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, errorCode);
+            var contextAttribs = ContextAttributes(instanceId, contentBlockId, editContext, errorCode, exOrNull);
 
             var lineBreaks = addLineBreaks ? "\n" : "";
 
@@ -71,7 +72,7 @@ namespace ToSic.Sxc.Blocks.Output
                    $"{lineBreaks}</{tag}>";
         }
 
-        private string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, string errorCode)
+        private string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos, string errorCode, Exception exOrNull)
         {
             var contextAttribs = "";
             if (instanceId != 0) contextAttribs += $" data-cb-instance='{instanceId}'";
@@ -79,7 +80,9 @@ namespace ToSic.Sxc.Blocks.Output
             if (contentBlockId != 0) contextAttribs += $" data-cb-id='{contentBlockId}'";
 
             // optionally add editing infos
-            if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", UiContextInfos(errorCode));
+            var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode, exOrNull);
+            var contextInfos = JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
+            if (includeEditInfos) contextAttribs += Build.Attribute("data-edit-context", contextInfos);
             return contextAttribs;
         }
 
@@ -126,10 +129,10 @@ namespace ToSic.Sxc.Blocks.Output
                 ? DesignMessage($"{WarnPrefix} {warning}", addContextWrapper, encodeMessage, null) 
                 : null;
 
-        public string UiContextInfos(string errorCode)
-        {
-            var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode);
-            return JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
-        }
+        //public string UiContextInfos(string errorCode)
+        //{
+        //    var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode);
+        //    return JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
+        //}
     }
 }

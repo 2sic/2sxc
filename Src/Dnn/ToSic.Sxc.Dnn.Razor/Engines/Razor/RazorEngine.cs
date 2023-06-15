@@ -85,12 +85,13 @@ namespace ToSic.Sxc.Engines
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
         [PrivateApi]
-        public void Render(TextWriter writer, object data)
+        private void Render(TextWriter writer, object data)
         {
             var l = Log.Fn(message: "will render into TextWriter");
+            var page = Webpage; // access the property once only
             try
             {
-                if (data != null && Webpage is ISetDynamicModel setDyn)
+                if (data != null && page is ISetDynamicModel setDyn)
                     setDyn.SetDynamicModel(data);
             }
             catch (Exception e)
@@ -100,7 +101,6 @@ namespace ToSic.Sxc.Engines
 
             try
             {
-                var page = Webpage; // access the property once only
                 page.ExecutePageHierarchy(new WebPageContext(HttpContext, page, data), writer, page);
             }
             catch (Exception maybeIEntityCast)
@@ -166,9 +166,9 @@ namespace ToSic.Sxc.Engines
             else if (pageToInit is ICompatibleToCode12)
                 compatibility = Constants.CompatibilityLevel12;
 
-            if(pageToInit is SexyContentWebPage oldPage)
+            if (pageToInit is SexyContentWebPage oldPage)
 #pragma warning disable 618, CS0612
-                oldPage.InstancePurpose = (InstancePurposes) Purpose;
+                oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
             InitHelpers(pageToInit, compatibility);
             return l.ReturnTrue("ok");

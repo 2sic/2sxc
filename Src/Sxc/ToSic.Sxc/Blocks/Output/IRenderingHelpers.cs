@@ -11,12 +11,14 @@ namespace ToSic.Sxc.Blocks.Output
 
         string WrapInContext(string content,
             string noParamOrder = Eav.Parameters.Protector,
-            int instanceId = 0, 
-            int contentBlockId = 0, 
-            bool editContext = false, 
+            int instanceId = 0,
+            int contentBlockId = 0,
+            bool editContext = false,
             string tag = "div",
             bool addLineBreaks = true,
-            string errorCode = default);
+            string errorCode = default,
+            Exception exOrNull = default
+        );
 
         //string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);
 

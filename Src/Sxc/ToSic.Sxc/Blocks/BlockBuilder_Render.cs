@@ -93,6 +93,7 @@ namespace ToSic.Sxc.Blocks
                 // do pre-check to see if system is stable & ready
                 var (body, err) = GenerateErrorMsgIfInstallationNotOk();
                 var errorCode = err ? ErrorInstallationNotOk : null;
+                Exception exOrNull = null;;
                 #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
                 {
@@ -105,7 +106,8 @@ namespace ToSic.Sxc.Blocks
                                   "but the content / apps have not been imported yet" +
                                   " - check 2sxc.org/help?tag=export-import - " +
                                   $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
-                            body = RenderingHelper.DesignErrorMessage(new Exception(msg), true);
+                        exOrNull = new Exception(msg);
+                        body = RenderingHelper.DesignErrorMessage(exOrNull, true);
                         err = true;
                         errorCode = ErrorDataIsMissing;
                     }
@@ -122,14 +124,19 @@ namespace ToSic.Sxc.Blocks
                             var engine = GetEngine();
                             var renderEngineResult = engine.Render(data);
                             body = renderEngineResult.Html;
+                            exOrNull = renderEngineResult.ExceptionOrNull;
                             errorCode = renderEngineResult.ErrorCode ?? errorCode;
-                            if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
+                            if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true)
+                            {
+                                // TODO: GET FROM render engine result
+                                exOrNull = exOrNull;
                                 errorCode = ErrorGeneral;
+                            }
                             // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (renderEngineResult.ActivateJsApi)
                             {
-                                Log.A("template referenced 2sxc.api JS in script-tag: will enable");
+                                l.A("template referenced 2sxc.api JS in script-tag: will enable");
                                 Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.NameId);
                             }
 
@@ -140,6 +147,7 @@ namespace ToSic.Sxc.Blocks
                     }
                     catch (Exception ex)
                     {
+                        exOrNull = ex;
                         body = RenderingHelper.DesignErrorMessage(ex, true);
                         err = true;
                         errorCode = ErrorRendering;
@@ -168,7 +176,8 @@ namespace ToSic.Sxc.Blocks
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
                         editContext: addEditCtx, 
-                        errorCode: errorCode)
+                        errorCode: errorCode,
+                        exOrNull: exOrNull)
                     : body;
                 #endregion
 

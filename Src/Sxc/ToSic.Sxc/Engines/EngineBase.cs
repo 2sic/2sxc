@@ -17,6 +17,8 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
+using ToSic.Sxc.Code.Errors;
+using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
 
@@ -84,8 +86,8 @@ namespace ToSic.Sxc.Engines
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-                // todo: change to some kind of "rendering exception"
-                throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
+                throw new RenderingException(new CodeError("Template File Not Found", "",
+                    "err-template-not-found", $"The template file '{templatePath}' does not exist."));
 
             Template = view;
             TemplatePath = templatePath;
@@ -101,6 +103,7 @@ namespace ToSic.Sxc.Engines
             // Run engine-internal init stuff
             Init();
         });
+
 
         private string PolymorphTryToSwitchPath(string root, IView view, string subPath) => Log.Func($"{root}, {subPath}", l =>
         {
@@ -163,10 +166,10 @@ namespace ToSic.Sxc.Engines
 #pragma warning restore CS0618
 #endif
             // check if rendering is possible, or throw exceptions...
-            var (renderStatus, message, errorCode) = CheckExpectedNoRenderConditions();
+            var (renderStatus, message, errorCode, exOrNull) = CheckExpectedNoRenderConditions();
 
             if (renderStatus != RenderStatusType.Ok)
-                return l.Return(new RenderEngineResult(message, false, null, errorCode), $"{nameof(renderStatus)} not OK");
+                return l.Return(new RenderEngineResult(message, false, null, errorCode, exOrNull), $"{nameof(renderStatus)} not OK");
 
             var renderedTemplate = RenderTemplate(data);
             var depMan = Services.BlockResourceExtractor;
@@ -177,19 +180,28 @@ namespace ToSic.Sxc.Engines
         private void CheckExpectedTemplateErrors()
         {
             if (Template == null)
-                throw new RenderingException("Template Configuration Missing");
+                throw new RenderingException(ErrHelpConfigMissing);
 
             if (Template.ContentType != "" && Services.AppStatesLazy.Value.Get(App).GetContentType(Template.ContentType) == null)
-                throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
+                throw new RenderingException(ErrHelpTypeMissing);
         }
 
-        private (RenderStatusType RenderStatus, string Message, string ErrorCode) CheckExpectedNoRenderConditions()
+        private static CodeError ErrHelpConfigMissing = new CodeError("Template Config missing", "",
+            "err-view-config-missing", "Template Configuration Missing");
+
+        private static CodeError ErrHelpTypeMissing = new CodeError("Content Type Missing", "", "err-view-type-missing", 
+            "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
+
+        private (RenderStatusType RenderStatus, string Message, string ErrorCode, Exception exOrNull) CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
                 Block.Configuration.Content.All(e => e == null))
-                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, BlockBuildingConstants.ErrorDataIsMissing);
+            {
+                var ex = new ExceptionWithHelp(new CodeError(ErrorDataIsMissing, "", "err-block-data-missing"));
+                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, ErrorDataIsMissing, ex);
+            }
 
-            return (RenderStatusType.Ok, null, null);
+            return (RenderStatusType.Ok, null, null, null);
         }
 
         // todo: refactor - this should go somewhere, I just don't know where :)
@@ -220,9 +232,13 @@ namespace ToSic.Sxc.Engines
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))
-                throw new RenderingException(new UnauthorizedAccessException(
-                    "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
+                // TODO: maybe create an exception which inherits from UnauthorizedAccess - in case this improves behavior / HTTP response
+                throw new RenderingException(ErrorHelpNotAuthorized, new UnauthorizedAccessException(
+                    $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
         }
 
+        private static CodeError ErrorHelpNotAuthorized = new CodeError("Not authorized", "",
+            "http://2sxc.org/help?tag=view-permissions",
+            "This view is not accessible for the current user. To give access, change permissions in the view settings.");
     }
 }
