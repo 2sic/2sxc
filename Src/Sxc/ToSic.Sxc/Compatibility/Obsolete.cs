@@ -7,14 +7,8 @@ namespace ToSic.Sxc.Compatibility
 {
     public class Obsolete
     {
-        public static void Warning13To15(string obsoleteId, string specificId, string link, Action<ILog> addMore = null) 
-            => new LogObsolete(obsoleteId, specificId, "v13", "v15 ca. end of 2022", link, addMore);
-
-        public static void Warning13To15(string obsoleteId, string specificId, string link, IBlock block) 
-            => new LogObsolete(obsoleteId, specificId, "v13", "v15 ca. end of 2022", link, (log) => LogBlockDetails(block, log));
-
-        public static void Killed13(string obsoleteId, string specificId, string link, Action<ILog> addMore = null) 
-            => new LogObsolete(obsoleteId, specificId, "v13 EOY 2021", null, link, addMore);
+        public static void Report(CodeChangeInfo change, string specificId = default, Action<ILog> addMore = null) 
+            => new LogObsolete(change, specificId, addMore);
 
         public static void LogBlockDetails(IBlock block, ILog log)
         {

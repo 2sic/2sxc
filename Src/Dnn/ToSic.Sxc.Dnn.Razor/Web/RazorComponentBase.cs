@@ -46,6 +46,7 @@ namespace ToSic.Sxc.Web
             // Return if parent page is not a SexyContentWebPage
             if (!(parentPage is RazorComponentBase typedParent)) return;
 
+            _parentComponent = typedParent;
 
             // Forward the context
             ConnectToRoot(typedParent._DynCodeRoot);
@@ -54,6 +55,8 @@ namespace ToSic.Sxc.Web
                 Log15.A("@RenderPage:" + VirtualPath);
             } catch { /* ignore */ }
         }
+
+        private RazorComponentBase _parentComponent;
 
         #region Compile Helpers
 

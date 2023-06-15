@@ -150,7 +150,7 @@ namespace ToSic.Sxc.Engines
         });
 
         [PrivateApi]
-        protected abstract string RenderTemplate(object data);
+        protected abstract (string Contents, Exception Exception) RenderTemplate(object data);
 
         [PrivateApi]
         protected virtual void Init() {}
@@ -173,7 +173,9 @@ namespace ToSic.Sxc.Engines
 
             var renderedTemplate = RenderTemplate(data);
             var depMan = Services.BlockResourceExtractor;
-            var result = depMan.Process(renderedTemplate);
+            var result = depMan.Process(renderedTemplate.Contents);
+            if (renderedTemplate.Exception != null)
+                result = new RenderEngineResult(result, exOrNull: renderedTemplate.Exception);
             return l.ReturnAsOk(result);
         }
 

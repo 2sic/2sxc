@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Engines
         }
 
 
-        protected override string RenderTemplate(object data)
+        protected override (string, Exception) RenderTemplate(object data)
         {
             var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
@@ -121,9 +121,9 @@ namespace ToSic.Sxc.Engines
             var repeatsMatches = RepeatRegex.Matches(templateSource);       
             var repeatsRendered = new List<string>();
             foreach (Match match in repeatsMatches)
-            {
-                repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(), match.Groups[RegexToken.StreamName].Value, match.Groups[RegexToken.Template].Value));
-            }
+                repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(),
+                    match.Groups[RegexToken.StreamName].Value,
+                    match.Groups[RegexToken.Template].Value));
 
             // Render sections between the <repeat>s (but before replace the <repeat>s and 
             // the templates contained with placeholders, so the templates in the <reapeat>s 
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Engines
                                .Insert(repeatsIndexes[i], repeatsRendered[i]);
             }
 
-            return renderedBuilder.ToString();
+            return (renderedBuilder.ToString(), null);
         }
 
 

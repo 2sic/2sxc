@@ -29,12 +29,12 @@ namespace ToSic.Sxc.Blocks
             var l = Log.Fn<IRenderResult>(timer: true);
             try
             {
-                var (html, err) = RenderInternal(data);
+                var (html, isErr, exOrNull) = RenderInternal(data);
                 var result = new RenderResult(html)
                 {
-                    IsError = err,
+                    IsError = isErr,
                     ModuleId = Block.ParentId,
-                    CanCache = !err && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
+                    CanCache = !isErr && exOrNull == null && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
                 };
 
                 // case when we do not have an app
@@ -80,9 +80,9 @@ namespace ToSic.Sxc.Blocks
 
         private IRenderResult _result;
 
-        private (string Html, bool Error) RenderInternal(object data)
+        private (string Html, bool IsError, Exception ExOrNull) RenderInternal(object data)
         {
-            var l = Log.Fn<(string, bool)>();
+            var l = Log.Fn<(string, bool, Exception)>();
 
             try
             {
@@ -189,11 +189,11 @@ namespace ToSic.Sxc.Blocks
 
                 #endregion
 
-                return l.Return((result, err));
+                return l.Return((result, err, exOrNull));
             }
             catch (Exception ex)
             {
-                return l.Return((RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true), "error");
+                return l.Return((RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true, ex), "error");
             }
         }
 

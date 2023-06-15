@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Data;
+using ToSic.Eav.Obsolete;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
@@ -49,12 +50,7 @@ namespace ToSic.Sxc.Blocks
 
 
             var block = services.BlockOrNull;
-            Warning13To15(
-                "DeprecatedStaticRender",
-                $"View:{block?.View?.Id}",
-                "https://go.2sxc.org/brc-13-static-render",
-                log => LogBlockDetails(block, log));
-
+            Report(CodeChangeInfo.V13To17("DeprecatedStaticRender", "https://go.2sxc.org/brc-13-static-render"), $"View:{block?.View?.Id}", log => LogBlockDetails(block, log));
 
             return services.RenderService;
         }

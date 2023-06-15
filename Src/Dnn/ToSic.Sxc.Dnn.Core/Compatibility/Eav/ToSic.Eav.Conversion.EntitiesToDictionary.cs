@@ -1,5 +1,6 @@
 ﻿using System;
 using ToSic.Eav.DataFormats.EavLight;
+using ToSic.Eav.Obsolete;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
 
@@ -23,8 +24,7 @@ namespace ToSic.Eav.Conversion
         /// </remarks>
         public EntitiesToDictionary(): base(DnnStaticDi.StaticBuild<MyServices>())
         {
-            Sxc.Compatibility.Obsolete.Warning13To15(nameof(EntitiesToDictionary), "", "https://go.2sxc.org/brc-13-conversion");
+            Sxc.Compatibility.Obsolete.Report(CodeChangeInfo.V13To17(nameof(EntitiesToDictionary), "https://go.2sxc.org/brc-13-conversion"));
         }
-
     }
 }

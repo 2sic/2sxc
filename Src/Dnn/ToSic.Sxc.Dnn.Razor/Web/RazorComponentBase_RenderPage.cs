@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Web
     public abstract partial class RazorComponentBase
     {
         [PrivateApi] protected string _ErrorWhenUsingRenderPage = null;
-        
+
         public override HelperResult RenderPage(string path, params object[] data)
         {
             if (_ErrorWhenUsingRenderPage != null)
@@ -24,5 +24,18 @@ namespace ToSic.Sxc.Web
         [PrivateApi]
         internal HelperResult BaseRenderPage(string path, params object[] data) 
             => base.RenderPage(path, data);
+
+        internal Exception RenderException
+        {
+            get => _renderException;
+            set
+            {
+                _renderException = value;
+                if (_parentComponent != null) _parentComponent.RenderException = value;
+            }
+        }
+
+        private Exception _renderException = null;
+
     }
 }

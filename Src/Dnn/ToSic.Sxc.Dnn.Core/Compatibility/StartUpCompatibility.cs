@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using ToSic.Sxc.Dnn.Services;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Compatibility
@@ -14,7 +13,7 @@ namespace ToSic.Sxc.Compatibility
         /// <returns></returns>
         public static IServiceCollection AddDnnCompatibility(this IServiceCollection services)
         {
-            services.TryAddTransient<ILogService, DnnSystemLogService>();
+            services.TryAddTransient<ILogService, LogServiceUsingOldInterface>();
             return services;
         }
     }

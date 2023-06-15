@@ -37,12 +37,13 @@ namespace ToSic.Sxc.Razor
         #endregion
 
         /// <inheritdoc/>
-        protected override string RenderTemplate(object data) => Log.Func(() =>
+        protected override (string, Exception) RenderTemplate(object data)
         {
+            var l = Log.Fn<(string, Exception)>();
             var task = RenderTask();
             task.Wait();
-            return (task.Result.ToString(), "ok");
-        });
+            return l.ReturnAsOk((task.Result.ToString(), null));
+        }
 
         [PrivateApi]
         public async Task<TextWriter> RenderTask()

@@ -35,7 +35,9 @@ namespace ToSic.Sxc.Engines.Razor
             if (stringHtml == null) return new HtmlString(string.Empty);
             if (stringHtml is string s) return new HtmlString(s);
             if (stringHtml is IHtmlString h) return h;
-            throw new ArgumentException("Html.Raw does not support type '" + stringHtml.GetType().Name + "'.", "stringHtml");
+            var ex = new ArgumentException("Html.Raw does not support type '" + stringHtml.GetType().Name + "'.", "stringHtml");
+            _page.RenderException = ex;
+            throw ex;
         }
 
         /// <summary>
@@ -93,6 +95,7 @@ namespace ToSic.Sxc.Engines.Razor
             // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
             var withHelp = _page._DynCodeRoot.GetService<CodeErrorHelpService>().AddHelpIfKnownError(renderException);
             var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(withHelp, true);
+            _page.RenderException = withHelp;
             return nice;
         }
 

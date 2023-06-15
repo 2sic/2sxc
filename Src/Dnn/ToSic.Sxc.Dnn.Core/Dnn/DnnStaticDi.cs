@@ -39,15 +39,14 @@ namespace ToSic.Sxc.Dnn
         /// </remarks>
         private static readonly Type ServiceScopeKey = typeof(IServiceScope);
 
+        public static IServiceProvider GetGlobalScopedServiceProvider() => GetGlobalServiceProvider().CreateScope().ServiceProvider;
 
         [PrivateApi("Very internal, to use at startup, so singletons are not lost")]
-        public static IServiceProvider GetGlobalServiceProvider() => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new Exception("can't access global DNN service provider"));
+        private /*public*/ static IServiceProvider GetGlobalServiceProvider() => Sp.Get(() => _getGlobalDnnServiceProvider?.Invoke() ?? throw new Exception("can't access global DNN service provider"));
         private static readonly GetOnce<IServiceProvider> Sp = new GetOnce<IServiceProvider>();
 
         [PrivateApi("This is just a temporary solution - shouldn't be used long term")]
-        public static IServiceProvider GetPageScopedServiceProvider() => GetPageServiceProvider();
-
-        private static IServiceProvider GetPageServiceProvider()
+        public static IServiceProvider GetPageScopedServiceProvider()
         {
             // Because 2sxc runs inside DNN as a webforms project and not asp.net core mvc, we have
             // to make sure the service-provider object is disposed correctly. If we don't do this,
@@ -71,17 +70,14 @@ namespace ToSic.Sxc.Dnn
         }
 
         [PrivateApi]
-        public static IServiceProvider CreateModuleScopedServiceProvider() => CreateModuleServiceProvider();
-
-        private static IServiceProvider CreateModuleServiceProvider()
+        public static IServiceProvider CreateModuleScopedServiceProvider()
         {
-            var pageSp = GetPageServiceProvider();
+            var pageSp = GetPageScopedServiceProvider();
             var moduleSp = pageSp.CreateScope().ServiceProvider;
 
             // In the module scope, we initialize the scoped PageScope Accessor and give it the parent scope
             // This is necessary for it to be able to give page-scoped objects
-            moduleSp.Build<PageScopeAccessor>()
-                .InitPageOfModule(pageSp);
+            moduleSp.Build<PageScopeAccessor>().InitPageOfModule(pageSp);
             return moduleSp;
         }
     }

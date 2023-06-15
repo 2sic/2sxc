@@ -85,9 +85,9 @@ namespace ToSic.Sxc.Engines
             => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
 
         [PrivateApi]
-        private void Render(TextWriter writer, object data)
+        private (TextWriter writer, Exception exception) Render(TextWriter writer, object data)
         {
-            var l = Log.Fn(message: "will render into TextWriter");
+            var l = Log.Fn<(TextWriter writer, Exception exception)>(message: "will render into TextWriter");
             var page = Webpage; // access the property once only
             try
             {
@@ -107,16 +107,16 @@ namespace ToSic.Sxc.Engines
             {
                 throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast));
             }
-            l.Done();
+            return l.Return((writer, page.RenderException));
         }
 
         [PrivateApi]
-        protected override string RenderTemplate(object data)
+        protected override (string, Exception) RenderTemplate(object data)
         {
-            var l = Log.Fn<string>();
+            var l = Log.Fn<(string, Exception)>();
             var writer = new StringWriter();
-            Render(writer, data);
-            return l.ReturnAsOk(writer.ToString());
+            var result = Render(writer, data);
+            return l.ReturnAsOk((result.writer.ToString(), result.exception));
         }
 
         private object CreateWebPageInstance()

@@ -1,4 +1,5 @@
 ﻿#if NETFRAMEWORK
+using ToSic.Eav.Obsolete;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.DataSources
@@ -13,7 +14,8 @@ namespace ToSic.Sxc.DataSources
             get
             {
                 if (_cache != null) return _cache;
-                Compatibility.Obsolete.Warning13To15("Data.Cache", "", "https://go.2sxc.org/brc-13-datasource-cache");
+                // on first access report problem
+                Compatibility.Obsolete.Report(CodeChangeInfo.V13To17("Data.Cache", "https://go.2sxc.org/brc-13-datasource-cache"));
                 return _cache = new Compatibility.CacheWithGetContentType(_appStates.Get(this));
             }
         }
