@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Obsolete;
 using ToSic.Sxc.Dnn.Services;
+using static ToSic.Eav.Obsolete.CodeChangeInfo;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services
@@ -11,7 +12,7 @@ namespace ToSic.Sxc.Services
     {
         public LogServiceUsingOldInterface(CodeChangeService codeChanges)
         {
-            codeChanges.Warn(CodeChangeInfo.V13To17($"ToSic.Sxc.Services.{nameof(ILogService)}", message: "Use ToSic.Sxc.Services.ISystemLogService instead"));
+            codeChanges.Warn(V16To18("ToSic.Sxc.Services.ILogService", message: "Use ToSic.Sxc.Services.ISystemLogService instead"));
         }
     }
 }

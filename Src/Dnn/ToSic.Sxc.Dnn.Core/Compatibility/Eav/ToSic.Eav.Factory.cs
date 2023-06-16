@@ -2,9 +2,8 @@
 using System;
 using ToSic.Eav.Obsolete;
 using ToSic.Lib.Documentation;
-using ToSic.Razor.Html5;
 using ToSic.Sxc.Dnn;
-using static ToSic.Sxc.Compatibility.Obsolete;
+using static ToSic.Eav.Obsolete.CodeChangeInfo;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav
@@ -24,7 +23,7 @@ namespace ToSic.Eav
 
         [PrivateApi("Removed v13.02 - should not be in use, completely remove ca. July 2022")]
 	    public static void ActivateNetCoreDi(ServiceConfigurator configure) =>
-            Report(CodeChangeInfo.V13Removed(nameof(ActivateNetCoreDi), "https://go.2sxc.org/brc-13-eav-factory-startup"), "");
+            DnnStaticDi.CodeChanges.Warn(V13Removed(nameof(ActivateNetCoreDi), "https://go.2sxc.org/brc-13-eav-factory-startup"));
 
         /// <summary>
         /// Dependency Injection resolver with a known type as a parameter.
@@ -33,8 +32,10 @@ namespace ToSic.Eav
         [Obsolete("Please use standard Dnn 9.4+ Dnn DI instead https://go.2sxc.org/brc-13-eav-factory")]
         public static T Resolve<T>()
         {
-            Report(CodeChangeInfo.V13To17("ToSic.Eav.Factory.Resolve<T>", "https://go.2sxc.org/brc-13-eav-factory"), typeof(T).FullName);
+            DnnStaticDi.CodeChanges.Warn(WarnObsolete.UsedAs(specificId: typeof(T).FullName));
             return DnnStaticDi.StaticBuild<T>();
         }
+
+        private static readonly ICodeChangeInfo WarnObsolete = V13To17("ToSic.Eav.Factory.Resolve<T>", "https://go.2sxc.org/brc-13-eav-factory");
     }
 }

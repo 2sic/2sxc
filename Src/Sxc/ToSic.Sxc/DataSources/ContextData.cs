@@ -4,6 +4,8 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.DataSources;
+using ToSic.Eav.Obsolete;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
@@ -23,8 +25,16 @@ namespace ToSic.Sxc.DataSources
 
 #if NETFRAMEWORK
         [PrivateApi("not meant for public use")]
-        public ContextData(MyServices services, IAppStates appStates) : base(services, "Sxc.BlckDs") => _appStates = appStates;
+        public ContextData(MyServices services, IAppStates appStates, LazySvc<CodeChangeService> codeChanges) : base(services, "Sxc.BlckDs")
+        {
+            ConnectServices(
+                _appStates = appStates,
+                _codeChanges = codeChanges
+            );
+        }
+
         private readonly IAppStates _appStates;
+        private readonly LazySvc<CodeChangeService> _codeChanges;
 #else
         [PrivateApi("not meant for public use")]
         public ContextData(MyServices services) : base(services, "Sxc.BlckDs")

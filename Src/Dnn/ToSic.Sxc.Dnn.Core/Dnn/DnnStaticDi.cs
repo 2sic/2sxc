@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Web;
+using ToSic.Eav.Obsolete;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -30,6 +31,8 @@ namespace ToSic.Sxc.Dnn
         [PrivateApi]
         [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
         public static T StaticBuild<T>(ILog parentLog = null) => GetPageScopedServiceProvider().Build<T>(parentLog);
+
+        public static CodeChangeService CodeChanges => StaticBuild<CodeChangeService>();
 
         /// <summary>
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context

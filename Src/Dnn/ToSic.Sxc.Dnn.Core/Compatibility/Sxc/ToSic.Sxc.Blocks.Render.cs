@@ -3,8 +3,10 @@ using ToSic.Eav.Data;
 using ToSic.Eav.Obsolete;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
-using static ToSic.Sxc.Compatibility.Obsolete;
+using ToSic.Sxc.Dnn;
+using static ToSic.Eav.Obsolete.CodeChangeInfo;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Blocks
@@ -38,22 +40,7 @@ namespace ToSic.Sxc.Blocks
             ICanBeEntity item = null,
             string field = null,
             Guid? newGuid = null)
-            => RenderService(parent).One(parent, noParamOrder, item, data: null, field: field, newGuid: newGuid);
-
-        private static Services.IRenderService RenderService(DynamicEntity parent)
-        {
-            var services = parent._Services;
-            // First do version checks -should not be allowed if compatibility is too low
-            if (services.CompatibilityLevel > Constants.MaxLevelForStaticRender)
-                throw new Exception(
-                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
-
-
-            var block = services.BlockOrNull;
-            Report(CodeChangeInfo.V13To17("DeprecatedStaticRender", "https://go.2sxc.org/brc-13-static-render"), $"View:{block?.View?.Id}", log => LogBlockDetails(block, log));
-
-            return services.RenderService;
-        }
+            => RenderServiceWithWarning(parent).One(parent, noParamOrder, item, data: null, field: field, newGuid: newGuid);
 
         /// <summary>
         /// Render content-blocks into a larger html-block containing placeholders
@@ -74,7 +61,25 @@ namespace ToSic.Sxc.Blocks
             string field = null,
             string apps = null,
             int max = 100,
-            string merge = null)
-            => RenderService(parent).All(parent, noParamOrder, field, apps, max, merge);
+            string merge = null) 
+            => RenderServiceWithWarning(parent).All(parent, noParamOrder, field, apps, max, merge);
+
+        private static Services.IRenderService RenderServiceWithWarning(DynamicEntity parent)
+        {
+            var services = parent._Services;
+            // First do version checks -should not be allowed if compatibility is too low
+            if (services.CompatibilityLevel > Constants.MaxLevelForStaticRender)
+                throw new Exception(
+                    "The static ToSic.Sxc.Blocks.Render can only be used in old Razor components. For v12+ use the ToSic.Sxc.Services.IRenderService instead");
+
+
+            var block = services.BlockOrNull;
+            DnnStaticDi.CodeChanges.WarnSxc(WarnObsolete.UsedAs(appId: parent.Entity.AppId, specificId: $"View:{block?.View?.Id}"), block: block);
+
+            return services.RenderService;
+        }
+
+        private static readonly ICodeChangeInfo WarnObsolete = V13To17("Deprecated Static RenderService", "https://go.2sxc.org/brc-13-static-render");
+
     }
 }

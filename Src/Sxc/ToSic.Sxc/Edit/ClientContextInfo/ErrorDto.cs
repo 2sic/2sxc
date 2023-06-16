@@ -34,14 +34,11 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 
             var warnings = codeWarnings.List;
             if (warnings.SafeAny())
-            {
-                problems.Add(new ProblemReport()
+                problems.Add(new ProblemReport
                 {
-                    Link = "todo - warning",
-                    Message = "This is old stuff",
+                    Code = "obsolete",
                     Severity = ErrorSeverity.warning
                 });
-            }
 
             Problems = problems.Any() ? problems : null;
         }

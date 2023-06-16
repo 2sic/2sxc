@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
 
@@ -24,3 +25,4 @@ namespace ToSic.SexyContent.ContentBlocks
             => Sxc.Blocks.Render.All(context, noParamOrder, field: field, merge: merge);
     }
 }
+#endif
