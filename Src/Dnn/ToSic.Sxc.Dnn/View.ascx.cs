@@ -37,6 +37,7 @@ namespace ToSic.Sxc.Dnn
         #region Logging
 
         private ILog Log { get; } = new Log("Sxc.View");
+        private LogStoreEntry _logInStore;
 
         protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
         private readonly GetOnce<ILogCall> _logTimer = new GetOnce<ILogCall>();
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Dnn
             LogTimer.DoInTimer(() =>
             {
                 // add to insights-history for analytic
-                GetService<ILogStore>().Add("module", Log);
+                _logInStore = GetService<ILogStore>().Add("module", Log);
                 //LogTimer.Timer.Start();
 
                 Log.Do(timer: true, action: () =>
@@ -134,6 +135,16 @@ namespace ToSic.Sxc.Dnn
                         {
                             var pageChanges = GetService<DnnPageChanges>();
                             pageChanges.Apply(Page, data);
+                        }
+                        catch
+                        {
+                            /* ignore */
+                        }
+
+                        // 16.02 - try to add page specs about the request to the log
+                        try
+                        {
+                            _logInStore?.UpdateSpecs(new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
                         }
                         catch
                         {
