@@ -1,4 +1,5 @@
 ﻿using ToSic.Eav.Configuration.Licenses;
+using ToSic.Eav.Obsolete;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -23,22 +24,29 @@ namespace ToSic.Sxc.Blocks
     {
         public class MyServices: MyServicesBase
         {
+
             public MyServices(
                 EngineFactory engineFactory,
                 Generator<IEnvironmentInstaller> envInstGen,
                 Generator<IRenderingHelper> renderHelpGen,
                 LazySvc<PageChangeSummary> pageChangeSummary,
                 LazySvc<ILicenseService> licenseService,
-                IModuleService moduleService
-            ) => ConnectServices(
-                EngineFactory = engineFactory,
-                EnvInstGen = envInstGen,
-                RenderHelpGen = renderHelpGen,
-                PageChangeSummary = pageChangeSummary,
-                LicenseService = licenseService,
-                ModuleService = moduleService
-            );
+                IModuleService moduleService,
+                CodeChangesInScope codeChanges
+            )
+            {
+                ConnectServices(
+                    EngineFactory = engineFactory,
+                    EnvInstGen = envInstGen,
+                    RenderHelpGen = renderHelpGen,
+                    PageChangeSummary = pageChangeSummary,
+                    LicenseService = licenseService,
+                    ModuleService = moduleService,
+                    CodeChanges = codeChanges
+                );
+            }
 
+            public CodeChangesInScope CodeChanges { get; }
             public EngineFactory EngineFactory { get; }
             public Generator<IEnvironmentInstaller> EnvInstGen { get; }
             public Generator<IRenderingHelper> RenderHelpGen { get; }

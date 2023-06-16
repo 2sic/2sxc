@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
@@ -7,6 +8,7 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
+using static System.StringComparer;
 using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -75,8 +77,13 @@ namespace ToSic.Sxc.Blocks
                 l.Ex(ex);
             }
 
+            // Add information to code changes if relevant
+            AddCodeWarningsSpecs();
+
+
             return l.Return(_result);
         }
+
 
         private IRenderResult _result;
 
@@ -126,12 +133,8 @@ namespace ToSic.Sxc.Blocks
                             body = renderEngineResult.Html;
                             exOrNull = renderEngineResult.ExceptionOrNull;
                             errorCode = renderEngineResult.ErrorCode ?? errorCode;
-                            if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true)
-                            {
-                                // TODO: GET FROM render engine result
-                                exOrNull = exOrNull;
+                            if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
                                 errorCode = ErrorGeneral;
-                            }
                             // Activate-js-api is true, if the html has some <script> tags which tell it to load the 2sxc
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (renderEngineResult.ActivateJsApi)
