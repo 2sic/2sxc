@@ -5,6 +5,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
@@ -12,36 +13,33 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 namespace ToSic.Sxc.Dnn.WebApi
 {
     [DnnLogWebApi, JsonOnlyResponse]
+    [PrivateApi("This controller is never used publicly, you can rename any time you want")]
     public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
 
-        protected DnnApiControllerWithFixes(string logSuffix) 
-	    {
-            // Create log - but set first message separately, so timer is in the first line in the log
+        protected DnnApiControllerWithFixes(string logSuffix)
+        {
             Log = new Log("Api." + logSuffix);
-            TimerWrapLog = Log.Fn(message: $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
-	        
             // ReSharper disable VirtualMemberCallInConstructor
-            GetService<ILogStore>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
+            WebApiLogging = new DnnWebApiLogging(Log, GetService<ILogStore>(), HistoryLogGroup);
             // ReSharper restore VirtualMemberCallInConstructor
         }
 
-        // ReSharper disable once InconsistentNaming
-        private readonly ILogCall TimerWrapLog;
+        internal DnnWebApiLogging WebApiLogging;
 
         protected override void Initialize(HttpControllerContext controllerContext) => Log.Do(() =>
         {
             // Add the logger to the request, in case it's needed in error-reporting
-            controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
+            WebApiLogging.OnInitialize(controllerContext);
             base.Initialize(controllerContext);
         });
 
         protected override void Dispose(bool disposing)
         {
-            TimerWrapLog.Done();
+            WebApiLogging.OnDispose();
             base.Dispose(disposing);
         }
 
@@ -60,12 +58,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
         /// <inheritdoc />
-        public virtual TService GetService<TService>()
-        {
-            var service = _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
-            return service;
-        }
-
+        public virtual TService GetService<TService>() => _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
         private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
 

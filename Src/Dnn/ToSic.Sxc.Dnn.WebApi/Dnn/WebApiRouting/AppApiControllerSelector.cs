@@ -99,7 +99,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             // Figure out the Path, or show error for that
             var appFolder = sp.Build<DnnAppFolderUtilities>(log).GetAppFolder(request, true);
 
-            var controllerPath = "";
             try
             {
                 // new for 2sxc 9.34 #1651
@@ -111,7 +110,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 var controllerFolder = GetControllerFolder(site, appFolder, edition, shared: false);
                 l.A($"Controller Folder: {controllerFolder}");
 
-                controllerPath = GetControllerPath(controllerFolder, controllerTypeName);
+                var controllerPath = GetControllerPath(controllerFolder, controllerTypeName);
                 l.A($"Controller Path: {controllerPath}");
 
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
@@ -138,7 +137,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             }
             catch (Exception e)
             {
-                var msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
+                const string msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
                 throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.InternalServerError, e, msg, sp.Build<CodeErrorHelpService>()));
             }
         }
@@ -168,6 +167,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
             // help with path resolution for compilers running inside the created controller
             request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
+            request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, controllerPath);
 
             return new HttpControllerDescriptor(_config, type.Name, type);
         }

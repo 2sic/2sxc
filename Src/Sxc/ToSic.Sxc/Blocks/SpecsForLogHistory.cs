@@ -1,27 +1,28 @@
 ﻿using System.Collections.Generic;
+using ToSic.Sxc.Apps;
 using static System.StringComparer;
 
 namespace ToSic.Sxc.Blocks
 {
-    internal class SpecsForLogHistory
+    public class SpecsForLogHistory
     {
-        internal IDictionary<string, string> BuildSpecsForLogHistory(IBlock block)
+        internal IDictionary<string, string> BuildSpecsForLogHistory(IBlock block, IApp app = default, string entry = default, bool addView = true)
         {
+            // use app provided or try to use from block
+            app = app ?? block?.App;
+
+            if (block == default && app == default) return null;
+
             var specs = new Dictionary<string, string>(InvariantCultureIgnoreCase);
+            if (entry != default)
+                specs.Add("Entry", entry);
+
             if (block != null)
             {
                 specs.Add(nameof(block.ContentBlockId), block.ContentBlockId.ToString());
 
-                var app = block.App;
-                if (app != null)
-                {
-                    specs.Add(nameof(app.AppId), app.AppId.ToString());
-                    specs.Add("AppPath", app.Path);
-                    specs.Add("AppName", app.Name);
-                }
-
                 var view = block.View;
-                if (view != null)
+                if (addView && view != null)
                 {
                     specs.Add("ViewId", view.Id.ToString());
                     specs.Add("ViewEdition", view.Edition);
@@ -55,10 +56,18 @@ namespace ToSic.Sxc.Blocks
                     }
                 }
 
-                return specs;
             }
 
-            return null;
+            if (app != null)
+            {
+                specs.Add(nameof(app.AppId), app.AppId.ToString());
+                specs.Add("AppPath", app.Path);
+                specs.Add("AppName", app.Name);
+            }
+
+
+
+            return specs;
         }
     }
 }

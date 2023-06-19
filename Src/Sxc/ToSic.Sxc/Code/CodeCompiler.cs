@@ -29,6 +29,7 @@ namespace ToSic.Sxc.Code
         public const string CsFileExtension = ".cs";
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
+        public const string SharedCodeRootFullPathKeyInCache = "SharedCodeRootFullPath";
 
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {

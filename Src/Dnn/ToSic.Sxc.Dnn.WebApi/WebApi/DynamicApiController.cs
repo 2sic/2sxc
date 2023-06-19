@@ -1,12 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Web.Http.Controllers;
+using ToSic.Eav.Generics;
+using ToSic.Eav.Obsolete;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
@@ -81,10 +85,9 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
+            // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             var block = GetBlockAndContext()?.LoadBlock();
             Log.A($"HasBlock: {block != null}");
-            // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
-            // if it's null, use the log of this object
             var compatibilityLevel = this is IDynamicCode16
                 ? Constants.CompatibilityLevel16
                 : this is ICompatibleToCode12
@@ -103,11 +106,18 @@ namespace ToSic.Sxc.WebApi
                 TryToAttachAppFromUrlParams();
             }
 
-            // must run this after creating AppAndDataHelpers
-            controllerContext.Request.Properties.Add(DnnConstants.DnnContextKey, Dnn); 
+            var reqProperties = controllerContext.Request.Properties;
 
-            if(controllerContext.Request.Properties.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var value))
-                CreateInstancePath = value as string;
+            // must run this after creating AppAndDataHelpers
+            reqProperties.Add(DnnConstants.DnnContextKey, Dnn);
+
+            if (reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootPathKeyInCache, out string path))
+                CreateInstancePath = path;
+
+            // 16.02 - try to log more details about the current API call
+            var currentPath = reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
+            WebApiLogging?.AddLogSpecs(block, _DynCodeRoot.App, currentPath, GetService<CodeChangesInScope>());
+
         }
 
         /// <summary>
@@ -134,9 +144,9 @@ namespace ToSic.Sxc.WebApi
 
         public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
 
-        private void TryToAttachAppFromUrlParams() => Log.Do(() =>
+        private IApp TryToAttachAppFromUrlParams() 
         {
-            var found = false;
+            var l = Log.Fn<IApp>();
             try
             {
                 var routeAppPath = Services.AppFolderUtilities.GetAppFolder(Request, false);
@@ -146,21 +156,22 @@ namespace ToSic.Sxc.WebApi
                 {
                     var siteCtx = SharedContextResolver.Site();
                     // Look up if page publishing is enabled - if module context is not available, always false
-                    Log.A($"AppId: {appState.AppId}");
+                    l.A($"AppId: {appState.AppId}");
                     var app = Services.AppOverrideLazy.Value
                         .PreInit(siteCtx.Site)
                         .Init(appState, Services.AppConfigDelegateLazy.Value.Build());
                     _DynCodeRoot.AttachApp(app);
-                    found = true;
+                    return l.Return(app, $"found #{app.AppId}");
                 }
             }
             catch
             {
+                l.ReturnNull("error, ignore");
                 /* ignore */
             }
 
-            return found.ToString();
-        });
+            return l.ReturnNull("no app detected");
+        }
 
 
         #region Adam - Shared Code Across the APIs
