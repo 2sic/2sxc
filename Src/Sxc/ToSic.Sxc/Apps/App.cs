@@ -2,12 +2,12 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
+using ToSic.Eav.CodeChanges;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.LookUp;
 using EavApp = ToSic.Eav.Apps.App;
@@ -22,34 +22,35 @@ namespace ToSic.Sxc.Apps
     [PublicApi_Stable_ForUseInYourCode]
     public partial class App : EavApp, IApp
     {
-        private readonly LazySvc<AsConverterService> _asConverter;
-
         #region DI Constructors
+
         [PrivateApi]
         public App(MyServices services, 
             LazySvc<GlobalPaths> globalPaths, 
-            LazySvc<AppPaths> appPathsLazy, 
-            LazySvc<DynamicEntity.MyServices> dynamicEntityDependenciesLazy,
+            LazySvc<AppPaths> appPathsLazy,
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate, 
-            LazySvc<AsConverterService> asConverter)
+            LazySvc<AsConverterService> asConverter,
+            LazySvc<CodeChangeService> codeChanges)
             : base(services, "App.SxcApp")
         {
             ConnectServices(
                 _globalPaths = globalPaths,
                 _appPathsLazy = appPathsLazy,
-                _dynEntSvcLazy = dynamicEntityDependenciesLazy,
                 _appStates = appStates,
                 _appConfigDelegate = appConfigDelegate,
-                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(Site))
+                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(Site)),
+                _codeChanges = codeChanges
             );
         }
 
         private readonly LazySvc<GlobalPaths> _globalPaths;
         private readonly LazySvc<AppPaths> _appPathsLazy;
-        private readonly LazySvc<DynamicEntity.MyServices> _dynEntSvcLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
+        private readonly LazySvc<CodeChangeService> _codeChanges;
+        private readonly LazySvc<AsConverterService> _asConverter;
+
 
         private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));
         private readonly GetOnce<AppPaths> _appPaths = new GetOnce<AppPaths>();
