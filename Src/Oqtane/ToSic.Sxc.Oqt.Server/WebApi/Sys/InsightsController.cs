@@ -21,8 +21,8 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [HttpGet("{view}")]
         public ContentResult Details([FromRoute] string view, 
             [FromQuery] int? appId = null, [FromQuery] string key = null, [FromQuery] int? position = null,
-            [FromQuery] string type = null, [FromQuery] bool? toggle = null, string nameId = null)
-            => Wrap(Real.Details(view, appId, key, position, type, toggle, nameId));
+            [FromQuery] string type = null, [FromQuery] bool? toggle = null, string nameId = null, string filter = default)
+            => Wrap(Real.Details(view, appId, key, position, type, toggle, nameId, filter));
 
         #region Logging aspects
 

@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Dnn
         private ILog Log { get; } = new Log("Sxc.View");
         private LogStoreEntry _logInStore;
 
-        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
+        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module: '{ModuleConfiguration.ModuleTitle}'"));
         private readonly GetOnce<ILogCall> _logTimer = new GetOnce<ILogCall>();
 
         #endregion
