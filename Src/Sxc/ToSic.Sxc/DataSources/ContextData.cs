@@ -1,16 +1,19 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav.Apps;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSource.Query;
 using ToSic.Eav.DataSources;
-using ToSic.Eav.Obsolete;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+
+#if NETFRAMEWORK
+using ToSic.Eav.Apps;
+using ToSic.Eav.CodeChanges;
+using ToSic.Lib.DI;
+#endif
 
 namespace ToSic.Sxc.DataSources
 {

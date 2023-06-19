@@ -2,7 +2,7 @@
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
-using static ToSic.Eav.Obsolete.CodeChangeInfo;
+using static ToSic.Eav.CodeChanges.CodeChangeInfo;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Conversion

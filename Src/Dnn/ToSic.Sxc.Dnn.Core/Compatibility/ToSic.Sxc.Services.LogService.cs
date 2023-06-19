@@ -1,6 +1,6 @@
-﻿using ToSic.Eav.Obsolete;
+﻿using ToSic.Eav.CodeChanges;
 using ToSic.Sxc.Dnn.Services;
-using static ToSic.Eav.Obsolete.CodeChangeInfo;
+using static ToSic.Eav.CodeChanges.CodeChangeInfo;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Services

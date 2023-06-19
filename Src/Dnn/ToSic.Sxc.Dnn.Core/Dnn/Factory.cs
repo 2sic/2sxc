@@ -10,7 +10,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.LookUp;
-using static ToSic.Eav.Obsolete.CodeChangeInfo;
+using static ToSic.Eav.CodeChanges.CodeChangeInfo;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ILog = ToSic.Lib.Logging.ILog;

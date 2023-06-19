@@ -1,5 +1,5 @@
 ﻿using System;
-using ToSic.Eav.Obsolete;
+using ToSic.Eav.CodeChanges;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 
@@ -11,8 +11,7 @@ namespace ToSic.Sxc.Compatibility
         {
             if (block != null)
                 change = change.UsedAs(more: LogBlockDetails(block));
-            // addMore = addMore ?? (l => LogBlockDetails(block, l));
-            svc.Warn(change); //, addMore: addMore);
+            svc.Warn(change);
         }
 
         public static void LogBlockDetails(IBlock block, ILog log)
