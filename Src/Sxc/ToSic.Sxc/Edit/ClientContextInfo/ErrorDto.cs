@@ -40,6 +40,14 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
                     Severity = ErrorSeverity.warning
                 });
 
+            var appId = block?.App?.AppId;
+            if (appId != null && codeWarnings.CodeChangeStats.AppHasWarnings(appId.Value))
+                problems.Add(new ProblemReport
+                {
+                    Code = "obsolete-app",
+                    Severity = ErrorSeverity.warning
+                });
+
             Problems = problems.Any() ? problems : null;
         }
     }
