@@ -141,7 +141,7 @@ namespace ToSic.Sxc.Dnn.Cms
             }
             catch (Exception ex)
             {
-                DnnLogging.LogToDnn("exception", "publishing", Log, force:true);
+                DnnLogging.LogToDnn("exception", "publishing", Log, force: true);
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
                 throw;
             }

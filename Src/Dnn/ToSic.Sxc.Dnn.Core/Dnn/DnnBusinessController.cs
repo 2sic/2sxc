@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Dnn
 
             try
             {
-                DnnLogging.LogToDnn("Publishing", "ok", Log, force:true);
+                DnnLogging.LogToDnn("Publishing", "ok", Log, force: true);
             }
             catch
             {
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Dnn
             var installer = ServiceProvider.Build<DnnEnvironmentInstaller>(Log);
             var res = installer.UpgradeModule(version, true);
             Log.A($"result:{res}");
-            DnnLogging.LogToDnn("Upgrade", "ok", Log, force:true); // always log, this often causes hidden problems
+            DnnLogging.LogToDnn("Upgrade", "ok", Log, force: true); // always log, this often causes hidden problems
             return l.ReturnAndLog(res);
         }
 
