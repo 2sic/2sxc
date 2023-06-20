@@ -59,17 +59,17 @@ namespace ToSic.Sxc.Code
         #region Get and GetInternal
 
         public object Get(string name, string noParamOrder = Protector, bool? required = default) 
-            => GetInternal(name, noParamOrder, required);
+            => GetInternal(name, required, noParamOrder);
 
         public T Get<T>(string name, string noParamOrder = Protector, T fallback = default, bool? required = default) 
             => GetInternal(name, noParamOrder, fallback, required);
 
-        private T GetInternal<T>(string name, string noParamOrder, T fallback, bool? required, [CallerMemberName] string cName = default)
+        private T GetInternal<T>(string name, string noParamOrder, T fallback, bool? required, [CallerMemberName] string method = default)
         {
             // If we have a clear fallback, don't make it required
             if (fallback != null && !EqualityComparer<T>.Default.Equals(fallback, default)) required = false;
 
-            var found = GetInternal(name, noParamOrder, required, cName: cName);
+            var found = GetInternal(name, required, noParamOrder, method: method);
             
             if (found == null) return fallback;
 
@@ -79,24 +79,25 @@ namespace ToSic.Sxc.Code
             return typeof(T).IsInterface ? fallback : found.ConvertOrFallback(fallback);
         }
 
-        private object GetInternal(string name, string noParamOrder = Protector, bool? required = default, [CallerMemberName] string cName = default)
+        private object GetInternal(string name, bool? required, string noParamOrder = Protector, [CallerMemberName] string method = default)
         {
-            Protect(noParamOrder, "required, fallback", cName);
+            Protect(noParamOrder, "required, fallback", method);
 
             if (_paramsDictionary.TryGetValue(name, out var result))
                 return result;
             if (required == false)
                 return null;
 
-            var call = $"{nameof(TypedModel)}.{nameof(cName)}(\"{name}\")";
+            var call = $"{nameof(TypedModel)}.{method}(\"{name}\")";
+            var callReqFalse = call.Replace(")", ", required: false)");
             throw new ArgumentException($@"Tried to get parameter with {call} but parameter '{name}' not provided. 
-Either change the calling Html.Partial(...) or use {call.Replace(")", ", required: false)")} to make it optional.", nameof(name));
+Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} ) or use {callReqFalse} to make it optional.", nameof(name));
         }
 
         public (T typed, object untyped, bool ok) GetInternalForInterface<T>(string name, string noParamOrder, T fallback, bool? required = default,
             [CallerMemberName] string cName = default) where T : class
         {
-            var maybe = GetInternal(name, noParamOrder, required, cName);
+            var maybe = GetInternal(name, required, noParamOrder, cName);
             if (maybe == null) return (fallback, null, true);
             if (maybe is T typed) return (typed, maybe, true);
 
