@@ -1,11 +1,16 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Oqtane.Extensions;
 using Oqtane.Infrastructure;
+using Oqtane.Repository;
+using Oqtane.Security;
 using System.IO;
+using Microsoft.Extensions.Hosting;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
@@ -21,14 +26,13 @@ using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.Web.EditUi;
 using ToSic.Sxc.WebApi;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     public class OqtStartup : IServerStartup
     {
-        public IConfiguration Configuration { get; }
+        public IConfigurationRoot Configuration { get; }
         //public IWebHostEnvironment HostEnvironment { get; set; }
 
         public OqtStartup()
@@ -68,6 +72,35 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // 2sxc Oqtane blob services for Imageflow and other customizations.
             services.AddImageflowExtensions();
+
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = Oqtane.Shared.Constants.AntiForgeryTokenHeaderName;
+                options.Cookie.Name = Oqtane.Shared.Constants.AntiForgeryTokenCookieName;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+            });
+
+            services.AddIdentityCore<IdentityUser>(options => { })
+                .AddEntityFrameworkStores<TenantDBContext>()
+                .AddSignInManager()
+                .AddDefaultTokenProviders()
+                .AddClaimsPrincipalFactory<ClaimsPrincipalFactory<IdentityUser>>(); // role claims
+
+            services.ConfigureOqtaneIdentityOptions(Configuration);
+
+            //services.AddAuthentication(options =>
+            //    {
+            //        options.DefaultAuthenticateScheme = Oqtane.Shared.Constants.AuthenticationScheme;
+            //        options.DefaultChallengeScheme = Oqtane.Shared.Constants.AuthenticationScheme;
+            //        options.DefaultSignOutScheme = Oqtane.Shared.Constants.AuthenticationScheme;
+            //    })
+            //    .AddCookie(Oqtane.Shared.Constants.AuthenticationScheme)
+            //    .AddOpenIdConnect(AuthenticationProviderTypes.OpenIDConnect, options => { })
+            //    .AddOAuth(AuthenticationProviderTypes.OAuth2, options => { });
+
+            services.ConfigureOqtaneCookieOptions();
+            services.ConfigureOqtaneAuthenticationOptions(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -93,12 +126,14 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var sxcSysLoader = serviceProvider.Build<SystemLoader>();
             sxcSysLoader.StartUp();
 
-            // TODO: @STV - should we really add an error handler? I assume Oqtane has this already
-            app.UseExceptionHandler("/error");
+            //// TODO: @STV - should we really add an error handler? I assume Oqtane has this already
+            //app.UseExceptionHandler("/error");
 
             // routing middleware
+            app.UseTenantResolution();
+            app.UseJwtAuthorization();
+            app.UseBlazorFrameworkFiles();
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
