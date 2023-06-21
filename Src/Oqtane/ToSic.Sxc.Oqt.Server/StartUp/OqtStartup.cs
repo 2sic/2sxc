@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
-using Oqtane.Repository;
-using Oqtane.Security;
 using System.IO;
-using Microsoft.Extensions.Hosting;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
 using ToSic.Eav.StartUp;
@@ -46,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         public void ConfigureServices(IServiceCollection services)
         {
             // 1. Enable dynamic razor compiling
-            services.AddRazorPages()            
+            services.AddRazorPages()
                 .AddRazorRuntimeCompilation(options =>
                 {
                     var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
@@ -72,35 +68,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // 2sxc Oqtane blob services for Imageflow and other customizations.
             services.AddImageflowExtensions();
-
-            services.AddAntiforgery(options =>
-            {
-                options.HeaderName = Oqtane.Shared.Constants.AntiForgeryTokenHeaderName;
-                options.Cookie.Name = Oqtane.Shared.Constants.AntiForgeryTokenCookieName;
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
-            });
-
-            services.AddIdentityCore<IdentityUser>(options => { })
-                .AddEntityFrameworkStores<TenantDBContext>()
-                .AddSignInManager()
-                .AddDefaultTokenProviders()
-                .AddClaimsPrincipalFactory<ClaimsPrincipalFactory<IdentityUser>>(); // role claims
-
-            services.ConfigureOqtaneIdentityOptions(Configuration);
-
-            //services.AddAuthentication(options =>
-            //    {
-            //        options.DefaultAuthenticateScheme = Oqtane.Shared.Constants.AuthenticationScheme;
-            //        options.DefaultChallengeScheme = Oqtane.Shared.Constants.AuthenticationScheme;
-            //        options.DefaultSignOutScheme = Oqtane.Shared.Constants.AuthenticationScheme;
-            //    })
-            //    .AddCookie(Oqtane.Shared.Constants.AuthenticationScheme)
-            //    .AddOpenIdConnect(AuthenticationProviderTypes.OpenIDConnect, options => { })
-            //    .AddOAuth(AuthenticationProviderTypes.OAuth2, options => { });
-
-            services.ConfigureOqtaneCookieOptions();
-            services.ConfigureOqtaneAuthenticationOptions(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -108,7 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            
+
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName);
             globalConfig.AppDataTemplateFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppFolder);
@@ -122,54 +89,121 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
             // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
             // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
-            
+
             var sxcSysLoader = serviceProvider.Build<SystemLoader>();
             sxcSysLoader.StartUp();
-
-            //// TODO: @STV - should we really add an error handler? I assume Oqtane has this already
-            //app.UseExceptionHandler("/error");
-
-            // routing middleware
-            app.UseTenantResolution();
-            app.UseJwtAuthorization();
-            app.UseBlazorFrameworkFiles();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             if (env.IsDevelopment())
                 app.UsePageResponseRewriteMiddleware();
 
-            // endpoint mapping
-            app.UseEndpoints(endpoints =>
+            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootNoLanguage}"), appBuilder =>
             {
-                // Release routes
-                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                // routing middleware
+                appBuilder.UseOqtaneMiddlewares();
 
-                // Beta routes
-                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                // endpoint mapping
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    // Release routes
+                    endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                    endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                });
+            });
 
-                // Route for 2sxc UI (after JS updates to use folder route (ending with /ng/ or /ng-edit/), probably this will not be necessary)
-                //endpoints.Map($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html"));
-                //endpoints.Map($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html"));
+            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootPathOrLang}"), appBuilder =>
+            {
+                // routing middleware
+                appBuilder.UseOqtaneMiddlewares();
 
-                // Handle / Process URLs to Dialogs route for 2sxc UI
-                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", 
-                    context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html", EditUiResourceSettings.QuickDialog));
-                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/",
-                    context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi));
+                // endpoint mapping
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    // Release routes
+                    endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                    endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                });
+            });
+
+            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootPathNdLang}"), appBuilder =>
+            {
+                // routing middleware
+                appBuilder.UseOqtaneMiddlewares();
+
+                // endpoint mapping
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    // Release routes
+                    endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                    endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                });
+            });
+
+            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.WebApiStateRoot}"), appBuilder =>
+            {
+                // routing middleware
+                appBuilder.UseOqtaneMiddlewares();
+
+                // endpoint mapping
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    // Beta routes
+                    endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                    endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                });
+            });
+
+            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/"), appBuilder =>
+            {
+                // routing middleware
+                appBuilder.UseOqtaneMiddlewares();
+
+                // endpoint mapping
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    // Handle / Process URLs to Dialogs route for 2sxc UI
+                    endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/",
+                        context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html", EditUiResourceSettings.QuickDialog));
+                });
+            });
+
+            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/"), appBuilder =>
+            {
+                // routing middleware
+                appBuilder.UseOqtaneMiddlewares();
+
+                // endpoint mapping
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    // Handle / Process URLs to Dialogs route for 2sxc UI
+                    endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/",
+                        context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi));
+                });
             });
         }
-
+        
         public void ConfigureMvc(IMvcBuilder mvcBuilder)
         {
             // Do nothing
+        }
+    }
+
+    public static class ApplicationBuilderExtensions
+    {
+        public static IApplicationBuilder UseOqtaneMiddlewares(this IApplicationBuilder app)
+        {
+            #region Oqtane copy from Startup.cs - L168
+
+            //app.UseHttpsRedirection();
+            //app.UseStaticFiles();
+            app.UseTenantResolution();
+            //app.UseJwtAuthorization();
+            //app.UseBlazorFrameworkFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            #endregion
+            return app;
         }
     }
 }
