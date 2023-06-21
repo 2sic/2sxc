@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Services.CmsService
             {
                 var originalImgTag = imgTag.ToString();
 
-                var imgProps = _imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.EntityGuid, Folder);
+                var imgProps = _imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
                 // use the IImageService to create Picture tags for it
                 var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,
