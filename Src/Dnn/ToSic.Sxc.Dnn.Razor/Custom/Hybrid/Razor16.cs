@@ -45,19 +45,19 @@ namespace Custom.Hybrid
         public new IAppTyped App => (IAppTyped)base.App;
         
         /// <inheritdoc />
-        public new ITypedRead Settings => _DynCodeRoot.Settings;
+        public new ITypedStack Settings => _DynCodeRoot.Settings;
 
         /// <inheritdoc />
-        public new ITypedRead Resources => _DynCodeRoot.Resources;
+        public new ITypedStack Resources => _DynCodeRoot.Resources;
 
         #endregion
 
+        /// <inheritdoc cref="IContextData.MyContent"/>
+        public ITypedItem MyItem => AsTyped(Data.MyContent);
 
-        //public ITypedItem MyItem => AsTyped(Data.MyContent);
+        public IEnumerable<ITypedItem> MyItems => AsTypedList(Data.MyContent);
 
-        //public IEnumerable<ITypedItem> MyItems => AsTypedList(Data.MyContent);
-
-        //public ITypedItem MyHeader => AsTyped(Data.MyHeader);
+        public ITypedItem MyHeader => AsTyped(Data.MyHeader);
 
         #region AsItem(s) / Merge
 

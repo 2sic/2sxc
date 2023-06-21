@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
+using ToSic.Lib.Documentation;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
-    public partial interface ITypedItem
+    [InternalApi_DoNotUse_MayChangeWithoutNotice]
+    public interface ITypedStack: ITypedRead
     {
-        #region parents / children
-
         /// <inheritdoc cref="ITypedRelationships.Child"/>
         ITypedItem Child(string name);
 
         /// <inheritdoc cref="ITypedRelationships.Children"/>
         IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default);
-
-        /// <inheritdoc cref="ITypedRelationships.Parents"/>
-        IEnumerable<ITypedItem> Parents(string type = default, string noParamOrder = Protector, string field = default);
-
-        #endregion 
     }
 }

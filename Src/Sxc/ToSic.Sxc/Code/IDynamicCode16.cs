@@ -6,6 +6,10 @@ using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Code
 {
+    /// <summary>
+    /// Standard interface for all TypedCode such as Razor16 or WebApi16.
+    /// Provides typed APIs to access Settings, Resources and more.
+    /// </summary>
     [WorkInProgressApi("WIP 16.02")]
     public interface IDynamicCode16
     {
@@ -13,9 +17,9 @@ namespace ToSic.Sxc.Code
 
         IAppTyped App { get; }
 
-        ITypedRead Settings { get; }
+        ITypedStack Settings { get; }
 
-        ITypedRead Resources { get; }
+        ITypedStack Resources { get; }
 
         /// <summary>
         /// Convert something to a <see cref="ITypedItem"/>.
