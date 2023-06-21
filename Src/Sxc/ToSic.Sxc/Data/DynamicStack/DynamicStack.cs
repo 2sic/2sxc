@@ -77,6 +77,6 @@ namespace ToSic.Sxc.Data
             ?? new List<PropertyDumpItem>();
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
-            => throw new NotSupportedException($"Setting a value on {nameof(DynamicStack)} is not supported");
+            => throw new NotSupportedException($"Setting a value on {nameof(IDynamicStack)} is not supported");
     }
 }

@@ -14,7 +14,8 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name)); // .AdamManager.Folder(Entity, name));
+        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
+
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         IFile ITypedItem.File(string name)
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Data
 
             // Generate a marker/placeholder to remember what field this is etc.
             var fakeEntity = PlaceHolder(Entity.AppId, Entity, field);
-            return new ListTypedItems(list, fakeEntity);
+            return new ListTypedItems(new List<ITypedItem>(), fakeEntity);
         }
 
         /// <inheritdoc />
