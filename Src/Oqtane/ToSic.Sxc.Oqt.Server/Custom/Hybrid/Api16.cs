@@ -53,6 +53,19 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region My... Stuff
+
+        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = new TypedCode16Helper(_DynCodeRoot.AsC, Data));
+        private TypedCode16Helper _codeHelper;
+
+        public ITypedItem MyItem => CodeHelper.MyItem;
+
+        public IEnumerable<ITypedItem> MyItems => CodeHelper.MyItems;
+
+        public ITypedItem MyHeader => CodeHelper.MyHeader;
+
+        #endregion
+
 
         #region AsItem(s) / Merge
 

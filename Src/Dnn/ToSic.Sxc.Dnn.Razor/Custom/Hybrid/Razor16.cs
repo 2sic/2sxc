@@ -71,12 +71,18 @@ namespace Custom.Hybrid
 
         #endregion
 
-        /// <inheritdoc cref="IContextData.MyContent"/>
-        public ITypedItem MyItem => AsTyped(Data.MyContent);
+        #region My... Stuff
 
-        public IEnumerable<ITypedItem> MyItems => AsTypedList(Data.MyContent);
+        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = new TypedCode16Helper(_DynCodeRoot.AsC, Data));
+        private TypedCode16Helper _codeHelper;
 
-        public ITypedItem MyHeader => AsTyped(Data.MyHeader);
+        public ITypedItem MyItem => CodeHelper.MyItem;
+
+        public IEnumerable<ITypedItem> MyItems => CodeHelper.MyItems;
+
+        public ITypedItem MyHeader => CodeHelper.MyHeader;
+
+        #endregion
 
         #region AsItem(s) / Merge
 

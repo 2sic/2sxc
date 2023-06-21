@@ -66,5 +66,16 @@ namespace ToSic.Sxc.Code
         ITypedRead Merge(params object[] items);
 
         #endregion
+
+        #region My... Stuff
+
+        ITypedItem MyItem {get; }
+
+        IEnumerable<ITypedItem> MyItems { get; }
+
+        ITypedItem MyHeader { get; }
+
+        #endregion
+
     }
 }

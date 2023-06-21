@@ -8,12 +8,9 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-
-#if NETFRAMEWORK
-using ToSic.Eav.Apps;
 using ToSic.Eav.CodeChanges;
 using ToSic.Lib.DI;
-#endif
+using static ToSic.Sxc.Code.DynamicCode16Warnings;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -28,7 +25,7 @@ namespace ToSic.Sxc.DataSources
 
 #if NETFRAMEWORK
         [PrivateApi("not meant for public use")]
-        public ContextData(MyServices services, IAppStates appStates, LazySvc<CodeChangeService> codeChanges) : base(services, "Sxc.BlckDs")
+        public ContextData(MyServices services, ToSic.Eav.Apps.IAppStates appStates, LazySvc<CodeChangeService> codeChanges) : base(services, "Sxc.BlckDs")
         {
             ConnectServices(
                 _appStates = appStates,
@@ -36,14 +33,17 @@ namespace ToSic.Sxc.DataSources
             );
         }
 
-        private readonly IAppStates _appStates;
-        private readonly LazySvc<CodeChangeService> _codeChanges;
+        private readonly ToSic.Eav.Apps.IAppStates _appStates;
 #else
         [PrivateApi("not meant for public use")]
-        public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
+        public ContextData(MyServices services, LazySvc<CodeChangeService> codeChanges) : base(services, "Sxc.BlckDs")
         {
+            ConnectServices(
+                _codeChanges = codeChanges
+            );
         }
 #endif
+        private readonly LazySvc<CodeChangeService> _codeChanges;
 
         public IContextData Init(IDynamicCodeRoot dynCodeRoot)
         {
@@ -52,24 +52,29 @@ namespace ToSic.Sxc.DataSources
         }
         private IDynamicCodeRoot _DynCodeRoot;
 
-#endregion
+        #endregion
 
         #region New v16
 
-        public IEnumerable<IEntity> MyContent => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
+        public IEnumerable<IEntity> MyContent =>  _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
+
+        IEnumerable<IEntity> IContextData.MyContent => _codeChanges.Value.GetAndWarn(NoDataMyContent, MyContent);
         private readonly GetOnce<IEnumerable<IEntity>> _myContent = new GetOnce<IEnumerable<IEntity>>();
 
         public IEnumerable<IEntity> MyData => _myData.Get(() => GetStream(emptyIfNotFound: true).List);
+
+        IEnumerable<IEntity> IContextData.MyData => _codeChanges.Value.GetAndWarn(NoDataMyData, MyData);
         private readonly GetOnce<IEnumerable<IEntity>> _myData = new GetOnce<IEnumerable<IEntity>>();
 
-        public IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
+        public IEnumerable<IEntity> MyHeader =>  _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
+        IEnumerable<IEntity> IContextData.MyHeader => _codeChanges.Value.GetAndWarn(NoDataMyHeader, MyHeader);
         private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
 
-        public ITypedItem MyItem => _myItem.Get(() => _DynCodeRoot.AsC.AsItem(MyContent));
-        private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
+        //public ITypedItem MyItem => _myItem.Get(() => _DynCodeRoot.AsC.AsItem(MyContent));
+        //private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
 
-        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _DynCodeRoot.AsC.AsItems(MyContent));
-        private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
+        //public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _DynCodeRoot.AsC.AsItems(MyContent));
+        //private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
         #endregion
 
