@@ -32,8 +32,16 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             var additional = new ProblemSuggestions().AddSuggestions(block, exOrNull, errorCode);
             problems.AddRange(additional);
 
-            var warnings = codeWarnings.List;
-            if (warnings.SafeAny())
+            problems.AddRange(codeWarnings.GetWarnings()
+                .Select(warning => new ProblemReport
+                {
+                    Code = "warning",
+                    Severity = ErrorSeverity.warning,
+                    Link = warning.Use.Change.Link,
+                    Message = warning.Use.Change.Message,
+                }));
+
+            if (codeWarnings.GetObsoletes().Any())
                 problems.Add(new ProblemReport
                 {
                     Code = "obsolete",

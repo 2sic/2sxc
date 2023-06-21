@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Compatibility
 {
     internal static class CodeChangeServiceExtensions
     {
-        public static void WarnSxc(this CodeChangeService svc, ICodeChangeInfo change, IBlock block = default)
+        public static void WarnSxc(this CodeChangeService svc, CodeChangeUse change, IBlock block = default)
         {
             if (block != null)
                 change = change.UsedAs(more: LogBlockDetails(block));

@@ -17,9 +17,15 @@ namespace ToSic.Sxc.Code
 
         IAppTyped App { get; }
 
+        // TODO: remove once all apps are migrated
         ITypedStack Settings { get; }
 
+        // TODO: remove once all apps are migrated
         ITypedStack Resources { get; }
+
+        ITypedStack ResourcesStack { get; }
+
+        ITypedStack SettingsStack { get; }
 
         /// <summary>
         /// Convert something to a <see cref="ITypedItem"/>.

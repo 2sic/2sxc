@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using Custom.Hybrid.Advanced;
 using ToSic.Eav;
+using ToSic.Eav.CodeChanges;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -39,16 +41,33 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region Temporary v16 objects which must get removed again
+
+        private CodeChangeService CcS => _ccs.Get(GetService<CodeChangeService>);
+        private readonly GetOnce<CodeChangeService> _ccs = new GetOnce<CodeChangeService>();
+
+        [PrivateApi]
+        public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
+
+        [PrivateApi]
+        public new ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
+
+
+
+        #endregion
+
         #region New App, Settings, Resources
 
         /// <inheritdoc />
         public new IAppTyped App => (IAppTyped)base.App;
-        
-        /// <inheritdoc />
-        public new ITypedStack Settings => _DynCodeRoot.Settings;
+
+
 
         /// <inheritdoc />
-        public new ITypedStack Resources => _DynCodeRoot.Resources;
+        public ITypedStack SettingsStack => _DynCodeRoot.Resources;
+
+        /// <inheritdoc />
+        public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
 
         #endregion
 
