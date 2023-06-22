@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using ToSic.Lib.Documentation;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -37,10 +38,11 @@ namespace ToSic.Sxc.Data
         /// If conversion fails, will return default `false` or what is specified in the `fallback`.
         /// </summary>
         /// <param name="name">property name</param>
+        /// <param name="noParamOrder"></param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `bool`</returns>
         /// <remarks>Added in 16.01</remarks>
-        bool Bool(string name, bool fallback = default);
+        bool Bool(string name, string noParamOrder = Protector, bool fallback = default);
 
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `DateTime`</returns>
         /// <remarks>Added in 16.01</remarks>
-        DateTime DateTime(string name, DateTime fallback = default);
+        DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default);
 
         /// <summary>
         /// Get a property and return the value as a `string`.
@@ -61,7 +63,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `string`</returns>
         /// <remarks>Added in 16.01</remarks>
-        string String(string name, string fallback = default);
+        string String(string name, string noParamOrder = Protector, string fallback = default);
 
         #region Numbers
 
@@ -76,7 +78,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `int`</returns>
         /// <remarks>Added in 16.01</remarks>
-        int Int(string name, int fallback = default);
+        int Int(string name, string noParamOrder = Protector, int fallback = default);
 
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `long`</returns>
         /// <remarks>Added in 16.01</remarks>
-        long Long(string name, long fallback = default);
+        long Long(string name, string noParamOrder = Protector, long fallback = default);
 
         /// <summary>
         /// Get a property and return the value as a `float`.
@@ -97,7 +99,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `float`</returns>
         /// <remarks>Added in 16.01</remarks>
-        float Float(string name, float fallback = default);
+        float Float(string name, string noParamOrder = Protector, float fallback = default);
 
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `decimal`</returns>
         /// <remarks>Added in 16.01</remarks>
-        decimal Decimal(string name, decimal fallback = default);
+        decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default);
 
         /// <summary>
         /// Get a property and return the value as a `double`.
@@ -118,7 +120,7 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `double`</returns>
         /// <remarks>Added in 16.01</remarks>
-        double Double(string name, double fallback = default);
+        double Double(string name, string noParamOrder = Protector, double fallback = default);
 
         #endregion
 
@@ -131,7 +133,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">The field name.</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
-        string Url(string name, string fallback = default);
+        string Url(string name, string noParamOrder = Protector, string fallback = default);
 
         #region Thing
 

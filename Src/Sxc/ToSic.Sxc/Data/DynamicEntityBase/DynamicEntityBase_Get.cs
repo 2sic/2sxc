@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Data
             string noParamOrder = Eav.Parameters.Protector,
             TValue fallback = default)
         {
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(fallback)}");
             return GetInternal(name, lookup: false).ConvertOrFallback(fallback);
         }
 

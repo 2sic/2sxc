@@ -26,33 +26,33 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        DateTime ITypedRead.DateTime(string name, DateTime fallback) => Get(name, fallback: fallback);
+        DateTime ITypedRead.DateTime(string name, string noParamOrder, DateTime fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITypedRead.String(string name, string fallback) => Get(name, fallback: fallback);
+        string ITypedRead.String(string name, string noParamOrder, string fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        int ITypedRead.Int(string name, int fallback) => Get(name, fallback: fallback);
+        int ITypedRead.Int(string name, string noParamOrder, int fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        bool ITypedRead.Bool(string name, bool fallback) => Get(name, fallback: fallback);
+        bool ITypedRead.Bool(string name, string noParamOrder, bool fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        long ITypedRead.Long(string name, long fallback) => Get(name, fallback: fallback);
+        long ITypedRead.Long(string name, string noParamOrder, long fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        float ITypedRead.Float(string name, float fallback) => Get(name, fallback: fallback);
+        float ITypedRead.Float(string name, string noParamOrder, float fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        decimal ITypedRead.Decimal(string name, decimal fallback) => Get(name, fallback: fallback);
+        decimal ITypedRead.Decimal(string name, string noParamOrder, decimal fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        double ITypedRead.Double(string name, double fallback) => Get(name, fallback: fallback);
+        double ITypedRead.Double(string name, string noParamOrder, double fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITypedRead.Url(string name, string fallback)
+        string ITypedRead.Url(string name, string noParamOrder, string fallback)
         {
-            var url = Get(name, convertLinks: true) as string;
+            var url = Get(name, noParamOrder: noParamOrder, convertLinks: true) as string;
             return Tags.SafeUrl(url).ToString();
         }
 

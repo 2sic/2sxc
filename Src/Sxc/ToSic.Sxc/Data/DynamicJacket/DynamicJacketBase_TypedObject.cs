@@ -28,31 +28,32 @@ namespace ToSic.Sxc.Data
             string noParamOrder = Eav.Parameters.Protector,
             TValue fallback = default)
         {
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(fallback)}");
             var result = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
             return result.ConvertOrFallback(fallback);
         }
 
         dynamic ITypedRead.Dyn => this;
 
-        bool ITypedRead.Bool(string name, bool fallback) => Get(name, fallback: fallback);
+        bool ITypedRead.Bool(string name, string noParamOrder , bool fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        DateTime ITypedRead.DateTime(string name, DateTime fallback) => Get(name, fallback: fallback);
+        DateTime ITypedRead.DateTime(string name, string noParamOrder, DateTime fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        string ITypedRead.String(string name, string fallback) => Get(name, fallback: fallback);
+        string ITypedRead.String(string name, string noParamOrder, string fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        int ITypedRead.Int(string name, int fallback) => Get(name, fallback: fallback);
+        int ITypedRead.Int(string name, string noParamOrder, int fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        long ITypedRead.Long(string name, long fallback) => Get(name, fallback: fallback);
+        long ITypedRead.Long(string name, string noParamOrder, long fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        float ITypedRead.Float(string name, float fallback) => Get(name, fallback: fallback);
+        float ITypedRead.Float(string name, string noParamOrder, float fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        decimal ITypedRead.Decimal(string name, decimal fallback) => Get(name, fallback: fallback);
+        decimal ITypedRead.Decimal(string name, string noParamOrder, decimal fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        double ITypedRead.Double(string name, double fallback) => Get(name, fallback: fallback);
+        double ITypedRead.Double(string name, string noParamOrder, double fallback) => Get(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        string ITypedRead.Url(string name, string fallback)
+        string ITypedRead.Url(string name, string noParamOrder, string fallback)
         {
-            var url = Get(name, fallback: fallback);
+            var url =  Get(name, noParamOrder: noParamOrder, fallback: fallback);
             return Tags.SafeUrl(url).ToString();
         }
     }
