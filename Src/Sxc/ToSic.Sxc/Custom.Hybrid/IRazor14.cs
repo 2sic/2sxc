@@ -21,8 +21,5 @@ namespace Custom.Hybrid
         [PublicApi("This is a polyfill to ensure the old Razor has the same property as .net Core Razor")]
         string Path { get; }
 
-        [PrivateApi("WIP v16.02")]
-        ITypedModel TypedModel { get; }
-
     }
 }

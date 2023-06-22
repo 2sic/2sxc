@@ -79,5 +79,8 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
+
+        ITypedModel MyModel { get; }
+
     }
 }

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Custom.Hybrid.Advanced;
 using ToSic.Eav;
 using ToSic.Eav.Code.InfoSystem;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -73,8 +76,18 @@ namespace Custom.Hybrid
 
         #region My... Stuff
 
-        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = new TypedCode16Helper(_DynCodeRoot.AsC, Data));
+        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
         private TypedCode16Helper _codeHelper;
+
+        private TypedCode16Helper CreateCodeHelper()
+        {
+            var myModelData = _overridePageData?.ObjectToDictionaryInvariant()
+                      ?? PageData?
+                          .Where(pair => pair.Key is string)
+                          .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
+
+            return new TypedCode16Helper(_DynCodeRoot, Data, myModelData, false, Path);
+        }
 
         public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -108,6 +121,35 @@ namespace Custom.Hybrid
         /// <param name="fallback"></param>
         /// <returns></returns>
         public ITypedRead Read(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
+
+
+        #region MyModel
+
+        // TODO: MOVE TO V16
+        [PrivateApi("WIP 16.02 - to be removed")]
+        public ITypedModel TypedModel => CcS.GetAndWarn(DynamicCode16Warnings.NoTypedModel, MyModel);
+
+        [PrivateApi("WIP v16.02")]
+        public ITypedModel MyModel => CodeHelper.MyModel;
+        //    _typedModel.Get(() =>
+        //{
+        //    var dic = _overridePageData?.ObjectToDictionary()
+        //              ?? PageData?
+        //                  .Where(pair => pair.Key is string)
+        //                  .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
+
+        //    //if (_overridePageData != null)
+        //    //    return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot, Path);
+
+        //    //var stringDic = PageData?
+        //    //    .Where(pair => pair.Key is string)
+        //    //    .ToDictionary(pair => pair.Key.ToString(), pair => pair.Value, InvariantCultureIgnoreCase);
+        //    return new TypedModel(dic, _DynCodeRoot, Path);
+        //});
+        //private readonly GetOnce<ITypedModel> _typedModel = new GetOnce<ITypedModel>();
+
+
+        #endregion
 
     }
 

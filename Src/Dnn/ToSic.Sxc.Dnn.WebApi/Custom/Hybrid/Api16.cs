@@ -71,8 +71,13 @@ namespace Custom.Hybrid
 
         #region My... Stuff
 
-        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = new TypedCode16Helper(_DynCodeRoot.AsC, Data));
+        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
         private TypedCode16Helper _codeHelper;
+
+        private TypedCode16Helper CreateCodeHelper()
+        {
+            return new TypedCode16Helper(_DynCodeRoot, Data, null, false, "c# WebApiController");
+        }
 
         public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -99,6 +104,8 @@ namespace Custom.Hybrid
             => _DynCodeRoot.AsC.AsItems(list);
 
         #endregion
+
+        public ITypedModel MyModel => CodeHelper.MyModel;
 
     }
 }

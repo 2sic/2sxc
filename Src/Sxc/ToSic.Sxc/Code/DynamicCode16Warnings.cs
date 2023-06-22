@@ -14,5 +14,9 @@ namespace ToSic.Sxc.Code
             message: "Don't use Data.MyHeader - use new MyHeader");
         public static ICodeInfo NoDataMyData = Warn("no-data-my-data-code16",
             message: "Don't use Data.MyData - use new TODO!");
+
+
+        public static ICodeInfo NoTypedModel = Warn("no-typed-model",
+            message: "Don't use TypedModel - use new MyModel");
     }
 }

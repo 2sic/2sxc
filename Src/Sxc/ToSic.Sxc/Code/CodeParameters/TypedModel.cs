@@ -15,12 +15,14 @@ namespace ToSic.Sxc.Code
     public class TypedModel : ITypedModel
     {
         private readonly IDynamicCodeRoot _codeRoot;
+        private readonly bool _isRazor;
         private readonly string _razorFileName;
         private readonly IDictionary<string, object> _paramsDictionary;
 
-        public TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot, string razorFileName)
+        public TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot, bool isRazor, string razorFileName)
         {
             _codeRoot = codeRoot;
+            _isRazor = isRazor;
             _razorFileName = razorFileName;
             _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
         }
