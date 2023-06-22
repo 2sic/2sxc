@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.CodeChanges;
-using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Problems;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
@@ -32,13 +31,16 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
             var additional = new ProblemSuggestions().AddSuggestions(block, exOrNull, errorCode);
             problems.AddRange(additional);
 
-            problems.AddRange(codeWarnings.GetWarnings()
-                .Select(warning => new ProblemReport
+            problems.AddRange(codeWarnings
+                .GetWarnings()
+                .GroupBy(w => w.Use.Change)
+                .Select(warningGroup => new ProblemReport
                 {
                     Code = "warning",
                     Severity = ErrorSeverity.warning,
-                    Link = warning.Use.Change.Link,
-                    Message = warning.Use.Change.Message,
+                    Link = warningGroup.Key.Link,
+                    Message =
+                        $"{warningGroup.Key.Message} ({warningGroup.Count()}{(warningGroup.Count() > 3 ? " - possibly in a loop" : "")})",
                 }));
 
             if (codeWarnings.GetObsoletes().Any())

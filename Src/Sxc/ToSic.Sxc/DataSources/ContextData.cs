@@ -45,13 +45,6 @@ namespace ToSic.Sxc.DataSources
 #endif
         private readonly LazySvc<CodeChangeService> _codeChanges;
 
-        public IContextData Init(IDynamicCodeRoot dynCodeRoot)
-        {
-            _DynCodeRoot = dynCodeRoot;
-            return this;
-        }
-        private IDynamicCodeRoot _DynCodeRoot;
-
         #endregion
 
         #region New v16
@@ -69,12 +62,6 @@ namespace ToSic.Sxc.DataSources
         public IEnumerable<IEntity> MyHeader =>  _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
         IEnumerable<IEntity> IContextData.MyHeader => _codeChanges.Value.GetAndWarn(NoDataMyHeader, MyHeader);
         private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
-
-        //public ITypedItem MyItem => _myItem.Get(() => _DynCodeRoot.AsC.AsItem(MyContent));
-        //private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
-
-        //public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _DynCodeRoot.AsC.AsItems(MyContent));
-        //private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
         #endregion
 

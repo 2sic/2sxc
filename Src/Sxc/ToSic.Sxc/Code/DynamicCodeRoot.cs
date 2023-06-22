@@ -121,7 +121,6 @@ namespace ToSic.Sxc.Code
                 return cLog.Return(this, "no block");
 
             Block = block;
-            Data = ((ContextData)block.Data).Init(this);
             AttachApp(block.App);
 
 
