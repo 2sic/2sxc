@@ -44,19 +44,20 @@ namespace ToSic.Sxc.Web.PageService
         public string Activate(
             string noParamOrder = Eav.Parameters.Protector,
             bool condition = true,
-            params string[] features) => Log.Func(() =>
+            params string[] features)
         {
+            var l = Log.Fn<string>();
             // Check condition - default is true - so if it's false, this overload was called
             if (!condition)
-                return ("", "condition false");
+                return l.ReturnNull("condition false");
             
             // Todo: unclear what to do with the parameter protector
             // Maybe must check the parameter protector, because we're not sure if the user may be calling this overload with a feature name
             // Reason is we're not 100% sure it takes the simple overload vs. this one if 
             // only one string is given, but ATM that's the case.
 
-            return (Activate(features), "condition true, added");
-        });
+            return l.Return(Activate(features), "condition true, added");
+        }
 
         private string[] AddManualResources(string[] keys)
         {
