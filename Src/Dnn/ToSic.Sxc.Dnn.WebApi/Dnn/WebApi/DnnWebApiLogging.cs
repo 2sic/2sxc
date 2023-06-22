@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using System.Web.Http.Controllers;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// <summary>
         /// Add Log Specs to the current request and also to any reported code changes later on.
         /// </summary>
-        public void AddLogSpecs(IBlock block, IApp app, string entry, CodeChangesInScope codeChanges)
+        public void AddLogSpecs(IBlock block, IApp app, string entry, CodeInfosInScope codeInfos)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                     .BuildSpecsForLogHistory(block, app, entry: entry, addView: false);
 
                 LogStoreEntry.UpdateSpecs(logSpecs);
-                codeChanges.AddContext(() => logSpecs, entryPoint: entry);
+                codeInfos.AddContext(() => logSpecs, entryPoint: entry);
             }
             catch { /* ignore */ }
         }

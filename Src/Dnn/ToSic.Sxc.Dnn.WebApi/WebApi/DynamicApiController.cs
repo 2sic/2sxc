@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Web.Http.Controllers;
-using ToSic.Eav.CodeChanges;
 using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
@@ -18,6 +17,7 @@ using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.LookUp;
 using ToSic.Sxc.WebApi.Adam;
+using ToSic.Eav.Code.InfoSystem;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -116,7 +116,7 @@ namespace ToSic.Sxc.WebApi
 
             // 16.02 - try to log more details about the current API call
             var currentPath = reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
-            WebApiLogging?.AddLogSpecs(block, _DynCodeRoot.App, currentPath, GetService<CodeChangesInScope>());
+            WebApiLogging?.AddLogSpecs(block, _DynCodeRoot.App, currentPath, GetService<CodeInfosInScope>());
 
         }
 

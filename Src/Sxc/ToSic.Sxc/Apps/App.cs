@@ -2,7 +2,6 @@
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
-using ToSic.Eav.CodeChanges;
 using ToSic.Eav.Data.PiggyBack;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
@@ -10,6 +9,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.LookUp;
+using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Apps
             Generator<IAppStates> appStates,
             Generator<AppConfigDelegate> appConfigDelegate, 
             LazySvc<AsConverterService> asConverter,
-            LazySvc<CodeChangeService> codeChanges)
+            LazySvc<CodeInfoService> codeChanges)
             : base(services, "App.SxcApp")
         {
             ConnectServices(
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Apps
         private readonly LazySvc<AppPaths> _appPathsLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
-        private readonly LazySvc<CodeChangeService> _codeChanges;
+        private readonly LazySvc<CodeInfoService> _codeChanges;
         private readonly LazySvc<AsConverterService> _asConverter;
 
 

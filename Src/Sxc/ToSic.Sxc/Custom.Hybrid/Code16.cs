@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using Custom.Hybrid.Advanced;
 using ToSic.Eav;
-using ToSic.Eav.CodeChanges;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -35,8 +35,8 @@ namespace Custom.Hybrid
 
         #endregion
 
-        private CodeChangeService CcS => _ccs.Get(GetService<CodeChangeService>);
-        private readonly GetOnce<CodeChangeService> _ccs = new GetOnce<CodeChangeService>();
+        private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
+        private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
         /// <inheritdoc />
         public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);

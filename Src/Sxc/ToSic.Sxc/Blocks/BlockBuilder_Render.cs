@@ -78,7 +78,7 @@ namespace ToSic.Sxc.Blocks
             }
 
             // Add information to code changes if relevant
-            Services.CodeChanges.AddContext(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
+            Services.CodeInfos.AddContext(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
 
 
             return l.Return(_result);

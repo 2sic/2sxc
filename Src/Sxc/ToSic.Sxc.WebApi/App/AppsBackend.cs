@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Parts;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Dto;
@@ -19,12 +18,12 @@ namespace ToSic.Sxc.WebApi.App
 {
     public class AppsBackend: ServiceBase
     {
-        private readonly CodeChangeStats _codeStats;
+        private readonly CodeInfoStats _codeStats;
         private readonly CmsZones _cmsZones;
         private readonly IContextOfSite _context;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
 
-        public AppsBackend(CmsZones cmsZones, IContextOfSite context, Generator<AppConfigDelegate> appConfigDelegate, CodeChangeStats codeStats) : base("Bck.Apps")
+        public AppsBackend(CmsZones cmsZones, IContextOfSite context, Generator<AppConfigDelegate> appConfigDelegate, CodeInfoStats codeStats) : base("Bck.Apps")
         {
             _codeStats = codeStats;
             ConnectServices(

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
@@ -16,8 +16,8 @@ namespace Custom.Hybrid
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     public abstract class Razor16: Razor14<dynamic, ServiceKit14>, IDynamicCode16
     {
-        private CodeChangeService CcS => _ccs.Get(GetService<CodeChangeService>);
-        private readonly GetOnce<CodeChangeService> _ccs = new GetOnce<CodeChangeService>();
+        private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
+        private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
         /// <inheritdoc />
         public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);

@@ -1,12 +1,12 @@
 ﻿using System;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.Infos;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Compatibility;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn;
-using static ToSic.Eav.CodeChanges.CodeChangeInfo;
+using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Blocks
@@ -74,12 +74,12 @@ namespace ToSic.Sxc.Blocks
 
 
             var block = services.BlockOrNull;
-            DnnStaticDi.CodeChanges.WarnSxc(WarnObsolete.UsedAs(appId: parent.Entity.AppId, specificId: $"View:{block?.View?.Id}"), block: block);
+            DnnStaticDi.CodeInfos.WarnSxc(WarnObsolete.UsedAs(appId: parent.Entity.AppId, specificId: $"View:{block?.View?.Id}"), block: block);
 
             return services.RenderService;
         }
 
-        private static readonly ICodeChangeInfo WarnObsolete = V13To17("Deprecated Static RenderService", "https://go.2sxc.org/brc-13-static-render");
+        private static readonly ICodeInfo WarnObsolete = V13To17("Deprecated Static RenderService", "https://go.2sxc.org/brc-13-static-render");
 
     }
 }

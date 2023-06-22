@@ -6,11 +6,10 @@ using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Eav.CodeChanges;
 using ToSic.Lib.DI;
 using static ToSic.Sxc.Code.DynamicCode16Warnings;
+using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 
 namespace ToSic.Sxc.DataSources
 {
@@ -25,7 +24,7 @@ namespace ToSic.Sxc.DataSources
 
 #if NETFRAMEWORK
         [PrivateApi("not meant for public use")]
-        public ContextData(MyServices services, ToSic.Eav.Apps.IAppStates appStates, LazySvc<CodeChangeService> codeChanges) : base(services, "Sxc.BlckDs")
+        public ContextData(MyServices services, ToSic.Eav.Apps.IAppStates appStates, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
         {
             ConnectServices(
                 _appStates = appStates,
@@ -36,14 +35,14 @@ namespace ToSic.Sxc.DataSources
         private readonly ToSic.Eav.Apps.IAppStates _appStates;
 #else
         [PrivateApi("not meant for public use")]
-        public ContextData(MyServices services, LazySvc<CodeChangeService> codeChanges) : base(services, "Sxc.BlckDs")
+        public ContextData(MyServices services, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
         {
             ConnectServices(
                 _codeChanges = codeChanges
             );
         }
 #endif
-        private readonly LazySvc<CodeChangeService> _codeChanges;
+        private readonly LazySvc<CodeInfoService> _codeChanges;
 
         #endregion
 

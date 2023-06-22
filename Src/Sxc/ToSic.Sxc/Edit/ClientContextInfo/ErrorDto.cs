@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Problems;
 using static System.Text.Json.Serialization.JsonIgnoreCondition;
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         [JsonIgnore(Condition = WhenWritingDefault)]
         public IEnumerable<ProblemReport> Problems { get; }
 
-        internal ErrorDto(IBlock block, string errorCode, Exception exOrNull, CodeChangesInScope codeWarnings)
+        internal ErrorDto(IBlock block, string errorCode, Exception exOrNull, CodeInfosInScope codeWarnings)
         {
             // New mechanism in 16.01
             Type = errorCode;
@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
                 });
 
             var appId = block?.App?.AppId;
-            if (appId != null && codeWarnings.CodeChangeStats.AppHasWarnings(appId.Value))
+            if (appId != null && codeWarnings.CodeInfoStats.AppHasWarnings(appId.Value))
                 problems.Add(new ProblemReport
                 {
                     Code = "obsolete-app",

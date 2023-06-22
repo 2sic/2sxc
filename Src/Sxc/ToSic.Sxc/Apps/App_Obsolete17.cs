@@ -1,6 +1,6 @@
 ﻿#if NETFRAMEWORK
 using System;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.Infos;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Apps
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Apps
                 return c?.Entity != null ? MakeDynProperty(c.Entity) : null;
             }
         }
-        private static readonly CodeChangeInfo OldIApp = CodeChangeInfo.V05To17("SexyContent.Interfaces.IApp.{0}",
+        private static readonly ICodeInfo OldIApp = CodeInfoObsolete.V05To17("SexyContent.Interfaces.IApp.{0}",
             message: "Accessing the App.{0} through the ancient SexyContent.Interfaces.IApp interface is very deprecated.");
 
         dynamic SexyContent.Interfaces.IApp.Resources => _codeChanges.Value.GetAndWarn(OldIApp.Replace(nameof(Resources)), Resources);

@@ -1,6 +1,6 @@
 ﻿#if NETFRAMEWORK
 using ToSic.Lib.Documentation;
-using static ToSic.Eav.CodeChanges.CodeChangeInfo;
+using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
 namespace ToSic.Sxc.DataSources
 {

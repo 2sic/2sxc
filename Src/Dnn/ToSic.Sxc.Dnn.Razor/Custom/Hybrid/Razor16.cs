@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Custom.Hybrid.Advanced;
 using ToSic.Eav;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
@@ -43,8 +43,8 @@ namespace Custom.Hybrid
 
         #region Temporary v16 objects which must get removed again
 
-        private CodeChangeService CcS => _ccs.Get(GetService<CodeChangeService>);
-        private readonly GetOnce<CodeChangeService> _ccs = new GetOnce<CodeChangeService>();
+        private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
+        private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
         [PrivateApi]
         public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);

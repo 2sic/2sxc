@@ -1,4 +1,4 @@
-﻿using ToSic.Eav.CodeChanges;
+﻿using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Configuration.Licenses;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Blocks
                 LazySvc<PageChangeSummary> pageChangeSummary,
                 LazySvc<ILicenseService> licenseService,
                 IModuleService moduleService,
-                CodeChangesInScope codeChanges
+                CodeInfosInScope codeInfos
             )
             {
                 ConnectServices(
@@ -42,11 +42,11 @@ namespace ToSic.Sxc.Blocks
                     PageChangeSummary = pageChangeSummary,
                     LicenseService = licenseService,
                     ModuleService = moduleService,
-                    CodeChanges = codeChanges
+                    CodeInfos = codeInfos
                 );
             }
 
-            public CodeChangesInScope CodeChanges { get; }
+            public CodeInfosInScope CodeInfos { get; }
             public EngineFactory EngineFactory { get; }
             public Generator<IEnvironmentInstaller> EnvInstGen { get; }
             public Generator<IRenderingHelper> RenderHelpGen { get; }

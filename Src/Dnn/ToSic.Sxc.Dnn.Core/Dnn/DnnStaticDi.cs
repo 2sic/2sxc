@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Web;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn
         [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
         public static T StaticBuild<T>(ILog parentLog = null) => GetPageScopedServiceProvider().Build<T>(parentLog);
 
-        public static CodeChangeService CodeChanges => StaticBuild<CodeChangeService>();
+        public static CodeInfoService CodeInfos => StaticBuild<CodeInfoService>();
 
         /// <summary>
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context

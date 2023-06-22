@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json.Serialization;
-using ToSic.Eav.CodeChanges;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextAll : ServiceBase
     {
-        private readonly CodeChangesInScope _codeWarnings;
+        private readonly CodeInfosInScope _codeWarnings;
         public JsContextEnvironment Environment;
         public JsContextUser User;
         public JsContextLanguage Language;
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Web.JsContext
         public UiDto Ui;
         public JsApi JsApi;
 
-        public JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeChangesInScope codeWarnings) : base("Sxc.CliInf")
+        public JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeInfosInScope codeWarnings) : base("Sxc.CliInf")
         {
             ConnectServices(
                 _jsLangCtx = jsLangCtx,
