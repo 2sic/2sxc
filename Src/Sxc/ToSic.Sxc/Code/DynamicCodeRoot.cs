@@ -11,7 +11,6 @@ using ToSic.Sxc.Code.Helpers;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Data.AsConverter;
-using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web.ContentSecurityPolicy;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -121,10 +120,11 @@ namespace ToSic.Sxc.Code
                 return cLog.Return(this, "no block");
 
             Block = block;
+            Data = block.Data;
             AttachApp(block.App);
 
 
-            return cLog.Return(this, $"AppId: {App?.AppId}, Block: {block?.Configuration?.BlockIdentifierOrNull?.Guid}");
+            return cLog.Return(this, $"AppId: {App?.AppId}, Block: {block.Configuration?.BlockIdentifierOrNull?.Guid}");
         }
 
         /// <inheritdoc />
