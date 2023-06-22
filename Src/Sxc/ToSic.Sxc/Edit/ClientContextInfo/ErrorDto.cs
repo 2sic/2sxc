@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
                     Severity = ErrorSeverity.warning,
                     Link = warningGroup.Key.Link,
                     Message =
-                        $"{warningGroup.Key.Message} ({warningGroup.Count()}{(warningGroup.Count() > 3 ? " - possibly in a loop" : "")})",
+                        $"{warningGroup.Key.Message} ({warningGroup.Count()} cases{(warningGroup.Count() > 3 ? " - possibly in a loop" : "")})",
                 }));
 
             if (codeWarnings.GetObsoletes().Any())
@@ -50,7 +50,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
                     Severity = ErrorSeverity.warning
                 });
 
-            var appId = block?.App?.AppId;
+            var appId = block.App?.AppId;
             if (appId != null && codeWarnings.CodeInfoStats.AppHasWarnings(appId.Value))
                 problems.Add(new ProblemReport
                 {
