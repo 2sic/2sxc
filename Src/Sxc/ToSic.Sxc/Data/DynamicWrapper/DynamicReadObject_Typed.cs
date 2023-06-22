@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Data
 
         IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder, string attribute)
         {
-            var value = (this as ITypedRead).String(name);
+            var value = (this as ITypedRead).String(name, noParamOrder: noParamOrder);
             return attribute != default
                 ? Tag.Attr(attribute, value)
                 : value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));

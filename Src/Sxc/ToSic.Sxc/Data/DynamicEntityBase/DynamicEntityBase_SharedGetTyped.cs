@@ -14,11 +14,10 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder, string attribute)
         {
-            if (attribute != default)
-                return Tag.Attr(attribute, (this as ITypedRead).String(name));
-
-            var value = (this as ITypedRead).String(name);
-            return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
+            var value = (this as ITypedRead).String(name, noParamOrder: noParamOrder);
+            return attribute != default 
+                ? Tag.Attr(attribute, value)
+                : value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
         }
 
         [PrivateApi]
@@ -54,6 +53,12 @@ namespace ToSic.Sxc.Data
         {
             var url = Get(name, noParamOrder: noParamOrder, convertLinks: true) as string;
             return Tags.SafeUrl(url).ToString();
+        }
+
+        [PrivateApi]
+        string ITypedRead.ToString()
+        {
+            return "test / debug" + ToString();
         }
 
         #region TypedRead

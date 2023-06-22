@@ -137,7 +137,13 @@ namespace ToSic.Sxc.Data
 
         #region Thing
 
-        
+
+
+        #endregion
+
+        #region Debugging
+
+        string ToString();
 
         #endregion
     }

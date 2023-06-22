@@ -67,7 +67,7 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc />
-        public ITypedStack SettingsStack => _DynCodeRoot.Resources;
+        public ITypedStack SettingsStack => _DynCodeRoot.Settings;
 
         /// <inheritdoc />
         public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
