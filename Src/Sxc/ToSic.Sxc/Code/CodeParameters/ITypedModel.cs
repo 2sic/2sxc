@@ -186,6 +186,20 @@ namespace ToSic.Sxc.Code
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool? required = default);
 
+        #region Stacks
+
+        /// <summary>
+        /// Get a stack which was passed to this
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="noParamOrder"></param>
+        /// <param name="fallback"></param>
+        /// <param name="required"></param>
+        /// <returns></returns>
+        ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default);
+
+        #endregion
+
         #region Item / Entity
 
         IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool? required = default);

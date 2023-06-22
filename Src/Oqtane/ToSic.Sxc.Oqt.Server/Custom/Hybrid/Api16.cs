@@ -70,8 +70,8 @@ namespace Custom.Hybrid
         #region AsItem(s) / Merge
 
         /// <inheritdoc />
-        public ITypedRead Merge(params object[] items)
-            => _DynCodeRoot.AsC.MergeTyped(items);
+        public ITypedStack Merge(params object[] items) => _DynCodeRoot.AsC.MergeTyped(items);
+        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.MergeTyped(items);
 
         /// <inheritdoc />
         public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)

@@ -63,7 +63,9 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        ITypedRead Merge(params object[] items);
+        ITypedStack Merge(params object[] items);
+
+        ITypedStack AsStack(params object[] items);
 
         #endregion
 

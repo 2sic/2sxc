@@ -143,6 +143,16 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
         #endregion
 
 
+        #region Stacks
+
+        public ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default)
+        {
+            var (typed, _, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
+            return ok ? typed : null;
+        }
+
+        #endregion
+
         #region Adam
 
         public IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool? required = default)

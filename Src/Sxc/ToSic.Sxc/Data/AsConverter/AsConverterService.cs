@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Eav.Data.PropertyLookup;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -121,12 +122,12 @@ namespace ToSic.Sxc.Data.AsConverter
 
 
         [PrivateApi]
-        public ITypedRead MergeTyped(params object[] entities)
+        public ITypedStack MergeTyped(params object[] objects)
         {
-            if (entities == null || !entities.Any()) return null;
-            if (entities.Length == 1) return AsTypedInternal(entities[0]);
+            if (!objects.SafeAny()) return null;
+            // if (objects.Length == 1) return AsTypedInternal(objects[0]);
             // New case: many items found, must create a stack
-            var sources = entities
+            var sources = objects
                 .Select(e => e as IPropertyLookup)
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
