@@ -49,8 +49,8 @@ namespace ToSic.Sxc.Data
         private IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
                 if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;
-                var app = _services?.BlockOrNull?.Context?.AppState;
-                var md = app?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
+                var appState = _services?.BlockOrNull?.Context?.AppState;
+                var md = appState?.GetMetadataOf(TargetTypes.CmsItem, rawString, "");
 
                 // Optionally add image-metadata recommendations
                 if (md?.Target != null && Value is string valString && valString.HasValue())
