@@ -10,7 +10,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static System.StringComparer;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -19,7 +18,7 @@ namespace Custom.Hybrid
     public abstract class Razor16: Razor14<dynamic, ServiceKit14>, IDynamicCode16
     {
         private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
-        private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
+        private readonly GetOnce<CodeInfoService> _ccs = new();
 
         /// <inheritdoc />
         public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);

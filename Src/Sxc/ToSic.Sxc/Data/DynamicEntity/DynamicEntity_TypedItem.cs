@@ -20,8 +20,7 @@ namespace ToSic.Sxc.Data
 
         IFile ITypedItem.File(string name)
         {
-            ThrowIfKitNotAvailable();
-            var file = _Services.Kit.Adam.File(Field(name));
+            var file = GetServiceKitOrThrow().Adam.File(Field(name));
             return file ?? (this as ITypedItem).Folder(name).Files.FirstOrDefault();
         }
 

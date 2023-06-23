@@ -1,15 +1,10 @@
-﻿using System;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
-using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.AsConverter;
-using ToSic.Sxc.Services;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
 
 namespace ToSic.Sxc.Data
@@ -33,20 +28,11 @@ namespace ToSic.Sxc.Data
                 _renderServiceGenerator = renderServiceGenerator;
             }
 
-            internal MyServices Init(IBlock blockOrNull, string[] dimensions, ILog log,
-                AsConverterService asConverter,
-                int compatibility = Constants.CompatibilityLevel10,
-                Func<ServiceKit14> kit = null
-                //Func<AdamManager> getAdamManager = null
-            )
+            internal MyServices Init(IBlock blockOrNull, string[] dimensions, AsConverterService asConverter)
             {
                 Dimensions = dimensions;
-                LogOrNull = log;
-                CompatibilityLevel = compatibility;
                 BlockOrNull = blockOrNull;
                 AsC = asConverter;
-                _getKit = kit;
-                //_getAdamManager = getAdamManager;
                 return this;
             }
 
@@ -54,9 +40,6 @@ namespace ToSic.Sxc.Data
 
             internal string[] Dimensions { get; private set; }
 
-            internal ILog LogOrNull { get; private set; }
-
-            internal int CompatibilityLevel { get; private set; }
 
             internal AsConverterService AsC { get; private set; }
 
@@ -65,7 +48,6 @@ namespace ToSic.Sxc.Data
             /// </summary>
             [PrivateApi]
             internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
-
             private readonly LazySvc<IValueConverter> _valueConverterLazy;
 
 
@@ -76,14 +58,6 @@ namespace ToSic.Sxc.Data
             internal IRenderService RenderService => _renderServiceGenerator.New();
             private readonly Generator<IRenderService> _renderServiceGenerator;
 
-            internal ServiceKit14 Kit => _kit.Get(() => _getKit?.Invoke());
-            private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
-            private Func<ServiceKit14> _getKit;
-
-
-            //internal AdamManager AdamManager => _adamManager.Get(() => _getAdamManager?.Invoke());
-            //private readonly GetOnce<AdamManager> _adamManager = new GetOnce<AdamManager>();
-            //private Func<AdamManager> _getAdamManager;
         }
     }
 }

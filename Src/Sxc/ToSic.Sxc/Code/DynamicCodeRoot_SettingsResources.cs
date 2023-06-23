@@ -13,10 +13,13 @@ namespace ToSic.Sxc.Code
         [PublicApi]
         public DynamicStack Resources => _resources.Get(() =>
         {
-            var appState = ((App)_DynCodeRoot.App).AppState;
-            return new DynamicStack(RootNameResources, AsC.DynamicEntityServices,
-                Services.SettingsStack.Init(appState)
-                    .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
+            return AsC.AsStack(RootNameResources, Services.SettingsStack
+                .Init(((App)_DynCodeRoot.App).AppState)
+                .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
+            //var appState = ((App)_DynCodeRoot.App).AppState;
+            //return new DynamicStack(RootNameResources, AsC.DynamicEntityServices,
+            //    Services.SettingsStack.Init(appState)
+            //        .GetStack(ConfigurationConstants.Resources, _DynCodeRoot.Block?.View?.Resources));
         });
         private readonly GetOnce<DynamicStack> _resources = new GetOnce<DynamicStack>();
 
@@ -25,10 +28,13 @@ namespace ToSic.Sxc.Code
         [PublicApi]
         public DynamicStack Settings => _settings.Get(() =>
         {
-            var appState = ((App)_DynCodeRoot.App).AppState;
-            return new DynamicStack(RootNameSettings, AsC.DynamicEntityServices,
-                Services.SettingsStack.Init(appState)
-                    .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
+            return AsC.AsStack(RootNameSettings, Services.SettingsStack
+                .Init(((App)_DynCodeRoot.App).AppState)
+                .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
+            //var appState = ((App)_DynCodeRoot.App).AppState;
+            //return new DynamicStack(RootNameSettings, AsC.DynamicEntityServices,
+            //    Services.SettingsStack.Init(appState)
+            //        .GetStack(ConfigurationConstants.Settings, _DynCodeRoot.Block?.View?.Settings));
 
         });
         private readonly GetOnce<DynamicStack> _settings = new GetOnce<DynamicStack>();
