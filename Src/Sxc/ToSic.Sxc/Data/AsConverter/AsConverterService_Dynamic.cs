@@ -14,6 +14,8 @@ namespace ToSic.Sxc.Data.AsConverter
 
         public DynamicEntity AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
 
+        public DynamicEntity AsDynamic(IEnumerable<IEntity> list) => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, services: DynamicEntityServices);
+
         public IEnumerable<dynamic> AsDynamicList(object list)
         {
             switch (list)

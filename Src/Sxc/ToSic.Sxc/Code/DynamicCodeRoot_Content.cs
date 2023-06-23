@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Code
             var list = Data[sourceStream].List.ToList();
             return !list.Any()
                 ? wrapLog.ReturnNull("first is null") 
-                : wrapLog.Return(new DynamicEntity(list, null, null, null, AsC.DynamicEntityServices), "found");
+                : wrapLog.Return(AsC.AsDynamic(list), "found");
         }
         
         #endregion

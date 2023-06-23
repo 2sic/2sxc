@@ -51,7 +51,7 @@ namespace ToSic.Sxc.Data.AsConverter
 
         #region DynamicEntityServices
 
-        public DynamicEntity.MyServices DynamicEntityServices => _dynamicEntityServices.Get(Log, l =>
+        private DynamicEntity.MyServices DynamicEntityServices => _dynamicEntityServices.Get(Log, l =>
         {
             var rawServices = _dynamicEntityDependenciesLazy.Value;
 

@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Adam
         {
             var mdOf = new MetadataOf<string>((int)TargetTypes.CmsItem, key, title, null, manager.AppRuntime.AppState);
             mdInit?.Invoke(mdOf);
-            return new Metadata(mdOf, null, manager.AsC.DynamicEntityServices);
+            return manager.AsC.Metadata(mdOf);
         }
     }
 }
