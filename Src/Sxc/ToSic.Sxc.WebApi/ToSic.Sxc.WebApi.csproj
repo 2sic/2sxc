@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TargetFrameworks>net472;netstandard2.0;net6.0;</TargetFrameworks>-->
-    <TargetFrameworks>net472;net6.0;</TargetFrameworks>
+    <!--<TargetFrameworks>net472;netstandard2.0;net7.0;</TargetFrameworks>-->
+    <TargetFrameworks>net472;net7.0;</TargetFrameworks>
     <RootNamespace>ToSic.Sxc.WebApi</RootNamespace>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <FileAlignment>512</FileAlignment>
@@ -53,7 +53,7 @@
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\netstandard2.0\ToSic.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
     <Reference Include="ToSic.Razor">
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net6.0\ToSic.Razor.dll</HintPath>
     </Reference>
@@ -64,7 +64,7 @@
   </ItemGroup>
 
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
   </ItemGroup>
 </Project>

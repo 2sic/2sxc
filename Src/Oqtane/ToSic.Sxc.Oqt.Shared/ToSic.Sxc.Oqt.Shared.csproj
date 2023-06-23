@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AssemblyName>ToSic.Sxc.Oqtane.Shared</AssemblyName>
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
@@ -30,9 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.3" />
-    <PackageReference Include="Oqtane.Shared" Version="3.4.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" /><!-- from Oqtane.Shared.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.5" />
+    <PackageReference Include="Oqtane.Shared" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,8 +43,8 @@
     <Folder Include="App\" />
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />
-  </ItemGroup>-->
+  <ItemGroup>
+    <!--<ProjectReference Include="..\..\..\..\oqtane\oqtane.framework\Oqtane.Shared\Oqtane.Shared.csproj" />-->
+  </ItemGroup>
 
 </Project>

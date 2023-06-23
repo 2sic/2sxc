@@ -116,7 +116,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Connect.Dnn.Koi, Version=2.0.0.27364, Culture=neutral, processorArchitecture=MSIL">
@@ -136,17 +136,17 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml" />
-    <Reference Include="ToSic.Imageflow.Dnn, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToSic.Imageflow.Dnn">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\Imageflow\Dnn\ToSic.Imageflow.Dnn.dll</HintPath>
       <Private>False</Private>
       <!-- this is important, otherwise it will be copied to the bin folder -->
     </Reference>
-    <Reference Include="ToSic.Razor, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToSic.Razor">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="ToSic.Razor.Dnn, Version=3.5.0.38911, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToSic.Razor.Dnn">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Dependencies\RazorBlade\Release\net40\ToSic.Razor.Dnn.dll</HintPath>
     </Reference>

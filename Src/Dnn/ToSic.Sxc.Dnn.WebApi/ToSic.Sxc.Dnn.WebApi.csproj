@@ -98,7 +98,7 @@
       <Version>5.2.3</Version>
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Json" Version="6.0.0">
+    <PackageReference Include="System.Text.Json" Version="7.0.2">
       <ExcludeAssets>runtime</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4">

@@ -216,7 +216,7 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>Microsoft.Bcl.AsyncInterfaces.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -307,7 +307,7 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.Collections.Immutable.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -332,10 +332,10 @@
             <!-- Microsoft.Extensions.Primitives transitive dependency -->
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
             <!-- System.Text.Encodings.Web transitive dependency -->
-            <!-- System.Text.Encodings.Web transitive dependency -->
+            <!-- ToSic.Imageflow.Dnn -->
             <assembly>
               <name>System.Memory.dll</name>
-              <version>4.0.1.1</version>
+              <version>4.0.1.2</version>
             </assembly>
             <!-- System.Memory transitive dependency -->
             <!-- System.Text.Json transitive dependency -->
@@ -355,11 +355,11 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>System.Text.Encodings.Web.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0.0</version>
             </assembly>
             <assembly>
               <name>System.Text.Json.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0</version>
             </assembly>
             <!-- Microsoft.Bcl.AsyncInterfaces transitive dependency -->
             <!-- System.Text.Json transitive dependency -->
@@ -1774,7 +1774,7 @@
                       <codeBase version="4.0.1.1" href="bin\Imageflow\System.Memory.dll" />
                     </dependentAssembly>
                   </node>-->
-                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
                         action="remove"
                         collision="overwrite"
                         nameSpace="urn:schemas-microsoft-com:asm.v1"
@@ -1798,7 +1798,7 @@
                         nameSpacePrefix="ab">
                     <codeBase version="4.0.1.1" href="bin\Imageflow\System.Memory.dll" xmlns="urn:schemas-microsoft-com:asm.v1"/>
                     <bindingRedirect oldVersion="0.0.0.0-4.0.1.1" newVersion="4.0.1.1" xmlns="urn:schemas-microsoft-com:asm.v1"/>
-                  </node>
+                  </node>-->
 
                   <!-- 11 - Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Numerics.Vectors.dll, version 4.1.3.0 -->
                   <!--<node path="/configuration/runtime/ab:assemblyBinding"
@@ -1994,7 +1994,7 @@
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
 
-	  <package name="ToSic.RazorBlade" type="Library" version="04.03.00.01">
+	  <package name="ToSic.RazorBlade" type="Library" version="04.04.00.01">
 		  <friendlyName>2sic RazorBlade</friendlyName>
 		  <description>2sic RazorBlade</description>
 		  <iconFile>icon.png</iconFile>

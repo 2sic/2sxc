@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <AssemblyName>ToSic.Sxc.Oqtane.Server</AssemblyName>
@@ -12,6 +12,7 @@
     <Configurations>Debug;Release;DebugOqtane;DebugDnn</Configurations>
     <Deterministic>true</Deterministic>
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+    <RestoreSources>$(RestoreSources);../../packages/;../../../../oqtane/oqtane-imageflow/InstallPackages/</RestoreSources>
     <!-- Don't generate assembly properties from this XML which should come from the core file, like version - these lines must be in sync in all ToSic.Eav.*.csproj files -->
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
@@ -85,17 +86,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.3" />
-    <PackageReference Include="Oqtane.Server" Version="3.4.3" />
-    <PackageReference Include="Oqtane.Shared" Version="3.4.3" />
-    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" /><!-- from Oqtane.Database.SqlServer.csproj -->
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.5" /><!-- from Oqtane.Server.csproj -->
+    <PackageReference Include="Oqtane.Server" Version="4.0.0" />
+    <PackageReference Include="Oqtane.Shared" Version="4.0.0" />
+    <PackageReference Include="ToSic.Imageflow.Oqtane" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

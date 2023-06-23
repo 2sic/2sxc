@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "ToSic.Razor/04.03.00": {
+      "ToSic.Razor/04.04.00": {
         "dependencies": {
           "Microsoft.AspNetCore.Html.Abstractions": "2.2.0",
           "Microsoft.Extensions.DependencyInjection": "3.1.16"
@@ -29,27 +29,14 @@
       "Microsoft.Extensions.DependencyInjection/3.1.16": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.16"
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.DependencyInjection.dll": {
-            "assemblyVersion": "3.1.16.0",
-            "fileVersion": "3.100.1621.26206"
-          }
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.16": {
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
-            "assemblyVersion": "3.1.16.0",
-            "fileVersion": "3.100.1621.26206"
-          }
-        }
-      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/3.1.16": {},
       "System.Text.Encodings.Web/4.5.0": {}
     }
   },
   "libraries": {
-    "ToSic.Razor/04.03.00": {
+    "ToSic.Razor/04.04.00": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
