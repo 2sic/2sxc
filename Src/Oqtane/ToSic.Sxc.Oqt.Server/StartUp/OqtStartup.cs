@@ -96,10 +96,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             if (env.IsDevelopment())
                 app.UsePageResponseRewriteMiddleware();
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootNoLanguage}"), appBuilder =>
+            // MapWhen split the middleware pipeline into two completely separate branches
+            app.MapWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootNoLanguage}"), appBuilder =>
             {
-                // routing middleware
-                appBuilder.UseOqtaneMiddlewares();
+                appBuilder.UseOqtaneMiddlewareConfiguration();
 
                 // endpoint mapping
                 appBuilder.UseEndpoints(endpoints =>
@@ -108,12 +108,13 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                     endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                     endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                 });
+
+                // end of this middleware pipeline branch
             });
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootPathOrLang}"), appBuilder =>
+            app.MapWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootPathOrLang}"), appBuilder =>
             {
-                // routing middleware
-                appBuilder.UseOqtaneMiddlewares();
+                appBuilder.UseOqtaneMiddlewareConfiguration();
 
                 // endpoint mapping
                 appBuilder.UseEndpoints(endpoints =>
@@ -122,12 +123,13 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                     endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                     endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                 });
+
+                // end of this middleware pipeline branch
             });
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootPathNdLang}"), appBuilder =>
+            app.MapWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.AppRootPathNdLang}"), appBuilder =>
             {
-                // routing middleware
-                appBuilder.UseOqtaneMiddlewares();
+                appBuilder.UseOqtaneMiddlewareConfiguration();
 
                 // endpoint mapping
                 appBuilder.UseEndpoints(endpoints =>
@@ -136,12 +138,13 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                     endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                     endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                 });
+
+                // end of this middleware pipeline branch
             });
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.WebApiStateRoot}"), appBuilder =>
+            app.MapWhen(context => context.Request.Path.StartsWithSegments($"/{WebApiConstants.WebApiStateRoot}"), appBuilder =>
             {
-                // routing middleware
-                appBuilder.UseOqtaneMiddlewares();
+                appBuilder.UseOqtaneMiddlewareConfiguration();
 
                 // endpoint mapping
                 appBuilder.UseEndpoints(endpoints =>
@@ -150,12 +153,13 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                     endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                     endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
                 });
+
+                // end of this middleware pipeline branch
             });
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/"), appBuilder =>
+            app.MapWhen(context => context.Request.Path.StartsWithSegments($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/"), appBuilder =>
             {
-                // routing middleware
-                appBuilder.UseOqtaneMiddlewares();
+                appBuilder.UseOqtaneMiddlewareConfiguration();
 
                 // endpoint mapping
                 appBuilder.UseEndpoints(endpoints =>
@@ -164,12 +168,13 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                     endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/",
                         context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html", EditUiResourceSettings.QuickDialog));
                 });
+
+                // end of this middleware pipeline branch
             });
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/"), appBuilder =>
+            app.MapWhen(context => context.Request.Path.StartsWithSegments($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/"), appBuilder =>
             {
-                // routing middleware
-                appBuilder.UseOqtaneMiddlewares();
+                appBuilder.UseOqtaneMiddlewareConfiguration();
 
                 // endpoint mapping
                 appBuilder.UseEndpoints(endpoints =>
@@ -178,6 +183,8 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                     endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/",
                         context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi));
                 });
+
+                // end of this middleware pipeline branch
             });
         }
         
@@ -189,18 +196,38 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseOqtaneMiddlewares(this IApplicationBuilder app)
+        public static IApplicationBuilder UseOqtaneMiddlewareConfiguration(this IApplicationBuilder app)
         {
-            #region Oqtane copy from Startup.cs - L168
+            // Oqtane middlewares should be executed before configuration of 2sxc endpoint mappings
+            // to avoid having duplicate middleware in pipeline (like we had before).
+            // Order of middleware configuration is important, because that is order of middleware execution in pipeline.
 
-            //app.UseHttpsRedirection();
-            //app.UseStaticFiles();
+            #region Oqtane copy from Startup.cs - L173
+
+            // allow oqtane localization middleware
+            app.UseOqtaneLocalization();
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseTenantResolution();
-            //app.UseJwtAuthorization();
-            //app.UseBlazorFrameworkFiles();
+            app.UseJwtAuthorization();
+            app.UseBlazorFrameworkFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //if (_useSwagger)
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/" + Constants.Version + "/swagger.json", Constants.PackageId + " " + Constants.Version); });
+            //}
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapBlazorHub();
+                endpoints.MapControllers();
+                endpoints.MapFallbackToPage("/_Host");
+            });
 
             #endregion
             return app;
