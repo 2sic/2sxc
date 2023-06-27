@@ -26,8 +26,12 @@ namespace ToSic.Sxc.Data.AsConverter
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IPropertyLookup>(null, e))
                 .ToList();
-            return l.ReturnAsOk(new DynamicStack(name, DynamicEntityServices, sources));
+            return l.ReturnAsOk(AsStack(name, sources));
+        }
 
+        public DynamicStack AsStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)
+        {
+            return new DynamicStack(name, DynamicEntityServices, sources);
         }
     }
 }
