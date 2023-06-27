@@ -10,19 +10,25 @@ namespace ToSic.Sxc.Code.Errors
         private const string ErrHasDetails = "***** You can see more help in the toolbar. ***** \n ";
         private const string ErrHelpSuf = "What follows is the internal error: -------------------------";
 
-        public CodeHelp(string name, string detect, string linkCode, string uiMessage = default, string detailsHtml = default)
+        public CodeHelp(string name, string detect, string linkCode = default, bool detectRegex = default, string uiMessage = default, string detailsHtml = default)
+            : this(original: null, name: name, detect: detect, linkCode: linkCode, detectRegex: detectRegex, uiMessage: uiMessage, detailsHtml: detailsHtml)
+        {}
+
+        public CodeHelp(CodeHelp original, string name = default, string detect = default, string linkCode = default, bool? detectRegex = default, string uiMessage = default, string detailsHtml = default)
         {
-            DetailsHtml = detailsHtml;
-            Name = name;
-            Detect = detect;
-            UiMessage = uiMessage;
-            LinkCode = linkCode;
+            Name = name ?? original?.Name;
+            LinkCode = linkCode ?? original?.LinkCode;
+            Detect = detect ?? original?.Detect;
+            DetectRegex = detectRegex ?? original?.DetectRegex ?? false;
+            UiMessage = uiMessage ?? original?.UiMessage;
+            DetailsHtml = detailsHtml ?? original?.DetailsHtml;
         }
         /// <summary>
         /// Name for internal use to better understand what this is for
         /// </summary>
         public string Name { get; }
         public string Detect { get; }
+        public bool DetectRegex { get; }
         public string UiMessage { get; }
         public string DetailsHtml { get; }
 

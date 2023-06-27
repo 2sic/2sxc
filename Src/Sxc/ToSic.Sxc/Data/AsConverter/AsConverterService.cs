@@ -1,6 +1,6 @@
-﻿using System;
-using ToSic.Eav.Context;
+﻿using ToSic.Eav.Context;
 using ToSic.Eav.Data;
+using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Data.AsConverter
     // todo: make internal once we have an interface
     public partial class AsConverterService: ServiceForDynamicCode
     {
+        private readonly LazySvc<DataBuilder> _dataBuilderLazy;
         private readonly LazySvc<DynamicEntity.MyServices> _dynamicEntityDependenciesLazy;
         private readonly LazySvc<AdamManager> _adamManagerLazy;
         private readonly LazySvc<IContextOfApp> _contextOfAppLazy;
@@ -21,12 +22,15 @@ namespace ToSic.Sxc.Data.AsConverter
         public AsConverterService(
             LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
             LazySvc<AdamManager> adamManager,
-            LazySvc<IContextOfApp> contextOfApp) : base("Sxc.AsConv")
+            LazySvc<IContextOfApp> contextOfApp,
+            LazySvc<DataBuilder> dataBuilderLazy
+            ) : base("Sxc.AsConv")
         {
             ConnectServices(
                 _dynamicEntityDependenciesLazy = dynamicEntityDependencies,
                 _adamManagerLazy = adamManager,
-                _contextOfAppLazy = contextOfApp
+                _contextOfAppLazy = contextOfApp,
+                _dataBuilderLazy = dataBuilderLazy
             );
         }
 
@@ -70,13 +74,6 @@ namespace ToSic.Sxc.Data.AsConverter
         #endregion
 
         public DynamicJacketBase AsDynamicFromJson(string json, string fallback = default) => DynamicJacket.AsDynamicJacket(json, fallback, Log);
-
-        public IEntity AsEntity(object thingToConvert) =>
-            thingToConvert == null
-                ? throw new ArgumentNullException(nameof(thingToConvert))
-                : thingToConvert as IEntity
-                  ?? (thingToConvert as ICanBeEntity)?.Entity
-                  ?? throw new ArgumentException($"Tried to convert an object to {nameof(IEntity)} but cannot convert a {thingToConvert.GetType()}");
 
 
 

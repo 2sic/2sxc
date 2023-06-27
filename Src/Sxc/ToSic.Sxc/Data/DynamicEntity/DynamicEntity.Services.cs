@@ -18,12 +18,8 @@ namespace ToSic.Sxc.Data
         [PrivateApi("this should all stay internal and never be public")]
         public class MyServices : MyServicesBase
         {
-            public MyServices(
-                LazySvc<DataBuilder> dataBuilderLazy,
-                LazySvc<IValueConverter> valueConverterLazy,
-                Generator<IRenderService> renderServiceGenerator)
+            public MyServices(LazySvc<IValueConverter> valueConverterLazy, Generator<IRenderService> renderServiceGenerator)
             {
-                _dataBuilderLazy = dataBuilderLazy;
                 _valueConverterLazy = valueConverterLazy;
                 _renderServiceGenerator = renderServiceGenerator;
             }
@@ -49,11 +45,6 @@ namespace ToSic.Sxc.Data
             [PrivateApi]
             internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
             private readonly LazySvc<IValueConverter> _valueConverterLazy;
-
-
-            internal DataBuilder DataBuilder => _dataBuilderLazy.Value;
-            private readonly LazySvc<DataBuilder> _dataBuilderLazy;
-
 
             internal IRenderService RenderService => _renderServiceGenerator.New();
             private readonly Generator<IRenderService> _renderServiceGenerator;

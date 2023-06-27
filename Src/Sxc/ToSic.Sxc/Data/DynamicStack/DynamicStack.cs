@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         {
             var source = UnwrappedStack.GetSource(name)
                          // If not found, create a fake one
-                         ?? _Services.DataBuilder.FakeEntity(_Services.BlockOrNull?.AppId ?? 0);
+                         ?? _Services.AsC.FakeEntity(_Services.BlockOrNull?.AppId);
 
             return SourceToDynamicEntity(source);
         }

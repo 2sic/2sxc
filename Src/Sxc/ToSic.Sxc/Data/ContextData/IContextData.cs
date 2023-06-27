@@ -3,6 +3,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Data
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Data
     /// Introduced in v16.01 to simplify the API when using <see cref="ITypedItem"/>s.
     /// </remarks>
     [PublicApi]
-    public interface IContextData: IBlockDataSource
+    public interface IContextData: IBlockDataSource, INeedsDynamicCodeRoot
     {
         /// <summary>
         /// The items which _belongs_ to this block,

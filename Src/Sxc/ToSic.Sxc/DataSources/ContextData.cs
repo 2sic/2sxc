@@ -8,6 +8,8 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
 using ToSic.Lib.DI;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Data.AsConverter;
 using static ToSic.Sxc.Code.DynamicCode16Warnings;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 
@@ -18,7 +20,7 @@ namespace ToSic.Sxc.DataSources
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
     /// </summary>
     [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
-    internal partial class ContextData : PassThrough, IContextData
+    internal partial class ContextData : PassThrough, INeedsDynamicCodeRoot, IHasDynamicCodeRoot, IContextData
     {
         #region Constructor and Init
 
@@ -45,6 +47,8 @@ namespace ToSic.Sxc.DataSources
         private readonly LazySvc<CodeInfoService> _codeChanges;
 
         #endregion
+
+
 
         #region New v16
 

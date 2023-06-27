@@ -1,6 +1,14 @@
-﻿using Custom.Hybrid.Advanced;
+﻿using ToSic.Eav.DataSource;
+using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
+using ToSic.Sxc;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.DevTools;
+using ToSic.Sxc.Context;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.Web;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -14,8 +22,81 @@ namespace Custom.Hybrid
     /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
     /// </remarks>
     [PublicApi]
-    public abstract class Razor14: Razor14<dynamic, ServiceKit14>
+    public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>
     {
+        [PrivateApi("Hide this, no need to publish; would only confuse users")]
+        protected Razor14()
+        {
+            // Set the error message to ensure that this will not work in Hybrid razor
+            _ErrorWhenUsingCreateInstanceCshtml = Razor12.ErrCreateInstanceCshtml;
+            _ErrorWhenUsingRenderPage = Razor12.ErrRenderPage;
+        }
+
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
+
+
+        /// <inheritdoc />
+        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+
+
+        public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
+        private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
+
+        ///// <inheritdoc />
+        //public string Path => VirtualPath;
+
+        #region Link, Edit
+
+        /// <inheritdoc />
+        public ILinkService Link => _DynCodeRoot.Link;
+
+        /// <inheritdoc />
+        public IEditService Edit => _DynCodeRoot.Edit;
+
+        #endregion
+
+
+        #region CmsContext
+
+        /// <inheritdoc />
+        public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+
+        #endregion
+
+
+        #region Content, Header, etc. and List
+
+        /// <inheritdoc/>
+        public dynamic Content => _DynCodeRoot.Content;
+
+        /// <inheritdoc />
+        public dynamic Header => _DynCodeRoot.Header;
+
+        /// <inheritdoc />
+        public IContextData Data => _DynCodeRoot.Data;
+
+        #endregion
+
+        #region CreateSource Stuff
+
+        /// <inheritdoc/>
+        public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
+
+        /// <inheritdoc/>
+        public T CreateSource<T>(IDataStream source) where T : IDataSource
+            => _DynCodeRoot.CreateSource<T>(source);
+
+        #endregion
+
+
+
+        #region Dev Tools & Dev Helpers
+
+        [PrivateApi("Not yet ready")]
+        public IDevTools DevTools => _DynCodeRoot.DevTools;
+
+        #endregion
     }
 
 

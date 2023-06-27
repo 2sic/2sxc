@@ -1,6 +1,10 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System.Collections.Generic;
+using ToSic.Eav.DataSource;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.Parameters;
+
 // ReSharper disable UnusedMemberInSuper.Global
 
 namespace ToSic.Sxc.Apps
@@ -95,5 +99,27 @@ namespace ToSic.Sxc.Apps
         string Thumbnail { get; }
 
 
+
+        // TODO: @2dm - must create an ITypedAppData - create a new wrapper object and use it for MyData as well
+        // Also rename IAppTyped to ITypedApp?
+
+        ///// <inheritdoc cref="IMyData.Item"/>
+        //ITypedItem Item(
+        //    string streamName = default,
+        //    string noParamOrder = Protector,
+        //    ITypedItem fallback = default,
+        //    bool? required = default
+        //);
+
+        ///// <inheritdoc cref="IMyData.Items"/>
+        //IEnumerable<ITypedItem> Items(
+        //    string streamName = default,
+        //    string noParamOrder = Protector,
+        //    IEnumerable<ITypedItem> fallback = default,
+        //    bool? required = default,
+        //    bool? preferNull = default);
+
+        ///// <inheritdoc cref="IMyData.DataSource"/>
+        //IDataSource DataSource { get; }
     }
 }

@@ -8,7 +8,6 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Code;
@@ -107,15 +106,13 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc/>
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
 
-        ///// <inheritdoc/>
-        //[PublicApi("Careful - still Experimental in 12.02")]
-        //public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
-
         #endregion
 
         #region AsEntity
+
         /// <inheritdoc/>
         public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
+
         #endregion
 
         #region AsList

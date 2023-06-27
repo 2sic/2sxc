@@ -24,11 +24,14 @@ namespace ToSic.Sxc.Web
     [PrivateApi("internal class only!")]
     public abstract partial class RazorComponentBase: WebPageBase, ICreateInstance, IHasCodeLog, IHasLog, IRazor, IDnnRazor
     {
-        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this, _DynCodeRoot?.Block?.Context.User.IsSystemAdmin ?? false));
+        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false));
         private IHtmlHelper _html;
 
         [PrivateApi]
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }
+
+        /// <inheritdoc />
+        public string Path => VirtualPath;
 
 
         /// <summary>
@@ -74,7 +77,8 @@ namespace ToSic.Sxc.Web
         {
             var wrapLog = Log15.Fn<object>($"{virtualPath}, ..., {name}");
             var path = NormalizePath(virtualPath);
-            VerifyFileExists(path);
+            if (!File.Exists(HostingEnvironment.MapPath(path)))
+                throw new FileNotFoundException("The shared file does not exist.", path);
             var result = path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
@@ -85,7 +89,7 @@ namespace ToSic.Sxc.Web
         // ReSharper disable once InconsistentNaming
         protected string _ErrorWhenUsingCreateInstanceCshtml = null;
         
-        protected dynamic CreateInstanceCshtml(string path)
+        private dynamic CreateInstanceCshtml(string path)
         {
             if (_ErrorWhenUsingCreateInstanceCshtml != null)
                 throw new NotSupportedException(_ErrorWhenUsingCreateInstanceCshtml);
@@ -93,13 +97,6 @@ namespace ToSic.Sxc.Web
             webPage.ConfigurePage(this);
             return webPage;
         }
-
-        protected static void VerifyFileExists(string path)
-        {
-            if (!File.Exists(HostingEnvironment.MapPath(path)))
-                throw new FileNotFoundException("The shared file does not exist.", path);
-        }
-
 
         #endregion
 

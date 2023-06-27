@@ -26,8 +26,8 @@ namespace Custom.Hybrid.Advanced
 
         protected Api14(string logSuffix) : base(logSuffix) { }
 
-        [PrivateApi("Not yet ready")]
-        public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TServiceKit> root) ? default : root.Model;
+        //[PrivateApi("Not yet ready")]
+        //public TModel Model => !(_DynCodeRoot is IDynamicCode<TModel, TServiceKit> root) ? default : root.Model;
 
         public TServiceKit Kit => _kit.Get(() => _DynCodeRoot.GetKit<TServiceKit>());
         private readonly GetOnce<TServiceKit> _kit = new GetOnce<TServiceKit>();

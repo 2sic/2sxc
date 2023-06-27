@@ -15,16 +15,17 @@ using ToSic.Sxc.Services;
 namespace Custom.Hybrid
 {
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+    // ReSharper disable once UnusedMember.Global
     public abstract class Razor16: Razor14<dynamic, ServiceKit14>, IDynamicCode16
     {
         private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
         private readonly GetOnce<CodeInfoService> _ccs = new();
 
-        /// <inheritdoc />
-        public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
+        ///// <inheritdoc />
+        //public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
 
-        /// <inheritdoc />
-        public new ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
+        ///// <inheritdoc />
+        //public new ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
 
         #region New App, Settings, Resources
 
@@ -56,6 +57,8 @@ namespace Custom.Hybrid
         public IEnumerable<ITypedItem> MyItems => CodeHelper.MyItems;
 
         public ITypedItem MyHeader => CodeHelper.MyHeader;
+
+        public IMyData MyData => _DynCodeRoot.Data as IMyData;
 
         #endregion
 
@@ -98,23 +101,15 @@ namespace Custom.Hybrid
 
         [PrivateApi("WIP v16.02")]
         public ITypedModel MyModel => CodeHelper.MyModel;
-        //_parameters.Get(() =>
-        //{
-        //    var dic = _overridePageData?.ObjectToDictionary()
-        //              ?? Model?.ObjectToDictionary();
-        //    //if (_overridePageData != null)
-        //    //    return new TypedModel(_overridePageData.ObjectToDictionary(), _DynCodeRoot, Path);
-
-        //    //var stringDic = Model?.ObjectToDictionary() ?? new Dictionary<string, object>(InvariantCultureIgnoreCase);
-        //    return new TypedModel(dic, _DynCodeRoot, Path);
-        //});
-        //private readonly GetOnce<ITypedModel> _parameters = new();
 
         internal override void UpdateModel(object data) => _overridePageData = data;
         private object _overridePageData;
 
 
         #endregion
+
+        /// <inheritdoc />
+        public ITypedRead Read(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
     }
 }

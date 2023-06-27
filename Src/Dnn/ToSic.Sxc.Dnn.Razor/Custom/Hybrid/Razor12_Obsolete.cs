@@ -1,10 +1,9 @@
 ﻿﻿using System;
 using System.Collections.Generic;
- using ToSic.Eav.Data;
- using ToSic.Eav.DataSource;
- using ToSic.Lib.Documentation;
-using ToSic.Eav.LookUp;
- using ToSic.Sxc.Custom.Hybrid;
+using ToSic.Eav.Data;
+using ToSic.Eav.DataSource;
+using ToSic.Lib.Documentation;
+using ToSic.Sxc.Code.Errors;
 
  // ReSharper disable once CheckNamespace
  namespace Custom.Hybrid
@@ -18,15 +17,6 @@ using ToSic.Eav.LookUp;
         // Obsolete stuff - not supported any more in RazorPage10 - maybe re-activate to show helpful error messages
 
         #region Shared Code Block between RazorComponent_Obsolete and ApiController_Obsolete
-
-        #region Obsolete CreateSource
-
-        [PrivateApi]
-        [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
-        public IDataSource CreateSource(string typeName = "", IDataSource links = null, ILookUpEngine configuration = null)
-            => Obsolete10.CreateSourceString();
-
-        #endregion
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
 
@@ -56,26 +46,6 @@ using ToSic.Eav.LookUp;
 
         #endregion
 
-        #region Presentation, ListContent, ListPresentation, List
-
-        [PrivateApi]
-        [Obsolete("use Content.Presentation instead")]
-        public dynamic Presentation => Obsolete10.Presentation();
-
-
-        [PrivateApi]
-        [Obsolete("Use Header instead")]
-        public dynamic ListContent => Obsolete10.ListContent();
-
-        [PrivateApi]
-        [Obsolete("Use Header.Presentation instead")]
-        public dynamic ListPresentation => Obsolete10.ListPresentation();
-
-        [PrivateApi]
-        [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
-        public IEnumerable<dynamic> List => Obsolete10.List();
-
-        #endregion
 
         #endregion
 

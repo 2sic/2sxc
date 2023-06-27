@@ -34,11 +34,11 @@ namespace Custom.Hybrid
         private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
         private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
-        /// <inheritdoc />
-        public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
+        ///// <inheritdoc />
+        //public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
 
-        /// <inheritdoc />
-        public new ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
+        ///// <inheritdoc />
+        //public new ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
 
         #region New App, Settings, Resources
 
@@ -69,6 +69,8 @@ namespace Custom.Hybrid
 
         public ITypedItem MyHeader => CodeHelper.MyHeader;
 
+        public IMyData MyData => _DynCodeRoot.Data as IMyData;
+
         #endregion
 
 
@@ -89,6 +91,10 @@ namespace Custom.Hybrid
         #endregion
 
         public ITypedModel MyModel => CodeHelper.MyModel;
+
+
+        /// <inheritdoc />
+        public ITypedRead Read(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
     }
 }

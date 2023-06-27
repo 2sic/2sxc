@@ -37,10 +37,8 @@ namespace ToSic.Sxc.Data
 
         private IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)
         {
-            var dummyEntity = _Services.DataBuilder.FakeEntity(appIdOrNull ?? parent.AppId);
-            return parent == null 
-                ? dummyEntity 
-                : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
+            var dummyEntity = _Services.AsC.FakeEntity(appIdOrNull ?? parent.AppId);
+            return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
         }
 
 

@@ -146,8 +146,8 @@ namespace Custom.Hybrid
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
-        /// <inheritdoc />
-        public string Path => VirtualPath;
+        ///// <inheritdoc />
+        //public string Path => VirtualPath;
 
         #endregion
     }

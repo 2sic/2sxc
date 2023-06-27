@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Code
 
 
         /// <summary>
-        /// Get a service from the EAV / 2sxc Dependency Injection. 
+        /// Get a service from the Dependency Injection. 
         /// </summary>
         /// <typeparam name="TService">Interface (preferred) or Class which is needed</typeparam>
         /// <returns>An object of the type or interface requested</returns>

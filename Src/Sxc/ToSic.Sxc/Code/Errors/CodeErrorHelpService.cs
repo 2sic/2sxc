@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ToSic.Eav.Plumbing;
 #if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
@@ -46,7 +47,7 @@ namespace ToSic.Sxc.Code.Errors
         public static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
         {
             var msg = ex?.Message;
-            return msg == null ? null : errorList.FirstOrDefault(help => msg.Contains(help.Detect));
+            return msg == null ? null : errorList.FirstOrDefault(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect));
         }
 
     }
