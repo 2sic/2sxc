@@ -86,8 +86,8 @@ namespace ToSic.Sxc.Engines
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-                throw new RenderingException(new CodeHelp("Template File Not Found", "",
-                    "err-template-not-found", $"The template file '{templatePath}' does not exist."));
+                throw new RenderingException(new CodeHelp(name: "Template File Not Found", detect: "",
+                    linkCode: "err-template-not-found", uiMessage: $"The template file '{templatePath}' does not exist."));
 
             Template = view;
             TemplatePath = templatePath;
@@ -188,18 +188,18 @@ namespace ToSic.Sxc.Engines
                 throw new RenderingException(ErrHelpTypeMissing);
         }
 
-        private static CodeHelp ErrHelpConfigMissing = new CodeHelp("Template Config missing", "",
-            "err-view-config-missing", "Template Configuration Missing");
+        private static CodeHelp ErrHelpConfigMissing = new CodeHelp(name: "Template Config missing", detect: "",
+            linkCode: "err-view-config-missing", uiMessage: "Template Configuration Missing");
 
-        private static CodeHelp ErrHelpTypeMissing = new CodeHelp("Content Type Missing", "", "err-view-type-missing", 
-            "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
+        private static CodeHelp ErrHelpTypeMissing = new CodeHelp(name: "Content Type Missing", detect: "", linkCode: "err-view-type-missing", 
+            uiMessage: "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
         private (RenderStatusType RenderStatus, string Message, string ErrorCode, Exception exOrNull) CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
                 Block.Configuration.Content.All(e => e == null))
             {
-                var ex = new ExceptionWithHelp(new CodeHelp(ErrorDataIsMissing, "", "err-block-data-missing"));
+                var ex = new ExceptionWithHelp(new CodeHelp(name: ErrorDataIsMissing, detect: "", linkCode: "err-block-data-missing"));
                 return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, ErrorDataIsMissing, ex);
             }
 
@@ -239,8 +239,8 @@ namespace ToSic.Sxc.Engines
                     $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
         }
 
-        private static CodeHelp ErrorHelpNotAuthorized = new CodeHelp("Not authorized", "",
-            "http://2sxc.org/help?tag=view-permissions",
-            "This view is not accessible for the current user. To give access, change permissions in the view settings.");
+        private static CodeHelp ErrorHelpNotAuthorized = new CodeHelp(name: "Not authorized", detect: "",
+            linkCode: "http://2sxc.org/help?tag=view-permissions",
+            uiMessage: "This view is not accessible for the current user. To give access, change permissions in the view settings.");
     }
 }
