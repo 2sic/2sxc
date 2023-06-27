@@ -9,7 +9,7 @@ namespace Custom.Hybrid
 {
     public abstract partial class Razor16
     {
-        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.MergeTyped(items);
+        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
 
         /// <inheritdoc />
         public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)

@@ -41,9 +41,6 @@ namespace Custom.Hybrid
         public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
         private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
 
-        ///// <inheritdoc />
-        //public string Path => VirtualPath;
-
         #region Link, Edit
 
         /// <inheritdoc />

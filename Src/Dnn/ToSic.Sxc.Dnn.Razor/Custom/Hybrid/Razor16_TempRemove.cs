@@ -39,7 +39,7 @@ namespace Custom.Hybrid
         #region AsItem(s) / Merge
 
         /// <inheritdoc />
-        public ITypedStack Merge(params object[] items) => _DynCodeRoot.AsC.MergeTyped(items);
+        public ITypedStack Merge(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
 
         #endregion
 

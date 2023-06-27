@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Data.AsConverter
             if (entities == null || !entities.Any()) return null;
             if (entities.Length == 1) return AsDynamicInternal(entities[0]);
 
-            return MergeTyped(entities);
+            return AsStack(entities);
             //// New case: many items found, must create a stack
             //var sources = entities
             //    .Select(e => e as IPropertyLookup)
