@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ToSic.Eav;
+using ToSic.Eav.Code;
 using ToSic.Eav.Plumbing;
 #if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
@@ -33,6 +35,10 @@ namespace ToSic.Sxc.Code.Errors
                 // Check if we already wrapped it
                 case ExceptionWithHelp _:
                     return null;
+                case NamedArgumentException nae:
+                    return new CodeHelp("named-parameters", null,
+                        Parameters.HelpLink,
+                        uiMessage: " ", detailsHtml: nae.Intro.Replace("\n", "<br>") + (nae.ParamNames.HasValue() ? $"<br>Param Names: <code>{nae.ParamNames}</code>": ""));
                 case RuntimeBinderException _:
                     return FindHelp(ex, CodeHelpList.ListRuntime);
                 case InvalidCastException _:

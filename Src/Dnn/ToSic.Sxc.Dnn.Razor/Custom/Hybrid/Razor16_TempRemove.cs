@@ -11,9 +11,9 @@ namespace Custom.Hybrid
 
         #region Temporary v16 objects which must get removed again
 
-        [PrivateApi]
-        private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
-        private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
+        //[PrivateApi]
+        //private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
+        //private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
         //[PrivateApi]
         //public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
