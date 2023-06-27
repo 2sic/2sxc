@@ -93,7 +93,7 @@ namespace ToSic.Sxc.Engines.Razor
             if (additionalLog != null) _page.Log?.GetContents().A(additionalLog);
             // Show a nice / ugly error depending on user permissions
             // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
-            var withHelp = _page._DynCodeRoot.GetService<CodeErrorHelpService>().AddHelpIfKnownError(renderException);
+            var withHelp = _page._DynCodeRoot.GetService<CodeErrorHelpService>().AddHelpIfKnownError(renderException, _page);
             var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(withHelp, true);
             _page.RenderException = withHelp;
             return nice;

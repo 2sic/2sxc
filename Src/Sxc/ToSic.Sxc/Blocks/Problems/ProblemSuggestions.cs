@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Plumbing;
 using ToSic.Sxc.Code.Errors;
 // ReSharper disable ConvertTypeCheckPatternToNullCheck
 
@@ -16,8 +17,8 @@ namespace ToSic.Sxc.Blocks.Problems
             {
                 var problem = new ProblemReport
                 {
-                    Link = help.Link,
-                    Message = help.UiMessage,
+                    Link = help.Link.NullIfNoValue(),
+                    Message = help.DetailsHtml ?? help.UiMessage,
                     Severity = ProblemReport.ErrorSeverity.warning,
                 };
                 suggestions.Add(problem);

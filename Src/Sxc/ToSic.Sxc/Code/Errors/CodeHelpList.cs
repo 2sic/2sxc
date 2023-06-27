@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace ToSic.Sxc.Code.Errors
 {
@@ -41,12 +39,6 @@ namespace ToSic.Sxc.Code.Errors
         {
             MethodOnObjectNotFound,
         };
-
-        public static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
-        {
-            var msg = ex?.Message;
-            return msg == null ? null : errorList.FirstOrDefault(help => msg.Contains(help.Detect));
-        }
     }
 
 }

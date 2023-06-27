@@ -1,5 +1,8 @@
 ﻿using Microsoft.CSharp.RuntimeBinder;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using ToSic.Eav.Plumbing;
 #if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
 #else
@@ -11,9 +14,14 @@ namespace ToSic.Sxc.Code.Errors
 {
     public class CodeErrorHelpService
     {
-        public Exception AddHelpIfKnownError(Exception ex)
+        public Exception AddHelpIfKnownError(Exception ex, object mainCodeObject)
         {
             var help = FindHelp(ex);
+            if (help != null) return new ExceptionWithHelp(help, ex);
+
+            if (mainCodeObject is IHasCodeErrorHelp withHelp && withHelp.ErrorHelpers.SafeAny())
+                help = FindHelp(ex, withHelp.ErrorHelpers);
+
             return help == null ? ex : new ExceptionWithHelp(help, ex);
         }
 
@@ -25,15 +33,21 @@ namespace ToSic.Sxc.Code.Errors
                 case ExceptionWithHelp _:
                     return null;
                 case RuntimeBinderException _:
-                    return CodeHelpList.FindHelp(ex, CodeHelpList.ListRuntime);
+                    return FindHelp(ex, CodeHelpList.ListRuntime);
                 case InvalidCastException _:
-                    return CodeHelpList.FindHelp(ex, CodeHelpList.ListInvalidCast);
+                    return FindHelp(ex, CodeHelpList.ListInvalidCast);
                 case HttpCompileException _:
-                    return CodeHelpList.FindHelp(ex, CodeHelpList.ListHttpCompile);
+                    return FindHelp(ex, CodeHelpList.ListHttpCompile);
                 default:
                     return null;
             }
         }
-        
+
+        public static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
+        {
+            var msg = ex?.Message;
+            return msg == null ? null : errorList.FirstOrDefault(help => msg.Contains(help.Detect));
+        }
+
     }
 }

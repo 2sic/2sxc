@@ -96,7 +96,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception e)
             {
-                l.Ex("Problem with setting dynamic model", e);
+                l.Ex("Problem with setting dynamic model, error will be ignored.", e);
             }
 
             try
@@ -105,7 +105,7 @@ namespace ToSic.Sxc.Engines
             }
             catch (Exception maybeIEntityCast)
             {
-                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast));
+                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
             }
             return l.Return((writer, page.RenderException));
         }
@@ -122,17 +122,22 @@ namespace ToSic.Sxc.Engines
         private object CreateWebPageInstance()
         {
             var l = Log.Fn<object>();
+            object page = null;
             try
             {
                 var compiledType = BuildManager.GetCompiledType(TemplatePath);
-                object objectValue = null;
                 if (compiledType != null)
-                    objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
-                return l.ReturnAsOk(objectValue);
+                {
+                    page = Activator.CreateInstance(compiledType);
+                    var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
+                    return l.ReturnAsOk(pageObjectValue);
+                }
+
+                return l.ReturnNull("type not found");
             }
             catch (Exception ex)
             {
-                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(ex));
+                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(ex, page));
             }
         }
 

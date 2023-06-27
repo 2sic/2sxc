@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Custom.Hybrid;
+using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
@@ -49,6 +50,7 @@ namespace ToSic.Sxc.Razor
         public async Task<TextWriter> RenderTask()
         {
             Log.A("will render into TextWriter");
+            RazorView page = null;
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
@@ -57,6 +59,7 @@ namespace ToSic.Sxc.Razor
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
+                        page = rzv; // keep for better errors
                         if (rzv.RazorPage is not IRazor asSxc) return;
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
@@ -67,7 +70,7 @@ namespace ToSic.Sxc.Razor
             }
             catch (Exception maybeIEntityCast)
             {
-                throw _errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast);
+                throw _errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page);
             }
 
             // WIP https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs#L397-L404
