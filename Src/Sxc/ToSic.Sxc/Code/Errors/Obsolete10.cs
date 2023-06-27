@@ -38,6 +38,19 @@ You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> whic
 </ol>
 ");
 
+        internal static CodeHelp DnnObjectNotInHybrid = new CodeHelp(name: "Object-Dnn-Not-In-Hybrid",
+            detect: @"error CS0118: 'Dnn' is a 'namespace' but is used like a 'variable'",
+            uiMessage: $@"
+You are probably trying to use the 'Dnn' object which is not supported in 'Custom.Hybrid.Razor' templates. 
+",
+            detailsHtml: $@"
+You are probably trying to use the <code>Dnn</code> object which is not supported in <code>Custom.Hybrid.Razor</code> templates. Use: 
+<ol>
+    <li>Other APIs such as <code>CmsContext</code> to get page/module etc. information</li>
+    <li>If really necessary (not recommended) use the standard Dnn APIs to get the necessary objects.</li>
+</ol>
+");
+
 
         internal static CodeHelp ListNotExist12 = CreateNotExistCodeHelp("List", "AsDynamic(Data)");
 

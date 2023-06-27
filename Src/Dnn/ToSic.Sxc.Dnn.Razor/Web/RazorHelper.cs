@@ -11,6 +11,7 @@ using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Web
 {
@@ -101,21 +102,25 @@ namespace ToSic.Sxc.Web
         #region Create Instance
 
         public object CreateInstance(string virtualPath,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             string name = null,
             bool throwOnError = true)
         {
             var wrapLog = Log.Fn<object>($"{virtualPath}, ..., {name}");
+            Protect(noParamOrder, $"{nameof(name)}, {nameof(throwOnError)}");
+
             var path = Page.NormalizePath(virtualPath);
             if (!File.Exists(HostingEnvironment.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
+
             object result = path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
                 : CreateInstanceCshtml(path);
+
             return wrapLog.Return(result, "ok");
         }
 
-        internal object CreateInstanceCshtml(string path)
+        internal WebPageBase CreateInstanceCshtml(string path)
         {
             // ReSharper disable once ConvertTypeCheckToNullCheck
             if (!(Page is IHasDnn))
@@ -127,8 +132,6 @@ namespace ToSic.Sxc.Web
             pageAsRcb?.RazorHelper.ConfigurePage(Page, pageAsRcb.VirtualPath);
             return pageAsCode;
         }
-
-
 
         #endregion
     }

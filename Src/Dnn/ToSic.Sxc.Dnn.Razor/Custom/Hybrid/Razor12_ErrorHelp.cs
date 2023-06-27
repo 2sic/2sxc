@@ -18,6 +18,9 @@ namespace Custom.Hybrid
             // use `CreateSource(name)
             CreateSourceStringObsolete,
 
+            // Use Dnn
+            DnnObjectNotInHybrid,
+
             // Not handled - can't because the AsDynamic accepts IEntity which works in Razor14
             // dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
             // dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)

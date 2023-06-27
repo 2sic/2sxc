@@ -14,6 +14,9 @@ namespace Custom.Hybrid
             // use `Convert`
             SystemConvertIncorrectUse,
 
+            // Use Dnn
+            DnnObjectNotInHybrid,
+
             // use `CreateSource(name)
             CreateSourceStringObsolete,
 

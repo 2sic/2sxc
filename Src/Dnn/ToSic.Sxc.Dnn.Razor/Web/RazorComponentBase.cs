@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Web
 
         #region Compile Helpers
 
-        public string CreateInstancePath { get; set; }
+        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
 
         /// <summary>
         /// Creates instances of the shared pages with the given relative path
