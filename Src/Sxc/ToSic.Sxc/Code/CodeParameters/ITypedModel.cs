@@ -20,9 +20,9 @@ namespace ToSic.Sxc.Code
     /// Example partial:
     ///
     /// ```c#
-    /// var blogPost = TypedModel.Item("BlogPost");
-    /// var file = TypedModel.File("File");
-    /// var title = TypedModel.String("Title");
+    /// var blogPost = MyModel.Item("BlogPost");
+    /// var file = MyModel.File("File");
+    /// var title = MyModel.String("Title");
     /// ```
     /// </summary>
     [WorkInProgressApi("WIP v16.02")]
@@ -35,8 +35,8 @@ namespace ToSic.Sxc.Code
         /// Note that it only checks if it is provided, so null still counts. The type is also not checked.
         /// Use:
         /// 
-        /// * `if (!TypedModel.All(name1)) { ... }`
-        /// * `if (!TypedModel.All(name1, name2, name3)) { ... }`
+        /// * `if (!MyModel.All(name1)) { ... }`
+        /// * `if (!MyModel.All(name1, name2, name3)) { ... }`
         /// </summary>
         /// <param name="names"></param>
         /// <returns></returns>
@@ -47,8 +47,8 @@ namespace ToSic.Sxc.Code
         /// Note that it only checks if it is provided, so null still counts. The type is also not checked.
         /// Use:
         /// 
-        /// * `if (!TypedModel.All(name1)) { ... }`
-        /// * `if (!TypedModel.Any(name1, name2, name3)) { ... }`
+        /// * `if (!MyModel.All(name1)) { ... }`
+        /// * `if (!MyModel.Any(name1, name2, name3)) { ... }`
         /// </summary>
         /// <param name="names"></param>
         /// <returns></returns>

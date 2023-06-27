@@ -36,9 +36,9 @@ namespace ToSic.Sxc.Data
         /// <summary>
         /// Get a list of items in the specified stream.
         /// * It will return an empty list if the stream exists
-        /// * It will throw an error if the stream doesn't exist, unless `<see cref="required"/>: false` in which case it returns the `<see cref="fallback"/>` or `null`
-        /// * If you prefer an empty list on `<see cref="required"/>: false`, set `<see cref="preferNull"/>: false`
-        /// * If you prefer null on empty lists, set `<see cref="preferNull"/>: true`
+        /// * It will throw an error if the stream doesn't exist, unless `required: false` in which case it returns the `<see cref="fallback"/>` or `null`
+        /// * If you prefer an empty list on `required: false`, set `preferNull: false`
+        /// * If you prefer null on empty lists, set `preferNull: true`
         /// </summary>
         /// <param name="streamName">The stream name to use, will use `Default` if not provided.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -51,9 +51,9 @@ namespace ToSic.Sxc.Data
         /// <param name="preferNull">
         /// Determines preference for not-found-stream or empty-list
         ///
-        /// * `null` (default): Return null on not-found (if '<see cref="required"/>: false', empty-list on empty-list
+        /// * `null` (default): Return null on not-found (if 'required: false', empty-list on empty-list
         /// * `true`: return a null if the stream was found and list is empty
-        /// * `false`: return empty list if '<see cref="required"/>: false'
+        /// * `false`: return empty list if 'required: false'
         /// </param>
         /// <returns></returns>
         IEnumerable<ITypedItem> Items(
