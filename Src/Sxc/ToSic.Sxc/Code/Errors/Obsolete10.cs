@@ -68,7 +68,7 @@ You are probably calling <code>CreateSource(stringNameOfSource, ...)</code> whic
         public static object Presentation() => NotSupported("Presentation", "Content.Presentation");
         public static object ListPresentation() => NotSupported("ListPresentation", "Header.Presentation");
         public static object ListContent() => NotSupported("ListContent", "Header");
-        public static object List() => NotSupported("List", "Data[\"Default\"].List");
+        public static IEnumerable<object> List() => NotSupported("List", "Data[\"Default\"].List");
 
         public static object AsDynamicInterfacesIEntity()
             => NotSupported($"AsDynamic(Eav.Interfaces.IEntity)", "Please cast your data to ToSic.Eav.Data.IEntity.");

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Web.WebPages;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -24,19 +26,11 @@ namespace Custom.Hybrid
     [PublicApi]
     public abstract partial class Razor12 : RazorComponentBase, IRazor12
     {
-        [PrivateApi] internal const string ErrCreateInstanceCshtml =
-            "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead.";
 
-        [PrivateApi] internal const string ErrRenderPage =
-            "RenderPage(...) is not supported in Hybrid Razor. Use Html.Partial(...) instead.";
-
-        [PrivateApi("Hide this, no need to publish; would only confuse users")]
-        protected Razor12()
-        {
-            // Set the error message to ensure that this will not work in Hybrid razor
-            _ErrorWhenUsingCreateInstanceCshtml = ErrCreateInstanceCshtml;
-            _ErrorWhenUsingRenderPage = ErrRenderPage;
-        }
+        /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
+        [PrivateApi]
+        public override HelperResult RenderPage(string path, params object[] data) 
+            => RazorHelper.RenderPageNotSupported();
 
 
         #region Link, Edit, Dnn, App, Data

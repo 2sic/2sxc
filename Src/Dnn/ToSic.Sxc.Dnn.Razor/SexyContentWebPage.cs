@@ -39,7 +39,8 @@ namespace ToSic.SexyContent.Razor
     /// Provides context infos like the Dnn object, helpers like Edit and much more. 
     /// </summary>
     public abstract class SexyContentWebPage : 
-        RazorComponentBase, 
+        RazorComponentBase,
+        IHasDnn,
         IDnnRazorCustomize, 
         IDynamicCodeBeforeV10,
 #pragma warning disable 618
@@ -58,7 +59,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         public IEditService Edit => _DynCodeRoot.Edit;
 
-        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
 #pragma warning disable 612
         /// <inheritdoc />

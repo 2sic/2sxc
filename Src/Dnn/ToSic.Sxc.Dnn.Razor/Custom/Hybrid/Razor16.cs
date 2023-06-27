@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System.Web.WebPages;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc;
 using ToSic.Sxc.Apps;
@@ -24,13 +25,12 @@ namespace Custom.Hybrid
     [WorkInProgressApi("WIP 16.02 - not final")]
     public abstract partial class Razor16: RazorComponentBase, IRazor, IDynamicCode16
     {
-        [PrivateApi("Hide this, no need to publish; would only confuse users")]
-        protected Razor16()
-        {
-            // Set the error message to ensure that this will not work in Hybrid razor
-            _ErrorWhenUsingCreateInstanceCshtml = Razor12.ErrCreateInstanceCshtml;
-            _ErrorWhenUsingRenderPage = Razor12.ErrRenderPage;
-        }
+
+        /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
+        [PrivateApi]
+        public override HelperResult RenderPage(string path, params object[] data)
+            => RazorHelper.RenderPageNotSupported();
+
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel16;
 

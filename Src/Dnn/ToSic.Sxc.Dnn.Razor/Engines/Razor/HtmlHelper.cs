@@ -21,13 +21,15 @@ namespace ToSic.Sxc.Engines.Razor
     [PrivateApi]
     public class HtmlHelper: IHtmlHelper
     {
-        public HtmlHelper(RazorComponentBase page, bool isSystemAdmin)
+        public HtmlHelper(RazorComponentBase page, bool isSystemAdmin, Func<string, object[], HelperResult> renderPage)
         {
             _page = page;
             _isSystemAdmin = isSystemAdmin;
+            _renderPage = renderPage;
         }
         private readonly RazorComponentBase _page;
         private readonly bool _isSystemAdmin;
+        private readonly Func<string, object[], HelperResult> _renderPage;
 
         /// <inheritdoc/>
         public IHtmlString Raw(object stringHtml)
@@ -36,7 +38,7 @@ namespace ToSic.Sxc.Engines.Razor
             if (stringHtml is string s) return new HtmlString(s);
             if (stringHtml is IHtmlString h) return h;
             var ex = new ArgumentException("Html.Raw does not support type '" + stringHtml.GetType().Name + "'.", "stringHtml");
-            _page.RenderException = ex;
+            _page.RazorHelper.RenderException = ex;
             throw ex;
         }
 
@@ -51,7 +53,7 @@ namespace ToSic.Sxc.Engines.Razor
             try
             {
                 // This will get a HelperResult object, which is often not executed yet
-                var result = _page.BaseRenderPage(path, data);
+                var result = _renderPage(path, data);
 
                 // In case we should throw a nice error, we must get the HTML now, to possibly cause the error and show an alternate message
                 if (!ThrowPartialError)
@@ -95,7 +97,7 @@ namespace ToSic.Sxc.Engines.Razor
             // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
             var withHelp = _page._DynCodeRoot.GetService<CodeErrorHelpService>().AddHelpIfKnownError(renderException, _page);
             var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(withHelp, true);
-            _page.RenderException = withHelp;
+            _page.RazorHelper.RenderException = withHelp;
             return nice;
         }
 

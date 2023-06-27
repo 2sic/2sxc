@@ -24,10 +24,10 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazor, IDnnRazor11
+    public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazorCompatibility, IDnnRazor11
     {
         /// <inheritdoc />
-        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
         #region CustomizeSearch corrections
 
