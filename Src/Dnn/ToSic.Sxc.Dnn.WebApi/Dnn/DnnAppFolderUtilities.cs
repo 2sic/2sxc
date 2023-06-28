@@ -9,10 +9,10 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApiRouting;
-using ToSic.Sxc.Code.Errors;
 
 namespace ToSic.Sxc.Dnn
 {

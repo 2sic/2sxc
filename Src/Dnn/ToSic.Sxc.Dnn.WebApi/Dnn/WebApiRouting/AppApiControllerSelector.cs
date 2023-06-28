@@ -17,7 +17,7 @@ using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Errors;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.WebApi.Sys;
 

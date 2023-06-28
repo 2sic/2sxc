@@ -11,7 +11,7 @@ using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Errors;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Web;

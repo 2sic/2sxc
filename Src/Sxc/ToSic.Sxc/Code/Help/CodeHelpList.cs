@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Code.Help;
 
-namespace ToSic.Sxc.Code.Errors
+namespace ToSic.Sxc.Code.Help
 {
     internal class CodeHelpList
     {

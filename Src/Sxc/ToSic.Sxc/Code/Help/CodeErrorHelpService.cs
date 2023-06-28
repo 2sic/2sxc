@@ -1,19 +1,19 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.CSharp.RuntimeBinder;
 using ToSic.Eav;
-using ToSic.Eav.Code;
+using ToSic.Eav.Code.Help;
 using ToSic.Eav.Plumbing;
 #if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
 #else
-// TODO
+// TODO: What's the real compile exception type?
 using HttpCompileException = System.Exception;
 #endif
 
-namespace ToSic.Sxc.Code.Errors
+namespace ToSic.Sxc.Code.Help
 {
     public class CodeErrorHelpService
     {
@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Code.Errors
             var help = FindHelp(ex);
             if (help != null) return new ExceptionWithHelp(help, ex);
 
-            if (mainCodeObject is IHasCodeErrorHelp withHelp && withHelp.ErrorHelpers.SafeAny())
+            if (mainCodeObject is IHasCodeHelp withHelp && withHelp.ErrorHelpers.SafeAny())
                 help = FindHelp(ex, withHelp.ErrorHelpers);
 
             return help == null ? ex : new ExceptionWithHelp(help, ex);
@@ -35,10 +35,10 @@ namespace ToSic.Sxc.Code.Errors
                 // Check if we already wrapped it
                 case ExceptionWithHelp _:
                     return null;
-                case NamedArgumentException nae:
-                    return new CodeHelp("named-parameters", null,
-                        Parameters.HelpLink,
-                        uiMessage: " ", detailsHtml: nae.Intro.Replace("\n", "<br>") + (nae.ParamNames.HasValue() ? $"<br>Param Names: <code>{nae.ParamNames}</code>": ""));
+                //case NamedArgumentException nae:
+                //    return new CodeHelp("named-parameters", null,
+                //        Parameters.HelpLink,
+                //        uiMessage: " ", detailsHtml: nae.Intro.Replace("\n", "<br>") + (nae.ParamNames.HasValue() ? $"<br>Param Names: <code>{nae.ParamNames}</code>": ""));
                 case RuntimeBinderException _:
                     return FindHelp(ex, CodeHelpList.ListRuntime);
                 case InvalidCastException _:

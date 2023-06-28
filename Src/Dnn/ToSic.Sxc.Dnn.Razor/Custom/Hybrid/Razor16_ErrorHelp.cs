@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code.Errors;
-using static ToSic.Sxc.Code.Errors.Obsolete10;
-using static ToSic.Sxc.Code.Errors.Obsolete16;
+using static ToSic.Sxc.Code.Help.Obsolete10;
+using static ToSic.Sxc.Code.Help.Obsolete16;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Razor16: IHasCodeErrorHelp
+    public abstract partial class Razor16: IHasCodeHelp
     {
         [PrivateApi]
-        List<CodeHelp> IHasCodeErrorHelp.ErrorHelpers => new List<CodeHelp>
+        List<CodeHelp> IHasCodeHelp.ErrorHelpers => new List<CodeHelp>
         {
             // use `Convert`
             SystemConvertIncorrectUse,

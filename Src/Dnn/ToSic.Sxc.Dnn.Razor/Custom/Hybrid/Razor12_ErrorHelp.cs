@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Code.Errors;
-using static ToSic.Sxc.Code.Errors.Obsolete10;
+using static ToSic.Sxc.Code.Help.Obsolete10;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -10,10 +10,10 @@ namespace Custom.Hybrid
     // The new hybrid implementation doesn't actually need this
     // But if we add these overloads in an inherited class, they will be preferred to the real working ones
     // which would result in errors on AsDynamic(some-object) even though it should just work
-    public partial class Razor12: IHasCodeErrorHelp
+    public partial class Razor12: IHasCodeHelp
     {
         [PrivateApi]
-        List<CodeHelp> IHasCodeErrorHelp.ErrorHelpers => new List<CodeHelp>
+        List<CodeHelp> IHasCodeHelp.ErrorHelpers => new List<CodeHelp>
         {
             // use `CreateSource(name)
             CreateSourceStringObsolete,

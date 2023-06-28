@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
-using static ToSic.Sxc.Code.Errors.ObsoleteHelp;
+using static ToSic.Sxc.Code.Help.ObsoleteHelp;
 
-namespace ToSic.Sxc.Code.Errors
+namespace ToSic.Sxc.Code.Help
 {
     [PrivateApi]
     public static class Obsolete10

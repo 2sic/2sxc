@@ -1,5 +1,4 @@
-﻿using ToSic.Eav.Apps;
-using ToSic.Eav.Configuration;
+﻿using ToSic.Eav.Configuration;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data;

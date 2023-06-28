@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Net;
 using System.Web.Http;
-using ToSic.Sxc.Code.Errors;
+using ToSic.Sxc.Code.Help;
 
 namespace ToSic.Sxc.Dnn
 {

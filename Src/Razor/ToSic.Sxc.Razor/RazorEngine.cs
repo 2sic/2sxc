@@ -7,7 +7,7 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Errors;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Razor

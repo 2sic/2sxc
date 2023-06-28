@@ -6,7 +6,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Data
 {
     [WorkInProgressApi("WIP 16.02")]
-    public interface IMyData
+    public interface IMyData: IContextData
     {
         ITypedItem FakeItem { get; }
 

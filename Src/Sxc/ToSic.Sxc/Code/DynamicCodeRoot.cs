@@ -44,17 +44,11 @@ namespace ToSic.Sxc.Code
             internal IServiceProvider ServiceProvider { get; }
             public LazySvc<CodeCompiler> CodeCompilerLazy { get; }
             public AppSettingsStack SettingsStack { get; }
-            //public LazySvc<DynamicEntity.MyServices> DynamicEntityDependencies { get; }
-            //public LazySvc<IContextOfApp> ContextOfApp { get; }
-            //public LazySvc<AdamManager> AdamManager { get; }
 
             public MyServices(
                 IServiceProvider serviceProvider,
                 LazySvc<CodeCompiler> codeCompilerLazy,
                 AppSettingsStack settingsStack,
-                //LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
-                //LazySvc<IContextOfApp> contextOfApp,
-                //LazySvc<AdamManager> adamManager,
                 LazySvc<IConvertService> convertService,
                 LazySvc<IDataSourcesService> dataSourceFactory,
                 LazySvc<DynamicCodeDataSources> dataSources,
@@ -64,9 +58,6 @@ namespace ToSic.Sxc.Code
                     ServiceProvider = serviceProvider,
                     CodeCompilerLazy = codeCompilerLazy,
                     SettingsStack = settingsStack,
-                    //DynamicEntityDependencies = dynamicEntityDependencies,
-                    //ContextOfApp = contextOfApp,
-                    //AdamManager = adamManager,
                     ConvertService = convertService,
                     DataSourceFactory = dataSourceFactory,
                     DataSources = dataSources,
@@ -104,10 +95,6 @@ namespace ToSic.Sxc.Code
                 newWithNeeds.ConnectToRoot(this);
             return newService;
         }
-
-        //[PrivateApi]
-        //internal PiggyBack PiggyBack => _piggyBack ?? (_piggyBack = new PiggyBack());
-        //private PiggyBack _piggyBack;
 
         [PrivateApi]
         public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)

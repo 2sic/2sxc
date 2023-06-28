@@ -2,11 +2,12 @@
 using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
+using ToSic.Eav;
+using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Code.Errors;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;

@@ -6,7 +6,7 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Razor.Blade;
-using ToSic.Sxc.Code.Errors;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Web;
 using static System.StringComparer;

@@ -6,7 +6,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
-using ToSic.Sxc.Code.Errors;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Compatibility;
 
 namespace ToSic.Sxc.WebApi
