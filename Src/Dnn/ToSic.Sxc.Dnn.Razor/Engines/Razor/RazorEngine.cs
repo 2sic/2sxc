@@ -138,7 +138,7 @@ namespace ToSic.Sxc.Engines
                 // 1. Read file
                 // 2. Try to find base type - or warn if not found
                 // 3. ...
-                var razorType = _sourceAnalyzer.Value.FindType(TemplatePath);
+                var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
                 l.A($"Razor Type: {razorType}");
                 throw l.Ex(_errorHelp.Value.AddHelpForCompileProblems(ex, razorType));
             }

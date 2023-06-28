@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Web
         /// For architecture of Composition over Inheritance.
         /// </summary>
         [PrivateApi]
-        protected internal RazorHelper RazorHelper => _razorHelper ?? (_razorHelper = new RazorHelper(this, (path, data) => base.RenderPage(path, data)));
+        protected internal RazorHelper RazorHelper => _razorHelper ?? (_razorHelper = new RazorHelper().Init(this, (path, data) => base.RenderPage(path, data)));
         private RazorHelper _razorHelper;
 
         public IHtmlHelper Html => RazorHelper.Html;

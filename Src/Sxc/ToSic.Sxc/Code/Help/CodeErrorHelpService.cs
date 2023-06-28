@@ -6,6 +6,8 @@ using Microsoft.CSharp.RuntimeBinder;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 #if NETFRAMEWORK
 using HttpCompileException = System.Web.HttpCompileException;
 #else
@@ -15,32 +17,63 @@ using HttpCompileException = System.Exception;
 
 namespace ToSic.Sxc.Code.Help
 {
-    public class CodeErrorHelpService
+    public class CodeErrorHelpService: ServiceBase
     {
+        public CodeErrorHelpService() : base("Sxc.CErrHS")
+        {
+            Log.A("Trying to add help to error, something must have happened");
+        }
+
         public Exception AddHelpForCompileProblems(Exception ex, CodeFileTypes fileType)
         {
-            // Check if it already has help included
-            if (ex is IExceptionWithHelp) return ex;
+            var l = Log.Fn<Exception>();
+            try
+            {
+                // Check if it already has help included
+                if (ex is IExceptionWithHelp) 
+                    return l.Return(ex, "already has help");
 
-            if (!CodeHelpDb.CompileHelp.TryGetValue(fileType, out var list))
-                return ex;
+                if (!CodeHelpDb.CompileHelp.TryGetValue(fileType, out var list))
+                    return l.Return(ex, "no additional help found");
 
-            var help = FindHelp(ex, list);
-            return help == null ? ex : new ExceptionWithHelp(help, ex);
+                var help = FindHelp(ex, list);
+                return help == null 
+                    ? l.Return(ex)
+                    : l.Return(new ExceptionWithHelp(help, ex), "added help");
+            }
+            catch (Exception myEx)
+            {
+                Log.Ex("Something went wrong, inner error", myEx);
+                return l.Return(ex, "just return original exception");
+            }
         }
 
         public Exception AddHelpIfKnownError(Exception ex, object mainCodeObject)
         {
-            // Check if it already has help included
-            if (ex is IExceptionWithHelp) return ex;
+            var l = Log.Fn<Exception>();
+            try
+            {
+                // Check if it already has help included
+                if (ex is IExceptionWithHelp)
+                    return l.Return(ex, "already has help");
 
-            var help = FindHelp(ex);
-            if (help != null) return new ExceptionWithHelp(help, ex);
+                var help = FindHelp(ex);
+                if (help != null)
+                    return l.Return(new ExceptionWithHelp(help, ex), "added help");
 
-            if (mainCodeObject is IHasCodeHelp withHelp && withHelp.ErrorHelpers.SafeAny())
-                help = FindHelp(ex, withHelp.ErrorHelpers);
+                if (mainCodeObject is IHasCodeHelp withHelp && withHelp.ErrorHelpers.SafeAny())
+                    help = FindHelp(ex, withHelp.ErrorHelpers);
 
-            return help == null ? ex : new ExceptionWithHelp(help, ex);
+                return help == null
+                    ? l.Return(ex)
+                    : l.Return(new ExceptionWithHelp(help, ex), "added help");
+            }
+            catch (Exception myEx)
+            {
+                Log.Ex("Something went wrong, inner error", myEx);
+                return l.Return(ex, "just return original exception");
+            }
+
         }
 
         internal CodeHelp FindHelp(Exception ex)
@@ -65,7 +98,7 @@ namespace ToSic.Sxc.Code.Help
             }
         }
 
-        public static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
+        private static CodeHelp FindHelp(Exception ex, List<CodeHelp> errorList)
         {
             var msg = ex?.Message;
             return msg == null ? null : errorList.FirstOrDefault(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect));

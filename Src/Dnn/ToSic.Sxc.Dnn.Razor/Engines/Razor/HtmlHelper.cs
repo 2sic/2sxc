@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.WebPages;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn.Web;
@@ -19,17 +21,36 @@ namespace ToSic.Sxc.Engines.Razor
     /// helper to quickly "raw" some html.
     /// </summary>
     [PrivateApi]
-    public class HtmlHelper: IHtmlHelper
+    public class HtmlHelper: ServiceBase, IHtmlHelper
     {
-        public HtmlHelper(RazorComponentBase page, bool isSystemAdmin, Func<string, object[], HelperResult> renderPage)
+        private readonly LazySvc<DnnRazorSourceAnalyzer> _codeAnalysis;
+        private readonly LazySvc<IFeaturesService> _featureSvc;
+        private readonly LazySvc<CodeErrorHelpService> _codeErrService;
+
+        public HtmlHelper(
+            LazySvc<CodeErrorHelpService> codeErrService,
+            LazySvc<IFeaturesService> featureSvc,
+            LazySvc<DnnRazorSourceAnalyzer> codeAnalysis) : base("Dnn.HtmHlp")
+        {
+            ConnectServices(
+                _codeErrService = codeErrService,
+                _featureSvc = featureSvc,
+                _codeAnalysis = codeAnalysis
+            );
+        }
+
+        public HtmlHelper Init(RazorComponentBase page, RazorHelper helper, bool isSystemAdmin, Func<string, object[], HelperResult> renderPage)
         {
             _page = page;
+            _helper = helper;
             _isSystemAdmin = isSystemAdmin;
             _renderPage = renderPage;
+            return this;
         }
-        private readonly RazorComponentBase _page;
-        private readonly bool _isSystemAdmin;
-        private readonly Func<string, object[], HelperResult> _renderPage;
+        private RazorComponentBase _page;
+        private RazorHelper _helper;
+        private bool _isSystemAdmin;
+        private Func<string, object[], HelperResult> _renderPage;
 
         /// <inheritdoc/>
         public IHtmlString Raw(object stringHtml)
@@ -37,8 +58,8 @@ namespace ToSic.Sxc.Engines.Razor
             if (stringHtml == null) return new HtmlString(string.Empty);
             if (stringHtml is string s) return new HtmlString(s);
             if (stringHtml is IHtmlString h) return h;
-            var ex = new ArgumentException("Html.Raw does not support type '" + stringHtml.GetType().Name + "'.", "stringHtml");
-            _page.RazorHelper.RenderException = ex;
+            var ex = new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml));
+            _helper.RenderException = ex;
             throw ex;
         }
 
@@ -67,7 +88,7 @@ namespace ToSic.Sxc.Engines.Razor
                     }
                     catch (Exception renderException)
                     {
-                        var nice = TryToLogAndReWrapError(renderException, true);
+                        var nice = TryToLogAndReWrapError(renderException, path, true);
                         writer.WriteLine(nice);
                     }
                 });
@@ -81,35 +102,40 @@ namespace ToSic.Sxc.Engines.Razor
                 _errorPaths.Add(path);
 
                 // Report if first time
-                var nice = TryToLogAndReWrapError(compileException, isFirstOccurrence, "Special exception handling - only show message");
+                var nice = TryToLogAndReWrapError(compileException, path, isFirstOccurrence, "Special exception handling - only show message");
                 var htmlError = Tag.Custom(nice);
                 return htmlError;
             }
         }
 
-        private string TryToLogAndReWrapError(Exception renderException, bool reportToDnn, string additionalLog = null)
+        private string TryToLogAndReWrapError(Exception renderException, string path, bool reportToDnn, string additionalLog = null)
         {
             // Important to know: Once this fires, the page will stop rendering more templates
             IsError = true;
             if (reportToDnn) _page.Log?.GetContents().Ex(renderException);
             if (additionalLog != null) _page.Log?.GetContents().A(additionalLog);
+
+            // If it's a compile issue, try to find explicit help for that
+            var pathOfPage = _page.NormalizePath(path);
+            var razorType =_codeAnalysis.Value.TypeOfVirtualPath(pathOfPage);
+            var exWithHelp = _codeErrService.Value.AddHelpForCompileProblems(renderException, razorType);
+
+
             // Show a nice / ugly error depending on user permissions
             // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
-            var withHelp = _page._DynCodeRoot.GetService<CodeErrorHelpService>().AddHelpIfKnownError(renderException, _page);
-            var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(withHelp, true);
-            _page.RazorHelper.RenderException = withHelp;
+            // Note that if withHelp already has help, it won't be extended any more
+            exWithHelp = _codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
+            var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(exWithHelp, true);
+            _helper.RenderException = exWithHelp;
             return nice;
         }
 
         [PrivateApi] public bool IsError;
         private HashSet<string> _errorPaths;
 
-        private bool ThrowPartialError => _throwPartialError.Get(() =>
-        {
-            var features = _page._DynCodeRoot.GetService<IFeaturesService>();
-            return features.IsEnabled(RazorThrowPartial.NameId) ||
-                   _isSystemAdmin && features.IsEnabled(RenderThrowPartialSystemAdmin.NameId);
-        });
+        private bool ThrowPartialError => _throwPartialError.Get(()
+            => _featureSvc.Value.IsEnabled(RazorThrowPartial.NameId) ||
+               _isSystemAdmin && _featureSvc.Value.IsEnabled(RenderThrowPartialSystemAdmin.NameId));
         private readonly GetOnce<bool> _throwPartialError = new GetOnce<bool>();
     }
 }

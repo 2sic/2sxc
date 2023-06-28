@@ -21,14 +21,20 @@ namespace ToSic.Sxc.Web
     {
         #region Constructor / Init
 
-        public RazorHelper(RazorComponentBase page, Func<string, object[], HelperResult> renderPage): base("Sxc.RzrHlp")
+        public RazorHelper() : base("Sxc.RzrHlp")
+        {
+
+        }
+
+        public RazorHelper Init(RazorComponentBase page, Func<string, object[], HelperResult> renderPage)
         {
             Page = page;
             _renderPage = renderPage;
+            return this;
         }
 
-        public RazorComponentBase Page { get; }
-        private readonly Func<string, object[], HelperResult> _renderPage;
+        public RazorComponentBase Page { get; private set; }
+        private Func<string, object[], HelperResult> _renderPage;
 
         public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
         {
@@ -84,7 +90,7 @@ namespace ToSic.Sxc.Web
         private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
 
-        public IHtmlHelper Html => _html ?? (_html = new HtmlHelper(Page, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage));
+        public IHtmlHelper Html => _html ?? (_html = _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage));
         private IHtmlHelper _html;
 
         #endregion

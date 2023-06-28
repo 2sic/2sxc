@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Sxc.Engines;
+using ToSic.Sxc.Engines.Razor;
 
 namespace ToSic.Sxc
 {
@@ -10,7 +11,7 @@ namespace ToSic.Sxc
         {
             // Settings / WebApi stuff
             services.TryAddTransient<DnnRazorSourceAnalyzer>();
-
+            services.TryAddTransient<HtmlHelper>();
 
             return services;
         }
