@@ -93,23 +93,18 @@ namespace ToSic.Sxc.Blocks.Output
             string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true)
         {
             if (addToEventLog) _errorLogger.Value.LogException(ex);
-            return DesignError($"{ex}{additionalInfo}", msgVisitors, addContextWrapper, encodeMessage);
-
-            //var msg = Context.User.IsSystemAdmin
-            //    ? $"{ErrPrefix} {ex}{additionalInfo}"
-            //    : msgVisitors ?? DefaultVisitorError;
-
-            //return DesignMessage(msg, addContextWrapper, encodeMessage, ErrorGeneral);
+            return DesignError($"{ex}{additionalInfo}", msgVisitors, addContextWrapper, encodeMessage, exOrNull: ex);
         }
-        public string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false, bool encodeMessage = true)
+
+        public string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false, bool encodeMessage = true, Exception exOrNull = default)
         {
             var msg = Context.User.IsSystemAdmin
                 ? $"{ErrPrefix} {msgSuperUser}"
                 : msgVisitors ?? DefaultVisitorError;
-            return DesignMessage(msg, addContextWrapper, encodeMessage, ErrorGeneral);
+            return DesignMessage(msg, addContextWrapper, encodeMessage, ErrorGeneral, exOrNull);
         }
 
-        private string DesignMessage(string msg, bool addContextWrapper, bool encodeMessage, string errorCode)
+        private string DesignMessage(string msg, bool addContextWrapper, bool encodeMessage, string errorCode, Exception exOrNull = default)
         {
             if (encodeMessage)
                 msg = HttpUtility.HtmlEncode(msg);
@@ -119,20 +114,15 @@ namespace ToSic.Sxc.Blocks.Output
 
             // add another, minimal id-wrapper for those cases where the rendering-wrapper is missing
             if (addContextWrapper)
-                msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id, errorCode: errorCode);
+                msg = WrapInContext(msg, instanceId: Context.Module.Id, contentBlockId: Context.Module.Id, errorCode: errorCode, exOrNull: exOrNull);
 
             return msg;
         }
 
         public string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true) =>
             Context.User.IsSystemAdmin 
-                ? DesignMessage($"{WarnPrefix} {warning}", addContextWrapper, encodeMessage, null) 
+                ? DesignMessage($"{WarnPrefix} {warning}", addContextWrapper, encodeMessage, null, null) 
                 : null;
 
-        //public string UiContextInfos(string errorCode)
-        //{
-        //    var context = _jsContextAllGen.New().GetJsContext(AppRootPath, Block, errorCode);
-        //    return JsonSerializer.Serialize(context, JsonOptions.SafeJsonForHtmlAttributes);
-        //}
     }
 }

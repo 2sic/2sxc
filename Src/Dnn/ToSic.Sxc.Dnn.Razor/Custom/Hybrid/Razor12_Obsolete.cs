@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Lib.Documentation;
- using ToSic.Sxc.Code.Help;
+ using static ToSic.Sxc.Code.Help.CodeHelpDbV12;
 
  // ReSharper disable once CheckNamespace
  namespace Custom.Hybrid
@@ -23,18 +23,18 @@ using ToSic.Lib.Documentation;
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-            => Obsolete10.AsDynamicInterfacesIEntity();
+            => AsDynamicInterfacesIEntity();
 
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
-            => Obsolete10.AsDynamicKvpInterfacesIEntity();
+            => AsDynamicKvpInterfacesIEntity();
 
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-            => Obsolete10.AsDynamicIEnumInterfacesIEntity();
+            => AsDynamicIEnumInterfacesIEntity();
 
         #endregion
 
@@ -42,7 +42,7 @@ using ToSic.Lib.Documentation;
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => Obsolete10.AsDynamicKvp();
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => AsDynamicKvp();
 
         #endregion
 
@@ -57,9 +57,9 @@ using ToSic.Lib.Documentation;
 
         #region Old AsDynamic with correct warnings
 
-        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Obsolete10.AsDynamicForList();
-        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => Obsolete10.AsDynamicForList();
-        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Obsolete10.AsDynamicForList();
+        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => AsDynamicForList();
+        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => AsDynamicForList();
+        [PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => AsDynamicForList();
 
         #endregion
     }

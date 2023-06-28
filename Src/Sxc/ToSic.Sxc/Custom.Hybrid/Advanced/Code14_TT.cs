@@ -6,6 +6,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid.Advanced
@@ -41,10 +42,14 @@ namespace Custom.Hybrid.Advanced
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         /// <inheritdoc />
-        public ITypedItem AsTyped(object target, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsItem(target);
+        public ITypedItem AsTyped(object original, string noParamOrder = Protector, bool? required = default) => _DynCodeRoot.AsC.AsItem(original);
 
         /// <inheritdoc />
-        public IEnumerable<ITypedItem> AsTypedList(object list, string noParamOrder = ToSic.Eav.Parameters.Protector) => _DynCodeRoot.AsC.AsItems(list);
+        public IEnumerable<ITypedItem> AsTypedList(object list,
+            string noParamOrder = Protector,
+            bool? required = default,
+            IEnumerable<ITypedItem> fallback = default)
+            => _DynCodeRoot.AsC.AsItems(list, required: required, fallback: fallback);
 
     }
 }

@@ -43,7 +43,8 @@ namespace ToSic.Sxc.Dnn
                                 instanceId: Block.ParentId,
                                 contentBlockId: Block.ContentBlockId,
                                 editContext: true,
-                                errorCode: BlockBuildingConstants.ErrorGeneral);
+                                errorCode: BlockBuildingConstants.ErrorGeneral,
+                                exOrNull: ex);
                     }
                     catch { /* ignore */ }
 

@@ -1,4 +1,6 @@
-﻿using System.Web.WebPages;
+﻿using System.Collections.Generic;
+using System.Web.WebPages;
+using ToSic.Eav.Code.Help;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
@@ -6,6 +8,7 @@ using ToSic.Lib.Helpers;
 using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -23,7 +26,7 @@ namespace Custom.Hybrid
     /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
     /// </remarks>
     [PublicApi]
-    public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>
+    public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>, IHasCodeHelp
     {
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
@@ -95,7 +98,10 @@ namespace Custom.Hybrid
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
+        [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV14.Compile14;
+
         #endregion
+
     }
 
 

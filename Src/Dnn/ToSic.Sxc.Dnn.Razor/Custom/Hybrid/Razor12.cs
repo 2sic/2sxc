@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.WebPages;
+using ToSic.Eav.Code.Help;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 
@@ -24,7 +23,7 @@ namespace Custom.Hybrid
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi]
-    public abstract partial class Razor12 : RazorComponentBase, IRazor12
+    public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHelp
     {
 
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
@@ -143,6 +142,9 @@ namespace Custom.Hybrid
         ///// <inheritdoc />
         //public string Path => VirtualPath;
 
+        [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV12.Compile12;
+
         #endregion
+
     }
 }

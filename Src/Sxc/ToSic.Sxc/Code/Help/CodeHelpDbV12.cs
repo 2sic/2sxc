@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
-using ToSic.Lib.Documentation;
 using static ToSic.Sxc.Code.Help.ObsoleteHelp;
 
 namespace ToSic.Sxc.Code.Help
 {
-    [PrivateApi]
-    public static class Obsolete10
+    public class CodeHelpDbV12
     {
 
         internal static CodeHelp SystemConvertIncorrectUse = new CodeHelp(name: "System.Convert-Incorrect-Use",
@@ -27,7 +25,8 @@ Older Razor/WebApi classes provided the IConvertService on an an object called '
         internal static CodeHelp CreateSourceStringObsolete = new CodeHelp(name: "CreateSource-String-Obsolete",
             detect: @"error CS0411: The type arguments for method .*\.CreateSource.*cannot be inferred from the usage",
             detectRegex: true,
-            linkCode: "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.Services.IDataService.html#ToSic_Sxc_Services_IDataService_GetSource_",
+            linkCode:
+            "https://docs.2sxc.org/api/dot-net/ToSic.Sxc.Services.IDataService.html#ToSic_Sxc_Services_IDataService_GetSource_",
             uiMessage: $@"
 You are probably calling CreateSource(stringNameOfSource, ...) which {IsNotSupportedIn12Plus}. 
 ",
@@ -55,17 +54,56 @@ You are probably trying to use the <code>Dnn</code> object which is not supporte
 
         internal static CodeHelp ListNotExist12 = CreateNotExistCodeHelp("List", "AsDynamic(Data)");
 
-        internal static CodeHelp ListObsolete12 = new CodeHelp(ListNotExist12, detect: "does not contain a definition for 'List'");
+        internal static CodeHelp ListObsolete12 =
+            new CodeHelp(ListNotExist12, detect: "does not contain a definition for 'List'");
 
 
         internal static CodeHelp ListObsolete12MisCompiledAsGenericList = new CodeHelp(ListNotExist12,
-            detect: @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments");
+            detect:
+            @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments");
 
         internal static CodeHelp ListContentNotExist12 = CreateNotExistCodeHelp("ListContent", "Header");
 
-        internal static CodeHelp ListPresentationNotExist12 = CreateNotExistCodeHelp("ListPresentation", "Header.Presentation");
+        internal static CodeHelp ListPresentationNotExist12 =
+            CreateNotExistCodeHelp("ListPresentation", "Header.Presentation");
 
-        internal static CodeHelp PresentationNotExist12 = CreateNotExistCodeHelp("Presentation", "Content.Presentation");
+        internal static CodeHelp PresentationNotExist12 =
+            CreateNotExistCodeHelp("Presentation", "Content.Presentation");
+
+
+        internal static List<CodeHelp> Compile12 = new List<CodeHelp>
+        {
+            // use `CreateSource(name)
+            CreateSourceStringObsolete,
+
+            // Use Dnn
+            DnnObjectNotInHybrid,
+
+            // Not handled - can't because the AsDynamic accepts IEntity which works in Razor14
+            // dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
+            // dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
+            // IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
+            // dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => Obsolete10.AsDynamicKvp();
+
+            // Access .List
+            ListNotExist12,
+
+            ListObsolete12,
+            ListObsolete12MisCompiledAsGenericList,
+
+            // Access ListContent
+            ListContentNotExist12,
+            ListPresentationNotExist12,
+
+            // Presentation
+            PresentationNotExist12,
+
+            // Skipped, as can't be detected - they are all IEnumerable...
+            //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Obsolete10.AsDynamicForList();
+            //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => Obsolete10.AsDynamicForList();
+            //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Obsolete10.AsDynamicForList();
+
+        };
 
 
 
@@ -73,12 +111,15 @@ You are probably trying to use the <code>Dnn</code> object which is not supporte
             => throw new Exception("AsDynamic for lists isn't supported in RazorComponent. Please use AsList instead.");
 
         internal static dynamic CreateSourceString()
-            => throw new Exception($"CreateSource(string, ...) {IsNotSupportedIn12Plus}. Please use CreateSource<DataSourceTypeName>(...) instead.");
+            => throw new Exception(
+                $"CreateSource(string, ...) {IsNotSupportedIn12Plus}. Please use CreateSource<DataSourceTypeName>(...) instead.");
 
         private static dynamic NotSupported(string original, string recommended)
             => throw new Exception($"{original} {IsNotSupportedIn12Plus}. Use {recommended}.");
 
-        public static object AsDynamicKvp() => NotSupported("AsDynamic(KeyValuePair<int, IEntity>", "AsDynamic(IEnumerable<IEntity>...)");
+        public static object AsDynamicKvp() =>
+            NotSupported("AsDynamic(KeyValuePair<int, IEntity>", "AsDynamic(IEnumerable<IEntity>...)");
+
         public static object Presentation() => NotSupported("Presentation", "Content.Presentation");
         public static object ListPresentation() => NotSupported("ListPresentation", "Header.Presentation");
         public static object ListContent() => NotSupported("ListContent", "Header");
@@ -88,9 +129,12 @@ You are probably trying to use the <code>Dnn</code> object which is not supporte
             => NotSupported($"AsDynamic(Eav.Interfaces.IEntity)", "Please cast your data to ToSic.Eav.Data.IEntity.");
 
         public static object AsDynamicKvpInterfacesIEntity()
-            => NotSupported("AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity>)", "Please cast your data to ToSic.Eav.Data.IEntity.");
+            => NotSupported("AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity>)",
+                "Please cast your data to ToSic.Eav.Data.IEntity.");
 
         public static IEnumerable<object> AsDynamicIEnumInterfacesIEntity()
-            => NotSupported("AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities)", "Please cast your data to ToSic.Eav.Data.IEntity.");
+            => NotSupported("AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities)",
+                "Please cast your data to ToSic.Eav.Data.IEntity.");
+
     }
 }

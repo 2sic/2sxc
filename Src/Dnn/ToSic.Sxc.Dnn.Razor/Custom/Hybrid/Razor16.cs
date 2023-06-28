@@ -1,10 +1,13 @@
-﻿using System.Web.WebPages;
+﻿using System.Collections.Generic;
+using System.Web.WebPages;
+using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
@@ -23,7 +26,7 @@ namespace Custom.Hybrid
     /// Be aware of this since the APIs are very different.
     /// </remarks>
     [WorkInProgressApi("WIP 16.02 - not final")]
-    public abstract partial class Razor16: RazorComponentBase, IRazor, IDynamicCode16
+    public abstract partial class Razor16: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp
     {
 
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
@@ -79,7 +82,10 @@ namespace Custom.Hybrid
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
+        [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
+
         #endregion
+
     }
 
 

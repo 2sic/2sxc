@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Code.Help;
@@ -22,7 +20,7 @@ namespace ToSic.Sxc.WebApi
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use CreateSource<type> instead.")]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
-            => Obsolete10.CreateSourceString();
+            => CodeHelpDbV12.CreateSourceString();
 
         #endregion
 
@@ -31,18 +29,18 @@ namespace ToSic.Sxc.WebApi
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)
-            => Obsolete10.AsDynamicInterfacesIEntity();
+            => CodeHelpDbV12.AsDynamicInterfacesIEntity();
 
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         public dynamic AsDynamic(KeyValuePair<int, ToSic.Eav.Interfaces.IEntity> entityKeyValuePair)
-            => Obsolete10.AsDynamicKvpInterfacesIEntity();
+            => CodeHelpDbV12.AsDynamicKvpInterfacesIEntity();
 
         [Obsolete("throws error with fix-instructions. Cast your entities to ToSic.Eav.Data.IEntity")]
         [PrivateApi]
         public IEnumerable<dynamic> AsDynamic(IEnumerable<ToSic.Eav.Interfaces.IEntity> entities)
-            => Obsolete10.AsDynamicIEnumInterfacesIEntity();
+            => CodeHelpDbV12.AsDynamicIEnumInterfacesIEntity();
 
 
         #endregion
@@ -51,7 +49,7 @@ namespace ToSic.Sxc.WebApi
 
         [PrivateApi]
         [Obsolete("throws error with fix-instructions. Use AsDynamic(IEnumerable<IEntity>...)")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => Obsolete10.AsDynamicKvp();
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => CodeHelpDbV12.AsDynamicKvp();
 
         #region Old AsDynamic with correct warnings
         /// <inheritdoc/>
@@ -77,20 +75,20 @@ namespace ToSic.Sxc.WebApi
 
         [PrivateApi]
         [Obsolete("use Content.Presentation instead")]
-        public dynamic Presentation => Obsolete10.Presentation();
+        public dynamic Presentation => CodeHelpDbV12.Presentation();
 
 
         [PrivateApi]
         [Obsolete("Use Header instead")]
-        public dynamic ListContent => Obsolete10.ListContent();
+        public dynamic ListContent => CodeHelpDbV12.ListContent();
 
         [PrivateApi]
         [Obsolete("Use Header.Presentation instead")]
-        public dynamic ListPresentation => Obsolete10.ListPresentation();
+        public dynamic ListPresentation => CodeHelpDbV12.ListPresentation();
 
         [PrivateApi]
         [Obsolete("This is an old way used to loop things - removed in RazorComponent")]
-        public IEnumerable<dynamic> List => Obsolete10.List();
+        public IEnumerable<dynamic> List => CodeHelpDbV12.List();
 
         #endregion
 

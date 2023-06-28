@@ -20,12 +20,10 @@ namespace ToSic.Sxc.Blocks.Output
             Exception exOrNull = default
         );
 
-        //string ContextAttributes(int instanceId, int contentBlockId, bool includeEditInfos);
-
         string DesignErrorMessage(Exception ex, bool addToEventLog, string msgVisitors = null, string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true);
 
         string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false,
-            bool encodeMessage = true);
+            bool encodeMessage = true, Exception exOrNull = default);
 
         string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true);
     }

@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
-using ToSic.Lib.Documentation;
-using static ToSic.Sxc.Code.Help.Obsolete10;
-using static ToSic.Sxc.Code.Help.Obsolete16;
+using static ToSic.Sxc.Code.Help.CodeHelpDbV12;
 
-// ReSharper disable once CheckNamespace
-namespace Custom.Hybrid
+namespace ToSic.Sxc.Code.Help
 {
-    public abstract partial class Razor16: IHasCodeHelp
+    internal class CodeHelpDbV14
     {
-        [PrivateApi]
-        List<CodeHelp> IHasCodeHelp.ErrorHelpers => new List<CodeHelp>
+        internal static List<CodeHelp> Compile14 = new List<CodeHelp>
         {
             // use `Convert`
             SystemConvertIncorrectUse,
@@ -28,32 +24,23 @@ namespace Custom.Hybrid
             // dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => Obsolete10.AsDynamicKvp();
 
             // Access .List
-            ListNotExist16,
+            ListNotExist12,
 
-            ListObsolete16,
-            ListObsolete16MisCompiledAsGenericList,
+            ListObsolete12,
+            ListObsolete12MisCompiledAsGenericList,
 
             // Access ListContent
-            ListContentNotExist16,
-            ListPresentationNotExist16,
+            ListContentNotExist12,
+            ListPresentationNotExist12,
 
             // Presentation
-            PresentationNotExist16,
-
-            // Content and Header - replaced with MyItem / MyHeader
-            ContentNotExist16,
-            HeaderNotExist16,
+            PresentationNotExist12,
 
             // Skipped, as can't be detected - they are all IEnumerable...
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataStream stream) => Obsolete10.AsDynamicForList();
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => Obsolete10.AsDynamicForList();
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Obsolete10.AsDynamicForList();
 
-            // Settings / Resources
-            SettingsNotExist16,
-            ResourcesNotExist16,
         };
-
     }
-
 }

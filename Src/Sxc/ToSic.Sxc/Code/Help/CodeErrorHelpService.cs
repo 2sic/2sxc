@@ -17,8 +17,23 @@ namespace ToSic.Sxc.Code.Help
 {
     public class CodeErrorHelpService
     {
+        public Exception AddHelpForCompileProblems(Exception ex, CodeFileTypes fileType)
+        {
+            // Check if it already has help included
+            if (ex is IExceptionWithHelp) return ex;
+
+            if (!CodeHelpDb.CompileHelp.TryGetValue(fileType, out var list))
+                return ex;
+
+            var help = FindHelp(ex, list);
+            return help == null ? ex : new ExceptionWithHelp(help, ex);
+        }
+
         public Exception AddHelpIfKnownError(Exception ex, object mainCodeObject)
         {
+            // Check if it already has help included
+            if (ex is IExceptionWithHelp) return ex;
+
             var help = FindHelp(ex);
             if (help != null) return new ExceptionWithHelp(help, ex);
 

@@ -7,6 +7,7 @@ using System.Web.Compilation;
 using System.Web.WebPages;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
@@ -30,12 +31,14 @@ namespace ToSic.Sxc.Engines
 
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly DnnCodeRootFactory _codeRootFactory;
+        private readonly LazySvc<DnnRazorSourceAnalyzer> _sourceAnalyzer;
 
-        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp) : base(helpers)
+        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
         {
             ConnectServices(
                 _codeRootFactory = codeRootFactory,
-                _errorHelp = errorHelp
+                _errorHelp = errorHelp,
+                _sourceAnalyzer = sourceAnalyzer
             );
         }
 
@@ -81,8 +84,9 @@ namespace ToSic.Sxc.Engines
         }
 
         [PrivateApi]
-        protected HttpContextBase HttpContext 
-            => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
+        protected HttpContextBase HttpContextCurrent => 
+            _httpContext.Get(() => HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current));
+        private readonly GetOnce<HttpContextBase> _httpContext = new GetOnce<HttpContextBase>();
 
         [PrivateApi]
         private (TextWriter writer, Exception exception) Render(TextWriter writer, object data)
@@ -101,7 +105,7 @@ namespace ToSic.Sxc.Engines
 
             try
             {
-                page.ExecutePageHierarchy(new WebPageContext(HttpContext, page, data), writer, page);
+                page.ExecutePageHierarchy(new WebPageContext(HttpContextCurrent, page, data), writer, page);
             }
             catch (Exception maybeIEntityCast)
             {
@@ -123,23 +127,37 @@ namespace ToSic.Sxc.Engines
         {
             var l = Log.Fn<object>();
             object page = null;
+            Type compiledType;
             try
             {
-                var compiledType = BuildManager.GetCompiledType(TemplatePath);
-                if (compiledType != null)
-                {
-                    page = Activator.CreateInstance(compiledType);
-                    var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
-                    return l.ReturnAsOk(pageObjectValue);
-                }
+                compiledType = BuildManager.GetCompiledType(TemplatePath);
+            }
+            catch (Exception ex)
+            {
+                // TODO: ADD MORE compile error help
+                // 1. Read file
+                // 2. Try to find base type - or warn if not found
+                // 3. ...
+                var razorType = _sourceAnalyzer.Value.FindType(TemplatePath);
+                l.A($"Razor Type: {razorType}");
+                throw l.Ex(_errorHelp.Value.AddHelpForCompileProblems(ex, razorType));
+            }
 
-                return l.ReturnNull("type not found");
+            try
+            {
+                if (compiledType == null)
+                    return l.ReturnNull("type not found");
+
+                page = Activator.CreateInstance(compiledType);
+                var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
+                return l.ReturnAsOk(pageObjectValue);
             }
             catch (Exception ex)
             {
                 throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(ex, page));
             }
         }
+
 
         private bool InitWebpage()
         {
@@ -155,7 +173,7 @@ namespace ToSic.Sxc.Engines
                 throw new InvalidOperationException($"The webpage at '{TemplatePath}' must derive from RazorComponentBase.");
             Webpage = pageToInit;
 
-            pageToInit.Context = HttpContext;
+            pageToInit.Context = HttpContextCurrent;
             pageToInit.VirtualPath = TemplatePath;
             var compatibility = Constants.CompatibilityLevel9Old;
             if (pageToInit is RazorComponent rzrPage)
