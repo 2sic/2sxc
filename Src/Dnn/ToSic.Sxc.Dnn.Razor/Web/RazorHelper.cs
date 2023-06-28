@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
@@ -70,17 +71,10 @@ namespace ToSic.Sxc.Web
 
         internal RazorComponentBase ParentPage { get; set; }
 
-        internal Exception RenderException
-        {
-            get => _renderException;
-            set
-            {
-                _renderException = value;
-                if (ParentPage != null) ParentPage.RazorHelper.RenderException = value;
-            }
-        }
+        public List<Exception> ExceptionsOrNull { get; private set; }
 
-        private Exception _renderException;
+        public void Add(Exception ex) => (ExceptionsOrNull ?? (ExceptionsOrNull = new List<Exception>())).Add(ex);
+
 
         #endregion
 

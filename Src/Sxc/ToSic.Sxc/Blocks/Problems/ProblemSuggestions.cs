@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Eav.Plumbing;
@@ -10,32 +11,31 @@ namespace ToSic.Sxc.Blocks.Problems
 {
     internal class ProblemSuggestions
     {
-        public IEnumerable<ProblemReport> AddSuggestions(IBlock block, Exception exOrNull, string errorCode)
+        public IEnumerable<ProblemReport> AddSuggestions(IBlock block, List<Exception> exsOrNull, string errorCode)
         {
             var suggestions = new List<ProblemReport>();
 
             // Add suggestions for any exceptions in the code
-            if ((exOrNull as IExceptionWithHelp)?.Help is CodeHelp help)
+            if (exsOrNull.SafeAny())
             {
-                var problem = new ProblemReport
-                {
-                    Link = help.Link.NullIfNoValue(),
-                    Message = help.DetailsHtml ?? help.UiMessage,
-                    Severity = ProblemReport.ErrorSeverity.warning,
-                };
-                suggestions.Add(problem);
+                // deduplicate - in case we have many of the same errors
+                var unique = exsOrNull
+                    .GroupBy(e => e.Message)
+                    .Select(g => g.First())
+                    .ToList();
+
+                foreach (var ex in unique)
+                    if ((ex as IExceptionWithHelp)?.Helps is List<CodeHelp> helps)
+                        helps.ForEach(h => suggestions.Add(new ProblemReport
+                        {
+                            Link = h.Link.NullIfNoValue(),
+                            Message = h.DetailsHtml ?? h.UiMessage,
+                            Severity = ProblemReport.ErrorSeverity.warning,
+                        }));
             }
 
 
             if (errorCode == null || block?.App == null) return suggestions;
-
-            //suggestions.Add(new ProblemReport
-            //{
-            //    Scope = ProblemReport.ErrorScope.view,
-            //    Severity = ProblemReport.ErrorSeverity.info,
-            //    Message = "test",
-            //    Link = "https://go.2sxc.org/test"
-            //});
 
             // Special suggestion for Blog v 6
             var app = block.App;

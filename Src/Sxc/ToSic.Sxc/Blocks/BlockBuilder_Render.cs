@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -8,7 +9,6 @@ using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks.Output;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Web.PageFeatures;
-using static System.StringComparer;
 using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -31,12 +31,12 @@ namespace ToSic.Sxc.Blocks
             var l = Log.Fn<IRenderResult>(timer: true);
             try
             {
-                var (html, isErr, exOrNull) = RenderInternal(data);
+                var (html, isErr, exsOrNull) = RenderInternal(data);
                 var result = new RenderResult(html)
                 {
                     IsError = isErr,
                     ModuleId = Block.ParentId,
-                    CanCache = !isErr && exOrNull == null && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
+                    CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
                 };
 
                 // case when we do not have an app
@@ -87,10 +87,11 @@ namespace ToSic.Sxc.Blocks
 
         private IRenderResult _result;
 
-        private (string Html, bool IsError, Exception ExOrNull) RenderInternal(object data)
+        private (string Html, bool IsError, List<Exception> exsOrNull) RenderInternal(object data)
         {
-            var l = Log.Fn<(string, bool, Exception)>();
+            var l = Log.Fn<(string, bool, List<Exception>)>();
 
+            var exceptions = new List<Exception>();
             try
             {
                 // New 13.11 - must set appid etc. for dependencies before we start
@@ -100,8 +101,9 @@ namespace ToSic.Sxc.Blocks
                 // do pre-check to see if system is stable & ready
                 var (body, err) = GenerateErrorMsgIfInstallationNotOk();
                 var errorCode = err ? ErrorInstallationNotOk : null;
-                Exception exOrNull = null;;
-                #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
+
+                #region Content-Group Exists
+                // Check if the content-group exists - sometimes the Content-Group it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
                 {
                     l.A("pre-init innerContent content is empty so no errors, will build");
@@ -113,8 +115,9 @@ namespace ToSic.Sxc.Blocks
                                   "but the content / apps have not been imported yet" +
                                   " - check 2sxc.org/help?tag=export-import - " +
                                   $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
-                        exOrNull = new Exception(msg);
-                        body = RenderingHelper.DesignErrorMessage(exOrNull, true);
+                        var ex = new Exception(msg);
+                        exceptions.Add(ex);
+                        body = RenderingHelper.DesignErrorMessage(exceptions, true);
                         err = true;
                         errorCode = ErrorDataIsMissing;
                     }
@@ -131,7 +134,8 @@ namespace ToSic.Sxc.Blocks
                             var engine = GetEngine();
                             var renderEngineResult = engine.Render(data);
                             body = renderEngineResult.Html;
-                            exOrNull = renderEngineResult.ExceptionOrNull;
+                            if (renderEngineResult.ExceptionsOrNull != null)
+                                exceptions.AddRange(renderEngineResult.ExceptionsOrNull);;
                             errorCode = renderEngineResult.ErrorCode ?? errorCode;
                             if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
                                 errorCode = ErrorGeneral;
@@ -150,8 +154,8 @@ namespace ToSic.Sxc.Blocks
                     }
                     catch (Exception ex)
                     {
-                        exOrNull = ex;
-                        body = RenderingHelper.DesignErrorMessage(ex, true);
+                        exceptions.Add(ex);
+                        body = RenderingHelper.DesignErrorMessage(exceptions, true);
                         err = true;
                         errorCode = ErrorRendering;
                     }
@@ -180,7 +184,7 @@ namespace ToSic.Sxc.Blocks
                         contentBlockId: Block.ContentBlockId,
                         editContext: addEditCtx, 
                         errorCode: errorCode,
-                        exOrNull: exOrNull)
+                        exsOrNull: exceptions)
                     : body;
                 #endregion
 
@@ -192,11 +196,12 @@ namespace ToSic.Sxc.Blocks
 
                 #endregion
 
-                return l.Return((result, err, exOrNull));
+                return l.Return((result, err, exceptions));
             }
             catch (Exception ex)
             {
-                return l.Return((RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true, ex), "error");
+                exceptions.Add(ex);
+                return l.Return((RenderingHelper.DesignErrorMessage(exceptions, true, addContextWrapper: true), true, exceptions), "error");
             }
         }
 
@@ -214,7 +219,7 @@ namespace ToSic.Sxc.Blocks
             if (!string.IsNullOrEmpty(notReady))
             {
                 Log.A("system isn't ready,show upgrade message");
-                var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true, encodeMessage: false); // don't encode, as it contains special links
+                var result = RenderingHelper.DesignErrorMessage(new List<Exception>{new Exception(notReady)}, true, encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 

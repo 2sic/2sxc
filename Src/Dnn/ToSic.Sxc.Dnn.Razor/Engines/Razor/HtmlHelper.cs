@@ -59,7 +59,7 @@ namespace ToSic.Sxc.Engines.Razor
             if (stringHtml is string s) return new HtmlString(s);
             if (stringHtml is IHtmlString h) return h;
             var ex = new ArgumentException($@"Html.Raw does not support type '{stringHtml.GetType().Name}'.", nameof(stringHtml));
-            _helper.RenderException = ex;
+            _helper.Add(ex);
             throw ex;
         }
 
@@ -125,8 +125,8 @@ namespace ToSic.Sxc.Engines.Razor
             // Note that if anything breaks here, it will just use the normal error - but for what breaks in here
             // Note that if withHelp already has help, it won't be extended any more
             exWithHelp = _codeErrService.Value.AddHelpIfKnownError(exWithHelp, _page);
-            var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(exWithHelp, true);
-            _helper.RenderException = exWithHelp;
+            var nice = _page._DynCodeRoot.Block.BlockBuilder.RenderingHelper.DesignErrorMessage(new List<Exception>{exWithHelp}, true);
+            _helper.Add(exWithHelp);
             return nice;
         }
 

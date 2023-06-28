@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 
@@ -17,13 +18,13 @@ namespace ToSic.Sxc.Blocks.Output
             string tag = "div",
             bool addLineBreaks = true,
             string errorCode = default,
-            Exception exOrNull = default
+            List<Exception> exsOrNull = default
         );
 
-        string DesignErrorMessage(Exception ex, bool addToEventLog, string msgVisitors = null, string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true);
+        string DesignErrorMessage(List<Exception> exs, bool addToEventLog, string msgVisitors = null, string additionalInfo = null, bool addContextWrapper = false, bool encodeMessage = true);
 
         string DesignError(string msgSuperUser, string msgVisitors = null, bool addContextWrapper = false,
-            bool encodeMessage = true, Exception exOrNull = default);
+            bool encodeMessage = true, List<Exception> exsOrNull = default);
 
         string DesignWarningForSuperUserOnly(string warning, bool addContextWrapper = false, bool encodeMessage = true);
     }

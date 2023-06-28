@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.UI;
 using DotNetNuke.Services.Exceptions;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
 
@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Dnn
 
                     // first get a rendering helper - but since BlockBuilder may be null, create a new one
                     var renderingHelper = GetService<IRenderingHelper>().Init(Block);
-                    var msg = renderingHelper.DesignErrorMessage(ex, true, 
+                    var msg = renderingHelper.DesignErrorMessage(new List<Exception> { ex }, true,
                         additionalInfo: $" - CONTEXT: Page: {TabId}; Module: {ModuleId}");
 
                     try
@@ -44,7 +44,7 @@ namespace ToSic.Sxc.Dnn
                                 contentBlockId: Block.ContentBlockId,
                                 editContext: true,
                                 errorCode: BlockBuildingConstants.ErrorGeneral,
-                                exOrNull: ex);
+                                exsOrNull: new List<Exception> { ex });
                     }
                     catch { /* ignore */ }
 

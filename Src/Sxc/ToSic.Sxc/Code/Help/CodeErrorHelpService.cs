@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Code.Help
                 if (!CodeHelpDb.CompileHelp.TryGetValue(fileType, out var list))
                     return l.Return(ex, "no additional help found");
 
-                var help = FindHelp(ex, list);
+                var help = FindManyOrNull(ex, list);
                 return help == null 
                     ? l.Return(ex)
                     : l.Return(new ExceptionWithHelp(help, ex), "added help");
@@ -102,6 +102,13 @@ namespace ToSic.Sxc.Code.Help
         {
             var msg = ex?.Message;
             return msg == null ? null : errorList.FirstOrDefault(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect));
+        }
+        private static List<CodeHelp> FindManyOrNull(Exception ex, List<CodeHelp> errorList)
+        {
+            var msg = ex?.Message;
+            return msg == null ? null : errorList
+                .Where(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect))
+                .ToList();
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -89,9 +90,9 @@ namespace ToSic.Sxc.Engines
         private readonly GetOnce<HttpContextBase> _httpContext = new GetOnce<HttpContextBase>();
 
         [PrivateApi]
-        private (TextWriter writer, Exception exception) Render(TextWriter writer, object data)
+        private (TextWriter writer, List<Exception> exception) Render(TextWriter writer, object data)
         {
-            var l = Log.Fn<(TextWriter writer, Exception exception)>(message: "will render into TextWriter");
+            var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
             var page = Webpage; // access the property once only
             try
             {
@@ -111,13 +112,13 @@ namespace ToSic.Sxc.Engines
             {
                 throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
             }
-            return l.Return((writer, page.RazorHelper.RenderException));
+            return l.Return((writer, page.RazorHelper.ExceptionsOrNull));
         }
 
         [PrivateApi]
-        protected override (string, Exception) RenderTemplate(object data)
+        protected override (string, List<Exception>) RenderTemplate(object data)
         {
-            var l = Log.Fn<(string, Exception)>();
+            var l = Log.Fn<(string, List<Exception>)>();
             var writer = new StringWriter();
             var result = Render(writer, data);
             return l.ReturnAsOk((result.writer.ToString(), result.exception));

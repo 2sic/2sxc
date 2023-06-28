@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Custom.Hybrid;
@@ -38,9 +39,9 @@ namespace ToSic.Sxc.Razor
         #endregion
 
         /// <inheritdoc/>
-        protected override (string, Exception) RenderTemplate(object data)
+        protected override (string, List<Exception>) RenderTemplate(object data)
         {
-            var l = Log.Fn<(string, Exception)>();
+            var l = Log.Fn<(string, List<Exception>)>();
             var task = RenderTask();
             task.Wait();
             return l.ReturnAsOk((task.Result.ToString(), null));

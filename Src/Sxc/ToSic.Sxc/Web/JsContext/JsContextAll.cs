@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Code.InfoSystem;
@@ -41,7 +42,7 @@ namespace ToSic.Sxc.Web.JsContext
         private readonly JsContextLanguage _jsLangCtx;
         private readonly IJsApiService _jsApiService;
 
-        public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode, Exception exOrNull)
+        public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode, List<Exception> exsOrNull)
         {
             var l = Log.Fn<JsContextAll>();
             var ctx = block.Context;
@@ -72,7 +73,7 @@ namespace ToSic.Sxc.Web.JsContext
                 rvt: null
             );
 
-            error = new ErrorDto(block, errorCode, exOrNull, _codeWarnings);
+            error = new ErrorDto(block, errorCode, exsOrNull, _codeWarnings);
             return l.Return(this);
         }
     }

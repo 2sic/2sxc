@@ -10,10 +10,10 @@ namespace ToSic.Sxc.Code.Help
 
         internal const string IsNotSupportedIn16Plus = "is not supported in Razor16+";
 
-        internal static CodeHelp CreateNotExistCodeHelp(string property, params string[] replacement) 
-            => CreateNotExistCodeHelp(property, true, replacement);
+        internal static CodeHelp HelpNotExists(string property, params string[] replacement) 
+            => HelpNotExists(property, true, replacement);
 
-        internal static CodeHelp CreateNotExistCodeHelp(string property, bool v12, params string[] replacement)
+        internal static CodeHelp HelpNotExists(string property, bool v12, params string[] replacement)
         {
             var firstBetter = !replacement.SafeAny() ? "unknown" : replacement[0];
             var better = !replacement.SafeAny()

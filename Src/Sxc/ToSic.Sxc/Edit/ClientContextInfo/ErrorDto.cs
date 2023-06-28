@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
         [JsonIgnore(Condition = WhenWritingDefault)]
         public IEnumerable<ProblemReport> Problems { get; }
 
-        internal ErrorDto(IBlock block, string errorCode, Exception exOrNull, CodeInfosInScope codeWarnings)
+        internal ErrorDto(IBlock block, string errorCode, List<Exception> exsOrNull, CodeInfosInScope codeWarnings)
         {
             // New mechanism in 16.01
             Type = errorCode;
@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Edit.ClientContextInfo
 
             // New problems report in 16.02
             var problems = new List<ProblemReport>(block.Problems);
-            var additional = new ProblemSuggestions().AddSuggestions(block, exOrNull, errorCode);
+            var additional = new ProblemSuggestions().AddSuggestions(block, exsOrNull, errorCode);
             problems.AddRange(additional);
 
             problems.AddRange(codeWarnings

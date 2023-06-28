@@ -179,13 +179,14 @@ namespace ToSic.Sxc.Dnn
             var result = new RenderResult(null);
             TryCatchAndLogToDnn(() =>
             {
-                if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
-                result = (RenderResult)Block.BlockBuilder.Run(true, null);
+                var bb = Block.BlockBuilder;
+                if (RenderNaked) bb.WrapInDiv = false;
+                result = (RenderResult)bb.Run(true, null);
 
                 if (result.Errors?.Any() ?? false)
                 {
                     var warnings = result.Errors
-                        .Select(e => Block.BlockBuilder.RenderingHelper.DesignError(e));
+                        .Select(e => bb.RenderingHelper.DesignError(e));
 
                     result.Html = string.Join("", warnings) + result.Html;
                 }

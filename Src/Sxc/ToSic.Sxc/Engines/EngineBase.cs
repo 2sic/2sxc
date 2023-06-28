@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -152,7 +153,7 @@ namespace ToSic.Sxc.Engines
         });
 
         [PrivateApi]
-        protected abstract (string Contents, Exception Exception) RenderTemplate(object data);
+        protected abstract (string Contents, List<Exception> Exception) RenderTemplate(object data);
 
         [PrivateApi]
         protected virtual void Init() {}
@@ -177,7 +178,7 @@ namespace ToSic.Sxc.Engines
             var depMan = Services.BlockResourceExtractor;
             var result = depMan.Process(renderedTemplate.Contents);
             if (renderedTemplate.Exception != null)
-                result = new RenderEngineResult(result, exOrNull: renderedTemplate.Exception);
+                result = new RenderEngineResult(result, exsOrNull: renderedTemplate.Exception);
             return l.ReturnAsOk(result);
         }
 
@@ -196,13 +197,13 @@ namespace ToSic.Sxc.Engines
         private static CodeHelp ErrHelpTypeMissing = new CodeHelp(name: "Content Type Missing", detect: "", linkCode: "err-view-type-missing", 
             uiMessage: "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
 
-        private (RenderStatusType RenderStatus, string Message, string ErrorCode, Exception exOrNull) CheckExpectedNoRenderConditions()
+        private (RenderStatusType RenderStatus, string Message, string ErrorCode, List<Exception> exOrNull) CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
                 Block.Configuration.Content.All(e => e == null))
             {
                 var ex = new ExceptionWithHelp(new CodeHelp(name: ErrorDataIsMissing, detect: "", linkCode: "err-block-data-missing"));
-                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, ErrorDataIsMissing, ex);
+                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, ErrorDataIsMissing, new List<Exception> { ex });
             }
 
             return (RenderStatusType.Ok, null, null, null);

@@ -110,7 +110,7 @@ namespace ToSic.Sxc.Engines
         }
 
 
-        protected override (string, Exception) RenderTemplate(object data)
+        protected override (string, List<Exception>) RenderTemplate(object data)
         {
             var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
