@@ -117,11 +117,11 @@ namespace Custom.Hybrid
 
         #region Killed Properties from base class
 
-        [PrivateApi("Hide as it's nothing that should be used")]
-        public new object Content => throw new NotSupportedException($"{nameof(Content)} isn't supported in v16 typed. Use Data.MyContent instead.");
+        //[PrivateApi("Hide as it's nothing that should be used")]
+        //public new object Content => throw new NotSupportedException($"{nameof(Content)} isn't supported in v16 typed. Use Data.MyContent instead.");
 
-        [PrivateApi("Hide as it's nothing that should be used")]
-        public new object Header => throw new NotSupportedException($"{nameof(Header)} isn't supported in v16 typed. Use Data.MyHeader instead.");
+        //[PrivateApi("Hide as it's nothing that should be used")]
+        //public new object Header => throw new NotSupportedException($"{nameof(Header)} isn't supported in v16 typed. Use Data.MyHeader instead.");
 
         #endregion
 

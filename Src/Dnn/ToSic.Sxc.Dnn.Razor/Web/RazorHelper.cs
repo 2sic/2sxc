@@ -21,10 +21,7 @@ namespace ToSic.Sxc.Web
     {
         #region Constructor / Init
 
-        public RazorHelper() : base("Sxc.RzrHlp")
-        {
-
-        }
+        public RazorHelper() : base("Sxc.RzrHlp") { }
 
         public RazorHelper Init(RazorComponentBase page, Func<string, object[], HelperResult> renderPage)
         {
@@ -35,16 +32,6 @@ namespace ToSic.Sxc.Web
 
         public RazorComponentBase Page { get; private set; }
         private Func<string, object[], HelperResult> _renderPage;
-
-        //public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        //{
-        //    // Do base work
-        //    base.ConnectToRoot(codeRoot);
-        //    var l = Log.Fn(message: "connected");
-        //    // Make sure the Code-Log is reset, in case it was used before this call
-        //    _codeLog.Reset();
-        //    l.Done();
-        //}
 
         #endregion
 
@@ -79,11 +66,7 @@ namespace ToSic.Sxc.Web
 
         #region Html Helper
 
-        //public ICodeLog CodeLog => _codeLog.Get(() => new CodeLog(Log));
-        //private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
-
-
-        public IHtmlHelper Html => _html ?? (_html = _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage));
+        internal IHtmlHelper Html => _html ?? (_html = _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage));
         private IHtmlHelper _html;
 
         #endregion
@@ -106,18 +89,26 @@ namespace ToSic.Sxc.Web
             string name = null,
             bool throwOnError = true)
         {
-            var wrapLog = Log.Fn<object>($"{virtualPath}, ..., {name}");
+            var l = Log.Fn<object>($"{virtualPath}, ..., {name}");
             Protect(noParamOrder, $"{nameof(name)}, {nameof(throwOnError)}");
 
             var path = Page.NormalizePath(virtualPath);
             if (!File.Exists(HostingEnvironment.MapPath(path)))
                 throw new FileNotFoundException("The shared file does not exist.", path);
 
-            object result = path.EndsWith(CodeCompiler.CsFileExtension)
-                ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
-                : CreateInstanceCshtml(path);
+            try
+            {
+                object result = path.EndsWith(CodeCompiler.CsFileExtension)
+                    ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
+                    : CreateInstanceCshtml(path);
+                return l.Return(result, "ok");
+            }
+            catch (Exception ex)
+            {
+                l.Done(ex);
+                throw;
+            }
 
-            return wrapLog.Return(result, "ok");
         }
 
         internal WebPageBase CreateInstanceCshtml(string path)

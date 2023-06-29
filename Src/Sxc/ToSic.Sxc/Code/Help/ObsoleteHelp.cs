@@ -35,7 +35,8 @@ You are calling the '{property.Name}' object which {notSupported}. {property.Com
 You should probably use '{first.Code}' 
 ",
                 detailsHtml: $@"
-You are probably calling <code>{property.Name}</code>. {(property.Comments.HasValue() ? $"<br><em>{property.Comments}</em><br>": "")}
+You are probably calling <code>{property.Name}</code>.
+{(property.Comments.HasValue() ? $"<br><em>{property.Comments}</em><br>": "")}
 The property <code>{property.Name}</code> {notSupported}. 
 Probably better: 
 {better}
