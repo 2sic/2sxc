@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public IEnumerable<IDictionary<string, object>> GetEntities(string contentType, string appPath = null) 
-            => Real.GetEntities(contentType, appPath);
+            => SysHlp.Real.GetEntities(contentType, appPath);
 
         #endregion
 
@@ -28,12 +28,12 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpGet]
 	    [AllowAnonymous] // will check security internally, so assume no requirements
 	    public IDictionary<string, object> GetOne(string contentType, string guid, string appPath = null) // this will handle Guid
-            => Real.GetOne(contentType, guid, appPath);
+            => SysHlp.Real.GetOne(contentType, guid, appPath);
 
         [HttpGet]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public IDictionary<string, object> GetOne(string contentType, int id, string appPath = null) // this will handle int id
-            => Real.GetOne(contentType, id.ToString(), appPath);
+            => SysHlp.Real.GetOne(contentType, id.ToString(), appPath);
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             [FromBody] Dictionary<string, object> newContentItem, 
             [FromUri] int? id = null,
             [FromUri] string appPath = null)
-            => Real.CreateOrUpdate(contentType, newContentItem, id, appPath);
+            => SysHlp.Real.CreateOrUpdate(contentType, newContentItem, id, appPath);
 
         #endregion
 
@@ -57,13 +57,13 @@ namespace ToSic.Sxc.Dnn.WebApi.App
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, string guid, [FromUri] string appPath = null) // this will handle Guid
-            => Real.Delete(contentType, guid, appPath);
+            => SysHlp.Real.Delete(contentType, guid, appPath);
 
  
         [HttpDelete]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public void Delete(string contentType, int id, [FromUri] string appPath = null) // this will handle int id
-            => Real.Delete(contentType, id.ToString(), appPath);
+            => SysHlp.Real.Delete(contentType, id.ToString(), appPath);
 
         #endregion
 

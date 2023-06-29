@@ -23,13 +23,13 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         [HttpGet]
         public List<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false) 
-            => Real.All(appId, global, path, mask, withSubfolders, returnFolders);
+            => SysHlp.Real.All(appId, global, path, mask, withSubfolders, returnFolders);
 
         [HttpGet]
         public AssetEditInfo Asset(int appId, 
             int templateId = 0, string path = null, // identifier is always one of these two
             bool global = false)
-            => Real.Asset(appId, templateId, path, global);
+            => SysHlp.Real.Asset(appId, templateId, path, global);
 
         [HttpPost]
         public bool Create(
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             [FromUri] string path,
             [FromUri] bool global,
             [FromUri] string templateKey)
-            => Real.Create(appId, path, global, templateKey);
+            => SysHlp.Real.Create(appId, path, global, templateKey);
 
         [HttpPost]
         public bool Asset(
@@ -48,16 +48,16 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             // todo w/SPM - global never seems to be used - must check why and if we remove or add to UI
             // TODO: NEW PARAM TEMPLATEKey SHOULD BE USED TO CREATE THE FILE
             [FromUri] bool global = false) 
-            => Real.Asset(appId: appId, template: template, templateId: templateId, path: path, global: global);
+            => SysHlp.Real.Asset(appId: appId, template: template, templateId: templateId, path: path, global: global);
 
         [HttpGet]
-        public TemplatesDto GetTemplates(string purpose = null, string type = null) => Real.GetTemplates(purpose, type);
+        public TemplatesDto GetTemplates(string purpose = null, string type = null) => SysHlp.Real.GetTemplates(purpose, type);
 
         [HttpGet]
         public TemplatePreviewDto Preview(int appId, string path, string templateKey, bool global = false)
-            => Real.Preview(appId, path, templateKey, global);
+            => SysHlp.Real.Preview(appId, path, templateKey, global);
 
         [HttpGet]
-        public AllFilesDto AppFiles(int appId, string path = null, string mask = null) => Real.AppFiles(appId, path, mask);
+        public AllFilesDto AppFiles(int appId, string path = null, string mask = null) => SysHlp.Real.AppFiles(appId, path, mask);
     }
 }

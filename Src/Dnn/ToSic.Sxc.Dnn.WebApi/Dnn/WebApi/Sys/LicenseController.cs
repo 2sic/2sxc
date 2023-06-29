@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 
         /// <inheritdoc />
         [HttpGet]
-        public IEnumerable<LicenseDto> Summary() => Real.Summary();
+        public IEnumerable<LicenseDto> Summary() => SysHlp.Real.Summary();
 
         /// <inheritdoc />
         [HttpPost]
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public LicenseFileResultDto Upload()
         {
             SysHlp.PreventServerTimeout300();
-            return Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request));
+            return SysHlp.Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request));
         }
 
         /// <inheritdoc />
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public LicenseFileResultDto Retrieve()
         {
             SysHlp.PreventServerTimeout300();
-            return Real.Retrieve();
+            return SysHlp.Real.Retrieve();
         }
     }
 }

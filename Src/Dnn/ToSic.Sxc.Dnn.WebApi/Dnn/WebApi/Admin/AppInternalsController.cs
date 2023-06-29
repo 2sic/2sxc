@@ -21,6 +21,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public AppInternalsDto Get(int appId, int targetType, string keyType, string key) 
-            => Real.Get(appId, targetType, keyType, key);
+            => SysHlp.Real.Get(appId, targetType, keyType, key);
     }
 }

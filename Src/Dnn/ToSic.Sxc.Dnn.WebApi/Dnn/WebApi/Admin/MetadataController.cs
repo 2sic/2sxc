@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         [HttpGet]
         public MetadataListDto Get(int appId, int targetType, string keyType, string key, string contentType = null)
-            => Real.Get(appId, targetType, keyType, key, contentType);
+            => SysHlp.Real.Get(appId, targetType, keyType, key, contentType);
 
     }
 }

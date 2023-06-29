@@ -21,6 +21,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public DialogController(): base(DialogControllerReal.LogSuffix) { }
 
         [HttpGet]
-        public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
+        public DialogContextStandaloneDto Settings(int appId) => SysHlp.Real.Settings(appId);
     }
 }

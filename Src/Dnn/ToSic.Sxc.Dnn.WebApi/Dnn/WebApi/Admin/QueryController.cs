@@ -22,24 +22,24 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     {
         public QueryController() : base(QueryControllerReal.LogSuffix) { }
 
-        [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Init(appId).Get(appId, id);
+        [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => SysHlp.Real.Init(appId).Get(appId, id);
 
-        [HttpGet] public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) => Real.Init(appId).DataSources();
+        [HttpGet] public IEnumerable<DataSourceDto> DataSources(int zoneId, int appId) => SysHlp.Real.Init(appId).DataSources();
 
 		[HttpPost] public QueryDefinitionDto Save([FromBody] QueryDefinitionDto data, int appId, int id)
-	        => Real.Init(appId).Save(data, appId, id);
+	        => SysHlp.Real.Init(appId).Save(data, appId, id);
 
 
-	    [HttpGet] public QueryRunDto Run(int appId, int id, int top = 0) => Real.Init(appId).RunDev(appId, id, top);
+	    [HttpGet] public QueryRunDto Run(int appId, int id, int top = 0) => SysHlp.Real.Init(appId).RunDev(appId, id, top);
 
         [HttpGet] public QueryRunDto DebugStream(int appId, int id, string from, string @out, int top = 25) 
-            => Real.Init(appId).DebugStream(appId, id, @from, @out, top);
+            => SysHlp.Real.Init(appId).DebugStream(appId, id, @from, @out, top);
 
-	    [HttpGet] public void Clone(int appId, int id) => Real.Init(appId).Clone(appId, id);
+	    [HttpGet] public void Clone(int appId, int id) => SysHlp.Real.Init(appId).Clone(appId, id);
 
 
-        [HttpDelete] public bool Delete(int appId, int id) => Real.Init(appId).DeleteIfUnused(appId, id);
+        [HttpDelete] public bool Delete(int appId, int id) => SysHlp.Real.Init(appId).DeleteIfUnused(appId, id);
 
-        [HttpPost] public bool Import(EntityImportDto args) => Real.Init(args.AppId).Import(args);
+        [HttpPost] public bool Import(EntityImportDto args) => SysHlp.Real.Init(args.AppId).Import(args);
 	}
 }

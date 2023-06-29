@@ -20,14 +20,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         /// <inheritdoc />
         [HttpGet]
-        public IList<SiteLanguageDto> GetLanguages() => Real.GetLanguages();
+        public IList<SiteLanguageDto> GetLanguages() => SysHlp.Real.GetLanguages();
 
         /// <inheritdoc />
         [HttpGet]
-        public void SwitchLanguage(string cultureCode, bool enable) => Real.SwitchLanguage(cultureCode, enable);
+        public void SwitchLanguage(string cultureCode, bool enable) => SysHlp.Real.SwitchLanguage(cultureCode, enable);
 
         /// <inheritdoc />
         [HttpGet]
-        public SystemInfoSetDto GetSystemInfo() => Real.GetSystemInfo();
+        public SystemInfoSetDto GetSystemInfo() => SysHlp.Real.GetSystemInfo();
     }
 }

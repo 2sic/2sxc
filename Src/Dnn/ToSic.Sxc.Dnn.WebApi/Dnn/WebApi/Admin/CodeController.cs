@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public IEnumerable<CodeControllerReal.HelpItem> InlineHelp(string language)
         {
             Log.A($"InlineHelp:l:{language}");
-            return Real.InlineHelp(language);
+            return SysHlp.Real.InlineHelp(language);
         }
     }
 }

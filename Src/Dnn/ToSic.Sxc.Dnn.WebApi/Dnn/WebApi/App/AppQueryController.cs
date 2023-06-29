@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             [FromUri] int? appId = null,
             [FromUri] string stream = null,
             [FromUri] bool includeGuid = false
-        ) => Real.Query(name, appId, stream, includeGuid);
+        ) => SysHlp.Real.Query(name, appId, stream, includeGuid);
 
         [HttpPost]
         public IDictionary<string, IEnumerable<EavLightEntity>> QueryPost([FromUri] string name,
@@ -29,14 +29,14 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             [FromUri] int? appId = null,
             [FromUri] string stream = null,
             [FromUri] bool includeGuid = false
-        ) => Real.QueryPost(name, more, appId, stream, includeGuid);
+        ) => SysHlp.Real.QueryPost(name, more, appId, stream, includeGuid);
 
         [HttpGet] 
         public IDictionary<string, IEnumerable<EavLightEntity>> PublicQuery(
             [FromUri] string appPath,
             [FromUri] string name,
             [FromUri] string stream = null
-        ) => Real.PublicQuery(appPath, name, stream);
+        ) => SysHlp.Real.PublicQuery(appPath, name, stream);
 
         [HttpPost]
         public IDictionary<string, IEnumerable<EavLightEntity>> PublicQueryPost(
@@ -44,6 +44,6 @@ namespace ToSic.Sxc.Dnn.WebApi.App
             [FromUri] string name,
             [FromBody] QueryParameters more,
             [FromUri] string stream = null
-        ) => Real.PublicQueryPost(appPath, name, more, stream);
+        ) => SysHlp.Real.PublicQueryPost(appPath, name, more, stream);
     }
 }

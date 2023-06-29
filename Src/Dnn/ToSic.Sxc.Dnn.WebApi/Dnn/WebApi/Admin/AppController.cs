@@ -30,66 +30,66 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public List<AppDto> List(int zoneId) => Real.List(zoneId);
+        public List<AppDto> List(int zoneId) => SysHlp.Real.List(zoneId);
 
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public List<AppDto> InheritableApps() => Real.InheritableApps();
+        public List<AppDto> InheritableApps() => SysHlp.Real.InheritableApps();
 
         /// <inheritdoc />
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void App(int zoneId, int appId, bool fullDelete = true) => Real.App(zoneId, appId, fullDelete);
+        public void App(int zoneId, int appId, bool fullDelete = true) => SysHlp.Real.App(zoneId, appId, fullDelete);
 
         /// <inheritdoc />
         [HttpPost]
         [ValidateAntiForgeryToken]
         [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void App(int zoneId, string name, int? inheritAppId = null) => Real.App(zoneId, name, inheritAppId);
+        public void App(int zoneId, string name, int? inheritAppId = null) => SysHlp.Real.App(zoneId, name, inheritAppId);
 
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public List<SiteLanguageDto> Languages(int appId) => Real.Languages(appId);
+        public List<SiteLanguageDto> Languages(int appId) => SysHlp.Real.Languages(appId);
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public AppExportInfoDto Statistics(int zoneId, int appId) => Real.Statistics(zoneId, appId);
+        public AppExportInfoDto Statistics(int zoneId, int appId) => SysHlp.Real.Statistics(zoneId, appId);
 
 
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool FlushCache(int zoneId, int appId) => Real.FlushCache(zoneId, appId);
+        public bool FlushCache(int zoneId, int appId) => SysHlp.Real.FlushCache(zoneId, appId);
 
         /// <inheritdoc />
         [HttpGet]
         public HttpResponseMessage Export(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid)
-            => Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
+            => SysHlp.Real.Export(zoneId, appId, includeContentGroups, resetAppGuid);
 
         /// <inheritdoc />
         [HttpGet]
         [ValidateAntiForgeryToken]
         public bool SaveData(int zoneId, int appId, bool includeContentGroups, bool resetAppGuid, bool withPortalFiles = false)
-            => Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
+            => SysHlp.Real.SaveData(zoneId, appId, includeContentGroups, resetAppGuid, withPortalFiles);
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
         public List<AppStackDataRaw> GetStack(int appId, string part, string key = null, Guid? view = null) 
-            => Real.GetStack(appId, part, key, view);
+            => SysHlp.Real.GetStack(appId, part, key, view);
 
         /// <inheritdoc />
         [HttpPost]
@@ -98,7 +98,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false)
         {
             SysHlp.PreventServerTimeout300();
-            return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
+            return SysHlp.Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
         }
 
         /// <inheritdoc />
@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public ImportResultDto Import(int zoneId)
         {
             SysHlp.PreventServerTimeout300();
-            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
+            return SysHlp.Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
         }
 
         /// <inheritdoc />
@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [SupportedModules(DnnSupportedModuleNames)]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public IEnumerable<PendingAppDto> GetPendingApps(int zoneId) 
-            => Real.GetPendingApps(zoneId);
+            => SysHlp.Real.GetPendingApps(zoneId);
 
         /// <inheritdoc />
         [HttpPost]
@@ -126,7 +126,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
         {
             SysHlp.PreventServerTimeout300();
-            return Real.InstallPendingApps(zoneId, pendingApps);
+            return SysHlp.Real.InstallPendingApps(zoneId, pendingApps);
         }
     }
 }

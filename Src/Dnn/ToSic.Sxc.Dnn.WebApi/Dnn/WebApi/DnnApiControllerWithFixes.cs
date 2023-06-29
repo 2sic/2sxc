@@ -54,12 +54,5 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// Helps group various calls by use case. 
         /// </summary>
         protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
-
-        /// <summary>
-        /// The RealController which is the full backend of this controller.
-        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
-        /// </summary>
-        protected TRealController Real => SysHlp.Real;
-
     }
 }

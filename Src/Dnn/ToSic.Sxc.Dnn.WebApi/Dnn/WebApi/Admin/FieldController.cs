@@ -26,19 +26,19 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Returns the configuration for a content type
         /// </summary>
         [HttpGet]
-        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => Real.All(appId, staticName);
+        public IEnumerable<ContentTypeFieldDto> All(int appId, string staticName) => SysHlp.Real.All(appId, staticName);
 
         /// <summary>
         /// Used to be GET ContentType/DataTypes
         /// </summary>
         [HttpGet]
-        public string[] DataTypes(int appId) => Real.DataTypes(appId);
+        public string[] DataTypes(int appId) => SysHlp.Real.DataTypes(appId);
 
         /// <summary>
         /// Used to be GET ContentType/InputTypes
         /// </summary>
 	    [HttpGet]
-        public List<InputTypeInfo> InputTypes(int appId) => Real.InputTypes(appId);
+        public List<InputTypeInfo> InputTypes(int appId) => SysHlp.Real.InputTypes(appId);
 
         /// <inheritdoc />
         [HttpGet]
@@ -49,26 +49,26 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </summary>
         [HttpPost]
         public int Add(int appId, int contentTypeId, string staticName, string type, string inputType, int index) 
-            => Real.Add(appId, contentTypeId, staticName, type, inputType, index);
+            => SysHlp.Real.Add(appId, contentTypeId, staticName, type, inputType, index);
 
         /// <summary>
         /// Used to be GET ContentType/DeleteField
         /// </summary>
         [HttpDelete]
-        public bool Delete(int appId, int contentTypeId, int attributeId) => Real.Delete(appId, contentTypeId, attributeId);
+        public bool Delete(int appId, int contentTypeId, int attributeId) => SysHlp.Real.Delete(appId, contentTypeId, attributeId);
 
         /// <summary>
         /// Used to be GET ContentType/Reorder
         /// </summary>
 	    [HttpPost]
-        public bool Sort(int appId, int contentTypeId, string order) => Real.Sort(appId, contentTypeId, order);
+        public bool Sort(int appId, int contentTypeId, string order) => SysHlp.Real.Sort(appId, contentTypeId, order);
 
 
         /// <summary>
         /// Used to be GET ContentType/UpdateInputType
         /// </summary>
         [HttpPost]
-        public bool InputType(int appId, int attributeId, string inputType) => Real.InputType(appId, attributeId, inputType);
+        public bool InputType(int appId, int attributeId, string inputType) => SysHlp.Real.InputType(appId, attributeId, inputType);
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// Used to be GET ContentType/Rename
         /// </summary>
         [HttpPost]
-        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => Real.Rename(appId, contentTypeId, attributeId, newName);
+        public void Rename(int appId, int contentTypeId, int attributeId, string newName) => SysHlp.Real.Rename(appId, contentTypeId, attributeId, newName);
 
 	}
 }

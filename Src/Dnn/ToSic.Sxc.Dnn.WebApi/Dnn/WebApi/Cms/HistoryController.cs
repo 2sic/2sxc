@@ -20,12 +20,12 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<ItemHistory> Get(int appId, [FromBody] ItemIdentifier item)
-            => Real.Get(appId, item);
+            => SysHlp.Real.Get(appId, item);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool Restore(int appId, int changeId, [FromBody] ItemIdentifier item) 
-            => Real.Restore(appId, changeId, item);
+            => SysHlp.Real.Restore(appId, changeId, item);
     }
 }

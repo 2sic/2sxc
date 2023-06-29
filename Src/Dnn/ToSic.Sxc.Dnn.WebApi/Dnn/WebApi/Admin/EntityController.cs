@@ -6,7 +6,6 @@ using System.Web.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
@@ -35,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) => Real.List(appId, contentType);
+        public IEnumerable<Dictionary<string, object>> List(int appId, string contentType) => SysHlp.Real.List(appId, contentType);
 
 
         /// <inheritdoc/>
@@ -43,7 +42,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Delete(string contentType, int appId, int? id = null, Guid? guid = null, bool force = false, int? parentId = null, string parentField = null)
-        => Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
+        => SysHlp.Real.Delete(contentType, appId, id, guid, force, parentId, parentField);
 
 
         /// <inheritdoc/>
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
-            return Real.Json(appId, id, prefix, withMetadata);
+            return SysHlp.Real.Json(appId, id, prefix, withMetadata);
         }
 
 
@@ -76,7 +75,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
-            return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
+            return SysHlp.Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
                 languageReferences, selectedIds);
         }
 
@@ -85,21 +84,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public ContentImportResultDto XmlPreview(ContentImportArgsDto args) => Real.XmlPreview(args);
+        public ContentImportResultDto XmlPreview(ContentImportArgsDto args) => SysHlp.Real.XmlPreview(args);
 
 
         /// <inheritdoc/>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public ContentImportResultDto XmlUpload(ContentImportArgsDto args) => Real.XmlUpload(args);
+        public ContentImportResultDto XmlUpload(ContentImportArgsDto args) => SysHlp.Real.XmlUpload(args);
 
 
         /// <inheritdoc/>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public bool Upload(EntityImportDto args) => Real.Upload(args);
+        public bool Upload(EntityImportDto args) => SysHlp.Real.Upload(args);
 
 
         ///// <inheritdoc/>

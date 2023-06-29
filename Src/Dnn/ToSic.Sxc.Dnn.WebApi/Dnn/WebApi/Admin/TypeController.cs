@@ -8,7 +8,6 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
@@ -44,7 +43,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false) => Real.List(appId, scope, withStatistics);
+        public IEnumerable<ContentTypeDto> List(int appId, string scope = null, bool withStatistics = false) => SysHlp.Real.List(appId, scope, withStatistics);
 
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public IDictionary<string, string> Scopes(int appId) => Real.Scopes(appId);
+        public IDictionary<string, string> Scopes(int appId) => SysHlp.Real.Scopes(appId);
 
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => Real.Get(appId, contentTypeId, scope);
+        public ContentTypeDto Get(int appId, string contentTypeId, string scope = null) => SysHlp.Real.Get(appId, contentTypeId, scope);
 
 
         /// <summary>
@@ -80,7 +79,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpDelete]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public bool Delete(int appId, string staticName) => Real.Delete(appId, staticName);
+        public bool Delete(int appId, string staticName) => SysHlp.Real.Delete(appId, staticName);
 
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         // 2019-11-15 2dm special change: item to be Dictionary<string, object> because in DNN 9.4
         // it causes problems when a content-type has metadata, where a value then is a deeper object
         // in future, the JS front-end should send something clearer and not the whole object
-        public bool Save(int appId, Dictionary<string, object> item) => Real.Save(appId, item);
+        public bool Save(int appId, Dictionary<string, object> item) => SysHlp.Real.Save(appId, item);
 
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool AddGhost(int appId, string sourceStaticName) => Real.AddGhost(appId, sourceStaticName);
+        public bool AddGhost(int appId, string sourceStaticName) => SysHlp.Real.AddGhost(appId, sourceStaticName);
 
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpPost]
         [ValidateAntiForgeryToken]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-        public void SetTitle(int appId, int contentTypeId, int attributeId) => Real.SetTitle(appId, contentTypeId, attributeId);
+        public void SetTitle(int appId, int contentTypeId, int attributeId) => SysHlp.Real.SetTitle(appId, contentTypeId, attributeId);
 
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
-            return Real.Json(appId, name);
+            return SysHlp.Real.Json(appId, name);
         }
 
 
@@ -155,7 +154,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public ImportResultDto Import(int zoneId, int appId)
         {
             SysHlp.PreventServerTimeout300();
-            return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
+            return SysHlp.Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
         }
 
         /// <summary>
@@ -172,7 +171,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
-            return Real.JsonBundleExport(appId, exportConfiguration, indentation);
+            return SysHlp.Real.JsonBundleExport(appId, exportConfiguration, indentation);
         }
     }
 }

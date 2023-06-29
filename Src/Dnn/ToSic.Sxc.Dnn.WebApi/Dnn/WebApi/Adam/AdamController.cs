@@ -28,38 +28,28 @@ namespace ToSic.Sxc.Dnn.WebApi
         [HttpPost]
         [HttpPut]
         public object Upload(int appId, string contentType, Guid guid, string field, [FromUri] string subFolder = "", bool usePortalRoot = false) 
-            => Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder, usePortalRoot);
+            => SysHlp.Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request), appId, contentType, guid, field, subFolder, usePortalRoot);
 
         // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
 
         [HttpGet]
         public IEnumerable</*AdamItemDto*/object> Items(int appId, string contentType, Guid guid, string field, string subfolder, bool usePortalRoot = false)
-            => Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
+            => SysHlp.Real.Items(appId, contentType, guid, field, subfolder, usePortalRoot);
 
 
         [HttpPost]
         public IEnumerable</*AdamItemDto*/object> Folder(int appId, string contentType, Guid guid, string field, string subfolder, string newFolder, bool usePortalRoot)
-            => Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
+            => SysHlp.Real.Folder(appId, contentType, guid, field, subfolder, newFolder, usePortalRoot);
 
 
         [HttpGet]
         public bool Delete(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, bool usePortalRoot)
-            => Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
+            => SysHlp.Real.Delete(appId, contentType, guid, field, subfolder, isFolder, id, usePortalRoot);
 
 
         [HttpGet]
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
-            => Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
+            => SysHlp.Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
 
-        // test method to provide a public API for accessing adam items easily
-        // not sure if it is ever used
-        // 2022-02-22 2dm - disabled
-        //[HttpGet]
-        //public IEnumerable<AdamItemDto> Items(string contentType, Guid guid, string field, string folder = "")
-        //{
-        //    // if app-path specified, use that app, otherwise use from context
-        //    const int AutoDetect = -1;
-        //    return Items(AutoDetect, contentType, guid, field, folder);
-        //}
     }
 }

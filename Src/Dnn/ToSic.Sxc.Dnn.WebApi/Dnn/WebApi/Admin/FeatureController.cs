@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-        public FeatureState Details(string nameId) => Real.Details(nameId);
+        public FeatureState Details(string nameId) => SysHlp.Real.Details(nameId);
 
         /// <summary>
         /// POST updated features JSON configuration.
@@ -31,6 +31,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         /// </remarks>
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-        public bool SaveNew([FromBody] List<FeatureManagementChange> changes) => Real.SaveNew(changes);
+        public bool SaveNew([FromBody] List<FeatureManagementChange> changes) => SysHlp.Real.SaveNew(changes);
     }
 }

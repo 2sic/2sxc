@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
-            return Real.Inspect(path, GetCompiledAssembly);
+            return SysHlp.Real.Inspect(path, GetCompiledAssembly);
         }
 
         private Assembly GetCompiledAssembly(string path)
