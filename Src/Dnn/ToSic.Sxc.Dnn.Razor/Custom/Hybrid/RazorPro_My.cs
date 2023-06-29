@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
@@ -10,7 +9,7 @@ using static System.StringComparer;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Razor16: ISetDynamicModel
+    public abstract partial class RazorPro: ISetDynamicModel
     {
         #region My... Stuff
 

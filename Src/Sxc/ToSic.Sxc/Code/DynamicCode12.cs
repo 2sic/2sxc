@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Custom.Hybrid;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Code
     /// Adds new properties and methods, and doesn't keep old / legacy APIs
     ///
     /// > [!TIP]
-    /// > This is an old base class and works, but you should use a newer one such as <see cref="Custom.Hybrid.Code16"/>
+    /// > This is an old base class and works, but you should use a newer one such as <see cref="CodePro"/>
     /// </summary>
     [PublicApi]
     public class DynamicCode12: DynamicCodeBase, IHasCodeLog, IDynamicCode, IDynamicCode12

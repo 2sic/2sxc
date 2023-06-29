@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Code.Help
     {
         internal const string IsNotSupportedIn12Plus = "is not supported in Razor12+";
 
-        internal const string IsNotSupportedIn16Plus = "is not supported in Razor16+ / Code16+";
+        internal const string IsNotSupportedIn16Plus = "is not supported in RazorPro / CodePro";
 
         internal static CodeHelp HelpNotExists12(string property, params string[] replacement) 
             => HelpNotExists((property, null), IsNotSupportedIn12Plus, replacement?.Select(r => (r, null as string)).ToArray());

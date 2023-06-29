@@ -6,7 +6,7 @@ using ToSic.Sxc.Data;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Razor16
+    public abstract partial class RazorPro
     {
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
 
@@ -20,7 +20,7 @@ namespace Custom.Hybrid
 
         #region AsEntity
         /// <inheritdoc/>
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
+        public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
         #endregion
 
     }

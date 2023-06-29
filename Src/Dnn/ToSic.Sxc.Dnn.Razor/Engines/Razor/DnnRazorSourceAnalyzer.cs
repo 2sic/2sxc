@@ -71,7 +71,8 @@ namespace ToSic.Sxc.Engines
         {
             { "Custom.Hybrid.Razor12", CodeFileTypes.V12 },
             { "Custom.Hybrid.Razor14", CodeFileTypes.V14 },
-            { "Custom.Hybrid.Razor16", CodeFileTypes.V16 }
+            { "Custom.Hybrid.Razor16", CodeFileTypes.V16 },
+            { "Custom.Hybrid.RazorPro", CodeFileTypes.V16 }
         };
     }
 }

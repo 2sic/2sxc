@@ -6,7 +6,7 @@ using ToSic.Sxc.Data;
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
-    public abstract partial class Razor16
+    public abstract partial class RazorPro
     {
 
         #region Temporary v16 objects which must get removed again

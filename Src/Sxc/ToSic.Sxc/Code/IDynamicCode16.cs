@@ -11,7 +11,7 @@ using ToSic.Sxc.Services;
 namespace ToSic.Sxc.Code
 {
     /// <summary>
-    /// Standard interface for all TypedCode such as Razor16 or WebApi16.
+    /// Standard interface for all TypedCode such as RazorPro or WebApiPro.
     /// Provides typed APIs to access Settings, Resources and more.
     /// </summary>
     [WorkInProgressApi("WIP 16.02")]
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Code
         #region AsEntity
 
         /// <inheritdoc cref="IDynamicCode.AsEntity" />
-        IEntity AsEntity(object dynamicEntity);
+        IEntity AsEntity(ICanBeEntity thing);
 
         #endregion
 
