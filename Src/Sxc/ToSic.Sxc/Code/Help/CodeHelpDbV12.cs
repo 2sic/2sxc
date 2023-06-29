@@ -52,7 +52,7 @@ You are probably trying to use the <code>Dnn</code> object which is not supporte
 ");
 
 
-        internal static CodeHelp ListNotExist12 = HelpNotExists("List", "AsDynamic(Data)");
+        internal static CodeHelp ListNotExist12 = HelpNotExists12("List", "AsDynamic(Data)");
 
         internal static CodeHelp ListObsolete12 =
             new CodeHelp(ListNotExist12, detect: "does not contain a definition for 'List'");
@@ -62,13 +62,13 @@ You are probably trying to use the <code>Dnn</code> object which is not supporte
             detect:
             @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments");
 
-        internal static CodeHelp ListContentNotExist12 = HelpNotExists("ListContent", "Header");
+        internal static CodeHelp ListContentNotExist12 = HelpNotExists12("ListContent", "Header");
 
         internal static CodeHelp ListPresentationNotExist12 =
-            HelpNotExists("ListPresentation", "Header.Presentation");
+            HelpNotExists12("ListPresentation", "Header.Presentation");
 
         internal static CodeHelp PresentationNotExist12 =
-            HelpNotExists("Presentation", "Content.Presentation");
+            HelpNotExists12("Presentation", "Content.Presentation");
 
 
         internal static List<CodeHelp> Compile12 = new List<CodeHelp>

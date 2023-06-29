@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code.Help
     public class CodeHelpDbV16
     {
         internal static CodeHelp ListNotExist16 =
-            HelpNotExists("List", false, "MyItems", "AsItems(MyData.Get())"); // TODO: NAMING NOT FINAL
+            HelpNotExistsPro("List", "MyItems", "AsItems(MyData.Get())"); // TODO: NAMING NOT FINAL
 
         internal static CodeHelp ListObsolete16 =
             new CodeHelp(ListNotExist16, detect: "does not contain a definition for 'List'");
@@ -16,21 +16,28 @@ namespace ToSic.Sxc.Code.Help
             detect:
             @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments");
 
-        internal static CodeHelp ListContentNotExist16 = HelpNotExists("ListContent", false, "MyHeader");
+        internal static CodeHelp ListContentNotExist16 = HelpNotExistsPro("ListContent", "MyHeader");
 
-        internal static CodeHelp ListPresentationNotExist16 = HelpNotExists("ListPresentation", false, "MyHeader.Presentation");
+        internal static CodeHelp ListPresentationNotExist16 = HelpNotExistsPro("ListPresentation", "MyHeader.Presentation");
 
-        internal static CodeHelp ContentNotExist16 = HelpNotExists("Content", false, "MyItem");
+        internal static CodeHelp ContentNotExist16 = HelpNotExistsPro("Content", "MyItem");
 
-        internal static CodeHelp ContentNotExist16Duplicate = HelpNotExists("Content", false, "You may prefer to use Razor14");
+        internal static CodeHelp ContentNotExist16Duplicate = HelpNotExistsPro("Content", "You may prefer to use Razor14");
 
-        internal static CodeHelp HeaderNotExist16 = HelpNotExists("Header", false, "MyHeader");
+        internal static CodeHelp HeaderNotExist16 = HelpNotExistsPro("Header", "MyHeader");
 
-        internal static CodeHelp SettingsNotExist16 = HelpNotExists("Settings", false, "App.Settings", "AllSettings");
+        internal static CodeHelp SettingsNotExist16 = HelpNotExistsPro("Settings", "App.Settings", "AllSettings");
 
-        internal static CodeHelp ResourcesNotExist16 = HelpNotExists("Resources", false, "App.Resources", "AllResources");
+        internal static CodeHelp ResourcesNotExist16 = HelpNotExistsPro("Resources", "App.Resources", "AllResources");
 
-        internal static CodeHelp PresentationNotExist16 = HelpNotExists("Presentation", false, "MyItem.Presentation");
+        internal static CodeHelp PresentationNotExist16 = HelpNotExistsPro("Presentation", "MyItem.Presentation");
+
+        internal static CodeHelp EditNotExist = HelpNotExistsPro("Edit",
+            ("Kit.Toolbar.Default()...", "to build a standard toolbar"),
+            ("Kit.Toolbar.Empty()...", "to start with an empty toolbar"),
+            ("CmsContext.User.IsContentAdmin", "to find out if edit is enabled"),
+            ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)"));
+
 
         internal static List<CodeHelp> Compile16 = new List<CodeHelp>
         {
@@ -75,6 +82,8 @@ namespace ToSic.Sxc.Code.Help
             // Settings / Resources
             SettingsNotExist16,
             ResourcesNotExist16,
+
+            EditNotExist,
         };
 
     }

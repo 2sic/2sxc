@@ -106,9 +106,11 @@ namespace ToSic.Sxc.Code.Help
         private static List<CodeHelp> FindManyOrNull(Exception ex, List<CodeHelp> errorList)
         {
             var msg = ex?.Message;
-            return msg == null ? null : errorList
+            if (msg.IsEmptyOrWs()) return null;
+            var list = errorList
                 .Where(help => help.DetectRegex ? Regex.IsMatch(msg, help.Detect) : msg.Contains(help.Detect))
                 .ToList();
+            return list.Any() ? list : null;
         }
 
     }
