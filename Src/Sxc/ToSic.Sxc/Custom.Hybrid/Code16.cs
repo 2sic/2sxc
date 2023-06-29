@@ -11,12 +11,13 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
+// ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
 {
     /// <summary>
-    /// Base class for v14 Dynamic Code files.
+    /// Base class for v16 Dynamic Code files.
     /// 
     /// Will provide the <see cref="ServiceKit14"/> on property `Kit`.
     /// This contains all the popular services used in v14/16, so that your code can be lighter. 
@@ -37,6 +38,9 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+
+        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
+        private TypedCode16Helper _codeHelper;
 
         #endregion
 
@@ -124,16 +128,16 @@ namespace Custom.Hybrid
         private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
         private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
-        /// <inheritdoc />
-        public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
+        ///// <inheritdoc />
+        //public ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
 
-        /// <inheritdoc />
-        public new ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
+        ///// <inheritdoc />
+        //public ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
 
         #region New App, Settings, Resources
 
         /// <inheritdoc />
-        public new IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
+        public IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
 
         /// <inheritdoc />
         public ITypedStack SettingsStack => _DynCodeRoot.Settings;
@@ -153,8 +157,6 @@ namespace Custom.Hybrid
 
         #region My... Stuff
 
-        private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
-        private TypedCode16Helper _codeHelper;
 
         private TypedCode16Helper CreateCodeHelper()
         {
