@@ -38,6 +38,7 @@ namespace ToSic.Sxc.Code.Help
             ("CmsContext.User.IsContentAdmin", "to find out if edit is enabled"),
             ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)"));
 
+        internal static CodeHelp AsAdamNotExist = HelpNotExistsPro(("AsAdam", "AsAdam isn't needed any more, since there is an easier syntax."), ("object.Folder(\"FieldName\")", "Use the Folder(...) method on an Item"));
 
         internal static List<CodeHelp> Compile16 = new List<CodeHelp>
         {
@@ -84,6 +85,7 @@ namespace ToSic.Sxc.Code.Help
             ResourcesNotExist16,
 
             EditNotExist,
+            AsAdamNotExist,
         };
 
     }
