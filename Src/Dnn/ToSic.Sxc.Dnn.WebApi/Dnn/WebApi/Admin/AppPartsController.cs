@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
@@ -46,7 +46,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId, int appId)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Import(uploadInfo: new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
         }
 

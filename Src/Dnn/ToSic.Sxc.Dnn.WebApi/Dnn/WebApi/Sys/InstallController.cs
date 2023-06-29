@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         private void PrepareResponseMaker()
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
         }
 
@@ -37,7 +37,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public InstallAppsDto InstallSettings(bool isContentApp) 
-            => Real.InstallSettings(isContentApp, ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo()));
+            => Real.InstallSettings(isContentApp, ((DnnModule)SysHlp.GetService<IModule>()).Init(Request.FindModuleInfo()));
 
 
         /// <inheritdoc />
@@ -46,9 +46,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT
         public HttpResponseMessage RemotePackage(string packageUrl)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             PrepareResponseMaker();
-            return Real.RemotePackage(packageUrl, ((DnnModule)GetService<IModule>()).Init(ActiveModule));
+            return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule));
         }
     }
 }

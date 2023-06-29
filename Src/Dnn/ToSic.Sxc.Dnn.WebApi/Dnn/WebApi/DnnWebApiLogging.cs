@@ -47,6 +47,8 @@ namespace ToSic.Sxc.Dnn.WebApi
                 var logSpecs = new SpecsForLogHistory()
                     .BuildSpecsForLogHistory(block, app, entry: entry, addView: false);
 
+                logSpecs["Url"] = HttpContext.Current?.Request.Url.AbsoluteUri;
+
                 LogStoreEntry.UpdateSpecs(logSpecs);
                 codeInfos.AddContext(() => logSpecs, entryPoint: entry);
             }

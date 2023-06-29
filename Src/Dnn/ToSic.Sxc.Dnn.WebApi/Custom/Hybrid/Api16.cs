@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using ToSic.Eav;
 using ToSic.Eav.Code.InfoSystem;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
@@ -47,7 +48,7 @@ namespace Custom.Hybrid
 
         #endregion
 
-        private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
+        private CodeInfoService CcS => _ccs.Get(SysHlp.GetService<CodeInfoService>);
         private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
         ///// <inheritdoc />
@@ -114,6 +115,8 @@ namespace Custom.Hybrid
         #endregion
 
         public ITypedModel MyModel => CodeHelper.MyModel;
+
+        public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
 
         /// <inheritdoc />
         public ITypedRead Read(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);

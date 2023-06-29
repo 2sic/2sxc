@@ -6,10 +6,6 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
-using static ToSic.Eav.Parameters;
-using System;
-using ToSic.Eav.DataSource;
-using ToSic.Eav.DataSources;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid

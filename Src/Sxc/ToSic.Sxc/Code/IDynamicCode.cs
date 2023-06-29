@@ -24,11 +24,12 @@ namespace ToSic.Sxc.Code
     public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
     {
         /// <summary>
-        /// Get a service from the EAV / 2sxc Dependency Injection. 
+        /// Get a service from the Dependency Injection.
+        /// The service can come from 2sxc, EAV or the underlying platform (Dnn, Oqtane).
         /// </summary>
         /// <typeparam name="TService">Interface (preferred) or Class which is needed</typeparam>
-        /// <returns>An object of the type or interface requested</returns>
         /// <remarks>Added in 2sxc 11.11</remarks>
+        /// <returns>An object of the type or interface requested, or null if not found in the DI.</returns>
         TService GetService<TService>();
 
         /// <summary>

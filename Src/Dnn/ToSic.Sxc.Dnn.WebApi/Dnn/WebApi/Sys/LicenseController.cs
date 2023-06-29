@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [ValidateAntiForgeryToken]
         public LicenseFileResultDto Upload()
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request));
         }
 
@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [HttpGet]
         public LicenseFileResultDto Retrieve()
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Retrieve();
         }
     }

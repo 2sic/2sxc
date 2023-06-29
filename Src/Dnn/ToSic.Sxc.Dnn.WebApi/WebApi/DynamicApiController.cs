@@ -67,7 +67,7 @@ namespace ToSic.Sxc.WebApi
         protected DynamicApiController() : base("DynApi") { }
         protected DynamicApiController(string logSuffix): base(logSuffix) { }
 
-        private MyServices Services => _depsGetter.Get(() => GetService<MyServices>().ConnectServices(Log));
+        private MyServices Services => _depsGetter.Get(() => SysHlp.GetService<MyServices>().ConnectServices(Log));
         private readonly GetOnce<MyServices> _depsGetter = new GetOnce<MyServices>();
 
         #endregion
@@ -96,8 +96,10 @@ namespace ToSic.Sxc.WebApi
             _DynCodeRoot = Services.DnnCodeRootFactory
                 .BuildDynamicCodeRoot(this)
                 .InitDynCodeRoot(block, Log, compatibilityLevel);
-            _AdamCode = GetService<AdamCode>();
-            _AdamCode.ConnectToRoot(_DynCodeRoot, Log);
+
+            SysHlp.ConnectToRoot(_DynCodeRoot);
+
+            _AdamCode = _DynCodeRoot.GetService<AdamCode>();
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)
@@ -116,21 +118,12 @@ namespace ToSic.Sxc.WebApi
 
             // 16.02 - try to log more details about the current API call
             var currentPath = reqProperties.TryGetTyped(CodeCompiler.SharedCodeRootFullPathKeyInCache, out string p2) ? p2.AfterLast("/") : null;
-            WebApiLogging?.AddLogSpecs(block, _DynCodeRoot.App, currentPath, GetService<CodeInfosInScope>());
+            SysHlp.WebApiLogging?.AddLogSpecs(block, _DynCodeRoot.App, currentPath, SysHlp.GetService<CodeInfosInScope>());
 
         }
 
-        /// <summary>
-        /// Get a service of a specified type. 
-        /// </summary>
-        /// <typeparam name="TService"></typeparam>
-        /// <returns></returns>
-        /// <remarks>
-        /// This will override the base functionality to ensure that any services created will be able to get the CodeContext.
-        /// </remarks>
-        public override TService GetService<TService>() => _DynCodeRoot != null 
-                ? _DynCodeRoot.GetService<TService>()
-                : base.GetService<TService>();          // If the CodeRoot isn't ready, use standard functionality
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}"/>
+        public virtual TService GetService<TService>() => SysHlp.GetService<TService>();
 
 
         [PrivateApi]

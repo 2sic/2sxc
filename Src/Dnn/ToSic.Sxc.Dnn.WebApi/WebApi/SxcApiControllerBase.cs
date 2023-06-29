@@ -23,13 +23,13 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            SharedContextResolver = GetService<IContextResolver>();
+            SharedContextResolver = SysHlp.GetService<IContextResolver>();
             SharedContextResolver.AttachBlock(GetBlockAndContext());
         }
 
         protected IContextResolver SharedContextResolver;
 
-        [PrivateApi] protected BlockWithContextProvider GetBlockAndContext() => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(Request));
+        [PrivateApi] protected BlockWithContextProvider GetBlockAndContext() => _blcCtx.Get(() => SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request));
         private readonly GetOnce<BlockWithContextProvider> _blcCtx = new GetOnce<BlockWithContextProvider>();
 
     }

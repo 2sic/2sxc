@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Inspect(string path)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Inspect(path, GetCompiledAssembly);
@@ -34,7 +34,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var controllerVirtualPath =
                 Path.Combine(
-                    GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, GetService<ISite>()), 
+                    SysHlp.GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, SysHlp.GetService<ISite>()), 
                     path);
 
             Log.A($"Controller Virtual Path: {controllerVirtualPath}");

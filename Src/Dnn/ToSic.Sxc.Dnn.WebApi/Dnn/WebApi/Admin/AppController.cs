@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Reset(zoneId, appId, PortalSettings.DefaultLanguage, withPortalFiles);
         }
 
@@ -107,7 +107,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, HttpContext.Current.Request["Name"]);
         }
 
@@ -125,7 +125,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto InstallPendingApps(int zoneId, IEnumerable<PendingAppDto> pendingApps)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.InstallPendingApps(zoneId, pendingApps);
         }
     }

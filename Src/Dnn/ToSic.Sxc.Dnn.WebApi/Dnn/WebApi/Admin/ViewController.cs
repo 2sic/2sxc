@@ -52,7 +52,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Json(int appId, int viewId)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Json(appId, viewId);
@@ -64,7 +64,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId, int appId)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
         }
 
