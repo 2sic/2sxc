@@ -45,7 +45,7 @@ namespace Custom.Hybrid
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) =>  _DynCodeRoot.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) =>  _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
 
         /// <inheritdoc />
         [PublicApi("Careful - still Experimental in 12.02")]

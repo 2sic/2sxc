@@ -6,19 +6,18 @@ using System.Web.WebPages;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;
-using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
-    public class RazorHelper: ServiceForDynamicCode
+    public class RazorHelper: CodeHelperBase
     {
         #region Constructor / Init
 
@@ -37,15 +36,15 @@ namespace ToSic.Sxc.Web
         public RazorComponentBase Page { get; private set; }
         private Func<string, object[], HelperResult> _renderPage;
 
-        public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            // Do base work
-            base.ConnectToRoot(codeRoot);
-            var l = Log.Fn(message: "connected");
-            // Make sure the Code-Log is reset, in case it was used before this call
-            _codeLog.Reset();
-            l.Done();
-        }
+        //public override void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        //{
+        //    // Do base work
+        //    base.ConnectToRoot(codeRoot);
+        //    var l = Log.Fn(message: "connected");
+        //    // Make sure the Code-Log is reset, in case it was used before this call
+        //    _codeLog.Reset();
+        //    l.Done();
+        //}
 
         #endregion
 
@@ -78,10 +77,10 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
-        #region CodeLog / Html Helper
+        #region Html Helper
 
-        public ICodeLog CodeLog => _codeLog.Get(() => new CodeLog(Log));
-        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
+        //public ICodeLog CodeLog => _codeLog.Get(() => new CodeLog(Log));
+        //private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
 
 
         public IHtmlHelper Html => _html ?? (_html = _DynCodeRoot.GetService<HtmlHelper>().Init(Page, this, _DynCodeRoot.Block?.Context.User.IsSystemAdmin ?? false, _renderPage));
@@ -130,7 +129,7 @@ namespace ToSic.Sxc.Web
                     uiMessage: "CreateInstance(*.cshtml) is not supported in Hybrid Razor. Use .cs files instead."));
             var pageAsCode = WebPageBase.CreateInstanceFromVirtualPath(path);
             var pageAsRcb = pageAsCode as RazorComponentBase;
-            pageAsRcb?.RazorHelper.ConfigurePage(Page, pageAsRcb.VirtualPath);
+            pageAsRcb?.SysHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);
             return pageAsCode;
         }
 

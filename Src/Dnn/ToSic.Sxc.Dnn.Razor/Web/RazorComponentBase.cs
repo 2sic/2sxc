@@ -18,22 +18,28 @@ namespace ToSic.Sxc.Web
     [PrivateApi("internal class only!")]
     public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasCodeLog, IHasLog, IRazor, IDnnRazorCompatibility
     {
+        #region Constructor / Setup
+
         /// <summary>
         /// Special helper to move all Razor logic into a separate class.
         /// For architecture of Composition over Inheritance.
         /// </summary>
         [PrivateApi]
-        protected internal RazorHelper RazorHelper => _razorHelper ?? (_razorHelper = new RazorHelper().Init(this, (path, data) => base.RenderPage(path, data)));
-        private RazorHelper _razorHelper;
+        internal RazorHelper SysHlp => _sysHlp ?? (_sysHlp = new RazorHelper().Init(this, (path, data) => base.RenderPage(path, data)));
+        private RazorHelper _sysHlp;
 
-        public IHtmlHelper Html => RazorHelper.Html;
 
+        /// <inheritdoc />
         [PrivateApi]
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }
 
         /// <inheritdoc />
-        public string Path => VirtualPath;
-
+        [PrivateApi]
+        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
+        {
+            SysHlp.ConnectToRoot(codeRoot);
+            _DynCodeRoot = codeRoot;
+        }
 
         /// <summary>
         /// Override the base class ConfigurePage, and additionally update internal objects so sub-pages work just like the master
@@ -43,8 +49,30 @@ namespace ToSic.Sxc.Web
         protected override void ConfigurePage(WebPageBase parentPage)
         {
             base.ConfigurePage(parentPage);
-            RazorHelper.ConfigurePage(parentPage, VirtualPath);
+            SysHlp.ConfigurePage(parentPage, VirtualPath);
         }
+
+        #endregion
+
+        #region IHasLog
+
+        /// <inheritdoc />
+        public ICodeLog Log => SysHlp.CodeLog;
+
+        /// <summary>
+        /// EXPLICIT Log implementation (to ensure that new IHasLog.Log interface is implemented)
+        /// </summary>
+        [PrivateApi] ILog IHasLog.Log => SysHlp.Log;
+
+        #endregion
+
+
+        /// <inheritdoc />
+        public IHtmlHelper Html => SysHlp.Html;
+
+        /// <inheritdoc />
+        public string Path => VirtualPath;
+
 
         #region Compile Helpers
 
@@ -54,32 +82,11 @@ namespace ToSic.Sxc.Web
         /// Creates instances of the shared pages with the given relative path
         /// </summary>
         /// <returns></returns>
-        public dynamic CreateInstance(string virtualPath,
-            string noParamOrder = Protector,
-            string name = null,
-            string relativePath = null,
-            bool throwOnError = true) =>
-            RazorHelper.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 
-        #region IHasLog
-
-        /// <inheritdoc />
-        public ICodeLog Log => RazorHelper.CodeLog; 
-
-        /// <summary>
-        /// EXPLICIT Log implementation (to ensure that new IHasLog.Log interface is implemented)
-        /// </summary>
-        [PrivateApi] ILog IHasLog.Log => RazorHelper.Log;
-
-        #endregion
-
-        public void ConnectToRoot(IDynamicCodeRoot codeRoot)
-        {
-            RazorHelper.ConnectToRoot(codeRoot);
-            _DynCodeRoot = codeRoot;
-        }
         
     }
 }

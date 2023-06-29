@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using ToSic.Lib.Logging;
+﻿using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Code
 {
@@ -16,8 +14,7 @@ namespace ToSic.Sxc.Code
             bool throwOnError = true)
         {
             var wrap = Log.Fn<object>($"{virtualPath}, {name}, {relativePath}, {throwOnError}");
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, "CreateInstance",
-                $"{nameof(name)},{nameof(throwOnError)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(name)},{nameof(throwOnError)}");
 
             // Compile
             var compiler = Services.CodeCompilerLazy.Value;

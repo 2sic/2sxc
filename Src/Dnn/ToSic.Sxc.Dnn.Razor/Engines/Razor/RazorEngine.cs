@@ -112,7 +112,7 @@ namespace ToSic.Sxc.Engines
             {
                 throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
             }
-            return l.Return((writer, page.RazorHelper.ExceptionsOrNull));
+            return l.Return((writer, page.SysHlp.ExceptionsOrNull));
         }
 
         [PrivateApi]

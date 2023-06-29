@@ -63,11 +63,7 @@ namespace ToSic.Sxc.Dnn
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
-
-        ///// <inheritdoc />
-        //[PublicApi("Careful - still Experimental in 12.02")]
-        //public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
 
         /// <inheritdoc />
         public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);

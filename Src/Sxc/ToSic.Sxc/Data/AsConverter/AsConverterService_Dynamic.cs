@@ -36,7 +36,7 @@ namespace ToSic.Sxc.Data.AsConverter
         }
 
 
-        internal object AsDynamicInternal(object dynObject)
+        public object AsDynamicInternal(object dynObject)
         {
             var l = Log.Fn<object>();
             var typed = AsTypedInternal(dynObject);

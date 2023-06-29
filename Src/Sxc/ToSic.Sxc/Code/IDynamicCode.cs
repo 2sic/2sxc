@@ -167,6 +167,7 @@ namespace ToSic.Sxc.Code
 
 
         #region Create Data Sources
+
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
         /// </summary>
@@ -184,6 +185,7 @@ namespace ToSic.Sxc.Code
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
+
         #endregion
 
 

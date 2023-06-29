@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
+using ToSic.Eav.Run;
 using ToSic.Lib.Documentation;
-using ToSic.Sxc.Adam;
+using ToSic.Lib.Logging;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
@@ -14,27 +15,44 @@ namespace ToSic.Sxc.Code
     /// Provides typed APIs to access Settings, Resources and more.
     /// </summary>
     [WorkInProgressApi("WIP 16.02")]
-    public interface IDynamicCode16
+    public interface IDynamicCode16 : ICreateInstance, ICompatibilityLevel, IHasLog
     {
         #region Stuff basically inherited from v12/14
 
-        /// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.GetService{TService}"/>
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}"/>
         TService GetService<TService>();
 
-        /// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.AsAdam"/>
-        IFolder AsAdam(ICanBeEntity item, string fieldName);
+        ///// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.AsAdam"/>
+        //IFolder AsAdam(ICanBeEntity item, string fieldName);
 
-        /// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.Link"/>
+        /// <inheritdoc cref="IDynamicCode.Link"/>
         ILinkService Link { get; }
 
-        /// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.Edit"/>
-        IEditService Edit { get; }
+        ///// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.Edit"/>
+        //IEditService Edit { get; }
+
+        ///// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.CmsContext"/>
+        //ICmsContext CmsContext { get; }
+
+        #endregion
+
+        #region Moving Properties
 
         /// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.CmsContext"/>
-        ICmsContext CmsContext { get; }
+        ICmsContext MyContext { get; }
+
 
 
         #endregion
+
+        #region AsEntity
+
+        /// <inheritdoc cref="IDynamicCode.AsEntity" />
+        IEntity AsEntity(object dynamicEntity);
+
+        #endregion
+
+
 
         #region from V16 WIP
 
@@ -67,6 +85,10 @@ namespace ToSic.Sxc.Code
         ITypedStack ResourcesStack { get; }
 
         ITypedStack SettingsStack { get; }
+
+        ITypedStack SysResources { get; }
+
+        ITypedStack SysSettings{ get; }
 
         /// <summary>
         /// Convert something to a <see cref="ITypedItem"/>.

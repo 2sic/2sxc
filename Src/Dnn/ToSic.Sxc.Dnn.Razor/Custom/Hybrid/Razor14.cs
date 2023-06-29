@@ -31,7 +31,7 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
         public override HelperResult RenderPage(string path, params object[] data)
-            => RazorHelper.RenderPageNotSupported();
+            => SysHlp.RenderPageNotSupported();
 
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;

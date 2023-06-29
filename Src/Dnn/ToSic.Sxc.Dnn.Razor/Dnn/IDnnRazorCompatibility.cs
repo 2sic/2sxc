@@ -8,7 +8,8 @@ namespace ToSic.Sxc.Dnn
     public interface IDnnRazorCompatibility
     {
         /// <summary>
-        /// Helper for Html.Raw - for creating raw html output which doesn't encode &gt; and &lt;
+        /// Helper for Html.Raw - for creating raw html output which doesn't encode &gt; and &lt;.
+        /// Also has helpers such as `.Partial(...)`
         /// </summary>
         IHtmlHelper Html { get; }
 

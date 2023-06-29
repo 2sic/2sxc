@@ -50,7 +50,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [NonAction]
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsDynamic(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicInternal(dynamicEntity);
 
         /// <inheritdoc />
         [NonAction]
@@ -159,6 +159,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
+        public ICmsContext MyContext => _DynCodeRoot?.CmsContext;
 
         /// <inheritdoc />
         public dynamic Resources => _DynCodeRoot.Resources;

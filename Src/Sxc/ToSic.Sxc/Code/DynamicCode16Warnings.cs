@@ -18,5 +18,8 @@ namespace ToSic.Sxc.Code
 
         public static ICodeInfo NoTypedModel = Warn("no-typed-model",
             message: "Don't use TypedModel - use new MyModel");
+
+        public static ICodeInfo NoCmsContext = Warn("no-cms-context",
+            message: "Don't use CmsContext - use new MyContext");
     }
 }

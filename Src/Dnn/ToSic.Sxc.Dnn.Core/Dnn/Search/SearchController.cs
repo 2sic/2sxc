@@ -26,7 +26,6 @@ using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Engines;
 using static System.StringComparer;
-using DynamicCode = ToSic.Sxc.Code.DynamicCode;
 
 
 // ReSharper disable once CheckNamespace
@@ -338,7 +337,7 @@ namespace ToSic.Sxc.Search
             if (!(instance is ICustomizeSearch customizeSearch)) return (null, "exit, class do not implements ICustomizeSearch");
 
             // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
-            if (instance is DynamicCode instanceWithContext)
+            if (instance is INeedsDynamicCodeRoot instanceWithContext)
             {
                 Log.A($"attach DynamicCode context to class instance");
                 var parentDynamicCodeRoot = _dnnDynamicCodeRoot.New().InitDynCodeRoot(block, Log, Constants.CompatibilityLevel10);

@@ -51,6 +51,12 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
 
+        /// <inheritdoc />
+        public ITypedStack SysSettings => _DynCodeRoot.Settings;
+
+        /// <inheritdoc />
+        public ITypedStack SysResources => _DynCodeRoot.Resources;
+
         #endregion
 
         #region My... Stuff

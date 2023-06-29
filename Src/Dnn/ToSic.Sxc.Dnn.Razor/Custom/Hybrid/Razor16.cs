@@ -32,7 +32,7 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
         public override HelperResult RenderPage(string path, params object[] data)
-            => RazorHelper.RenderPageNotSupported();
+            => SysHlp.RenderPageNotSupported();
 
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel16;
@@ -49,8 +49,8 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public ILinkService Link => _DynCodeRoot.Link;
 
-        /// <inheritdoc />
-        public IEditService Edit => _DynCodeRoot.Edit;
+        ///// <inheritdoc />
+        //public IEditService Edit => _DynCodeRoot.Edit;
 
         #endregion
 
@@ -66,6 +66,12 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
 
+        /// <inheritdoc />
+        public ITypedStack SysSettings => _DynCodeRoot.Settings;
+
+        /// <inheritdoc />
+        public ITypedStack SysResources => _DynCodeRoot.Resources;
+
         #endregion
 
 
@@ -73,6 +79,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+        public ICmsContext MyContext => _DynCodeRoot.CmsContext;
 
         #endregion
 

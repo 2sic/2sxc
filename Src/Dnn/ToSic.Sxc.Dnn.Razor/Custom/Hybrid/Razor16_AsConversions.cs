@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Data;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 
 // ReSharper disable once CheckNamespace
@@ -19,8 +18,10 @@ namespace Custom.Hybrid
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
             => _DynCodeRoot.AsC.AsItems(list);
 
-        /// <inheritdoc />
-        public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsC.Folder(item, fieldName);
+        #region AsEntity
+        /// <inheritdoc/>
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
+        #endregion
 
     }
 
