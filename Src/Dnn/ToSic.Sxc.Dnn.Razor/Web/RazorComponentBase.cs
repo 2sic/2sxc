@@ -4,7 +4,6 @@ using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
-using static ToSic.Eav.Parameters;
 using IHasLog = ToSic.Lib.Logging.IHasLog;
 using ILog = ToSic.Lib.Logging.ILog;
 
@@ -16,7 +15,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, ICreateInstance, IHasCodeLog, IHasLog, IRazor, IDnnRazorCompatibility
+    public abstract class RazorComponentBase: WebPageBase, IRazor, ICreateInstance, IHasCodeLog, IHasLog, IDnnRazorCompatibility
     {
         #region Constructor / Setup
 
@@ -54,39 +53,34 @@ namespace ToSic.Sxc.Web
 
         #endregion
 
-        #region IHasLog
-
-        /// <inheritdoc />
-        public ICodeLog Log => SysHlp.CodeLog;
+        #region Secret Stuff like IHasLog or Compile Helpers
 
         /// <summary>
         /// EXPLICIT Log implementation (to ensure that new IHasLog.Log interface is implemented)
         /// </summary>
         [PrivateApi] ILog IHasLog.Log => SysHlp.Log;
 
-        #endregion
-
-
-        /// <inheritdoc />
-        public IHtmlHelper Html => SysHlp.Html;
+        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
 
         /// <inheritdoc />
         public string Path => VirtualPath;
 
 
-        #region Compile Helpers
+        #endregion
 
-        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
+        #region Core Properties which should appear in docs
 
-        /// <summary>
-        /// Creates instances of the shared pages with the given relative path
-        /// </summary>
-        /// <returns></returns>
-        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
+        /// <inheritdoc />
+        public virtual ICodeLog Log => SysHlp.CodeLog;
+
+        /// <inheritdoc />
+        public virtual IHtmlHelper Html => SysHlp.Html;
+
+        /// <inheritdoc />
+        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
             => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 
-        
     }
 }

@@ -8,6 +8,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Code;
@@ -28,6 +29,21 @@ namespace ToSic.Sxc.Dnn
     {
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
+
+        #region Core Properties which should appear in docs
+
+        /// <inheritdoc />
+        public override ICodeLog Log => SysHlp.CodeLog;
+
+        /// <inheritdoc />
+        public override IHtmlHelper Html => SysHlp.Html;
+
+        /// <inheritdoc />
+        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+
+        #endregion
+
 
         #region CustomizeSearch corrections
 

@@ -111,7 +111,6 @@ namespace ToSic.Sxc.Engines.Razor
         private string TryToLogAndReWrapError(Exception renderException, string path, bool reportToDnn, string additionalLog = null)
         {
             // Important to know: Once this fires, the page will stop rendering more templates
-            IsError = true;
             if (reportToDnn) _page.Log?.GetContents().Ex(renderException);
             if (additionalLog != null) _page.Log?.GetContents().A(additionalLog);
 
@@ -130,7 +129,6 @@ namespace ToSic.Sxc.Engines.Razor
             return nice;
         }
 
-        [PrivateApi] public bool IsError;
         private HashSet<string> _errorPaths;
 
         private bool ThrowPartialError => _throwPartialError.Get(()

@@ -11,6 +11,7 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 
@@ -44,8 +45,21 @@ namespace Custom.Hybrid
         public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
         private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
 
-        ///// <inheritdoc />
-        //public string Path => VirtualPath;
+
+        #region Core Properties which should appear in docs
+
+        /// <inheritdoc />
+        public override ICodeLog Log => SysHlp.CodeLog;
+
+        /// <inheritdoc />
+        public override IHtmlHelper Html => SysHlp.Html;
+
+        /// <inheritdoc />
+        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+
+        #endregion
+
 
         #region Link, Edit
 

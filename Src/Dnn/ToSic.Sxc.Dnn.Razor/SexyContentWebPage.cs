@@ -47,6 +47,20 @@ namespace ToSic.SexyContent.Razor
         IAppAndDataHelpers
 #pragma warning restore 618
     {
+        #region Core Properties which should appear in docs
+
+        /// <inheritdoc />
+        public override ICodeLog Log => SysHlp.CodeLog;
+
+        /// <inheritdoc />
+        public override IHtmlHelper Html => SysHlp.Html;
+
+        /// <inheritdoc />
+        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+
+        #endregion
+
         #region Helpers linked through AppAndData Helpers
 
         public ILinkService Link => _DynCodeRoot.Link;

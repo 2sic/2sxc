@@ -6,10 +6,12 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Adam;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
 using IApp = ToSic.Sxc.Apps.IApp;
@@ -30,6 +32,20 @@ namespace Custom.Hybrid
         [PrivateApi]
         public override HelperResult RenderPage(string path, params object[] data) 
             => SysHlp.RenderPageNotSupported();
+
+        #region Core Properties which should appear in docs
+
+        /// <inheritdoc />
+        public override ICodeLog Log => SysHlp.CodeLog;
+
+        /// <inheritdoc />
+        public override IHtmlHelper Html => SysHlp.Html;
+
+        /// <inheritdoc />
+        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+
+        #endregion
 
 
         #region Link, Edit, Dnn, App, Data
