@@ -16,34 +16,34 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public EntityInListDto Header(Guid guid) 
-            => SysHlp.Real.Header(guid);
+            => Real.Header(guid);
 
 
         // TODO: shouldn't be part of ContentGroupController any more, as it's generic now
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public void Replace(Guid guid, string part, int index, int entityId, bool add = false)
-            => SysHlp.Real.Replace(guid, part, index, entityId, add);
+            => Real.Replace(guid, part, index, entityId, add);
 
 
         // TODO: WIP changing this from ContentGroup editing to any list editing
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public ReplacementListDto Replace(Guid guid, string part, int index)
-            => SysHlp.Real.Replace(guid, part, index);
+            => Real.Replace(guid, part, index);
 
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public List<EntityInListDto> ItemList(Guid guid, string part)
-            => SysHlp.Real.ItemList(guid, part);
+            => Real.ItemList(guid, part);
 
 
         // TODO: part should be handed in with all the relevant names! atm it's "content" in the content-block scenario
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
         public bool ItemList([FromUri] Guid guid, List<EntityInListDto> list, [FromUri] string part = null)
-            => SysHlp.Real.ItemList(guid, list, part);
+            => Real.ItemList(guid, list, part);
 
     }
 }

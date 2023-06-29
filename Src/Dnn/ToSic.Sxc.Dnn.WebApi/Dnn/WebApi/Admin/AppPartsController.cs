@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         [ValidateAntiForgeryToken]
-        public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => SysHlp.Real.Get(zoneId: zoneId, appId: appId, scope: scope);
+        public ExportPartsOverviewDto Get(int zoneId, int appId, string scope) => Real.Get(zoneId: zoneId, appId: appId, scope: scope);
 
 
         /// <inheritdoc />
@@ -35,7 +35,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
-            return SysHlp.Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
+            return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
                 entityIdsString: entityIdsString, templateIdsString: templateIdsString);
         }
 
@@ -47,7 +47,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public ImportResultDto Import(int zoneId, int appId)
         {
             SysHlp.PreventServerTimeout300();
-            return SysHlp.Real.Import(uploadInfo: new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
+            return Real.Import(uploadInfo: new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
         }
 
         #endregion

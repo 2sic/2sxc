@@ -5,27 +5,23 @@ using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.WebApi;
 
 namespace ToSic.Sxc.WebApi
 {
-    internal class DnnWebApiHelper<TRealController> : CodeHelperBase where TRealController : class, IHasLog
+    internal class DnnWebApiHelper : CodeHelperBase
     {
 
         #region Constructor / Init
 
-        public DnnWebApiHelper(DnnApiControllerWithFixes<TRealController> apiController, string historyLogGroup) : base("Sxc.RzrHlp")
+        public DnnWebApiHelper(IHasLog apiController, string historyLogGroup) : base("Sxc.RzrHlp")
         {
-            _apiController = apiController;
-            _historyLogGroup = historyLogGroup;
-            this.LinkLog(_apiController.Log);
-            WebApiLogging = new DnnWebApiLogging(_apiController.Log, GetService<ILogStore>(), historyLogGroup);
+            this.LinkLog(apiController.Log);
+            WebApiLogging = new DnnWebApiLogging(apiController.Log, GetService<ILogStore>(), historyLogGroup);
         }
-
-        private readonly DnnApiControllerWithFixes<TRealController> _apiController;
-        private readonly string _historyLogGroup;
 
         #endregion
 
@@ -68,14 +64,20 @@ namespace ToSic.Sxc.WebApi
         public void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
 
 
-        /// <summary>
-        /// The RealController which is the full backend of this controller.
-        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
-        /// </summary>
-        public TRealController Real
-            => _real.Get(() => GetService<TRealController>()
-                               ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
-        private readonly GetOnce<TRealController> _real = new GetOnce<TRealController>();
+        ///// <summary>
+        ///// The RealController which is the full backend of this controller.
+        ///// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
+        ///// </summary>
+        //public TRealController Real
+        //    => _real.Get(() => GetService<TRealController>()
+        //                       ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
+        //private readonly GetOnce<TRealController> _real = new GetOnce<TRealController>();
+
+
+        public BlockWithContextProvider GetBlockAndContext(HttpRequestMessage request) 
+            => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(request));
+        private readonly GetOnce<BlockWithContextProvider> _blcCtx = new GetOnce<BlockWithContextProvider>();
+
 
     }
 }

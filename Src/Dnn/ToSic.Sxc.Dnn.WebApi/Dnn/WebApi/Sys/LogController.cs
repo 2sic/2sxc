@@ -20,6 +20,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
 
         /// <inheritdoc />
         [HttpGet]
-        public string EnableDebug(int duration = 1) => SysHlp.Real.EnableDebug(DnnLogging.ActivateForDuration, duration);
+        public string EnableDebug(int duration = 1) => Real.EnableDebug(DnnLogging.ActivateForDuration, duration);
     }
 }

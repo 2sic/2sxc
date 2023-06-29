@@ -1,8 +1,10 @@
-﻿using System.Web.Http.Controllers;
+﻿using System;
+using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
@@ -21,7 +23,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         {
             Log = new Log("Api." + logSuffix);
             // ReSharper disable once VirtualMemberCallInConstructor
-            SysHlp = new DnnWebApiHelper<TRealController>(this, HistoryLogGroup);
+            SysHlp = new DnnWebApiHelper(this, HistoryLogGroup);
         }
 
         /// <summary>
@@ -29,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// For architecture of Composition over Inheritance.
         /// </summary>
         [PrivateApi]
-        internal DnnWebApiHelper<TRealController> SysHlp { get; }
+        internal DnnWebApiHelper SysHlp { get; }
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {
@@ -54,5 +56,15 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// Helps group various calls by use case. 
         /// </summary>
         protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
+
+        /// <summary>
+        /// The RealController which is the full backend of this controller.
+        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
+        /// </summary>
+        internal TRealController Real
+            => _real.Get(() => SysHlp.GetService<TRealController>()
+                               ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
+        private readonly GetOnce<TRealController> _real = new GetOnce<TRealController>();
+
     }
 }

@@ -25,14 +25,14 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous]   // will check security internally, so assume no requirements
         public EditDto Load([FromBody] List<ItemIdentifier> items, int appId) 
-            => Log.Func(() => SysHlp.Real.Load(items, appId));
+            => Log.Func(() => Real.Load(items, appId));
 
         /// <inheritdoc />
         [HttpPost]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         [AllowAnonymous] // will check security internally, so assume no requirements
         public Dictionary<Guid, int> Save([FromBody] EditDto package, int appId, bool partOfPage)
-            => Log.Func(() => SysHlp.Real.Save(package, appId, partOfPage));
+            => Log.Func(() => Real.Save(package, appId, partOfPage));
 
 
         /// <inheritdoc />
@@ -43,19 +43,19 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
             [FromUri] int appId,
             [FromBody] string[] items,
             [FromUri] string contentTypeName = null)
-            => SysHlp.Real.EntityPicker(appId, items, contentTypeName);
+            => Real.EntityPicker(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public LinkInfoDto LinkInfo(string link, int appId, string contentType = default, Guid guid = default,
             string field = default)
-            => SysHlp.Real.LinkInfo(link, appId, contentType, guid, field);
+            => Real.LinkInfo(link, appId, contentType, guid, field);
 
         /// <inheritdoc />
         [HttpPost]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]
         public bool Publish(int id)
-            => SysHlp.Real.Publish(id);
+            => Real.Publish(id);
     }
 }

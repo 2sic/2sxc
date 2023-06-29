@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// </summary>
         [HttpPost]
         public void Move(Guid? parent, string fields, int index, int toIndex)
-            => SysHlp.Real.Move(parent, fields, index, toIndex);
+            => Real.Move(parent, fields, index, toIndex);
 
 
         /// <inheritdoc />
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         /// </summary>
         [HttpDelete]
         public void Delete(Guid? parent, string fields, int index)
-            => SysHlp.Real.Delete(parent, fields, index);
+            => Real.Delete(parent, fields, index);
 
     }
 }

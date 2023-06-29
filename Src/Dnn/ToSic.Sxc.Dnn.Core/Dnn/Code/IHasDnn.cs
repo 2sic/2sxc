@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn.Code
     public interface IHasDnn
     {
         /// <summary>
-        /// The DNN context.  
+        /// The DNN context. Has various objects to access the Dnn Page, etc.
         /// </summary>
         IDnnContext Dnn { get; }
     }

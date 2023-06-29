@@ -1,9 +1,6 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -23,14 +20,17 @@ namespace ToSic.Sxc.WebApi
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            SharedContextResolver = SysHlp.GetService<IContextResolver>();
-            SharedContextResolver.AttachBlock(GetBlockAndContext());
+            DynHlp.InitializeBlockContext(controllerContext.Request);
+            //SharedContextResolver = SysHlp.GetService<IContextResolver>();
+            //SharedContextResolver.AttachBlock(SysHlp.GetBlockAndContext(Request));
         }
 
-        protected IContextResolver SharedContextResolver;
+        [PrivateApi]
+        internal DynamicApiCodeHelpers DynHlp => _dynHlp ?? (_dynHlp = new DynamicApiCodeHelpers(this, SysHlp));
+        private DynamicApiCodeHelpers _dynHlp;
 
-        [PrivateApi] protected BlockWithContextProvider GetBlockAndContext() => _blcCtx.Get(() => SysHlp.GetService<DnnGetBlock>().GetCmsBlock(Request));
-        private readonly GetOnce<BlockWithContextProvider> _blcCtx = new GetOnce<BlockWithContextProvider>();
+
+        //protected IContextResolver SharedContextResolver;
 
     }
 }
