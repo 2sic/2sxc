@@ -57,15 +57,15 @@ namespace Custom.Hybrid
         public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
             => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
+
+        public ITypedCode GetCode(string path) => SysHlp.GetCode(path);
+
         #endregion
 
         #region Link, Edit
 
         /// <inheritdoc />
         public ILinkService Link => _DynCodeRoot.Link;
-
-        ///// <inheritdoc />
-        //public IEditService Edit => _DynCodeRoot.Edit;
 
         #endregion
 
@@ -112,6 +112,7 @@ namespace Custom.Hybrid
         [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV16.Compile16;
 
         #endregion
+
 
     }
 

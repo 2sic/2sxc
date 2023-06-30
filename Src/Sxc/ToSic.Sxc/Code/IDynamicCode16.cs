@@ -170,5 +170,11 @@ namespace ToSic.Sxc.Code
 
         ITypedModel MyModel { get; }
 
+        #region SharedCode
+
+        //SharedCode Code(string path);
+
+        #endregion
+
     }
 }
