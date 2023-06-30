@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
@@ -241,5 +242,30 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
+        #region HtmlTags
+
+        /// <summary>
+        /// Will get the value being an `IHtmlTag` as specified (RazorBlade objects)
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">If required (default), throw error if not found. If automatically `false` if a `fallback` is not `null`.</param>
+        /// <returns>typed result if found, `null` if not found</returns>
+        IHtmlTag HtmlTag(string name, string noParamOrder = Protector, IHtmlTag fallback = default,
+            bool? required = default);
+
+        /// <summary>
+        /// Will get the value being an list (IEnumerable) of `IHtmlTag` as specified (RazorBlade objects)
+        /// </summary>
+        /// <param name="name">The field name</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">The optional fallback value.</param>
+        /// <param name="required">If required (default), throw error if not found. If automatically `false` if a `fallback` is not `null`.</param>
+        /// <returns>typed result if found, `null` if not found</returns>
+        IEnumerable<IHtmlTag> HtmlTags(string name, string noParamOrder = Protector,
+            IEnumerable<IHtmlTag> fallback = default, bool? required = default);
+
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using ToSic.Eav.Data;
 using ToSic.Eav.Generics;
 using ToSic.Eav.Plumbing;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Edit.Toolbar;
@@ -14,17 +15,17 @@ namespace ToSic.Sxc.Code
 {
     public class TypedModel : ITypedModel
     {
-        private readonly IDynamicCodeRoot _codeRoot;
         private readonly bool _isRazor;
         private readonly string _razorFileName;
         private readonly IDictionary<string, object> _paramsDictionary;
+        private readonly TypedConverter _converter;
 
         public TypedModel(IDictionary<string, object> paramsDictionary, IDynamicCodeRoot codeRoot, bool isRazor, string razorFileName)
         {
-            _codeRoot = codeRoot;
             _isRazor = isRazor;
             _razorFileName = razorFileName;
             _paramsDictionary = paramsDictionary?.ToInvariant() ?? new Dictionary<string, object>();
+            _converter = new TypedConverter(codeRoot.AsC);
         }
 
         #region Check if parameters were supplied
@@ -96,17 +97,6 @@ namespace ToSic.Sxc.Code
 Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} ) or use {callReqFalse} to make it optional.", nameof(name));
         }
 
-        public (T typed, object untyped, bool ok) GetInternalForInterface<T>(string name, string noParamOrder, T fallback, bool? required = default,
-            [CallerMemberName] string cName = default) where T : class
-        {
-            var maybe = GetInternal(name, required, noParamOrder, cName);
-            if (maybe == null) return (fallback, null, true);
-            if (maybe is T typed) return (typed, maybe, true);
-
-            return (null, maybe, false);
-        }
-
-
         #endregion
 
         public dynamic Dynamic(string name, string noParamOrder = Protector, object fallback = default, bool? required = default) 
@@ -147,93 +137,57 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
 
         #region Stacks
 
-        public ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default)
-        {
-            var (typed, _, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            return ok ? typed : null;
-        }
+        public ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default) 
+            => _converter.Stack(GetInternal(name, required, noParamOrder), fallback);
 
         #endregion
 
         #region Adam
 
-        public IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            if (ok) return typed;
+        public IFile File(string name, string noParamOrder = Protector, IFile fallback = default, bool? required = default) 
+            => _converter.File(GetInternal(name, required, noParamOrder), fallback);
 
-            // Flatten list if necessary
-            return untyped is IEnumerable<IFile> list ? list.First() : fallback;
-        }
-
-        public IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            if (ok) return typed;
-
-            // Wrap into list if necessary
-            return untyped is IFile item ? new List<IFile> { item } : fallback;
-        }
+        public IEnumerable<IFile> Files(string name, string noParamOrder = Protector, IEnumerable<IFile> fallback = default, bool? required = default) 
+            => _converter.Files(GetInternal(name, required, noParamOrder), fallback);
 
         public IFolder Folder(string name, string noParamOrder = Protector, IFolder fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            if (ok) return typed;
-
-            // Flatten list if necessary
-            return untyped is IEnumerable<IFolder> list ? list.First() : fallback;
-        }
+            => _converter.Folder(GetInternal(name, required, noParamOrder), fallback);
 
         public IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            if (ok) return typed;
-
-            // Wrap into list if necessary
-            return untyped is IFolder item ? new List<IFolder> { item } : fallback;
-        }
+            => _converter.Folders(GetInternal(name, required, noParamOrder), fallback);
 
         #endregion
 
         #region Entity and Item(s)
 
         public IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsC.AsEntity(untyped);
-        }
+            => _converter.Entity(GetInternal(name, required, noParamOrder), fallback);
 
         public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsC.AsItem(untyped);
-        }
+            => _converter.Item(GetInternal(name, required, noParamOrder), fallback);
         public ITypedRead Typed(string name, string noParamOrder = Protector, ITypedRead fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsC.AsItem(untyped);
-        }
+            => _converter.Typed(GetInternal(name, required, noParamOrder), fallback);
 
         public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
-        {
-            var (typed, untyped, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : _codeRoot.AsC.AsItems(untyped);
-        }
+            => _converter.Items(GetInternal(name, required, noParamOrder), fallback);
+
+        #endregion
+
+        #region HtmlTags
+
+        public IHtmlTag HtmlTag(string name, string noParamOrder = Protector, IHtmlTag fallback = default, bool? required = default)
+            => _converter.HtmlTag(GetInternal(name, required, noParamOrder), fallback);
+
+        public IEnumerable<IHtmlTag> HtmlTags(string name, string noParamOrder = Protector, IEnumerable<IHtmlTag> fallback = default, bool? required = default)
+            => _converter.HtmlTags(GetInternal(name, required, noParamOrder), fallback);
+
 
         #endregion
 
         #region Toolbar
 
         public IToolbarBuilder Toolbar(string name, string noParamOrder = Protector, IToolbarBuilder fallback = default, bool? required = default)
-        {
-            var (typed, _, ok) = GetInternalForInterface(name, noParamOrder, fallback, required);
-            // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : fallback;
-        }
+            => _converter.Toolbar(GetInternal(name, required, noParamOrder), fallback);
 
         #endregion
     }
