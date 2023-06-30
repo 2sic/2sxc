@@ -37,6 +37,9 @@ namespace ToSic.Sxc.WebApi
 
         /// <summary>
         /// Create a File-result to stream to the client
+        ///
+        ///
+        /// Typical use: `return File(download: true, contentType: "text/xml", contents: ...);`
         /// </summary>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="download">If a download should be enforced (otherwise the file may just be displayed - like an image)</param>
@@ -51,8 +54,8 @@ namespace ToSic.Sxc.WebApi
         dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
             // Important: the second parameter should _not_ be a string, otherwise the signature looks the same as the built-in File(...) method
             bool? download = null,
-            string virtualPath =
-                null, // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
+            // important: this is the virtualPath, but it should not have the same name, to not confuse the compiler with same sounding param names
+            string virtualPath = null,
             string contentType = null,
             string fileDownloadName = null,
             object contents = null // can be stream, string or byte[]

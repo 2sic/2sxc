@@ -21,16 +21,11 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             DynHlp.InitializeBlockContext(controllerContext.Request);
-            //SharedContextResolver = SysHlp.GetService<IContextResolver>();
-            //SharedContextResolver.AttachBlock(SysHlp.GetBlockAndContext(Request));
         }
 
         [PrivateApi]
         internal DynamicApiCodeHelpers DynHlp => _dynHlp ?? (_dynHlp = new DynamicApiCodeHelpers(this, SysHlp));
         private DynamicApiCodeHelpers _dynHlp;
-
-
-        //protected IContextResolver SharedContextResolver;
-
+        
     }
 }

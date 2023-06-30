@@ -8,7 +8,7 @@ using ToSic.Eav.Plumbing;
 
 namespace ToSic.Sxc.WebApi
 {
-    public abstract partial class ApiCoreShim : IDynamicWebApi
+    public partial class WebApiCoreShim
     {
         /// <inheritdoc />
         public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,

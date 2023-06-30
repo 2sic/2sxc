@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
-using ToSic.Lib.Documentation;
 using ToSic.Eav.LookUp;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code.Help;
-using ToSic.Sxc.Compatibility;
 
-namespace ToSic.Sxc.WebApi
+// ReSharper disable once CheckNamespace
+namespace Custom.Hybrid
 {
-    public partial class ApiCoreShim: IDynamicCodeBeforeV10
+    public partial class Api14_Obsolete
     {
         // Obsolete stuff - not supported any more in after V10 - show helpful error messages
 

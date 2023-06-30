@@ -7,42 +7,52 @@ using System.Web.Http;
 
 namespace ToSic.Sxc.WebApi
 {
-    public abstract partial class ApiCoreShim
+    public partial class WebApiCoreShim
     {
 
         /// <summary>
         /// Creates a .net-core like `OkResult` object that produces an empty .net-core like `StatusCodes.Status200OK` response.
+        ///
+        /// Typical use: `return Ok();`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `OkResult` for the response.</returns>
         [NonAction]
-        public new dynamic Ok()
-        {
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        public dynamic Ok() => Request.CreateResponse(HttpStatusCode.OK);
 
         /// <summary>
         /// Creates an .net-core like `OkObjectResult` object that produces an .net-core like `StatusCodes.Status200OK` response.
+        ///
+        /// Typical use: `return Ok(objectToInclude);`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <param name="value">The content value to format in the entity body.</param>
         /// <returns>The created .net-core like `OkObjectResult` for the response.</returns>
         [NonAction]
         // maybe ??? low priority
-        public dynamic Ok(object value)
-        {
-            return Request.CreateResponse(HttpStatusCode.OK, value);
-        }
+        public dynamic Ok(object value) => Request.CreateResponse(HttpStatusCode.OK, value);
 
         /// <summary>
         /// Creates a .net-core like `NoContentResult` object that produces an empty
         /// .net-core like `StatusCodes.Status204NoContent` response.
+        ///
+        /// Typical use: `return NoContent();`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `NoContentResult` object for the response.</returns>
         [NonAction]
-        public dynamic NoContent()
-        {
-            return Request.CreateResponse(HttpStatusCode.NoContent);
-        }
+        public dynamic NoContent() => Request.CreateResponse(HttpStatusCode.NoContent);
 
+        // TODO: this Shim could now be implemented after 16.02 - since we don't have the Content property any more
         #region Content (ca. 5 overloads) can't be implemented, because it conflicts with our property "Content"
         //public dynamic Content(string content)
         //{
@@ -61,11 +71,17 @@ namespace ToSic.Sxc.WebApi
         /// <summary>
         /// Creates a .net-core like `RedirectResult` object that redirects (.net-core like `StatusCodes.Status302Found`)
         /// to the specified <paramref name="url"/>.
+        ///
+        /// Typical use: `return Redirect("https://2sxc.org");`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <param name="url">The URL to redirect to.</param>
         /// <returns>The created .net-core like `RedirectResult` for the response.</returns>
         [NonAction]
-        public new dynamic Redirect(string url)
+        public dynamic Redirect(string url)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
             var response = Request.CreateResponse(HttpStatusCode.Redirect);
@@ -76,7 +92,13 @@ namespace ToSic.Sxc.WebApi
         /// <summary>
         /// Creates a .net-core like `RedirectResult` object with .net-core like `RedirectResult.Permanent` set to true
         /// (.net-core like `StatusCodes.Status301MovedPermanently`) using the specified <paramref name="url"/>.
+        ///
+        /// Typical use: `return RedirectPermanent("https://2sxc.org");`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <param name="url">The URL to redirect to.</param>
         /// <returns>The created .net-core like `RedirectResult` for the response.</returns>
         [NonAction]
@@ -97,66 +119,99 @@ namespace ToSic.Sxc.WebApi
         #region StatusCode - low priority
         /// <summary>
         /// Creates a .net-core like `StatusCodeResult` object by specifying a <paramref name="statusCode"/>.
+        ///
+        /// Typical use: `return StatusCode(403);`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <param name="statusCode">The status code to set on the response.</param>
         /// <returns>The created .net-core like `StatusCodeResult` object for the response.</returns>
         [NonAction]
-        public dynamic StatusCode(int statusCode)
-        {
-            return Request.CreateResponse((HttpStatusCode)statusCode);
-        }
+        public dynamic StatusCode(int statusCode) => Request.CreateResponse((HttpStatusCode)statusCode);
 
         /// <summary>
         /// Creates a .net-core like `ObjectResult` object by specifying a <paramref name="statusCode"/> and <paramref name="value"/>
+        ///
+        /// Typical use: `return StatusCode(304, "not modified");`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <param name="statusCode">The status code to set on the response.</param>
         /// <param name="value">The value to set on the .net-core like `ObjectResult"/>.</param>
         /// <returns>The created .net-core like `ObjectResult` object for the response.</returns>
         [NonAction]
-        public dynamic StatusCode(int statusCode, object value)
-            => Request.CreateResponse((HttpStatusCode)statusCode, value);
+        public dynamic StatusCode(int statusCode, object value) => Request.CreateResponse((HttpStatusCode)statusCode, value);
         #endregion
 
 
         /// <summary>
         /// Creates an .net-core like `UnauthorizedResult` that produces an .net-core like `StatusCodes.Status401Unauthorized` response.
+        ///
+        /// Typical use: `return Unauthorized();`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `UnauthorizedResult` for the response.</returns>
         [NonAction]
-        public dynamic Unauthorized()
-            => Request.CreateResponse(HttpStatusCode.Unauthorized);
+        public dynamic Unauthorized() => Request.CreateResponse(HttpStatusCode.Unauthorized);
 
         /// <summary>
         /// Creates an .net-core like `UnauthorizedObjectResult` that produces a .net-core like `StatusCodes.Status401Unauthorized` response.
+        ///
+        /// Typical use: `return Unauthorized("we don't like this");`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `UnauthorizedObjectResult` for the response.</returns>
         [NonAction]
-        public dynamic Unauthorized(object value)
-            => Request.CreateResponse(HttpStatusCode.Unauthorized, value);
+        public dynamic Unauthorized(object value) => Request.CreateResponse(HttpStatusCode.Unauthorized, value);
 
         /// <summary>
         /// Creates an .net-core like `NotFoundResult` that produces a .net-core like `StatusCodes.Status404NotFound` response.
+        ///
+        /// Typical use: `return NotFound();`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `NotFoundResult` for the response.</returns>
         [NonAction]
-        public new dynamic NotFound()
-            => Request.CreateResponse(HttpStatusCode.NotFound);
+        public dynamic NotFound() => Request.CreateResponse(HttpStatusCode.NotFound);
 
         /// <summary>
         /// Creates an .net-core like `NotFoundObjectResult` that produces a .net-core like `StatusCodes.Status404NotFound` response.
+        ///
+        /// Typical use: `return Unauthorized("try another ID");`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `NotFoundObjectResult` for the response.</returns>
         [NonAction]
-        public dynamic NotFound(object value)
-            => Request.CreateResponse(HttpStatusCode.NotFound, value);
+        public dynamic NotFound(object value) => Request.CreateResponse(HttpStatusCode.NotFound, value);
 
         /// <summary>
         /// Creates an .net-core like `BadRequestResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
+        ///
+        /// Typical use: `return BadRequest();`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `BadRequestResult` for the response.</returns>
         [NonAction]
-        public new dynamic BadRequest()
-            => Request.CreateResponse(HttpStatusCode.BadRequest);
+        public dynamic BadRequest() => Request.CreateResponse(HttpStatusCode.BadRequest);
 
         ///// <summary>
         ///// Creates an .net-core like `BadRequestObjectResult` that produces a .net-core like `StatusCodes.Status400BadRequest` response.
@@ -176,23 +231,34 @@ namespace ToSic.Sxc.WebApi
         //public dynamic BadRequest(object modelState)
         //    => throw new NotSupportedException();
 
-        #region
+        #region Conflict
+
         /// <summary>
         /// Creates an .net-core like `ConflictResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
+        ///
+        /// Typical use: `return Conflict();`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `ConflictResult` for the response.</returns>
         [NonAction]
-        public new dynamic Conflict()
-            => Request.CreateResponse(HttpStatusCode.Conflict);
+        public dynamic Conflict() => Request.CreateResponse(HttpStatusCode.Conflict);
 
         /// <summary>
         /// Creates an .net-core like `ConflictObjectResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
+        ///
+        /// Typical use: `return Conflict("the stored file is newer");`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <param name="error">Contains errors to be returned to the client.</param>
         /// <returns>The created .net-core like `ConflictObjectResult` for the response.</returns>
         [NonAction]
-        public dynamic Conflict(object error)
-            => Request.CreateResponse(HttpStatusCode.Conflict, error);
+        public dynamic Conflict(object error) => Request.CreateResponse(HttpStatusCode.Conflict, error);
 
         ///// <summary>
         ///// Creates an .net-core like `ConflictObjectResult` that produces a .net-core like `StatusCodes.Status409Conflict` response.
@@ -216,11 +282,16 @@ namespace ToSic.Sxc.WebApi
 
         /// <summary>
         /// Creates a .net-core like `AcceptedResult` object that produces an .net-core like `StatusCodes.Status202Accepted` response.
+        ///
+        /// Typical use: `return Accepted();`
         /// </summary>
+        /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        /// </remarks>
         /// <returns>The created .net-core like `AcceptedResult` for the response.</returns>
         [NonAction]
-        public dynamic Accepted()
-            => Request.CreateResponse(HttpStatusCode.Accepted);
+        public dynamic Accepted() => Request.CreateResponse(HttpStatusCode.Accepted);
 
         // All other accepted - don't implement
         ///// <summary>
@@ -305,15 +376,19 @@ namespace ToSic.Sxc.WebApi
         #region Forbid - only one implemented
         /// <summary>
         /// Creates a .net-core like `ForbidResult` (.net-core like `StatusCodes.Status403Forbidden` by default).
+        ///
+        /// Typical use: `return Forbid();`
         /// </summary>
         /// <returns>The created .net-core like `ForbidResult` for the response.</returns>
         /// <remarks>
+        /// This is a shim to ensure that .net Framework code can be written the same way as .net core WebApis.
+        /// It returns a `dynamic` to make it easy to use, but the real .net core implementation returns a typed object.
+        ///
         /// Some authentication schemes, such as cookies, will convert .net-core like `StatusCodes.Status403Forbidden` to
         /// a redirect to show a login page.
         /// </remarks>
         [NonAction]
-        public dynamic Forbid()
-            => Request.CreateResponse(HttpStatusCode.Forbidden);
+        public dynamic Forbid() => Request.CreateResponse(HttpStatusCode.Forbidden);
 
         #endregion
     }
