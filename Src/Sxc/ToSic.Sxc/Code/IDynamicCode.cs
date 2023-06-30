@@ -193,8 +193,15 @@ namespace ToSic.Sxc.Code
         #region Context
 
         /// <summary>
-        /// The CmsContext tells you about the environment, like what page and module we're running in.
-        /// It's supposed to replace the Dnn object in Razor and WebAPI code.
+        /// This Context tells you about the environment, such as
+        ///
+        /// * the current User
+        /// * the Page
+        /// * the View
+        /// * the Site
+        /// 
+        /// It's supposed to replace direct access to Dnn or Oqtane object in Razor and WebAPI code,
+        /// allowing hybrid code that works everywhere.
         /// </summary>
         /// <remarks>
         /// New in v11.11

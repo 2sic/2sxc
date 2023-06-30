@@ -160,7 +160,17 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
-        public ICmsContext MyContext => _DynCodeRoot?.CmsContext;
+
+        // TODO: MOVE OUT WITH CODE REFACTORING
+
+        /// <inheritdoc />
+        public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+
+        /// <inheritdoc />
+        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+
+        /// <inheritdoc />
+        public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
         /// <inheritdoc />
         public dynamic Resources => _DynCodeRoot.Resources;

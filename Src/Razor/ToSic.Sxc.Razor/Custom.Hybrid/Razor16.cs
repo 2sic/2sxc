@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Code.InfoSystem;
+using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -32,17 +33,14 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public new IAppTyped App => (IAppTyped)base.App;
 
-        /// <inheritdoc />
-        public ITypedStack SettingsStack => _DynCodeRoot.Settings;
+        [PrivateApi] public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
+        [PrivateApi] public ITypedStack SettingsStack => _DynCodeRoot.Settings;
 
-        /// <inheritdoc />
-        public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
+        /// <inheritdoc cref="IDynamicCode16.AllResources" />
+        public ITypedStack AllResources => _DynCodeRoot.Resources;
 
-        /// <inheritdoc />
-        public ITypedStack SysSettings => _DynCodeRoot.Settings;
-
-        /// <inheritdoc />
-        public ITypedStack SysResources => _DynCodeRoot.Resources;
+        /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+        public ITypedStack AllSettings => _DynCodeRoot.Settings;
 
         #endregion
 
@@ -97,6 +95,8 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
             => _DynCodeRoot.AsC.AsItems(list);
+
+        public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
 
         #endregion
 

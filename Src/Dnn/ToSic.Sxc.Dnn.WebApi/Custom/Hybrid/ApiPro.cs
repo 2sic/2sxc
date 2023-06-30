@@ -62,7 +62,14 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
 
+        /// <inheritdoc />
         public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+
+        /// <inheritdoc />
+        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+
+        /// <inheritdoc />
+        public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
         ///// <inheritdoc cref="IDynamicCode.Edit" />
         //public IEditService Edit => _DynCodeRoot?.Edit;
@@ -145,19 +152,16 @@ namespace Custom.Hybrid
         #region New App, Settings, Resources
 
         /// <inheritdoc />
-        public new IAppTyped App => (IAppTyped)_DynCodeRoot.App;
+        public IAppTyped App => (IAppTyped)_DynCodeRoot.App;
 
-        /// <inheritdoc />
-        public ITypedStack SettingsStack => _DynCodeRoot.Settings;
+        [PrivateApi] public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
+        [PrivateApi] public ITypedStack SettingsStack => _DynCodeRoot.Settings;
 
-        /// <inheritdoc />
-        public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
+        /// <inheritdoc cref="IDynamicCode16.AllResources" />
+        public ITypedStack AllResources => _DynCodeRoot.Resources;
 
-        /// <inheritdoc />
-        public ITypedStack SysSettings => _DynCodeRoot.Settings;
-
-        /// <inheritdoc />
-        public ITypedStack SysResources => _DynCodeRoot.Resources;
+        /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+        public ITypedStack AllSettings => _DynCodeRoot.Settings;
 
         #endregion
 

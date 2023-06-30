@@ -20,7 +20,8 @@ namespace ToSic.Sxc.Context
         ICmsModule Module { get; }
 
         /// <summary>
-        /// Information about the Page (called Tab in DNN)
+        /// Information about the current Page (called Tab in DNN).
+        /// It's especially useful to get current URL Parameters.
         /// </summary>
         ICmsPage Page { get; }
 
@@ -35,7 +36,8 @@ namespace ToSic.Sxc.Context
         ICmsSite Site { get; }
 
         /// <summary>
-        /// Information about the current user
+        /// Information about the current user.
+        /// It's especially useful to see if the user has any kind of Admin privileges.
         /// </summary>
         ICmsUser User { get; }
         

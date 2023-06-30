@@ -21,7 +21,8 @@ namespace ToSic.Sxc.Context
         /// User Id as int. Works in DNN and Oqtane.
         /// If anonymous is zero.
         /// 
-        /// 🪒 Use in Razor: `CmsContext.User.Id`
+        /// 🪒 Use in Razor12+: `CmsContext.User.Id`
+        /// 🪒 Use in RazorPro: `MyUser.Id`
         /// </summary>
         int Id { get; }
 
@@ -53,7 +54,8 @@ namespace ToSic.Sxc.Context
         /// Information if the current user is Site Content Administrator.
         /// Basically this means a user has Admin permissions, but may not have all admin permissions if excluded through special 2sxc-groups.
         /// 
-        /// 🪒 Use in Razor: `CmsContext.User.IsContentAdmin`
+        /// 🪒 Use in Razor12+: `CmsContext.User.IsContentAdmin`
+        /// 🪒 Use in RazorPro: `MyUser.IsContentAdmin`
         /// </summary>
         /// <remarks>
         /// These are not the highest possible privileges
@@ -68,7 +70,8 @@ namespace ToSic.Sxc.Context
         /// Basically this means a user has maximum permissions - incl. the ability
         /// to install additional components or do dangerous things like edit razor.
         /// 
-        /// 🪒 Use in Razor: `CmsContext.User.isSystemAdmin`
+        /// 🪒 Use in Razor12+: `CmsContext.User.isSystemAdmin`
+        /// 🪒 Use in RazorPro: `MyUser.isSystemAdmin`
         /// </summary>
         /// <remarks>
         /// New in 2sxc 12
@@ -81,7 +84,8 @@ namespace ToSic.Sxc.Context
         /// Basically this means a user has maximum site permissions - incl. the ability
         /// to install additional components or do dangerous things like edit razor.
         /// 
-        /// 🪒 Use in Razor: `CmsContext.User.IsSiteDeveloper`
+        /// 🪒 Use in Razor12+: `CmsContext.User.IsSiteDeveloper`
+        /// 🪒 Use in RazorPro: `MyUser.IsSiteDeveloper`
         /// </summary>
         /// <remarks>
         /// These are not the highest possible privileges

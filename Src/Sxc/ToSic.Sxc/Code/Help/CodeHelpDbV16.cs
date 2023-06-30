@@ -6,39 +6,51 @@ namespace ToSic.Sxc.Code.Help
 {
     public class CodeHelpDbV16
     {
-        internal static CodeHelp ListNotExist16 =
+        private static readonly CodeHelp ListNotExist16 =
             HelpNotExistsPro("List", "MyItems", "AsItems(MyData.Get())"); // TODO: NAMING NOT FINAL
 
-        internal static CodeHelp ListObsolete16 =
+        private static readonly CodeHelp ListObsolete16 =
             new CodeHelp(ListNotExist16, detect: "does not contain a definition for 'List'");
 
-        internal static CodeHelp ListObsolete16MisCompiledAsGenericList = new CodeHelp(ListNotExist16,
+        private static readonly CodeHelp ListObsolete16MisCompiledAsGenericList = new CodeHelp(ListNotExist16,
             detect:
             @"error CS0305: Using the generic type 'System.Collections.Generic.List<T>' requires 1 type arguments");
 
-        internal static CodeHelp ListContentNotExist16 = HelpNotExistsPro("ListContent", "MyHeader");
+        private static readonly CodeHelp ListContentNotExist16 = HelpNotExistsPro("ListContent", "MyHeader");
 
-        internal static CodeHelp ListPresentationNotExist16 = HelpNotExistsPro("ListPresentation", "MyHeader.Presentation");
+        private static readonly CodeHelp ListPresentationNotExist16 = HelpNotExistsPro("ListPresentation", "MyHeader.Presentation");
 
-        internal static CodeHelp ContentNotExist16 = HelpNotExistsPro("Content", "MyItem");
+        private static readonly CodeHelp ContentNotExist16 = HelpNotExistsPro("Content", "MyItem");
 
-        internal static CodeHelp ContentNotExist16Duplicate = HelpNotExistsPro("Content", "You may prefer to use Razor14");
+        private static readonly CodeHelp ContentNotExist16Duplicate = HelpNotExistsPro("Content", "You may prefer to use Razor14");
 
-        internal static CodeHelp HeaderNotExist16 = HelpNotExistsPro("Header", "MyHeader");
+        private static readonly CodeHelp HeaderNotExist16 = HelpNotExistsPro("Header", "MyHeader");
 
-        internal static CodeHelp SettingsNotExist16 = HelpNotExistsPro("Settings", "App.Settings", "AllSettings");
 
-        internal static CodeHelp ResourcesNotExist16 = HelpNotExistsPro("Resources", "App.Resources", "AllResources");
+        private static readonly CodeHelp ResourcesNotExist16 = HelpNotExistsPro("Resources", "App.Resources", "AllResources");
 
-        internal static CodeHelp PresentationNotExist16 = HelpNotExistsPro("Presentation", "MyItem.Presentation");
+        private static readonly CodeHelp ResourcesNotExist16B = new CodeHelp(ResourcesNotExist16,
+            // example error: "error CS0234: The type or namespace name 'String' does not exist in the namespace 'Resources' (are you missing an assembly reference?) at"
+            // but the Term string could change so we'll just check the last part
+            detect: @"does not exist in the namespace 'Resources' (are you missing an assembly reference?)");
 
-        internal static CodeHelp EditNotExist = HelpNotExistsPro("Edit",
+        private static readonly CodeHelp SettingsNotExist16 = HelpNotExistsPro("Settings", "App.Settings", "AllSettings");
+        //private static readonly CodeHelp SettingsNotExist16b = new CodeHelp(ResourcesNotExist16,
+        //    // example error: "error CS0234: The type or namespace name 'String' does not exist in the namespace 'Resources' (are you missing an assembly reference?) at"
+        //    // but the Term string could change so we'll just check the last part
+        //    detect: @"does not exist in the namespace 'Resources' (are you missing an assembly reference?)");
+
+        private static readonly CodeHelp PresentationNotExist16 = HelpNotExistsPro("Presentation", "MyItem.Presentation");
+
+        private static readonly CodeHelp DataNotExist = HelpNotExistsPro("Data", "MyData");
+
+        private static readonly CodeHelp EditNotExist = HelpNotExistsPro("Edit",
             ("Kit.Toolbar.Default()...", "to build a standard toolbar"),
             ("Kit.Toolbar.Empty()...", "to start with an empty toolbar"),
-            ("CmsContext.User.IsContentAdmin", "to find out if edit is enabled"),
+            ("MyUser.IsContentAdmin", "to find out if edit is enabled"),
             ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)"));
 
-        internal static CodeHelp AsAdamNotExist = HelpNotExistsPro(("AsAdam", "AsAdam isn't needed any more, since there is an easier syntax."), ("object.Folder(\"FieldName\")", "Use the Folder(...) method on an Item"));
+        private static readonly CodeHelp AsAdamNotExist = HelpNotExistsPro(("AsAdam", "AsAdam isn't needed any more, since there is an easier syntax."), ("object.Folder(\"FieldName\")", "Use the Folder(...) method on an Item"));
 
         internal static List<CodeHelp> Compile16 = new List<CodeHelp>
         {
@@ -83,9 +95,11 @@ namespace ToSic.Sxc.Code.Help
             // Settings / Resources
             SettingsNotExist16,
             ResourcesNotExist16,
+            ResourcesNotExist16B,
 
             EditNotExist,
             AsAdamNotExist,
+            DataNotExist,
         };
 
     }

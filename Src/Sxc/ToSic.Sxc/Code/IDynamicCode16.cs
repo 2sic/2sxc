@@ -38,9 +38,15 @@ namespace ToSic.Sxc.Code
 
         #region Moving Properties
 
-        /// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.CmsContext"/>
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         ICmsContext MyContext { get; }
 
+        
+        /// <inheritdoc cref="ICmsContext.User" />
+        ICmsUser MyUser { get; }
+
+        /// <inheritdoc cref="ICmsContext.Page" />
+        ICmsPage MyPage { get; }
 
 
         #endregion
@@ -86,9 +92,25 @@ namespace ToSic.Sxc.Code
 
         ITypedStack SettingsStack { get; }
 
-        ITypedStack SysResources { get; }
+        /// <summary>
+        /// Stack of all Resources in the System, merging Resources of View, App, Site, Global etc.
+        /// Will retrieve values by priority, with View-Resources being top priority and Preset-Resources being the lowest.
+        ///
+        /// > [!TIP]
+        /// > If you know that Resources come from the App, you should prefer `App.Resources` instead.
+        /// > That is faster and helps people reading your code figure out where to change a value.
+        /// </summary>
+        ITypedStack AllResources { get; }
 
-        ITypedStack SysSettings{ get; }
+        /// <summary>
+        /// Stack of all Settings in the System, merging Settings of View, App, Site, Global etc.
+        /// Will retrieve values by priority, with View-Settings being top priority and Preset-Settings being the lowest.
+        ///
+        /// > [!TIP]
+        /// > If you know that Settings come from the App, you should prefer `App.Settings` instead.
+        /// > That is faster and helps people reading your code figure out where to change a value.
+        /// </summary>
+        ITypedStack AllSettings{ get; }
 
         /// <summary>
         /// Convert something to a <see cref="ITypedItem"/>.

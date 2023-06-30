@@ -142,17 +142,15 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
 
-        /// <inheritdoc />
-        public ITypedStack SettingsStack => _DynCodeRoot.Settings;
+        [PrivateApi] public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
+        [PrivateApi] public ITypedStack SettingsStack => _DynCodeRoot.Settings;
 
-        /// <inheritdoc />
-        public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
+        /// <inheritdoc cref="IDynamicCode16.AllResources" />
+        public ITypedStack AllResources => _DynCodeRoot.Resources;
 
-        /// <inheritdoc />
-        public ITypedStack SysSettings => _DynCodeRoot.Settings;
+        /// <inheritdoc cref="IDynamicCode16.AllSettings" />
+        public ITypedStack AllSettings => _DynCodeRoot.Settings;
 
-        /// <inheritdoc />
-        public ITypedStack SysResources => _DynCodeRoot.Resources;
 
         public IMyData MyData => _DynCodeRoot.Data as IMyData;
 
@@ -193,7 +191,14 @@ namespace Custom.Hybrid
 
         public ITypedModel MyModel => CodeHelper.MyModel;
 
-        public ICmsContext MyContext => CmsContext;
+        /// <inheritdoc />
+        public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+
+        /// <inheritdoc />
+        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+
+        /// <inheritdoc />
+        public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
         /// <inheritdoc />
         public ITypedRead Read(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
