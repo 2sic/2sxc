@@ -6,6 +6,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
@@ -29,7 +30,7 @@ namespace Custom.Hybrid
         // ReSharper disable once InconsistentNaming
         [PrivateApi] public AdamCode _AdamCode { get; set; }
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
 
         public new TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 

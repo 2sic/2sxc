@@ -53,7 +53,7 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => ToSic.Sxc.Constants.CompatibilityLevel16;
 
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using ToSic.Lib.Documentation;
+﻿using System;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
 
@@ -9,12 +10,13 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public void AttachApp(IApp app)
         {
-            if (app is App typed) typed.AddDynamicEntityServices(AsC/*, AsC.DynamicEntityServices*/);
+            if (app is App typedApp) typedApp.AddDynamicEntityServices(AsC);
             App = app;
         }
 
         [PrivateApi]
-        public int CompatibilityLevel { get; private set; }
+        [Obsolete("Warning - avoid using this on the DynamicCode Root - always use the one on the AsC")]
+        public int CompatibilityLevel => AsC.CompatibilityLevel;
 
         [PrivateApi] public IBlock Block { get; private set; }
 

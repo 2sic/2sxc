@@ -1,4 +1,5 @@
 ﻿using ToSic.Lib.Documentation;
+using ToSic.Sxc;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
@@ -15,5 +16,8 @@ namespace Custom.Dnn
     {
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
+
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
+
     }
 }

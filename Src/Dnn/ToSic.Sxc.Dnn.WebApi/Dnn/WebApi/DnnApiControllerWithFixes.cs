@@ -61,9 +61,9 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// The RealController which is the full backend of this controller.
         /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
         /// </summary>
-        internal TRealController Real
-            => _real.Get(() => SysHlp.GetService<TRealController>()
-                               ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
+        internal TRealController Real => _real.Get(()
+            => SysHlp.GetService<TRealController>()
+               ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons, got null"));
         private readonly GetOnce<TRealController> _real = new GetOnce<TRealController>();
 
     }

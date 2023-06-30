@@ -1,5 +1,6 @@
 ﻿using System.Web.WebPages;
 using Custom.Hybrid;
+using ToSic.Eav.Run;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Dnn;
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, IRazor, ICreateInstance, IHasCodeLog, IHasLog, IDnnRazorCompatibility
+    public abstract class RazorComponentBase: WebPageBase, IRazor, ICreateInstance, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
     {
         #region Constructor / Setup
 
@@ -50,6 +51,12 @@ namespace ToSic.Sxc.Web
             base.ConfigurePage(parentPage);
             SysHlp.ConfigurePage(parentPage, VirtualPath);
         }
+
+        /// <summary>
+        /// Must be set on each derived class
+        /// </summary>
+        [PrivateApi]
+        public abstract int CompatibilityLevel { get; }
 
         #endregion
 

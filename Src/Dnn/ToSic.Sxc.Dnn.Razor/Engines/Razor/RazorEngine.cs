@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
+using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -176,19 +177,20 @@ namespace ToSic.Sxc.Engines
 
             pageToInit.Context = HttpContextCurrent;
             pageToInit.VirtualPath = TemplatePath;
-            var compatibility = Constants.CompatibilityLevel9Old;
+            //var compatibility = Constants.CompatibilityLevel9Old;
             if (pageToInit is RazorComponent rzrPage)
             {
 #pragma warning disable CS0618
                 rzrPage.Purpose = Purpose;
 #pragma warning restore CS0618
-                compatibility = Constants.CompatibilityLevel10;
+                //compatibility = Constants.CompatibilityLevel10;
             }
 
-            if (pageToInit is IDynamicCode16)
-                compatibility = Constants.CompatibilityLevel16;
-            else if (pageToInit is ICompatibleToCode12)
-                compatibility = Constants.CompatibilityLevel12;
+            var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
+            //if (pageToInit is IDynamicCode16)
+            //    compatibility = Constants.CompatibilityLevel16;
+            //else if (pageToInit is ICompatibleToCode12)
+            //    compatibility = Constants.CompatibilityLevel12;
 
             if (pageToInit is SexyContentWebPage oldPage)
 #pragma warning disable 618, CS0612

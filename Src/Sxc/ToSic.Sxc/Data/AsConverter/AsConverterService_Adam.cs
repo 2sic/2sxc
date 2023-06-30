@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Data.AsConverter
                 contextOfApp.ResetApp(_DynCodeRoot.App);
             }
 
-            return _adamManagerLazy.Value.Init(contextOfApp, this, _DynCodeRoot.CompatibilityLevel);
+            return _adamManagerLazy.Value.Init(contextOfApp, this, CompatibilityLevel);
         }
         public AdamManager AdamManager => _admMng.Get(GetAdamManager);
         private readonly GetOnce<AdamManager> _admMng = new GetOnce<AdamManager>();

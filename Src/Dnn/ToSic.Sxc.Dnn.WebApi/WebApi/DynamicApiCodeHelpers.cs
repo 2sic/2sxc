@@ -15,6 +15,7 @@ using ToSic.Sxc.WebApi.Adam;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using DotNetNuke.Web.Api;
+using ToSic.Eav.Run;
 
 namespace ToSic.Sxc.WebApi
 {
@@ -57,11 +58,13 @@ namespace ToSic.Sxc.WebApi
             // Note that the CmsBlock is created by the BaseClass, if it's detectable. Otherwise it's null
             var block = SysHlp.GetBlockAndContext(request)?.LoadBlock();
             Log.A($"HasBlock: {block != null}");
-            var compatibilityLevel = _owner is IDynamicCode16
-                ? Constants.CompatibilityLevel16
-                : _owner is ICompatibleToCode12
-                    ? Constants.CompatibilityLevel12
-                    : Constants.CompatibilityLevel10;
+            var compatibilityLevel =
+                (_owner as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel10;
+                //_owner is IDynamicCode16
+                //? Constants.CompatibilityLevel16
+                //: _owner is ICompatibleToCode12
+                //    ? Constants.CompatibilityLevel12
+                //    : Constants.CompatibilityLevel10;
 
             var services = SysHlp.GetService<DynamicApiServices>().ConnectServices(Log);
             var codeRoot = services.DnnCodeRootFactory

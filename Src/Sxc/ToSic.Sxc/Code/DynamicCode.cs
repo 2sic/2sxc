@@ -35,6 +35,8 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel10;
+
         #endregion
 
         #region App / Data / Content / Header

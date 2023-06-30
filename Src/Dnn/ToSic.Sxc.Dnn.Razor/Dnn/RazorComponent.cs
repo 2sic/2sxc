@@ -101,7 +101,7 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel10;
 
         /// <inheritdoc />
         public new IApp App => _DynCodeRoot.App;

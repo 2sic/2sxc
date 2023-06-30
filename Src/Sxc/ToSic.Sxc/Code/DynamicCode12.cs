@@ -37,6 +37,8 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
+
         #endregion
 
         #region Stuff added by Code12

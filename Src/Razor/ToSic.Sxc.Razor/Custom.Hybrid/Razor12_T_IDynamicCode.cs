@@ -3,6 +3,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -34,7 +35,7 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public IEditService Edit => _DynCodeRoot.Edit;
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
 
         /// <inheritdoc />
         public IApp App => _DynCodeRoot.App;

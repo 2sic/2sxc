@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
@@ -41,6 +42,8 @@ namespace Custom.Hybrid
 
         private TypedCode16Helper CodeHelper => _codeHelper ?? (_codeHelper = CreateCodeHelper());
         private TypedCode16Helper _codeHelper;
+
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
 
         #endregion
 

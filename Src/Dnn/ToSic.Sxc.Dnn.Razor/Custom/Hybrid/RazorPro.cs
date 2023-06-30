@@ -36,7 +36,7 @@ namespace Custom.Hybrid
             => SysHlp.RenderPageNotSupported();
 
 
-        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel16;
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
 
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();

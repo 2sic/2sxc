@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Dnn
     /// This is the type used by code-behind classes of razor components.
     /// Use it to move logic / functions etc. into a kind of code-behind razor instead of as part of your view-template.
     /// </summary>
-    [PublicApi_Stable_ForUseInYourCode]
+    [PublicApi]
     public abstract class RazorComponentCode: RazorComponent
     {
         /// <inheritdoc />

@@ -7,6 +7,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -55,7 +56,7 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
 
         #endregion
 

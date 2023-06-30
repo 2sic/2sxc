@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Code
     /// Important for dynamic code files like Razor or WebApi. Note that there are many overloads to ensure that AsDynamic and AsEntity "just work" even if you give them the original data.
     /// </summary>
     [PrivateApi("WIP v14.02")]
-    public partial interface IDynamicCode14<out TModel, out TServiceKit> : ICompatibleToCode12, IDynamicCode<TModel, TServiceKit>
+    public partial interface IDynamicCode14<out TModel, out TServiceKit> : /*ICompatibleToCode12,*/ IDynamicCode<TModel, TServiceKit>
         where TModel : class
         where TServiceKit : ServiceKit
     {

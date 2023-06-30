@@ -102,7 +102,7 @@ namespace ToSic.Sxc.Code
             this.LinkLog(parentLog ?? block?.Log);
             var cLog = Log.Fn<IDynamicCodeRoot>($"{nameof(compatibility)}: {compatibility}");
 
-            CompatibilityLevel = compatibility;
+            AsC.SetCompatibilityLevel(compatibility);
             if (block == null)
                 return cLog.Return(this, "no block");
 

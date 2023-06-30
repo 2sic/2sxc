@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Code
             SysHlp.ConnectToRoot(codeRoot);
         });
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
+        [PrivateApi] public abstract int CompatibilityLevel { get; } // Constants.CompatibilityLevel9Old;
 
         #endregion
     }

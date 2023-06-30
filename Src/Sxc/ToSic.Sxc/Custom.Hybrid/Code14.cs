@@ -4,6 +4,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -42,6 +43,8 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
         #endregion
 

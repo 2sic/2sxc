@@ -35,7 +35,7 @@ namespace Custom.Hybrid
             => SysHlp.RenderPageNotSupported();
 
 
-        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
 
         /// <inheritdoc />

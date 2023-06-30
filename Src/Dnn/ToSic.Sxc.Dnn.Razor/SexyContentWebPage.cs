@@ -10,6 +10,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Search;
+using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
@@ -92,7 +93,7 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel9Old;
 
         /// <inheritdoc />
         public new IApp App => _DynCodeRoot.App;

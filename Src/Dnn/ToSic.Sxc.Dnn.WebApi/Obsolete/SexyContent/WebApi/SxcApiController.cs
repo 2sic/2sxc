@@ -8,6 +8,7 @@ using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Compatibility;
@@ -67,7 +68,7 @@ namespace ToSic.SexyContent.WebApi
         /// </summary>
         [PrivateApi] public IBlock Block => SysHlp.GetBlockAndContext(Request).LoadBlock();
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel9Old;
 
         /// <inheritdoc />
         public IApp App => _DynCodeRoot.App;

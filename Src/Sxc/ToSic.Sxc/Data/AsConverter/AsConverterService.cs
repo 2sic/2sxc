@@ -34,6 +34,8 @@ namespace ToSic.Sxc.Data.AsConverter
             );
         }
 
+        public void SetCompatibilityLevel(int compatibilityLevel) => _priorityCompatibilityLevel = compatibilityLevel;
+
         public void SetFallbacks(ISite site, int? compatibility = default, AdamManager adamManagerPrepared = default)
         {
             _siteOrNull = site;
@@ -42,7 +44,8 @@ namespace ToSic.Sxc.Data.AsConverter
         }
 
         private ISite _siteOrNull;
-        public int CompatibilityLevel => _DynCodeRoot?.CompatibilityLevel ?? _compatibilityLevel;
+        public int CompatibilityLevel => _priorityCompatibilityLevel ?? _compatibilityLevel;
+        private int? _priorityCompatibilityLevel;
         private int _compatibilityLevel = Constants.CompatibilityLevel10;
         private AdamManager _adamManagerPrepared;
 
@@ -80,7 +83,7 @@ namespace ToSic.Sxc.Data.AsConverter
 
 
 
-        internal ITypedRead AsTypedInternal(object dynObject)
+        private ITypedRead AsTypedInternal(object dynObject)
         {
             var l = Log.Fn<ITypedRead>();
             switch (dynObject)

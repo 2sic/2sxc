@@ -1,8 +1,8 @@
-﻿using Custom.Hybrid;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
-namespace ToSic.Sxc.Custom.Hybrid
+// ReSharper disable once CheckNamespace
+namespace Custom.Hybrid
 {
     [PrivateApi]
     [DnnLogExceptions]

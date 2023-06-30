@@ -8,6 +8,7 @@ using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Efc.Models;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
@@ -50,7 +51,7 @@ namespace Custom.Hybrid
 
         [PrivateApi] ILog IHasLog.Log => base.Log;
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
 
         #endregion
 
