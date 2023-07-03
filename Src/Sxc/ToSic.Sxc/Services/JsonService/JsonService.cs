@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Services
             => JsonSerializer.Deserialize<object>(json, JsonOptions.SafeJsonForHtmlAttributes);
 
         /// <inheritdoc />
-        public ITypedRead ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default) 
+        public ITyped ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default) 
             => DynamicJacket.AsDynamicJacket(json, fallback, Log);
 
         /// <inheritdoc />

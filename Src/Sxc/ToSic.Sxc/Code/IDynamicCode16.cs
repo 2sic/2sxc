@@ -116,14 +116,14 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
-        ITypedRead AsTyped(object original);
+        ITyped AsTyped(object original);
 
         /// <summary>
         /// TODO: WIP NAME NOT FINAL
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
-        IEnumerable<ITypedRead> AsTypedList(object original);
+        IEnumerable<ITyped> AsTypedList(object original);
 
         /// <summary>
         /// Create a typed object which will provide all the properties of the things wrapped inside it.

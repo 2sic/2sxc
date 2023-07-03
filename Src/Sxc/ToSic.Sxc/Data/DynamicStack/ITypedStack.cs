@@ -6,7 +6,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Data
 {
     [InternalApi_DoNotUse_MayChangeWithoutNotice]
-    public interface ITypedStack: ITypedRead, ICanDebug
+    public interface ITypedStack: ITyped, ICanDebug
     {
         /// <inheritdoc cref="ITypedRelationships.Child"/>
         ITypedItem Child(string name);

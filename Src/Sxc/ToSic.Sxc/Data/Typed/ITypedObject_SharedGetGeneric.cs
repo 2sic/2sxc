@@ -1,6 +1,6 @@
 ﻿namespace ToSic.Sxc.Data
 {
-    public partial interface ITypedRead
+    public partial interface ITyped
     {
         /*
          IMPORTANT

@@ -13,31 +13,31 @@ namespace ToSic.Sxc.Data.AsConverter
         private const string NameOfAsTyped = nameof(IDynamicCode16.AsTyped) + "(...)";
         private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
 
-        public ITypedRead AsTypedPure(object original, bool required = false, string detailsMessage = default)
+        public ITyped AsTypedPure(object original, bool required = false, string detailsMessage = default)
         {
-            var l = Log.Fn<ITypedRead>();
+            var l = Log.Fn<ITyped>();
 
             if (AsTypedPreflightReturnNull(original, NameOfAsTyped, required, detailsMessage))
                 return l.ReturnNull();
 
-            if (original is ITypedRead alreadyTyped)
+            if (original is ITyped alreadyTyped)
                 return l.Return(alreadyTyped, "already typed");
 
             var result = DynamicHelpers.WrapIfPossible(original, true, true, false);
-            if (result is ITypedRead resTyped)
+            if (result is ITyped resTyped)
                 return l.Return(resTyped, "converted to dyn-read");
 
             throw l.Done(new ArgumentException($"Can't wrap/convert the original '{original.GetType()}'"));
         }
 
-        public IEnumerable<ITypedRead> AsTypedListPure(object list, bool? required = false)
+        public IEnumerable<ITyped> AsTypedListPure(object list, bool? required = false)
         {
-            var l = Log.Fn<IEnumerable<ITypedRead>>();
+            var l = Log.Fn<IEnumerable<ITyped>>();
 
             if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, required == true))
                 return l.ReturnNull();
 
-            if (list is IEnumerable<ITypedRead> alreadyTyped)
+            if (list is IEnumerable<ITyped> alreadyTyped)
                 return l.Return(alreadyTyped, "already typed");
 
             if (!(list is IEnumerable enumerable))

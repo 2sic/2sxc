@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Services
         object ToObject(string json);
 
         /// <summary>
-        /// Creates a <see cref="ITypedRead"/> object from a json string.
+        /// Creates a <see cref="ITyped"/> object from a json string.
         /// </summary>
         /// <param name="json"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
@@ -83,6 +83,6 @@ namespace ToSic.Sxc.Services
         /// </remarks>
         /// <returns></returns>
         [WorkInProgressApi("WIP 16.02 - not yet done")]
-        ITypedRead ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default);
+        ITyped ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default);
     }
 }

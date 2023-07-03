@@ -99,7 +99,7 @@ namespace ToSic.Sxc.Code
             return ok ? typed : null;
         }
 
-        public ITypedRead Typed(object maybe, ITypedRead fallback)
+        public ITyped Typed(object maybe, ITyped fallback)
         {
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error

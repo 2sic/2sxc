@@ -7,17 +7,6 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public interface ITypedRelationships
     {
-        ///// <summary>
-        ///// Return an <see cref="ITypedItem"/> from the value found on the `name`.
-        ///// The `name` can be something simple like `Author` or a path such as `Author.Publisher`
-        ///// </summary>
-        ///// <param name="name"></param>
-        ///// <returns>The <see cref="ITypedItem"/> or null if nothing found.</returns>
-        //ITypedItem Item(string name);
-
-        //IEnumerable<ITypedItem> Items(string name);
-
-
         /// <summary>
         /// A single item from a field.
         /// If the field doesn't exist or is empty, will return null.

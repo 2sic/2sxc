@@ -9,10 +9,10 @@ using static System.StringComparison;
 
 namespace ToSic.Sxc.Data
 {
-    public abstract partial class DynamicJacketBase: ITypedRead
+    public abstract partial class DynamicJacketBase: ITyped
     {
         [PrivateApi]
-        IRawHtmlString ITypedRead.Attribute(string name, string noParamOrder, string fallback, string attribute)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, string attribute)
         {
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
             return attribute != default 
@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Data
                 : value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
         }
 
-        TValue ITypedRead.Get<TValue>(string name)
+        TValue ITyped.Get<TValue>(string name)
         {
             var result = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
             return result.ConvertOrDefault<TValue>();
@@ -43,13 +43,13 @@ namespace ToSic.Sxc.Data
             return result.ConvertOrFallback(fallback);
         }
 
-        dynamic ITypedRead.Dyn => this;
+        dynamic ITyped.Dyn => this;
 
-        bool ITypedRead.Bool(string name, string noParamOrder , bool fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        bool ITyped.Bool(string name, string noParamOrder , bool fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        DateTime ITypedRead.DateTime(string name, string noParamOrder, DateTime fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        string ITypedRead.String(string name, string noParamOrder, string fallback, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool scrubHtml)
         {
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 #pragma warning disable CS0618
@@ -57,17 +57,17 @@ namespace ToSic.Sxc.Data
 #pragma warning restore CS0618
         }
 
-        int ITypedRead.Int(string name, string noParamOrder, int fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        int ITyped.Int(string name, string noParamOrder, int fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        long ITypedRead.Long(string name, string noParamOrder, long fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        long ITyped.Long(string name, string noParamOrder, long fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        float ITypedRead.Float(string name, string noParamOrder, float fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        float ITyped.Float(string name, string noParamOrder, float fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        decimal ITypedRead.Decimal(string name, string noParamOrder, decimal fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        double ITypedRead.Double(string name, string noParamOrder, double fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        double ITyped.Double(string name, string noParamOrder, double fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        string ITypedRead.Url(string name, string noParamOrder, string fallback)
+        string ITyped.Url(string name, string noParamOrder, string fallback)
         {
             var url =  GetV(name, noParamOrder: noParamOrder, fallback: fallback);
             return Tags.SafeUrl(url).ToString();

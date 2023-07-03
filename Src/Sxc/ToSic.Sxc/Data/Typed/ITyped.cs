@@ -6,10 +6,10 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Data
 {
     /// <summary>
-    /// This describes a wrapper around an anonymous or JSON object which will
+    /// This describes objects which usually wrap other objects to provide strictly typed access to properties.
     /// have typed Methods to read properties like `.String(propName)`.
     ///
-    /// It's usually the result of a `Read(something)` command.
+    /// It's usually the result of a `AsTyped(something)` or `AsItem(...)` command.
     ///
     /// It's meant to help Razor etc. access unknown or dynamic objects in a typed way.
     /// </summary>
@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data
     /// </remarks>
     [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP v16.02")]
     [JsonConverter(typeof(DynamicJsonConverter))] // we'll have to keep an eye on it for scenarios where ITypedItem also inherits from ITypedRead, and could have some surprises. But since the DynamicEntity was never meant to become json, probably there is no code out there that tries to do this. 
-    public partial interface ITypedRead
+    public partial interface ITyped
     {
         /// <summary>
         /// A dynamic accessor for properties, to quickly get values when you don't care about type safety.
