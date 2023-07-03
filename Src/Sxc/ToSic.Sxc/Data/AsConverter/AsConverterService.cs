@@ -83,37 +83,39 @@ namespace ToSic.Sxc.Data.AsConverter
 
 
 
-        private ITypedRead AsTypedInternal(object dynObject)
-        {
-            var l = Log.Fn<ITypedRead>();
-            switch (dynObject)
-            {
-                case null:
-                    return l.Return(AsDynamicFromJson(null), "null");
-                case string strObject:
-                    return l.Return(AsDynamicFromJson(strObject), "string");
-                case IDynamicEntity dynEnt:
-                    return l.Return(dynEnt, "DynamicEntity");
-                // New case - should avoid re-converting dynamic json, DynamicStack etc.
-                case ISxcDynamicObject sxcDyn:
-                    return l.Return(sxcDyn, "Dynamic Something");
-                case IEntity entity:
-                    return l.Return(new DynamicEntity(entity, DynamicEntityServices), "IEntity");
-                //case DynamicObject typedDynObject:
-                //    return wrapLog.Return(typedDynObject, "DynamicObject");
-                default:
-                    // Check value types - note that it won't catch strings, but these were handled above
-                    //if (dynObject.GetType().IsValueType) return wrapLog.Return(dynObject, "bad call - value type");
+        //private ITypedRead AsTypedInternal(object dynObject)
+        //{
+        //    var l = Log.Fn<ITypedRead>();
+        //    switch (dynObject)
+        //    {
+        //        //case null:
+        //        //    return l.Return(AsDynamicFromJson(null), "null");
+        //        //case string strObject:
+        //        //    return l.Return(AsDynamicFromJson(strObject), "string");
+        //        //case IDynamicEntity dynEnt:
+        //        //    return l.Return(dynEnt, "DynamicEntity");
+        //        //// New case - should avoid re-converting dynamic json, DynamicStack etc.
+        //        //case ISxcDynamicObject sxcDyn:
+        //        //    return l.Return(sxcDyn, "Dynamic Something");
+        //        //case IEntity entity:
+        //        //    return l.Return(new DynamicEntity(entity, DynamicEntityServices), "IEntity");
 
-                    // 2021-09-14 new - just convert to a DynamicReadObject
-                    var result = DynamicHelpers.WrapIfPossible(dynObject, true, true, false);
-                    if (result is ITypedRead resTyped) return l.Return(resTyped, "converted to dyn-read");
 
-                    //// Note 2dm 2021-09-14 returning the original object was actually the default till now.
-                    //// Unknown conversion, just return the original and see what happens/breaks
-                    //// probably not a good solution
-                    return l.Return(null, "unknown, return original");
-            }
-        }
+        //        //case DynamicObject typedDynObject:
+        //        //    return wrapLog.Return(typedDynObject, "DynamicObject");
+        //        default:
+        //            // Check value types - note that it won't catch strings, but these were handled above
+        //            //if (dynObject.GetType().IsValueType) return wrapLog.Return(dynObject, "bad call - value type");
+
+        //            // 2021-09-14 new - just convert to a DynamicReadObject
+        //            var result = DynamicHelpers.WrapIfPossible(dynObject, true, true, false);
+        //            if (result is ITypedRead resTyped) return l.Return(resTyped, "converted to dyn-read");
+
+        //            //// Note 2dm 2021-09-14 returning the original object was actually the default till now.
+        //            //// Unknown conversion, just return the original and see what happens/breaks
+        //            //// probably not a good solution
+        //            return l.Return(null, "unknown, return original");
+        //    }
+        //}
     }
 }

@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Code
     /// Standard interface for all TypedCode such as RazorPro or WebApiPro.
     /// Provides typed APIs to access Settings, Resources and more.
     /// </summary>
-    [WorkInProgressApi("WIP 16.02")]
+    [PrivateApi("Shouldn't be visible, as the real API is 100% visible on RazorPro, CodePro etc.")]
     public interface IDynamicCode16 : ICreateInstance, ICompatibilityLevel, IHasLog
     {
         #region Stuff basically inherited from v12/14
@@ -108,7 +108,22 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc cref="IDynamicCode.AsEntity" />
         IEntity AsEntity(ICanBeEntity thing);
 
+        /// <summary>
+        /// Creates a typed object to read the original passed into this function.
+        /// This is usually used to process objects which the compiler can't know, such as anonymous objects returned from helper code etc.
+        ///
+        /// If you have an array of such objects, use <see cref="AsTypedList"/>.
+        /// </summary>
+        /// <param name="original"></param>
+        /// <returns></returns>
         ITypedRead AsTyped(object original);
+
+        /// <summary>
+        /// TODO: WIP NAME NOT FINAL
+        /// </summary>
+        /// <param name="original"></param>
+        /// <returns></returns>
+        IEnumerable<ITypedRead> AsTypedList(object original);
 
         /// <summary>
         /// Create a typed object which will provide all the properties of the things wrapped inside it.

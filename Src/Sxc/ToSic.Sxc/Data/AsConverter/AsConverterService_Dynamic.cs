@@ -39,22 +39,22 @@ namespace ToSic.Sxc.Data.AsConverter
         public object AsDynamicInternal(object dynObject)
         {
             var l = Log.Fn<object>();
-            var typed = AsTypedInternal(dynObject);
-            if (typed != null) return l.Return(typed, nameof(ITypedRead));
+            //var typed = AsTypedInternal(dynObject);
+            //if (typed != null) return l.Return(typed, nameof(ITypedRead));
 
             switch (dynObject)
             {
-                //case null:
-                //    return wrapLog.Return( this.AsDynamicFromJson(null), "null");
-                //case string strObject:
-                //    return wrapLog.Return(this.AsDynamicFromJson(strObject), "string");
-                //case IDynamicEntity dynEnt:
-                //    return wrapLog.Return(dynEnt, "DynamicEntity");
-                //// New case - should avoid re-converting dynamic json, DynamicStack etc.
-                //case ISxcDynamicObject sxcDyn:
-                //    return wrapLog.Return(sxcDyn, "Dynamic Something");
-                //case IEntity entity:
-                //    return wrapLog.Return(new DynamicEntity(entity, DynamicEntityServices), "IEntity");
+                case null:
+                    return l.Return(this.AsDynamicFromJson(null), "null");
+                case string strObject:
+                    return l.Return(this.AsDynamicFromJson(strObject), "string");
+                case IDynamicEntity dynEnt:
+                    return l.Return(dynEnt, "DynamicEntity");
+                // New case - should avoid re-converting dynamic json, DynamicStack etc.
+                case ISxcDynamicObject sxcDyn:
+                    return l.Return(sxcDyn, "Dynamic Something");
+                case IEntity entity:
+                    return l.Return(new DynamicEntity(entity, DynamicEntityServices), "IEntity");
                 case DynamicObject typedDynObject:
                     return l.Return(typedDynObject, "DynamicObject");
                 default:

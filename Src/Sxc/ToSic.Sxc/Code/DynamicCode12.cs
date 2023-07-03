@@ -29,6 +29,7 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Main constructor. May never have parameters, otherwise inheriting code will run into problems. 
         /// </summary>
+        [PrivateApi]
         protected DynamicCode12() : base("Sxc.DynCod") { }
 
         // <inheritdoc />

@@ -17,7 +17,7 @@ namespace Custom.Dnn
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
-        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
     }
 }

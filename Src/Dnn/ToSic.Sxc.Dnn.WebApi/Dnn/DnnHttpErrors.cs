@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Dnn
             var exToShow = dnnUser?.IsSuperUser == true 
                 ? exception 
                 : new PublicException(ApiErrMessage + helpText);
-            return new HttpResponseException(request.CreateErrorResponse(code, /*helpText,*/ exToShow));
+            return new HttpResponseException(request.CreateErrorResponse(code, exToShow));
         }
 
     }

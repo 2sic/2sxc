@@ -135,12 +135,12 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
         #endregion
 
 
-        #region Stacks
+        //#region Stacks
 
-        public ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default) 
-            => _converter.Stack(GetInternal(name, required, noParamOrder), fallback);
+        //public ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default) 
+        //    => _converter.Stack(GetInternal(name, required, noParamOrder), fallback);
 
-        #endregion
+        //#endregion
 
         #region Adam
 
@@ -160,13 +160,8 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
 
         #region Entity and Item(s)
 
-        public IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool? required = default)
-            => _converter.Entity(GetInternal(name, required, noParamOrder), fallback);
-
         public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default)
             => _converter.Item(GetInternal(name, required, noParamOrder), fallback);
-        public ITypedRead Typed(string name, string noParamOrder = Protector, ITypedRead fallback = default, bool? required = default)
-            => _converter.Typed(GetInternal(name, required, noParamOrder), fallback);
 
         public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
             => _converter.Items(GetInternal(name, required, noParamOrder), fallback);

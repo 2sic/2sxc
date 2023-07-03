@@ -31,6 +31,7 @@ namespace Custom.Hybrid
         /// <summary>
         /// Main constructor. May never have parameters, otherwise inheriting code will run into problems. 
         /// </summary>
+        [PrivateApi]
         protected Code12() : base("Sxc.Code12") { }
 
         // <inheritdoc />

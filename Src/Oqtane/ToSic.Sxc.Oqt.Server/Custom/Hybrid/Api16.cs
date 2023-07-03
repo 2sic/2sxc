@@ -86,6 +86,9 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
         public ITypedRead AsTyped(object original) => _DynCodeRoot.AsC.AsTypedPure(original);
 
+        /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
+        public IEnumerable<ITypedRead> AsTypedList(object list) => _DynCodeRoot.AsC.AsTypedListPure(list);
+
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
 

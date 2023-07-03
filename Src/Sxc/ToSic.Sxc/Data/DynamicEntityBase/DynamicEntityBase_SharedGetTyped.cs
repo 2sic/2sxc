@@ -28,7 +28,11 @@ namespace ToSic.Sxc.Data
         DateTime ITypedRead.DateTime(string name, string noParamOrder, DateTime fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        string ITypedRead.String(string name, string noParamOrder, string fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        string ITypedRead.String(string name, string noParamOrder, string fallback, bool scrubHtml)
+        {
+            var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+            return scrubHtml ? _Services.Scrub.All(value) : value;
+        }
 
         [PrivateApi]
         int ITypedRead.Int(string name, string noParamOrder, int fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Adam;
@@ -25,6 +24,12 @@ namespace ToSic.Sxc.Code
     /// var file = MyModel.File("File");
     /// var title = MyModel.String("Title");
     /// ```
+    ///
+    /// > [!TIP]
+    /// > The common data types such as `string` or <see cref="ITypedItem"/> have methods to quickly get them in the desired type.
+    /// > This allows things such as `var message = MyModel.String("Message");`
+    /// > For less common types you'll need to use <see cref="Get"/> and cast it as needed, like this:
+    /// > `string message = MyModel.Get("Message");`.
     /// </summary>
     [WorkInProgressApi("WIP v16.02")]
     public interface ITypedModel
@@ -187,23 +192,21 @@ namespace ToSic.Sxc.Code
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<IFolder> Folders(string name, string noParamOrder = Protector, IEnumerable<IFolder> fallback = default, bool? required = default);
 
-        #region Stacks
+        //#region Stacks
 
-        /// <summary>
-        /// Get a stack which was passed to this
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="noParamOrder"></param>
-        /// <param name="fallback"></param>
-        /// <param name="required"></param>
-        /// <returns></returns>
-        ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default);
+        ///// <summary>
+        ///// Get a stack which was passed to this
+        ///// </summary>
+        ///// <param name="name"></param>
+        ///// <param name="noParamOrder"></param>
+        ///// <param name="fallback"></param>
+        ///// <param name="required"></param>
+        ///// <returns></returns>
+        //ITypedStack Stack(string name, string noParamOrder = Protector, ITypedStack fallback = default, bool? required = default);
 
-        #endregion
+        //#endregion
 
         #region Item / Entity
-
-        IEntity Entity(string name, string noParamOrder = Protector, IEntity fallback = default, bool? required = default);
 
         /// <summary>
         /// Will get the value if specified.
@@ -226,9 +229,6 @@ namespace ToSic.Sxc.Code
         /// <param name="required">If required (default), throw error if not found. If automatically `false` if a `fallback` is not `null`.</param>
         /// <returns>typed result if found, empty-list if not found.</returns>
         IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default);
-
-        ITypedRead Typed(string name, string noParamOrder = Protector, ITypedRead fallback = default,
-            bool? required = default);
 
         /// <summary>
         /// Will get the value being a toolbar as specified.
