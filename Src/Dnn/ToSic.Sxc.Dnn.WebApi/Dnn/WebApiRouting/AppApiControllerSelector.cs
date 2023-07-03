@@ -53,11 +53,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             @"api\/2sxc\/app\/[^/]+\/([^/]+\/)?api"
         };
 
-        private const string ApiErrPrefix = "2sxc Api Controller Finder Error: ";
-        private const string ApiErrGeneral = "Error selecting / compiling an API controller. ";
-        private const string ApiErrSuffix = "Check event-log, code and inner exception. ";
-
-
         /// <summary>
         /// Verify if this request is one which should be handled by this system
         /// </summary>
@@ -107,8 +102,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
                 var site = (DnnSite)sp.Build<ISite>(log);
 
-                // note: this may look like something you could optimize/cache the result, but that's a bad idea
-                // because when the file changes, the type-object will be different, so please don't optimize :)
+                // First check local app (in this site), then global
                 var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false);
                 if (descriptor != null) return l.ReturnAsOk(descriptor);
 
@@ -118,8 +112,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             }
             catch (Exception e)
             {
-                const string msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
-                throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.InternalServerError, e, msg, sp.Build<CodeErrorHelpService>()));
+                throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.InternalServerError, e, DnnHttpErrors.ApiErrMessage, sp.Build<CodeErrorHelpService>()));
             }
 
             // If we got to here we didn't find it.
