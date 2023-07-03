@@ -20,11 +20,8 @@ namespace ToSic.Sxc.Dnn
             DotNetNuke.Services.Exceptions.Exceptions.LogException(exception);
 
             var dnnUser = DotNetNuke.Entities.Users.UserController.Instance.GetCurrentUserInfo();
-            if (dnnUser?.IsSuperUser == true)
-            {
-
-            }
-            return new HttpResponseException(request.CreateErrorResponse(code, helpText, e));
+            var exToShow = (dnnUser?.IsSuperUser == true) ? exception : e;
+            return new HttpResponseException(request.CreateErrorResponse(code, helpText, exToShow));
         }
 
     }

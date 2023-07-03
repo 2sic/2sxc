@@ -107,26 +107,27 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
                 var site = (DnnSite)sp.Build<ISite>(log);
 
-                var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false);
-
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
                 // because when the file changes, the type-object will be different, so please don't optimize :)
+                var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false);
                 if (descriptor != null) return l.ReturnAsOk(descriptor);
 
                 l.A("path not found, will check on shared location");
                 descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, true);
                 if (descriptor != null) return l.ReturnAsOk(descriptor);
-
-                l.A("path not found in shared, error will be thrown in a moment");
-
-                var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app and paths.";
-                throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new Exception(), msgFinal, sp.Build<CodeErrorHelpService>()));
             }
             catch (Exception e)
             {
                 const string msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
                 throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.InternalServerError, e, msg, sp.Build<CodeErrorHelpService>()));
             }
+
+            // If we got to here we didn't find it.
+            // But we want to throw the exception here, otherwise it's re-wrapped.
+                l.A("Path / Controller not found in shared, error will be thrown in a moment");
+            var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app and paths.";
+            throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new Exception(), msgFinal, sp.Build<CodeErrorHelpService>()));
+
         }
 
         private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, DnnSite site, string appFolder, string edition, string controllerTypeName, bool shared)
@@ -141,7 +142,7 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             // note: this may look like something you could optimize/cache the result, but that's a bad idea
             // because when the file changes, the type-object will be different, so please don't optimize :)
             var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
-            var descriptor = exists ? HttpControllerDescriptor(request, controllerFolder, controllerPath, controllerTypeName) : null;
+            var descriptor = exists ? BuildDescriptor(request, controllerFolder, controllerPath, controllerTypeName) : null;
             return l.Return(descriptor, $"{nameof(exists)}: {exists}");
         }
 
@@ -155,15 +156,16 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
             return edition;
         }
 
-        private HttpControllerDescriptor HttpControllerDescriptor(HttpRequestMessage request, 
-            string controllerFolder, string controllerPath, string controllerTypeName)
+        private HttpControllerDescriptor BuildDescriptor(HttpRequestMessage request, string folder, string fullPath, string typeName)
         {
-            var assembly = BuildManager.GetCompiledAssembly(controllerPath);
-            var type = assembly.GetType(controllerTypeName, true, true);
+            var assembly = BuildManager.GetCompiledAssembly(fullPath)
+                ?? throw new Exception("Assembly not found or compiled to null (error).");
+            var type = assembly.GetType(typeName, true, true)
+                ?? throw new Exception($"Type '{typeName}' not found in assembly. Could be a compile error or name mismatch.");
 
             // help with path resolution for compilers running inside the created controller
-            request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
-            request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, controllerPath);
+            request?.Properties.Add(CodeCompiler.SharedCodeRootPathKeyInCache, folder);
+            request?.Properties.Add(CodeCompiler.SharedCodeRootFullPathKeyInCache, fullPath);
 
             return new HttpControllerDescriptor(_config, type.Name, type);
         }
