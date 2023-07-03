@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data.AsConverter
         private const string NameOfAsTyped = nameof(IDynamicCode16.AsTyped) + "(...)";
         private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
 
-        public ITyped AsTypedPure(object original, bool required = false, string detailsMessage = default)
+        public ITyped AsTyped(object original, bool required = false, string detailsMessage = default)
         {
             var l = Log.Fn<ITyped>();
 
@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data.AsConverter
             throw l.Done(new ArgumentException($"Can't wrap/convert the original '{original.GetType()}'"));
         }
 
-        public IEnumerable<ITyped> AsTypedListPure(object list, bool? required = false)
+        public IEnumerable<ITyped> AsTypedList(object list, bool? required = false)
         {
             var l = Log.Fn<IEnumerable<ITyped>>();
 
@@ -46,16 +46,10 @@ namespace ToSic.Sxc.Data.AsConverter
             var itemsRequired = required != false;
             var result = enumerable
                 .Cast<object>()
-                .Select((o, i) => AsTypedPure(o, itemsRequired, $"index: {i}"))
+                .Select((o, i) => AsTyped(o, itemsRequired, $"index: {i}"))
                 .ToList();
 
             return result;
-
-            //var result = DynamicHelpers.WrapIfPossible(list, true, true, false);
-            //if (result is IEnumerable<ITypedRead> resTyped)
-            //    return l.Return(resTyped, "converted to dyn-read");
-
-            //throw l.Done(new ArgumentException($"Can't wrap/convert the original '{list.GetType()}'"));
         }
 
         private bool AsTypedPreflightReturnNull(object original, string methodName, bool required, string detailsMessage = default)

@@ -80,10 +80,10 @@ namespace Custom.Hybrid
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
 
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
-        public ITyped AsTyped(object original) => _DynCodeRoot.AsC.AsTypedPure(original);
+        public ITyped AsTyped(object original) => _DynCodeRoot.AsC.AsTyped(original);
 
         /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-        public IEnumerable<ITyped> AsTypedList(object list) => _DynCodeRoot.AsC.AsTypedListPure(list);
+        public IEnumerable<ITyped> AsTypedList(object list) => _DynCodeRoot.AsC.AsTypedList(list);
 
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);

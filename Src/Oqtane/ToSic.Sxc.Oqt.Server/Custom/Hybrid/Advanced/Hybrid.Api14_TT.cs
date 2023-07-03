@@ -1,8 +1,6 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 
 // ReSharper disable once CheckNamespace
@@ -14,7 +12,7 @@ namespace Custom.Hybrid.Advanced
     /// As of 2sxc v12 it's identical to [](xref:Custom.Hybrid.Api12) but this may be enhanced in future. 
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Api14<TModel, TServiceKit> : Api12, IDynamicCode14<TModel, TServiceKit>
+    public abstract class Api14<TModel, TServiceKit> : Api12, IDynamicCode14<TModel, TServiceKit>
         where TModel : class
         where TServiceKit : ServiceKit
     {
