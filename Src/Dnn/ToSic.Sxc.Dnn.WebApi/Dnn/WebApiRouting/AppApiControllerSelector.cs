@@ -107,32 +107,19 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
 
                 var site = (DnnSite)sp.Build<ISite>(log);
 
-                var controllerFolder = GetControllerFolder(site, appFolder, edition, shared: false);
-                l.A($"Controller Folder: {controllerFolder}");
-
-                var controllerPath = GetControllerPath(controllerFolder, controllerTypeName);
-                l.A($"Controller Path: {controllerPath}");
+                var descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, false);
 
                 // note: this may look like something you could optimize/cache the result, but that's a bad idea
                 // because when the file changes, the type-object will be different, so please don't optimize :)
-                if (File.Exists(HostingEnvironment.MapPath(controllerPath)))
-                    return l.ReturnAsOk(HttpControllerDescriptor(request, controllerFolder, controllerPath, controllerTypeName));
+                if (descriptor != null) return l.ReturnAsOk(descriptor);
 
                 l.A("path not found, will check on shared location");
-
-                var sharedControllerFolder = GetControllerFolder(site, appFolder, edition, shared: true);
-                l.A($"Shared Controller Folder: {sharedControllerFolder}");
-
-                var sharedControllerPath = GetControllerPath(sharedControllerFolder, controllerTypeName);
-                l.A($"Shared Controller Path: {sharedControllerPath}");
-
-                if (File.Exists(HostingEnvironment.MapPath(sharedControllerPath)))
-                    return l.ReturnAsOk(HttpControllerDescriptor(request, sharedControllerFolder, sharedControllerPath, controllerTypeName));
+                descriptor = DescriptorIfExists(log, request, site, appFolder, edition, controllerTypeName, true);
+                if (descriptor != null) return l.ReturnAsOk(descriptor);
 
                 l.A("path not found in shared, error will be thrown in a moment");
 
-                var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app. " +
-                               $"We checked the virtual path '{controllerPath}'";
+                var msgFinal = $"2sxc Api Controller Finder: Controller {controllerTypeName} not found in app and paths.";
                 throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.NotFound, new Exception(), msgFinal, sp.Build<CodeErrorHelpService>()));
             }
             catch (Exception e)
@@ -140,6 +127,22 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 const string msg = ApiErrPrefix + ApiErrGeneral + ApiErrSuffix;
                 throw l.Done(DnnHttpErrors.LogAndReturnException(request, HttpStatusCode.InternalServerError, e, msg, sp.Build<CodeErrorHelpService>()));
             }
+        }
+
+        private HttpControllerDescriptor DescriptorIfExists(ILog log, HttpRequestMessage request, DnnSite site, string appFolder, string edition, string controllerTypeName, bool shared)
+        {
+            var l = log.Fn<HttpControllerDescriptor>();
+            var controllerFolder = Path
+                .Combine(shared ? site.SharedAppsRootRelative : site.AppsRootRelative, appFolder, edition + "api/")
+                .ForwardSlash();
+            var controllerPath = Path.Combine(controllerFolder, $"{controllerTypeName}.cs");
+            l.A($"Controller Folder: '{controllerFolder}' Path: '{controllerPath}'");
+
+            // note: this may look like something you could optimize/cache the result, but that's a bad idea
+            // because when the file changes, the type-object will be different, so please don't optimize :)
+            var exists = File.Exists(HostingEnvironment.MapPath(controllerPath));
+            var descriptor = exists ? HttpControllerDescriptor(request, controllerFolder, controllerPath, controllerTypeName) : null;
+            return l.Return(descriptor, $"{nameof(exists)}: {exists}");
         }
 
         private static string GetEdition(IHttpRouteData routeData)
@@ -151,13 +154,6 @@ namespace ToSic.Sxc.Dnn.WebApiRouting
                 edition += "/";
             return edition;
         }
-
-        private static string GetControllerFolder(DnnSite site, string appFolder, string edition, bool shared = false) 
-            => Path.Combine(shared ? site.SharedAppsRootRelative: site.AppsRootRelative, appFolder, edition + "api/")
-                .ForwardSlash();
-
-        private static string GetControllerPath(string controllerFolder, string controllerTypeName)
-            => Path.Combine(controllerFolder + controllerTypeName + ".cs");
 
         private HttpControllerDescriptor HttpControllerDescriptor(HttpRequestMessage request, 
             string controllerFolder, string controllerPath, string controllerTypeName)
