@@ -60,7 +60,7 @@ namespace Custom.Hybrid
             => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
 
-        public ITypedCode GetCode(string path) => SysHlp.GetCode(path);
+        //public ITypedCode GetCode(string path) => SysHlp.GetCode(path);
 
         #endregion
 

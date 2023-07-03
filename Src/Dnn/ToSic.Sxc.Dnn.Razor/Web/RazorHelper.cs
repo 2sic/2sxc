@@ -5,12 +5,10 @@ using System.Web.Hosting;
 using System.Web.WebPages;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
-using ToSic.Sxc.Code.SharedCode;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Engines.Razor;
@@ -85,11 +83,6 @@ namespace ToSic.Sxc.Web
         #endregion
 
         #region Create Instance
-
-        public ITypedCode GetCode(string path) => path.IsEmptyOrWs()
-            ? throw new ArgumentException("Needs a real, relative path", nameof(path))
-            : new SharedCode(CreateInstance(path), _DynCodeRoot.AsC);
-
 
         public object CreateInstance(string virtualPath,
             string noParamOrder = Protector,
