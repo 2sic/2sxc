@@ -31,14 +31,7 @@ namespace Custom.Hybrid
     [DnnLogExceptions]
     // v16 should now default to normal
     //[DefaultToNewtonsoftForHttpJson]
-    public abstract class ApiPro: DynamicApiController, /*IDynamicCode14<object, ServiceKit14>,*/ IHasCodeLog,
-        IDynamicWebApi,
-
-        //Api14<dynamic, ServiceKit14>,
-        //IDynamicCode12, 
-        //IDynamicWebApi, 
-        IHasDynamicCodeRoot,
-        IDynamicCode16
+    public abstract class ApiPro: DynamicApiController, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16
     {
         #region Setup
 
