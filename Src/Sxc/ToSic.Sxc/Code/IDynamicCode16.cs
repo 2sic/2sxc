@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Code
     /// Provides typed APIs to access Settings, Resources and more.
     /// </summary>
     [PrivateApi("Shouldn't be visible, as the real API is 100% visible on RazorPro, CodePro etc.")]
-    public interface IDynamicCode16 : ICreateInstance, ICompatibilityLevel, IHasLog
+    public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog
     {
         #region Stuff basically inherited from v12/14
 

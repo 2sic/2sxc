@@ -31,7 +31,8 @@ namespace ToSic.Sxc.Dnn
     [Obsolete("This will continue to work, but you should use the Custom.Hybrid.Api14 or Custom.Dnn.Api12 instead.")]
     [DefaultToNewtonsoftForHttpJson]
     public abstract class ApiController : DynamicApiController, 
-        IDnnDynamicWebApi, 
+        IDnnDynamicWebApi,
+        ICreateInstance,
         IDynamicCode, 
         IDynamicWebApi, 
         IHasDynamicCodeRoot,
@@ -131,10 +132,21 @@ namespace ToSic.Sxc.Dnn
         public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
-        #region RunContext WiP
+        
+        #region CmsContext
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
+        #endregion
+
+        #region CreateInstance
+
+        string IGetCodePath.CreateInstancePath { get; set; }
+
+        /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
+        public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
+
         #endregion
 
         #region IHasLog

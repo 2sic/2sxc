@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
 using ToSic.Eav;
-using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -31,7 +30,7 @@ namespace Custom.Hybrid
     [DnnLogExceptions]
     // v16 should now default to normal
     //[DefaultToNewtonsoftForHttpJson]
-    public abstract class ApiPro: DynamicApiController, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16
+    public abstract class ApiPro: DynamicApiController, IHasCodeLog, IDynamicWebApi, IHasDynamicCodeRoot, IDynamicCode16, IGetCodePath
     {
         #region Setup
 
@@ -136,10 +135,21 @@ namespace Custom.Hybrid
 
         #endregion
 
+
+        #region CreateInstance
+
+        string IGetCodePath.CreateInstancePath { get; set; }
+
+        ///// <inheritdoc cref="ICreateInstance.CreateInstance"/>
+        //public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+        //    => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
+
+
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
         public dynamic GetCode(string path)
-            => _DynCodeRoot.CreateInstance(path, relativePath: ((ICreateInstance)this).CreateInstancePath);
+            => _DynCodeRoot.CreateInstance(path, relativePath: ((IGetCodePath)this).CreateInstancePath);
 
+        #endregion
 
         #region My... Stuff
 

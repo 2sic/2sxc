@@ -46,6 +46,7 @@ namespace ToSic.SexyContent.WebApi
     public abstract partial class SxcApiController : 
         DynamicApiController, 
         IDnnDynamicWebApi,
+        ICreateInstance,
         IDynamicWebApi, 
         IDynamicCodeBeforeV10,
 #pragma warning disable 618
@@ -185,6 +186,16 @@ namespace ToSic.SexyContent.WebApi
             string field = null,
             string subFolder = "")
             => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+
+        #endregion
+
+        #region CreateInstance
+
+        string IGetCodePath.CreateInstancePath { get; set; }
+
+        /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
+        public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
 
         #endregion
 

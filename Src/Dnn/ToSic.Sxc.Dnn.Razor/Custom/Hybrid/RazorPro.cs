@@ -29,7 +29,7 @@ namespace Custom.Hybrid
     /// Be aware of this since the APIs are very different.
     /// </remarks>
     [WorkInProgressApi("WIP 16.02 - not final")]
-    public abstract partial class RazorPro: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, ICreateInstance
+    public abstract partial class RazorPro: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath
     {
 
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
@@ -134,11 +134,7 @@ namespace Custom.Hybrid
 
         #region CreateInstance
 
-        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
-
-        /// <inheritdoc />
-        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+        [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
         #endregion
 

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi
     [PrivateApi("This is an internal base class used for the App ApiControllers. Make sure the implementations don't break")]
     // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
     [DnnLogExceptions]
-    public abstract class DynamicApiController : SxcApiControllerBase<DummyControllerReal>, ICreateInstance, IHasDynamicCodeRoot
+    public abstract class DynamicApiController : SxcApiControllerBase<DummyControllerReal>, /*ICreateInstance,*/ IHasDynamicCodeRoot
     {
         #region Constructor & DI / Setup
 
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             var init = DynHlp.Initialize(controllerContext);
-            ((ICreateInstance)this).CreateInstancePath = init.Path;
+            ((IGetCodePath)this).CreateInstancePath = init.Path;
             _DynCodeRoot = init.Root;
         }
 
@@ -48,8 +48,6 @@ namespace ToSic.Sxc.WebApi
 
         [PrivateApi]
         public IDynamicCodeRoot _DynCodeRoot { get; private set; }
-
-        string ICreateInstance.CreateInstancePath { get; set; }
 
         /// <summary>
         /// The name of the logger in insights. The inheriting class should provide the real name to be used.
@@ -74,10 +72,16 @@ namespace ToSic.Sxc.WebApi
             Guid? guid = null, string field = null, string subFolder = "")
             => DynHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
-        /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
-        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((ICreateInstance)this).CreateInstancePath, throwOnError);
-
         #endregion
+
+        //#region CreateInstance
+
+        //string IGetCodePath.CreateInstancePath { get; set; }
+
+        ///// <inheritdoc cref="ICreateInstance.CreateInstance"/>
+        //public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
+        //    => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
+
+        //#endregion
     }
 }

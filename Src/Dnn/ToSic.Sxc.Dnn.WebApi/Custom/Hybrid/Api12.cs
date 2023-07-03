@@ -5,7 +5,6 @@ using System.Web.Http;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
-using ToSic.Eav.Persistence.Efc.Models;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc;
@@ -32,11 +31,7 @@ namespace Custom.Hybrid
     [PublicApi("This is the official base class for v12+")]
     [DnnLogExceptions]
     [DefaultToNewtonsoftForHttpJson]
-    public abstract partial class Api12: DynamicApiController,
-        IDynamicCode12, 
-        IDynamicWebApi, 
-        IHasDynamicCodeRoot,
-        IHasCodeLog
+    public abstract partial class Api12: DynamicApiController, IDynamicCode12, IDynamicWebApi, IHasCodeLog, ICreateInstance
     {
         #region Setup
 
@@ -156,6 +151,17 @@ namespace Custom.Hybrid
             => base.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
         #endregion
+
+        #region CreateInstance
+
+        string IGetCodePath.CreateInstancePath { get; set; }
+
+        /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
+        public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
+
+        #endregion
+
 
 
         #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

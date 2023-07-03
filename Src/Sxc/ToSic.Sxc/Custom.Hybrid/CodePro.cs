@@ -69,11 +69,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [PrivateApi]
-        string ICreateInstance.CreateInstancePath { get; set; }
-
-        /// <inheritdoc cref="IDynamicCode.CreateInstance" />
-        public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>
-            SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
+        string IGetCodePath.CreateInstancePath { get; set; }
 
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
         public dynamic GetCode(string path) => SysHlp.CreateInstance(path);

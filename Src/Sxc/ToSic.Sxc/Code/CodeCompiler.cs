@@ -155,7 +155,7 @@ namespace ToSic.Sxc.Code
         {
             var l = Log.Fn();
 
-            if (!(instance is ICreateInstance codeForwarding))
+            if (!(instance is IGetCodePath codeForwarding))
             {
                 l.Done("didn't attach");
                 return;

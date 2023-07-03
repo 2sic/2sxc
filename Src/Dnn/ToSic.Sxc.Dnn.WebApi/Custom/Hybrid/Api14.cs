@@ -33,14 +33,7 @@ namespace Custom.Hybrid
     [PublicApi]
     [DnnLogExceptions]
     [DefaultToNewtonsoftForHttpJson]
-    public abstract class Api14:
-        DynamicApiController, IDynamicCode14<object, ServiceKit14>, IHasCodeLog,
-        IDynamicWebApi,
-
-        //Api14<dynamic, ServiceKit14>,
-        IDynamicCode12, 
-        //IDynamicWebApi, 
-        IHasDynamicCodeRoot
+    public abstract class Api14: DynamicApiController, IDynamicCode14<object, ServiceKit14>, IHasCodeLog, IDynamicWebApi, IDynamicCode12, ICreateInstance
     {
         #region Setup
 
@@ -162,6 +155,15 @@ namespace Custom.Hybrid
 
         #endregion
 
+        #region CreateInstance
+
+        string IGetCodePath.CreateInstancePath { get; set; }
+
+        /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
+        public dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, ((IGetCodePath)this).CreateInstancePath, throwOnError);
+
+        #endregion
 
 
         #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

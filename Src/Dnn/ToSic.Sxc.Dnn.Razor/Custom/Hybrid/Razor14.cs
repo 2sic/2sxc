@@ -114,7 +114,7 @@ namespace Custom.Hybrid
 
         #region CreateInstance
 
-        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
+        [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
         /// <inheritdoc />
         public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)

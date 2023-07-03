@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Code.CodeHelpers
             bool throwOnError = true) => Log.Func(() =>
         {
             // usually we don't have a relative path, so we use the preset path from when this class was instantiated
-            var createPath = (_parent as ICreateInstance)?.CreateInstancePath;
+            var createPath = (_parent as IGetCodePath)?.CreateInstancePath;
             relativePath = relativePath ?? createPath;
             var instance = _DynCodeRoot?.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
             return instance;

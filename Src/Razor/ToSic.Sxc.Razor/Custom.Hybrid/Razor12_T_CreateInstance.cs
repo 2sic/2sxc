@@ -8,7 +8,7 @@ namespace Custom.Hybrid
 {
     public partial class Razor12<TModel>
     {
-        string ICreateInstance.CreateInstancePath
+        string IGetCodePath.CreateInstancePath
         {
             get => _createInstancePath ?? Path;
             set => _createInstancePath = value;
