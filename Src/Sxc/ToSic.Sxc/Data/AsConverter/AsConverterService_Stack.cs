@@ -13,12 +13,18 @@ namespace ToSic.Sxc.Data.AsConverter
         [PrivateApi]
         public ITypedStack AsStack(params object[] parts) => AsStack(null, parts);
 
-        public DynamicStack AsStack(string name, params object[] parts)
+        public ITypedStack AsStack(string name, params object[] parts)
         {
             name = name ?? Eav.Constants.NullNameId;
-            var l = Log.Fn<DynamicStack>($"'{name}', {parts?.Length}");
+            var l = Log.Fn<ITypedStack>($"'{name}', {parts?.Length}");
 
-            if (parts == null || !parts.SafeAny()) throw l.Ex(new ArgumentNullException(nameof(parts)));
+            // Error if nothing
+            if (parts == null || !parts.SafeAny())
+                throw l.Ex(new ArgumentNullException(nameof(parts)));
+
+            // Return if already correct (this is just to type-cast the object from dynamic code)
+            if (parts.Length == 1 && parts[0] is ITypedStack alreadyStack)
+                return alreadyStack;
             
             // Must create a stack
             var sources = parts
@@ -29,9 +35,7 @@ namespace ToSic.Sxc.Data.AsConverter
             return l.ReturnAsOk(AsStack(name, sources));
         }
 
-        public DynamicStack AsStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources)
-        {
-            return new DynamicStack(name, DynamicEntityServices, sources);
-        }
+        public DynamicStack AsStack(string name, List<KeyValuePair<string, IPropertyLookup>> sources) 
+            => new DynamicStack(name, DynamicEntityServices, sources);
     }
 }

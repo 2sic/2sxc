@@ -112,7 +112,6 @@ namespace ToSic.Sxc.Data.AsConverter
                     //// Note 2dm 2021-09-14 returning the original object was actually the default till now.
                     //// Unknown conversion, just return the original and see what happens/breaks
                     //// probably not a good solution
-                    //return wrapLog.Return(dynObject, "unknown, return original");
                     return l.Return(null, "unknown, return original");
             }
         }

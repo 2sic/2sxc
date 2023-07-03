@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Web.WebPages;
+using ToSic.Eav;
 using ToSic.Eav.Code.Help;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.DevTools;
@@ -13,6 +14,7 @@ using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -100,6 +102,27 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+
+        #endregion
+
+        #region As Conversions
+
+        /// <inheritdoc cref="IDynamicCode16.AsItem" />
+        public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)
+            => _DynCodeRoot.AsC.AsItem(target);
+
+        /// <inheritdoc cref="IDynamicCode16.AsItems" />
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
+            => _DynCodeRoot.AsC.AsItems(list);
+
+        /// <inheritdoc cref="IDynamicCode16.AsEntity" />
+        public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
+
+        /// <inheritdoc cref="IDynamicCode16.AsTyped" />
+        public ITypedRead AsTyped(object original) => _DynCodeRoot.AsC.AsTypedPure(original);
+
+        /// <inheritdoc cref="IDynamicCode16.AsStack" />
+        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
 
         #endregion
 

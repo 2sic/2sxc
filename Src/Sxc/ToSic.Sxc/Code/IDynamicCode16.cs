@@ -22,17 +22,8 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc cref="IDynamicCode.GetService{TService}"/>
         TService GetService<TService>();
 
-        ///// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.AsAdam"/>
-        //IFolder AsAdam(ICanBeEntity item, string fieldName);
-
         /// <inheritdoc cref="IDynamicCode.Link"/>
         ILinkService Link { get; }
-
-        ///// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.Edit"/>
-        //IEditService Edit { get; }
-
-        ///// <inheritdoc cref="IDynamicCode14{TModel,TServiceKit}.CmsContext"/>
-        //ICmsContext CmsContext { get; }
 
         #endregion
 
@@ -52,16 +43,10 @@ namespace ToSic.Sxc.Code
 
         #endregion
 
-        #region AsEntity
-
-        /// <inheritdoc cref="IDynamicCode.AsEntity" />
-        IEntity AsEntity(ICanBeEntity thing);
-
-        #endregion
 
 
 
-        #region Stuff Added in v16
+        #region App, Resources, Settings
 
         IAppTyped App { get; }
 
@@ -84,6 +69,10 @@ namespace ToSic.Sxc.Code
         /// > That is faster and helps people reading your code figure out where to change a value.
         /// </summary>
         ITypedStack AllSettings{ get; }
+
+        #endregion
+
+        #region AsConversions
 
         /// <summary>
         /// Convert something to a <see cref="ITypedItem"/>.
@@ -115,6 +104,11 @@ namespace ToSic.Sxc.Code
             string noParamOrder = Eav.Parameters.Protector
         );
 
+
+        /// <inheritdoc cref="IDynamicCode.AsEntity" />
+        IEntity AsEntity(ICanBeEntity thing);
+
+        ITypedRead AsTyped(object original);
 
         /// <summary>
         /// Create a typed object which will provide all the properties of the things wrapped inside it.

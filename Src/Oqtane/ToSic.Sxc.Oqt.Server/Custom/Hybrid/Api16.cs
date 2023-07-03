@@ -70,21 +70,25 @@ namespace Custom.Hybrid
         #endregion
 
 
-        #region AsItem(s) / Merge
+        #region As Conversions
 
-        /// <inheritdoc />
-        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
-
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode16.AsItem" />
         public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)
             => _DynCodeRoot.AsC.AsItem(target);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode16.AsItems" />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
             => _DynCodeRoot.AsC.AsItems(list);
 
+        /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
-        
+
+        /// <inheritdoc cref="IDynamicCode16.AsTyped" />
+        public ITypedRead AsTyped(object original) => _DynCodeRoot.AsC.AsTypedPure(original);
+
+        /// <inheritdoc cref="IDynamicCode16.AsStack" />
+        public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
+
         #endregion
 
         public ITypedModel MyModel => CodeHelper.MyModel;
