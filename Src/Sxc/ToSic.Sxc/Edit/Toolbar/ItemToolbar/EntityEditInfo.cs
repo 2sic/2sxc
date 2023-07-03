@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using IEntity = ToSic.Eav.Data.IEntity;
 // ReSharper disable InconsistentNaming
 

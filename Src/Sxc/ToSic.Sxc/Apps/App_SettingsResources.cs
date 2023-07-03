@@ -1,9 +1,7 @@
-﻿using System;
-using ToSic.Eav.Data;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Data.AsConverter;
-using ToSic.Sxc.Services.CmsService;
+using ToSic.Sxc.Data.Decorators;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -11,9 +9,8 @@ namespace ToSic.Sxc.Apps
 {
     public partial class App
     {
-
-
         #region Dynamic Properties: Configuration, Settings, Resources
+
         /// <inheritdoc />
         // Create config object. Note that AppConfiguration could be null, then it would use default values
         public AppConfiguration Configuration => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));

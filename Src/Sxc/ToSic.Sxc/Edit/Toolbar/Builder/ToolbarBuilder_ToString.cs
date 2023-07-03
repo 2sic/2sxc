@@ -6,6 +6,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.Data;
 using ToSic.Eav.Serialization;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
 using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
 using Attribute = ToSic.Razor.Markup.Attribute;

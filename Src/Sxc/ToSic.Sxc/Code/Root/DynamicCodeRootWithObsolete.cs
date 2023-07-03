@@ -11,6 +11,7 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.LookUp;
 using ToSic.SexyContent;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Code
 {

@@ -1,14 +1,14 @@
 ﻿using ToSic.Eav.Data;
 
-namespace ToSic.Sxc.Services.CmsService
+namespace ToSic.Sxc.Data.Decorators
 {
-    internal class CmsEditDecorator: IDecorator<IEntity>
+    internal class CmsEditDecorator : IDecorator<IEntity>
     {
-        public bool EnableEdit { get; }
+        public bool DisableEdit { get; }
 
         private CmsEditDecorator(bool enableEdit)
         {
-            EnableEdit = enableEdit;
+            DisableEdit = !enableEdit;
         }
 
         public static EntityDecorator12<CmsEditDecorator> Wrap(IEntity entity, bool enableEdit) =>

@@ -8,6 +8,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services.CmsService
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.Services.CmsService
             if (_field.Parent.IsDemoItem)
                 return l.Return(tag, "demo-item, so no toolbar");
 
-            if (_field.Parent.Entity.GetDecorator<CmsEditDecorator>()?.EnableEdit == false)
+            if (_field.Parent.Entity.DisableInlineEdit())
                 return l.Return(tag, "decorator no-edit");
 
             var toolbar = _toolbar ?? defaultToolbar;

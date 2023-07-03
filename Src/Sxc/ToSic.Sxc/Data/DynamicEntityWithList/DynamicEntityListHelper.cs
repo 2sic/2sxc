@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Data
 {

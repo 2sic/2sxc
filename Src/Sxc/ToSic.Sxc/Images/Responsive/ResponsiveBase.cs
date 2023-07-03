@@ -4,6 +4,7 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
+using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Web;
 using static ToSic.Sxc.Configuration.Features.BuiltInFeatures;
 
@@ -90,7 +91,7 @@ namespace ToSic.Sxc.Images
                 if (!isInSameEntity) return tag;
 
                 // Check if it's not a demo-entity, in which case editing settings shouldn't happen
-                if (Call.Field.Parent.IsDemoItem) return tag;
+                if (Call.Field.Parent.Entity.DisableInlineEdit()) return tag;
 
                 // var tlbUi = ImgService.ToolbarOrNull?.
                 var toolbarConfig = ImgService.ToolbarOrNull?.Empty().Metadata(Call.Field).Settings(hover: "right-middle");

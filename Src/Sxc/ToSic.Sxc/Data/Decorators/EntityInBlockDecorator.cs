@@ -2,7 +2,7 @@
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Data
+namespace ToSic.Sxc.Data.Decorators
 {
     [PrivateApi]
     public class EntityInBlockDecorator: EntityInListDecorator
@@ -33,10 +33,5 @@ namespace ToSic.Sxc.Data
         /// new 2019-09-18 trying to mark demo-items for better detection in output #1792
         /// </summary>
         internal bool IsDemoItem { get; }
-    }
-
-    public static class IEntityExtensions
-    {
-        public static bool IsDemoItem(this IEntity entity) => entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false;
     }
 }
