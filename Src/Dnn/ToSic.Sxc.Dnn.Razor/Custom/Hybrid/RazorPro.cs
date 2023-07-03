@@ -89,9 +89,6 @@ namespace Custom.Hybrid
         #region CmsContext
 
         /// <inheritdoc />
-        public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
-
-        /// <inheritdoc />
         public ICmsContext MyContext => _DynCodeRoot.CmsContext;
 
         /// <inheritdoc />
