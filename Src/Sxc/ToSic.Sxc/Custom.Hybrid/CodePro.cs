@@ -142,9 +142,6 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public IAppTyped App => (IAppTyped)_DynCodeRoot?.App;
 
-        [PrivateApi] public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
-        [PrivateApi] public ITypedStack SettingsStack => _DynCodeRoot.Settings;
-
         /// <inheritdoc cref="IDynamicCode16.AllResources" />
         public ITypedStack AllResources => _DynCodeRoot.Resources;
 
@@ -176,7 +173,6 @@ namespace Custom.Hybrid
         #region AsItem(s) / Merge
 
         /// <inheritdoc />
-        public ITypedStack Merge(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
 
         /// <inheritdoc />
@@ -201,7 +197,6 @@ namespace Custom.Hybrid
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
         /// <inheritdoc />
-        public ITypedRead Read(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
-
+        public ICmsView MyView => _DynCodeRoot.CmsContext.View;
     }
 }

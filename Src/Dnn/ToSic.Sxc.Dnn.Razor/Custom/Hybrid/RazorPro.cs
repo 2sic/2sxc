@@ -75,9 +75,6 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public new IAppTyped App => (IAppTyped)_DynCodeRoot.App;
 
-        [PrivateApi] public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
-        [PrivateApi] public ITypedStack SettingsStack => _DynCodeRoot.Settings;
-
         /// <inheritdoc cref="IDynamicCode16.AllResources" />
         public ITypedStack AllResources => _DynCodeRoot.Resources;
 
@@ -100,6 +97,9 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
+
+        /// <inheritdoc />
+        public ICmsView MyView => _DynCodeRoot.CmsContext.View;
 
         #endregion
 

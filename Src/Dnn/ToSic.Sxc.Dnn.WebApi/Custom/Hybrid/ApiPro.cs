@@ -71,18 +71,8 @@ namespace Custom.Hybrid
         /// <inheritdoc />
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
-        ///// <inheritdoc cref="IDynamicCode.Edit" />
-        //public IEditService Edit => _DynCodeRoot?.Edit;
-
-        ///// <inheritdoc cref="IDynamicCode.CmsContext" />
-        //public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
-        ////public ICmsContext MyContext => _DynCodeRoot?.CmsContext;
-
-        ///// <inheritdoc cref="IDynamicCode12.Resources" />
-        //public dynamic Resources => _DynCodeRoot.Resources;
-
-        ///// <inheritdoc cref="IDynamicCode12.Settings" />
-        //public dynamic Settings => _DynCodeRoot.Settings;
+        /// <inheritdoc />
+        public ICmsView MyView => _DynCodeRoot.CmsContext.View;
 
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
@@ -143,19 +133,10 @@ namespace Custom.Hybrid
         private CodeInfoService CcS => _ccs.Get(SysHlp.GetService<CodeInfoService>);
         private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
-        ///// <inheritdoc />
-        //public new ITypedStack Settings => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Settings);
-
-        ///// <inheritdoc />
-        //public new ITypedStack Resources => CcS.GetAndWarn(DynamicCode16Warnings.AvoidSettingsResources, _DynCodeRoot.Resources);
-
         #region New App, Settings, Resources
 
         /// <inheritdoc />
         public IAppTyped App => (IAppTyped)_DynCodeRoot.App;
-
-        [PrivateApi] public ITypedStack ResourcesStack => _DynCodeRoot.Resources;
-        [PrivateApi] public ITypedStack SettingsStack => _DynCodeRoot.Settings;
 
         /// <inheritdoc cref="IDynamicCode16.AllResources" />
         public ITypedStack AllResources => _DynCodeRoot.Resources;
@@ -189,7 +170,6 @@ namespace Custom.Hybrid
         #region AsItem(s) / Merge
 
         /// <inheritdoc />
-        public ITypedStack Merge(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);
 
 
@@ -206,9 +186,6 @@ namespace Custom.Hybrid
         public ITypedModel MyModel => CodeHelper.MyModel;
 
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
-
-        /// <inheritdoc />
-        public ITypedRead Read(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
 
         #region Net Core Compatibility Shims - Copy this entire section to WebApi Files

@@ -111,6 +111,9 @@ namespace Custom.Hybrid
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
         /// <inheritdoc />
+        public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+
+        /// <inheritdoc />
         public dynamic Resources => _DynCodeRoot.Resources;
 
         /// <inheritdoc />

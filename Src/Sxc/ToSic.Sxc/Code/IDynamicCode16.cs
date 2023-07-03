@@ -48,6 +48,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc cref="ICmsContext.Page" />
         ICmsPage MyPage { get; }
 
+        ICmsView MyView { get; }
 
         #endregion
 
@@ -60,37 +61,9 @@ namespace ToSic.Sxc.Code
 
 
 
-        #region from V16 WIP
-
-        /// <summary>
-        /// Take a json and provide it as a dynamic object to the code
-        /// </summary>
-        /// <remarks>Added in 2sxc 10.22.00</remarks>
-        /// <param name="json">the original json string</param>
-        /// <param name="fallback">
-        /// Alternate string to use, if the original json can't parse.
-        /// Can also be null or the word "error" if you would prefer an error to be thrown.</param>
-        /// <returns>A dynamic object representing the original json.
-        /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
-        /// If you provide null for the fallback, then you will get null back.
-        /// </returns>
-        ITypedRead Read(string json, string fallback = default);
-
-        #endregion
-
         #region Stuff Added in v16
 
         IAppTyped App { get; }
-
-        //// TODO: remove once all apps are migrated
-        //ITypedStack Settings { get; }
-
-        //// TODO: remove once all apps are migrated
-        //ITypedStack Resources { get; }
-
-        ITypedStack ResourcesStack { get; }
-
-        ITypedStack SettingsStack { get; }
 
         /// <summary>
         /// Stack of all Resources in the System, merging Resources of View, App, Site, Global etc.
@@ -149,8 +122,6 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="items"></param>
         /// <returns></returns>
-        ITypedStack Merge(params object[] items);
-
         ITypedStack AsStack(params object[] items);
 
         #endregion
