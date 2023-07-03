@@ -53,12 +53,10 @@ namespace ToSic.Sxc.Data
             return FindValueOrNull(name).ConvertOrFallback(fallback);
         }
 
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, string attribute)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
         {
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
-            return attribute != default
-                ? Tag.Attr(attribute, value)
-                : value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
+            return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
         }
     }
 }
