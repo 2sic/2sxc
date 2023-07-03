@@ -75,13 +75,6 @@ namespace Custom.Hybrid
             }
         }
 
-        private void Test()
-        {
-            var x = base.Content("");
-            var y = base.Ok();
-            var z = base.Redirect("todo");
-        }
-
         #endregion
 
     }

@@ -35,7 +35,7 @@ namespace Custom.Hybrid
                 : throw new NotSupportedException("CreateInstance with .cshtml files is not supported in Oqtane. Use a .cs file instead. ");
         }
 
-        protected void VerifyFileExists(string path)
+        private void VerifyFileExists(string path)
         {
             var pathFinder = GetService<IServerPaths>();
             var finalPath = pathFinder.FullAppPath(path);
