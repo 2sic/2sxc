@@ -1,4 +1,6 @@
-﻿using ToSic.Lib.Documentation;
+﻿using ToSic.Eav;
+using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services
 {
@@ -63,5 +65,24 @@ namespace ToSic.Sxc.Services
         /// <param name="json"></param>
         /// <returns></returns>
         object ToObject(string json);
+
+        /// <summary>
+        /// Creates a <see cref="ITypedRead"/> object from a json string.
+        /// </summary>
+        /// <param name="json"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="fallback">
+        /// Alternate string to use, if the original json can't parse.
+        /// Can also be null or the word "error" if you would prefer an error to be thrown.</param>
+        /// <returns>A dynamic object representing the original json.
+        /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
+        /// If you provide null for the fallback, then you will get null back.
+        /// </returns>
+        /// <remarks>
+        /// New in 16.02
+        /// </remarks>
+        /// <returns></returns>
+        [WorkInProgressApi("WIP 16.02 - not yet done")]
+        ITypedRead ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default);
     }
 }
