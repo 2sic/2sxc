@@ -94,7 +94,7 @@ namespace Custom.Hybrid
         public ITypedStack AllSettings => _DynCodeRoot.Settings;
 
 
-        public IMyData MyData => _DynCodeRoot.Data as IMyData;
+        public IContextData MyData => _DynCodeRoot.Data;
 
         #endregion
 

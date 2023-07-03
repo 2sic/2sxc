@@ -48,7 +48,7 @@ namespace Custom.Hybrid
 
         public ITypedItem MyHeader => CodeHelper.MyHeader;
 
-        public IMyData MyData => _DynCodeRoot.Data as IMyData;
+        public IContextData MyData => _DynCodeRoot.Data;
 
         #endregion
 

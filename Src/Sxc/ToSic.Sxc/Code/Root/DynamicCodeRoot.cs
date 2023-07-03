@@ -108,7 +108,7 @@ namespace ToSic.Sxc.Code
 
             Block = block;
             Data = block.Data;
-            Data.ConnectToRoot(this);
+            // Data.ConnectToRoot(this);
             AttachApp(block.App);
 
 

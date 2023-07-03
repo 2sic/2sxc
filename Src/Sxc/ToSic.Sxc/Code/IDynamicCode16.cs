@@ -143,7 +143,7 @@ namespace ToSic.Sxc.Code
 
         ITypedItem MyHeader { get; }
 
-        IMyData MyData { get; }
+        IContextData MyData { get; }
 
         #endregion
 

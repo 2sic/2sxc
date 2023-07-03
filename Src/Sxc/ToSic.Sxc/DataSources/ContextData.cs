@@ -20,7 +20,7 @@ namespace ToSic.Sxc.DataSources
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
     /// </summary>
     [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
-    internal partial class ContextData : PassThrough, INeedsDynamicCodeRoot, IHasDynamicCodeRoot, IContextData
+    internal partial class ContextData : PassThrough, /*INeedsDynamicCodeRoot, IHasDynamicCodeRoot,*/ IContextData
     {
         #region Constructor and Init
 
@@ -52,19 +52,20 @@ namespace ToSic.Sxc.DataSources
 
         #region New v16
 
-        public IEnumerable<IEntity> MyContent =>  _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
-
-        IEnumerable<IEntity> IContextData.MyContent => _codeChanges.Value.GetAndWarn(NoDataMyContent, MyContent);
+        internal IEnumerable<IEntity> MyContent => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _myContent = new GetOnce<IEnumerable<IEntity>>();
+        //IEnumerable<IEntity> IContextData.MyContent => _codeChanges.Value.GetAndWarn(NoDataMyContent, MyContent);
 
-        public IEnumerable<IEntity> MyData => _myData.Get(() => GetStream(emptyIfNotFound: true).List);
 
-        IEnumerable<IEntity> IContextData.MyData => _codeChanges.Value.GetAndWarn(NoDataMyData, MyData);
-        private readonly GetOnce<IEnumerable<IEntity>> _myData = new GetOnce<IEnumerable<IEntity>>();
+        //public IEnumerable<IEntity> MyData => _myData.Get(() => GetStream(emptyIfNotFound: true).List);
 
-        public IEnumerable<IEntity> MyHeader =>  _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
-        IEnumerable<IEntity> IContextData.MyHeader => _codeChanges.Value.GetAndWarn(NoDataMyHeader, MyHeader);
+        //IEnumerable<IEntity> IContextData.MyData => _codeChanges.Value.GetAndWarn(NoDataMyData, MyData);
+        //private readonly GetOnce<IEnumerable<IEntity>> _myData = new GetOnce<IEnumerable<IEntity>>();
+
+        internal IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
+        //IEnumerable<IEntity> IContextData.MyHeader => _codeChanges.Value.GetAndWarn(NoDataMyHeader, MyHeader);
+
 
         #endregion
 
