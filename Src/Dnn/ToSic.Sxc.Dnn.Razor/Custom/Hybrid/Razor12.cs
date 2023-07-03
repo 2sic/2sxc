@@ -26,7 +26,7 @@ namespace Custom.Hybrid
     /// Provides context objects like CmsContext, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi]
-    public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHelp
+    public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHelp, ICreateInstance
     {
 
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
@@ -41,10 +41,6 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public override IHtmlHelper Html => SysHlp.Html;
-
-        /// <inheritdoc />
-        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 
@@ -160,6 +156,16 @@ namespace Custom.Hybrid
         //public string Path => VirtualPath;
 
         [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV12.Compile12;
+
+        #endregion
+
+        #region CreateInstance
+
+        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
+
+        /// <inheritdoc />
+        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 

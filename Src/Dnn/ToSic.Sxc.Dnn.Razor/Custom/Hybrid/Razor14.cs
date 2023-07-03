@@ -27,7 +27,7 @@ namespace Custom.Hybrid
     /// Important: The property `Convert` which exited on Razor12 was removed. use `Kit.Convert` instead.
     /// </remarks>
     [PublicApi]
-    public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>, IHasCodeHelp
+    public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>, IHasCodeHelp, ICreateInstance
     {
         /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
@@ -53,10 +53,6 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         public override IHtmlHelper Html => SysHlp.Html;
-
-        /// <inheritdoc />
-        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 
@@ -113,6 +109,16 @@ namespace Custom.Hybrid
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         [PrivateApi] List<CodeHelp> IHasCodeHelp.ErrorHelpers => CodeHelpDbV14.Compile14;
+
+        #endregion
+
+        #region CreateInstance
+
+        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
+
+        /// <inheritdoc />
+        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 

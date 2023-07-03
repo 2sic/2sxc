@@ -143,15 +143,15 @@ namespace Custom.Hybrid
 
         #region  CreateInstance implementation
 
-        public string CreateInstancePath { get; set; }
+        string ICreateInstance.CreateInstancePath { get; set; }
 
         [NonAction]
         public dynamic CreateInstance(string virtualPath,
             string noParamOrder = Protector,
             string name = null,
             string relativePath = null,
-            bool throwOnError = true) =>
-            _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, CreateInstancePath, throwOnError);
+            bool throwOnError = true)
+            => _DynCodeRoot.CreateInstance(virtualPath, noParamOrder, name, (this as ICreateInstance).CreateInstancePath, throwOnError);
 
         #endregion
 

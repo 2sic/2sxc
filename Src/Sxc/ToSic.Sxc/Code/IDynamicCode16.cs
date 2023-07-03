@@ -152,7 +152,13 @@ namespace ToSic.Sxc.Code
 
         #region SharedCode
 
-        //SharedCode Code(string path);
+        /// <summary>
+        /// Create an instance of a class in a `.cs` code file.
+        /// Note that the class name in the file must match the file name, so `MyHelpers.cs` must have a `MyHelpers` class.
+        /// </summary>
+        /// <param name="path">The path, like `Helper.cs`, `./helper.cs` or `../../Helper.cs`</param>
+        /// <returns></returns>
+        dynamic GetCode(string path);
 
         #endregion
 

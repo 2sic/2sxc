@@ -90,8 +90,10 @@ namespace Custom.Hybrid
 
 
         #region Link and Edit
+
         /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
+
         /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot?.Edit;
 
@@ -101,7 +103,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [PrivateApi]
-        public string CreateInstancePath { get; set; }
+        string ICreateInstance.CreateInstancePath { get; set; }
 
         /// <inheritdoc cref="IDynamicCode.CreateInstance" />
         public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>

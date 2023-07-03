@@ -130,9 +130,6 @@ namespace Custom.Hybrid
 
         #endregion
 
-        private CodeInfoService CcS => _ccs.Get(SysHlp.GetService<CodeInfoService>);
-        private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
-
         #region New App, Settings, Resources
 
         /// <inheritdoc />
@@ -145,6 +142,11 @@ namespace Custom.Hybrid
         public ITypedStack AllSettings => _DynCodeRoot.Settings;
 
         #endregion
+
+        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+        public dynamic GetCode(string path)
+            => _DynCodeRoot.CreateInstance(path, relativePath: ((ICreateInstance)this).CreateInstancePath);
+
 
         #region My... Stuff
 

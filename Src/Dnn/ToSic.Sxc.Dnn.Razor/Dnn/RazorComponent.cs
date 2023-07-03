@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazorCompatibility, IDnnRazor11
+    public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
     {
         /// <inheritdoc />
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
@@ -37,10 +37,6 @@ namespace ToSic.Sxc.Dnn
 
         /// <inheritdoc />
         public override IHtmlHelper Html => SysHlp.Html;
-
-        /// <inheritdoc />
-        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 
@@ -175,5 +171,16 @@ namespace ToSic.Sxc.Dnn
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion
+
+        #region CreateInstance
+
+        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
+
+        /// <inheritdoc />
+        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+
+        #endregion
+
     }
 }

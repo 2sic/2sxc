@@ -55,7 +55,7 @@ namespace Custom.Hybrid
             // Ensure the Api knows what path it's on, in case it will
             // create instances of .cs files
             if (context.HttpContext.Items.TryGetValue(CodeCompiler.SharedCodeRootPathKeyInCache, out var createInstancePath))
-                CreateInstancePath = createInstancePath as string;
+                (this as ICreateInstance).CreateInstancePath = createInstancePath as string;
         }
 
         private void TryToAttachAppFromUrlParams(ActionExecutingContext context) => base.Log.Do(() =>

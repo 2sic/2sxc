@@ -10,7 +10,6 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
-using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -70,17 +69,17 @@ namespace Custom.Hybrid
 
         /// <inheritdoc />
         [PrivateApi]
-        public string CreateInstancePath { get; set; }
+        string ICreateInstance.CreateInstancePath { get; set; }
 
         /// <inheritdoc cref="IDynamicCode.CreateInstance" />
         public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>
             SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
+        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+        public dynamic GetCode(string path) => SysHlp.CreateInstance(path);
+
+
         #endregion
-
-
-        private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
-        private readonly GetOnce<CodeInfoService> _ccs = new GetOnce<CodeInfoService>();
 
 
         #region New App, Settings, Resources

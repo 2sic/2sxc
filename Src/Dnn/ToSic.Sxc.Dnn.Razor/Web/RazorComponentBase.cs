@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, IRazor, ICreateInstance, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
+    public abstract class RazorComponentBase: WebPageBase, IRazor, /*ICreateInstance,*/ IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
     {
         #region Constructor / Setup
 
@@ -67,8 +67,6 @@ namespace ToSic.Sxc.Web
         /// </summary>
         [PrivateApi] ILog IHasLog.Log => SysHlp.Log;
 
-        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
-
         /// <inheritdoc />
         public string Path => VirtualPath;
 
@@ -82,10 +80,6 @@ namespace ToSic.Sxc.Web
 
         /// <inheritdoc />
         public virtual IHtmlHelper Html => SysHlp.Html;
-
-        /// <inheritdoc />
-        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 

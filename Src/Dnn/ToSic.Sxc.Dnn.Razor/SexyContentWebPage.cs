@@ -41,6 +41,7 @@ namespace ToSic.SexyContent.Razor
     /// </summary>
     public abstract class SexyContentWebPage : 
         RazorComponentBase,
+        ICreateInstance,
         IHasDnn,
         IDnnRazorCustomize, 
         IDynamicCodeBeforeV10,
@@ -55,10 +56,6 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         public override IHtmlHelper Html => SysHlp.Html;
-
-        /// <inheritdoc />
-        public override dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 
@@ -257,6 +254,16 @@ namespace ToSic.SexyContent.Razor
 
         /// <inheritdoc />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
+
+        #endregion
+
+        #region CreateInstance
+
+        [PrivateApi] string ICreateInstance.CreateInstancePath { get; set; }
+
+        /// <inheritdoc />
+        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 
         #endregion
 

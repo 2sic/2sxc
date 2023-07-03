@@ -89,7 +89,7 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc />
         [PrivateApi]
-        public string CreateInstancePath { get; set; }
+        string ICreateInstance.CreateInstancePath { get; set; }
 
         /// <inheritdoc cref="IDynamicCode.CreateInstance" />
         public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true) =>

@@ -8,8 +8,7 @@ namespace Custom.Hybrid
 {
     public partial class Razor12<TModel>
     {
-
-        public string CreateInstancePath
+        string ICreateInstance.CreateInstancePath
         {
             get => _createInstancePath ?? Path;
             set => _createInstancePath = value;
@@ -26,19 +25,14 @@ namespace Custom.Hybrid
             string relativePath = null,
             bool throwOnError = true)
         {
-            var directory = System.IO.Path.GetDirectoryName(Path);
-            if (directory == null) throw new Exception("Current directory seems to be null");
+            var directory = System.IO.Path.GetDirectoryName(Path) 
+                            ?? throw new("Current directory seems to be null");
             var path = System.IO.Path.Combine(directory, virtualPath);
             VerifyFileExists(path);
             
             return path.EndsWith(CodeCompiler.CsFileExtension)
                 ? _DynCodeRoot.CreateInstance(path, noParamOrder, name, null, throwOnError)
-                : CreateInstanceCshtml(path);
-        }
-
-        private dynamic CreateInstanceCshtml(string path)
-        {
-            throw new NotSupportedException("CreateInstance with .cshtml files is not supported in Oqtane. We're still trying to find a solution, but ATM it doesn't work. Use a .cs file instead. ");
+                : throw new NotSupportedException("CreateInstance with .cshtml files is not supported in Oqtane. Use a .cs file instead. ");
         }
 
         protected void VerifyFileExists(string path)

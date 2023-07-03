@@ -2,11 +2,9 @@
 using System;
 using System.Collections.Generic;
 using ToSic.Eav;
-using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -19,9 +17,6 @@ namespace Custom.Hybrid
     // ReSharper disable once UnusedMember.Global
     public abstract class Razor16: Razor14<dynamic, ServiceKit14>, IDynamicCode16
     {
-        private CodeInfoService CcS => _ccs.Get(GetService<CodeInfoService>);
-        private readonly GetOnce<CodeInfoService> _ccs = new();
-
         #region New App, Settings, Resources
 
         /// <inheritdoc />
@@ -105,6 +100,9 @@ namespace Custom.Hybrid
 
 
         #endregion
+
+        /// <inheritdoc cref="IDynamicCode16.GetCode"/>
+        public dynamic GetCode(string path) => CreateInstance(path);
 
     }
 }
