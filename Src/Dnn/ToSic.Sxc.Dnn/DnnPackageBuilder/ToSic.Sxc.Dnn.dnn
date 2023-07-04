@@ -728,8 +728,9 @@
             version="01.00.07.01" - ToSic.Imageflow.Dnn v01.00.07 is OK
             version="01.10.00.01" - ToSic.Imageflow.Dnn v01.01.00 NOT OK
             version="01.10.01.01" - rollback to ToSic.Imageflow.Dnn v01.00.07
+            version="01.10.02.01" - ToSic.Imageflow.Dnn v01.02.00 is OK
     -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.01.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.02.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
@@ -762,6 +763,11 @@
             <basePath>bin</basePath>
             <assembly>
               <name>ToSic.Imageflow.Dnn.dll</name>
+            </assembly>
+            <!-- Imageflow.NET transitive dependency -->
+            <assembly>
+              <name>Newtonsoft.Json.dll</name>
+              <version>13.0.0.0</version>
             </assembly>
           </assemblies>
 

@@ -1,16 +1,10 @@
 
 <h2>Imageflow extension for DNN</h2>
-<p>Version 01.00.07</p>
+<p>Version 01.02.00</p>
 <ul>
 	<li>dependent assemblies are in bin\Imageflow folder</li>
 </ul>
 <p>Notes</p>
 <ul>
 	<li>As part of dnn extension installation it will automatically unregister older ImageResizer http module in web.config.</li>
-</ul>
-<p>Versions included in 2sxc</p>
-<ul>
-	<li>version="01.00.07.01" - ToSic.Imageflow.Dnn v01.00.07 is OK</li>
-	<li>version="01.10.00.01" - ToSic.Imageflow.Dnn v01.01.00 NOT OK</li>
-	<li>version="01.10.01.01" - rollback to ToSic.Imageflow.Dnn v01.00.07</li>
 </ul>
