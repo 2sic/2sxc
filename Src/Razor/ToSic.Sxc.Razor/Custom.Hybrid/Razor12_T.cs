@@ -1,21 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc.Razor.Internal;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Razor;
 using ToSic.Sxc.Services;
-using IHasLog = ToSic.Lib.Logging.IHasLog;
-using ILog = ToSic.Lib.Logging.ILog;
 using static ToSic.Eav.Parameters;
 using System.Collections.Generic;
 using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Sxc.Adam;
-using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Engines;
 
@@ -23,7 +17,7 @@ using ToSic.Sxc.Engines;
 namespace Custom.Hybrid
 {
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract partial class Razor12<TModel>: Microsoft.AspNetCore.Mvc.Razor.RazorPage<TModel>, IHasCodeLog, IRazor, IRazor12, ISetDynamicModel
+    public abstract class Razor12<TModel>: OqtRazorBase<TModel>, IHasCodeLog, IRazor, IRazor12, ISetDynamicModel
     {
         #region Constructor / DI / SysHelp
 
@@ -31,50 +25,7 @@ namespace Custom.Hybrid
         /// Constructor - only available for inheritance
         /// </summary>
         [PrivateApi]
-        protected Razor12() { }
-
-        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
-
-        /// <summary>
-        /// Special helper to move all Razor logic into a separate class.
-        /// For architecture of Composition over Inheritance.
-        /// </summary>
-        [PrivateApi]
-        internal OqtRazorHelper<TModel> SysHlp => _sysHlp ??= new(this, "Oqt.Rzr12"); //.Init(this);
-        private OqtRazorHelper<TModel> _sysHlp;
-
-        #endregion
-
-        #region GetService / Logs / DevTools
-
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
-
-        /// <inheritdoc cref="IHasCodeLog.Log" />
-        public ICodeLog Log => SysHlp.CodeLog;
-
-        [PrivateApi] ILog IHasLog.Log => SysHlp.Log;
-
-        [PrivateApi("Not yet ready")]
-        public IDevTools DevTools => _DynCodeRoot.DevTools;
-
-        #endregion
-
-        #region DynCode Root
-
-        [PrivateApi]
-        public IDynamicCodeRoot _DynCodeRoot => SysHlp._DynCodeRootMain;
-
-        [PrivateApi]
-        public void ConnectToRoot(IDynamicCodeRoot parent) => SysHlp.ConnectToRoot(parent);
-
-        [RazorInject]
-        [PrivateApi]
-        public new ViewDataDictionary<TModel> ViewData
-        {
-            get => base.ViewData;
-            set => base.ViewData = SysHlp.HandleViewDataInject(value);
-        }
+        protected Razor12(): base(Constants.CompatibilityLevel12, "Oqt.Rzr12") { }
 
         #endregion
 
@@ -82,11 +33,7 @@ namespace Custom.Hybrid
 
         public dynamic DynamicModel => SysHlp.DynamicModel;
 
-        void ISetDynamicModel.SetDynamicModel(object data) => SysHlp.SetDynamicModel(data);
-
         #endregion
-
-
 
         #region CreateInstance
 

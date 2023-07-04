@@ -13,11 +13,11 @@ namespace ToSic.Sxc.Razor
 {
     internal class OqtRazorHelper<TModel>: RazorHelperBase, ISetDynamicModel
     {
-        public OqtRazorHelper(Razor12<TModel> owner, string logName) : base(logName)
+        public OqtRazorHelper(OqtRazorBase<TModel> owner, string logName) : base(logName)
         {
             _owner = owner;
         }
-        private readonly Razor12<TModel> _owner;
+        private readonly OqtRazorBase<TModel> _owner;
 
         //public OqtRazorHelper<TModel> Init(IHasDynamicCodeRoot owner)
         //{
