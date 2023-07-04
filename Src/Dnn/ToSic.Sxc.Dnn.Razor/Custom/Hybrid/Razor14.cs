@@ -29,7 +29,7 @@ namespace Custom.Hybrid
     [PublicApi]
     public abstract partial class Razor14: RazorComponentBase, IRazor14<object, ServiceKit14>, IHasCodeHelp, ICreateInstance
     {
-        /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
+        /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
         public override HelperResult RenderPage(string path, params object[] data)
             => SysHlp.RenderPageNotSupported();
@@ -38,7 +38,7 @@ namespace Custom.Hybrid
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
 
@@ -59,10 +59,10 @@ namespace Custom.Hybrid
 
         #region Link, Edit
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot.Link;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot.Edit;
 
         #endregion
@@ -70,7 +70,7 @@ namespace Custom.Hybrid
 
         #region CmsContext
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion
@@ -78,10 +78,10 @@ namespace Custom.Hybrid
 
         #region Content, Header, etc. and List
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _DynCodeRoot.Content;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Header" />
         public dynamic Header => _DynCodeRoot.Header;
 
         /// <inheritdoc />
@@ -91,11 +91,11 @@ namespace Custom.Hybrid
 
         #region CreateSource Stuff
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 

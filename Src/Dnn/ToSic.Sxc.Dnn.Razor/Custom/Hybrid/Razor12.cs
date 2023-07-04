@@ -29,14 +29,14 @@ namespace Custom.Hybrid
     public abstract partial class Razor12 : RazorComponentBase, IRazor12, IHasCodeHelp, ICreateInstance
     {
 
-        /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
+        /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
         public override HelperResult RenderPage(string path, params object[] data) 
             => SysHlp.RenderPageNotSupported();
 
         #region Core Properties which should appear in docs
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IHasCodeLog.Log" />
         public override ICodeLog Log => SysHlp.CodeLog;
 
         /// <inheritdoc />
@@ -47,13 +47,13 @@ namespace Custom.Hybrid
 
         #region Link, Edit, Dnn, App, Data
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot.Link;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot.Edit;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel12;
@@ -68,29 +68,29 @@ namespace Custom.Hybrid
 
         #region AsDynamic in many variations
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
         public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
         [PublicApi("Careful - still Experimental in 12.02")]
         public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsC.MergeDynamic(entities);
 
         #endregion
 
         #region AsEntity
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.AsEntity" />
         public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
         #endregion
 
         #region AsList
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsList" />
         public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsC.AsDynamicList(list);
 
         #endregion
@@ -105,21 +105,21 @@ namespace Custom.Hybrid
 
         #region Data Source Stuff
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
         #endregion
 
         #region Content, Header, etc. and List
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _DynCodeRoot.Content;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Header" />
         public dynamic Header => _DynCodeRoot.Header;
 
         #endregion
@@ -130,23 +130,23 @@ namespace Custom.Hybrid
 
         #region Adam 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsAdam" />
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         #endregion
 
         #region v11 properties CmsContext
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
         #endregion
 
         #region v12 properties Resources, Settings, Path
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode12.Resources" />
         public dynamic Resources => _DynCodeRoot.Resources;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode12.Settings" />
         public dynamic Settings => _DynCodeRoot.Settings;
 
         [PrivateApi("Not yet ready")]
@@ -161,9 +161,10 @@ namespace Custom.Hybrid
 
         #region CreateInstance
 
+        /// <inheritdoc cref="ICreateInstance.CreateInstancePath"/>
         [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
         public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
             => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
 

@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Code
         // <inheritdoc />
         public new ICodeLog Log => SysHlp.CodeLog;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel10;
@@ -41,24 +41,25 @@ namespace ToSic.Sxc.Code
 
         #region App / Data / Content / Header
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.App" />
         public IApp App => _DynCodeRoot?.App;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Data" />
         public IContextData Data => _DynCodeRoot?.Data;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _DynCodeRoot?.Content;
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Header" />
         public dynamic Header => _DynCodeRoot?.Header;
 
         #endregion
 
 
         #region Link and Edit
-        /// <inheritdoc />
+
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
@@ -77,7 +78,7 @@ namespace ToSic.Sxc.Code
 
         #region Context, Settings, Resources
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
 
         #endregion CmsContext

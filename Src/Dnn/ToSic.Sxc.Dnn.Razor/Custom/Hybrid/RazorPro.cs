@@ -32,7 +32,7 @@ namespace Custom.Hybrid
     public abstract partial class RazorPro: RazorComponentBase, IRazor, IDynamicCode16, IHasCodeHelp, IGetCodePath
     {
 
-        /// <inheritdoc cref="RazorHelper.RenderPageNotSupported"/>
+        /// <inheritdoc cref="DnnRazorHelper.RenderPageNotSupported"/>
         [PrivateApi]
         public override HelperResult RenderPage(string path, params object[] data)
             => SysHlp.RenderPageNotSupported();
@@ -40,7 +40,7 @@ namespace Custom.Hybrid
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel16;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
 
@@ -62,7 +62,7 @@ namespace Custom.Hybrid
 
         #region Link, Edit
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot.Link;
 
         #endregion

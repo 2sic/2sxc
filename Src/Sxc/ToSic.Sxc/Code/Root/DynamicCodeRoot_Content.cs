@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Data;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 using static ToSic.Sxc.Blocks.ViewParts;
 
@@ -11,12 +10,12 @@ namespace ToSic.Sxc.Code
     {
         #region basic properties like Content, Header
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _contentGo.Get(() => TryToBuildFirstOfStream(StreamDefaultName));
         private readonly GetOnce<object> _contentGo = new GetOnce<object>();
 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Header" />
         public dynamic Header => _header.Get(Log, l =>
         {
             var header = TryToBuildFirstOfStream(StreamHeader);

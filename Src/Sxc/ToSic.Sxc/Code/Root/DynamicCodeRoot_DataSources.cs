@@ -27,11 +27,11 @@ namespace ToSic.Sxc.Code
         private readonly GetOnce<DynamicCodeDataSources> _dataSources = new GetOnce<DynamicCodeDataSources>();
 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource 
             => DataSources.CreateDataSource<T>(false, attach: inSource, options: configurationProvider);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
         {
             // if it has a source, then use this, otherwise it's null and then it uses the App-Default

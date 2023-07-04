@@ -71,10 +71,10 @@ namespace ToSic.SexyContent.WebApi
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel9Old;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.App" />
         public IApp App => _DynCodeRoot.App;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Data" />
         public IContextData Data => _DynCodeRoot.Data;
 
 
@@ -122,12 +122,15 @@ namespace ToSic.SexyContent.WebApi
 
         #region CreateSource implementations
         [Obsolete]
+        [PrivateApi]
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
 	        => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configurationProvider);
 
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
 	    public T CreateSource<T>(IDataStream source) where T : IDataSource 
             => _DynCodeRoot.CreateSource<T>(source);
 
@@ -164,7 +167,7 @@ namespace ToSic.SexyContent.WebApi
 
         #region Adam
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsAdam" />
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         /// <summary>
@@ -200,14 +203,16 @@ namespace ToSic.SexyContent.WebApi
         #endregion
 
         #region Link & Edit - added in 2sxc 10.01
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
+        /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
 
         #region CmsContext, Resources and Settings
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         ///// <inheritdoc />

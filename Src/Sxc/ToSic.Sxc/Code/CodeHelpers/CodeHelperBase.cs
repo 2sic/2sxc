@@ -6,13 +6,6 @@ namespace ToSic.Sxc.Code.CodeHelpers
 {
     public class CodeHelperBase : ServiceForDynamicCode
     {
-        /// <summary>
-        /// Constructor for DI
-        /// </summary>
-        public CodeHelperBase() : base("Sxc.DCdHlp")
-        {
-        }
-
         protected CodeHelperBase(string logName) : base(logName)
         {
         }

@@ -21,28 +21,27 @@ namespace ToSic.Sxc.Code
 
         #region AsDynamic Implementations
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
         public dynamic AsDynamic(string json, string fallback = default) => AsC.AsDynamicFromJson(json, fallback);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
         public dynamic AsDynamic(IEntity entity) => AsC.AsDynamic(entity);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
         public dynamic AsDynamic(object dynamicEntity) => AsC.AsDynamicInternal(dynamicEntity);
 
-        /// <inheritdoc />
-        [PublicApi]
+        /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
         public dynamic AsDynamic(params object[] entities) => AsC.MergeDynamic(entities);
 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsEntity" />
         public IEntity AsEntity(object dynamicEntity) => AsC.AsEntity(dynamicEntity);
 
         #endregion
 
         #region AsList
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsList" />
         public IEnumerable<dynamic> AsList(object list) => AsC.AsDynamicList(list);
 
         #endregion
@@ -57,7 +56,7 @@ namespace ToSic.Sxc.Code
 
         #region Adam
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsAdam" />
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => AsC.Folder(item, fieldName);
 
         #endregion

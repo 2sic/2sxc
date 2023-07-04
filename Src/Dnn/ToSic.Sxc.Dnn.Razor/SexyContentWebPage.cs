@@ -61,14 +61,13 @@ namespace ToSic.SexyContent.Razor
 
         #region Helpers linked through AppAndData Helpers
 
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot.Link;
 
-        [PrivateApi] public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
+        [PrivateApi]
+        public dynamic DynamicModel => throw new NotSupportedException($"{nameof(DynamicModel)} not implemented on {nameof(SexyContentWebPage)}. {RazorComponent.NotImplementedUseCustomBase}");
 
-        /// <summary>
-        /// Helper commands to enable in-page editing functionality
-        /// Use it to check if edit is enabled, generate context-json infos and provide toolbar buttons
-        /// </summary>
+        /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot.Edit;
 
         public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
@@ -87,7 +86,7 @@ namespace ToSic.SexyContent.Razor
         /// </summary>
         [PrivateApi] public IBlock Block => _DynCodeRoot.Block;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
         [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel9Old;
@@ -137,13 +136,15 @@ namespace ToSic.SexyContent.Razor
 
         #region Future features: AsList / Settings / Resources
 
-        /// <inheritdoc />
+        [PrivateApi]
         public IEnumerable<dynamic> AsList(object list)
             => throw new Exception("AsList is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
+        [PrivateApi]
         public dynamic Resources
             => throw new Exception("Resources is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
+        [PrivateApi]
         public dynamic Settings
             => throw new Exception("Settings is a newer feature in 2sxc. To use it, change your template type to " + nameof(Razor12) + " see https://go.2sxc.org/RazorComponent");
 
@@ -177,12 +178,12 @@ namespace ToSic.SexyContent.Razor
         public IDataSource CreateSource(string typeName = "", IDataSource inSource = null, ILookUpEngine configurationProvider = null)
             => new DynamicCodeObsolete(_DynCodeRoot).CreateSource(typeName, inSource, configurationProvider);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
         [Obsolete("this is the old implementation with ILookUp Engine, don't think it was ever used publicly because people couldn't create these engines")]
         public T CreateSource<T>(IDataSource inSource = default, ILookUpEngine configurationProvider = default) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
@@ -190,14 +191,17 @@ namespace ToSic.SexyContent.Razor
 
 
         #region Content, Header, etc. and List
+        /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _DynCodeRoot.Content;
 
         [Obsolete("use Content.Presentation instead")]
+        [PrivateApi]
         public dynamic Presentation => _DynCodeRoot.Content?.Presentation;
 
         /// <summary>
         /// We are blocking this property on purpose, so that people will want to migrate to the new RazorComponent
         /// </summary>
+        [PrivateApi]
         public dynamic Header => throw new Exception("The header property is a new feature in 2sxc 10.20. " +
                                                      "To use it, change your template type to inherit from " +
                                                      nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
@@ -215,7 +219,7 @@ namespace ToSic.SexyContent.Razor
         private List<Element> _list;
 #pragma warning restore 618
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
         public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
             => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
                                    + nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
@@ -245,14 +249,14 @@ namespace ToSic.SexyContent.Razor
 
         #region Adam 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsAdam" />
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         #endregion
 
         #region CmsContext
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion

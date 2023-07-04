@@ -77,7 +77,6 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
-        //public ICmsContext MyContext => _DynCodeRoot?.CmsContext;
 
         /// <inheritdoc cref="IDynamicCode12.Resources" />
         public dynamic Resources => _DynCodeRoot.Resources;

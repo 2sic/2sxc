@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Web
     /// It only contains internal wiring stuff, so not to be published
     /// </summary>
     [PrivateApi("internal class only!")]
-    public abstract class RazorComponentBase: WebPageBase, IRazor, /*ICreateInstance,*/ IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
+    public abstract class RazorComponentBase: WebPageBase, IRazor, IHasCodeLog, IHasLog, IDnnRazorCompatibility, ICompatibilityLevel
     {
         #region Constructor / Setup
 
@@ -25,8 +25,8 @@ namespace ToSic.Sxc.Web
         /// For architecture of Composition over Inheritance.
         /// </summary>
         [PrivateApi]
-        internal RazorHelper SysHlp => _sysHlp ?? (_sysHlp = new RazorHelper().Init(this, (path, data) => base.RenderPage(path, data)));
-        private RazorHelper _sysHlp;
+        internal DnnRazorHelper SysHlp => _sysHlp ?? (_sysHlp = new DnnRazorHelper().Init(this, (path, data) => base.RenderPage(path, data)));
+        private DnnRazorHelper _sysHlp;
 
 
         /// <inheritdoc />

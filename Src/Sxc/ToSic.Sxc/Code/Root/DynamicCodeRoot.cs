@@ -87,7 +87,7 @@ namespace ToSic.Sxc.Code
         #endregion
 
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public TService GetService<TService>()
         {
             var newService = _serviceProvider.Build<TService>(Log);
@@ -121,7 +121,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc />
         public IContextData Data { get; private set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Link" />
         // Note that ILinkHelper uses INeedsCodeRoot, so if initialized in GetService this will be auto-provided
         public ILinkService Link => _link ?? (_link = GetService<ILinkService>());
         private ILinkService _link;

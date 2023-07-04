@@ -49,24 +49,24 @@ namespace ToSic.Sxc.Dnn
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel9Old;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.App" />
         public IApp App => _DynCodeRoot.App;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Data" />
         public IContextData Data => _DynCodeRoot.Data;
 
 
         #region AsDynamic implementations
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
         public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
         public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
         public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
         public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
 
         #endregion
@@ -81,11 +81,11 @@ namespace ToSic.Sxc.Dnn
 
         #region CreateSource implementations
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
@@ -93,10 +93,10 @@ namespace ToSic.Sxc.Dnn
 
         #region Content, Presentation & List
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _DynCodeRoot.Content;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Header" />
         public dynamic Header => _DynCodeRoot.Header;
 
 
@@ -104,7 +104,7 @@ namespace ToSic.Sxc.Dnn
 
         #region Adam
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.AsAdam" />
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         ///// <inheritdoc />
@@ -125,17 +125,17 @@ namespace ToSic.Sxc.Dnn
 
         #region Link & Edit - added to API in 2sxc 10.01
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
-        
+
         #region CmsContext
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot?.CmsContext;
         #endregion
 

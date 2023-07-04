@@ -7,7 +7,7 @@ namespace ToSic.Sxc.Code
         #region SharedCode Compiler
 
         /// <inheritdoc />
-        public virtual dynamic CreateInstance(string virtualPath,
+        public dynamic CreateInstance(string virtualPath,
             string noParamOrder = Eav.Parameters.Protector,
             string name = null,
             string relativePath = null,

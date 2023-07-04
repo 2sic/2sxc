@@ -39,7 +39,7 @@ namespace ToSic.Sxc.Engines.Razor
             );
         }
 
-        public HtmlHelper Init(RazorComponentBase page, RazorHelper helper, bool isSystemAdmin, Func<string, object[], HelperResult> renderPage)
+        public HtmlHelper Init(RazorComponentBase page, DnnRazorHelper helper, bool isSystemAdmin, Func<string, object[], HelperResult> renderPage)
         {
             _page = page;
             _helper = helper;
@@ -48,7 +48,7 @@ namespace ToSic.Sxc.Engines.Razor
             return this;
         }
         private RazorComponentBase _page;
-        private RazorHelper _helper;
+        private DnnRazorHelper _helper;
         private bool _isSystemAdmin;
         private Func<string, object[], HelperResult> _renderPage;
 

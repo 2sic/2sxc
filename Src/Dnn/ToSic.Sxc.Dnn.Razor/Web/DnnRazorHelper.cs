@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
@@ -17,13 +16,13 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Web
 {
     [PrivateApi]
-    public class RazorHelper: CodeHelperBase
+    public class DnnRazorHelper: RazorHelperBase
     {
         #region Constructor / Init
 
-        public RazorHelper() : base("Sxc.RzrHlp") { }
+        public DnnRazorHelper() : base("Sxc.RzrHlp") { }
 
-        public RazorHelper Init(RazorComponentBase page, Func<string, object[], HelperResult> renderPage)
+        public DnnRazorHelper Init(RazorComponentBase page, Func<string, object[], HelperResult> renderPage)
         {
             Page = page;
             _renderPage = renderPage;
@@ -56,11 +55,6 @@ namespace ToSic.Sxc.Web
         }
 
         internal RazorComponentBase ParentPage { get; set; }
-
-        public List<Exception> ExceptionsOrNull { get; private set; }
-
-        public void Add(Exception ex) => (ExceptionsOrNull ?? (ExceptionsOrNull = new List<Exception>())).Add(ex);
-
 
         #endregion
 
@@ -111,7 +105,7 @@ namespace ToSic.Sxc.Web
 
         }
 
-        internal WebPageBase CreateInstanceCshtml(string path)
+        private object CreateInstanceCshtml(string path)
         {
             // ReSharper disable once ConvertTypeCheckToNullCheck
             if (!(Page is IHasDnn))

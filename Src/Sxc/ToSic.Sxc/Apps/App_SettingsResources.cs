@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Lib.Helpers;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.Data.Decorators;
 
@@ -28,11 +29,11 @@ namespace ToSic.Sxc.Apps
         }
         private AsConverterService _asc;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode12.Settings" />
         public dynamic Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings));
         private readonly GetOnce<dynamic> _settings = new GetOnce<dynamic>();
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode12.Resources" />
         public dynamic Resources => AppResources == null ? null : _res.Get(() => MakeDynProperty(AppResources));
         private readonly GetOnce<dynamic> _res = new GetOnce<dynamic>();
 
