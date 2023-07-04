@@ -1,10 +1,9 @@
-﻿using Custom.Hybrid.Advanced;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Data;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
@@ -15,8 +14,19 @@ namespace Custom.Hybrid
 {
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     // ReSharper disable once UnusedMember.Global
-    public abstract class Razor16: Razor14<dynamic, ServiceKit14>, IDynamicCode16
+    public abstract class Razor16: Razor12<dynamic>, IRazor14<object, ServiceKit14>, IDynamicCode16
     {
+
+        #region ServiceKit
+
+        public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
+        private readonly GetOnce<ServiceKit14> _kit = new();
+
+
+
+
+        #endregion
+
         #region New App, Settings, Resources
 
         /// <inheritdoc />
@@ -32,15 +42,7 @@ namespace Custom.Hybrid
 
         #region My... Stuff
 
-        private TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();
-        private TypedCode16Helper _codeHelper;
-
-        private TypedCode16Helper CreateCodeHelper()
-        {
-            var myModelData = _overridePageData?.ObjectToDictionaryInvariant()
-                      ?? Model?.ObjectToDictionary();
-            return new TypedCode16Helper(_DynCodeRoot, Data, myModelData, true, Path);
-        }
+        private TypedCode16Helper CodeHelper => SysHlp.CodeHelper;
 
         public ITypedItem MyItem => CodeHelper.MyItem;
 
@@ -95,8 +97,8 @@ namespace Custom.Hybrid
         [PrivateApi("WIP v16.02")]
         public ITypedModel MyModel => CodeHelper.MyModel;
 
-        internal override void UpdateModel(object data) => _overridePageData = data;
-        private object _overridePageData;
+        //internal override void UpdateModel(object data) => _overridePageData = data;
+        //private object _overridePageData;
 
 
         #endregion
