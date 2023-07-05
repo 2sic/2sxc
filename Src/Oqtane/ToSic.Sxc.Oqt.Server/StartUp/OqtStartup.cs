@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Oqtane.Extensions;
 using Oqtane.Infrastructure;
+using System;
 using System.IO;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.Run;
@@ -98,11 +99,11 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             // MapWhen split the middleware pipeline into two completely separate branches
             app.MapWhen(context => 
-                context.Request.Path.Value.Contains("/api/sxc/")
-                || context.Request.Path.Value.Contains("/app/")
-                || context.Request.Path.Value.Contains("/2sxc/shared/")
-                || context.Request.Path.Value.Contains($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/")
-                || context.Request.Path.Value.Contains($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/")
+                context.Request.Path.Value.Contains("/api/sxc/", StringComparison.OrdinalIgnoreCase)
+                || context.Request.Path.Value.Contains("/app/", StringComparison.OrdinalIgnoreCase)
+                || context.Request.Path.Value.Contains("/2sxc/shared/", StringComparison.OrdinalIgnoreCase)
+                || context.Request.Path.Value.Contains($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", StringComparison.OrdinalIgnoreCase)
+                || context.Request.Path.Value.Contains($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/", StringComparison.OrdinalIgnoreCase)
                 , appBuilder =>
             {
                 appBuilder.UseOqtaneMiddlewareConfiguration();
