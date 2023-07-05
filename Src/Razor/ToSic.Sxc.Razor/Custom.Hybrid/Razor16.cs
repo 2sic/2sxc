@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
@@ -24,7 +23,7 @@ namespace Custom.Hybrid
         /// Constructor - only available for inheritance
         /// </summary>
         [PrivateApi]
-        protected Razor16() : base(ToSic.Sxc.Constants.CompatibilityLevel16, "Oqt.Rzr12") { }
+        protected Razor16() : base(ToSic.Sxc.Constants.CompatibilityLevel16, "Oqt.Rzr16") { }
 
         #endregion
 

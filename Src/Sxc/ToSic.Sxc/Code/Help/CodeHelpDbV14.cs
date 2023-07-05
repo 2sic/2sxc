@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Code.Help;
 using static ToSic.Sxc.Code.Help.CodeHelpDbV12;
+using static ToSic.Sxc.Code.Help.ObsoleteHelp;
 
 namespace ToSic.Sxc.Code.Help
 {
     internal class CodeHelpDbV14
     {
+        internal static CodeHelp HelpRemoved14(string property, string linkCode, params (string Code, string Comment)[] alt)
+            => HelpNotExists((property, null), "was a bad design choice in Razor14 and had to be removed - see link", linkCode, alt);
+
+        internal static CodeHelp AsTypedRemoved14 = HelpRemoved14("AsTyped", "brc-1602", null);
+
+        internal static CodeHelp AsTypedListRemoved14 = HelpRemoved14("AsTypedList", "brc-1602", null);
+
         internal static List<CodeHelp> Compile14 = new List<CodeHelp>
         {
             // use `Convert`
@@ -41,6 +49,9 @@ namespace ToSic.Sxc.Code.Help
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IDataSource source) => Obsolete10.AsDynamicForList();
             //[PrivateApi] public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) => Obsolete10.AsDynamicForList();
 
+            // v16.01 AsTyped / AsTypedList
+            AsTypedRemoved14,
+            AsTypedListRemoved14,
         };
     }
 }
