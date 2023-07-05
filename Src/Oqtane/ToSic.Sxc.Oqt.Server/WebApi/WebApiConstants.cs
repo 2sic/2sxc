@@ -1,4 +1,8 @@
-﻿namespace ToSic.Sxc.Oqt.Server.WebApi
+﻿using System.Collections.Generic;
+using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.Web.EditUi;
+
+namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     public static class WebApiConstants
     {
@@ -30,5 +34,42 @@
         // QueryStringKeys
         public const string PageId = "pageid";
         public const string ModuleId = "moduleid";
+
+        // Endpoint mappings
+        public static readonly string[] SxcEndpointPatterns = new[]
+        {
+            // Release routes
+            AppRootNoLanguage + "/{appFolder}/api/{controller}/{action}",
+            AppRootNoLanguage + "/{appFolder}/{edition}/api/{controller}/{action}",
+            AppRootPathOrLang + "/{appFolder}/api/{controller}/{action}",
+            AppRootPathOrLang + "/{appFolder}/{edition}/api/{controller}/{action}",
+            AppRootPathNdLang + "/{appFolder}/api/{controller}/{action}",
+            AppRootPathNdLang + "/{appFolder}/{edition}/api/{controller}/{action}",
+            // Beta routes
+            WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}",
+            WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}"
+        };
+
+        // Regex patterns to match endpoint mappings
+        public static readonly string[] SxcEndpointPathRegexPatterns = new[]
+{
+            // Release routes
+            @"app/([\w-]*)/api/([\w-]*)/([\w-]*)",
+            @"app/([\w-]*)/([\w-]*)/api/([\w-]*)/([\w-]*)",
+            @"([\w-]*)/app/([\w-]*)/api/([\w-]*)/([\w-]*)",
+            @"([\w-]*)/app/([\w-]*)/([\w-]*)/api/([\w-]*)/([\w-]*)",
+            @"([\w-]*)/([\w-]*)/app/([\w-]*)/api/([\w-]*)/([\w-]*)",
+            @"([\w-]*)/([\w-]*)/app/([\w-]*)/([\w-]*)/api/([\w-]*)/([\w-]*)",
+            // Beta routes
+            @"(\d+)/api/sxc/app/([\w-]*)/api/([\w-]*)/([\w-]*)",
+            @"(\d+)/api/sxc/app/([\w-]*)/([\w-]*)/api/([\w-]*)/([\w-]*)"
+        };
+
+        // Dialogs for 2sxc UI
+        public static readonly List<(string url, string page, EditUiResourceSettings setting)> SxcFallbacks = new(capacity: 2)
+        {
+            ($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html", EditUiResourceSettings.QuickDialog),
+            ($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/", $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi)
+        };
     }
 }
