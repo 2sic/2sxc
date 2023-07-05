@@ -32,15 +32,9 @@ namespace ToSic.Sxc.Code.Help
         private static readonly CodeHelp ResourcesNotExist16 = HelpNotExistsPro("Resources", "App.Resources", "AllResources");
 
         private static readonly CodeHelp ResourcesNotExist16B = new CodeHelp(ResourcesNotExist16,
-            // example error: "error CS0234: The type or namespace name 'String' does not exist in the namespace 'Resources' (are you missing an assembly reference?) at"
-            // but the Term string could change so we'll just check the last part
             detect: @"does not exist in the namespace 'Resources' (are you missing an assembly reference?)");
 
         private static readonly CodeHelp SettingsNotExist16 = HelpNotExistsPro("Settings", "App.Settings", "AllSettings");
-        //private static readonly CodeHelp SettingsNotExist16b = new CodeHelp(ResourcesNotExist16,
-        //    // example error: "error CS0234: The type or namespace name 'String' does not exist in the namespace 'Resources' (are you missing an assembly reference?) at"
-        //    // but the Term string could change so we'll just check the last part
-        //    detect: @"does not exist in the namespace 'Resources' (are you missing an assembly reference?)");
 
         private static readonly CodeHelp PresentationNotExist16 = HelpNotExistsPro("Presentation", "MyItem.Presentation");
 
