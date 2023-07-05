@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// The helper to assist in timing and common operations of WebApi Controllers
         /// </summary>
         private readonly NetCoreControllersHelper _helper;
-
+        internal NetCoreControllersHelper Helper => _helper;
 
         /// <summary>
         /// The group name for log entries in insights.

@@ -95,7 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
         public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false) 
-            => Real.Reset(zoneId, appId, BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
+            => Real.Reset(zoneId, appId, SysHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
 
         /// <inheritdoc />
         [HttpPost]
