@@ -15,7 +15,7 @@ namespace Custom.Hybrid
 {
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     // ReSharper disable once UnusedMember.Global
-    public abstract class Razor16: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16
+    public abstract class RazorPro: OqtRazorBase<dynamic>, IHasCodeLog, IRazor, ISetDynamicModel, IDynamicCode16
     {
         #region Constructor / DI / SysHelp
 
@@ -23,7 +23,7 @@ namespace Custom.Hybrid
         /// Constructor - only available for inheritance
         /// </summary>
         [PrivateApi]
-        protected Razor16() : base(ToSic.Sxc.Constants.CompatibilityLevel16, "Oqt.Rzr16") { }
+        protected RazorPro() : base(ToSic.Sxc.Constants.CompatibilityLevel16, "Oqt.Rzr16") { }
 
         #endregion
 
