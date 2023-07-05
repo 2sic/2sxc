@@ -27,6 +27,7 @@ namespace ToSic.Sxc.Code.Help
         private static readonly CodeHelp HeaderNotExist16 = HelpNotExistsPro("Header", "MyHeader");
 
         private static readonly CodeHelp CreateSourceNotExist16 = HelpNotExistsPro("CreateSource", "Kit.Data.CreateSource(...)");
+        private static readonly CodeHelp CreateInstanceShouldBeGetCode = HelpNotExistsPro("CreateInstance", "GetCode(...)");
 
         private static readonly CodeHelp ResourcesNotExist16 = HelpNotExistsPro("Resources", "App.Resources", "AllResources");
 
@@ -63,6 +64,8 @@ namespace ToSic.Sxc.Code.Help
 
             // use `CreateSource(name)
             CreateSourceNotExist16,
+
+            CreateInstanceShouldBeGetCode,
 
             // Not handled - can't because the AsDynamic accepts IEntity which works in Razor14
             // dynamic AsDynamic(ToSic.Eav.Interfaces.IEntity entity)

@@ -728,7 +728,7 @@
                 "Metadata": [
                   {
                     "Id": 134258,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "cf06e71c-f14e-4f0a-a0a0-455b6628cd9c",
                     "Type": {
                       "Name": "@All",
@@ -799,7 +799,7 @@
                   },
                   {
                     "Id": 134260,
-                    "Version": 2,
+                    "Version": 3,
                     "Guid": "66f7c299-a872-4313-a3c6-ccc14e4262e2",
                     "Type": {
                       "Name": "@Entity",
@@ -837,7 +837,7 @@
                           "en-us": true
                         },
                         "EnableRemove": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },
