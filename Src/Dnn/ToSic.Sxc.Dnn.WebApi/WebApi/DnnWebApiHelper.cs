@@ -33,7 +33,7 @@ namespace ToSic.Sxc.WebApi
 
         #region Logging
 
-        public DnnWebApiLogging WebApiLogging;
+        public DnnWebApiLogging WebApiLogging { get; }
 
 
         #endregion

@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         protected DynamicCode() : base("Sxc.DynCod") { }
 
-        // <inheritdoc />
+        /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
         /// <inheritdoc cref="IDynamicCode.GetService{TService}" />

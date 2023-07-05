@@ -34,7 +34,7 @@ namespace Custom.Hybrid
         [PrivateApi]
         protected Code12() : base("Sxc.Code12") { }
 
-        // <inheritdoc />
+        /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
         /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />

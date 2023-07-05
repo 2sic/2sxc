@@ -38,7 +38,7 @@ namespace Custom.Hybrid
         /// </summary>
         protected Code14() : base("Sxc.Code14") { }
 
-        // <inheritdoc />
+        /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
         /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />

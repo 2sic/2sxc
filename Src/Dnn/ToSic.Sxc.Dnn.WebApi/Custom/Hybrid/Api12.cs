@@ -6,7 +6,6 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
@@ -18,8 +17,6 @@ using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.WebApi;
-using IHasLog = ToSic.Lib.Logging.IHasLog;
-using ILog = ToSic.Lib.Logging.ILog;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -39,12 +36,8 @@ namespace Custom.Hybrid
 
         protected Api12(string logSuffix) : base(logSuffix) { }
 
-        // TODO:
-        /// <inheritdoc />
-        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
-        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
-
-        [PrivateApi] ILog IHasLog.Log => base.Log;
+        /// <inheritdoc cref="IHasCodeLog.Log" />
+        public new ICodeLog Log => SysHlp.CodeLog;
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
 

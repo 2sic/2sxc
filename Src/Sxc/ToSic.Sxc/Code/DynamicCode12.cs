@@ -32,7 +32,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         protected DynamicCode12() : base("Sxc.DynCod") { }
 
-        // <inheritdoc />
+        /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
         /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />

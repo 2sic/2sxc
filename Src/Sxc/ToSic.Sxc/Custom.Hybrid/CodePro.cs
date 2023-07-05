@@ -9,7 +9,6 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using static ToSic.Eav.Parameters;
 using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -34,7 +33,7 @@ namespace Custom.Hybrid
         /// </summary>
         protected CodePro() : base("Sxc.Code14") { }
 
-        // <inheritdoc />
+        /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;
 
         /// <inheritdoc cref="IDynamicCode12.GetService{TService}" />

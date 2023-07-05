@@ -103,7 +103,7 @@ namespace Custom.Hybrid
 
         #region IHasLog
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
         private readonly GetOnce<ICodeLog> _codeLog = new();
         [PrivateApi] ILog IHasLog.Log => base.Log;

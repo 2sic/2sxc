@@ -7,7 +7,6 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Sxc;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
@@ -24,8 +23,6 @@ using IApp = ToSic.Sxc.Apps.IApp;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
-using IHasLog = ToSic.Lib.Logging.IHasLog;
-using ILog = ToSic.Lib.Logging.ILog;
 
 // ReSharper disable InheritdocInvalidUsage
 
@@ -225,11 +222,8 @@ namespace ToSic.SexyContent.WebApi
 
         #region IHasLog
 
-        /// <inheritdoc />
-        public new ICodeLog Log => _codeLog.Get(() => new CodeLog(base.Log));
-        private readonly GetOnce<ICodeLog> _codeLog = new GetOnce<ICodeLog>();
-
-        [PrivateApi] ILog IHasLog.Log => base.Log;
+        /// <inheritdoc cref="IHasCodeLog.Log" />
+        public new ICodeLog Log => SysHlp.CodeLog;
 
         #endregion
     }
