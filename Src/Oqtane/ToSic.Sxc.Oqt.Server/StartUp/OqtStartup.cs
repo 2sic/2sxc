@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +21,8 @@ using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.WebApi;
-using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
+using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
+using static ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
@@ -97,34 +97,28 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 app.UsePageResponseRewriteMiddleware();
 
             // MapWhen split the middleware pipeline into two completely separate branches
-            app.MapWhen(IsSxcEndpoint, appBuilder =>
+            app.MapWhen(context => IsSxcEndpoint(context.Request.Path.Value), appBuilder =>
             {
                 appBuilder.UseOqtaneMiddlewareConfiguration();
                 appBuilder.UseEndpoints(endpoints =>
                 {
-                    foreach (var pattern in WebApiConstants.SxcEndpointPatterns)
+                    foreach (var pattern in SxcEndpointPatterns)
                         endpoints.Map(pattern, AppApiMiddleware.InvokeAsync);
                 });
                 // end of this middleware pipeline branch
             });
 
-            app.MapWhen(IsSxcFallback, appBuilder =>
+            app.MapWhen(context => IsSxcDialog(context.Request.Path.Value), appBuilder =>
             {
                 appBuilder.UseOqtaneMiddlewareConfiguration();
                 appBuilder.UseEndpoints(endpoints =>
                 {
                     // Handle / Process URLs to Dialogs route for 2sxc UI
-                    foreach (var (url, page, setting) in WebApiConstants.SxcFallbacks)
+                    foreach (var (url, page, setting) in SxcDialogs)
                         endpoints.MapFallback(url, context => EditUiMiddleware.PageOutputCached(context, env, page, setting));
                 });
             });
         }
-
-        #region Sxc Configure helpers
-        private static bool IsSxcEndpoint(HttpContext context) => OqtStartupHelper.IsSxcEndpoint(context.Request.Path.Value);    
-
-        private static bool IsSxcFallback(HttpContext context) => OqtStartupHelper.IsSxcFallback(context.Request.Path.Value);
-        #endregion
 
         public void ConfigureMvc(IMvcBuilder mvcBuilder)
         {
