@@ -137,6 +137,8 @@ namespace ToSic.Sxc.WebApi
 
         #region Adam
 
+        public AdamCode AdamCode { get; private set; }
+
         public Sxc.Adam.IFile SaveInAdam(string noParamOrder = Eav.Parameters.Protector,
             Stream stream = null,
             string fileName = null,
@@ -153,7 +155,6 @@ namespace ToSic.Sxc.WebApi
                 subFolder: subFolder);
 
         #endregion
-        public AdamCode AdamCode { get; private set; }
 
     }
 }

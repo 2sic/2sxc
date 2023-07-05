@@ -116,6 +116,7 @@ namespace Custom.Hybrid
         #endregion
 
         #region Content, Header, etc. and List
+
         /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _DynCodeRoot.Content;
 

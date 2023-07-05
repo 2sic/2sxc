@@ -54,22 +54,27 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
 
-        /// <inheritdoc />
-        public ICmsContext MyContext => _DynCodeRoot.CmsContext;
-
-        /// <inheritdoc />
-        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
-
-        /// <inheritdoc />
-        public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
-
-        /// <inheritdoc />
-        public ICmsView MyView => _DynCodeRoot.CmsContext.View;
-
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
         #endregion
+
+        #region MyContext
+
+        /// <inheritdoc cref="IDynamicCode16.MyContext" />
+        public ICmsContext MyContext => _DynCodeRoot.CmsContext;
+
+        /// <inheritdoc cref="IDynamicCode16.MyUser" />
+        public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
+
+        /// <inheritdoc cref="IDynamicCode16.MyPage" />
+        public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
+
+        /// <inheritdoc cref="IDynamicCode16.MyView" />
+        public ICmsView MyView => _DynCodeRoot.CmsContext.View;
+
+        #endregion
+
 
 
         #region AsDynamic implementations + AsList - all killed in v16

@@ -99,18 +99,18 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
         public dynamic GetCode(string path) => SysHlp.CreateInstance(path, Path);
 
-        #region New Context V16
+        #region MyContext
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode16.MyContext" />
         public ICmsContext MyContext => _DynCodeRoot.CmsContext;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode16.MyUser" />
         public ICmsUser MyUser => _DynCodeRoot.CmsContext.User;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode16.MyPage" />
         public ICmsPage MyPage => _DynCodeRoot.CmsContext.Page;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode16.MyView" />
         public ICmsView MyView => _DynCodeRoot.CmsContext.View;
 
         #endregion

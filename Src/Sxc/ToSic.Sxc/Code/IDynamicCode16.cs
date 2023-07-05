@@ -39,6 +39,7 @@ namespace ToSic.Sxc.Code
         /// <inheritdoc cref="ICmsContext.Page" />
         ICmsPage MyPage { get; }
 
+        /// <inheritdoc cref="ICmsContext.View" />
         ICmsView MyView { get; }
 
         #endregion

@@ -20,7 +20,7 @@ namespace ToSic.Sxc.WebApi
     [PrivateApi("This is an internal base class used for the App ApiControllers. Make sure the implementations don't break")]
     // Note: 2022-02 2dm I'm not sure if this was ever published as the official api controller, but it may have been?
     [DnnLogExceptions]
-    public abstract class DynamicApiController : SxcApiControllerBase<DummyControllerReal>, /*ICreateInstance,*/ IHasDynamicCodeRoot
+    public abstract class DynamicApiController : SxcApiControllerBase<DummyControllerReal>, IHasDynamicCodeRoot
     {
         #region Constructor & DI / Setup
 
@@ -38,7 +38,8 @@ namespace ToSic.Sxc.WebApi
         {
             base.Initialize(controllerContext);
             var init = DynHlp.Initialize(controllerContext);
-            ((IGetCodePath)this).CreateInstancePath = init.Path;
+            if (this is IGetCodePath thisWithPath)
+                thisWithPath.CreateInstancePath = init.Path;
             _DynCodeRoot = init.Root;
         }
 

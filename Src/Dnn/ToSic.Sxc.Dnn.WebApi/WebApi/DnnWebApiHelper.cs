@@ -17,7 +17,7 @@ namespace ToSic.Sxc.WebApi
 
         #region Constructor / Init
 
-        public DnnWebApiHelper(IHasLog apiController, string historyLogGroup) : base("Sxc.RzrHlp")
+        public DnnWebApiHelper(IHasLog apiController, string historyLogGroup) : base("Dnn.ApiHlp")
         {
             this.LinkLog(apiController.Log);
             WebApiLogging = new DnnWebApiLogging(apiController.Log, GetService<ILogStore>(), historyLogGroup);
