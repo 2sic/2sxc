@@ -2,22 +2,22 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
 -- make sure sql rolls back automatically in case of error.
 SET XACT_ABORT ON
 GO
 
 -- 1. remove sql trigger functionality that store data in 'ToSIC_EAV_DataTimeline' table 
--- min Sql Server 2016
-DROP TRIGGER IF EXISTS [dbo].[AutoLogAllChangesToTimeline_EntityRelationships];
-DROP TRIGGER IF EXISTS [dbo].[AutoLogAllChangesToTimeline_Values];
-DROP TRIGGER IF EXISTS [dbo].[AutoLogAllChangesToTimeline_ValuesDimensions];
-DROP PROCEDURE IF EXISTS [dbo].[ToSIC_EAV_LogToTimeline]
+IF EXISTS (SELECT * FROM sys.triggers WHERE name = 'AutoLogAllChangesToTimeline_EntityRelationships')
+    DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_EntityRelationships];
+IF EXISTS (SELECT * FROM sys.triggers WHERE name = 'AutoLogAllChangesToTimeline_Values')
+    DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_Values];
+IF EXISTS (SELECT * FROM sys.triggers WHERE name = 'AutoLogAllChangesToTimeline_ValuesDimensions')
+    DROP TRIGGER [dbo].[AutoLogAllChangesToTimeline_ValuesDimensions];
+IF EXISTS (SELECT * FROM sys.procedures WHERE name = 'ToSIC_EAV_LogToTimeline')
+    DROP PROCEDURE [dbo].[ToSIC_EAV_LogToTimeline]
 GO
 
 -- 2. first install case (execute when [ToSIC_EAV_DataTimeline] is empty)
--- there is equivalnt sql code from c# that is executed only as part of module upgrade after dnn restarts
--- ToSic.Sxc.Dnn.Core/Dnn/Install/DnnEnvironmentInstaller.cs#L121-L121
 IF NOT EXISTS (SELECT * FROM [dbo].[ToSIC_EAV_DataTimeline])
 BEGIN
     -- add CJson column to 'ToSIC_EAV_DataTimeline'
@@ -27,12 +27,18 @@ BEGIN
     END
     
     -- drop NewData column from 'ToSIC_EAV_DataTimeline'
-    ALTER TABLE [dbo].[ToSIC_EAV_DataTimeline] DROP COLUMN IF EXISTS [NewData];
+    IF EXISTS (SELECT * FROM sys.columns WHERE Name = 'NewData' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
+    BEGIN
+        ALTER TABLE [dbo].[ToSIC_EAV_DataTimeline] DROP COLUMN [NewData];
+    END
 END
 GO
 
 -- 3. remove columns not in use
-ALTER TABLE [dbo].[ToSIC_EAV_AttributeGroups] DROP COLUMN IF EXISTS [SortOrder];
-ALTER TABLE [dbo].[ToSIC_EAV_Entities] DROP COLUMN IF EXISTS [SortOrder];
-ALTER TABLE [dbo].[ToSIC_EAV_AttributeSets] DROP COLUMN IF EXISTS [Description];
-GO
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = 'SortOrder' AND Object_ID = OBJECT_ID('ToSIC_EAV_AttributeGroups'))
+    ALTER TABLE [dbo].[ToSIC_EAV_AttributeGroups] DROP COLUMN [SortOrder];
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = 'SortOrder' AND Object_ID = OBJECT_ID('ToSIC_EAV_Entities'))
+    ALTER TABLE [dbo].[ToSIC_EAV_Entities] DROP COLUMN [SortOrder];
+IF EXISTS (SELECT * FROM sys.columns WHERE Name = 'Description' AND Object_ID = OBJECT_ID('ToSIC_EAV_AttributeSets'))
+    ALTER TABLE [dbo].[ToSIC_EAV_AttributeSets] DROP COLUMN [Description];
+GO 

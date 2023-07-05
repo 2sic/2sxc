@@ -114,7 +114,10 @@ namespace ToSic.Sxc.Dnn.Install
                             END;
 
                             -- drop NewData column from 'ToSIC_EAV_DataTimeline'
-                            ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN IF EXISTS NewData;
+                            IF EXISTS (SELECT * FROM sys.columns WHERE Name = 'NewData' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
+                            BEGIN
+                                ALTER TABLE ToSIC_EAV_DataTimeline DROP COLUMN NewData;
+                            END;
 
                             -- add CJson column to 'ToSIC_EAV_DataTimeline'
                             IF NOT EXISTS (SELECT * FROM sys.columns WHERE Name = 'CJson' AND Object_ID = OBJECT_ID('ToSIC_EAV_DataTimeline'))
