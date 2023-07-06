@@ -5,8 +5,8 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Dnn.WebApi.Logging;
-using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin.AppFiles;
+using RealController = ToSic.Sxc.WebApi.Admin.AppFiles.AppFilesControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -17,9 +17,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class AppFilesController : SxcApiControllerBase<AppFilesControllerReal>, IAppFilesController
+    public class AppFilesController : DnnApiControllerWithFixes, IAppFilesController
     {
-        public AppFilesController() : base(AppFilesControllerReal.LogSuffix) { }
+        public AppFilesController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         [HttpGet]
         public List<string> All(int appId, bool global, string path = null, string mask = "*.*", bool withSubfolders = false, bool returnFolders = false) 

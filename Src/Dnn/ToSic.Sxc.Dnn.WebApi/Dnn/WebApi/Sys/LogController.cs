@@ -4,6 +4,7 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.Run;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using RealController = ToSic.Eav.WebApi.Sys.LogControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
@@ -14,9 +15,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class LogController : DnnApiControllerWithFixes<LogControllerReal>, ILogController
+    public class LogController : DnnApiControllerWithFixes, ILogController
     {
-        public LogController() : base(LogControllerReal.LogSuffix) { }
+        public LogController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc />
         [HttpGet]

@@ -6,12 +6,15 @@ using System.Web.Http;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ItemLists;
+using RealController = ToSic.Sxc.WebApi.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
-    public class ContentGroupController : SxcApiControllerBase<ContentGroupControllerReal>, IContentGroupController
+    public class ContentGroupController : SxcApiControllerBase, IContentGroupController
     {
-        public ContentGroupController(): base(ContentGroupControllerReal.LogSuffix) { }
+        public ContentGroupController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

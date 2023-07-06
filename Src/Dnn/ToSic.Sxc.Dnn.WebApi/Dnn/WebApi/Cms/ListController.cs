@@ -4,15 +4,17 @@ using System;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Cms;
+using RealController = ToSic.Sxc.WebApi.Cms.ListControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
-    public class ListController: SxcApiControllerBase<ListControllerReal>, IListController
+    public class ListController: SxcApiControllerBase, IListController
     {
-        public ListController() : base(ListControllerReal.LogSuffix) { }
+        public ListController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc />
         /// <summary>

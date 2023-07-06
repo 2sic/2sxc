@@ -4,6 +4,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.Configuration;
 using ToSic.Eav.WebApi.Admin.Features;
+using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -15,9 +16,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// </remarks>
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
-    public class FeatureController : DnnApiControllerWithFixes<FeatureControllerReal>, IFeatureController
+    public class FeatureController : DnnApiControllerWithFixes, IFeatureController
     {
-        public FeatureController(): base(FeatureControllerReal.LogSuffix) { }
+        public FeatureController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

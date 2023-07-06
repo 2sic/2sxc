@@ -5,13 +5,15 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.WebApi.Sys;
+using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
-    public class InstallController : DnnApiControllerWithFixes<InstallControllerReal<HttpResponseMessage>>, IInstallController<HttpResponseMessage>
+    public class InstallController : DnnApiControllerWithFixes, IInstallController<HttpResponseMessage>
     {
-        public InstallController() : base(InstallControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public InstallController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.

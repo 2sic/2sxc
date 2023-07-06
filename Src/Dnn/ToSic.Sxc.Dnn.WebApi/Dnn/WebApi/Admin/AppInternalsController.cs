@@ -5,6 +5,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
+using RealController = ToSic.Eav.WebApi.Admin.AppInternalsControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -12,9 +13,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Proxy Class to the AppInternalsController (Web API Controller)
     /// </summary>
     [DnnLogExceptions]
-	public class AppInternalsController : SxcApiControllerBase<AppInternalsControllerReal>, IAppInternalsController
+	public class AppInternalsController : SxcApiControllerBase, IAppInternalsController
 	{
-        public AppInternalsController(): base(AppInternalsControllerReal.LogSuffix) { }
+        public AppInternalsController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc/>
         [HttpGet]

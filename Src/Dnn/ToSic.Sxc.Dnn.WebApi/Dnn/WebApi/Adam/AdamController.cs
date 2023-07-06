@@ -6,8 +6,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.PublicApi;
-using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Adam;
+using RealController = ToSic.Sxc.WebApi.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
@@ -19,11 +18,12 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
-    public class AdamController : SxcApiControllerBase<AdamControllerReal<int>>, IAdamController<int>
+    public class AdamController : DnnApiControllerWithFixes, IAdamController<int>
     {
         // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
         public AdamController() : base("Adam") { }
+        private RealController Real => SysHlp.GetService<RealController>();
 
         [HttpPost]
         [HttpPut]

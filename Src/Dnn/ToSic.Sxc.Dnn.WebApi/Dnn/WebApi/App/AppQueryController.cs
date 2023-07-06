@@ -4,14 +4,16 @@ using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.App;
+using RealController = ToSic.Sxc.WebApi.App.AppQueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
 {
     [AllowAnonymous] // All functions will check security internally, so assume no requirements
-    public class AppQueryController : SxcApiControllerBase<AppQueryControllerReal>, IAppQueryController
+    public class AppQueryController : SxcApiControllerBase, IAppQueryController
     {
-        public AppQueryController() : base(AppQueryControllerReal.LogSuffix) { }
+        public AppQueryController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         // GET is separated from POST to solve HttpResponseException that happens when
         // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature

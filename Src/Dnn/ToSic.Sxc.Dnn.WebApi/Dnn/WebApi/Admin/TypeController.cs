@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Admin;
+using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -27,10 +27,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-    public class TypeController : SxcApiControllerBase<TypeControllerReal<HttpResponseMessage>>, ITypeController<HttpResponseMessage>
+    public class TypeController : SxcApiControllerBase, ITypeController<HttpResponseMessage>
     {
-        public TypeController() : base(TypeControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public TypeController() : base(RealController.LogSuffix) { }
 
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Get a list of all content-types.

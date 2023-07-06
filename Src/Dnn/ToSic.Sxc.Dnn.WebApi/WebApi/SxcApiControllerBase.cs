@@ -13,7 +13,7 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [DnnLogExceptions]
     [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
-    public abstract class SxcApiControllerBase<TRealController>: DnnApiControllerWithFixes<TRealController> where TRealController : class, IHasLog
+    public abstract class SxcApiControllerBase: DnnApiControllerWithFixes
     {
         protected SxcApiControllerBase(string logSuffix) : base(logSuffix) { }
 

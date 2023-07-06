@@ -6,18 +6,17 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
-using ToSic.Sxc.WebApi.Admin;
+using RealController = ToSic.Sxc.WebApi.Admin.AppPartsControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
 
-    public class AppPartsController : DnnApiControllerWithFixes<AppPartsControllerReal<HttpResponseMessage>>, IAppPartsController<HttpResponseMessage>
+    public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController<HttpResponseMessage>
     {
-        public AppPartsController() : base(AppPartsControllerReal<HttpResponseMessage>.LogSuffix) { }
-
+        public AppPartsController() : base(RealController.LogSuffix) { }
+        private RealController Real => SysHlp.GetService<RealController>();
         #region Parts Export/Import
 
         /// <inheritdoc />

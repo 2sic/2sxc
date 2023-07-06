@@ -6,7 +6,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Sxc.WebApi;
+using RealController = ToSic.Eav.WebApi.Admin.FieldControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -16,9 +16,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class FieldController : SxcApiControllerBase<FieldControllerReal>, IFieldController
+    public class FieldController : DnnApiControllerWithFixes, IFieldController
     {
-        public FieldController() : base(FieldControllerReal.LogSuffix) { }
+        public FieldController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         #region Fields - Get, Reorder, Data-Types (for dropdown), etc.
 

@@ -5,13 +5,16 @@ using System.Web;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Sys.Licenses;
+using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>, ILicenseController
+    public class LicenseController : DnnApiControllerWithFixes, ILicenseController
     {
         public LicenseController() : base("License") { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.

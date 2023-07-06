@@ -2,7 +2,6 @@
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Lib.Logging;
-using ToSic.Eav.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
@@ -10,7 +9,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules(DnnSupportedModuleNames)]
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class ModuleController: DnnApiControllerWithFixes<DummyControllerReal>
+    public class ModuleController: DnnApiControllerWithFixes
     {
         public ModuleController() : base("Mod") { }
 

@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
+using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -25,10 +26,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-	public class EntityController : SxcApiControllerBase<EntityControllerReal<HttpResponseMessage>>, IEntityController<HttpResponseMessage>
+	public class EntityController : SxcApiControllerBase, IEntityController<HttpResponseMessage>
 	{
-        public EntityController(): base(EntityControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public EntityController(): base(RealController.LogSuffix) { }
 
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc/>
         [HttpGet]

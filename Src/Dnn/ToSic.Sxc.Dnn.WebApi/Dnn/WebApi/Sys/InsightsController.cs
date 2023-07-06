@@ -1,13 +1,15 @@
 ﻿using System.Web.Http;
-using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using RealController = ToSic.Eav.WebApi.Sys.InsightsControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnLogExceptions]
-    public class InsightsController : DnnApiControllerWithFixes<InsightsControllerReal>
+    public class InsightsController : DnnApiControllerWithFixes
     {
-        public InsightsController() : base(InsightsControllerReal.LogSuffix) { }
+        public InsightsController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Single-Point-Of-Entry

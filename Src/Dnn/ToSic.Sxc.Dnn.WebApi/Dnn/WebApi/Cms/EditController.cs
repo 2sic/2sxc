@@ -8,17 +8,23 @@ using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Cms;
+using RealController = ToSic.Sxc.WebApi.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     //[SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
-    public class EditController : SxcApiControllerBase<EditControllerReal>, IEditController
+    public class EditController : SxcApiControllerBase, IEditController
     {
+        #region Setup / Infrastructure
+
         // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
-        public EditController() : base(EditControllerReal.LogSuffix) { }
+        public EditController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
+
+        #endregion
 
         /// <inheritdoc />
         [HttpPost]
