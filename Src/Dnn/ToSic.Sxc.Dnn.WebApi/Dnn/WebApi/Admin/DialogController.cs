@@ -16,7 +16,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [ValidateAntiForgeryToken]
     public class DialogController : DnnApiControllerWithFixes, IDialogController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
+
 
         public DialogController(): base(RealController.LogSuffix) { }
 

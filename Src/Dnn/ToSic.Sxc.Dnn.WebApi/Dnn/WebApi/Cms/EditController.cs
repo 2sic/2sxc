@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
     {
         #region Setup / Infrastructure
 
-        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
+
 
         public EditController() : base(RealController.LogSuffix) { }
 

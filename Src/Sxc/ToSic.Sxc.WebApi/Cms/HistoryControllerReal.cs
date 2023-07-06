@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Apps;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
@@ -9,8 +8,6 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
-
     public class HistoryControllerReal : ServiceBase, IHistoryController
     {
         public const string LogSuffix = "Hist";

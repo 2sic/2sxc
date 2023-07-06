@@ -1,6 +1,5 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 

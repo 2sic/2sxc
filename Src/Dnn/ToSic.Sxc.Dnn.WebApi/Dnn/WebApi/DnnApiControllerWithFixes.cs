@@ -13,8 +13,6 @@ namespace ToSic.Sxc.Dnn.WebApi
     [PrivateApi("This controller is never used publicly, you can rename any time you want")]
     public abstract class DnnApiControllerWithFixes : DnnApiController, IHasLog
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
-
         internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
 
         protected DnnApiControllerWithFixes(string logSuffix)

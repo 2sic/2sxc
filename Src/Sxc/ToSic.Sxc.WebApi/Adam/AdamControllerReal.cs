@@ -9,7 +9,6 @@ using ToSic.Lib.Services;
 
 namespace ToSic.Sxc.WebApi.Adam
 {
-    // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
 
     public class AdamControllerReal<TIdentifier>: ServiceBase
     {

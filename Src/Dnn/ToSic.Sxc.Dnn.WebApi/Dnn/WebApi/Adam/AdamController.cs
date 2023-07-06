@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [ValidateAntiForgeryToken]
     public class AdamController : DnnApiControllerWithFixes, IAdamController<int>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
+
 
         public AdamController() : base("Adam") { }
         private RealController Real => SysHlp.GetService<RealController>();
