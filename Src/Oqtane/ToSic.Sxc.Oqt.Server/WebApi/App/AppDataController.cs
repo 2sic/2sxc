@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.App;
+using RealController = ToSic.Sxc.WebApi.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
@@ -18,12 +18,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.AppRootPathOrLang + "/{appPath}/data")] // new, v13
     [Route(WebApiConstants.AppRootPathNdLang + "/{appPath}/data")] // new, v13
 
-    public class AppDataController: OqtStatefulControllerBase<AppDataControllerReal>, IAppDataController
+    public class AppDataController: OqtStatefulControllerBase, IAppDataController
     {
-        public AppDataController(): base(AppDataControllerReal.LogSuffix) { }
+        public AppDataController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
+
 
         #region Get List / all of a certain content-type
-        
+
         /// <inheritdoc />
         [HttpGet("{contentType}")]
         [AllowAnonymous]   // will check security internally, so assume no requirements

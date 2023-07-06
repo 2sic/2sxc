@@ -6,6 +6,7 @@ using ToSic.Eav.Configuration;
 using ToSic.Eav.WebApi.Admin.Features;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Admin.Features.FeatureControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -16,10 +17,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class FeatureController : OqtStatefulControllerBase<FeatureControllerReal>, IFeatureController
+    public class FeatureController : OqtStatefulControllerBase, IFeatureController
     {
-        public FeatureController(): base(FeatureControllerReal.LogSuffix)
-        { }
+        public FeatureController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
 
         /// <summary>

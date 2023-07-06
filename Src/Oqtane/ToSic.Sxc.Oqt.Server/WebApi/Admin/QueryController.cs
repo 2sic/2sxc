@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Admin.Query;
+using RealController = ToSic.Sxc.WebApi.Admin.Query.QueryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -22,9 +22,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class QueryController : OqtStatefulControllerBase<QueryControllerReal>, IQueryController
+    public class QueryController : OqtStatefulControllerBase, IQueryController
     {
-        public QueryController() : base(QueryControllerReal.LogSuffix) { }
+        public QueryController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
         [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Init(appId).Get(appId, id);
 

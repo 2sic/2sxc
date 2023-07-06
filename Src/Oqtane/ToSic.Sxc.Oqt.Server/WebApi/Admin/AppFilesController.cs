@@ -7,6 +7,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin.AppFiles;
+using RealController = ToSic.Sxc.WebApi.Admin.AppFiles.AppFilesControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -21,9 +22,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class AppFilesController : OqtStatefulControllerBase<AppFilesControllerReal>, IAppFilesController
+    public class AppFilesController : OqtStatefulControllerBase, IAppFilesController
     {
-        public AppFilesController(): base(AppFilesControllerReal.LogSuffix) { }
+        public AppFilesController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
 
         [HttpGet]

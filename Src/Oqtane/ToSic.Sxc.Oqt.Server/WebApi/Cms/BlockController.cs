@@ -9,6 +9,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.InPage;
+using RealController = ToSic.Sxc.WebApi.Cms.BlockControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
@@ -20,9 +21,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class BlockController : OqtStatefulControllerBase<BlockControllerReal>, IBlockController
+    public class BlockController : OqtStatefulControllerBase, IBlockController
     {
-        public BlockController(): base(BlockControllerReal.LogSuffix) { }
+        public BlockController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
+
 
 
         /// <inheritdoc />

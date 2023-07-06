@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -12,7 +11,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
-    public abstract class AppAssetsControllerBase : OqtControllerBase<DummyControllerReal>
+    public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         private string Route { get; }
 

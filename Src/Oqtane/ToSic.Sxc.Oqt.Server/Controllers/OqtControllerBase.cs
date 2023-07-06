@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Shared.Dev;
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [SystemTestJsonFormatter] // This is needed to preserve compatibility with previous api usage
     [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
     [ServiceFilter(typeof(HttpResponseExceptionFilter))]
-    public abstract class OqtControllerBase<TRealController> : Controller, IHasLog where TRealController : class, IHasLog
+    public abstract class OqtControllerBase : Controller, IHasLog
     {
         protected OqtControllerBase(string logSuffix)
         {
@@ -70,12 +69,5 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
 
         protected TService GetService<TService>() where TService : class => _helper.GetService<TService>();
-
-        /// <summary>
-        /// The RealController which is the full backend of this controller.
-        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
-        /// </summary>
-        protected virtual TRealController Real => _real.Get(() => _helper.Real<TRealController>()) ;
-        private readonly GetOnce<TRealController> _real = new();
     }
 }

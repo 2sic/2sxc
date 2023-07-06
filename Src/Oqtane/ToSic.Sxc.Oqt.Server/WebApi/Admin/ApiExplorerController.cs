@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using System;
 using System.Reflection;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
@@ -14,6 +13,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -26,9 +26,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
 
-    public class ApiExplorerController : OqtStatefulControllerBase<ApiExplorerControllerReal<IActionResult>>, IApiExplorerController<IActionResult>
+    public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerController<IActionResult>
     {
-        public ApiExplorerController() : base(ApiExplorerControllerReal<IActionResult>.LogSuffix) { }
+        public ApiExplorerController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
         [HttpGet]
         public IActionResult Inspect(string path)

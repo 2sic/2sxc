@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.WebApi.Sys;
+using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
@@ -15,11 +15,13 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
     [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    public class InstallController: OqtStatefulControllerBase<InstallControllerReal<IActionResult>>, IInstallController<IActionResult>
+    public class InstallController: OqtStatefulControllerBase, IInstallController<IActionResult>
     {
 
+        public InstallController(): base(RealController.LogSuffix) { }
 
-        public InstallController(): base(InstallControllerReal<IActionResult>.LogSuffix) { }
+        private RealController Real => GetService<RealController>();
+
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.

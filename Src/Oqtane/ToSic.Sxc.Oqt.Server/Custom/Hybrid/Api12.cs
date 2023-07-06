@@ -29,7 +29,7 @@ namespace Custom.Hybrid
     /// It is without dependencies in class constructor, commonly provided with DI.
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
-    public abstract class Api12 : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IDynamicCode12, IHasCodeLog, IHasDynamicCodeRoot
+    public abstract class Api12 : OqtStatefulControllerBase, IDynamicWebApi, IDynamicCode12, IHasCodeLog, IHasDynamicCodeRoot
     {
         #region Setup
 

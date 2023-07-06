@@ -6,7 +6,7 @@ using ToSic.Eav.WebApi.Admin.App;
 using ToSic.Eav.WebApi.Admin.Query;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.App;
+using RealController = ToSic.Sxc.WebApi.App.AppQueryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
@@ -16,9 +16,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [Route(WebApiConstants.AppRootPathNdLang)]
 
     [AllowAnonymous] // All functions will check security internally, so assume no requirements
-    public class AppQueryController : OqtStatefulControllerBase<AppQueryControllerReal>, IAppQueryController
+    public class AppQueryController : OqtStatefulControllerBase, IAppQueryController
     {
-        public AppQueryController(): base(AppQueryControllerReal.LogSuffix) { }
+        public AppQueryController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
         // GET is separated from POST to solve HttpResponseException that happens when
         // 'content-type' header is missing (or in GET request) on the endpoint that has [FromBody] in signature

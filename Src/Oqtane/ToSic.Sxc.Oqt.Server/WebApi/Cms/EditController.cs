@@ -12,8 +12,8 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Cms;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
+using RealController = ToSic.Sxc.WebApi.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
@@ -25,11 +25,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [ValidateAntiForgeryToken]
 
     [ApiController]
-    public class EditController: OqtStatefulControllerBase<EditControllerReal>, IEditController
+    public class EditController: OqtStatefulControllerBase, IEditController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
+        public EditController() : base(RealController.LogSuffix) { }
 
-        public EditController() : base(EditControllerReal.LogSuffix) { }
+        private RealController Real => GetService<RealController>();
 
 
         [HttpPost]

@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -31,9 +32,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class EntityController : OqtStatefulControllerBase<EntityControllerReal<IActionResult>>, IEntityController<IActionResult>
+    public class EntityController : OqtStatefulControllerBase, IEntityController<IActionResult>
     {
-        public EntityController() : base(EntityControllerReal<IActionResult>.LogSuffix) { }
+        public EntityController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
 
         /// <inheritdoc/>

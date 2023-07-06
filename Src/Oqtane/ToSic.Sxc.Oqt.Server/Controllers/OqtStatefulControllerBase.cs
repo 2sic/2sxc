@@ -3,10 +3,9 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Server.Custom;
 
-
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class OqtStatefulControllerBase<TRealController> : OqtControllerBase<TRealController> where TRealController : class, IHasLog
+    public abstract class OqtStatefulControllerBase : OqtControllerBase
     {
         #region Setup
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Sys.InsightsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
@@ -10,11 +11,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [Route(WebApiConstants.ApiRootPathNdLang + "/sys/[controller]/")]
     
     [ApiController]
-    public class InsightsController : OqtControllerBase<InsightsControllerReal>
+    public class InsightsController : OqtControllerBase
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://go.2sxc.org/proxy-controllers
+        public InsightsController(): base(RealController.LogSuffix) { }
 
-        public InsightsController(): base(InsightsControllerReal.LogSuffix) { }
+        private RealController Real => GetService<RealController>();
+
 
         private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
 

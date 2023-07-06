@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
@@ -14,6 +13,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.Views;
+using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -24,15 +24,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class ViewController : OqtStatefulControllerBase<ViewControllerReal<IActionResult>>, IViewController<IActionResult>
+    public class ViewController : OqtStatefulControllerBase, IViewController<IActionResult>
     {
-        public ViewController(LazySvc<Pages.Pages> pages) : base(ViewControllerReal<IActionResult>.LogSuffix)
+        public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
         {
             this.ConnectServices(
                 _pages = pages
             );
         }
         private readonly LazySvc<Pages.Pages> _pages;
+
+        private RealController Real => GetService<RealController>();
 
         /// <inheritdoc />
         [HttpGet]

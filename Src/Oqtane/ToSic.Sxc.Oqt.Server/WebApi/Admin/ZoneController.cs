@@ -7,6 +7,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Zone;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Admin.ZoneControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -20,9 +21,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class ZoneController : OqtStatefulControllerBase<ZoneControllerReal>, IZoneController
+    public class ZoneController : OqtStatefulControllerBase, IZoneController
     {
-        public ZoneController(): base(ZoneControllerReal.LogSuffix) { }
+        public ZoneController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
+
 
         /// <inheritdoc />
         [HttpGet]

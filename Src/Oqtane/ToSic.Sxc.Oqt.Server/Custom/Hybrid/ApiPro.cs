@@ -30,7 +30,7 @@ namespace Custom.Hybrid
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
     [JsonFormatter]
-    public abstract class ApiPro : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IHasCodeLog, IHasDynamicCodeRoot, IDynamicCode16
+    public abstract class ApiPro : OqtStatefulControllerBase, IDynamicWebApi, IHasCodeLog, IHasDynamicCodeRoot, IDynamicCode16
     {
         #region setup
 

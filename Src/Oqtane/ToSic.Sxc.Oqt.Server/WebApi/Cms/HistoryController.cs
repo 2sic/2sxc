@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Cms;
+using RealController = ToSic.Sxc.WebApi.Cms.HistoryControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
@@ -17,9 +17,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
     [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
-    public class HistoryController : OqtStatefulControllerBase<HistoryControllerReal>, IHistoryController
+    public class HistoryController : OqtStatefulControllerBase, IHistoryController
     {
-        public HistoryController(): base(HistoryControllerReal.LogSuffix) { }
+        public HistoryController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
+
 
         /// <inheritdoc />
         [HttpPost]
