@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Code.Help;
+using ToSic.Eav.Plumbing;
+using ToSic.Sxc.Data;
 using static ToSic.Sxc.Code.Help.ObsoleteHelp;
 
 namespace ToSic.Sxc.Code.Help
@@ -47,6 +50,39 @@ namespace ToSic.Sxc.Code.Help
             ("Kit.Edit", "to really use the Edit object (not often needed, as the replacements are better)"));
 
         private static readonly CodeHelp AsAdamNotExist = HelpNotExistsPro(("AsAdam", "AsAdam isn't needed any more, since there is an easier syntax."), ("object.Folder(\"FieldName\")", "Use the Folder(...) method on an Item"));
+
+        #region Common Properties on DynamicEntity which are now different
+
+        private static readonly CodeHelp ItemNoEntityId = HelpChangeITypedItem(("EntityId", null), null, ("Id", null));
+        private static readonly CodeHelp ItemNoEntityGuid = HelpChangeITypedItem(("EntityGuid", null), null, ("Guid", null));
+        private static readonly CodeHelp ItemNoEntityTitle = HelpChangeITypedItem(("EntityTitle", null), null, ("Title", null));
+
+        internal static CodeHelp HelpChangeITypedItem((string Name, string Comments) property, string linkCode, params (string Code, string Comment)[] alt)
+        {
+            var first = alt.SafeAny() ? alt[0] : ("unknown", null);
+            var better = alt == null || alt.Length == 1
+                ? HtmlRec(("." + first.Code, first.Comment))
+                : $"<ol>{string.Join("\n", alt.Select(a => HtmlRec(("." + a.Code, a.Comment))))}</ol>";
+
+            return new CodeHelp(name: $"ITypedItem-{property.Name}-DoesNotExist",
+                detect: $"error CS1061: 'ToSic.Sxc.Data.ITypedItem' does not contain a definition for '{property.Name}' and no extension method '{property.Name}' accepting a first argument of type 'ToSic.Sxc.Data.ITypedItem' could be found",
+                linkCode: linkCode,
+                uiMessage: $@"
+You are calling the '{property.Name}' property which was common on DynamicEntities, but not available on {nameof(ITypedItem)} (RazorPro). {property.Comments}
+You should probably use '{first.Code}' {first.Comment}
+",
+                detailsHtml: $@"
+You are probably calling <code>.{property.Name}</code>.
+{(property.Comments.HasValue() ? $"<br><em>{property.Comments}</em><br>" : "")}
+The property <code>.{property.Name}</code> is replaced with: 
+{better}
+"
+            );
+        }
+
+
+
+        #endregion
 
         internal static List<CodeHelp> Compile16 = new List<CodeHelp>
         {
@@ -98,6 +134,10 @@ namespace ToSic.Sxc.Code.Help
             EditNotExist,
             AsAdamNotExist,
             DataNotExist,
+
+            ItemNoEntityId,
+            ItemNoEntityGuid,
+            ItemNoEntityTitle,
         };
 
     }

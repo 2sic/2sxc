@@ -45,7 +45,7 @@ Probably better:
             );
         }
 
-        private static string HtmlRec((string Code, string Comment) r) 
+        internal static string HtmlRec((string Code, string Comment) r)
             => $"<li>{(r.Comment.HasValue() ? r.Comment + " - " : "")}<code>{r.Code}</code></li>";
     }
 }
