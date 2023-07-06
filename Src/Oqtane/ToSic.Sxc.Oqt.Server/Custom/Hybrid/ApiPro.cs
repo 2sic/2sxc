@@ -29,6 +29,7 @@ namespace Custom.Hybrid
     /// It's identical to [](xref:Custom.Hybrid.Api14) but this may be enhanced in future. 
     /// </summary>
     [PrivateApi("This will already be documented through the Dnn DLL so shouldn't appear again in the docs")]
+    [JsonFormatter]
     public abstract class ApiPro : OqtStatefulControllerBase<DummyControllerReal>, IDynamicWebApi, IHasCodeLog, IHasDynamicCodeRoot, IDynamicCode16
     {
         #region setup
