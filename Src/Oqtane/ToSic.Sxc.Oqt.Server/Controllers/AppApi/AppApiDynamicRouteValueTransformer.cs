@@ -13,11 +13,12 @@ using ToSic.Eav.WebApi.Errors;
 using ToSic.Lib.DI;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Code;
-using ToSic.Sxc.Oqt.Server.Blocks;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi;
+using ToSic.Sxc.WebApi.Infrastructure;
 using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
@@ -30,7 +31,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
         private readonly ITenantResolver _tenantResolver;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public const string HttpContextKeyForAppFolder = "SxcAppFolderName";
 
         public AppApiDynamicRouteValueTransformer(
             ITenantResolver tenantResolver,
@@ -89,8 +89,8 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                     // before trying to get the AppFolder, we must init the ICmsContext as this will
                     // this transient dependencies are not provided as usual constructor provided lazy/generator dependencies (from root service provider)
                     // but as a transient dependencies from the request service provider
-                    var blockInitializer = httpContext.RequestServices.Build<OqtGetBlock>();
-                    blockInitializer.TryToLoadBlockAndAttachToResolver();
+                    var blockInitializer = httpContext.RequestServices.Build<IWebApiContextBuilder>();
+                    blockInitializer.PrepareContextResolverForApiRequest();
                     appFolder = httpContext.RequestServices.Build<AppFolder>().GetAppFolder();
                 }
 
@@ -136,7 +136,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                 // help with path resolution for compilers running inside the created controller
                 httpContext.Request?.HttpContext.Items.Add(CodeCompiler.SharedCodeRootPathKeyInCache, controllerFolder);
 
-                httpContext.Request?.HttpContext.Items.Add(HttpContextKeyForAppFolder, appFolder);
+                httpContext.Request?.HttpContext.Items.Add(SxcWebApiConstants.HttpContextKeyForAppFolder, appFolder);
 
                 return wrapLog.Return(values, $"ok, TransformAsync route required values are prepared");
             });

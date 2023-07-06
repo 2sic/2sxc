@@ -13,14 +13,13 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.Providers
 {
 
     public sealed class ModifiedTabAndModuleInfoProvider : ITabAndModuleInfoProvider
     {
-        private const string ModuleIdKey = WebApiConstants.HeaderInstanceId; // changed 2dm 2021-10-07
+        private const string ModuleIdKey = ContextConstants.ModuleIdKey; // changed 2dm 2021-10-07
         private const string TabIdKey = ContextConstants.PageIdKey; // changed by 2dm 2020-11-20
 
         public bool TryFindTabId(HttpRequestMessage request, out int tabId)

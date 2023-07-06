@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
     [ApiController]
     public class InsightsController : OqtControllerBase
     {
-        public InsightsController(): base(RealController.LogSuffix) { }
+        public InsightsController(): base(false, RealController.LogSuffix) { }
 
         private RealController Real => GetService<RealController>();
 

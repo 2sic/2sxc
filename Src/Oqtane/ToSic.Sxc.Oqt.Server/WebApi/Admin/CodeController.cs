@@ -20,7 +20,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 
     public class CodeController : OqtControllerBase
     {
-        public CodeController() : base(CodeControllerReal.LogSuffix) { }
+        public CodeController() : base(false, RealController.LogSuffix) { }
 
         private RealController Real => GetService<RealController>();
 

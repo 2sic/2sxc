@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿#if NETCOREAPP
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
@@ -11,20 +12,18 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.LookUp;
-using ToSic.Sxc.Oqt.Server.Blocks;
-using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.WebApi.Adam;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IContextResolver = ToSic.Sxc.Context.IContextResolver;
 
-namespace ToSic.Sxc.Oqt.Server.Custom
+namespace ToSic.Sxc.WebApi.Infrastructure
 {
-    internal class OqtWebApiHelper: CodeHelperBase
+    internal class NetCoreWebApiContextHelper: CodeHelperBase
     {
         private readonly IHasLog _owner;
         private readonly NetCoreControllersHelper _helper;
 
-        public OqtWebApiHelper(IHasLog owner, NetCoreControllersHelper helper, string historyLogGroup) : base("Oqt.ApiHlp")
+        public NetCoreWebApiContextHelper(IHasLog owner, NetCoreControllersHelper helper) : base("Oqt.ApiHlp")
         {
             this.LinkLog(owner.Log);
             _owner = owner;
@@ -41,8 +40,8 @@ namespace ToSic.Sxc.Oqt.Server.Custom
         {
             if (_blockContextInitialized) return;
             _blockContextInitialized = true;
-            var getBlock = _helper.GetService<OqtGetBlock>();
-            CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
+            var getBlock = _helper.GetService<IWebApiContextBuilder>();
+            CtxResolver = getBlock.PrepareContextResolverForApiRequest();
             BlockOptional = CtxResolver.BlockOrNull();
         }
 
@@ -87,7 +86,7 @@ namespace ToSic.Sxc.Oqt.Server.Custom
             try
             {
                 // Handed in from the App-API Transformer
-                context.HttpContext.Items.TryGetValue(AppApiDynamicRouteValueTransformer.HttpContextKeyForAppFolder,
+                context.HttpContext.Items.TryGetValue(SxcWebApiConstants.HttpContextKeyForAppFolder,
                     out var routeAppPathObj);
                 if (routeAppPathObj == null) return "";
                 var routeAppPath = routeAppPathObj.ToString();
@@ -150,3 +149,4 @@ namespace ToSic.Sxc.Oqt.Server.Custom
 
     }
 }
+#endif

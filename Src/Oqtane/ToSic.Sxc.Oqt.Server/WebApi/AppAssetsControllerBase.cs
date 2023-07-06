@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         #endregion
 
 
-        protected AppAssetsControllerBase(MyServices services, string route, string logSuffix): base(logSuffix)
+        protected AppAssetsControllerBase(MyServices services, string route, string logSuffix): base(false, logSuffix)
         {
             Deps = services.ConnectServices(Log);
             Route = route;

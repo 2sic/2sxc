@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
+﻿#if NETCOREAPP
 using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.WebApi;
 
-namespace ToSic.Sxc.Oqt.Server.Integration
+// TODO: @STV - try to move after the .net 7 upgrade
+namespace ToSic.Sxc.WebApi.Infrastructure
 {
     /// <summary>
     /// Helper to get header, query string and route information from current request.
@@ -54,12 +55,13 @@ namespace ToSic.Sxc.Oqt.Server.Integration
 
         public int TryGetPageId() =>
             GetTypedHeader(ContextConstants.PageIdKey,
-                GetQueryString(WebApiConstants.PageId,
-                    GetRouteValuesString(WebApiConstants.PageId, Eav.Constants.NullId)));
+                GetQueryString(ContextConstants.PageIdKey,
+                    GetRouteValuesString(ContextConstants.PageIdKey, Eav.Constants.NullId)));
 
         public int TryGetModuleId() =>
-            GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId,
-                GetQueryString(WebApiConstants.ModuleId,
-                    GetRouteValuesString(WebApiConstants.ModuleId, Eav.Constants.NullId)));
+            GetTypedHeader(ContextConstants.ModuleIdKey,
+                GetQueryString(ContextConstants.ModuleIdKey,
+                    GetRouteValuesString(ContextConstants.ModuleIdKey, Eav.Constants.NullId)));
     }
 }
+#endif

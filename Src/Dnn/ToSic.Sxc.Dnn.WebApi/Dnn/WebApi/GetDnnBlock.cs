@@ -42,9 +42,9 @@ namespace ToSic.Sxc.Dnn.WebApi
         {
             var block = blockWithContextProvider.LoadBlock();
             // check if we need an inner block
-            if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId))
+            if (request.Headers.Contains(SxcWebApiConstants.HeaderContentBlockId))
             {
-                var blockHeaderId = request.Headers.GetValues(WebApiConstants.HeaderContentBlockId).FirstOrDefault();
+                var blockHeaderId = request.Headers.GetValues(SxcWebApiConstants.HeaderContentBlockId).FirstOrDefault();
                 int.TryParse(blockHeaderId, out var blockId);
                 if (blockId < 0) // negative id, so it's an inner block
                 {

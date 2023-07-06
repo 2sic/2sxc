@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Oqt.Shared.Dev;
+using ToSic.Sxc.WebApi.Infrastructure;
 using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -17,13 +18,29 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [SystemTestJsonFormatter] // This is needed to preserve compatibility with previous api usage
     [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
     [ServiceFilter(typeof(HttpResponseExceptionFilter))]
-    public abstract class OqtControllerBase : Controller, IHasLog
+    public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     {
-        protected OqtControllerBase(string logSuffix)
+        #region Setup
+
+        private readonly bool _withBlockContext;
+
+        protected OqtControllerBase(bool withBlockContext, string logSuffix)
         {
+            _withBlockContext = withBlockContext;
             Log = new Log($"Api.{logSuffix}", null, GetType().Name);
             _helper = new(this);
+
+            if (withBlockContext) _ctxHlp = new(this, _helper);
         }
+
+        #endregion
+
+
+        /// <summary>
+        /// The group name for log entries in insights.
+        /// Helps group various calls by use case.
+        /// </summary>
+        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <inheritdoc />
         public ILog Log { get; }
@@ -32,40 +49,43 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// The helper to assist in timing and common operations of WebApi Controllers
         /// </summary>
         private readonly NetCoreControllersHelper _helper;
-        internal NetCoreControllersHelper Helper => _helper;
+        //internal NetCoreControllersHelper Helper => _helper;
 
         /// <summary>
-        /// The group name for log entries in insights.
-        /// Helps group various calls by use case.
+        /// Special helper to move all Razor logic into a separate class.
+        /// For architecture of Composition over Inheritance.
         /// </summary>
-        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
+        [PrivateApi]
+        internal NetCoreWebApiContextHelper CtxHlp 
+            => _ctxHlp ?? throw new($"This controller doesn't have a {nameof(CtxHlp)}. Check your constructor.");
+        private readonly NetCoreWebApiContextHelper _ctxHlp;
 
         /// <summary>
         /// Initializer - just ensure SiteState is initialized thanks to our paths
         /// </summary>
         /// <param name="context"></param>
         [NonAction]
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public /*override*/ virtual void OnActionExecuting(ActionExecutingContext context)
         {
-            base.OnActionExecuting(context);
+            var l = Log.Fn();
+            //base.OnActionExecuting(context);
             _helper.OnActionExecuting(context, HistoryLogGroup);
 
             // background processes can pass in an alias using the SiteState service
             GetService<SiteStateInitializer>().InitIfEmpty();
+            
+            if (_withBlockContext) CtxHlp.InitializeBlockContext(context);
+            l.Done();
         }
-
-        #region Extend Time so Web Server doesn't time out - not really implemented ATM
-
-        protected void PreventServerTimeout300() => WipConstants.DontDoAnythingImplementLater();
-
-        #endregion
 
         /// <inheritdoc/>
         [NonAction]
-        public override void OnActionExecuted(ActionExecutedContext context)
+        public /*override*/ virtual void OnActionExecuted(ActionExecutedContext context)
         {
-            base.OnActionExecuted(context);
+            var l = Log.Fn();
+            //base.OnActionExecuted(context);
             _helper.OnActionExecuted(context);
+            l.Done();
         }
 
         protected TService GetService<TService>() where TService : class => _helper.GetService<TService>();

@@ -30,11 +30,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         public const string SharedRootPathNdLang = RootPathNdLang + "2sxc/shared";
 
         // Beta routes
-        public const string WebApiStateRoot = "{alias:int}/api/sxc";
-
-        // QueryStringKeys
-        public const string PageId = "pageid";
-        public const string ModuleId = "moduleid";
+        //public const string WebApiStateRoot = "{alias:int}/api/sxc";
 
         // Endpoint mappings
         public static readonly string[] SxcEndpointPatterns = new[]

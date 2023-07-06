@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [Authorize(Roles = RoleNames.Admin)]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public InstallAppsDto InstallSettings(bool isContentApp)
-            => Real.InstallSettings(isContentApp, SysHlp.BlockOptional.Context.Module);
+            => Real.InstallSettings(isContentApp, CtxHlp.BlockOptional.Context.Module);
 
         private void PrepareResponseMaker()
         {
@@ -60,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         {
             HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
             PrepareResponseMaker();
-            return Real.RemotePackage(packageUrl, SysHlp.BlockOptional?.Context.Module);
+            return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module);
         }
     }
 }

@@ -18,6 +18,7 @@ using ToSic.Sxc.Oqt.Server.Run;
 using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Services;
+using ToSic.Sxc.WebApi.Infrastructure;
 using OqtPageOutput = ToSic.Sxc.Oqt.Server.Blocks.Output.OqtPageOutput;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<OqtSxcViewBuilder>();
 
             services.TryAddTransient<DynamicCodeRoot, OqtaneDynamicCodeRoot>();
-            services.TryAddTransient<OqtGetBlock>();
+            services.TryAddTransient<IWebApiContextBuilder, OqtGetBlock>();
 
             // v13
             services.TryAddTransient<IModuleAndBlockBuilder, OqtModuleAndBlockBuilder>();

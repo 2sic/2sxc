@@ -46,7 +46,7 @@ namespace Custom.Hybrid
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
-            SysHlp.OnActionExecutingEnd(context);
+            CtxHlp.OnActionExecutingEnd(context);
         }
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel16;
@@ -56,10 +56,10 @@ namespace Custom.Hybrid
         #region Infrastructure
 
         /// <inheritdoc cref="IHasCodeLog.Log" />
-        public new ICodeLog Log => SysHlp.CodeLog;
+        public new ICodeLog Log => CtxHlp.CodeLog;
 
         // ReSharper disable once InconsistentNaming
-        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => SysHlp._DynCodeRoot;
+        [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => CtxHlp._DynCodeRoot;
 
         /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public new TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
@@ -105,7 +105,7 @@ namespace Custom.Hybrid
             Guid? guid = null,
             string field = null,
             string subFolder = "")
-            => SysHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
+            => CtxHlp.SaveInAdam(noParamOrder, stream, fileName, contentType, guid, field, subFolder);
 
         #endregion
 

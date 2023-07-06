@@ -1,20 +1,18 @@
 ﻿using Oqtane.Repository;
 using ToSic.Lib.DI;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
-using ToSic.Sxc.Oqt.Server.Integration;
-using ToSic.Sxc.Oqt.Shared;
+using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
     /// <summary>
     /// WIP - separating concerns in OqtState to get the block and provide the state...
     /// </summary>
-    public class OqtGetBlock: ServiceBase
+    internal class OqtGetBlock: ServiceBase, IWebApiContextBuilder
     {
         public OqtGetBlock(
             LazySvc<IModuleRepository> modRepoLazy,
@@ -23,7 +21,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             Generator<IContextOfBlock> cntOfBlkGen,
             Generator<BlockFromModule> blkFromModGen,
             Generator<BlockFromEntity> blkFromEntGen
-        ) : base($"{OqtConstants.OqtLogPrefix}.GetBlk")
+        ) : base("Sxc.GetBlk")
         {
             ConnectServices(
                 _modRepoLazy = modRepoLazy,
@@ -42,22 +40,22 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly Generator<BlockFromModule> _blkFromModGen;
         private readonly Generator<BlockFromEntity> _blkFromEntGen;
 
-        public IContextResolver TryToLoadBlockAndAttachToResolver()
+        public IContextResolver PrepareContextResolverForApiRequest()
         {
             if (_alreadyTriedToLoad) return _contextResolverToInit;
             _alreadyTriedToLoad = true;
 
-            var block = GetBlockWithContextProvider();
+            var block = InitializeBlock(); // GetBlockWithContextProvider();
             _contextResolverToInit.AttachBlock(block);
             return _contextResolverToInit;
         }
         private bool _alreadyTriedToLoad;
 
-        private BlockWithContextProvider GetBlockWithContextProvider() => _blockWithContextProvider.Get(InitializeBlock);
-        private readonly GetOnce<BlockWithContextProvider> _blockWithContextProvider = new();
+        //private BlockWithContextProvider GetBlockWithContextProvider() => _blockWithContextProvider.Get(InitializeBlock);
+        //private readonly GetOnce<BlockWithContextProvider> _blockWithContextProvider = new();
 
 
-        internal BlockWithContextProvider InitializeBlock()
+        private BlockWithContextProvider InitializeBlock()
         {
             var wrapLog = Log.Fn<BlockWithContextProvider>();
 
@@ -75,7 +73,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             var block = _blkFromModGen.New().Init(ctx);
 
             // only if it's negative, do we load the inner block
-            var contentBlockId = _requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
+            var contentBlockId = _requestHelper.GetTypedHeader(Sxc.WebApi.SxcWebApiConstants.HeaderContentBlockId, 0); // this can be negative, so use 0
             if (contentBlockId >= 0)
                 return wrapLog.Return(new(ctx, () => block)/* block*/, "found block");
 

@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Oqtane.Infrastructure;
 using Oqtane.Security;
 using System.Threading.Tasks;
+using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Integration;
-using ToSic.Sxc.Oqt.Server.WebApi;
+using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
@@ -15,15 +16,11 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
     public class AppApiPermissionHandler : PermissionHandler
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IUserPermissions _userPermissions;
-        private readonly ILogManager _logger;
         private readonly RequestHelper _requestHelper;
 
         public AppApiPermissionHandler(IHttpContextAccessor httpContextAccessor, IUserPermissions userPermissions, ILogManager logger, RequestHelper requestHelper) : base(httpContextAccessor, userPermissions, logger)
         {
             _httpContextAccessor = httpContextAccessor;
-            _userPermissions = userPermissions;
-            _logger = logger;
             _requestHelper = requestHelper;
         }
 
@@ -32,9 +29,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
             var httpContext = _httpContextAccessor.HttpContext;
             if (!httpContext.Request.Query.ContainsKey("entityid"))
             {
-                var moduleId = _requestHelper.GetTypedHeader(Sxc.WebApi.WebApiConstants.HeaderInstanceId,
-                    _requestHelper.GetQueryString(WebApiConstants.ModuleId,
-                        _requestHelper.GetRouteValuesString(WebApiConstants.ModuleId,
+                var moduleId = _requestHelper.GetTypedHeader(ContextConstants.ModuleIdKey,
+                    _requestHelper.GetQueryString(ContextConstants.ModuleIdKey,
+                        _requestHelper.GetRouteValuesString(ContextConstants.ModuleIdKey,
                             -1)));
                 var queryString = httpContext.Request.QueryString.Add(new($"?entityid={moduleId}"));
                 httpContext.Request.QueryString = queryString;
