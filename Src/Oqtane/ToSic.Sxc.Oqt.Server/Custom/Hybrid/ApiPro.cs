@@ -18,6 +18,7 @@ using static ToSic.Eav.Parameters;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using ToSic.Sxc.Adam;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -36,10 +37,18 @@ namespace Custom.Hybrid
 
         protected ApiPro(string logSuffix) : base(logSuffix) { }
 
-        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel16;
+        /// <summary>
+        /// Our custom dynamic 2sxc app api controllers, depends on event OnActionExecuting to provide dependencies (without DI in constructor).
+        /// </summary>
+        /// <param name="context"></param>
+        [NonAction]
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+            SysHlp.OnActionExecutingEnd(context);
+        }
 
-        public ServiceKit14 Kit => _kit.Get(_DynCodeRoot.GetKit<ServiceKit14>);
-        private readonly GetOnce<ServiceKit14> _kit = new();
+        [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel16;
 
         #endregion
 
@@ -54,6 +63,9 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public new TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
+        public ServiceKit14 Kit => _kit.Get(_DynCodeRoot.GetKit<ServiceKit14>);
+        private readonly GetOnce<ServiceKit14> _kit = new();
+
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;
 
@@ -63,9 +75,6 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
-
-        ///// <inheritdoc cref="IDynamicCode.Edit" />
-        //public IEditService Edit => _DynCodeRoot?.Edit;
 
         #endregion
 
