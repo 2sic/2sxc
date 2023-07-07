@@ -2,6 +2,7 @@
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
 using RealController = ToSic.Sxc.WebApi.Admin.DialogControllerReal;
 
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class DialogController : DnnApiControllerWithFixes, IDialogController
+    public class DialogController : SxcApiControllerBase, IDialogController
     {
 
 

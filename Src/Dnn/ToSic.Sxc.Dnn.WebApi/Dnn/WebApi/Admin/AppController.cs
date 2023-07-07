@@ -10,6 +10,7 @@ using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
 using AppDto = ToSic.Eav.WebApi.Dto.AppDto;
 using RealController = ToSic.Sxc.WebApi.Admin.AppControllerReal<System.Net.Http.HttpResponseMessage>;
 
@@ -20,7 +21,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     // [ValidateAntiForgeryToken] because the exports are called by the browser directly (new tab) 
     // we can't set this globally (only needed for imports)
     [DnnLogExceptions]
-    public class AppController : DnnApiControllerWithFixes, IAppController<HttpResponseMessage>
+    public class AppController : SxcApiControllerBase, IAppController<HttpResponseMessage>
     {
         public AppController() : base(RealController.LogSuffix) { }
 

@@ -6,6 +6,7 @@ using ToSic.Eav.Apps.Parts;
 using ToSic.Eav.Data;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
+using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.FieldControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -16,7 +17,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class FieldController : DnnApiControllerWithFixes, IFieldController
+    public class FieldController : SxcApiControllerBase, IFieldController
     {
         public FieldController() : base(RealController.LogSuffix) { }
 

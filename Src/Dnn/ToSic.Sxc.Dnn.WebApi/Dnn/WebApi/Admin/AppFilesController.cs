@@ -5,6 +5,7 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Assets;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin.AppFiles;
 using RealController = ToSic.Sxc.WebApi.Admin.AppFiles.AppFilesControllerReal;
 
@@ -17,7 +18,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class AppFilesController : DnnApiControllerWithFixes, IAppFilesController
+    public class AppFilesController : SxcApiControllerBase, IAppFilesController
     {
         public AppFilesController() : base(RealController.LogSuffix) { }
 

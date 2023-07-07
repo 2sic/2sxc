@@ -6,6 +6,7 @@ using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.PublicApi;
+using ToSic.Sxc.WebApi;
 using RealController = ToSic.Sxc.WebApi.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Dnn.WebApi
@@ -18,7 +19,7 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
-    public class AdamController : DnnApiControllerWithFixes, IAdamController<int>
+    public class AdamController : SxcApiControllerBase, IAdamController<int>
     {
 
 

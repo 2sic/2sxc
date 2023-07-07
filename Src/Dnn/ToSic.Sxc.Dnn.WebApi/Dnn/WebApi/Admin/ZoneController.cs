@@ -6,6 +6,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Zone;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
 using RealController = ToSic.Eav.WebApi.Admin.ZoneControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
@@ -14,7 +15,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     [DnnLogExceptions]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [ValidateAntiForgeryToken]
-    public class ZoneController : DnnApiControllerWithFixes, IZoneController
+    public class ZoneController : SxcApiControllerBase, IZoneController
     {
         public ZoneController() : base(RealController.LogSuffix) { }
 
