@@ -19,6 +19,7 @@ using ToSic.Sxc.Compatibility.RazorPermissions;
 using ToSic.Sxc.Compatibility.Sxc;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Run;
@@ -94,8 +95,19 @@ namespace ToSic.SexyContent.Razor
         /// <inheritdoc />
         public new IApp App => _DynCodeRoot.App;
 
+        #region Data - with old interface #DataInAddWontWork
+
         /// <inheritdoc />
-        public IContextData Data => _DynCodeRoot.Data;
+        public IBlockDataSourceOld Data => (IBlockDataSourceOld)_DynCodeRoot.Data;
+
+        // This is explicitly implemented so the interfaces don't complain
+        // but actually we're not showing this - in reality we're showing the Old (see above)
+        IContextData IAppAndDataHelpers.Data => _DynCodeRoot.Data;
+        
+        #endregion
+
+        /// <inheritdoc />
+        IContextData IDynamicCode.Data => _DynCodeRoot.Data;
 
         public RazorPermissions Permissions => new RazorPermissions(_DynCodeRoot.Block?.Context.UserMayEdit ?? false);
 

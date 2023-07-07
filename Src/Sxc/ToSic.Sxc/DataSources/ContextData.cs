@@ -7,11 +7,10 @@ using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+#if NETFRAMEWORK
 using ToSic.Lib.DI;
-using ToSic.Sxc.Code;
-using ToSic.Sxc.Data.AsConverter;
-using static ToSic.Sxc.Code.DynamicCode16Warnings;
 using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
+#endif
 
 namespace ToSic.Sxc.DataSources
 {
@@ -20,7 +19,7 @@ namespace ToSic.Sxc.DataSources
     /// It's based on the <see cref="PassThrough"/> data source, because it's just a coordination-wrapper.
     /// </summary>
     [PrivateApi("used to be Internal... till 16.01, then changed to private to hide implementation")]
-    internal partial class ContextData : PassThrough, /*INeedsDynamicCodeRoot, IHasDynamicCodeRoot,*/ IContextData
+    internal partial class ContextData : PassThrough, IContextData
     {
         #region Constructor and Init
 
@@ -33,18 +32,12 @@ namespace ToSic.Sxc.DataSources
                 _codeChanges = codeChanges
             );
         }
-
-        private readonly ToSic.Eav.Apps.IAppStates _appStates;
 #else
         [PrivateApi("not meant for public use")]
-        public ContextData(MyServices services, LazySvc<CodeInfoService> codeChanges) : base(services, "Sxc.BlckDs")
+        public ContextData(MyServices services) : base(services, "Sxc.BlckDs")
         {
-            ConnectServices(
-                _codeChanges = codeChanges
-            );
         }
 #endif
-        private readonly LazySvc<CodeInfoService> _codeChanges;
 
         #endregion
 
@@ -61,16 +54,15 @@ namespace ToSic.Sxc.DataSources
         #endregion
 
 
-        [PrivateApi("older use case, probably don't publish")]
-        public DataPublishing Publish { get; } = new DataPublishing();
-
         internal void SetOut(Query querySource) => _querySource = querySource;
         private Query _querySource;
         internal void SetBlock(CmsBlock blockSource) => _blockSource = blockSource;
         private CmsBlock _blockSource;
 
-        public override IReadOnlyDictionary<string, IDataStream> Out => _querySource?.Out ?? base.Out;
+        // #DataInAddWontWork
+        // private IReadOnlyDictionary<string, IDataStream> PickOut => _querySource?.Out ?? base.Out;
 
+        public override IReadOnlyDictionary<string, IDataStream> Out => _querySource?.Out ?? base.Out;
 
     }
 }

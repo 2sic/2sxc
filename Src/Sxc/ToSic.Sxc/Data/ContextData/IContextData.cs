@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Data
     /// Introduced in v16.01 to simplify the API when using <see cref="ITypedItem"/>s.
     /// </remarks>
     [PublicApi]
-    public interface IContextData: IBlockDataSource
+    public interface IContextData: IDataSource // IBlockDataSource
     {
         [PrivateApi("maybe just add for docs")]
         new IReadOnlyDictionary<string, IDataStream> Out { get; }

@@ -56,9 +56,13 @@ namespace ToSic.Sxc.DataSources
             {
                 // Note: Deprecated feature in v13, remove ca. 14 - should warn
                 // TODO: #WarnDeprecated
-                contextDataSource.Publish.Enabled = view.PublishData;
-                contextDataSource.Publish.Streams = view.StreamsToPublish;
-
+#if NETFRAMEWORK
+                if (contextDataSource is IBlockDataSourceOld old)
+                {
+                    old.Publish.Enabled = view.PublishData;
+                    old.Publish.Streams = view.StreamsToPublish;
+                }
+#endif
                 Log.A($"use template, & query#{view.Query?.Id}");
                 // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
                 if (view.Query != null)

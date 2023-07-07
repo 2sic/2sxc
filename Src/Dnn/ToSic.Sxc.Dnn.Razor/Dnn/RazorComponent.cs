@@ -17,6 +17,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -102,10 +103,19 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc />
         public new IApp App => _DynCodeRoot.App;
 
-        /// <inheritdoc />
-        public IContextData Data => _DynCodeRoot.Data;
+        #endregion
+
+        #region Data - with old interface #DataInAddWontWork
+
+        [PrivateApi]
+        public IBlockDataSourceOld Data => (IBlockDataSourceOld)_DynCodeRoot.Data;
+
+        // This is explicitly implemented so the interfaces don't complain
+        // but actually we're not showing this - in reality we're showing the Old (see above)
+        IContextData IDynamicCode.Data => _DynCodeRoot.Data;
 
         #endregion
+
 
         #region AsDynamic in many variations
 

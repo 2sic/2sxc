@@ -5,6 +5,7 @@ using DotNetNuke.Entities.Modules;
 using ToSic.SexyContent.Razor;
 using ToSic.SexyContent.Search;
 using ToSic.Sxc.Context;
+using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Web;
 
@@ -17,7 +18,13 @@ namespace ToSic.Sxc.Engines
 
         /// <inheritdoc />
         [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
-        public override void CustomizeData() => (Webpage as IDnnRazorCustomize)?.CustomizeData();
+        public override void CustomizeData()
+        {
+            if (!(Webpage is IDnnRazorCustomize old)) return;
+            if (!(old.Data is IBlockDataSourceOld isOld)) return;
+            //(isOld as ContextData)?.ToggleOldMode();
+            old.CustomizeData();
+        }
 
         /// <inheritdoc />
         [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
