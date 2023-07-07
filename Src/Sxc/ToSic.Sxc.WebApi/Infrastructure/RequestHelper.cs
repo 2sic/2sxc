@@ -1,11 +1,8 @@
 ﻿#if NETCOREAPP
 using System;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
-using ToSic.Sxc.Context;
 
-// TODO: @STV - try to move after the .net 7 upgrade
 namespace ToSic.Sxc.WebApi.Infrastructure
 {
     /// <summary>
@@ -54,15 +51,8 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             }
         }
 
-        public int TryGetPageId() =>
-            GetTypedHeader(ContextConstants.PageIdKey,
-                GetQueryString(ContextConstants.PageIdKey,
-                    GetRouteValuesString(ContextConstants.PageIdKey, Eav.Constants.NullId)));
+        public int TryGetId(string key) => GetTypedHeader(key, GetQueryString(key, GetRouteValuesString(key, Eav.Constants.NullId)));
 
-        public int TryGetModuleId() =>
-            GetTypedHeader(ContextConstants.ModuleIdKey,
-                GetQueryString(ContextConstants.ModuleIdKey,
-                    GetRouteValuesString(ContextConstants.ModuleIdKey, Eav.Constants.NullId)));
     }
 }
 #endif

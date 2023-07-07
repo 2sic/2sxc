@@ -164,7 +164,7 @@ namespace ToSic.Sxc.WebApi
         public static IServiceCollection AddNetCore(this IServiceCollection services)
         {
             // Helper to get header, query string and route information from current request
-            //services.TryAddScoped<RequestHelper>();
+            services.TryAddScoped<RequestHelper>();
 
             return services;
         }
