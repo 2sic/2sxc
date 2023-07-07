@@ -1,6 +1,7 @@
 ﻿#if NETCOREAPP
 using System;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using ToSic.Sxc.Context;
 
@@ -19,7 +20,7 @@ namespace ToSic.Sxc.WebApi.Infrastructure
         {
             _httpContextAccessor = httpContextAccessor;
         }
-        
+
         public T GetTypedHeader<T>(string headerName, T fallback)
         {
             var valueString = _httpContextAccessor.HttpContext?.Request.Headers[headerName] ?? StringValues.Empty;
