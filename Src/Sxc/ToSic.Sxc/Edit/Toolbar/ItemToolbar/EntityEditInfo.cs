@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using ToSic.Eav.Data;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using IEntity = ToSic.Eav.Data.IEntity;
 // ReSharper disable InconsistentNaming
 
@@ -18,8 +19,8 @@ namespace ToSic.Sxc.Edit.Toolbar
             isPublished = entity.IsPublished;
             title = entity.GetBestTitle();
             entityGuid = entity.EntityGuid;
+
             var editDecorator = entity.GetDecorator<EntityInBlockDecorator>();
-            //if (entity is IHasEditingData editingData)
             if (editDecorator != null)
             {
                 sortOrder = editDecorator.SortOrder;

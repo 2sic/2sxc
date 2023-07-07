@@ -1,6 +1,5 @@
 ﻿using System;
 using ToSic.Eav.Security.Encryption;
-using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -18,7 +17,7 @@ namespace ToSic.Sxc.Services
     /// To encrypt other values, use the SecureDataTest.DumpEncryptedValue() code and get the encrypted value from the Trace
     /// </summary>
     [PrivateApi("Hide implementation")]
-    public class SecureDataService: ServiceBase, ISecureDataService
+    internal class SecureDataService: ServiceBase, ISecureDataService
     {
         public readonly AesCryptographyService Aes;
 
@@ -86,7 +85,7 @@ namespace ToSic.Sxc.Services
             }
             catch (Exception ex)
             {
-                throw l.Ex(ex);
+                throw l.Done(ex);
             }
         });
 

@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Custom.Hybrid;
+using Microsoft.AspNetCore.Mvc.Razor;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Engines;
 
 namespace ToSic.Sxc.Razor
@@ -18,33 +21,37 @@ namespace ToSic.Sxc.Razor
 
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
+        private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly LazySvc<DynamicCodeRoot> _dynCodeRootLazy;
         public IRazorRenderer RazorRenderer { get; }
 
         #region Constructor / DI
 
-        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy) : base(services)
+        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy, LazySvc<CodeErrorHelpService> errorHelp) : base(services)
         {
             ConnectServices(
                 _dynCodeRootLazy = dynCodeRootLazy,
-                RazorRenderer = razorRenderer
+                RazorRenderer = razorRenderer,
+                _errorHelp = errorHelp
             );
         }
         
         #endregion
 
         /// <inheritdoc/>
-        protected override string RenderTemplate(object data) => Log.Func(() =>
+        protected override (string, List<Exception>) RenderTemplate(object data)
         {
+            var l = Log.Fn<(string, List<Exception>)>();
             var task = RenderTask();
             task.Wait();
-            return (task.Result.ToString(), "ok");
-        });
+            return l.ReturnAsOk((task.Result.ToString(), null));
+        }
 
         [PrivateApi]
         public async Task<TextWriter> RenderTask()
         {
             Log.A("will render into TextWriter");
+            RazorView page = null;
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return null;
@@ -53,6 +60,7 @@ namespace ToSic.Sxc.Razor
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
+                        page = rzv; // keep for better errors
                         if (rzv.RazorPage is not IRazor asSxc) return;
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
@@ -63,8 +71,7 @@ namespace ToSic.Sxc.Razor
             }
             catch (Exception maybeIEntityCast)
             {
-                ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
-                throw;
+                throw _errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page);
             }
 
             // WIP https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs#L397-L404

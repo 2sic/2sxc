@@ -22,6 +22,7 @@ using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ContentBlocks;
 using ToSic.Sxc.WebApi.Context;
 using ToSic.Sxc.WebApi.ImportExport;
+using ToSic.Sxc.WebApi.Infrastructure;
 using ToSic.Sxc.WebApi.InPage;
 using ToSic.Sxc.WebApi.Save;
 using ToSic.Sxc.WebApi.Sys;
@@ -109,6 +110,12 @@ namespace ToSic.Sxc.WebApi
 
             services.AddLoadSettingsProviders();
 
+#if NETCOREAPP
+            services.AddNetCore();
+#endif
+
+            services.AddFallbacks();
+
             return services;
         }
 
@@ -146,5 +153,21 @@ namespace ToSic.Sxc.WebApi
 
             return services;
         }
+
+        public static IServiceCollection AddFallbacks(this IServiceCollection services)
+        {
+            services.TryAddTransient<IWebApiContextBuilder, WebApiContextBuilderUnknown>();
+            return services;
+        }
+
+#if NETCOREAPP
+        public static IServiceCollection AddNetCore(this IServiceCollection services)
+        {
+            // Helper to get header, query string and route information from current request
+            services.TryAddScoped<RequestHelper>();
+
+            return services;
+        }
+#endif
     }
 }

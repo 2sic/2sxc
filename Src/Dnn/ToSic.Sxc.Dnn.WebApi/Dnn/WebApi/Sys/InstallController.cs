@@ -2,17 +2,18 @@
 using DotNetNuke.Web.Api;
 using System.Net.Http;
 using System.Web.Http;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using ToSic.Sxc.WebApi.Sys;
+using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
-    public class InstallController : DnnApiControllerWithFixes<InstallControllerReal<HttpResponseMessage>>, IInstallController<HttpResponseMessage>
+    public class InstallController : DnnApiControllerWithFixes, IInstallController<HttpResponseMessage>
     {
-        public InstallController() : base(InstallControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public InstallController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
@@ -29,7 +30,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         private void PrepareResponseMaker()
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
         }
 
@@ -37,7 +38,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public InstallAppsDto InstallSettings(bool isContentApp) 
-            => Real.InstallSettings(isContentApp, ((DnnModule) GetService<IModule>()).Init(Request.FindModuleInfo()));
+            => Real.InstallSettings(isContentApp, ((DnnModule)SysHlp.GetService<IModule>()).Init(Request.FindModuleInfo()));
 
 
         /// <inheritdoc />
@@ -46,9 +47,9 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [ValidateAntiForgeryToken] // now activate this, as it's post now, previously not, because this is a GET and can't include the RVT
         public HttpResponseMessage RemotePackage(string packageUrl)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             PrepareResponseMaker();
-            return Real.RemotePackage(packageUrl, ((DnnModule)GetService<IModule>()).Init(ActiveModule));
+            return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule));
         }
     }
 }

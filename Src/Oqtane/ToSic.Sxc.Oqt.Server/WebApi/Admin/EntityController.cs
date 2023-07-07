@@ -9,6 +9,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -27,13 +28,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnLogExceptions]
 
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class EntityController : OqtStatefulControllerBase<EntityControllerReal<IActionResult>>, IEntityController<IActionResult>
+    public class EntityController : OqtStatefulControllerBase, IEntityController<IActionResult>
     {
-        public EntityController() : base(EntityControllerReal<IActionResult>.LogSuffix) { }
+        public EntityController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
 
         /// <inheritdoc/>

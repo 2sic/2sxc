@@ -1,10 +1,20 @@
-﻿using System;
-using ToSic.Razor.Blade;
+﻿using ToSic.Razor.Blade;
 
 namespace ToSic.Sxc.Data
 {
     public partial interface IDynamicEntity
     {
+        /// <summary>
+        /// Many templates show demo data.
+        /// If the template code must know if it's the demo item or
+        /// real data, use `.IsDemoItem`.
+        /// </summary>
+        /// <returns>
+        /// True if this is the item configured in the view-settings, false if not.
+        /// </returns>
+        /// <remarks>New in 10.07 on IDynamicEntity, new in 16.02 on ITypedEntity</remarks>
+        new bool IsDemoItem { get; }
+
         /// <summary>
         /// Show a field in the expected / best possible way.
         /// As of now it's meant for WYSIWYG fields with Very-Rich Text.
@@ -26,7 +36,7 @@ namespace ToSic.Sxc.Data
         /// * Added in 2sxc 16.01
         /// * Only works on Razor files inheriting from Hybrid14 or newer
         /// </remarks>
-        IHtmlTag Html(
+        new IHtmlTag Html(
             string name,
             string noParamOrder = Eav.Parameters.Protector,
             object container = default,

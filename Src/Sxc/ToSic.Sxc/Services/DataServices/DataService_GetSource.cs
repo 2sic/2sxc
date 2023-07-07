@@ -8,7 +8,7 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
-    public partial class DataService
+    internal partial class DataService
     {
 
         // IMPORTANT - this is different! from the _DynCodeRoot - as it shouldn't auto attach at all!
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Services
                                             $"d) the file name is not 'DataSources/{name}.cs'. ");
 
             if (dsInfo.ErrorOrNull != null && showErrors)
-                throw l.Ex(new Exception($"{ErrorIntro(name, "compile error")}\n" +
+                throw l.Done(new Exception($"{ErrorIntro(name, "compile error")}\n" +
                                          $"It could also be that the file name and class names don't match. \n" +
                                          $"Title: '{dsInfo.ErrorOrNull.Title}'; \n" +
                                          $"Message: {dsInfo.ErrorOrNull.Message}; \n" +
@@ -72,7 +72,7 @@ namespace ToSic.Sxc.Services
             var message = $"Title: '{errEntity.Get<string>(ErrorFieldTitle)}'; \n" +
                           $"Message: {errEntity.Get<string>(ErrorFieldMessage)}; \n" +
                           $"Debug Info: {errEntity.Get<string>(ErrorFieldDebugNotes)}";
-            throw l.Ex(new Exception($"{ErrorIntro(name, "bug in the code")}\n{message}"));
+            throw l.Done(new Exception($"{ErrorIntro(name, "bug in the code")}\n{message}"));
 
         }
 

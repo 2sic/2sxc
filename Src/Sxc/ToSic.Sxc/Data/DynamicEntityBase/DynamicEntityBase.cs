@@ -16,6 +16,7 @@ namespace ToSic.Sxc.Data
         protected DynamicEntityBase(DynamicEntity.MyServices services) => _Services = services;
 
         // ReSharper disable once InconsistentNaming
+        [PrivateApi("Private, but public for debugging in emergencies")]
         public DynamicEntity.MyServices _Services { get; }
 
         // ReSharper disable once InconsistentNaming
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Data
 
         #endregion
 
-        protected ILog LogOrNull => _logOrNull.Get(() => _Services.LogOrNull?.SubLogOrNull("DynEnt", Debug));
+        protected ILog LogOrNull => _logOrNull.Get(() => _Services.AsC?.Log?.SubLogOrNull("DynEnt", Debug));
         private readonly GetOnce<ILog> _logOrNull = new GetOnce<ILog>();
 
     }

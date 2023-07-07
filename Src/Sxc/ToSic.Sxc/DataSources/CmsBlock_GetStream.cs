@@ -9,6 +9,7 @@ using ToSic.Eav.DataSources;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using static ToSic.Eav.DataSource.DataSourceConstants;
 
 namespace ToSic.Sxc.DataSources
@@ -76,8 +77,8 @@ namespace ToSic.Sxc.DataSources
                         try
                         {
                             var itm = originals.One(entityId);
-                            entitiesToDeliver.Add(
-                                EntityInBlockDecorator.Wrap(itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem));
+                            entitiesToDeliver.Add(EntityInBlockDecorator.Wrap(
+                                itm, null, null, isListHeader ? -1 : i, presentationEntity, isDemoItem));
                         }
                         catch (Exception ex)
                         {

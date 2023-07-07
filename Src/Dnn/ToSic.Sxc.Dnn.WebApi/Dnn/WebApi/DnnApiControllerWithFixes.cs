@@ -1,47 +1,46 @@
-﻿using System;
-using System.Web;
-using System.Web.Http.Controllers;
+﻿using System.Web.Http.Controllers;
 using DotNetNuke.Web.Api;
-using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi;
-using ToSic.Lib.Helpers;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn.WebApi.HttpJson;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using ToSic.Sxc.WebApi;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
     [DnnLogWebApi, JsonOnlyResponse]
-    public abstract class DnnApiControllerWithFixes<TRealController> : DnnApiController, IHasLog where TRealController : class, IHasLog
+    [PrivateApi("This controller is never used publicly, you can rename any time you want")]
+    public abstract class DnnApiControllerWithFixes : DnnApiController, IHasLog
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
-
         internal const string DnnSupportedModuleNames = "2sxc,2sxc-app";
 
-        protected DnnApiControllerWithFixes(string logSuffix) 
-	    {
-            // Create log - but set first message separately, so timer is in the first line in the log
+        protected DnnApiControllerWithFixes(string logSuffix)
+        {
             Log = new Log("Api." + logSuffix);
-            TimerWrapLog = Log.Fn(message: $"Path: {HttpContext.Current?.Request.Url.AbsoluteUri}", timer: true);
-	        
-            // ReSharper disable VirtualMemberCallInConstructor
-            GetService<ILogStore>().Add(HistoryLogGroup ?? EavWebApiConstants.HistoryNameWebApi, Log);
-            // ReSharper restore VirtualMemberCallInConstructor
+            // ReSharper disable once VirtualMemberCallInConstructor
+            SysHlp = new DnnWebApiHelper(this, HistoryLogGroup);
         }
 
-        // ReSharper disable once InconsistentNaming
-        private readonly ILogCall TimerWrapLog;
+        /// <summary>
+        /// Special helper to move all Razor logic into a separate class.
+        /// For architecture of Composition over Inheritance.
+        /// </summary>
+        [PrivateApi]
+        internal DnnWebApiHelper SysHlp { get; }
 
-        protected override void Initialize(HttpControllerContext controllerContext) => Log.Do(() =>
+        protected override void Initialize(HttpControllerContext controllerContext)
         {
+            var l = Log.Fn();
             // Add the logger to the request, in case it's needed in error-reporting
-            controllerContext.Request.Properties.Add(DnnConstants.EavLogKey, Log);
+            SysHlp.WebApiLogging.OnInitialize(controllerContext);
             base.Initialize(controllerContext);
-        });
+            l.Done();
+        }
 
         protected override void Dispose(bool disposing)
         {
-            TimerWrapLog.Done();
+            SysHlp.OnDispose();
             base.Dispose(disposing);
         }
 
@@ -53,30 +52,6 @@ namespace ToSic.Sxc.Dnn.WebApi
         /// Helps group various calls by use case. 
         /// </summary>
         protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
-
-        /// <summary>
-        ///  Extend Time so Web Server doesn't time out
-        /// </summary>
-        protected void PreventServerTimeout300() => HttpContext.Current.Server.ScriptTimeout = 300;
-
-        /// <inheritdoc />
-        public virtual TService GetService<TService>()
-        {
-            var service = _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
-            return service;
-        }
-
-        // Must cache it, to be really sure we use the same ServiceProvider in the same request
-        private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
-
-        /// <summary>
-        /// The RealController which is the full backend of this controller.
-        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
-        /// </summary>
-        protected virtual TRealController Real
-            => _real.Get(() => GetService<TRealController>()
-                               ?? throw new Exception($"Can't use {nameof(Real)} for unknown reasons"));
-        private readonly GetOnce<TRealController> _real = new GetOnce<TRealController>();
 
     }
 }

@@ -8,10 +8,9 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Admin;
+using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -28,10 +27,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-    public class TypeController : SxcApiControllerBase<TypeControllerReal<HttpResponseMessage>>, ITypeController<HttpResponseMessage>
+    public class TypeController : SxcApiControllerBase, ITypeController<HttpResponseMessage>
     {
-        public TypeController() : base(TypeControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public TypeController() : base(RealController.LogSuffix) { }
 
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Get a list of all content-types.
@@ -135,7 +135,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Json(int appId, string name)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Json(appId, name);
@@ -154,7 +154,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId, int appId)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
         }
 
@@ -169,7 +169,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.JsonBundleExport(appId, exportConfiguration, indentation);

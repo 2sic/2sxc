@@ -1,5 +1,7 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -24,8 +26,21 @@ namespace ToSic.Sxc.Edit.Toolbar
         /// <remarks>
         /// New in v14.04
         /// </remarks>
-        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP - still choosing name for/target")]
         IToolbarBuilder For(object target);
+
+        /// <summary>
+        /// Detect if the toolbar should go into demo-mode.
+        /// 
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="message">Optional message or a resources key such as `Resources.ToolbarShowingDemo`</param>
+        /// <returns></returns>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice("WIP 16.02")]
+        IToolbarBuilder DetectDemo(
+            ICanBeEntity root,
+            string noParamOrder = Protector,
+            string message = default);
 
         /// <summary>
         /// Condition to apply if the toolbar would show, but maybe shouldn't.

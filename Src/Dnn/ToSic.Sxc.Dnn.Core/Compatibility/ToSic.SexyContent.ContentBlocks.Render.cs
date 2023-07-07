@@ -1,6 +1,7 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+using System;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
-using IHtmlString = System.Web.IHtmlString;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.SexyContent.ContentBlocks
@@ -9,7 +10,7 @@ namespace ToSic.SexyContent.ContentBlocks
     public static class Render
     {
         [Obsolete]
-        public static IHtmlString One(DynamicEntity context,
+        public static IRawHtmlString One(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
             IDynamicEntity item = null,
             string field = null,
@@ -17,10 +18,11 @@ namespace ToSic.SexyContent.ContentBlocks
             => Sxc.Blocks.Render.One(context, noParamOrder, item: item, field: field, newGuid: newGuid);
 
         [Obsolete]
-        public static IHtmlString All(DynamicEntity context,
+        public static IRawHtmlString All(DynamicEntity context,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string merge = null)
             => Sxc.Blocks.Render.All(context, noParamOrder, field: field, merge: merge);
     }
 }
+#endif

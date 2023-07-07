@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -29,13 +31,12 @@ namespace ToSic.Sxc.Blocks
             var l = Log.Fn<IRenderResult>(timer: true);
             try
             {
-                var (html, err) = RenderInternal(data);
-                var result = new RenderResult
+                var (html, isErr, exsOrNull) = RenderInternal(data);
+                var result = new RenderResult(html)
                 {
-                    Html = html,
-                    IsError = err,
+                    IsError = isErr,
                     ModuleId = Block.ParentId,
-                    CanCache = !err && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
+                    CanCache = !isErr && exsOrNull.SafeNone() && (Block.ContentGroupExists || Block.Configuration?.PreviewTemplateId.HasValue == true),
                 };
 
                 // case when we do not have an app
@@ -76,15 +77,21 @@ namespace ToSic.Sxc.Blocks
                 l.Ex(ex);
             }
 
+            // Add information to code changes if relevant
+            Services.CodeInfos.AddContext(() => new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
+
+
             return l.Return(_result);
         }
 
+
         private IRenderResult _result;
 
-        private (string Html, bool Error) RenderInternal(object data)
+        private (string Html, bool IsError, List<Exception> exsOrNull) RenderInternal(object data)
         {
-            var l = Log.Fn<(string, bool)>();
+            var l = Log.Fn<(string, bool, List<Exception>)>();
 
+            var exceptions = new List<Exception>();
             try
             {
                 // New 13.11 - must set appid etc. for dependencies before we start
@@ -94,19 +101,23 @@ namespace ToSic.Sxc.Blocks
                 // do pre-check to see if system is stable & ready
                 var (body, err) = GenerateErrorMsgIfInstallationNotOk();
                 var errorCode = err ? ErrorInstallationNotOk : null;
-                #region check if the content-group exists (sometimes it's missing if a site is being imported and the data isn't in yet
+
+                #region Content-Group Exists
+                // Check if the content-group exists - sometimes the Content-Group it's missing if a site is being imported and the data isn't in yet
                 if (body == null)
                 {
-                    Log.A("pre-init innerContent content is empty so no errors, will build");
+                    l.A("pre-init innerContent content is empty so no errors, will build");
                     if (Block.DataIsMissing)
                     {
-                        Log.A("content-block is missing data - will show error or just stop if not-admin-user");
+                        l.A("content-block is missing data - will show error or just stop if not-admin-user");
                         var blockId = Block.Configuration?.BlockIdentifierOrNull;
                         var msg = "Data is missing. This is common when a site is copied " +
                                   "but the content / apps have not been imported yet" +
                                   " - check 2sxc.org/help?tag=export-import - " +
                                   $" Zone/App: {Block.ZoneId}/{Block.AppId}; App NameId: {blockId?.AppNameId}; ContentBlock GUID: {blockId?.Guid}";
-                            body = RenderingHelper.DesignErrorMessage(new Exception(msg), true);
+                        var ex = new Exception(msg);
+                        exceptions.Add(ex);
+                        body = RenderingHelper.DesignErrorMessage(exceptions, true);
                         err = true;
                         errorCode = ErrorDataIsMissing;
                     }
@@ -123,6 +134,8 @@ namespace ToSic.Sxc.Blocks
                             var engine = GetEngine();
                             var renderEngineResult = engine.Render(data);
                             body = renderEngineResult.Html;
+                            if (renderEngineResult.ExceptionsOrNull != null)
+                                exceptions.AddRange(renderEngineResult.ExceptionsOrNull);;
                             errorCode = renderEngineResult.ErrorCode ?? errorCode;
                             if (errorCode == null && body?.Contains(ErrorHtmlMarker) == true) 
                                 errorCode = ErrorGeneral;
@@ -130,7 +143,7 @@ namespace ToSic.Sxc.Blocks
                             // only set if true, because otherwise we may accidentally overwrite the previous setting
                             if (renderEngineResult.ActivateJsApi)
                             {
-                                Log.A("template referenced 2sxc.api JS in script-tag: will enable");
+                                l.A("template referenced 2sxc.api JS in script-tag: will enable");
                                 Block.Context.PageServiceShared.PageFeatures.Activate(BuiltInFeatures.JsCore.NameId);
                             }
 
@@ -141,7 +154,8 @@ namespace ToSic.Sxc.Blocks
                     }
                     catch (Exception ex)
                     {
-                        body = RenderingHelper.DesignErrorMessage(ex, true);
+                        exceptions.Add(ex);
+                        body = RenderingHelper.DesignErrorMessage(exceptions, true);
                         err = true;
                         errorCode = ErrorRendering;
                     }
@@ -169,7 +183,8 @@ namespace ToSic.Sxc.Blocks
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
                         editContext: addEditCtx, 
-                        errorCode: errorCode)
+                        errorCode: errorCode,
+                        exsOrNull: exceptions)
                     : body;
                 #endregion
 
@@ -181,11 +196,12 @@ namespace ToSic.Sxc.Blocks
 
                 #endregion
 
-                return l.Return((result, err));
+                return l.Return((result, err, exceptions));
             }
             catch (Exception ex)
             {
-                return l.Return((RenderingHelper.DesignErrorMessage(ex, true, addContextWrapper: true), true), "error");
+                exceptions.Add(ex);
+                return l.Return((RenderingHelper.DesignErrorMessage(exceptions, true, addContextWrapper: true), true, exceptions), "error");
             }
         }
 
@@ -203,7 +219,7 @@ namespace ToSic.Sxc.Blocks
             if (!string.IsNullOrEmpty(notReady))
             {
                 Log.A("system isn't ready,show upgrade message");
-                var result = RenderingHelper.DesignErrorMessage(new Exception(notReady), true, encodeMessage: false); // don't encode, as it contains special links
+                var result = RenderingHelper.DesignErrorMessage(new List<Exception>{new Exception(notReady)}, true, encodeMessage: false); // don't encode, as it contains special links
                 return (result, true);
             }
 
@@ -223,7 +239,7 @@ namespace ToSic.Sxc.Blocks
             if (AnyLicenseOk) return null;
             
             Log.A("none of the licenses are valid");
-            var warningLink = Tag.A("r.2sxc.org/license-warning").Href("https://r.2sxc.org/license-warning");
+            var warningLink = Tag.A("go.2sxc.org/license-warning").Href("https://go.2sxc.org/license-warning");
             var appsManagementLink = Tag.A("System-Management").Href("#").On("click", "$2sxc(this).cms.run({ action: 'system' })");
             var warningMsg = "Registration not valid so some features may be disabled. " +
                              $"Please re-register in {appsManagementLink}. " +

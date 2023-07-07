@@ -40,6 +40,7 @@ namespace ToSic.Sxc.DataSources
             { nameof(Size), Size },
         };
 
+        [PrivateApi]
         public override IEnumerable<object> RelationshipKeys(RawConvertOptions options) => new List<object> { $"FileIn:{ParentFolderInternal}" };
 
     }

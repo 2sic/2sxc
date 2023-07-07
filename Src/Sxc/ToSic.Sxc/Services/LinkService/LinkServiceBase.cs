@@ -119,7 +119,7 @@ namespace ToSic.Sxc.Services
             object settings = default,
             object factor = default,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicField field = default,
+            IField field = default,
             object width = default,
             object height = default,
             object quality = default,
@@ -132,14 +132,14 @@ namespace ToSic.Sxc.Services
             )
         {
             // prevent incorrect use without named parameters
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, $"{nameof(Image)}", $"{nameof(width)},{nameof(height)}," +
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(width)},{nameof(height)}," +
                 $"{nameof(quality)},{nameof(resizeMode)},{nameof(scaleMode)},{nameof(format)},{nameof(aspectRatio)},{nameof(type)},{nameof(parameters)}");
 
             // If params were given, ensure it can be used as string, as it could also be a params-object
             var strParams = ParametersToString(parameters);
 
             // If the url should be expanded to have a full root or something, do this first
-            url = url ?? field?.Parent.Get(field.Name) as string;
+            url = url ?? field?.Parent.Get<string>(field.Name);
             var expandedUrl = ExpandUrlIfNecessary(type, url);
 
             // Get the image-url(s) as needed

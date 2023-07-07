@@ -7,7 +7,7 @@
         /// <summary>
         /// Turn on some javascript code when all requirements have been met.
         /// Uses [turnOn](xref:JsCode.TurnOn.Index).
-        ///
+        /// 
         /// Will automatically activate the feature and set hidden data on the page for the turnOn JS to pick up.
         /// </summary>
         /// <param name="runOrSpecs">
@@ -22,12 +22,17 @@
         /// * a array of such strings
         /// </param>
         /// <param name="data">_optional_ any value such as a string, or an object - to pass into the run-command</param>
+        /// <param name="condition">_optional_ condition when this should happen - if false, it won't add anything (new v16.02)</param>
         /// <returns>An empty string, just so you can use it directly in Razor like `@Kit.Page.TurnOn("...")`</returns>
-        /// <remarks>New in v15.</remarks>
+        /// <remarks>
+        /// * Added in v15.x
+        /// * `condition` added in 16.02
+        /// </remarks>
         string TurnOn(object runOrSpecs,
             string noParamOrder = Eav.Parameters.Protector,
             object require = default,
-            object data = default);
+            object data = default,
+            bool condition = true);
 
         #endregion
 

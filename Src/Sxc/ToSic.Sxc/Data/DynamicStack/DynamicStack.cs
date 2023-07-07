@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         {
             var source = UnwrappedStack.GetSource(name)
                          // If not found, create a fake one
-                         ?? _Services.DataBuilder.FakeEntity(_Services.BlockOrNull?.AppId ?? 0);
+                         ?? _Services.AsC.FakeEntity(_Services.BlockOrNull?.AppId);
 
             return SourceToDynamicEntity(source);
         }
@@ -77,6 +77,6 @@ namespace ToSic.Sxc.Data
             ?? new List<PropertyDumpItem>();
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
-            => throw new NotSupportedException($"Setting a value on {nameof(DynamicStack)} is not supported");
+            => throw new NotSupportedException($"Setting a value on {nameof(IDynamicStack)} is not supported");
     }
 }

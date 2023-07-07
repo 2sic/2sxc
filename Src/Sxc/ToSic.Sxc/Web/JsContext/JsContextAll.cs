@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
+using ToSic.Eav.Code.InfoSystem;
 using ToSic.Eav.Data.Shared;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -12,6 +15,7 @@ namespace ToSic.Sxc.Web.JsContext
 {
     public class JsContextAll : ServiceBase
     {
+        private readonly CodeInfosInScope _codeWarnings;
         public JsContextEnvironment Environment;
         public JsContextUser User;
         public JsContextLanguage Language;
@@ -26,18 +30,19 @@ namespace ToSic.Sxc.Web.JsContext
         public UiDto Ui;
         public JsApi JsApi;
 
-        public JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService) : base("Sxc.CliInf")
+        public JsContextAll(JsContextLanguage jsLangCtx, IJsApiService jsApiService, CodeInfosInScope codeWarnings) : base("Sxc.CliInf")
         {
             ConnectServices(
                 _jsLangCtx = jsLangCtx,
-                _jsApiService = jsApiService
-                );
+                _jsApiService = jsApiService,
+                _codeWarnings = codeWarnings
+            );
         }
 
         private readonly JsContextLanguage _jsLangCtx;
         private readonly IJsApiService _jsApiService;
 
-        public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode)
+        public JsContextAll GetJsContext(string systemRootUrl, IBlock block, string errorCode, List<Exception> exsOrNull)
         {
             var l = Log.Fn<JsContextAll>();
             var ctx = block.Context;
@@ -46,22 +51,20 @@ namespace ToSic.Sxc.Web.JsContext
             Language = _jsLangCtx.Init(ctx.Site, block.ZoneId);
 
             // New in v13 - if the view is from remote, don't allow design
-            var view = block.View; // can be null
-            var blockCanDesign = (view?.Entity.HasAncestor() ?? false) ? (bool?)false : null;
+            var blockCanDesign = block.View?.Entity.HasAncestor() ?? false ? (bool?)false : null;
 
             User = new JsContextUser(ctx.User, blockCanDesign);
 
             ContentBlockReference = new ContentBlockReferenceDto(block, ctx.Publishing.Mode);
             ContentBlock = new ContentBlockDto(block);
-            var autoToolbar = ctx.UserMayEdit;
 
             // If auto toolbar is false / not certain, and we have features activated...
             // find out if the Toolbars-Auto is enabled, in which case we should activate them
-            if (!autoToolbar && block.BlockFeatureKeys.Any())
-            {
-                var features = block.Context.PageServiceShared.PageFeatures.GetWithDependents(block.BlockFeatureKeys, Log);
-                autoToolbar = features.Contains(BuiltInFeatures.ToolbarsAutoInternal);
-            }
+            var autoToolbar = ctx.UserMayEdit || (
+                block.BlockFeatureKeys.Any() && block.Context.PageServiceShared.PageFeatures
+                    .GetWithDependents(block.BlockFeatureKeys, Log)
+                    .Contains(BuiltInFeatures.ToolbarsAutoInternal)
+            );
 
             l.A($"{nameof(autoToolbar)}: {autoToolbar}");
             Ui = new UiDto(autoToolbar);
@@ -70,7 +73,7 @@ namespace ToSic.Sxc.Web.JsContext
                 rvt: null
             );
 
-            error = new ErrorDto(block, errorCode);
+            error = new ErrorDto(block, errorCode, exsOrNull, _codeWarnings);
             return l.Return(this);
         }
     }

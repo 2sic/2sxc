@@ -1,7 +1,6 @@
 ﻿using System;
 using ToSic.Eav.Apps.Assets;
 using ToSic.Eav.Data;
-using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleForEntity;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -16,13 +15,14 @@ namespace ToSic.Sxc.Edit.Toolbar
             string autoAddMore = default,
             object ui = default,
             object parameters = default)
-            => AddInternal(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
+            => this.AddInternal(new ToolbarRuleSettings(show: show, hover: hover, follow: follow, classes: classes, autoAddMore: autoAddMore,
                 ui: PrepareUi(ui), parameters: Utils.Par2Url.Serialize(parameters)));
 
 
         public IToolbarBuilder Parameters(
             object target = default,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = default,
             object parameters = default,
             object prefill = default,
@@ -44,10 +44,15 @@ namespace ToSic.Sxc.Edit.Toolbar
             target = target ?? previous?.Target;
 
             // Must create a new one, to not change the original which is still in the original object
-            var parsString = Utils.Par2Url.SerializeWithChild(previous?.Parameters, parameters);
+            var uiWithPrevious = PrepareUi(previous?.Ui, ui);
+            var partsWithPrevious = Utils.Par2Url.SerializeWithChild(previous?.Parameters, parameters);
+            var parts = PreCleanParams(tweak, defOp: ToolbarRuleOps.OprNone, ui: uiWithPrevious, parameters: partsWithPrevious, prefill: prefill);
+
+            //var parsWithPrefill = Utils.Prefill2Url.SerializeWithChild(partsWithPrevious, prefill, PrefixPrefill);
+
             var newParamsRule = new ToolbarRuleForParams(target,
-                PrepareUi(previous?.Ui, ui),
-                Utils.Prefill2Url.SerializeWithChild(parsString, prefill, PrefixPrefill),
+                parts.Ui,
+                parts.Parameters,
                 GenerateContext(target, context) ?? previous?.Context,
                 Services.ToolbarButtonHelper.Value);
 

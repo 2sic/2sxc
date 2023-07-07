@@ -37,8 +37,9 @@ namespace ToSic.Sxc.Dnn
         #region Logging
 
         private ILog Log { get; } = new Log("Sxc.View");
+        private LogStoreEntry _logInStore;
 
-        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Page:{TabId} '{Page?.Title}', Module:{ModuleId} '{ModuleConfiguration.ModuleTitle}'"));
+        protected ILogCall LogTimer => _logTimer.Get(() => Log.Fn(message: $"Module: '{ModuleConfiguration.ModuleTitle}'"));
         private readonly GetOnce<ILogCall> _logTimer = new GetOnce<ILogCall>();
 
         #endregion
@@ -51,7 +52,7 @@ namespace ToSic.Sxc.Dnn
             LogTimer.DoInTimer(() =>
             {
                 // add to insights-history for analytic
-                GetService<ILogStore>().Add("module", Log);
+                _logInStore = GetService<ILogStore>().Add("module", Log);
                 //LogTimer.Timer.Start();
 
                 Log.Do(timer: true, action: () =>
@@ -140,6 +141,16 @@ namespace ToSic.Sxc.Dnn
                             /* ignore */
                         }
 
+                        // 16.02 - try to add page specs about the request to the log
+                        try
+                        {
+                            _logInStore?.UpdateSpecs(new SpecsForLogHistory().BuildSpecsForLogHistory(Block));
+                        }
+                        catch
+                        {
+                            /* ignore */
+                        }
+
                         // call this after rendering templates, because the template may change what resources are registered
                         DnnClientResources.AddEverything(data.Features);
                         headersAndScriptsAdded = true; // will be true if we make it this far
@@ -165,16 +176,17 @@ namespace ToSic.Sxc.Dnn
         {
             var l = Log.Fn<IRenderResult>(message: $"module {ModuleId} on page {TabId}", timer: true);
 
-            var result = new RenderResult();
+            var result = new RenderResult(null);
             TryCatchAndLogToDnn(() =>
             {
-                if (RenderNaked) Block.BlockBuilder.WrapInDiv = false;
-                result = (RenderResult)Block.BlockBuilder.Run(true, null);
+                var bb = Block.BlockBuilder;
+                if (RenderNaked) bb.WrapInDiv = false;
+                result = (RenderResult)bb.Run(true, null);
 
                 if (result.Errors?.Any() ?? false)
                 {
                     var warnings = result.Errors
-                        .Select(e => Block.BlockBuilder.RenderingHelper.DesignError(e));
+                        .Select(e => bb.RenderingHelper.DesignError(e));
 
                     result.Html = string.Join("", warnings) + result.Html;
                 }

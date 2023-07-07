@@ -46,7 +46,6 @@ namespace ToSic.Sxc.Blocks.Renderers
             // because these were scoped, 
             // must attach additional info to the parent block, so it doesn't loose header changes and similar
 
-            // Return resulting string
             return l.Return(result.Html);
         }
 
@@ -54,23 +53,27 @@ namespace ToSic.Sxc.Blocks.Renderers
         private const string WrapperMultiItems = "sc-content-block-list"; // tells quickE that it's an editable area
         private const string WrapperSingleItem = WrapperMultiItems + " show-placeholder single-item"; // enables a placeholder when empty, and limits one entry
 
-        public string RenderWithEditContext(DynamicEntity parent, IDynamicEntity subItem, string cbFieldName, Guid? newGuid, IEditService edit, object data = default)
+        internal string RenderWithEditContext(IBlock block, ICanBeEntity parent, ICanBeEntity subItem, string cbFieldName, Guid? newGuid, IEditService edit, object data = default)
         {
             var l = Log.Fn<string>();
             var attribs = edit.ContextAttributes(parent, field: cbFieldName, newGuid: newGuid);
-            var inner = subItem == null ? "": Render(parent._Services.BlockOrNull, subItem.Entity, data: data);
+            var inner = subItem == null ? "": Render(block, subItem.Entity, data: data);
             var cbClasses = edit.Enabled ? WrapperSingleItem : "";
             return l.Return(string.Format(WrapperTemplate, new object[] { cbClasses, attribs, inner}));
         }
 
-        public string RenderListWithContext(DynamicEntity parent, string fieldName, string apps, int max, IEditService edit)
+        public string RenderListWithContext(IBlock block, IEntity parent, string fieldName, string apps, int max, IEditService edit)
         {
             var l = Log.Fn<string>();
             var innerBuilder = new StringBuilder();
-            var found = parent.TryGetMember(fieldName, out var objFound);
-            if (found && objFound is IList<DynamicEntity> items)
-                foreach (var cb in items)
-                    innerBuilder.Append(Render(cb._Services.BlockOrNull, cb.Entity));
+            var children = parent.Entity.Children(fieldName);
+            foreach (var child in children)
+                innerBuilder.Append(Render(block, child));
+
+            //var found = parent.TryGetMember(fieldName, out var objFound);
+            //if (found && objFound is IList<DynamicEntity> items)
+            //    foreach (var cb in items)
+            //        innerBuilder.Append(Render(block, cb.Entity));
 
             var result = string.Format(WrapperTemplate, new object[]
             {

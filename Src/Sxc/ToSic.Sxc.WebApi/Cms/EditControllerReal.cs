@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ToSic.Lib.DI;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
@@ -10,8 +9,6 @@ using ToSic.Sxc.WebApi.InPage;
 
 namespace ToSic.Sxc.WebApi.Cms
 {
-    // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
-
     public class EditControllerReal: ServiceBase, IEditController
     {
         public const string LogSuffix = "Edit";

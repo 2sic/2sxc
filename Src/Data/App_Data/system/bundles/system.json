@@ -2571,7 +2571,7 @@
                 "Metadata": [
                   {
                     "Id": 45248,
-                    "Version": 4,
+                    "Version": 5,
                     "Guid": "340210e1-81b3-4764-a742-bf3f66b68687",
                     "Type": {
                       "Name": "@All",
@@ -2580,25 +2580,36 @@
                     "Attributes": {
                       "String": {
                         "CustomJavaScript": {
-                          "*": ""
+                          "en-us": ""
                         },
                         "DefaultValue": {
-                          "*": "false"
+                          "en-us": "false"
+                        },
+                        "Information": {
+                          "en-us": ""
                         },
                         "InputType": {
-                          "*": "boolean-default"
+                          "en-us": "boolean-default"
                         },
                         "Name": {
-                          "*": "Hidden"
+                          "en-us": "Hidden"
                         },
                         "Notes": {
-                          "*": "Show / hide this in the app selector. Advanced apps are usually set to hidden once the developer adds them to the necessary pages."
+                          "en-us": "Show / hide this in the app selector. Advanced apps are usually set to hidden once the developer adds them to the necessary pages."
                         },
                         "Placeholder": {
-                          "*": ""
+                          "en-us": ""
+                        },
+                        "Tooltip": {
+                          "en-us": ""
                         },
                         "ValidationRegExJavaScript": {
-                          "*": ""
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
+                          "en-us": ""
                         }
                       },
                       "Entity": {
@@ -2614,16 +2625,16 @@
                       },
                       "Boolean": {
                         "Disabled": {
-                          "*": false
+                          "en-us": false
                         },
                         "DisableTranslation": {
-                          "*": true
+                          "en-us": true
                         },
                         "Required": {
-                          "*": false
+                          "en-us": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
+                          "en-us": true
                         }
                       }
                     },
@@ -2631,7 +2642,7 @@
                   },
                   {
                     "Id": 45260,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "40b12003-1962-4004-aaae-4e08b7c7bab6",
                     "Type": {
                       "Name": "@Boolean",
@@ -2640,13 +2651,18 @@
                     "Attributes": {
                       "String": {
                         "TitleFalse": {
-                          "*": "Default (Visible)"
+                          "en-us": "Default (Visible)"
                         },
                         "TitleIndeterminate": {
-                          "*": "Default (Visible)"
+                          "en-us": "Default (Visible)"
                         },
                         "TitleTrue": {
-                          "*": "Hidden - will not appear in add-app list"
+                          "en-us": "Hidden - will not appear in add-app list"
+                        }
+                      },
+                      "Boolean": {
+                        "ReverseToggle": {
+                          "en-us": true
                         }
                       }
                     },
@@ -2661,8 +2677,25 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
+                    "Id": 129746,
+                    "Version": 2,
+                    "Guid": "a70c7a0c-011d-4953-be26-fd1d84f7ab1c",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
                     "Id": 129743,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "00e026d9-685c-47ac-8c6b-41db9655911b",
                     "Type": {
                       "Name": "@All",
@@ -2697,7 +2730,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "a0ed3d8d-3410-4317-b415-aee9b5d5b2c9"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -2714,23 +2749,6 @@
                           "*": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 129746,
-                    "Version": 2,
-                    "Guid": "a70c7a0c-011d-4953-be26-fd1d84f7ab1c",
-                    "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
                           "*": true
                         }
                       }
@@ -3019,8 +3037,25 @@
                 "IsTitle": false,
                 "Metadata": [
                   {
+                    "Id": 129742,
+                    "Version": 2,
+                    "Guid": "35750ea4-f0b9-4f63-a6b1-2c31505a8de6",
+                    "Type": {
+                      "Name": "@empty-default",
+                      "Id": "@empty-default"
+                    },
+                    "Attributes": {
+                      "Boolean": {
+                        "DefaultCollapsed": {
+                          "*": true
+                        }
+                      }
+                    },
+                    "Owner": "dnn:userid=41"
+                  },
+                  {
                     "Id": 129741,
-                    "Version": 3,
+                    "Version": 4,
                     "Guid": "a8486bb9-04cc-4a34-8f7c-62b394553b11",
                     "Type": {
                       "Name": "@All",
@@ -3055,7 +3090,9 @@
                           "*": []
                         },
                         "Formulas": {
-                          "*": []
+                          "*": [
+                            "6225b39f-aeef-4f14-92a1-8e66abae60f4"
+                          ]
                         },
                         "Warnings": {
                           "*": []
@@ -3072,23 +3109,6 @@
                           "*": false
                         },
                         "VisibleInEditUI": {
-                          "*": true
-                        }
-                      }
-                    },
-                    "Owner": "dnn:userid=41"
-                  },
-                  {
-                    "Id": 129742,
-                    "Version": 2,
-                    "Guid": "35750ea4-f0b9-4f63-a6b1-2c31505a8de6",
-                    "Type": {
-                      "Name": "@empty-default",
-                      "Id": "@empty-default"
-                    },
-                    "Attributes": {
-                      "Boolean": {
-                        "DefaultCollapsed": {
                           "*": true
                         }
                       }
@@ -3642,7 +3662,64 @@
               }
             ]
           },
-          "Entities": []
+          "Entities": [
+            {
+              "Id": 172322,
+              "Version": 1,
+              "Guid": "6225b39f-aeef-4f14-92a1-8e66abae60f4",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const sxc = '2sxc: ' + (data.RequiredVersion || '?');\n  const dnn = 'Dnn: ' + (data.RequiredDnnVersion || '?');\n  const oqt = 'Oqt: ' + (data.RequiredOqtaneVersion || '❔');\n  return data.default + ' (' + [sxc, dnn, oqt].join('; ') + ')';\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Name"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            },
+            {
+              "Id": 172321,
+              "Version": 4,
+              "Guid": "a0ed3d8d-3410-4317-b415-aee9b5d5b2c9",
+              "Type": {
+                "Name": "UiFormula",
+                "Id": "772dfff1-b236-4aa9-8359-5f53c08ff7bf"
+              },
+              "Attributes": {
+                "String": {
+                  "Formula": {
+                    "en-us": "v2((data, context) => {\n  const token = 'Tokens: ' + (data.AllowTokenTemplates ? '✅' : '➖');\n  const razor = 'Razor: ' + (data.AllowRazorTemplates ? '✅' : '➖');\n  const ajax = 'Ajax: ' + (data.SupportsAjaxReload ? '✅' : '➖');\n  return data.default + ' (' + [token, razor, ajax].join('; ') + ')';\n});"
+                  },
+                  "Target": {
+                    "en-us": "Field.Settings.Name"
+                  },
+                  "Title": {
+                    "en-us": "Field.Settings.Name"
+                  }
+                },
+                "Boolean": {
+                  "Enabled": {
+                    "en-us": true
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41"
+            }
+          ]
         }
       ]
     }

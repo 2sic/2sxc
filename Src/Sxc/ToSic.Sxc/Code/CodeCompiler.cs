@@ -29,6 +29,7 @@ namespace ToSic.Sxc.Code
         public const string CsFileExtension = ".cs";
         public const string CsHtmlFileExtension = ".cshtml";
         public const string SharedCodeRootPathKeyInCache = "SharedCodeRootPath";
+        public const string SharedCodeRootFullPathKeyInCache = "SharedCodeRootFullPath";
 
         internal object InstantiateClass(string virtualPath, string className = null, string relativePath = null, bool throwOnError = true)
         {
@@ -150,16 +151,19 @@ namespace ToSic.Sxc.Code
         }
 
 
-        private bool AttachRelativePath(string virtualPath, object instance)
+        private void AttachRelativePath(string virtualPath, object instance)
         {
-            var l = Log.Fn<bool>();
+            var l = Log.Fn();
 
-            if (!(instance is ICreateInstance codeForwarding)) 
-                return l.ReturnFalse("didn't attach");
+            if (!(instance is IGetCodePath codeForwarding))
+            {
+                l.Done("didn't attach");
+                return;
+            }
 
             // in case it supports shared code again, give it the relative path
             codeForwarding.CreateInstancePath = Path.GetDirectoryName(virtualPath);
-            return l.ReturnTrue("attached");
+            l.Done("attached");
         }
     }
 }

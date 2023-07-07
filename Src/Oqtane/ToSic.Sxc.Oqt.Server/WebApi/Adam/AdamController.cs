@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Adam;
+using RealController = ToSic.Sxc.WebApi.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 {
@@ -19,17 +18,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
     [ValidateAntiForgeryToken]
 
     // Release routes
-    [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
-    [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-    [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-    [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
-    public class AdamController : OqtStatefulControllerBase<AdamControllerReal<int>>, IAdamController<int>
+    [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/content/{contentType}/{guid:guid}/{field}")]
+    [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/data/{contentType}/{guid:guid}/{field}")] // new, v13
+    public class AdamController : OqtStatefulControllerBase, IAdamController<int>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
-
         public AdamController(): base("Adam") { }
+
+        private RealController Real => GetService<RealController>();
 
         // Note: #AdamItemDto - as of now, we must use object because System.Io.Text.Json will otherwise not convert the object correctly :(
 

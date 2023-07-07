@@ -24,6 +24,11 @@ namespace ToSic.Sxc.Data
             JsonSerializer.Serialize(writer, hasJsonSource.JsonSource, options);
         }
 
-        public override bool CanConvert(Type objectType) => objectType == typeof(IHasJsonSource) || typeof(IHasJsonSource).IsAssignableFrom(objectType) ;
+        public override bool CanConvert(Type objectType) =>
+            objectType == typeof(IHasJsonSource)
+            || typeof(IHasJsonSource).IsAssignableFrom(objectType)
+            || objectType == typeof(ITyped)
+            || typeof(ITyped).IsAssignableFrom(objectType); // we'll have to keep an eye on it for scenarios where ITypedItem also inherits from ITypedRead, and could have some surprises,
+                                                                // but since the DynamicEntity was never meant to become json, probably there is no code out there that tries to do this. 
     }
 }

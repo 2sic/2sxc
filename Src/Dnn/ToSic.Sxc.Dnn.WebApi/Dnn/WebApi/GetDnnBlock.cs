@@ -42,9 +42,9 @@ namespace ToSic.Sxc.Dnn.WebApi
         {
             var block = blockWithContextProvider.LoadBlock();
             // check if we need an inner block
-            if (request.Headers.Contains(WebApiConstants.HeaderContentBlockId))
+            if (request.Headers.Contains(SxcWebApiConstants.HeaderContentBlockId))
             {
-                var blockHeaderId = request.Headers.GetValues(WebApiConstants.HeaderContentBlockId).FirstOrDefault();
+                var blockHeaderId = request.Headers.GetValues(SxcWebApiConstants.HeaderContentBlockId).FirstOrDefault();
                 int.TryParse(blockHeaderId, out var blockId);
                 if (blockId < 0) // negative id, so it's an inner block
                 {
@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                         block = FindInnerContentParentBlock(block, blockId, blockIds);
                     }
 
-                    block = _blockFromEntity.New().Init(block, blockId);
+                    block = _blockFromEntity.New().Init(block, null, blockId);
                 }
             }
 
@@ -74,7 +74,7 @@ namespace ToSic.Sxc.Dnn.WebApi
                     var id = int.Parse(parentIds[0]);
                     if (!int.TryParse(parentIds[1], out var cbid) || id == cbid || cbid >= 0) continue;
                     if (cbid == contentBlockId) break; // we are done, because block should be parent/ancestor of cbid
-                    parent = _blockFromEntity.New().Init(parent, cbid);
+                    parent = _blockFromEntity.New().Init(parent, null, cbid);
                 }
             }
 

@@ -8,6 +8,7 @@ using ToSic.Eav.Run;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Code;
@@ -16,6 +17,7 @@ using ToSic.Sxc.Dnn.Web;
 using ToSic.Sxc.Search;
 using ToSic.Sxc.Services;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.DataSources;
 
 namespace ToSic.Sxc.Dnn
 {
@@ -24,10 +26,21 @@ namespace ToSic.Sxc.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazor, IDnnRazor11
+    public abstract partial class RazorComponent : RazorComponentBase, IDnnRazorCustomize, IDnnRazorCompatibility, IDnnRazor11, ICreateInstance
     {
         /// <inheritdoc />
-        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
+
+        #region Core Properties which should appear in docs
+
+        /// <inheritdoc />
+        public override ICodeLog Log => SysHlp.CodeLog;
+
+        /// <inheritdoc />
+        public override IHtmlHelper Html => SysHlp.Html;
+
+        #endregion
+
 
         #region CustomizeSearch corrections
 
@@ -76,62 +89,69 @@ namespace ToSic.Sxc.Dnn
 
         #region Link, Edit, Dnn, App, Data
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot.Link;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Edit" />
         public IEditService Edit => _DynCodeRoot.Edit;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
         public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
 
-        [PrivateApi] public int CompatibilityLevel => _DynCodeRoot.CompatibilityLevel;
+        [PrivateApi] public override int CompatibilityLevel => Constants.CompatibilityLevel10;
 
         /// <inheritdoc />
         public new IApp App => _DynCodeRoot.App;
 
-        /// <inheritdoc />
-        public IContextData Data => _DynCodeRoot.Data;
+        #endregion
+
+        #region Data - with old interface #DataInAddWontWork
+
+        [PrivateApi]
+        public IBlockDataSourceOld Data => (IBlockDataSourceOld)_DynCodeRoot.Data;
+
+        // This is explicitly implemented so the interfaces don't complain
+        // but actually we're not showing this - in reality we're showing the Old (see above)
+        IContextData IDynamicCode.Data => _DynCodeRoot.Data;
 
         #endregion
 
+
         #region AsDynamic in many variations
 
-        /// <inheritdoc/>
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson) => _DynCodeRoot.AsDynamic(json, fallback);
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+        public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot.AsC.AsDynamicFromJson(json, fallback);
 
-        /// <inheritdoc/>
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsDynamic(entity);
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
 
-        /// <inheritdoc/>
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsDynamic(dynamicEntity);
-
-        ///// <inheritdoc/>
-        //[PublicApi("Careful - still Experimental in 12.02")]
-        //public dynamic AsDynamic(params object[] entities) => _DynCodeRoot.AsDynamic(entities);
+        /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
 
         #endregion
 
         #region AsEntity
-        /// <inheritdoc/>
-        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsEntity(dynamicEntity);
+
+        /// <inheritdoc cref="IDynamicCode.AsEntity" />
+        public IEntity AsEntity(object dynamicEntity) => _DynCodeRoot.AsC.AsEntity(dynamicEntity);
+
         #endregion
 
         #region AsList
 
-        /// <inheritdoc />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsList(list);
+        /// <inheritdoc cref="IDynamicCode.AsList" />
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot.AsC.AsDynamicList(list);
 
         #endregion
 
 
         #region Data Source Stuff
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataSource, ILookUpEngine)" />
         public T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(inSource, configurationProvider);
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.CreateSource{T}(IDataStream)" />
         public T CreateSource<T>(IDataStream source) where T : IDataSource
             => _DynCodeRoot.CreateSource<T>(source);
 
@@ -139,10 +159,10 @@ namespace ToSic.Sxc.Dnn
 
 
         #region Content, Header, etc. and List
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDynamicCode.Content" />
         public dynamic Content => _DynCodeRoot.Content;
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.Header" />
         public dynamic Header => _DynCodeRoot.Header;
 
         #endregion
@@ -150,20 +170,27 @@ namespace ToSic.Sxc.Dnn
 
         #region Adam 
 
-        /// <inheritdoc />
-        public IFolder AsAdam(IDynamicEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
-
-
-        /// <inheritdoc />
-        public IFolder AsAdam(IEntity entity, string fieldName) => _DynCodeRoot.AsAdam(entity, fieldName);
+        /// <inheritdoc cref="IDynamicCode.AsAdam" />
+        public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         #endregion
 
         #region CmsContext
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IDynamicCode.CmsContext" />
         public ICmsContext CmsContext => _DynCodeRoot.CmsContext;
 
         #endregion
+
+        #region CreateInstance
+
+        [PrivateApi] string IGetCodePath.CreateInstancePath { get; set; }
+
+        /// <inheritdoc />
+        public virtual dynamic CreateInstance(string virtualPath, string noParamOrder = ToSic.Eav.Parameters.Protector, string name = null, string relativePath = null, bool throwOnError = true)
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, throwOnError);
+
+        #endregion
+
     }
 }

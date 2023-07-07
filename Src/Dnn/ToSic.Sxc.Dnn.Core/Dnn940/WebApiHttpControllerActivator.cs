@@ -32,7 +32,8 @@ namespace ToSic.Sxc.Dnn940
             // Such types are never registered in the DI catalog, as they may change on-the-fly.
             // In this case we must use ActivatorUtilities, which will create the object and if it expects 
             // any DI parameters, they will come from the DependencyInjection as should be best practice
-            var dnnGlobalDi = DnnStaticDi.GetGlobalServiceProvider(); // 2022-08-11 2dm cleaned up, shouldn't use duplicate code to get dnn internal object
+            //var dnnGlobalDi = DnnStaticDi.GetGlobalServiceProvider(); // 2022-08-11 2dm cleaned up, shouldn't use duplicate code to get dnn internal object
+            var dnnGlobalDi = DnnStaticDi.GetGlobalScopedServiceProvider(); // 2023-06-15 2dm - trying this instead, so we always have a scope and nothing bleeds out
             var resultFromUtilities = (IHttpController)ActivatorUtilities.CreateInstance(dnnGlobalDi, controllerType);
             return resultFromUtilities;
         }

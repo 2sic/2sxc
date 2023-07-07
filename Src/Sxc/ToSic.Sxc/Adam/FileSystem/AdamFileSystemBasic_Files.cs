@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ToSic.Eav.Helpers;
 using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Adam
@@ -9,30 +8,25 @@ namespace ToSic.Sxc.Adam
     public partial class AdamFileSystemBasic
     {
         /// <inheritdoc />
-        public File<string, string> GetFile(string fileId)
+        public override File<string, string> GetFile(string fileId)
         {
-            var dir = EnsurePhysicalPath(fileId);
+            var dir = FsHelpers.EnsurePhysicalPath(fileId);
             return ToAdamFile(dir);
         }
 
         /// <inheritdoc />
-        public List<File<string, string>> GetFiles(IFolder folder)
+        public override List<File<string, string>> GetFiles(IFolder folder)
         {
-            var dir = Directory.GetFiles(EnsurePhysicalPath(folder.Path));
+            var dir = Directory.GetFiles(FsHelpers.EnsurePhysicalPath(folder.Path));
             return dir.Select(ToAdamFile).ToList();
         }
 
-        /// <inheritdoc />
-        public void Rename(IFile file, string newName) => Log.Do(() => TryToRenameFile(_adamPaths.PhysicalPath(file.Path), newName));
 
         /// <inheritdoc />
-        public void Delete(IFile file) => Log.Do(() => File.Delete(_adamPaths.PhysicalPath(file.Path)));
-
-        /// <inheritdoc />
-        public File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
+        public override File<string, string> Add(IFolder parent, Stream body, string fileName, bool ensureUniqueName)
         {
             var callLog = Log.Fn<File<string, string>>($"..., ..., {fileName}, {ensureUniqueName}");
-            if (ensureUniqueName) fileName = FindUniqueFileName(parent, fileName);
+            if (ensureUniqueName) fileName = FsHelpers.FindUniqueFileName(_adamPaths.PhysicalPath(parent.Path), fileName);
             var fullContentPath = _adamPaths.PhysicalPath(parent.Path);
             Directory.CreateDirectory(fullContentPath);
             var filePath = Path.Combine(fullContentPath, fileName);
@@ -44,32 +38,6 @@ namespace ToSic.Sxc.Adam
 
             return callLog.ReturnAsOk(fileInfo);
         }
-
-
-        protected bool TryToRenameFile(string originalWithPath, string newName)
-        {
-            var callLog = Log.Fn<bool>($"{newName}");
-            
-            if (!File.Exists(originalWithPath))
-                return callLog.ReturnFalse($"Can't rename because source file does not exist {originalWithPath}");
-
-            AdamPathsBase.ThrowIfPathContainsDotDot(newName);
-            var path = FindParentPath(originalWithPath);
-            var newFilePath = Path.Combine(path, newName);
-            if (File.Exists(newFilePath))
-                return callLog.ReturnFalse($"Can't rename because file with new name exists {newFilePath}");
-
-            File.Move(originalWithPath, newFilePath);
-            return callLog.ReturnTrue( $"File renamed");
-        }
-
-
-        private static string FindParentPath(string path)
-        {
-            var cleanedPath = path.Backslash().TrimEnd('\\');
-            var lastSlash = cleanedPath.LastIndexOf('\\');
-            return lastSlash == -1 ? "" : cleanedPath.Substring(0, lastSlash);
-        }
-
+        
     }
 }

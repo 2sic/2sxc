@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 parameters: pars.Parameters,
                 propsKeep: KeysOfLists, 
                 operation: pars.Operation);
-            return AddInternal(command);
+            return this.AddInternal(command);
 
         }
 

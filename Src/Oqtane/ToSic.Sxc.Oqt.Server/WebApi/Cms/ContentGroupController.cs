@@ -7,20 +7,24 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.ItemLists;
+using RealController = ToSic.Sxc.WebApi.Cms.ContentGroupControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
     [ApiController]
     // cannot use this, as most requests now come from a lone page [SupportedModules("2sxc,2sxc-app")]
-    public class ContentGroupController : OqtStatefulControllerBase<ContentGroupControllerReal>, IContentGroupController
+    public class ContentGroupController : OqtStatefulControllerBase, IContentGroupController
     {
-        public ContentGroupController(): base(ContentGroupControllerReal.LogSuffix) { }
+        public ContentGroupController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
+
 
         [HttpGet]
         //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

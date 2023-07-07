@@ -5,13 +5,16 @@ using System.Web;
 using System.Web.Http;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Sys.Licenses;
+using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
-    public class LicenseController : DnnApiControllerWithFixes<LicenseControllerReal>, ILicenseController
+    public class LicenseController : DnnApiControllerWithFixes, ILicenseController
     {
         public LicenseController() : base("License") { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
@@ -28,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [ValidateAntiForgeryToken]
         public LicenseFileResultDto Upload()
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Upload(new HttpUploadedFile(Request, HttpContext.Current.Request));
         }
 
@@ -36,7 +39,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [HttpGet]
         public LicenseFileResultDto Retrieve()
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Retrieve();
         }
     }

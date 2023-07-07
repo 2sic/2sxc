@@ -32,7 +32,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Users",
         Icon = Icons.UserCircled,
         UiHint = "Users in this site",
-        HelpLink = "https://r.2sxc.org/ds-users",
+        HelpLink = "https://go.2sxc.org/ds-users",
         NameId = "93ac53c6-adc6-4218-b979-48d1071a5765", // random & unique Guid
         Type = DataSourceType.Source,
         ConfigurationType = "ac11fae7-1916-4d2d-8583-09872e1e6966"

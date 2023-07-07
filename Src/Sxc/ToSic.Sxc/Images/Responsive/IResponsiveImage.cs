@@ -1,7 +1,7 @@
 ﻿using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Html5;
-using ToSic.Sxc.Web;
+using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Images
 {
@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Images
     /// History: Released 2sxc 13.10
     /// </remarks>
     [PublicApi]
-    public interface IResponsiveImage: IHybridHtmlString
+    public interface IResponsiveImage: IRawHtmlString
     {
         /// <summary>
         /// An Alt-description on the image which is retrieved from (in order of priority):

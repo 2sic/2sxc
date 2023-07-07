@@ -10,20 +10,22 @@ using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.Pages;
 using ToSic.Sxc.Dnn.WebApi.Context;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.Views;
+using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [DnnLogExceptions]
-    public class ViewController : SxcApiControllerBase<ViewControllerReal<HttpResponseMessage>>, IViewController<HttpResponseMessage>
+    public class ViewController : SxcApiControllerBase, IViewController<HttpResponseMessage>
     {
-        public ViewController() : base(ViewControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public ViewController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc />
         [HttpGet]
@@ -52,7 +54,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Json(int appId, int viewId)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Json(appId, viewId);
@@ -64,7 +66,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId, int appId)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Import(new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId, appId);
         }
 

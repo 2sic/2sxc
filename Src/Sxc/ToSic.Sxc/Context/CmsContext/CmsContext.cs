@@ -50,15 +50,6 @@ namespace ToSic.Sxc.Context
         private readonly IAppStates _appStates;
         private readonly LazySvc<ICmsSite> _cmsSiteLazy;
 
-        ///// <summary>
-        ///// System to extend the known context by more information if we're running inside a block
-        ///// </summary>
-        ///// <returns></returns>
-        //public void ConnectToRoot(IDynamicCodeRoot codeRoot) => CodeRoot = codeRoot;
-        //protected IDynamicCodeRoot CodeRoot;
-
-        internal DynamicEntity.MyServices DEDeps => (_DynCodeRoot as DynamicCodeRoot)?.DynamicEntityServices;
-
         private AppState SiteAppState => _siteAppState.Get(() => _appStates.GetPrimaryApp(CtxSite.Site.ZoneId, Log));
         private readonly GetOnce<AppState> _siteAppState = new GetOnce<AppState>();
 

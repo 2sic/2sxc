@@ -1,13 +1,15 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Razor.Blade;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks.Renderers;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -89,23 +91,26 @@ namespace ToSic.Sxc.Blocks
         /// <param name="parent">The parent-item containing the content-blocks and providing edit-context</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="item">The content-block item to render. Optional, by default the same item is used as the context.</param>
+        /// <param name="data">TODO V16.00</param>
         /// <param name="field">Optional: </param>
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <returns></returns>
-        public IHybridHtmlString One(DynamicEntity parent,
+        public IRawHtmlString One(
+            ITypedItem parent,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null,
+            ICanBeEntity item = null,
             object data = null,
             string field = null,
             Guid? newGuid = null)
         {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(noParamOrder, nameof(One), $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
+            Eav.Parameters.Protect(noParamOrder, $"{nameof(item)},{nameof(field)},{nameof(newGuid)}");
             item = item ?? parent;
             MakeSureLogIsInHistory();
             var simpleRenderer = _Deps.SimpleRenderer.New();
-            return new HybridHtmlString(field == null
-                ? simpleRenderer.Render(parent._Services.BlockOrNull, item.Entity, data: data) // without field edit-context
-                : simpleRenderer.RenderWithEditContext(parent, item, field, newGuid, GetEdit(parent), data)); // with field-edit-context data-list-context
+            var block = ((IDynamicEntity)parent)._Services.BlockOrNull;
+            return Tag.Custom(field == null
+                ? simpleRenderer.Render(block, item.Entity, data: data) // without field edit-context
+                : simpleRenderer.RenderWithEditContext(block, parent, item, field, newGuid, GetEdit(block), data)); // with field-edit-context data-list-context
         }
 
         /// <summary>
@@ -118,7 +123,11 @@ namespace ToSic.Sxc.Blocks
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
-        public IHybridHtmlString All(DynamicEntity parent,
+        /// <remarks>
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        public IRawHtmlString All(
+            ITypedItem parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,
@@ -129,9 +138,10 @@ namespace ToSic.Sxc.Blocks
             if (string.IsNullOrWhiteSpace(field)) throw new ArgumentNullException(nameof(field));
 
             MakeSureLogIsInHistory();
-            return new HybridHtmlString(merge == null
-                    ? _Deps.SimpleRenderer.New().RenderListWithContext(parent, field, apps, max, GetEdit(parent))
-                    : _Deps.InTextRenderer.New().RenderMerge(parent, field, merge, GetEdit(parent)));
+            var block = ((IDynamicEntity)parent)._Services.BlockOrNull;
+            return Tag.Custom(merge == null
+                    ? _Deps.SimpleRenderer.New().RenderListWithContext(block, parent.Entity, field, apps, max, GetEdit(block))
+                    : _Deps.InTextRenderer.New().RenderMerge(block, parent.Entity, field, merge, GetEdit(block)));
         }
 
 
@@ -154,7 +164,7 @@ namespace ToSic.Sxc.Blocks
         /// create edit-object which is necessary for context attributes
         /// We need a new one for each parent
         /// </summary>
-        private IEditService GetEdit(DynamicEntity parent)
+        private IEditService GetEdit(IBlock blockOrNull)
         {
             // If we have a dyn-code, use that
             if (_DynCodeRoot?.Edit != null) return _DynCodeRoot.Edit;
@@ -162,7 +172,7 @@ namespace ToSic.Sxc.Blocks
             // Otherwise create a new one - even though it's not clear if this would have any real effect
             var newEdit = _Deps.EditGenerator.New();
             newEdit.ConnectToRoot(_DynCodeRoot);
-            return newEdit.SetBlock(_DynCodeRoot, parent._Services.BlockOrNull);
+            return newEdit.SetBlock(_DynCodeRoot, blockOrNull);
         }
     }
 }

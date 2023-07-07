@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Data
 {
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Data
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
         private readonly DynamicEntity.MyServices _services;
-        
+
         private Func<bool?> _getDebug;
 
         public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntity.MyServices services)
@@ -25,7 +26,7 @@ namespace ToSic.Sxc.Data
             _getDebug = getDebug;
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug,  DynamicEntity.MyServices services)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, DynamicEntity.MyServices services)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
@@ -50,21 +51,21 @@ namespace ToSic.Sxc.Data
                 // If not, it's coming from a stream or something and shouldn't do that
                 var reWrapWithListNumbering = ParentOrNull != null;
 
-                //var index = 0;
                 var debug = _getDebug?.Invoke();
                 return _list = _entities
                     .Select((e, i) =>
                     {
                         // If we should re-wrap, we create an Entity with some metadata-decoration, so that toolbars know it's part of a list
                         var blockEntity = reWrapWithListNumbering
-                            //? new EntityInBlock(e, ParentOrNull.EntityGuid, FieldOrNull, index++)
-                            ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i) // index++)
+                            ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
                             : e;
                         return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _services, debug);
                     })
                     .ToList();
             }
         }
+
+
 
         public int Count => _entities?.Length ?? 1;
 

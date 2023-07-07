@@ -109,8 +109,8 @@ namespace ToSic.Sxc.Engines
             confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.Content, _data.Content));
         }
 
-
-        protected override string RenderTemplate(object data)
+        [PrivateApi]
+        protected override (string, List<Exception>) RenderTemplate(object data)
         {
             var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));
             // Convert old <repeat> elements to the new ones
@@ -121,9 +121,9 @@ namespace ToSic.Sxc.Engines
             var repeatsMatches = RepeatRegex.Matches(templateSource);       
             var repeatsRendered = new List<string>();
             foreach (Match match in repeatsMatches)
-            {
-                repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(), match.Groups[RegexToken.StreamName].Value, match.Groups[RegexToken.Template].Value));
-            }
+                repeatsRendered.Add(RenderRepeat(match.Groups[RegexToken.SourceName].Value.ToLowerInvariant(),
+                    match.Groups[RegexToken.StreamName].Value,
+                    match.Groups[RegexToken.Template].Value));
 
             // Render sections between the <repeat>s (but before replace the <repeat>s and 
             // the templates contained with placeholders, so the templates in the <reapeat>s 
@@ -140,7 +140,7 @@ namespace ToSic.Sxc.Engines
                                .Insert(repeatsIndexes[i], repeatsRendered[i]);
             }
 
-            return renderedBuilder.ToString();
+            return (renderedBuilder.ToString(), null);
         }
 
 
@@ -160,7 +160,7 @@ namespace ToSic.Sxc.Engines
             {
                 // Create property sources for the current data item (for the current data item and its list information)
                 var propertySources = new Dictionary<string, ILookUp>();
-                propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
+                propertySources.Add(sourceName, new LookUpForTokenTemplate(sourceName, _data.AsC.AsDynamic(dataItems.ElementAt(i)), i, itemsCount));
                 builder.Append(RenderSection(template, propertySources));
             }
 

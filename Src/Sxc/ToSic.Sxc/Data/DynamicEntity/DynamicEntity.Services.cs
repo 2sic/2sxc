@@ -1,13 +1,11 @@
-﻿using System;
-using ToSic.Eav.Data;
+﻿using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
-using ToSic.Lib.Logging;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
 using ToSic.Lib.Services;
+using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Services;
+using ToSic.Sxc.Data.AsConverter;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
 
 namespace ToSic.Sxc.Data
@@ -21,25 +19,18 @@ namespace ToSic.Sxc.Data
         [PrivateApi("this should all stay internal and never be public")]
         public class MyServices : MyServicesBase
         {
-            public MyServices(
-                LazySvc<DataBuilder> dataBuilderLazy,
-                LazySvc<IValueConverter> valueConverterLazy,
-                Generator<IRenderService> renderServiceGenerator)
+            public MyServices(LazySvc<IValueConverter> valueConverterLazy, Generator<IRenderService> renderServiceGenerator, LazySvc<IScrub> scrub)
             {
-                _dataBuilderLazy = dataBuilderLazy;
                 _valueConverterLazy = valueConverterLazy;
                 _renderServiceGenerator = renderServiceGenerator;
+                _scrub = scrub;
             }
 
-            internal MyServices Init(IBlock blockOrNull, string[] dimensions, ILog log,
-                int compatibility = Constants.CompatibilityLevel10,
-                Func<ServiceKit14> kit = null)
+            internal MyServices Init(IBlock blockOrNull, string[] dimensions, AsConverterService asConverter)
             {
                 Dimensions = dimensions;
-                LogOrNull = log;
-                CompatibilityLevel = compatibility;
                 BlockOrNull = blockOrNull;
-                _getKit = kit;
+                AsC = asConverter;
                 return this;
             }
 
@@ -47,30 +38,21 @@ namespace ToSic.Sxc.Data
 
             internal string[] Dimensions { get; private set; }
 
-            internal ILog LogOrNull { get; private set; }
 
-            internal int CompatibilityLevel { get; private set; }
-
+            internal AsConverterService AsC { get; private set; }
 
             /// <summary>
             /// The ValueConverter is used to parse links in the format like "file:72"
             /// </summary>
             [PrivateApi]
             internal IValueConverter ValueConverterOrNull => _valueConverterLazy.Value;
-
             private readonly LazySvc<IValueConverter> _valueConverterLazy;
-
-
-            internal DataBuilder DataBuilder => _dataBuilderLazy.Value;
-            private readonly LazySvc<DataBuilder> _dataBuilderLazy;
-
 
             internal IRenderService RenderService => _renderServiceGenerator.New();
             private readonly Generator<IRenderService> _renderServiceGenerator;
 
-            internal ServiceKit14 Kit => _kit.Get(() => _getKit?.Invoke());
-            private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
-            private Func<ServiceKit14> _getKit;
+            internal IScrub Scrub => _scrub.Value;
+            private readonly LazySvc<IScrub> _scrub;
         }
     }
 }

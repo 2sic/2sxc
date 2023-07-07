@@ -9,7 +9,7 @@ using ToSic.Lib.Services;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    public class ConvertService: ServiceBase, IConvertService
+    internal class ConvertService: ServiceBase, IConvertService
     {
         public ConvertService(LazySvc<IJsonService> json): base("Sxc.CnvSrv")
         {

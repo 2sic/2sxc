@@ -1,13 +1,15 @@
 ﻿using System.Web.Http;
-using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Dnn.WebApi.Logging;
+using RealController = ToSic.Eav.WebApi.Sys.InsightsControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {
     [DnnLogExceptions]
-    public class InsightsController : DnnApiControllerWithFixes<InsightsControllerReal>
+    public class InsightsController : DnnApiControllerWithFixes
     {
-        public InsightsController() : base(InsightsControllerReal.LogSuffix) { }
+        public InsightsController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <summary>
         /// Single-Point-Of-Entry
@@ -16,8 +18,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         /// on any additional system. 
         /// </summary>
         [HttpGet] // Will do security checks internally
-        public string Details(string view, int? appId = null, string key = null, int? position = null, string type = null, bool? toggle = null, string nameId = null)
-            => Real.Details(view, appId, key, position, type, toggle, nameId);
+        public string Details(string view, int? appId = null, string key = null, int? position = null, string type = null, bool? toggle = null, string nameId = null, string filter = default)
+            => Real.Details(view, appId, key, position, type, toggle, nameId, filter);
 
 
         #region Controll Logging of Requests on Insights for special debugging, usually disabled to not clutter the logs

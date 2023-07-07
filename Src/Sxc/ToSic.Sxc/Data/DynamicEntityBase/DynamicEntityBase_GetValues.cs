@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         protected virtual object GetInternal(string field, string language = null, bool lookup = true)
         {
-            var logOrNull = _Services.LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
+            var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
             return logOrNull.Func<object>(
                 $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
                 l =>

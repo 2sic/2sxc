@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.WebApi;
 using ToSic.Eav.WebApi.Helpers;
-using ToSic.Lib.Helpers;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Oqt.Server.Plumbing;
-using ToSic.Sxc.Oqt.Shared.Dev;
+using ToSic.Sxc.WebApi.Infrastructure;
 using Log = ToSic.Lib.Logging.Log;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
@@ -18,13 +18,29 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
     [SystemTestJsonFormatter] // This is needed to preserve compatibility with previous api usage
     [ServiceFilter(typeof(OptionalBodyFilter))] // Instead of global options.AllowEmptyInputInBodyModelBinding = true;
     [ServiceFilter(typeof(HttpResponseExceptionFilter))]
-    public abstract class OqtControllerBase<TRealController> : Controller, IHasLog where TRealController : class, IHasLog
+    public abstract class OqtControllerBase : ControllerBase, IHasLog, IActionFilter
     {
-        protected OqtControllerBase(string logSuffix)
+        #region Setup
+
+        private readonly bool _withBlockContext;
+
+        protected OqtControllerBase(bool withBlockContext, string logSuffix)
         {
+            _withBlockContext = withBlockContext;
             Log = new Log($"Api.{logSuffix}", null, GetType().Name);
             _helper = new(this);
+
+            if (withBlockContext) _ctxHlp = new(this, _helper);
         }
+
+        #endregion
+
+
+        /// <summary>
+        /// The group name for log entries in insights.
+        /// Helps group various calls by use case.
+        /// </summary>
+        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
 
         /// <inheritdoc />
         public ILog Log { get; }
@@ -34,48 +50,41 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         private readonly NetCoreControllersHelper _helper;
 
-
         /// <summary>
-        /// The group name for log entries in insights.
-        /// Helps group various calls by use case.
+        /// Special helper to move all Razor logic into a separate class.
+        /// For architecture of Composition over Inheritance.
         /// </summary>
-        protected virtual string HistoryLogGroup => EavWebApiConstants.HistoryNameWebApi;
+        [PrivateApi]
+        internal NetCoreWebApiContextHelper CtxHlp 
+            => _ctxHlp ?? throw new($"This controller doesn't have a {nameof(CtxHlp)}. Check your constructor.");
+        private readonly NetCoreWebApiContextHelper _ctxHlp;
 
         /// <summary>
         /// Initializer - just ensure SiteState is initialized thanks to our paths
         /// </summary>
         /// <param name="context"></param>
         [NonAction]
-        public override void OnActionExecuting(ActionExecutingContext context)
+        public virtual void OnActionExecuting(ActionExecutingContext context)
         {
-            base.OnActionExecuting(context);
+            var l = Log.Fn();
             _helper.OnActionExecuting(context, HistoryLogGroup);
 
             // background processes can pass in an alias using the SiteState service
             GetService<SiteStateInitializer>().InitIfEmpty();
+            
+            if (_withBlockContext) CtxHlp.InitializeBlockContext(context);
+            l.Done();
         }
-
-        #region Extend Time so Web Server doesn't time out - not really implemented ATM
-
-        protected void PreventServerTimeout300() => WipConstants.DontDoAnythingImplementLater();
-
-        #endregion
 
         /// <inheritdoc/>
         [NonAction]
-        public override void OnActionExecuted(ActionExecutedContext context)
+        public virtual void OnActionExecuted(ActionExecutedContext context)
         {
-            base.OnActionExecuted(context);
+            var l = Log.Fn();
             _helper.OnActionExecuted(context);
+            l.Done();
         }
 
         protected TService GetService<TService>() where TService : class => _helper.GetService<TService>();
-
-        /// <summary>
-        /// The RealController which is the full backend of this controller.
-        /// Note that it's not available at construction time, because the ServiceProvider isn't ready till later.
-        /// </summary>
-        protected virtual TRealController Real => _real.Get(() => _helper.Real<TRealController>()) ;
-        private readonly GetOnce<TRealController> _real = new();
     }
 }

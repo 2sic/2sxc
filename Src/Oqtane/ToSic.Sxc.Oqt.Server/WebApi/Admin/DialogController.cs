@@ -4,6 +4,7 @@ using Oqtane.Shared;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin;
+using RealController = ToSic.Sxc.WebApi.Admin.DialogControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -16,18 +17,19 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [AutoValidateAntiforgeryToken]
 
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
     [ApiController]
 
-    public class DialogController : OqtStatefulControllerBase<DialogControllerReal>, IDialogController
+    public class DialogController : OqtStatefulControllerBase, IDialogController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        public DialogController() : base(RealController.LogSuffix) { }
 
-        public DialogController() : base(DialogControllerReal.LogSuffix) { }
-        
+        private RealController Real => GetService<RealController>();
+
+
         [HttpGet]
         public DialogContextStandaloneDto Settings(int appId) => Real.Settings(appId);
         

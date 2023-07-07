@@ -47,7 +47,6 @@ namespace ToSic.Sxc.Data
 
             // Otherwise it's a complex object, which should be re-wrapped for navigation
             var wrap = wrapRealObjects || value.IsAnonymous();
-            // var dontWrap = onlyRewrapDynamic && value.IsAnonymous();
             return wrap ? new DynamicReadObject(value, wrapChildren, wrapRealChildren): value;
         }
     }

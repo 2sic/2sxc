@@ -12,21 +12,10 @@ namespace Custom.Dnn
     /// Provides context infos like the Dnn object, helpers like Edit and much more. <br/>
     /// </summary>
     [PublicApi_Stable_ForUseInYourCode]
-    public abstract class Razor12 : Hybrid.Razor12, IDnnDynamicCodeAdditions, IRazor12, IDnnRazor
+    public abstract class Razor12 : Hybrid.Razor12, IHasDnn, IRazor12, IDnnRazorCompatibility
     {
-        [PrivateApi("Hide this, no need to publish; would only confuse users")]
-        protected Razor12()
-        {
-            // Enable CreateInstanceCshtml and RenderPage in anything that inherits these classes
-            _ErrorWhenUsingCreateInstanceCshtml = null;
-            _ErrorWhenUsingRenderPage = null;
-        }
-
         /// <inheritdoc />
-        public IDnnContext Dnn => (_DynCodeRoot as IDnnDynamicCode)?.Dnn;
+        public IDnnContext Dnn => (_DynCodeRoot as IHasDnn)?.Dnn;
 
-        #region Code Behind - a Dnn feature which probably won't exist in Oqtane - so it's empty just as reminder
-
-        #endregion
     }
 }

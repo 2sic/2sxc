@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using ToSic.Eav;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Security;
+using ToSic.Eav.Code;
 using ToSic.Eav.Context;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Plumbing;
@@ -17,8 +20,10 @@ using ToSic.Lib.Services;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Blocks.Output;
+using static ToSic.Sxc.Blocks.BlockBuildingConstants;
 using IApp = ToSic.Sxc.Apps.IApp;
 using IDataSource = ToSic.Eav.DataSource.IDataSource;
+using ToSic.Eav.Code.Help;
 
 namespace ToSic.Sxc.Engines
 {
@@ -84,8 +89,8 @@ namespace ToSic.Sxc.Engines
 
             // Throw Exception if Template does not exist
             if (!File.Exists(Services.ServerPaths.FullAppPath(templatePath)))
-                // todo: change to some kind of "rendering exception"
-                throw new SexyContentException("The template file '" + templatePath + "' does not exist.");
+                throw new RenderingException(new CodeHelp(name: "Template File Not Found", detect: "",
+                    linkCode: "err-template-not-found", uiMessage: $"The template file '{templatePath}' does not exist."));
 
             Template = view;
             TemplatePath = templatePath;
@@ -101,6 +106,7 @@ namespace ToSic.Sxc.Engines
             // Run engine-internal init stuff
             Init();
         });
+
 
         private string PolymorphTryToSwitchPath(string root, IView view, string subPath) => Log.Func($"{root}, {subPath}", l =>
         {
@@ -147,7 +153,7 @@ namespace ToSic.Sxc.Engines
         });
 
         [PrivateApi]
-        protected abstract string RenderTemplate(object data);
+        protected abstract (string Contents, List<Exception> Exception) RenderTemplate(object data);
 
         [PrivateApi]
         protected virtual void Init() {}
@@ -163,33 +169,44 @@ namespace ToSic.Sxc.Engines
 #pragma warning restore CS0618
 #endif
             // check if rendering is possible, or throw exceptions...
-            var (renderStatus, message, errorCode) = CheckExpectedNoRenderConditions();
+            var (renderStatus, message, errorCode, exOrNull) = CheckExpectedNoRenderConditions();
 
             if (renderStatus != RenderStatusType.Ok)
-                return l.Return(new RenderEngineResult(message, false, null, errorCode), $"{nameof(renderStatus)} not OK");
+                return l.Return(new RenderEngineResult(message, false, null, errorCode, exOrNull), $"{nameof(renderStatus)} not OK");
 
             var renderedTemplate = RenderTemplate(data);
             var depMan = Services.BlockResourceExtractor;
-            var result = depMan.Process(renderedTemplate);
+            var result = depMan.Process(renderedTemplate.Contents);
+            if (renderedTemplate.Exception != null)
+                result = new RenderEngineResult(result, exsOrNull: renderedTemplate.Exception);
             return l.ReturnAsOk(result);
         }
 
         private void CheckExpectedTemplateErrors()
         {
             if (Template == null)
-                throw new RenderingException("Template Configuration Missing");
+                throw new RenderingException(ErrHelpConfigMissing);
 
             if (Template.ContentType != "" && Services.AppStatesLazy.Value.Get(App).GetContentType(Template.ContentType) == null)
-                throw new RenderingException("The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
+                throw new RenderingException(ErrHelpTypeMissing);
         }
 
-        private (RenderStatusType RenderStatus, string Message, string ErrorCode) CheckExpectedNoRenderConditions()
+        private static CodeHelp ErrHelpConfigMissing = new CodeHelp(name: "Template Config missing", detect: "",
+            linkCode: "err-view-config-missing", uiMessage: "Template Configuration Missing");
+
+        private static CodeHelp ErrHelpTypeMissing = new CodeHelp(name: "Content Type Missing", detect: "", linkCode: "err-view-type-missing", 
+            uiMessage: "The contents of this module cannot be displayed because I couldn't find the assigned content-type.");
+
+        private (RenderStatusType RenderStatus, string Message, string ErrorCode, List<Exception> exOrNull) CheckExpectedNoRenderConditions()
         {
             if (Template.ContentType != "" && Template.ContentItem == null &&
                 Block.Configuration.Content.All(e => e == null))
-                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, BlockBuildingConstants.ErrorDataIsMissing);
+            {
+                var ex = new ExceptionWithHelp(new CodeHelp(name: ErrorDataIsMissing, detect: "", linkCode: "err-block-data-missing"));
+                return (RenderStatusType.MissingData, ToolbarForEmptyTemplate, ErrorDataIsMissing, new List<Exception> { ex });
+            }
 
-            return (RenderStatusType.Ok, null, null);
+            return (RenderStatusType.Ok, null, null, null);
         }
 
         // todo: refactor - this should go somewhere, I just don't know where :)
@@ -220,9 +237,13 @@ namespace ToSic.Sxc.Engines
                 return;
 
             if (!templatePermissions.UserMay(GrantSets.ReadSomething))
-                throw new RenderingException(new UnauthorizedAccessException(
-                    "This view is not accessible for the current user. To give access, change permissions in the view settings. See http://2sxc.org/help?tag=view-permissions"));
+                // TODO: maybe create an exception which inherits from UnauthorizedAccess - in case this improves behavior / HTTP response
+                throw new RenderingException(ErrorHelpNotAuthorized, new UnauthorizedAccessException(
+                    $"{ErrorHelpNotAuthorized.UiMessage} See {ErrorHelpNotAuthorized.LinkCode}"));
         }
 
+        private static CodeHelp ErrorHelpNotAuthorized = new CodeHelp(name: "Not authorized", detect: "",
+            linkCode: "http://2sxc.org/help?tag=view-permissions",
+            uiMessage: "This view is not accessible for the current user. To give access, change permissions in the view settings.");
     }
 }

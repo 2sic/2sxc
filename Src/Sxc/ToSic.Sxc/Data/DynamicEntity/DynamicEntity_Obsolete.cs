@@ -2,6 +2,7 @@
 
 using System;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Data
 {
@@ -24,8 +25,8 @@ namespace ToSic.Sxc.Data
                 if (!userMayEdit)
                     return new System.Web.HtmlString("");
 
-                if (_Services.CompatibilityLevel > Constants.MaxLevelForEntityDotToolbar)
-                    throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://r.2sxc.org/EditToolbar");
+                if (_Services.AsC.CompatibilityLevel > Constants.MaxLevelForEntityDotToolbar)
+                    throw new Exception("content.Toolbar is deprecated in the new RazorComponent. Use @Edit.TagToolbar(content) or @Edit.Toolbar(content) instead. See https://go.2sxc.org/EditToolbar");
 
                 var toolbar = new Edit.Toolbar.ItemToolbar(Entity).ToolbarAsTag;
                 return new System.Web.HtmlString(toolbar);
@@ -34,9 +35,9 @@ namespace ToSic.Sxc.Data
 
         [Obsolete]
         [PrivateApi("probably we won't continue recommending to use this, but first we must provide an alternative")]
-        public System.Web.IHtmlString Render()
+        public IRawHtmlString Render()
         {
-            if (_Services.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
+            if (_Services.AsC.CompatibilityLevel > Constants.MaxLevelForEntityDotRender)
                 throw new Exception("content.Render() is deprecated in the new RazorComponent. Use GetService&lt;ToSic.Sxc.Services.IRenderService&gt;().One(content) instead.");
 
             return _Services.RenderService.One(this);

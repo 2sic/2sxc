@@ -6,9 +6,8 @@ using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
-using ToSic.Sxc.Oqt.Server.Integration;
 using ToSic.Sxc.Oqt.Shared;
-using Log = ToSic.Lib.Logging.Log;
+using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {
@@ -32,7 +31,6 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private readonly Generator<IContextOfBlock> _contextGenerator;
         private readonly Generator<IModuleRepository> _moduleRepositoryGenerator;
         private readonly RequestHelper _requestHelper;
-        private ILog ParentLog => (Log as Log)?.Parent ?? Log;
 
         /// <summary>
         /// 
@@ -42,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         /// <returns></returns>
         protected override IModule GetModuleImplementation(int pageId, int moduleId)
         {
-            var oqtModule = (_moduleRepositoryGenerator.New()).GetModule(moduleId);
+            var oqtModule = _moduleRepositoryGenerator.New().GetModule(moduleId);
             ThrowIfModuleIsNull(pageId, moduleId, oqtModule);
             var module = ((OqtModule) _moduleGenerator.New()).Init(oqtModule);
             return module;
@@ -80,12 +78,11 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
         private IContextOfBlock InitPageOnly(IContextOfBlock context, int? pageId)
         {
             // TODO: try to use the pageId if given, would usually only be used in inner-content / IRenderService scenarios
-
-            var wrapLog = Log.Fn<IContextOfBlock>();
+            var l = Log.Fn<IContextOfBlock>();
             // Collect / assemble page information
-            context.Page.Init(_requestHelper.TryGetPageId());
+            context.Page.Init(_requestHelper.TryGetId(ContextConstants.PageIdKey));
             var url = context.Page.Url;
-            return wrapLog.Return(context, url);
+            return l.Return(context, url);
         }
     }
 }

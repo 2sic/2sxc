@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
@@ -12,7 +11,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
-    public abstract class AppAssetsControllerBase : OqtControllerBase<DummyControllerReal>
+    public abstract class AppAssetsControllerBase : OqtControllerBase
     {
         private string Route { get; }
 
@@ -41,7 +40,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         #endregion
 
 
-        protected AppAssetsControllerBase(MyServices services, string route, string logSuffix): base(logSuffix)
+        protected AppAssetsControllerBase(MyServices services, string route, string logSuffix): base(false, logSuffix)
         {
             Deps = services.ConnectServices(Log);
             Route = route;
@@ -55,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
             var l = Log.Fn<IActionResult>($"{nameof(appName)}: {appName}; {nameof(filePath)}: {filePath}");
             try
             {
-                if (appName == WebApiConstants.Auto) appName = Deps.AppFolder.Value.GetAppFolder();
+                if (appName == OqtWebApiConstants.Auto) appName = Deps.AppFolder.Value.GetAppFolder();
 
                 var alias = Deps.SiteState.Alias;
                 var fullFilePath = Deps.FileHelper.Value.GetFilePath(Deps.HostingEnvironment.ContentRootPath, alias, Route, appName, filePath);

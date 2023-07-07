@@ -33,6 +33,8 @@ namespace ToSic.Sxc
 
         public const int CompatibilityLevel12 = 12;
 
+        public const int CompatibilityLevel16 = 16;
+
         public const int MaxLevelForAutoJQuery = CompatibilityLevel9Old;
         public const int MaxLevelForEntityDotToolbar = CompatibilityLevel9Old;
         public const int MaxLevelForEntityDotRender = CompatibilityLevel9Old;

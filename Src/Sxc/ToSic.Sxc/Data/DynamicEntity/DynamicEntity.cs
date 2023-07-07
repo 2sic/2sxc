@@ -2,6 +2,7 @@
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data.Decorators;
 using IEntity = ToSic.Eav.Data.IEntity;
 
 namespace ToSic.Sxc.Data
@@ -37,10 +38,8 @@ namespace ToSic.Sxc.Data
 
         private IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)
         {
-            var dummyEntity = _Services.DataBuilder.FakeEntity(appIdOrNull ?? parent.AppId);
-            return parent == null 
-                ? dummyEntity 
-                : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
+            var dummyEntity = _Services.AsC.FakeEntity(appIdOrNull ?? parent.AppId);
+            return parent == null ? dummyEntity : EntityInBlockDecorator.Wrap(dummyEntity, parent.EntityGuid, field);
         }
 
 
@@ -64,7 +63,7 @@ namespace ToSic.Sxc.Data
 
         // ReSharper disable once InheritdocInvalidUsage
         /// <inheritdoc />
-        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity?.GetDecorator<EntityInBlockDecorator>()?.IsDemoItem ?? false).Value;
+        public bool IsDemoItem => _isDemoItem ?? (_isDemoItem = Entity.IsDemoItem()).Value;
         private bool? _isDemoItem;
 
         [PrivateApi("Not in use yet, and I believe not communicated")]

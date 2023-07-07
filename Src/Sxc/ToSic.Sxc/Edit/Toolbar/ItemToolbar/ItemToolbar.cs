@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         protected override string ToolbarJson => ToolbarObjJson();
 
-        private IHybridHtmlString AttributeSettings() => Build.Attribute(JsonSettingsNodeName, SettingsJson);
+        private string AttributeSettings() => Build.Attribute(JsonSettingsNodeName, SettingsJson).ToString();
 
         public override string ToolbarAsAttributes() =>
             Build.Attribute(ToolbarAttributeName,

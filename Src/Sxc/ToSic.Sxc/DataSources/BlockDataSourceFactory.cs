@@ -48,7 +48,7 @@ namespace ToSic.Sxc.DataSources
                 : null;
             Log.A($"use query upstream:{viewDataSourceUpstream != null}");
 
-            var contextDataSource = dsFactory.Create<Block>(attach: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
+            var contextDataSource = dsFactory.Create<ContextData>(attach: viewDataSourceUpstream, options: new DataSourceOptions(appIdentity: block, lookUp: configLookUp));
             contextDataSource.SetBlock(blockDataSource);
 
             // Take Publish-Properties from the View-Template
@@ -56,9 +56,13 @@ namespace ToSic.Sxc.DataSources
             {
                 // Note: Deprecated feature in v13, remove ca. 14 - should warn
                 // TODO: #WarnDeprecated
-                contextDataSource.Publish.Enabled = view.PublishData;
-                contextDataSource.Publish.Streams = view.StreamsToPublish;
-
+#if NETFRAMEWORK
+                if (contextDataSource is IBlockDataSourceOld old)
+                {
+                    old.Publish.Enabled = view.PublishData;
+                    old.Publish.Streams = view.StreamsToPublish;
+                }
+#endif
                 Log.A($"use template, & query#{view.Query?.Id}");
                 // Append Streams of the Data-Query (this doesn't require a change of the viewDataSource itself)
                 if (view.Query != null)

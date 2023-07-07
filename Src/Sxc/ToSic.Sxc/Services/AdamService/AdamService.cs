@@ -8,7 +8,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("hide implementation")]
-    public class AdamService: IAdamService, INeedsDynamicCodeRoot
+    internal class AdamService: IAdamService, INeedsDynamicCodeRoot
     {
         #region Constructor etc.
 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Services
         /// <inheritdoc />
         public IFile File(int id)
         {
-            var admManager = (_codeRoot as DynamicCodeRoot)?.AdamManager;
+            var admManager = (_codeRoot as DynamicCodeRoot)?.AsC.AdamManager;
             return admManager?.File(id);
         }
 
@@ -35,16 +35,16 @@ namespace ToSic.Sxc.Services
         }
 
         /// <inheritdoc />
-        public IFile File(IDynamicField field) => File(field?.Raw as string);
+        public IFile File(IField field) => File(field?.Raw as string);
 
         /// <inheritdoc />
         public IFolder Folder(int id)
         {
-            var admManager = (_codeRoot as DynamicCodeRoot)?.AdamManager;
+            var admManager = (_codeRoot as DynamicCodeRoot)?.AsC.AdamManager;
             return admManager?.Folder(id);
         }
 
         /// <inheritdoc />
-        public IFolder Folder(IDynamicField field) => _codeRoot?.AsAdam(field.Parent, field.Name);
+        public IFolder Folder(IField field) => _codeRoot?.AsAdam(field.Parent, field.Name);
     }
 }

@@ -5,6 +5,8 @@ using ToSic.Eav.Context;
 using ToSic.Eav.Data;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
+using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.AsConverter;
 
 namespace ToSic.Sxc.Adam
 {
@@ -17,10 +19,11 @@ namespace ToSic.Sxc.Adam
         public AdamManager(
             LazySvc<AppRuntime> appRuntime,
             LazySvc<AdamMetadataMaker> metadataMaker,
+            LazySvc<AsConverterService> asConverter,
             AdamConfiguration adamConfiguration,
             LazySvc<IAdamFileSystem<TFolderId, TFileId>> adamFsLazy,
             Generator<AdamStorageOfField<TFolderId, TFileId>> fieldStorageGenerator)
-            : base(appRuntime, metadataMaker, adamConfiguration, "Adm.MngrTT")
+            : base(appRuntime, metadataMaker, asConverter, adamConfiguration, "Adm.MngrTT")
         {
             ConnectServices(
                 _adamFsLazy = adamFsLazy.SetInit(f => f.Init(this)),
@@ -28,9 +31,9 @@ namespace ToSic.Sxc.Adam
             );
         }
 
-        public override AdamManager Init(IContextOfApp ctx, int compatibility)
+        public override AdamManager Init(IContextOfApp ctx, AsConverterService asc, int compatibility)
         {
-            base.Init(ctx, compatibility);
+            base.Init(ctx, asc, compatibility);
             AdamFs = _adamFsLazy.Value;
             return this;
         }

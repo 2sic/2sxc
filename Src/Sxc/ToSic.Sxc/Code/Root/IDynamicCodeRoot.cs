@@ -1,0 +1,34 @@
+﻿using ToSic.Lib.Documentation;
+using ToSic.Sxc.Apps;
+using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code.Helpers;
+using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.AsConverter;
+
+namespace ToSic.Sxc.Code
+{
+    /// <summary>
+    /// This is the same as IDynamicCode, but the root object. 
+    /// We create another interface to ensure we don't accidentally pass around a sub-object where the root is really needed.
+    /// </summary>
+    [PrivateApi]
+    public interface IDynamicCodeRoot : IDynamicCode12
+    {
+        [PrivateApi("WIP")] IBlock Block { get; }
+
+        [PrivateApi] DynamicCodeDataSources DataSources { get; }
+
+        [PrivateApi] void AttachApp(IApp app);
+
+
+        new DynamicStack Resources { get; }
+        new DynamicStack Settings { get; }
+
+        #region AsConverter (internal)
+
+        [PrivateApi("internal use only")]
+        AsConverterService AsC { get; }
+
+        #endregion
+    }
+}

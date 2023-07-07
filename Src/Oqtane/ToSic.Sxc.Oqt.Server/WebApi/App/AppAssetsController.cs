@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     // TODO: 2DM please check permissions
 
     // Release routes
-    [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/assets")]
-    [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/assets")]
-    [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/assets")]
+    [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/assets")]
+    [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/assets")]
+    [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/assets")]
 
     // Beta routes
     //[Route(WebApiConstants.WebApiStateRoot + "/assets/{appName}")]

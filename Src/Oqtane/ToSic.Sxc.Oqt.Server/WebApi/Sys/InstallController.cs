@@ -6,20 +6,22 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.WebApi.Sys;
+using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
-    [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
-    [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    public class InstallController: OqtStatefulControllerBase<InstallControllerReal<IActionResult>>, IInstallController<IActionResult>
+    public class InstallController: OqtStatefulControllerBase, IInstallController<IActionResult>
     {
 
+        public InstallController(): base(RealController.LogSuffix) { }
 
-        public InstallController(): base(InstallControllerReal<IActionResult>.LogSuffix) { }
+        private RealController Real => GetService<RealController>();
+
 
         /// <summary>
         /// Make sure that these requests don't land in the normal api-log.
@@ -40,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         [Authorize(Roles = RoleNames.Admin)]
         // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
         public InstallAppsDto InstallSettings(bool isContentApp)
-            => Real.InstallSettings(isContentApp, BlockOptional.Context.Module);
+            => Real.InstallSettings(isContentApp, CtxHlp.BlockOptional.Context.Module);
 
         private void PrepareResponseMaker()
         {
@@ -58,7 +60,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         {
             HotReloadEnabledCheck.Check(); // Ensure that Hot Reload is not enabled or try to disable it.
             PrepareResponseMaker();
-            return Real.RemotePackage(packageUrl, BlockOptional?.Context.Module);
+            return Real.RemotePackage(packageUrl, CtxHlp.BlockOptional?.Context.Module);
         }
     }
 }

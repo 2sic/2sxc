@@ -6,18 +6,17 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
-using ToSic.Sxc.WebApi.Admin;
+using RealController = ToSic.Sxc.WebApi.Admin.AppPartsControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     // [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)] can't be used, because it forces the security
     // token, which fails in the cases where the url is called using get, which should result in a download
 
-    public class AppPartsController : DnnApiControllerWithFixes<AppPartsControllerReal<HttpResponseMessage>>, IAppPartsController<HttpResponseMessage>
+    public class AppPartsController : DnnApiControllerWithFixes, IAppPartsController<HttpResponseMessage>
     {
-        public AppPartsController() : base(AppPartsControllerReal<HttpResponseMessage>.LogSuffix) { }
-
+        public AppPartsController() : base(RealController.LogSuffix) { }
+        private RealController Real => SysHlp.GetService<RealController>();
         #region Parts Export/Import
 
         /// <inheritdoc />
@@ -32,7 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
@@ -46,7 +45,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         [ValidateAntiForgeryToken]
         public ImportResultDto Import(int zoneId, int appId)
         {
-            PreventServerTimeout300();
+            SysHlp.PreventServerTimeout300();
             return Real.Import(uploadInfo: new HttpUploadedFile(Request, HttpContext.Current.Request), zoneId: zoneId, appId: appId);
         }
 

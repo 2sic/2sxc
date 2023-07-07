@@ -1,7 +1,8 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Blocks
 {
@@ -25,10 +26,10 @@ namespace ToSic.Sxc.Blocks
     {
         [PrivateApi]
 //#pragma warning disable CS0108, CS0114
-        IHybridHtmlString One(DynamicEntity parent, string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null, object data = null, string field = null, Guid? newGuid = null);
+        new IRawHtmlString One(ITypedItem parent, string noParamOrder = Eav.Parameters.Protector,
+            ICanBeEntity item = null, object data = null, string field = null, Guid? newGuid = null);
         [PrivateApi]
-        IHybridHtmlString All(DynamicEntity parent, string noParamOrder = Eav.Parameters.Protector,
+        new IRawHtmlString All(ITypedItem parent, string noParamOrder = Eav.Parameters.Protector,
             string field = null, string apps = null, int max = 100, string merge = null);
 //#pragma warning restore CS0108, CS0114
     }

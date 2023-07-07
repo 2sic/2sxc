@@ -1,9 +1,5 @@
 ﻿using System.Web.Http.Controllers;
 using ToSic.Lib.Documentation;
-using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.WebApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 
@@ -16,21 +12,19 @@ namespace ToSic.Sxc.WebApi
     /// </summary>
     [DnnLogExceptions]
     [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
-    public abstract class SxcApiControllerBase<TRealController>: DnnApiControllerWithFixes<TRealController> where TRealController : class, IHasLog
+    public abstract class SxcApiControllerBase: DnnApiControllerWithFixes
     {
         protected SxcApiControllerBase(string logSuffix) : base(logSuffix) { }
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            SharedContextResolver = GetService<IContextResolver>();
-            SharedContextResolver.AttachBlock(GetBlockAndContext());
+            DynHlp.InitializeBlockContext(controllerContext.Request);
         }
 
-        protected IContextResolver SharedContextResolver;
-
-        [PrivateApi] protected BlockWithContextProvider GetBlockAndContext() => _blcCtx.Get(() => GetService<DnnGetBlock>().GetCmsBlock(Request));
-        private readonly GetOnce<BlockWithContextProvider> _blcCtx = new GetOnce<BlockWithContextProvider>();
-
+        [PrivateApi]
+        internal DynamicApiCodeHelpers DynHlp => _dynHlp ?? (_dynHlp = new DynamicApiCodeHelpers(this, SysHlp));
+        private DynamicApiCodeHelpers _dynHlp;
+        
     }
 }

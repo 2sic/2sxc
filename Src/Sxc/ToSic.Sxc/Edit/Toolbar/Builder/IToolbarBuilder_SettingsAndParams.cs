@@ -1,4 +1,6 @@
-﻿namespace ToSic.Sxc.Edit.Toolbar
+﻿using System;
+
+namespace ToSic.Sxc.Edit.Toolbar
 {
 
     public partial interface IToolbarBuilder
@@ -53,6 +55,7 @@
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="ui">_optional_ configuration how to show, see [ui guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Ui)</param>
+        /// <param name="tweak">Functional [Tweak API](xref:ToSic.Sxc.Services.ToolbarBuilder.TweakButtons) to modify UI and parameters (new v16.02)</param>
         /// <param name="parameters">_optional_ parameters for the command, see [parameters guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Parameters)</param>
         /// <param name="prefill">_optional_ prefill for the edit-UI, see [prefill guide](xref:ToSic.Sxc.Services.ToolbarBuilder.Prefill)</param>
         /// <param name="context"></param>
@@ -60,6 +63,7 @@
         IToolbarBuilder Parameters(
             object target = default,
             string noParamOrder = Eav.Parameters.Protector,
+            Func<ITweakButton, ITweakButton> tweak = default,
             object ui = default,
             object parameters = default,
             object prefill = default,

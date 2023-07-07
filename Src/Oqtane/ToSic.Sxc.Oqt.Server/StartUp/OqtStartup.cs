@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Oqtane.Extensions;
 using Oqtane.Infrastructure;
 using System.IO;
 using ToSic.Eav.Configuration;
@@ -19,16 +20,15 @@ using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Shared;
 using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
-using ToSic.Sxc.Web.EditUi;
 using ToSic.Sxc.WebApi;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
-using WebApiConstants = ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
+using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
+using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {
     public class OqtStartup : IServerStartup
     {
-        public IConfiguration Configuration { get; }
+        public IConfigurationRoot Configuration { get; }
         //public IWebHostEnvironment HostEnvironment { get; set; }
 
         public OqtStartup()
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         public void ConfigureServices(IServiceCollection services)
         {
             // 1. Enable dynamic razor compiling
-            services.AddRazorPages()            
+            services.AddRazorPages()
                 .AddRazorRuntimeCompilation(options =>
                 {
                     var dllLocation = typeof(Oqtane.Server.Program).Assembly.Location;
@@ -75,7 +75,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
-            
+
             var globalConfig = serviceProvider.Build<IGlobalConfiguration>();
             globalConfig.GlobalFolder = Path.Combine(env.ContentRootPath, "wwwroot\\Modules", OqtConstants.PackageName);
             globalConfig.AppDataTemplateFolder = Path.Combine(env.ContentRootPath, "Content", "2sxc", "system", Eav.Constants.AppDataProtectedFolder, Eav.Constants.NewAppFolder);
@@ -89,52 +89,80 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             // NOTE: On first installation of 2sxc module in oqtane, this code can not load all 2sxc global types
             // because it has dependency on ToSic_Eav_* sql tables, before this tables are actually created by oqtane 2.3.x,
             // but after next restart of oqtane application all is ok, and all 2sxc global types are loaded as expected
-            
+
             var sxcSysLoader = serviceProvider.Build<SystemLoader>();
             sxcSysLoader.StartUp();
-
-            // TODO: @STV - should we really add an error handler? I assume Oqtane has this already
-            app.UseExceptionHandler("/error");
-
-            // routing middleware
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             if (env.IsDevelopment())
                 app.UsePageResponseRewriteMiddleware();
 
-            // endpoint mapping
-            app.UseEndpoints(endpoints =>
+            // MapWhen split the middleware pipeline into two completely separate branches
+            app.MapWhen(context => IsSxcEndpoint(context.Request.Path.Value), appBuilder =>
             {
-                // Release routes
-                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootNoLanguage + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathOrLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.AppRootPathNdLang + "/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
+                appBuilder.UseOqtaneMiddlewareConfiguration();
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    foreach (var pattern in SxcEndpointPatterns)
+                        endpoints.Map(pattern, AppApiMiddleware.InvokeAsync);
+                });
+                // end of this middleware pipeline branch
+            });
 
-                // Beta routes
-                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-                endpoints.Map(WebApiConstants.WebApiStateRoot + "/app/{appFolder}/{edition}/api/{controller}/{action}", AppApiMiddleware.InvokeAsync);
-
-                // Route for 2sxc UI (after JS updates to use folder route (ending with /ng/ or /ng-edit/), probably this will not be necessary)
-                //endpoints.Map($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html"));
-                //endpoints.Map($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/index-raw.html", (context) => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html"));
-
-                // Handle / Process URLs to Dialogs route for 2sxc UI
-                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/quickDialog/", 
-                    context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\quickDialog\index-raw.html", EditUiResourceSettings.QuickDialog));
-                endpoints.MapFallback($"/Modules/{OqtConstants.PackageName}/dist/ng-edit/",
-                    context => EditUiMiddleware.PageOutputCached(context, env, $@"Modules\{OqtConstants.PackageName}\dist\ng-edit\index-raw.html", EditUiResourceSettings.EditUi));
+            app.MapWhen(context => IsSxcDialog(context.Request.Path.Value), appBuilder =>
+            {
+                appBuilder.UseOqtaneMiddlewareConfiguration();
+                appBuilder.UseEndpoints(endpoints =>
+                {
+                    // Handle / Process URLs to Dialogs route for 2sxc UI
+                    foreach (var (url, page, setting) in SxcDialogs)
+                        endpoints.MapFallback(url, context => EditUiMiddleware.PageOutputCached(context, env, page, setting));
+                });
             });
         }
 
         public void ConfigureMvc(IMvcBuilder mvcBuilder)
         {
             // Do nothing
+        }
+    }
+
+    public static class ApplicationBuilderExtensions
+    {
+        public static IApplicationBuilder UseOqtaneMiddlewareConfiguration(this IApplicationBuilder app)
+        {
+            // Oqtane middlewares should be executed before configuration of 2sxc endpoint mappings
+            // to avoid having duplicate middleware in pipeline (like we had before).
+            // Order of middleware configuration is important, because that is order of middleware execution in pipeline.
+
+            #region Oqtane copy from Startup.cs - L173
+
+            // allow oqtane localization middleware
+            app.UseOqtaneLocalization();
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            //app.UseTenantResolution(); // commented, because it breaks alias resolving in 2sxc and it will resolve siteid=1 for all sites
+            app.UseJwtAuthorization();
+            app.UseBlazorFrameworkFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            //if (_useSwagger)
+            //{
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/" + Constants.Version + "/swagger.json", Constants.PackageId + " " + Constants.Version); });
+            //}
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapBlazorHub();
+                endpoints.MapControllers();
+                endpoints.MapFallbackToPage("/_Host");
+            });
+
+            #endregion
+            return app;
         }
     }
 }

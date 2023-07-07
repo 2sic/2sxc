@@ -12,7 +12,7 @@ using static ToSic.Sxc.Blocks.RenderService;
 
 namespace ToSic.Sxc.Services.CmsService
 {
-    public class CmsServiceStringWysiwyg: ServiceForDynamicCode
+    internal class CmsServiceStringWysiwyg: ServiceForDynamicCode
     {
 
         #region Constructor / DI
@@ -34,18 +34,19 @@ namespace ToSic.Sxc.Services.CmsService
 
         #region Init
 
-        public CmsServiceStringWysiwyg Init(IDynamicField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object imageSettings)
+        public CmsServiceStringWysiwyg Init(IField field, IContentType contentType, IContentTypeAttribute attribute, IFolder folder, bool debug, object imageSettings)
         {
+            var l = Log.Fn<CmsServiceStringWysiwyg>();
             Field = field;
             ContentType = contentType;
             Folder = folder;
             Attribute = attribute;
             Debug = debug;
             ImageSettings = imageSettings;
-            return this;
+            return l.ReturnAsOk(this);
         }
 
-        protected IDynamicField Field;
+        protected IField Field;
         protected IContentType ContentType;
         protected IContentTypeAttribute Attribute;
         protected bool Debug;
@@ -65,7 +66,10 @@ namespace ToSic.Sxc.Services.CmsService
         internal const string WysiwygDebugClass = "wysiwyg-debug";
         private const string WysiwygCssPrefix = "wysiwyg";  // not used ATM
 
-        internal CmsProcessed Process()
+        /// <summary>
+        /// Note: very expressive name for logs
+        /// </summary>
+        internal CmsProcessed HtmlForStringAndWysiwyg()
         {
             var l = Log.Fn<CmsProcessed>();
             var html = Field.Raw as string;
@@ -87,16 +91,17 @@ namespace ToSic.Sxc.Services.CmsService
             var imgTags = RegexUtil.ImagesDetection.Value.Matches(html);
             if (imgTags.Count == 0)
                 return l.Return(new CmsProcessed(true, html, classes), "can't find img tags with data-cmsid, done");
-            l.A($"Found {imgTags.Count} images to process");
+            var imgSettings = ImageSettings ?? "Wysiwyg";
+            l.A($"Found {imgTags.Count} images to process with settings: {imgSettings}");
 
             foreach (var imgTag in imgTags)
             {
                 var originalImgTag = imgTag.ToString();
 
-                var imgProps = _imageExtractor.ExtractProperties(originalImgTag, Field.Parent.EntityGuid, Folder);
+                var imgProps = _imageExtractor.ExtractImageProperties(originalImgTag, Field.Parent.Guid, Folder);
 
                 // use the IImageService to create Picture tags for it
-                var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: ImageSettings ?? "Wysiwyg", factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,
+                var picture = ServiceKit.Image.Picture(link: imgProps.Src, settings: imgSettings, factor: imgProps.Factor, width: imgProps.Width, imgAlt: imgProps.ImgAlt,
                     imgClass: imgProps.ImgClasses);
 
                 // re-attach an alt-attribute, class etc. from the original if it had it
@@ -129,7 +134,7 @@ namespace ToSic.Sxc.Services.CmsService
                 return l.Return(html, "no inner content; next field is not content-block");
 
             html = ServiceKit.Render
-                .All(Field.Parent as DynamicEntity, field: nextField.Name, merge: html)
+                .All(Field.Parent, field: nextField.Name, merge: html)
                 .ToString();
 
             return l.ReturnAsOk(html);

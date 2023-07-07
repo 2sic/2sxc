@@ -8,17 +8,23 @@ using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Cms;
+using RealController = ToSic.Sxc.WebApi.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     //[SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
-    public class EditController : SxcApiControllerBase<EditControllerReal>, IEditController
+    public class EditController : SxcApiControllerBase, IEditController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        #region Setup / Infrastructure
 
-        public EditController() : base(EditControllerReal.LogSuffix) { }
+
+
+        public EditController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
+
+        #endregion
 
         /// <inheritdoc />
         [HttpPost]
@@ -42,11 +48,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Cms
         public IEnumerable<EntityForPickerDto> EntityPicker(
             [FromUri] int appId,
             [FromBody] string[] items,
-            [FromUri] string contentTypeName = null
-            // 2dm 2023-01-22 #maybeSupportIncludeParentApps
-            //[FromUri] bool? includeParentApps = null
-            )
-            => Real.EntityPicker(appId, items, contentTypeName/*, includeParentApps*/);
+            [FromUri] string contentTypeName = null)
+            => Real.EntityPicker(appId, items, contentTypeName);
 
         /// <inheritdoc />
         [HttpGet]

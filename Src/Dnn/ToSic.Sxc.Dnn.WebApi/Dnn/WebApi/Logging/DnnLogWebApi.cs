@@ -1,4 +1,5 @@
 ﻿using System.Web.Http.Filters;
+using ToSic.Eav.Generics;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
@@ -18,23 +19,21 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
             try
             {
                 var reqProps = actionContext.Request.Properties;
-                // check if we have any logging details for this request
-                if (!reqProps.ContainsKey(DnnConstants.EavLogKey)) return;
 
+                // check if already logged, and set property to prevent double-logging
                 if (reqProps.ContainsKey(AlreadyLogged)) return;
+                reqProps.Add(AlreadyLogged, true);
 
-                var log = reqProps[DnnConstants.EavLogKey] as ILog;
+                // check if we have any logging details for this request
+                if (!reqProps.TryGetTyped(DnnConstants.EavLogKey, out LogStoreEntry logStoreEntry)) return;
 
                 // check if we have additional context information (portal, module, etc.)
                 reqProps.TryGetValue(DnnConstants.DnnContextKey, out var dnnContext);
 
                 DnnLogging.LogToDnn("2sxc-Api", 
-                    actionContext.Request.RequestUri.PathAndQuery, 
-                    log, 
+                    actionContext.Request.RequestUri.PathAndQuery,
+                    logStoreEntry.Log, 
                     dnnContext as DnnContext);
-
-                // set property, to prevent double-logging
-                actionContext.Request.Properties.Add(AlreadyLogged, true);
             }
             catch
             {

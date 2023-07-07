@@ -16,6 +16,7 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
 
@@ -141,7 +142,7 @@ namespace ToSic.Sxc.Dnn.Cms
             }
             catch (Exception ex)
             {
-                DnnLogging.LogToDnn("exception", "publishing", Log, force:true);
+                DnnLogging.LogToDnn("exception", "publishing", Log, force: true);
                 DotNetNuke.Services.Exceptions.Exceptions.LogException(ex);
                 throw;
             }

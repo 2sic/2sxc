@@ -1,8 +1,9 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data;
-using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Services
 {
@@ -33,10 +34,13 @@ namespace ToSic.Sxc.Services
         /// <param name="newGuid">Internal: this is the guid given to the item when being created in this block. Important for the inner-content functionality to work. </param>
         /// <param name="data">Data to give the Razor as `DynamicModel` - new 15.07</param>
         /// <returns></returns>
-        IHybridHtmlString One(
-            DynamicEntity parent,
+        /// <remarks>
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        IRawHtmlString One(
+            ITypedItem parent,
             string noParamOrder = Eav.Parameters.Protector,
-            IDynamicEntity item = null,
+            ICanBeEntity item = null,
             object data = null,
             string field = null,
             Guid? newGuid = null
@@ -52,8 +56,11 @@ namespace ToSic.Sxc.Services
         /// <param name="merge">Optional: html-text containing special placeholders.</param>
         /// <param name="apps">BETA / WIP</param>
         /// <returns></returns>
-        IHybridHtmlString All(
-            DynamicEntity parent,
+        /// <remarks>
+        /// * Changed result object to `IRawHtmlString` in v16.02 from `IHybridHtmlString`
+        /// </remarks>
+        IRawHtmlString All(
+            ITypedItem parent,
             string noParamOrder = Eav.Parameters.Protector,
             string field = null,
             string apps = null,

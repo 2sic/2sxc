@@ -28,7 +28,7 @@ namespace ToSic.Sxc.DataSources
         NiceName = "Roles (User Roles)",
         Icon = Icons.UserCircled,
         UiHint = "Roles in this site",
-        HelpLink = "https://r.2sxc.org/ds-roles",
+        HelpLink = "https://go.2sxc.org/ds-roles",
         NameId = "eee54266-d7ad-4f5e-9422-2d00c8f93b45",
         Type = DataSourceType.Source,
         ConfigurationType = "1b9fd9d1-dde0-40ad-bb66-5cd7f30de18d"

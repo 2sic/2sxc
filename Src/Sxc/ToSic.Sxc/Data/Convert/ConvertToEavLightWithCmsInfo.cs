@@ -3,6 +3,7 @@ using ToSic.Eav.Data;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Data.Decorators;
 
 namespace ToSic.Sxc.Data
 {

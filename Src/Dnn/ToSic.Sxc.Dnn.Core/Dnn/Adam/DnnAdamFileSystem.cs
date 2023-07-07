@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Dnn.Adam
 
         public DnnAdamFileSystem(): base("Dnn.FilSys") { }
 
-        public IAdamFileSystem<int, int> Init(AdamManager<int, int> adamManager) => Log.Func(() =>
+        public void Init(AdamManager<int, int> adamManager) => Log.Func(() =>
         {
             AdamManager = adamManager;
             return this;

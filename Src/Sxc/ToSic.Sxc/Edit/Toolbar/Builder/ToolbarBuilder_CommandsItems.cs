@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Edit.Toolbar
                 contentType: contentType,
                 propsKeep: propsKeep, propsSkip: propsSkip,
                 decoHelper: Services.ToolbarButtonHelper.Value);
-            var builder = AddInternal(command);
+            var builder = this.AddInternal(command);
             return (command, builder);
         }
 
@@ -92,18 +92,17 @@ namespace ToSic.Sxc.Edit.Toolbar
             object target = null,
             string noParamOrder = Protector,
             Func<ITweakButton, ITweakButton> tweak = default,
-            //string fields = default,
             object ui = null,
             object parameters = null,
             object prefill = null,
             string operation = null)
         {
             Protect(noParamOrder, "See docs");
-            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill/*, fields: fields*/);
+            var pars = PreCleanParams(tweak, defOp: OprAdd, operation: operation, ui: ui, parameters: parameters, prefill: prefill);
             return EntityRule("edit", target, pars, propsSkip: new[] { KeyEntityGuid, KeyTitle, KeyPublished }).Builder;
         }
 
-        internal const string BetaEditUiFieldsParamName = "fields";
+        internal const string BetaEditUiFieldsParamName = "uifields";
 
         public IToolbarBuilder New(
             object target = null,

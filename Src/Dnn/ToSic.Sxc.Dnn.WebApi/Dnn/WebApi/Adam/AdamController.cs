@@ -7,7 +7,7 @@ using DotNetNuke.Web.Api;
 using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Adam;
+using RealController = ToSic.Sxc.WebApi.Adam.AdamControllerReal<int>;
 
 namespace ToSic.Sxc.Dnn.WebApi
 {
@@ -19,11 +19,12 @@ namespace ToSic.Sxc.Dnn.WebApi
     [SupportedModules(DnnSupportedModuleNames)]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.View)]    // use view, all methods must re-check permissions
     [ValidateAntiForgeryToken]
-    public class AdamController : SxcApiControllerBase<AdamControllerReal<int>>, IAdamController<int>
+    public class AdamController : SxcApiControllerBase, IAdamController<int>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+
 
         public AdamController() : base("Adam") { }
+        private RealController Real => SysHlp.GetService<RealController>();
 
         [HttpPost]
         [HttpPut]
@@ -51,15 +52,5 @@ namespace ToSic.Sxc.Dnn.WebApi
         public bool Rename(int appId, string contentType, Guid guid, string field, string subfolder, bool isFolder, int id, string newName, bool usePortalRoot)
             => Real.Rename(appId, contentType, guid, field, subfolder, isFolder, id, newName, usePortalRoot);
 
-        // test method to provide a public API for accessing adam items easily
-        // not sure if it is ever used
-        // 2022-02-22 2dm - disabled
-        //[HttpGet]
-        //public IEnumerable<AdamItemDto> Items(string contentType, Guid guid, string field, string folder = "")
-        //{
-        //    // if app-path specified, use that app, otherwise use from context
-        //    const int AutoDetect = -1;
-        //    return Items(AutoDetect, contentType, guid, field, folder);
-        //}
     }
 }

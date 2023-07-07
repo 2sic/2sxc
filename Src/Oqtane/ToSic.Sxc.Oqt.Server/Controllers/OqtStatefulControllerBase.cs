@@ -1,31 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
+using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
-using ToSic.Sxc.Blocks;
-using ToSic.Sxc.Context;
-using ToSic.Sxc.Oqt.Server.Blocks;
-using IApp = ToSic.Sxc.Apps.IApp;
-
+using ToSic.Sxc.Oqt.Server.Custom;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
-    public abstract class OqtStatefulControllerBase<TRealController> : OqtControllerBase<TRealController> where TRealController : class, IHasLog
+    public abstract class OqtStatefulControllerBase : OqtControllerBase
     {
-        protected OqtStatefulControllerBase(string logSuffix): base(logSuffix) { }
+        #region Setup
 
-        protected IContextResolver CtxResolver;
-
-        public override void OnActionExecuting(ActionExecutingContext context) => Log.Do(() =>
+        protected OqtStatefulControllerBase(string logSuffix) : base(true, logSuffix)
         {
-            base.OnActionExecuting(context);
+            // ReSharper disable once VirtualMemberCallInConstructor
+            //CtxHlp = new(this, Helper, HistoryLogGroup);
+        }
 
-            var getBlock = GetService<OqtGetBlock>();
-            CtxResolver = getBlock.TryToLoadBlockAndAttachToResolver();
-            BlockOptional = CtxResolver.BlockOrNull();
-        });
+        ///// <summary>
+        ///// Special helper to move all Razor logic into a separate class.
+        ///// For architecture of Composition over Inheritance.
+        ///// </summary>
+        //[PrivateApi]
+        //internal OqtWebApiContextHelper CtxHlp { get; }
 
-        protected IBlock BlockOptional { get; private set; }
+        #endregion
 
-        //protected IApp GetApp(int appId)
-        //    => GetService<Apps.App>().Init(appId, BlockOptional);
+
+        //public override void OnActionExecuting(ActionExecutingContext context) => Log.Do(() =>
+        //{
+        //    base.OnActionExecuting(context);
+        //    CtxHlp.InitializeBlockContext(context);
+        //});
     }
 }

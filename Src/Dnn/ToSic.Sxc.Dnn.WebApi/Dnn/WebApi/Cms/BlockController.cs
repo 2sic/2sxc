@@ -7,14 +7,17 @@ using ToSic.Eav.Apps.Ui;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Cms;
 using ToSic.Sxc.WebApi.InPage;
+using RealController = ToSic.Sxc.WebApi.Cms.BlockControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [ValidateAntiForgeryToken]
     // cannot use this, as most requests now come from a lone page [SupportedModules(DnnSupportedModuleNames)]
-    public class BlockController : SxcApiControllerBase<BlockControllerReal>, IBlockController
+    public class BlockController : SxcApiControllerBase, IBlockController
     {
-        public BlockController() : base(BlockControllerReal.LogSuffix) { }
+        public BlockController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc />
         [HttpPost]

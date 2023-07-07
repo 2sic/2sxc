@@ -6,7 +6,7 @@ using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Services
 {
-    public class TurnOnService: ServiceBase, ITurnOnService
+    internal class TurnOnService: ServiceBase, ITurnOnService
     {
         private const string TagName = "turnOn";
         private const string AttributeName = "turn-on";

@@ -2,6 +2,7 @@
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
+using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Eav.Conversion
@@ -23,8 +24,7 @@ namespace ToSic.Eav.Conversion
         /// </remarks>
         public EntitiesToDictionary(): base(DnnStaticDi.StaticBuild<MyServices>())
         {
-            Sxc.Compatibility.Obsolete.Warning13To15(nameof(EntitiesToDictionary), "", "https://r.2sxc.org/brc-13-conversion");
+            DnnStaticDi.CodeInfos.Warn(V13To17(nameof(EntitiesToDictionary), "https://go.2sxc.org/brc-13-conversion"));
         }
-
     }
 }

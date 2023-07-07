@@ -1,6 +1,7 @@
 ﻿using System;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Dnn;
+using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 
 // ReSharper disable once CheckNamespace
 namespace ToSic.Sxc.Conversion
@@ -20,9 +21,9 @@ namespace ToSic.Sxc.Conversion
         [Obsolete("only keep in case external code was using this in apps ca. 2sxc 11. v12+ should use GetService")]
         public DataToDictionary() : base(DnnStaticDi.StaticBuild<MyServices>())
         {
-            Compatibility.Obsolete.Warning13To15(nameof(DataToDictionary), "",
-                "https://r.2sxc.org/brc-13-conversion");
+            DnnStaticDi.CodeInfos.Warn(V13To17(nameof(DataToDictionary), "https://go.2sxc.org/brc-13-conversion"));
         }
+
 
         /// <summary>
         /// Old constructor, for old use cases. Was published in tutorial for a while; not ideal...

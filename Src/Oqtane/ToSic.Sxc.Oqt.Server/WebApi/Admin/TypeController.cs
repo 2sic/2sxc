@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System;
 using System.Collections.Generic;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Admin;
+using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -22,14 +21,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [AutoValidateAntiforgeryToken]
 
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
 
-    public class TypeController : OqtStatefulControllerBase<TypeControllerReal<IActionResult>>, ITypeController<IActionResult>
+    public class TypeController : OqtStatefulControllerBase, ITypeController<IActionResult>
     {
-        public TypeController(): base(TypeControllerReal<IActionResult>.LogSuffix) { }
+        public TypeController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
+
 
         [HttpGet]
         [ValidateAntiForgeryToken]

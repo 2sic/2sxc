@@ -6,10 +6,10 @@ using System.Web.Http;
 using ToSic.Eav.ImportExport.Options;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using Guid = System.Guid;
+using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -26,10 +26,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-	public class EntityController : SxcApiControllerBase<EntityControllerReal<HttpResponseMessage>>, IEntityController<HttpResponseMessage>
+	public class EntityController : SxcApiControllerBase, IEntityController<HttpResponseMessage>
 	{
-        public EntityController(): base(EntityControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public EntityController(): base(RealController.LogSuffix) { }
 
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc/>
         [HttpGet]
@@ -52,7 +53,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Json(appId, id, prefix, withMetadata);
@@ -73,7 +74,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             string selectedIds = null)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,

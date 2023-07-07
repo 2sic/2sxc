@@ -185,8 +185,8 @@
       <!-- DNN specific DLLs -->
       <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\ToSic.Imageflow.Dnn.dll" />
 
-      <!-- DNN shared assemblies -->
-      <!--<ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />-->
+      <!-- DNN shared assemblies, Imageflow.NET transient dependency -->
+      <ImageflowAssemblyInclude Include="$(MSBuildProjectDirectory)\Extensions\Imageflow\bin\Newtonsoft.Json.dll" />
     </ItemGroup>
 
     <Copy SourceFiles="@(ImageflowAssemblyInclude)" DestinationFolder="$(TempPackageFolder)\bin" />

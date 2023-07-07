@@ -2,6 +2,7 @@
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Code;
 
 namespace ToSic.Sxc.Services
 {
@@ -106,9 +107,7 @@ namespace ToSic.Sxc.Services
         private readonly GetOnce<IJsonService> _json = new GetOnce<IJsonService>();
 
 
-        /// <summary>
-        /// The JSON service, used to convert data to-and-from JSON
-        /// </summary>
+        /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _link.Get(GetService<ILinkService>);
         private readonly GetOnce<ILinkService> _link = new GetOnce<ILinkService>();
 

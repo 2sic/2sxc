@@ -2,18 +2,20 @@
 using System.Web.Http;
 using ToSic.Eav.WebApi.App;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.App;
+using RealController = ToSic.Sxc.WebApi.App.AppDataControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.App
 {
     /// <inheritdoc />
     [AllowAnonymous]
-    public class AppDataController : SxcApiControllerBase<AppDataControllerReal>, IAppDataController
+    public class AppDataController : SxcApiControllerBase, IAppDataController
     {
-        public AppDataController(): base(AppDataControllerReal.LogSuffix) { }
+        public AppDataController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         #region Get List / all of a certain content-type
-        
+
         /// <inheritdoc />
         [HttpGet]
         [AllowAnonymous]   // will check security internally, so assume no requirements

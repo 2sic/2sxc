@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ToSic.Eav.Data;
 using ToSic.Eav.DataSource;
 using ToSic.Eav.LookUp;
 using ToSic.Lib.Logging;
@@ -8,7 +9,6 @@ using ToSic.Sxc.Apps;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
-using DynamicJacket = ToSic.Sxc.Data.DynamicJacket;
 using IEntity = ToSic.Eav.Data.IEntity;
 using IFolder = ToSic.Sxc.Adam.IFolder;
 
@@ -24,11 +24,12 @@ namespace ToSic.Sxc.Code
     public interface IDynamicCode: ICreateInstance, ICompatibilityLevel, IHasLog // inherit from old namespace to ensure compatibility
     {
         /// <summary>
-        /// Get a service from the EAV / 2sxc Dependency Injection. 
+        /// Get a service from the Dependency Injection.
+        /// The service can come from 2sxc, EAV or the underlying platform (Dnn, Oqtane).
         /// </summary>
         /// <typeparam name="TService">Interface (preferred) or Class which is needed</typeparam>
-        /// <returns>An object of the type or interface requested</returns>
         /// <remarks>Added in 2sxc 11.11</remarks>
+        /// <returns>An object of the type or interface requested, or null if not found in the DI.</returns>
         TService GetService<TService>();
 
         /// <summary>
@@ -72,18 +73,10 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Provides an Adam instance for this item and field
         /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
+        /// <param name="item">The item - an IEntity, IDynamicEntity, ITypedItem etc. often Content or similar</param>
         /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
         /// <returns>An Adam object for navigating the assets</returns>
-        IFolder AsAdam(IDynamicEntity entity, string fieldName);
-
-        /// <summary>
-        /// Provides an Adam instance for this item and field
-        /// </summary>
-        /// <param name="entity">The entity, often Content or similar</param>
-        /// <param name="fieldName">The field name, like "Gallery" or "Pics"</param>
-        /// <returns>An Adam object for navigating the assets</returns>
-        IFolder AsAdam(IEntity entity, string fieldName);
+        IFolder AsAdam(ICanBeEntity item, string fieldName);
 
         #endregion
 
@@ -125,7 +118,7 @@ namespace ToSic.Sxc.Code
         /// If it can't be parsed, it will parse the fallback, which by default is an empty empty dynamic object.
         /// If you provide null for the fallback, then you will get null back.
         /// </returns>
-        dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson);
+        dynamic AsDynamic(string json, string fallback = default);
 
         #endregion 
 
@@ -175,6 +168,7 @@ namespace ToSic.Sxc.Code
 
 
         #region Create Data Sources
+
         /// <summary>
         /// Create a <see cref="IDataSource"/> which will process data from the given stream.
         /// </summary>
@@ -192,14 +186,22 @@ namespace ToSic.Sxc.Code
         /// <typeparam name="T">A data-source type - must be inherited from IDataSource</typeparam>
         /// <returns>A typed DataSource object</returns>
         T CreateSource<T>(IDataSource inSource = null, ILookUpEngine configurationProvider = default) where T : IDataSource;
+
         #endregion
 
 
         #region Context
 
         /// <summary>
-        /// The CmsContext tells you about the environment, like what page and module we're running in.
-        /// It's supposed to replace the Dnn object in Razor and WebAPI code.
+        /// This Context tells you about the environment, such as
+        ///
+        /// * the current User
+        /// * the Page
+        /// * the View
+        /// * the Site
+        /// 
+        /// It's supposed to replace direct access to Dnn or Oqtane object in Razor and WebAPI code,
+        /// allowing hybrid code that works everywhere.
         /// </summary>
         /// <remarks>
         /// New in v11.11
@@ -207,6 +209,6 @@ namespace ToSic.Sxc.Code
         ICmsContext CmsContext { get; }
 
         #endregion
-        
+
     }
 }

@@ -12,10 +12,10 @@ namespace ToSic.Sxc.DataSources
     public interface IBlockDataSource: IDataSource
     {
 
+#if NETFRAMEWORK
         [PrivateApi("older use case, will probably become obsolete some day")]
         DataPublishing Publish { get; }
 
-#if NETFRAMEWORK
         [System.Obsolete("Must be removed soon, but it's part of older Mobius so we must add warnings there")]
         [PrivateApi]
         Compatibility.CacheWithGetContentType Cache { get; }

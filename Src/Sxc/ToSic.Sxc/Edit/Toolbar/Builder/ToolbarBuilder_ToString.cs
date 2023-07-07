@@ -1,8 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using ToSic.Eav.Configuration;
+using ToSic.Eav.Data;
 using ToSic.Eav.Serialization;
-using ToSic.Razor.Markup;
+using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using static ToSic.Sxc.Edit.Toolbar.ItemToolbarBase;
+using static ToSic.Sxc.Edit.Toolbar.ToolbarRuleToolbar;
+using Attribute = ToSic.Razor.Markup.Attribute;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -18,23 +25,79 @@ namespace ToSic.Sxc.Edit.Toolbar
 
         public override string ToString()
         {
-            var mode = _configuration?.Mode;
-            mode = (mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
-
-            var edit = _codeRoot?.Edit;
+            var edit = _DynCodeRoot?.Edit;
 
             // TODO:
             // - force
 
             // Only test conditions if the toolbar would show - otherwise ignore
-            if (edit?.Enabled == true)
+            if (edit?.Enabled == true && _configuration != null)
             {
                 // ReSharper disable AssignNullToNotNullAttribute
-                if (_configuration?.Condition == false) return null;
-                if (_configuration?.ConditionFunc != null && _configuration.ConditionFunc() == false) return null;
+                if (_configuration.Condition == false) return null;
+                if (_configuration.ConditionFunc?.Invoke() == false) return null;
                 // ReSharper restore AssignNullToNotNullAttribute
             }
 
+            // No auto-demo
+            if (!ShouldUseDemoMode()) return Render();
+
+            //var useDemoMode = ShouldUseDemoMode();
+            //if (!useDemoMode) return Render();
+
+            // Implement Demo-Mode with info-button only
+            var rules = new List<ToolbarRuleBase>();
+            bool AddRuleIfFound<T>(Func<T, T> tweak = null) where T : ToolbarRuleBase
+            {
+                var possibleParams = FindRule<T>();
+                if (possibleParams == null) return false;
+                var tweaked = tweak?.Invoke(possibleParams);
+                rules.Add(tweaked ?? possibleParams);
+                return true;
+            }
+
+            if (!AddRuleIfFound<ToolbarRuleToolbar>(t => new ToolbarRuleToolbar(Empty, t.Ui)))
+                rules.Add(new ToolbarRuleToolbar(Empty));
+            AddRuleIfFound<ToolbarRuleForParams>();
+            AddRuleIfFound<ToolbarRuleSettings>();
+                
+            var tlb = new ToolbarBuilder(this, rules) as IToolbarBuilder;
+            var keyOrMessage = _configuration?.DemoMessage;
+            var message = keyOrMessage == null
+                ? _DynCodeRoot.Resources.Get<string>($"{ConfigurationConstants.RootNameResources}.Toolbar.IsDemoSubItem")
+                : keyOrMessage.StartsWith($"{ConfigurationConstants.RootNameResources}.")
+                    ? _DynCodeRoot.Resources.Get<string>(keyOrMessage)
+                    : keyOrMessage;
+            tlb = tlb.Info(tweak: b => b.Note(message));
+            return ((ToolbarBuilder)tlb).Render();
+        }
+
+        private bool ShouldUseDemoMode()
+        {
+            // If no root provided, we can't check demo mode as of now, so return
+            var root = _configuration?.Root?.Entity;
+            if (root == null) return false;
+
+            // If root is not demo, then don't use demo mode
+            if (!root.IsDemoItem()) return false;
+
+            // Check if we have a target, if not, then go into demo-mode
+            var target = (FindRule<ToolbarRuleForParams>()?.Target as ICanBeEntity)?.Entity;
+            if (target == null) return true;
+
+            // If the root and target are the same, then the toolbar should work
+            // because it's meant to create a new entry right here
+            if (root.EntityId == target.EntityId) return false;
+
+            return true;
+        }
+
+
+        private string Render()
+        {
+            var edit = _DynCodeRoot?.Edit;
+            var mode = _configuration?.Mode;
+            mode = (mode ?? ToolbarHtmlModes.OnTag).ToLowerInvariant();
             switch (mode)
             {
                 // ReSharper disable AssignNullToNotNullAttribute

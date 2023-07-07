@@ -728,7 +728,7 @@
                 "Metadata": [
                   {
                     "Id": 134258,
-                    "Version": 2,
+                    "Version": 4,
                     "Guid": "cf06e71c-f14e-4f0a-a0a0-455b6628cd9c",
                     "Type": {
                       "Name": "@All",
@@ -740,6 +740,9 @@
                           "en-us": ""
                         },
                         "DefaultValue": {
+                          "en-us": ""
+                        },
+                        "Information": {
                           "en-us": ""
                         },
                         "InputType": {
@@ -754,7 +757,15 @@
                         "Placeholder": {
                           "en-us": ""
                         },
+                        "Tooltip": {
+                          "en-us": ""
+                        },
                         "ValidationRegExJavaScript": {
+                          "en-us": ""
+                        }
+                      },
+                      "Hyperlink": {
+                        "HelpLink": {
                           "en-us": ""
                         }
                       },
@@ -788,7 +799,7 @@
                   },
                   {
                     "Id": 134260,
-                    "Version": 1,
+                    "Version": 3,
                     "Guid": "66f7c299-a872-4313-a3c6-ccc14e4262e2",
                     "Type": {
                       "Name": "@Entity",
@@ -799,6 +810,12 @@
                         "EntityType": {
                           "en-us": "⚙️GoogleRecaptcha"
                         },
+                        "Label": {
+                          "en-us": ""
+                        },
+                        "MoreFields": {
+                          "en-us": ""
+                        },
                         "Prefill": {
                           "en-us": ""
                         }
@@ -808,7 +825,7 @@
                           "en-us": false
                         },
                         "EnableAddExisting": {
-                          "en-us": false
+                          "en-us": true
                         },
                         "EnableCreate": {
                           "en-us": true
@@ -820,7 +837,7 @@
                           "en-us": true
                         },
                         "EnableRemove": {
-                          "en-us": false
+                          "en-us": true
                         }
                       }
                     },

@@ -3,15 +3,22 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Logging;
+using ToSic.Lib.Services;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Utils;
 
 namespace ToSic.Sxc.Services.CmsService
 {
-    public class CmsServiceImageExtractor
+    internal class CmsServiceImageExtractor: ServiceBase
     {
-        internal ImageProperties ExtractProperties(string oldImgTag, Guid guid, IFolder folder)
+        public CmsServiceImageExtractor() : base("Sxc.ImgExt")
         {
+        }
+
+        internal ImageProperties ExtractImageProperties(string oldImgTag, Guid guid, IFolder folder)
+        {
+            var l = Log.Fn<ImageProperties>($"old: '{oldImgTag}'");
             string src = null;
             string factor = null;
             object width = default;
@@ -53,11 +60,12 @@ namespace ToSic.Sxc.Services.CmsService
                 }
             }
 
-            return new ImageProperties
+            var result = new ImageProperties
             {
                 Src = src, Factor = factor, ImgAlt = imgAlt, ImgClasses = imgClasses, PicClasses = picClasses,
                 Width = width, OtherAttributes = otherAttributes
             };
+            return l.Return(result, $"src:{src}");
         }
 
         public static string GetPictureClasses(string classes)

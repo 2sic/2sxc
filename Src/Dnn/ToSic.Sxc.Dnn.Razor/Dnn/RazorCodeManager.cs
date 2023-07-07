@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Dnn
             Log.A($"Will try to load code from '{codeFile}");
             try
             {
-                var compiled = Parent.CreateInstance(codeFile);
+                var compiled = Parent.SysHlp.CreateInstance(codeFile);
                 if (compiled != null && !(compiled is RazorComponentCode))
                 {
                     throw new Exception(

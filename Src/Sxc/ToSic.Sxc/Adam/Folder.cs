@@ -17,12 +17,13 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IDynamicMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
-        private IDynamicMetadata _metadata;
+        public IMetadata Metadata => _metadata ?? (_metadata = AdamManager.MetadataMaker.Get(AdamManager, CmsMetadata.FolderPrefix + SysId, Name));
+        private IMetadata _metadata;
 
         /// <inheritdoc />
         [JsonIgnore]
         public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
+
 
         /// <inheritdoc />
         public string Url { get; set; }
@@ -36,6 +37,7 @@ namespace ToSic.Sxc.Adam
             => _hasChildren ?? (_hasChildren = AdamManager.AdamFs.GetFiles(this).Any() 
                                                || AdamManager.AdamFs.GetFolders(this).Any()).Value;
         private bool? _hasChildren;
+
 
 
         /// <inheritdoc />
@@ -54,6 +56,5 @@ namespace ToSic.Sxc.Adam
             => _metadataOf ?? (_metadataOf = AdamManager.AppContext.AppState.GetMetadataOf(TargetTypes.CmsItem,
                 CmsMetadata.FolderPrefix + SysId, Name));
         private IMetadataOf _metadataOf;
-
     }
 }

@@ -58,7 +58,7 @@ namespace ToSic.Sxc.Web.PageService
                 .Select(f => f.Message)
                 .ToList();
 
-            var result = new RenderResult
+            var result = new RenderResult(null)
             {
                 Assets = assets,
                 FeaturesFromSettings = rest,

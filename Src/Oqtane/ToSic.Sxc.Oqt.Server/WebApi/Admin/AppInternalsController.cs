@@ -5,6 +5,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Admin.AppInternalsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -12,12 +13,14 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     /// Proxy Class to the AppInternalsController (Web API Controller)
     /// </summary>
 
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
-    public class AppInternalsController : OqtStatefulControllerBase<AppInternalsControllerReal>, IAppInternalsController
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+    public class AppInternalsController : OqtStatefulControllerBase, IAppInternalsController
     {
-        public AppInternalsController() : base(AppInternalsControllerReal.LogSuffix) { }
+        public AppInternalsController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
         /// <inheritdoc/>
         [HttpGet]

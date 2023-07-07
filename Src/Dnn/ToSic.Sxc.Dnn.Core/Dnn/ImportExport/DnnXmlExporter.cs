@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Dnn.ImportExport
 
         protected override void PostContextInit(IContextOfApp appContext)
         {
-            AdamManager.Init(appContext, Constants.CompatibilityLevel10);
+            AdamManager.Init(ctx: appContext, compatibility: Constants.CompatibilityLevel10, asc: null);
         }
 
         #endregion

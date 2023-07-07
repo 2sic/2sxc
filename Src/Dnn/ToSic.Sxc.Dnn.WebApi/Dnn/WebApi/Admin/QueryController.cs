@@ -7,7 +7,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.PublicApi;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Admin.Query;
+using RealController = ToSic.Sxc.WebApi.Admin.Query.QueryControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -18,9 +18,11 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
 	[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [DnnLogExceptions]
     [ValidateAntiForgeryToken]
-	public class QueryController : SxcApiControllerBase<QueryControllerReal>, IQueryController
+	public class QueryController : SxcApiControllerBase, IQueryController
     {
-        public QueryController() : base(QueryControllerReal.LogSuffix) { }
+        public QueryController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         [HttpGet] public QueryDefinitionDto Get(int appId, int? id = null) => Real.Init(appId).Get(appId, id);
 

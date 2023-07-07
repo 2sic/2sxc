@@ -10,21 +10,23 @@ using System.Web.Http;
 using ToSic.Eav.Context;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Eav.WebApi.Plumbing;
+using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal<System.Net.Http.HttpResponseMessage>;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [ValidateAntiForgeryToken]
     [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
-    public class ApiExplorerController : DnnApiControllerWithFixes<ApiExplorerControllerReal<HttpResponseMessage>>, IApiExplorerController<HttpResponseMessage>
+    public class ApiExplorerController : DnnApiControllerWithFixes, IApiExplorerController<HttpResponseMessage>
     {
-        public ApiExplorerController() : base(ApiExplorerControllerReal<HttpResponseMessage>.LogSuffix) { }
+        public ApiExplorerController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         [HttpGet]
         public HttpResponseMessage Inspect(string path)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (ResponseMakerNetFramework)GetService<ResponseMaker<HttpResponseMessage>>();
+            var responseMaker = SysHlp.GetResponseMaker();
             responseMaker.Init(this);
 
             return Real.Inspect(path, GetCompiledAssembly);
@@ -34,7 +36,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         {
             var controllerVirtualPath =
                 Path.Combine(
-                    GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, GetService<ISite>()), 
+                    SysHlp.GetService<DnnAppFolderUtilities>().GetAppFolderVirtualPath(Request, SysHlp.GetService<ISite>()), 
                     path);
 
             Log.A($"Controller Virtual Path: {controllerVirtualPath}");

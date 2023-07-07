@@ -6,7 +6,7 @@ using ToSic.Razor.Blade;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi]
-    public class ModuleService: ServiceBase, IModuleService
+    internal class ModuleService: ServiceBase, IModuleService
     {
         public ModuleService() : base(Constants.SxcLogName + ".ModSvc") { }
 

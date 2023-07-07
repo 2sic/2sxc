@@ -7,6 +7,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps.Assets;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin.AppFiles;
+using RealController = ToSic.Sxc.WebApi.Admin.AppFiles.AppFilesControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -17,13 +18,15 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Authorize(Roles = RoleNames.Admin)]
 
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class AppFilesController : OqtStatefulControllerBase<AppFilesControllerReal>, IAppFilesController
+    public class AppFilesController : OqtStatefulControllerBase, IAppFilesController
     {
-        public AppFilesController(): base(AppFilesControllerReal.LogSuffix) { }
+        public AppFilesController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
 
         [HttpGet]

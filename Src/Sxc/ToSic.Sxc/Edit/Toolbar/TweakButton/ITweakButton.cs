@@ -123,6 +123,24 @@ namespace ToSic.Sxc.Edit.Toolbar
         #region Params
 
         /// <summary>
+        /// Add form-parameters to the button - which are available in the `data.parameters` in formulas.
+        /// </summary>
+        /// <param name="value">A string such as `name=value` or an anonymous object such as `new { name = 27 }`</param>
+        /// <returns></returns>
+        /// <remarks>Added in 16.02</remarks>
+        ITweakButton FormParameters(object value);
+
+        /// <summary>
+        /// Add form-parameters to the button - which are available in the `data.parameters` in formulas.
+        /// </summary>
+        /// <param name="name">The name/key which comes before the `=`</param>
+        /// <param name="value">The value which comes after the `=`</param>
+        /// <returns></returns>
+        /// <remarks>Added in 16.02</remarks>
+        ITweakButton FormParameters(string name, object value);
+
+
+        /// <summary>
         /// Add parameters to the button - which are usually used when executing the command.
         /// </summary>
         /// <param name="value">A string such as `name=value` or an anonymous object such as `new { name = 27 }`</param>

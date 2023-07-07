@@ -1,22 +1,38 @@
 ﻿using ToSic.Eav.Serialization;
 using System.Text.Json;
+using ToSic.Eav;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    public class JsonService: IJsonService
+    internal class JsonService: ServiceBase, IJsonService
     {
-        /// <inheritdoc />
-        public T To<T>(string json) => JsonSerializer.Deserialize<T>(json, JsonOptions.SafeJsonForHtmlAttributes);
+        public JsonService(): base("Sxc.JsnSvc")
+        {
+
+        }
 
         /// <inheritdoc />
-        public object ToObject(string json) => JsonSerializer.Deserialize<object>(json, JsonOptions.SafeJsonForHtmlAttributes);
+        public T To<T>(string json) 
+            => JsonSerializer.Deserialize<T>(json, JsonOptions.SafeJsonForHtmlAttributes);
 
         /// <inheritdoc />
-        public string ToJson(object item) => JsonSerializer.Serialize(item, JsonOptions.SafeJsonForHtmlAttributes);
+        public object ToObject(string json)
+            => JsonSerializer.Deserialize<object>(json, JsonOptions.SafeJsonForHtmlAttributes);
 
         /// <inheritdoc />
-        public string ToJson(object item, int indentation) => JsonSerializer.Serialize(item, JsonOptions.SafeJsonForHtmlAttributes);
+        public ITyped ToTyped(string json, string noParamOrder = Parameters.Protector, string fallback = default) 
+            => DynamicJacket.AsDynamicJacket(json, fallback, Log);
+
+        /// <inheritdoc />
+        public string ToJson(object item)
+            => JsonSerializer.Serialize(item, JsonOptions.SafeJsonForHtmlAttributes);
+
+        /// <inheritdoc />
+        public string ToJson(object item, int indentation)
+            => JsonSerializer.Serialize(item, JsonOptions.SafeJsonForHtmlAttributes);
     }
 }

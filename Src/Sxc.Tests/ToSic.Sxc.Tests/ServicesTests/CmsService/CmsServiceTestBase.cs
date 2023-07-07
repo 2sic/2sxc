@@ -66,7 +66,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             //var imgService = Build<LazySvc<IImageService>>();
             //var valueConverter = Build<LazySvc<IValueConverter>>();
             var cmsService = GetService<ICmsService>(); // new Services.CmsService.CmsService(imgService, valueConverter);
-            return cmsService.Show(dynamicField);
+            return cmsService.Html(dynamicField);
         }
     }
 }

@@ -13,9 +13,7 @@ namespace ToSic.Sxc.Dnn.Run
 
         public static void LogToDnn(string key, string message, ILog log = null, DnnContext dnnContext = null, bool force = false)
         {
-            if(!force)
-                if (!EnableLogging(GlobalConfiguration.Configuration.Properties)) return;
-
+            if (!force || !EnableLogging(GlobalConfiguration.Configuration.Properties)) return;
 
             // note: this code has a lot of try/catch, to ensure that most of it works and that
             // it doesn't interfere with other functionality
@@ -75,12 +73,12 @@ namespace ToSic.Sxc.Dnn.Run
         {
             if (props == null) return false;
             if (!props.TryGetValue(DnnConstants.AdvancedLoggingEnabledKey, out var enabled)) return false;
-            if (!(enabled is bool)) return false;
-            if (!(bool)enabled) return false;
+            if (!(enabled is bool boolEnabled) || !boolEnabled) return false;
+//            if (!boolEnabled) return false;
 
             if (!props.TryGetValue(DnnConstants.AdvancedLoggingTillKey, out var till)) return false;
-            if (!(till is DateTime)) return false;
-            if (((DateTime)till).CompareTo(DateTime.Now) <= 0) return false;
+            if (!(till is DateTime dtmTill) || dtmTill.CompareTo(DateTime.Now) <= 0) return false;
+            // if (dtmTill.CompareTo(DateTime.Now) <= 0) return false;
             return true;
         }
 

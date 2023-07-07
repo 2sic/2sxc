@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using ToSic.Eav.Generics;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.Run;
@@ -18,16 +19,17 @@ namespace ToSic.Sxc.Dnn.WebApi.Logging
             // try to access log created so far
             try
             {
-                if (context.Request?.Properties.ContainsKey(DnnConstants.EavLogKey) ?? false)
+                LogStoreEntry logEntry = null;
+                if (context.Request?.Properties.TryGetTyped(DnnConstants.EavLogKey, out LogStoreEntry logEntryObj) ?? false)
+                    logEntry = logEntryObj;
+                if (logEntry != null) // context.Request?.Properties.ContainsKey(DnnConstants.EavLogKey) ?? false)
                 {
                     // must to ContainsKey checks, otherwise we get too many errors which is a problem while debugging
-                    var log = context.Request.Properties.ContainsKey(DnnConstants.EavLogKey)
-                        ? context.Request.Properties[DnnConstants.EavLogKey] as ILog
+                    // var log = logEntry.Log; // context.Request.Properties[DnnConstants.EavLogKey] as ILog;
+                    var dnnContext = context.Request.Properties.TryGetValue(DnnConstants.DnnContextKey, out var ctxObj) // .ContainsKey(DnnConstants.DnnContextKey) 
+                        ? ctxObj as DnnContext // context.Request.Properties[DnnConstants.DnnContextKey] as DnnContext
                         : null;
-                    var dnnContext = context.Request.Properties.ContainsKey(DnnConstants.DnnContextKey) 
-                        ? context.Request.Properties[DnnConstants.DnnContextKey] as DnnContext
-                        : null;
-                    DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", log, dnnContext, force: true);
+                    DnnLogging.LogToDnn("2sxc-Api", "Auto-Log Exception", logEntry.Log, dnnContext, force: true);
                 }
                 else
                     DnnLogging.LogToDnn("2sxc-Api",

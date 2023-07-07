@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
+using ToSic.Eav.Run;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.SexyContent.Engines;
 using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Web;
@@ -26,11 +31,19 @@ namespace ToSic.Sxc.Engines
     {
         #region Constructor / DI
 
-        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory) : base(helpers) =>
-            ConnectServices(
-                _codeRootFactory = codeRootFactory
-            );
+        private readonly LazySvc<CodeErrorHelpService> _errorHelp;
         private readonly DnnCodeRootFactory _codeRootFactory;
+        private readonly LazySvc<DnnRazorSourceAnalyzer> _sourceAnalyzer;
+
+        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
+        {
+            ConnectServices(
+                _codeRootFactory = codeRootFactory,
+                _errorHelp = errorHelp,
+                _sourceAnalyzer = sourceAnalyzer
+            );
+        }
+
 
         #endregion
 
@@ -56,6 +69,7 @@ namespace ToSic.Sxc.Engines
         [PrivateApi]
         protected override void Init()
         {
+            var l = Log.Fn();
             try
             {
                 InitWebpage();
@@ -66,70 +80,86 @@ namespace ToSic.Sxc.Engines
                 var e = new Exception("Configuration Error. Your web.config seems to be wrong in the 2sxc folder.", exc);
                 //old till 2023-05-11 " Please follow this checklist to solve the problem: http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7", exc);
                 // see https://web.archive.org/web/20131201093234/http://swisschecklist.com/en/i4k4hhqo/2Sexy-Content-Solve-configuration-error-after-upgrading-to-DotNetNuke-7
-                throw Log.Ex(e);
-            }
-        }
-
-        [PrivateApi]
-        protected HttpContextBase HttpContext 
-            => System.Web.HttpContext.Current == null ? null : new HttpContextWrapper(System.Web.HttpContext.Current);
-
-        [PrivateApi]
-        public void Render(TextWriter writer, object data)
-        {
-            var l = Log.Fn(message: "will render into TextWriter");
-            try
-            {
-                if (data != null && Webpage is ISetDynamicModel setDyn)
-                    setDyn.SetDynamicModel(data);
-            }
-            catch (Exception e)
-            {
-                l.E("Problem with setting dynamic model");
-                l.Ex(e);
-            }
-
-            try
-            {
-                var page = Webpage; // access the property once only
-                page.ExecutePageHierarchy(new WebPageContext(HttpContext, page, data), writer, page);
-            }
-            catch (Exception maybeIEntityCast)
-            {
-                l.Ex(maybeIEntityCast);
-                ErrorHelp.AddHelpIfKnownError(maybeIEntityCast);
-                throw;
+                throw l.Done(e);
             }
             l.Done();
         }
 
         [PrivateApi]
-        protected override string RenderTemplate(object data)
+        protected HttpContextBase HttpContextCurrent => 
+            _httpContext.Get(() => HttpContext.Current == null ? null : new HttpContextWrapper(HttpContext.Current));
+        private readonly GetOnce<HttpContextBase> _httpContext = new GetOnce<HttpContextBase>();
+
+        [PrivateApi]
+        private (TextWriter writer, List<Exception> exception) Render(TextWriter writer, object data)
         {
-            var l = Log.Fn<string>();
+            var l = Log.Fn<(TextWriter writer, List<Exception> exception)>(message: "will render into TextWriter");
+            var page = Webpage; // access the property once only
+            try
+            {
+                if (data != null && page is ISetDynamicModel setDyn)
+                    setDyn.SetDynamicModel(data);
+            }
+            catch (Exception e)
+            {
+                l.Ex("Problem with setting dynamic model, error will be ignored.", e);
+            }
+
+            try
+            {
+                page.ExecutePageHierarchy(new WebPageContext(HttpContextCurrent, page, data), writer, page);
+            }
+            catch (Exception maybeIEntityCast)
+            {
+                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
+            }
+            return l.Return((writer, page.SysHlp.ExceptionsOrNull));
+        }
+
+        [PrivateApi]
+        protected override (string, List<Exception>) RenderTemplate(object data)
+        {
+            var l = Log.Fn<(string, List<Exception>)>();
             var writer = new StringWriter();
-            Render(writer, data);
-            return l.ReturnAsOk(writer.ToString());
+            var result = Render(writer, data);
+            return l.ReturnAsOk((result.writer.ToString(), result.exception));
         }
 
         private object CreateWebPageInstance()
         {
             var l = Log.Fn<object>();
+            object page = null;
+            Type compiledType;
             try
             {
-                var compiledType = BuildManager.GetCompiledType(TemplatePath);
-                object objectValue = null;
-                if (compiledType != null)
-                    objectValue = RuntimeHelpers.GetObjectValue(Activator.CreateInstance(compiledType));
-                return l.ReturnAsOk(objectValue);
+                compiledType = BuildManager.GetCompiledType(TemplatePath);
             }
             catch (Exception ex)
             {
-                Log.Ex(ex);
-                ErrorHelp.AddHelpIfKnownError(ex);
-                throw;
+                // TODO: ADD MORE compile error help
+                // 1. Read file
+                // 2. Try to find base type - or warn if not found
+                // 3. ...
+                var razorType = _sourceAnalyzer.Value.TypeOfVirtualPath(TemplatePath);
+                l.A($"Razor Type: {razorType}");
+                throw l.Ex(_errorHelp.Value.AddHelpForCompileProblems(ex, razorType));
+            }
+
+            try
+            {
+                if (compiledType == null)
+                    return l.ReturnNull("type not found");
+
+                page = Activator.CreateInstance(compiledType);
+                var pageObjectValue = RuntimeHelpers.GetObjectValue(page);
+                return l.ReturnAsOk(pageObjectValue);
+            }
+            catch (Exception ex)
+            {
+                throw l.Ex(_errorHelp.Value.AddHelpIfKnownError(ex, page));
             }
         }
+
 
         private bool InitWebpage()
         {
@@ -145,23 +175,26 @@ namespace ToSic.Sxc.Engines
                 throw new InvalidOperationException($"The webpage at '{TemplatePath}' must derive from RazorComponentBase.");
             Webpage = pageToInit;
 
-            pageToInit.Context = HttpContext;
+            pageToInit.Context = HttpContextCurrent;
             pageToInit.VirtualPath = TemplatePath;
-            var compatibility = Constants.CompatibilityLevel9Old;
+            //var compatibility = Constants.CompatibilityLevel9Old;
             if (pageToInit is RazorComponent rzrPage)
             {
 #pragma warning disable CS0618
                 rzrPage.Purpose = Purpose;
 #pragma warning restore CS0618
-                compatibility = Constants.CompatibilityLevel10;
+                //compatibility = Constants.CompatibilityLevel10;
             }
 
-            if (pageToInit is ICompatibleToCode12)
-                compatibility = Constants.CompatibilityLevel12;
+            var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
+            //if (pageToInit is IDynamicCode16)
+            //    compatibility = Constants.CompatibilityLevel16;
+            //else if (pageToInit is ICompatibleToCode12)
+            //    compatibility = Constants.CompatibilityLevel12;
 
-            if(pageToInit is SexyContentWebPage oldPage)
+            if (pageToInit is SexyContentWebPage oldPage)
 #pragma warning disable 618, CS0612
-                oldPage.InstancePurpose = (InstancePurposes) Purpose;
+                oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
             InitHelpers(pageToInit, compatibility);
             return l.ReturnTrue("ok");

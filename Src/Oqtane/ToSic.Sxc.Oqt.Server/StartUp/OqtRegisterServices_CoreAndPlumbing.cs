@@ -12,6 +12,7 @@ using ToSic.Sxc.Oqt.Server.Services;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 using ToSic.Sxc.Run;
 using ToSic.Sxc.Web;
+using ToSic.Sxc.WebApi.Infrastructure;
 using OqtPageChangesSupportService = ToSic.Sxc.Oqt.Server.Services.OqtPageChangesSupportService;
 using OqtPrerenderService = ToSic.Sxc.Oqt.Server.Services.OqtPrerenderService;
 
@@ -42,7 +43,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
             services.TryAddTransient<SettingsHelper>();
 
             // Helper to get header, query string and route information from current request
-            services.TryAddScoped<RequestHelper>();
+            //services.TryAddScoped<RequestHelper>();
 
             // Manage oqtane site culture info
             services.TryAddTransient<OqtCulture>();

@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Web.Http;
 using DotNetNuke.Security;
 using DotNetNuke.Web.Api;
-using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Lib.Services;
 

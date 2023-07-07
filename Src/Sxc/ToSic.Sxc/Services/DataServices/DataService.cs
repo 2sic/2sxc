@@ -16,8 +16,8 @@ using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Services
 {
-    [PrivateApi("not yet ready / public")]
-    public partial class DataService: ServiceForDynamicCode, IDataService
+    [PrivateApi("hide implementation")]
+    internal partial class DataService: ServiceForDynamicCode, IDataService
     {
         private readonly LazySvc<IDataSourcesService> _dataSources;
         private readonly LazySvc<DataSourceCatalog> _catalog;

@@ -1,5 +1,7 @@
 ﻿using System;
+using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -7,12 +9,15 @@ namespace ToSic.Sxc.Edit.Toolbar
     {
         private IToolbarBuilder With(
             string noParamOrder = Eav.Parameters.Protector,
-            string mode = null,
-            object target = null,
-            bool? condition = null, 
-            Func<bool> conditionFunc = null,
-            bool? force = null,
-            string group = null
+            string mode = default,
+            object target = default,
+            bool? condition = default, 
+            Func<bool> conditionFunc = default,
+            bool? force = default,
+            string group = default,
+            ICanBeEntity root = default,
+            bool? autoDemoMode = default,
+            string demoMessage = default
         )
         {
             Eav.Parameters.Protect(noParamOrder, $"{nameof(mode)}, {nameof(target)}, {nameof(condition)}, {nameof(conditionFunc)}");
@@ -27,7 +32,10 @@ namespace ToSic.Sxc.Edit.Toolbar
                 condition: condition, 
                 conditionFunc: conditionFunc, 
                 force: force, 
-                group: group
+                group: group,
+                root: root,
+                autoDemoMode: autoDemoMode,
+                demoMessage: demoMessage
             );
             return clone;
         }
@@ -38,12 +46,16 @@ namespace ToSic.Sxc.Edit.Toolbar
         )
         {
             Eav.Parameters.Protect(noParamOrder, nameof(ui));
-            return AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
+            return this.AddInternal(new ToolbarRuleCustom("more", ui: PrepareUi(ui)));
         }
 
         public IToolbarBuilder For(object target) => With(target: target);
 
-        public IToolbarBuilder Target(object target) => With(target: target);
+        public IToolbarBuilder DetectDemo(
+            ICanBeEntity root,
+            string noParamOrder = Protector,
+            string message = default)
+            => With(root: root, demoMessage: message);
 
         public IToolbarBuilder Condition(bool condition) => With(condition: condition);
 
@@ -62,7 +74,7 @@ namespace ToSic.Sxc.Edit.Toolbar
             // auto-add other UI params such as the previous group
             return name.StartsWith("-")
                 // It's a remove-group rule
-                ? AddInternal($"-group={name.Substring(1)}") 
+                ? this.AddInternal($"-group={name.Substring(1)}") 
                 // It's an add group - set the current group and add the button-rule
                 : With(group: name).AddInternal($"+group={name}");
         }

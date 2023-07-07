@@ -10,6 +10,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.LookUp;
+using static ToSic.Eav.Code.Infos.CodeInfoObsolete;
 using App = ToSic.Sxc.Apps.App;
 using IApp = ToSic.Sxc.Apps.IApp;
 using ILog = ToSic.Lib.Logging.ILog;
@@ -59,7 +60,7 @@ namespace ToSic.Sxc.Dnn
         [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IBlockBuilder CmsBlock(int pageId, int modId, ILog parentLog) => parentLog.Func($"{pageId}, {modId}", () =>
         {
-            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "https://go.2sxc.org/brc-13-dnn-factory"));
             return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(pageId, modId).LoadBlock().BlockBuilder;
         });
 
@@ -81,7 +82,7 @@ namespace ToSic.Sxc.Dnn
         [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IBlockBuilder CmsBlock(IModule module, ILog parentLog = null)
         {
-            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(CmsBlock)}", "https://go.2sxc.org/brc-13-dnn-factory"));
             parentLog = parentLog ?? NewLog();
             var dnnModule = ((Module<ModuleInfo>)module)?.GetContents();
             return StaticBuild<IModuleAndBlockBuilder>(parentLog).GetProvider(dnnModule, null).LoadBlock().BlockBuilder;
@@ -95,7 +96,7 @@ namespace ToSic.Sxc.Dnn
         [Obsolete("This is obsolete in V13 but will continue to work for now, we plan to remove in v15 or 16. Use the IDynamicCodeService or the IRenderService instead.")]
         public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
         {
-            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "https://go.2sxc.org/brc-13-dnn-factory"));
             return StaticBuild<DnnDynamicCodeRoot>().InitDynCodeRoot(blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as
                 DnnDynamicCodeRoot;
         }
@@ -160,7 +161,7 @@ namespace ToSic.Sxc.Dnn
             bool showDrafts,
             ILog parentLog)
         {
-            Compatibility.Obsolete.Warning13To15($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "", "https://r.2sxc.org/brc-13-dnn-factory");
+            DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(App)}", "https://go.2sxc.org/brc-13-dnn-factory"));
             var log = new Log("Dnn.Factry", parentLog ?? NewLog());
             log.A($"Create App(z:{zoneId}, a:{appId}, tenantObj:{site != null}, showDrafts: {showDrafts}, parentLog: {parentLog != null})");
             var app = StaticBuild<App>(log);

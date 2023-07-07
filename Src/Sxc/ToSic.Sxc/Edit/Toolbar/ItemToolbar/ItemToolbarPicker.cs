@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
+using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Edit.Toolbar
 {
@@ -67,7 +68,7 @@ namespace ToSic.Sxc.Edit.Toolbar
 
             if (!(toolbar is IEnumerable<object> objEnum)) return null;
             var asArray = objEnum.ToArray();
-            return !asArray.All(o => o is string || o is IString)
+            return !asArray.All(o => o is string || o is IString || o is IRawHtmlString)
                 ? null
                 : asArray.Select(o => o.ToString()).ToList();
         }

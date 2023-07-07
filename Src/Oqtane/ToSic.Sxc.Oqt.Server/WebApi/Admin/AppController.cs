@@ -9,7 +9,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using ToSic.Sxc.WebApi.Admin;
+using RealController = ToSic.Sxc.WebApi.Admin.AppControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -19,15 +19,17 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     // we can't set this globally (only needed for imports)
 
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class AppController : OqtStatefulControllerBase<AppControllerReal<IActionResult>>, IAppController<IActionResult>
+    public class AppController : OqtStatefulControllerBase, IAppController<IActionResult>
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
 
-        public AppController(): base(AppControllerReal<IActionResult>.LogSuffix) { }
+
+        public AppController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
 
         /// <inheritdoc />
         [HttpGet]
@@ -95,7 +97,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         [Authorize(Roles = RoleNames.Host)]
         [ValidateAntiForgeryToken]
         public ImportResultDto Reset(int zoneId, int appId, bool withPortalFiles = false) 
-            => Real.Reset(zoneId, appId, BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
+            => Real.Reset(zoneId, appId, CtxHlp.BlockOptional.Context.Site.DefaultCultureCode, withPortalFiles);
 
         /// <inheritdoc />
         [HttpPost]

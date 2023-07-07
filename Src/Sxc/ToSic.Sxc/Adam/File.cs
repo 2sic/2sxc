@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using ToSic.Eav.Metadata;
-using ToSic.SexyContent.Adam;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Images;
 
@@ -12,7 +11,7 @@ namespace ToSic.Sxc.Adam
 {
     public class File<TFolderId, TFileId> : Eav.Apps.Assets.File<TFolderId, TFileId>,
 #pragma warning disable 618
-        AdamFile, 
+        ToSic.SexyContent.Adam.AdamFile, 
 #pragma warning restore 618
         IFile
     {
@@ -23,9 +22,9 @@ namespace ToSic.Sxc.Adam
 
         /// <inheritdoc />
         [JsonIgnore]
-        public IDynamicMetadata Metadata => _metadata 
-            ?? (_metadata = AdamManager.MetadataMaker.GetMetadata(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
-        private IDynamicMetadata _metadata;
+        public IMetadata Metadata => _metadata 
+            ?? (_metadata = AdamManager.MetadataMaker.Get(AdamManager, CmsMetadata.FilePrefix + SysId, FileName, AttachMdRecommendations));
+        private IMetadata _metadata;
 
         /// <summary>
         /// Attach metadata recommendations
@@ -41,6 +40,7 @@ namespace ToSic.Sxc.Adam
         /// <inheritdoc />
         [JsonIgnore]
         public bool HasMetadata => (Metadata as IHasMetadata)?.Metadata.Any() ?? false;
+
 
         #endregion
 

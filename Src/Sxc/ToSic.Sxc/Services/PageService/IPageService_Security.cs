@@ -1,4 +1,4 @@
-﻿using ToSic.Sxc.Web;
+﻿using ToSic.Razor.Markup;
 
 namespace ToSic.Sxc.Services
 {
@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Services
         /// <remarks>
         /// History: Created in 2sxc 13.10
         /// </remarks>
-        IHybridHtmlString AssetAttributes(
+        IRawHtmlString AssetAttributes(
             string noParamOrder = Eav.Parameters.Protector,
             bool optimize = true,
             int priority = 0,

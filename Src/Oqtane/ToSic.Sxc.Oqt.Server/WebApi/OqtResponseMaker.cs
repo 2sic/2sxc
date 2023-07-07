@@ -9,11 +9,11 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 {
     public class OqtResponseMaker: ResponseMaker<IActionResult>
     {
-        public void Init(Controller apiController) => _apiController = apiController;
+        public void Init(ControllerBase apiController) => _apiController = apiController;
 
-        private Controller _apiController;
+        private ControllerBase _apiController;
 
-        public Controller ApiController => _apiController ??
+        public ControllerBase ApiController => _apiController ??
                                            throw new(
                                                $"Accessing the {nameof(ApiController)} in the {nameof(OqtResponseMaker)} requires it to be Init first.");
 
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         public override IActionResult Error(int statusCode, Exception exception)
             => ApiController.Problem(exception.Message, null, statusCode);
 
-        public override IActionResult Json(object json) => ApiController.Json(json);
+        public override IActionResult Json(object json) => new JsonResult(json); // ApiController.Json(json);
 
         public override IActionResult Ok() => ApiController.Ok();
 

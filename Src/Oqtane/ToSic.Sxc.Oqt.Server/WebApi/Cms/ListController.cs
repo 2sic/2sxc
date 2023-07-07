@@ -5,21 +5,24 @@ using System;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Cms;
+using RealController = ToSic.Sxc.WebApi.Cms.ListControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]
     [Authorize(Roles = RoleNames.Admin)]
-    public class ListController : OqtStatefulControllerBase<ListControllerReal>, IListController
+    public class ListController : OqtStatefulControllerBase, IListController
     {
-        public ListController(): base(ListControllerReal.LogSuffix) { }
+        public ListController(): base(RealController.LogSuffix) { }
+
+        private RealController Real => GetService<RealController>();
+
 
         /// <inheritdoc />
         /// <summary>

@@ -5,6 +5,7 @@ using ToSic.Sxc.Adam;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Cms.Publishing;
 using ToSic.Sxc.Code;
+using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.DataSources;
 using ToSic.Sxc.Polymorphism;
@@ -40,7 +41,7 @@ namespace ToSic.Sxc.Startup
             services.AddTransient<IPagePublishingGetSettings, PagePublishingGetSettingsForbidden>();
 
             // Code / Dynamic Code
-            services.TryAddTransient<DynamicCodeRoot, BasicDynamicCodeRoot>();
+            services.TryAddTransient<DynamicCodeRoot, DynamicCodeRootUnknown>();
             services.TryAddTransient<IModule, ModuleUnknown>();
             
             // 11.08 - fallback in case not added
@@ -83,6 +84,7 @@ namespace ToSic.Sxc.Startup
 
             // v16
             services.TryAddScoped<IJsApiService, JsApiServiceUnknown>();
+            services.TryAddTransient<CodeErrorHelpService>();
 
             return services;
         }

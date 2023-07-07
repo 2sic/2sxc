@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Code
         protected override (Type Type, string ErrorMessage) GetCsHtmlType(string relativePath)
         {
             var compiledType = BuildManager.GetCompiledType(relativePath);
-            var errMsg = (compiledType == null)
+            var errMsg = compiledType == null
                 ? $"Couldn't create instance of {relativePath}. Compiled type == null" : null;
             return (compiledType, errMsg);
         }

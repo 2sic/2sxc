@@ -8,7 +8,7 @@ using ToSic.Sxc.Data;
 namespace ToSic.Sxc.Services.CmsService
 {
     [PrivateApi("WIP + Hide Implementation")]
-    public class CmsService: ServiceForDynamicCode, ICmsService
+    internal class CmsService: ServiceForDynamicCode, ICmsService
     {
         private readonly Generator<CmsServiceStringWysiwyg> _stringWysiwyg;
 
@@ -21,7 +21,7 @@ namespace ToSic.Sxc.Services.CmsService
             );
         }
 
-        public IHtmlTag Show(
+        public IHtmlTag Html(
             object thing,
             string noParamOrder = Eav.Parameters.Protector,
             object container = default,
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Services.CmsService
             bool? toolbar = default
         )
         {
-            var field = thing as IDynamicField;
+            var field = thing as IField;
             var l = Log.Fn<IHtmlTag>($"Field: {field?.Name}");
             // Initialize the container helper, as we'll use it a few times
             var cntHelper = new CmsServiceContainerHelper(_DynCodeRoot, field, container, classes, toolbar, Log);
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Services.CmsService
                     var fieldAdam = _DynCodeRoot.AsAdam(field.Parent.Entity, field.Name);
                     var htmlResult = _stringWysiwyg.New()
                         .Init(field, contentType, attribute, fieldAdam, debug, imageSettings)
-                        .Process();
+                        .HtmlForStringAndWysiwyg();
                     return htmlResult.IsProcessed
                         ? l.Return(cntHelper.Wrap(htmlResult, defaultToolbar: true), "wysiwyg, default w/toolbar")
                         : l.Return(cntHelper.Wrap(value, defaultToolbar: true), "wysiwyg, not converted, w/toolbar");

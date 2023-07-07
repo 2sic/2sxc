@@ -1,28 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Sys.InsightsControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + "/sys/[controller]/")]
-    [Route(WebApiConstants.ApiRootPathOrLang + "/sys/[controller]/")]
-    [Route(WebApiConstants.ApiRootPathNdLang + "/sys/[controller]/")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + "/sys/[controller]/")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + "/sys/[controller]/")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + "/sys/[controller]/")]
     
     [ApiController]
-    public class InsightsController : OqtControllerBase<InsightsControllerReal>
+    public class InsightsController : OqtControllerBase
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        public InsightsController(): base(false, RealController.LogSuffix) { }
 
-        public InsightsController(): base(InsightsControllerReal.LogSuffix) { }
+        private RealController Real => GetService<RealController>();
+
 
         private ContentResult Wrap(string contents) => base.Content(contents, "text/html");
 
         [HttpGet("{view}")]
         public ContentResult Details([FromRoute] string view, 
             [FromQuery] int? appId = null, [FromQuery] string key = null, [FromQuery] int? position = null,
-            [FromQuery] string type = null, [FromQuery] bool? toggle = null, string nameId = null)
-            => Wrap(Real.Details(view, appId, key, position, type, toggle, nameId));
+            [FromQuery] string type = null, [FromQuery] bool? toggle = null, string nameId = null, string filter = default)
+            => Wrap(Real.Details(view, appId, key, position, type, toggle, nameId, filter));
 
         #region Logging aspects
 

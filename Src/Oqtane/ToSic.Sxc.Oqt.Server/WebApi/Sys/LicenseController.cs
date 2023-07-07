@@ -2,23 +2,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
 using System.Collections.Generic;
-using ToSic.Eav.WebApi.Adam;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys.Licenses;
 using ToSic.Sxc.Oqt.Server.Controllers;
+using RealController = ToSic.Eav.WebApi.Sys.Licenses.LicenseControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
-    [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
-    [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
-    public class LicenseController : OqtStatefulControllerBase<LicenseControllerReal>, ILicenseController
+    public class LicenseController : OqtStatefulControllerBase, ILicenseController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
-
         public LicenseController(): base("License") { }
+
+        private RealController Real => GetService<RealController>();
+
 
 
         /// <summary>

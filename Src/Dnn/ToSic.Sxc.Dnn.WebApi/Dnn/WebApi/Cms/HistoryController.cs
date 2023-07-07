@@ -6,15 +6,17 @@ using ToSic.Eav.Persistence.Versions;
 using ToSic.Eav.WebApi.Cms;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Sxc.WebApi;
-using ToSic.Sxc.WebApi.Cms;
+using RealController = ToSic.Sxc.WebApi.Cms.HistoryControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Cms
 {
     [SupportedModules(DnnSupportedModuleNames)]
     [ValidateAntiForgeryToken]
-    public class HistoryController : SxcApiControllerBase<HistoryControllerReal>, IHistoryController
+    public class HistoryController : SxcApiControllerBase, IHistoryController
     {
-        public HistoryController() : base(HistoryControllerReal.LogSuffix) { }
+        public HistoryController() : base(RealController.LogSuffix) { }
+
+        private RealController Real => SysHlp.GetService<RealController>();
 
         /// <inheritdoc />
         [HttpPost]

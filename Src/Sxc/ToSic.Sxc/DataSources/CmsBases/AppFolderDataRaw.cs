@@ -23,12 +23,14 @@ namespace ToSic.Sxc.DataSources
 
         public static DataFactoryOptions Options = new DataFactoryOptions(typeName: TypeName, titleField: nameof(Name));
 
+        [PrivateApi]
         public override IDictionary<string, object> Attributes(RawConvertOptions options) => new Dictionary<string, object>(base.Attributes(options))
         {
             { "Folders", new RawRelationship(key: $"FolderIn:{FullName}") },
             { "Files", new RawRelationship(key: $"FileIn:{FullName}") },
         };
 
+        [PrivateApi]
         public override IEnumerable<object> RelationshipKeys(RawConvertOptions options) => new List<object>
         {
             // For Relationships looking for this folder

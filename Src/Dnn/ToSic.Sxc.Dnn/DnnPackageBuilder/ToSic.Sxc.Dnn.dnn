@@ -1,6 +1,6 @@
 ﻿<dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="2SexyContent" type="Module" version="16.01.00">
+    <package name="2SexyContent" type="Module" version="16.02.00">
       <friendlyName> Content</friendlyName>
       <description>2sxc is a DNN Extension to create attractive and designed content. It solves the common problem, allowing the web designer to create designed templates for different content elements, so that the user must only fill in fields and receive a perfectly designed and animated output.</description>
       <iconFile>icon.png</iconFile>
@@ -64,7 +64,7 @@
             <script type="UnInstall">
               <path>SqlDataProvider</path>
               <name>Uninstall.SqlDataProvider</name>
-              <version>16.01.00</version>
+              <version>16.02.00</version>
             </script>
           </scripts>
         </component>
@@ -115,7 +115,7 @@
               <businessControllerClass>ToSic.SexyContent.DnnBusinessController</businessControllerClass>
               <desktopModuleID>[DESKTOPMODULEID]</desktopModuleID>
               <!-- This must contain all versions which have upgrade-code. By convention, we also add the main entry versions, even if no upgrade code exists for them -->
-              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.01.00</upgradeVersionsList>
+              <upgradeVersionsList>01.00.00,08.11.00,08.12.00,09.00.00,10.00.00,11.00.00,12.00.00,13.00.00,13.01.00,13.04.00,14.00.00,15.00.00,15.02.00,16.00.00,16.02.00</upgradeVersionsList>
             </attributes>
           </eventMessage>
         </component>
@@ -216,7 +216,7 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>Microsoft.Bcl.AsyncInterfaces.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -307,7 +307,7 @@
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
               <name>System.Collections.Immutable.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0.0</version>
             </assembly>
             <!-- Microsoft.EntityFrameworkCore transitive dependency -->
             <assembly>
@@ -332,10 +332,10 @@
             <!-- Microsoft.Extensions.Primitives transitive dependency -->
             <!-- Microsoft.Extensions.Logging.Abstractions transitive dependency -->
             <!-- System.Text.Encodings.Web transitive dependency -->
-            <!-- System.Text.Encodings.Web transitive dependency -->
+            <!-- ToSic.Imageflow.Dnn -->
             <assembly>
               <name>System.Memory.dll</name>
-              <version>4.0.1.1</version>
+              <version>4.0.1.2</version>
             </assembly>
             <!-- System.Memory transitive dependency -->
             <!-- System.Text.Json transitive dependency -->
@@ -355,11 +355,11 @@
             <!-- System.Text.Json transitive dependency -->
             <assembly>
               <name>System.Text.Encodings.Web.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0.0</version>
             </assembly>
             <assembly>
               <name>System.Text.Json.dll</name>
-              <version>6.0.0.0</version>
+              <version>7.0.0</version>
             </assembly>
             <!-- Microsoft.Bcl.AsyncInterfaces transitive dependency -->
             <!-- System.Text.Json transitive dependency -->
@@ -614,7 +614,7 @@
       </components>
     </package>
 
-    <package name="2SexyContent-App" type="Module" version="16.01.00">
+    <package name="2SexyContent-App" type="Module" version="16.02.00">
       <friendlyName> App</friendlyName>
       <description>2sxc App is an extension that allows to install and use a 2sxc app.</description>
       <iconFile>icon-app.png</iconFile>
@@ -728,8 +728,9 @@
             version="01.00.07.01" - ToSic.Imageflow.Dnn v01.00.07 is OK
             version="01.10.00.01" - ToSic.Imageflow.Dnn v01.01.00 NOT OK
             version="01.10.01.01" - rollback to ToSic.Imageflow.Dnn v01.00.07
+            version="01.10.02.01" - ToSic.Imageflow.Dnn v01.02.00 is OK
     -->
-    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.01.01">
+    <package name="ToSic.Imageflow.Dnn" type="Library" version="01.10.02.01">
       <friendlyName>Imageflow</friendlyName>
 
       <description>
@@ -762,6 +763,11 @@
             <basePath>bin</basePath>
             <assembly>
               <name>ToSic.Imageflow.Dnn.dll</name>
+            </assembly>
+            <!-- Imageflow.NET transitive dependency -->
+            <assembly>
+              <name>Newtonsoft.Json.dll</name>
+              <version>13.0.0.0</version>
             </assembly>
           </assemblies>
 
@@ -1768,7 +1774,7 @@
                       <codeBase version="4.0.1.1" href="bin\Imageflow\System.Memory.dll" />
                     </dependentAssembly>
                   </node>-->
-                  <node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
+                  <!--<node path="/configuration/runtime/ab:assemblyBinding/ab:dependentAssembly[ab:assemblyIdentity/@name='System.Memory'][ab:bindingRedirect]/ab:codeBase[@href='bin\Imageflow\System.Memory.dll']"
                         action="remove"
                         collision="overwrite"
                         nameSpace="urn:schemas-microsoft-com:asm.v1"
@@ -1792,7 +1798,7 @@
                         nameSpacePrefix="ab">
                     <codeBase version="4.0.1.1" href="bin\Imageflow\System.Memory.dll" xmlns="urn:schemas-microsoft-com:asm.v1"/>
                     <bindingRedirect oldVersion="0.0.0.0-4.0.1.1" newVersion="4.0.1.1" xmlns="urn:schemas-microsoft-com:asm.v1"/>
-                  </node>
+                  </node>-->
 
                   <!-- 11 - Imageflow add codeBase and update bindingRedirects for bin\Imageflow\System.Numerics.Vectors.dll, version 4.1.3.0 -->
                   <!--<node path="/configuration/runtime/ab:assemblyBinding"
@@ -1988,7 +1994,7 @@
       shows when upgrading 2sxc: https://github.com/2sic/2sxc/issues/1555
       -->
 
-	  <package name="ToSic.RazorBlade" type="Library" version="04.02.00.01">
+	  <package name="ToSic.RazorBlade" type="Library" version="04.04.00.01">
 		  <friendlyName>2sic RazorBlade</friendlyName>
 		  <description>2sic RazorBlade</description>
 		  <iconFile>icon.png</iconFile>

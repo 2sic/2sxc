@@ -34,6 +34,7 @@ namespace ToSic.Sxc.Data
         /// Use the [key] accessor to get the values as <see cref="DynamicJacket"/> or <see cref="DynamicJacketList"/>
         /// </summary>
         /// <returns>the string names of the keys</returns>
+        [InternalApi_DoNotUse_MayChangeWithoutNotice]
         public override IEnumerator<object> GetEnumerator() => UnwrappedContents.Select(p => p.Key).GetEnumerator();
 
 

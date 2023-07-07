@@ -10,7 +10,7 @@ namespace ToSic.SexyContent.Interfaces
 
     public interface IApp: Eav.Apps.IApp
     {
-         dynamic Configuration { get;  }
+        dynamic Configuration { get;  }
 
         dynamic Settings { get;  }
 

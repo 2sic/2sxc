@@ -6,7 +6,7 @@ using ToSic.Sxc.Context.Raw;
 
 namespace ToSic.Sxc.Services
 {
-    public class UsersServiceUnknown : UsersServiceBase, IIsUnknown
+    internal class UsersServiceUnknown : UsersServiceBase, IIsUnknown
     {
         public UsersServiceUnknown(WarnUseOfUnknown<UsersServiceUnknown> _, LazySvc<IContextOfSite> context) : base(context)
         { }

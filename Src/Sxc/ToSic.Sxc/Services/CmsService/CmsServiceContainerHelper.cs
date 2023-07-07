@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Data;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
@@ -7,6 +8,7 @@ using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.Decorators;
 using ToSic.Sxc.Edit.Toolbar;
 
 namespace ToSic.Sxc.Services.CmsService
@@ -17,10 +19,10 @@ namespace ToSic.Sxc.Services.CmsService
         private readonly object _container;
         private string Classes { get; set; }
         private readonly bool? _toolbar;
-        private readonly IDynamicField _field;
+        private readonly IField _field;
 
         public CmsServiceContainerHelper(IDynamicCodeRoot dynCodeRoot,
-            IDynamicField field,
+            IField field,
             object container,
             string classes,
             bool? toolbar,
@@ -53,22 +55,29 @@ namespace ToSic.Sxc.Services.CmsService
             tag = tag.Wrap(contents);
             // If tag is not a real tag (no name) then it also can't have classes or toolbars; just finish and return
             if (!tag.TagName.HasValue())
-                return l.Return(tag, "no tag name, stop here");
+                return l.Return(tag, "no wrapper tag, stop here");
 
             // Add classes if we can
             if (Classes.HasValue()) tag = tag.Class(Classes);
-            var toolbar = _toolbar ?? defaultToolbar;
-            if (toolbar && _field != null)
-            {
-                l.A("Will add toolbar");
-                tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
-                    .Icon(EditFieldIcon)
-                    .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, _field.Name)
-                ));
-                return l.Return(tag, "added toolbar");
-            }
 
-            return l.Return(tag, "no toolbar added");
+            // Add Toolbar if relevant
+            if (_field.Parent.IsDemoItem)
+                return l.Return(tag, "demo-item, so no toolbar");
+
+            if (_field.Parent.Entity.DisableInlineEdit())
+                return l.Return(tag, "decorator no-edit");
+
+            var toolbar = _toolbar ?? defaultToolbar;
+            if (!toolbar || _field == null)
+                return l.Return(tag, "no toolbar added");
+
+            l.A("Will add toolbar");
+            tag = tag.Attr(ServiceKit.Toolbar.Empty().Edit(_field.Parent, tweak: b => b
+                .Icon(EditFieldIcon)
+                .Parameters(ToolbarBuilder.BetaEditUiFieldsParamName, _field.Name)
+            ));
+            return l.Return(tag, "added toolbar");
+
         }
 
         private const string EditFieldIcon =
@@ -87,7 +96,7 @@ namespace ToSic.Sxc.Services.CmsService
                 case string tagName when !tagName.Contains(" "):
                     return l.Return(Tag.Custom(tagName), "was a tag name, created tag");
                 case string tagName:
-                    throw l.Ex(new ArgumentException($"Must be a tag name like 'div' or a RazorBlade Html Tag object but got '{tagName}'",
+                    throw l.Done(new ArgumentException($"Must be a tag name like 'div' or a RazorBlade Html Tag object but got '{tagName}'",
                         nameof(container)));
                 default:
                     // Nothing to do, just return an empty tag which can be filled...

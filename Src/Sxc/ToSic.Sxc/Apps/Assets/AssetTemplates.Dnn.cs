@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Apps.Assets
         {
             Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data etc. - you can delete this comment *@
-@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
+@using ToSic.Sxc.Services; @* Make it easier to use https://go.2sxc.org/services *@
 
 <div @Edit.TagToolbar(Content)>
     Put your content here
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Apps.Assets
                 Body = @"@inherits Custom.Dnn.Razor12
 @* This inherits statement gets you features like App, CmsContext, Data as well as Dnn etc. - you can delete this comment *@
 @using ToSic.Razor.Blade;
-@using ToSic.Sxc.Services; @* Make it easier to use https://r.2sxc.org/services *@
+@using ToSic.Sxc.Services; @* Make it easier to use https://go.2sxc.org/services *@
 
 @functions {
   public string Hello() {
@@ -54,7 +54,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Search;
-using ToSic.Sxc.Services; // Make it easier to use https://r.2sxc.org/services
+using ToSic.Sxc.Services; // Make it easier to use https://go.2sxc.org/services
 
 /*
 Custom code which views use to customize how dnn search treats data of that view.
@@ -63,7 +63,7 @@ It's meant for customizing the internal indexer of the platform, _not_ for Googl
 To use it, create a custom code (.cs) file which implements ICustomizeSearch interface.
 You can also inherit from a DynamicCode base class (like Code12) if you need more functionality.
 
-For more guidance on search customizations, see https://r.2sxc.org/customize-search
+For more guidance on search customizations, see https://go.2sxc.org/customize-search
 */
 public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12, ICustomizeSearch
 {
@@ -99,7 +99,7 @@ public class " + CsCodeTemplateName + @" : Custom.Hybrid.Code12, ICustomizeSearc
 }
 ",
                 Description =
-                    "custom search c# code to customize how dnn search treats data of view, see https://r.2sxc.org/customize-search",
+                    "custom search c# code to customize how dnn search treats data of view, see https://go.2sxc.org/customize-search",
                 PlatformTypes = PlatformType.Dnn,
             };
 

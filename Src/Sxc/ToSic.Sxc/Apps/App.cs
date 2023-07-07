@@ -1,18 +1,15 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Apps.Decorators;
 using ToSic.Eav.Apps.Paths;
-using ToSic.Eav.Context;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.PiggyBack;
-using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Sxc.Data;
+using ToSic.Sxc.Data.AsConverter;
 using ToSic.Sxc.LookUp;
+using CodeInfoService = ToSic.Eav.Code.InfoSystem.CodeInfoService;
 using EavApp = ToSic.Eav.Apps.App;
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
 
@@ -26,91 +23,37 @@ namespace ToSic.Sxc.Apps
     public partial class App : EavApp, IApp
     {
         #region DI Constructors
+
         [PrivateApi]
         public App(MyServices services, 
             LazySvc<GlobalPaths> globalPaths, 
-            LazySvc<AppPaths> appPathsLazy, 
-            LazySvc<DynamicEntity.MyServices> dynamicEntityDependenciesLazy,
+            LazySvc<AppPaths> appPathsLazy,
             Generator<IAppStates> appStates,
-            Generator<AppConfigDelegate> appConfigDelegate) 
+            Generator<AppConfigDelegate> appConfigDelegate, 
+            LazySvc<AsConverterService> asConverter,
+            LazySvc<CodeInfoService> codeChanges)
             : base(services, "App.SxcApp")
         {
-            this.ConnectServices(
+            ConnectServices(
                 _globalPaths = globalPaths,
                 _appPathsLazy = appPathsLazy,
-                _dynamicEntityDependenciesLazy = dynamicEntityDependenciesLazy,
                 _appStates = appStates,
-                _appConfigDelegate = appConfigDelegate
+                _appConfigDelegate = appConfigDelegate,
+                _asConverter = asConverter.SetInit(asc => asc.SetFallbacks(Site)),
+                _codeChanges = codeChanges
             );
         }
 
         private readonly LazySvc<GlobalPaths> _globalPaths;
         private readonly LazySvc<AppPaths> _appPathsLazy;
-        private readonly LazySvc<DynamicEntity.MyServices> _dynamicEntityDependenciesLazy;
         private readonly Generator<IAppStates> _appStates;
         private readonly Generator<AppConfigDelegate> _appConfigDelegate;
+        private readonly LazySvc<CodeInfoService> _codeChanges;
+        private readonly LazySvc<AsConverterService> _asConverter;
+
 
         private AppPaths AppPaths => _appPaths.Get(() => _appPathsLazy.Value.Init(Site, AppState));
         private readonly GetOnce<AppPaths> _appPaths = new GetOnce<AppPaths>();
-
-        [PrivateApi]
-        public App PreInit(ISite site)
-        {
-            Site = site;
-            return this;
-        }
-
-        /// <summary>
-        /// Main constructor which auto-configures the app-data
-        /// </summary>
-        [PrivateApi]
-        public new App Init(IAppIdentity appIdentity, Func<EavApp, IAppDataConfiguration> buildConfig)
-        {
-            base.Init(appIdentity, buildConfig);
-            if (buildConfig != null) return this;
-            Log.A("App only initialized for light use - .Data shouldn't be used");
-            return this;
-        }
-
-        #endregion
-
-
-        #region Dynamic Properties: Configuration, Settings, Resources
-        /// <inheritdoc />
-        public AppConfiguration Configuration
-            // Create config object. Note that AppConfiguration could be null, then it would use default values
-            => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
-        private readonly GetOnce<AppConfiguration> _appConfig = new GetOnce<AppConfiguration>();
-
-#if NETFRAMEWORK
-        [PrivateApi("obsolete, use the typed accessor instead, only included for old-compatibility")]
-        [Obsolete("use the new, typed accessor instead")]
-        dynamic SexyContent.Interfaces.IApp.Configuration
-        {
-            get
-            {
-                var c = Configuration;
-                return c?.Entity != null ? MakeDynProperty(c.Entity) : null;
-            }
-        }
-#endif
-        private dynamic MakeDynProperty(IEntity contents) => new DynamicEntity(contents, DynamicEntityServices);
-
-        // TODO: THIS CAN PROBABLY BE IMPROVED
-        // TO GET THE DynamicEntityDependencies from the DynamicCodeRoot which creates the App...? 
-        // ATM it's a bit limited, for example it probably cannot resolve links
-        private DynamicEntity.MyServices DynamicEntityServices
-            => _dynamicEntityDependencies.Get(() =>
-                _dynamicEntityDependenciesLazy.Value.Init(null, Site.SafeLanguagePriorityCodes(), Log));
-        private readonly GetOnce<DynamicEntity.MyServices> _dynamicEntityDependencies = new GetOnce<DynamicEntity.MyServices>();
-
-        /// <inheritdoc />
-        public dynamic Settings => AppSettings != null ? _settings.Get(() => MakeDynProperty(AppSettings)) : null;
-        private readonly GetOnce<dynamic> _settings = new GetOnce<dynamic>();
-
-        /// <inheritdoc />
-        public dynamic Resources => AppResources != null ? _res.Get(() => MakeDynProperty(AppResources)) : null;
-        private readonly GetOnce<dynamic> _res = new GetOnce<dynamic>();
 
         #endregion
 

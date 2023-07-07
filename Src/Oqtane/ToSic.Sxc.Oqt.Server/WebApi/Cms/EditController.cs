@@ -12,24 +12,24 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Formats;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Cms;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
+using RealController = ToSic.Sxc.WebApi.Cms.EditControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
 
     [ApiController]
-    public class EditController: OqtStatefulControllerBase<EditControllerReal>, IEditController
+    public class EditController: OqtStatefulControllerBase, IEditController
     {
-        // IMPORTANT: Uses the Proxy/Real concept - see https://r.2sxc.org/proxy-controllers
+        public EditController() : base(RealController.LogSuffix) { }
 
-        public EditController() : base(EditControllerReal.LogSuffix) { }
+        private RealController Real => GetService<RealController>();
 
 
         [HttpPost]

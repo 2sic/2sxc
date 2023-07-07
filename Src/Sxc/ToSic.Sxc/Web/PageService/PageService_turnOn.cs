@@ -9,9 +9,15 @@ namespace ToSic.Sxc.Web.PageService
         public string TurnOn(object runOrSpecs,
             string noParamOrder = Eav.Parameters.Protector,
             object require = default,
-            object data = default)
+            object data = default,
+            bool condition = true)
         {
             var l = Log.Fn<string>($"{runOrSpecs}: {runOrSpecs}; {require}; {data}");
+
+            // Check condition - default is true - so if it's false, this overload was called
+            if (!condition)
+                return l.ReturnNull("condition false");
+
             // first activate the page feature
             Activate(BuiltInFeatures.TurnOn.NameId);
 
@@ -20,7 +26,7 @@ namespace ToSic.Sxc.Web.PageService
             _moduleService.Value.AddToMore(tag);
 
             // Then return empty string
-            return l.ReturnAsOk("");
+            return l.ReturnAsOk(null);
         }
     }
 }
