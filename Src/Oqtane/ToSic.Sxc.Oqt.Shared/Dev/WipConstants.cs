@@ -6,7 +6,6 @@
     public class WipConstants
     {
         // ADAM
-        public const int MaxUploadSize = 25000;
         public const int ParentFolderNotFound = 0;
         public static void AdamNotImplementedYet() { }
         
