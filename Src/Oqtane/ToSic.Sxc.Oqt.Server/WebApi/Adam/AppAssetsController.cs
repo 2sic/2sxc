@@ -4,9 +4,9 @@ using ToSic.Sxc.Oqt.Server.Adam;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Adam
 {
     // Release routes
-    [Route(WebApiConstants.AppRootNoLanguage + "/{appName}/adam")]
-    [Route(WebApiConstants.AppRootPathOrLang + "/{appName}/adam")]
-    [Route(WebApiConstants.AppRootPathNdLang + "/{appName}/adam")]
+    [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appName}/adam")]
+    [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appName}/adam")]
+    [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appName}/adam")]
 
     // Beta routes
     //[Route(WebApiConstants.WebApiStateRoot + "/adam/{appName}")]

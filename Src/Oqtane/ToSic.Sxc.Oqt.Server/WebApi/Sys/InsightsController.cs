@@ -6,9 +6,9 @@ using RealController = ToSic.Eav.WebApi.Sys.InsightsControllerReal;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + "/sys/[controller]/")]
-    [Route(WebApiConstants.ApiRootPathOrLang + "/sys/[controller]/")]
-    [Route(WebApiConstants.ApiRootPathNdLang + "/sys/[controller]/")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + "/sys/[controller]/")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + "/sys/[controller]/")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + "/sys/[controller]/")]
     
     [ApiController]
     public class InsightsController : OqtControllerBase

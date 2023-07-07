@@ -11,12 +11,12 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     [ApiController]
 
     // Release routes
-    [Route(WebApiConstants.AppRootNoLanguage+ "/{appPath}/content")]
-    [Route(WebApiConstants.AppRootPathOrLang+ "/{appPath}/content")]
-    [Route(WebApiConstants.AppRootPathNdLang + "/{appPath}/content")]
-    [Route(WebApiConstants.AppRootNoLanguage + "/{appPath}/data")] // new, v13
-    [Route(WebApiConstants.AppRootPathOrLang + "/{appPath}/data")] // new, v13
-    [Route(WebApiConstants.AppRootPathNdLang + "/{appPath}/data")] // new, v13
+    [Route(OqtWebApiConstants.AppRootNoLanguage+ "/{appPath}/content")]
+    [Route(OqtWebApiConstants.AppRootPathOrLang+ "/{appPath}/content")]
+    [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appPath}/content")]
+    [Route(OqtWebApiConstants.AppRootNoLanguage + "/{appPath}/data")] // new, v13
+    [Route(OqtWebApiConstants.AppRootPathOrLang + "/{appPath}/data")] // new, v13
+    [Route(OqtWebApiConstants.AppRootPathNdLang + "/{appPath}/data")] // new, v13
 
     public class AppDataController: OqtStatefulControllerBase, IAppDataController
     {

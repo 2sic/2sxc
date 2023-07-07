@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using static ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
+using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {

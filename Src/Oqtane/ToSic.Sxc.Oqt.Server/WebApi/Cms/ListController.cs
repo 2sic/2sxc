@@ -10,9 +10,9 @@ using RealController = ToSic.Sxc.WebApi.Cms.ListControllerReal;
 namespace ToSic.Sxc.Oqt.Server.WebApi.Cms
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
-    [Route(WebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Cms}")]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Cms}")]
 
     [ValidateAntiForgeryToken]
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Edit)]

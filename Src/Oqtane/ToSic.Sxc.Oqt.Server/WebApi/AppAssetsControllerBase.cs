@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
             var l = Log.Fn<IActionResult>($"{nameof(appName)}: {appName}; {nameof(filePath)}: {filePath}");
             try
             {
-                if (appName == WebApiConstants.Auto) appName = Deps.AppFolder.Value.GetAppFolder();
+                if (appName == OqtWebApiConstants.Auto) appName = Deps.AppFolder.Value.GetAppFolder();
 
                 var alias = Deps.SiteState.Alias;
                 var fullFilePath = Deps.FileHelper.Value.GetFilePath(Deps.HostingEnvironment.ContentRootPath, alias, Route, appName, filePath);

@@ -5,7 +5,7 @@ using ToSic.Sxc.Web.EditUi;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi
 {
-    public static class WebApiConstants
+    public static class OqtWebApiConstants
     {
         public const string Auto = "auto";
 

@@ -11,9 +11,9 @@ using RealController = ToSic.Sxc.WebApi.App.AppQueryControllerReal;
 namespace ToSic.Sxc.Oqt.Server.WebApi.App
 {
     // Release routes
-    [Route(WebApiConstants.AppRootNoLanguage)]
-    [Route(WebApiConstants.AppRootPathOrLang)]
-    [Route(WebApiConstants.AppRootPathNdLang)]
+    [Route(OqtWebApiConstants.AppRootNoLanguage)]
+    [Route(OqtWebApiConstants.AppRootPathOrLang)]
+    [Route(OqtWebApiConstants.AppRootPathNdLang)]
 
     [AllowAnonymous] // All functions will check security internally, so assume no requirements
     public class AppQueryController : OqtStatefulControllerBase, IAppQueryController

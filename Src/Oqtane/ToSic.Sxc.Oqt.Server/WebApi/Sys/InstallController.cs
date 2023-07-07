@@ -11,9 +11,9 @@ using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<Microsoft.AspN
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {
     // Release routes
-    [Route(WebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
-    [Route(WebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
-    [Route(WebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootWithNoLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootPathOrLang + "/" + AreaRoutes.Sys)]
+    [Route(OqtWebApiConstants.ApiRootPathNdLang + "/" + AreaRoutes.Sys)]
 
     public class InstallController: OqtStatefulControllerBase, IInstallController<IActionResult>
     {

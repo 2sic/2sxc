@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
                     throw new HttpExceptionAbstraction(HttpStatusCode.NotFound,
                         $"Error: missing required 'appFolder' route value.", "Not Found");
                 var appFolder = (string) values["appFolder"];
-                if (appFolder == WebApiConstants.Auto)
+                if (appFolder == OqtWebApiConstants.Auto)
                 {
                     // before trying to get the AppFolder, we must init the ICmsContext as this will
                     // this transient dependencies are not provided as usual constructor provided lazy/generator dependencies (from root service provider)

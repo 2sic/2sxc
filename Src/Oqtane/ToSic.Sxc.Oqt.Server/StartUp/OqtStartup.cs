@@ -22,7 +22,7 @@ using ToSic.Sxc.Razor;
 using ToSic.Sxc.Startup;
 using ToSic.Sxc.WebApi;
 using static ToSic.Sxc.Oqt.Server.StartUp.OqtStartupHelper;
-using static ToSic.Sxc.Oqt.Server.WebApi.WebApiConstants;
+using static ToSic.Sxc.Oqt.Server.WebApi.OqtWebApiConstants;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {

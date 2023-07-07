@@ -8,9 +8,9 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.App
     // TODO: 2DM please check permissions
 
     // Release routes
-    [Route(WebApiConstants.SharedRootNoLanguage + "/{appName}/")]
-    [Route(WebApiConstants.SharedRootPathOrLang + "/{appName}/")]
-    [Route(WebApiConstants.SharedRootPathNdLang + "/{appName}/")]
+    [Route(OqtWebApiConstants.SharedRootNoLanguage + "/{appName}/")]
+    [Route(OqtWebApiConstants.SharedRootPathOrLang + "/{appName}/")]
+    [Route(OqtWebApiConstants.SharedRootPathNdLang + "/{appName}/")]
     public class AppSharedController: AppAssetsControllerBase
     {
         public AppSharedController(MyServices services) 
