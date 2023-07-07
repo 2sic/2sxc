@@ -49,7 +49,6 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// The helper to assist in timing and common operations of WebApi Controllers
         /// </summary>
         private readonly NetCoreControllersHelper _helper;
-        //internal NetCoreControllersHelper Helper => _helper;
 
         /// <summary>
         /// Special helper to move all Razor logic into a separate class.
@@ -65,10 +64,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         /// </summary>
         /// <param name="context"></param>
         [NonAction]
-        public /*override*/ virtual void OnActionExecuting(ActionExecutingContext context)
+        public virtual void OnActionExecuting(ActionExecutingContext context)
         {
             var l = Log.Fn();
-            //base.OnActionExecuting(context);
             _helper.OnActionExecuting(context, HistoryLogGroup);
 
             // background processes can pass in an alias using the SiteState service
@@ -80,10 +78,9 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
         /// <inheritdoc/>
         [NonAction]
-        public /*override*/ virtual void OnActionExecuted(ActionExecutedContext context)
+        public virtual void OnActionExecuted(ActionExecutedContext context)
         {
             var l = Log.Fn();
-            //base.OnActionExecuted(context);
             _helper.OnActionExecuted(context);
             l.Done();
         }
