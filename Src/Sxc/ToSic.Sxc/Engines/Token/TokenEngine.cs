@@ -109,7 +109,7 @@ namespace ToSic.Sxc.Engines
             confProv.Add(new LookUpForTokenTemplate(SourcePropertyName.Content, _data.Content));
         }
 
-
+        [PrivateApi]
         protected override (string, List<Exception>) RenderTemplate(object data)
         {
             var templateSource = File.ReadAllText(Services.ServerPaths.FullAppPath(TemplatePath));

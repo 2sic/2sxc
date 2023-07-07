@@ -28,10 +28,12 @@ namespace ToSic.Sxc.Engines
 
         /// <inheritdoc />
         [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
+        [PrivateApi]
         public virtual void CustomizeData() { }
 
         /// <inheritdoc />
         [Obsolete("Shouldn't be used any more, but will continue to work for indefinitely for old base classes, not in v12. There are now better ways of doing this")]
+        [PrivateApi]
         public virtual void CustomizeSearch(Dictionary<string, List<ISearchItem>> searchInfos, IModule moduleInfo,
             DateTime beginDate)
         {

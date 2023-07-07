@@ -52,21 +52,12 @@ namespace ToSic.Sxc.DataSources
 
         #region New v16
 
-        internal IEnumerable<IEntity> MyContent => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
+        internal IEnumerable<IEntity> MyItem => _myContent.Get(() => _blockSource.GetStream(emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _myContent = new GetOnce<IEnumerable<IEntity>>();
-        //IEnumerable<IEntity> IContextData.MyContent => _codeChanges.Value.GetAndWarn(NoDataMyContent, MyContent);
-
-
-        //public IEnumerable<IEntity> MyData => _myData.Get(() => GetStream(emptyIfNotFound: true).List);
-
-        //IEnumerable<IEntity> IContextData.MyData => _codeChanges.Value.GetAndWarn(NoDataMyData, MyData);
-        //private readonly GetOnce<IEnumerable<IEntity>> _myData = new GetOnce<IEnumerable<IEntity>>();
 
         internal IEnumerable<IEntity> MyHeader => _header.Get(() => _blockSource.GetStream(ViewParts.StreamHeader, emptyIfNotFound: true).List);
         private readonly GetOnce<IEnumerable<IEntity>> _header = new GetOnce<IEnumerable<IEntity>>();
-        //IEnumerable<IEntity> IContextData.MyHeader => _codeChanges.Value.GetAndWarn(NoDataMyHeader, MyHeader);
-
-
+        
         #endregion
 
 

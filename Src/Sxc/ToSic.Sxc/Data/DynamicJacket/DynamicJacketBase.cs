@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Data
         /// Use the [key] accessor to get the values as <see cref="DynamicJacketList"/> or <see cref="Data"/>
         /// </summary>
         /// <returns></returns>
-        [PrivateApi]
+        [InternalApi_DoNotUse_MayChangeWithoutNotice]
         public abstract IEnumerator<object> GetEnumerator();
 
 

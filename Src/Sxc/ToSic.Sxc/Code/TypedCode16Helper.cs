@@ -21,10 +21,10 @@ namespace ToSic.Sxc.Code
             Data = data as ContextData;
         }
 
-        public ITypedItem MyItem => _myItem.Get(() => _codeRoot.AsC.AsItem(Data.MyContent));
+        public ITypedItem MyItem => _myItem.Get(() => _codeRoot.AsC.AsItem(Data.MyItem));
         private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
 
-        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _codeRoot.AsC.AsItems(Data.MyContent));
+        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _codeRoot.AsC.AsItems(Data.MyItem));
         private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
         public ITypedItem MyHeader => _myHeader.Get(() => _codeRoot.AsC.AsItem(Data.MyHeader));
