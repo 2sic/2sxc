@@ -32,7 +32,9 @@ namespace ToSic.Sxc.Dnn
         [Obsolete("Avoid using at all cost - only DNN and test-code may use this!")]
         public static T StaticBuild<T>(ILog parentLog = null) => GetPageScopedServiceProvider().Build<T>(parentLog);
 
+#pragma warning disable CS0618
         public static CodeInfoService CodeInfos => StaticBuild<CodeInfoService>();
+#pragma warning restore CS0618
 
         /// <summary>
         /// Dictionary key for keeping the Scoped Injection Service Provider in the Http-Context
