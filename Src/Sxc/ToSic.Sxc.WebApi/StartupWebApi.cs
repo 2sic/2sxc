@@ -111,9 +111,9 @@ namespace ToSic.Sxc.WebApi
 
             services.AddLoadSettingsProviders();
 
-#if NETCOREAPP
-            services.AddNetCore();
-#endif
+//#if NETCOREAPP
+//            services.AddNetCore();
+//#endif
 
             services.AddFallbacks();
 
@@ -161,17 +161,17 @@ namespace ToSic.Sxc.WebApi
             return services;
         }
 
-#if NETCOREAPP
-        public static IServiceCollection AddNetCore(this IServiceCollection services)
-        {
-            // Helper to get header, query string and route information from current request
-            services.TryAddScoped<RequestHelper>();
+//#if NETCOREAPP
+//        public static IServiceCollection AddNetCore(this IServiceCollection services)
+//        {
+//            // Helper to get header, query string and route information from current request
+//            services.TryAddScoped<RequestHelper>();
 
-            // This ensures that generic backends (.net framework/core) can create a response object
-            services.TryAddScoped<ResponseMaker<Microsoft.AspNetCore.Mvc.IActionResult>, NetCoreResponseMaker>();
+//            //// This ensures that generic backends (.net framework/core) can create a response object
+//            //services.TryAddScoped<ResponseMaker<Microsoft.AspNetCore.Mvc.IActionResult>, ResponseMakerNetCore>();
 
-            return services;
-        }
-#endif
+//            return services;
+//        }
+//#endif
     }
 }

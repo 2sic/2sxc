@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using ToSic.Sxc.WebApi.Infrastructure;
 using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -81,9 +79,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public IActionResult Json(int appId, string name)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (NetCoreResponseMaker)GetService<ResponseMaker<IActionResult>>();
-            responseMaker.Init(this);
-
+            CtxHlp.SetupResponseMaker();
             return Real.Json(appId, name);
         }
 
@@ -99,9 +95,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public IActionResult JsonBundleExport(int appId, Guid exportConfiguration, int indentation = 0)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (NetCoreResponseMaker)GetService<ResponseMaker<IActionResult>>();
-            responseMaker.Init(this);
-
+            CtxHlp.SetupResponseMaker();
             return Real.JsonBundleExport(appId, exportConfiguration, indentation);
         }
 

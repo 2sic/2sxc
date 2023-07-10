@@ -1,6 +1,7 @@
 ﻿using Oqtane.Models;
 using Oqtane.Repository;
 using System;
+using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;

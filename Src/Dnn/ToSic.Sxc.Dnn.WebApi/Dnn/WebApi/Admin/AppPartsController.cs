@@ -31,8 +31,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Export(int zoneId, int appId, string contentTypeIdsString, string entityIdsString, string templateIdsString)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
+            SysHlp.SetupResponseMaker(this);
 
             return Real.Export(zoneId: zoneId, appId: appId, contentTypeIdsString: contentTypeIdsString,
                 entityIdsString: entityIdsString, templateIdsString: templateIdsString);

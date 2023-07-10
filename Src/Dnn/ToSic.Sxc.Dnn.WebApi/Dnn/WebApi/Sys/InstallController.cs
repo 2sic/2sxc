@@ -27,13 +27,6 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Host)]
         public bool Resume() => Real.Resume();
 
-        private void PrepareResponseMaker()
-        {
-            // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
-        }
-
         /// <inheritdoc />
         [HttpGet]
         [DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
@@ -48,7 +41,8 @@ namespace ToSic.Sxc.Dnn.WebApi.Sys
         public HttpResponseMessage RemotePackage(string packageUrl)
         {
             SysHlp.PreventServerTimeout300();
-            PrepareResponseMaker();
+            // Make sure the Scoped ResponseMaker has this controller context
+            SysHlp.SetupResponseMaker(this);
             return Real.RemotePackage(packageUrl, ((DnnModule)SysHlp.GetService<IModule>()).Init(ActiveModule));
         }
     }

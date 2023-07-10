@@ -1,11 +1,13 @@
 ﻿#if NETCOREAPP
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.Helpers;
+using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
@@ -20,12 +22,13 @@ namespace ToSic.Sxc.WebApi.Infrastructure
 {
     internal class NetCoreWebApiContextHelper: CodeHelperBase
     {
-        private readonly IHasLog _owner;
+        private readonly ControllerBase _owner;
         private readonly NetCoreControllersHelper _helper;
 
-        public NetCoreWebApiContextHelper(IHasLog owner, NetCoreControllersHelper helper) : base("Oqt.ApiHlp")
+        public NetCoreWebApiContextHelper(ControllerBase owner, NetCoreControllersHelper helper) : base("Oqt.ApiHlp")
         {
-            this.LinkLog(owner.Log);
+            if (owner is IHasLog ownerWithLog)
+                this.LinkLog(ownerWithLog.Log);
             _owner = owner;
             _helper = helper;
         }
@@ -123,6 +126,12 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             return app.Init(new AppIdentity(AppConstants.AutoLookupZone, appId), _helper.GetService<AppConfigDelegate>().Build());
         });
 
+
+        #endregion
+
+        #region Context Maker
+
+        public void SetupResponseMaker() => _helper.GetService<ResponseMaker>().Init(_owner as ControllerBase);
 
         #endregion
 

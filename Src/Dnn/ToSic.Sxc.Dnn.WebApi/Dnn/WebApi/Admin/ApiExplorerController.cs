@@ -26,9 +26,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Inspect(string path)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
-
+            SysHlp.SetupResponseMaker(this);
             return Real.Inspect(path, GetCompiledAssembly);
         }
 

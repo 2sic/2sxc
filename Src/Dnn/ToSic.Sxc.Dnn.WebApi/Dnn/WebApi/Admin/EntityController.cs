@@ -53,8 +53,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
         public HttpResponseMessage Json(int appId, int id, string prefix, bool withMetadata)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
+            SysHlp.SetupResponseMaker(this);
 
             return Real.Json(appId, id, prefix, withMetadata);
         }
@@ -74,8 +73,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
             string selectedIds = null)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = SysHlp.GetResponseMaker();
-            responseMaker.Init(this);
+            SysHlp.SetupResponseMaker(this);
 
             return Real.Download(appId, language, defaultLanguage, contentType, recordExport, resourcesReferences,
                 languageReferences, selectedIds);
