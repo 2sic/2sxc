@@ -13,14 +13,19 @@ using ToSic.Eav.WebApi.ImportExport;
 using ToSic.Lib.DI;
 using ToSic.Sxc.WebApi.ImportExport;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.Admin
 {
-    public class TypeControllerReal<THttpResponseType> : ServiceBase, ITypeController<THttpResponseType>
+    public class TypeControllerReal : ServiceBase, ITypeController
     {
         private readonly LazySvc<IContextOfSite> _context;
         private readonly LazySvc<ContentTypeApi> _ctApiLazy;
-        private readonly LazySvc<ContentExportApi<THttpResponseType>> _contentExportLazy;
+        private readonly LazySvc<ContentExportApi> _contentExportLazy;
         private readonly LazySvc<IUser> _userLazy;
         private readonly Generator<ImportContent> _importContent;
         public const string LogSuffix = "Types";
@@ -28,7 +33,7 @@ namespace ToSic.Sxc.WebApi.Admin
         public TypeControllerReal(
             LazySvc<IContextOfSite> context,
             LazySvc<ContentTypeApi> ctApiLazy, 
-            LazySvc<ContentExportApi<THttpResponseType>> contentExportLazy, 
+            LazySvc<ContentExportApi> contentExportLazy, 
             LazySvc<IUser> userLazy,
             Generator<ImportContent> importContent) : base("Api.TypesRl")
         {

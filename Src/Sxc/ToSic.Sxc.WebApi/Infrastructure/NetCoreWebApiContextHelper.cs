@@ -131,7 +131,7 @@ namespace ToSic.Sxc.WebApi.Infrastructure
 
         #region Context Maker
 
-        public void SetupResponseMaker() => _helper.GetService<ResponseMaker>().Init(_owner as ControllerBase);
+        public void SetupResponseMaker() => _helper.GetService<IResponseMaker>().Init(_owner);
 
         #endregion
 

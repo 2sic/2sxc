@@ -17,17 +17,22 @@ using ToSic.Sxc.Run;
 using ToSic.Sxc.WebApi.App;
 using IFeaturesService = ToSic.Sxc.Services.IFeaturesService;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.Sys
 {
-    public class InstallControllerReal<THttpResponseType> : ServiceBase
+    public class InstallControllerReal : ServiceBase
     {
         private readonly LazySvc<IPlatformAppInstaller> _platformAppInstaller;
         private readonly LazySvc<IFeaturesService> _featureService;
         private readonly LazySvc<IContextOfSite> _context;
         private readonly LazySvc<IEnvironmentInstaller> _envInstallerLazy;
         private readonly LazySvc<ImportFromRemote> _impFromRemoteLazy;
-        private readonly ResponseMaker<THttpResponseType> _responseMaker;
+        private readonly IResponseMaker _responseMaker;
         private readonly LazySvc<IAppStates> _appStates;
         private readonly LazySvc<AppSettingsStack> _appSettingsStack;
         private readonly LazySvc<AppsBackend> _appsBackendLazy;
@@ -41,7 +46,7 @@ namespace ToSic.Sxc.WebApi.Sys
             LazySvc<IEnvironmentInstaller> envInstallerLazy, 
             LazySvc<IPlatformAppInstaller> platformAppInstaller,
             LazySvc<ImportFromRemote> impFromRemoteLazy,
-            ResponseMaker<THttpResponseType> responseMaker,
+            IResponseMaker responseMaker,
             LazySvc<IFeaturesService> featureService,
             LazySvc<AppsBackend> appsBackend,
             LazySvc<IAppStates> appStates,

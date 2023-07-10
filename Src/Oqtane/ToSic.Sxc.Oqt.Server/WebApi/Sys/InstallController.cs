@@ -5,7 +5,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
 {

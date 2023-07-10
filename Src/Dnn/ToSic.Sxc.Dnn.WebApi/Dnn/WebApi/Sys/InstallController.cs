@@ -5,7 +5,7 @@ using System.Web.Http;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Context;
-using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<System.Net.Http.HttpResponseMessage>;
+using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Sys
 {

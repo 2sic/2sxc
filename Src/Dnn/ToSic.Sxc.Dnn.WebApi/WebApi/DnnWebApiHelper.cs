@@ -54,7 +54,7 @@ namespace ToSic.Sxc.WebApi
         // Must cache it, to be really sure we use the same ServiceProvider in the same request
         private readonly GetOnce<IServiceProvider> _serviceProvider = new GetOnce<IServiceProvider>();
 
-        public void SetupResponseMaker(System.Web.Http.ApiController apiController) => GetService<ResponseMaker>().Init(apiController);
+        public void SetupResponseMaker(System.Web.Http.ApiController apiController) => GetService<IResponseMaker>().Init(apiController);
 
         #endregion
 

@@ -12,7 +12,7 @@ using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.Views;
-using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -23,7 +23,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class ViewController : OqtStatefulControllerBase, IViewController<IActionResult>
+    public class ViewController : OqtStatefulControllerBase, IViewController
     {
         public ViewController(LazySvc<Pages.Pages> pages) : base(RealController.LogSuffix)
         {

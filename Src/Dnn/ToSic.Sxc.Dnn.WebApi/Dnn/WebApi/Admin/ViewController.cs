@@ -16,12 +16,12 @@ using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
 using ToSic.Sxc.WebApi.Admin;
 using ToSic.Sxc.WebApi.Views;
-using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal<System.Net.Http.HttpResponseMessage>;
+using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
     [DnnLogExceptions]
-    public class ViewController : SxcApiControllerBase, IViewController<HttpResponseMessage>
+    public class ViewController : SxcApiControllerBase, IViewController
     {
         public ViewController() : base(RealController.LogSuffix) { }
 

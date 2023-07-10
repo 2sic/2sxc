@@ -15,6 +15,11 @@ using ToSic.Sxc.WebApi.App;
 using ToSic.Sxc.WebApi.AppStack;
 using ToSic.Sxc.WebApi.ImportExport;
 using ServiceBase = ToSic.Lib.Services.ServiceBase;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.Admin
 {
@@ -22,7 +27,7 @@ namespace ToSic.Sxc.WebApi.Admin
     /// Experimental new class
     /// Goal is to reduce code in the Dnn and Oqtane controllers, which basically does the same thing, mostly DI work
     /// </summary>
-    public class AppControllerReal<THttpResponseType> : ServiceBase where THttpResponseType : class
+    public class AppControllerReal : ServiceBase
     {
         public const string LogSuffix = "AppCon";
 

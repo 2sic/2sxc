@@ -8,7 +8,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
-using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Eav.WebApi.Admin.EntityControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -31,7 +31,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     [Route(OqtWebApiConstants.ApiRootPathOrLang + $"/{AreaRoutes.Admin}")]
     [Route(OqtWebApiConstants.ApiRootPathNdLang + $"/{AreaRoutes.Admin}")]
 
-    public class EntityController : OqtStatefulControllerBase, IEntityController<IActionResult>
+    public class EntityController : OqtStatefulControllerBase, IEntityController
     {
         public EntityController() : base(RealController.LogSuffix) { }
 

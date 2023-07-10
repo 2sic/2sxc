@@ -62,7 +62,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddSxcWebApi()                 // This adds all the standard backend services for WebAPIs to work
                 .AddSxcCore()                   // Core 2sxc services
                 .AddEav()                       // Core EAV services
-                .AddEavWebApiTypedAfterEav<IActionResult>()
+                .AddEavWebApiTypedAfterEav()
                 .AddOqtAppWebApi()              // Oqtane App WebAPI stuff
                 .AddRazorBlade();               // RazorBlade helpers for Razor in the edition used by Oqtane
 

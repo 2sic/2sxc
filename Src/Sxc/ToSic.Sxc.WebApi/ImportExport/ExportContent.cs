@@ -12,14 +12,19 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.WebApi.App;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.ImportExport
 {
-    public class ExportContent<THttpResponseType> : ServiceBase
+    public class ExportContent : ServiceBase
     {
         #region Constructor / DI
 
-        public ExportContent(XmlExporter xmlExporter, LazySvc<CmsRuntime> cmsRuntime, ISite site, IUser user, Generator<ImpExpHelpers> impExpHelpers, ResponseMaker<THttpResponseType> responseMaker)
+        public ExportContent(XmlExporter xmlExporter, LazySvc<CmsRuntime> cmsRuntime, ISite site, IUser user, Generator<ImpExpHelpers> impExpHelpers, IResponseMaker responseMaker)
             : base("Bck.Export") =>
             ConnectServices(
                 _xmlExporter = xmlExporter,
@@ -36,7 +41,7 @@ namespace ToSic.Sxc.WebApi.ImportExport
         private CmsRuntime CmsRuntime => _cmsRuntime.Value;
         private readonly IUser _user;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
-        private readonly ResponseMaker<THttpResponseType> _responseMaker;
+        private readonly IResponseMaker _responseMaker;
 
         #endregion
 

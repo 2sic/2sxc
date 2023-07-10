@@ -10,7 +10,7 @@ using ToSic.Eav.WebApi.Admin;
 using ToSic.Eav.WebApi.Dto;
 using ToSic.Sxc.Dnn.WebApi.Logging;
 using ToSic.Sxc.WebApi;
-using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal<System.Net.Http.HttpResponseMessage>;
+using RealController = ToSic.Sxc.WebApi.Admin.TypeControllerReal;
 
 namespace ToSic.Sxc.Dnn.WebApi.Admin
 {
@@ -27,7 +27,7 @@ namespace ToSic.Sxc.Dnn.WebApi.Admin
     /// Security checking is possible, because the cookie still contains user information
     /// </remarks>
     [DnnLogExceptions]
-    public class TypeController : SxcApiControllerBase, ITypeController<HttpResponseMessage>
+    public class TypeController : SxcApiControllerBase, ITypeController
     {
         public TypeController() : base(RealController.LogSuffix) { }
 

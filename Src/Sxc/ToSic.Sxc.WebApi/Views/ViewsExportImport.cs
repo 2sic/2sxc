@@ -27,10 +27,15 @@ using ToSic.Sxc.WebApi.ImportExport;
 using ToSic.Eav.Helpers;
 using ToSic.Eav.Security;
 using ToSic.Eav.WebApi.Infrastructure;
+#if NETFRAMEWORK
+using THttpResponseType = System.Net.Http.HttpResponseMessage;
+#else
+using THttpResponseType = Microsoft.AspNetCore.Mvc.IActionResult;
+#endif
 
 namespace ToSic.Sxc.WebApi.Views
 {
-    public class ViewsExportImport<THttpResponseType> : ServiceBase
+    public class ViewsExportImport : ServiceBase
     {
         private readonly LazySvc<QueryDefinitionBuilder> _qDefBuilder;
         private readonly IServerPaths _serverPaths;
@@ -40,7 +45,7 @@ namespace ToSic.Sxc.WebApi.Views
         private readonly IAppStates _appStates;
         private readonly AppIconHelpers _appIconHelpers;
         private readonly Generator<ImpExpHelpers> _impExpHelpers;
-        private readonly ResponseMaker<THttpResponseType> _responseMaker;
+        private readonly IResponseMaker _responseMaker;
         private readonly ISite _site;
         private readonly IUser _user;
 
@@ -52,7 +57,7 @@ namespace ToSic.Sxc.WebApi.Views
             IAppStates appStates,
             AppIconHelpers appIconHelpers,
             Generator<ImpExpHelpers> impExpHelpers,
-            ResponseMaker<THttpResponseType> responseMaker,
+            IResponseMaker responseMaker,
             LazySvc<QueryDefinitionBuilder> qDefBuilder) : base("Bck.Views")
         {
             ConnectServices(

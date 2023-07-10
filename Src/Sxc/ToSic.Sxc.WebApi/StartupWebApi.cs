@@ -4,7 +4,6 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
-using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.ImportExport;
@@ -69,11 +68,11 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient<ExportApp>();
             services.TryAddTransient<ImportApp>();
             services.TryAddTransient<ImportContent>();
-            services.TryAddTransient(typeof(ExportContent<>));
+            services.TryAddTransient<ExportContent>();
             services.TryAddTransient<ResetApp>();
             services.TryAddTransient<AppStackBackend>();
             services.TryAddTransient<AppFolder>();
-            services.TryAddTransient(typeof(ViewsExportImport<>));
+            services.TryAddTransient<ViewsExportImport>();
 
             // Small WebApi Helpers
             // #UnusedFeatureHistoryOfGroup 2022-07-05 2dm removed - probably clean up ca. Q4 2022
@@ -94,18 +93,18 @@ namespace ToSic.Sxc.WebApi
             services.TryAddTransient(typeof(AdamControllerReal<>));
             services.TryAddTransient<AppFilesControllerReal>();
             services.TryAddTransient<QueryControllerReal>();
-            services.TryAddTransient(typeof(AppControllerReal<>));
-            services.TryAddTransient(typeof(AppPartsControllerReal<>));
+            services.TryAddTransient<AppControllerReal>();
+            services.TryAddTransient<AppPartsControllerReal>();
             services.TryAddTransient<DialogControllerReal>();
-            services.TryAddTransient(typeof(TypeControllerReal<>));
-            services.TryAddTransient(typeof(ViewControllerReal<>));
+            services.TryAddTransient<TypeControllerReal>();
+            services.TryAddTransient<ViewControllerReal>();
             services.TryAddTransient<AppDataControllerReal>();
             services.TryAddTransient<AppQueryControllerReal>();
             services.TryAddTransient<ContentGroupControllerReal>();
             services.TryAddTransient<EditControllerReal>();
             services.TryAddTransient<HistoryControllerReal>();
             services.TryAddTransient<ListControllerReal>();
-            services.TryAddTransient(typeof(InstallControllerReal<>));
+            services.TryAddTransient<InstallControllerReal>();
             services.TryAddTransient<BlockControllerReal>();
             services.TryAddTransient<CodeControllerReal>();
 

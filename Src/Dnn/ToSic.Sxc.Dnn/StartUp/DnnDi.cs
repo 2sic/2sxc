@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Dnn.StartUp
                 .AddSxcWebApi()
                 .AddSxcCore()
                 .AddEav()
-                .AddEavWebApiTypedAfterEav<HttpResponseMessage>()
+                .AddEavWebApiTypedAfterEav()
                 .AddRazorBlade();
 
             // temp polymorphism - later put into AddPolymorphism

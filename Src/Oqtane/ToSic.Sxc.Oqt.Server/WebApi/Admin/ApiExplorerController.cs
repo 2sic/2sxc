@@ -12,7 +12,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
-using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
@@ -25,7 +25,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
     //[DnnModuleAuthorize(AccessLevel = SecurityAccessLevel.Admin)]
     [Authorize(Roles = RoleNames.Admin)]
 
-    public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerController<IActionResult>
+    public class ApiExplorerController : OqtStatefulControllerBase, IApiExplorerController
     {
         public ApiExplorerController() : base(RealController.LogSuffix) { }
 

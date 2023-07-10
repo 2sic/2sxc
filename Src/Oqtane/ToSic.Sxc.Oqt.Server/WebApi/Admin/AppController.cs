@@ -9,7 +9,7 @@ using ToSic.Eav.WebApi.Dto;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
-using RealController = ToSic.Sxc.WebApi.Admin.AppControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
+using RealController = ToSic.Sxc.WebApi.Admin.AppControllerReal;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
 {
