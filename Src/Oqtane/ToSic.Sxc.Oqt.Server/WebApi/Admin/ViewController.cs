@@ -8,10 +8,11 @@ using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.Dto;
-using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.WebApi.Admin;
+using ToSic.Sxc.WebApi.Infrastructure;
 using ToSic.Sxc.WebApi.Views;
 using RealController = ToSic.Sxc.WebApi.Admin.ViewControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
@@ -63,7 +64,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public IActionResult Json(int appId, int viewId)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            var responseMaker = (NetCoreResponseMaker)GetService<ResponseMaker<IActionResult>>();
             responseMaker.Init(this);
 
             return Real.Json(appId, viewId);

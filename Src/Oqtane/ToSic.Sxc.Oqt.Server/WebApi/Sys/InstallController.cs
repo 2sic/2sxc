@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Oqtane.Shared;
-using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Eav.WebApi.Sys;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Installation;
+using ToSic.Sxc.WebApi.Infrastructure;
 using RealController = ToSic.Sxc.WebApi.Sys.InstallControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
@@ -47,7 +48,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Sys
         private void PrepareResponseMaker()
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            var responseMaker = (NetCoreResponseMaker)GetService<ResponseMaker<IActionResult>>();
             responseMaker.Init(this);
         }
 

@@ -4,6 +4,7 @@ using ToSic.Eav.Apps.ImportExport;
 using ToSic.Eav.DataFormats.EavLight;
 using ToSic.Eav.WebApi.Context;
 using ToSic.Eav.WebApi.ImportExport;
+using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Apps.ImportExport;
@@ -165,6 +166,9 @@ namespace ToSic.Sxc.WebApi
         {
             // Helper to get header, query string and route information from current request
             services.TryAddScoped<RequestHelper>();
+
+            // This ensures that generic backends (.net framework/core) can create a response object
+            services.TryAddScoped<ResponseMaker<Microsoft.AspNetCore.Mvc.IActionResult>, NetCoreResponseMaker>();
 
             return services;
         }

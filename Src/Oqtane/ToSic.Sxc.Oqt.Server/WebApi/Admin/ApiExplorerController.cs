@@ -5,7 +5,7 @@ using System.Reflection;
 using ToSic.Lib.Logging;
 using ToSic.Eav.Run;
 using ToSic.Eav.WebApi.ApiExplorer;
-using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Eav.WebApi.Routing;
 using ToSic.Sxc.Apps;
 using ToSic.Sxc.Oqt.Server.Code;
@@ -13,6 +13,7 @@ using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.Controllers.AppApi;
 using ToSic.Sxc.Oqt.Server.Plumbing;
 using ToSic.Sxc.Oqt.Server.Run;
+using ToSic.Sxc.WebApi.Infrastructure;
 using RealController = ToSic.Eav.WebApi.ApiExplorer.ApiExplorerControllerReal<Microsoft.AspNetCore.Mvc.IActionResult>;
 
 namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
@@ -36,7 +37,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi.Admin
         public IActionResult Inspect(string path)
         {
             // Make sure the Scoped ResponseMaker has this controller context
-            var responseMaker = (OqtResponseMaker)GetService<ResponseMaker<IActionResult>>();
+            var responseMaker = (NetCoreResponseMaker)GetService<ResponseMaker<IActionResult>>();
             responseMaker.Init(this);
 
             return Real.Inspect(path, GetCompiledAssembly);

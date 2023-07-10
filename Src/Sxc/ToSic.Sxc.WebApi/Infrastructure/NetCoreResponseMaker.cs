@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
+﻿#if !NETFRAMEWORK
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using ToSic.Eav.Plumbing;
-using ToSic.Eav.WebApi.Plumbing;
+using ToSic.Eav.WebApi.Infrastructure;
 
-namespace ToSic.Sxc.Oqt.Server.WebApi
+namespace ToSic.Sxc.WebApi.Infrastructure
 {
-    public class OqtResponseMaker: ResponseMaker<IActionResult>
+    public class NetCoreResponseMaker: ResponseMaker<IActionResult>
     {
         public void Init(ControllerBase apiController) => _apiController = apiController;
 
@@ -15,7 +16,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
 
         public ControllerBase ApiController => _apiController ??
                                            throw new(
-                                               $"Accessing the {nameof(ApiController)} in the {nameof(OqtResponseMaker)} requires it to be Init first.");
+                                               $"Accessing the {nameof(ApiController)} in the {nameof(NetCoreResponseMaker)} requires it to be Init first.");
 
         public override IActionResult Error(int statusCode, string message)
             => ApiController.Problem(message, null, statusCode); 
@@ -23,7 +24,7 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         public override IActionResult Error(int statusCode, Exception exception)
             => ApiController.Problem(exception.Message, null, statusCode);
 
-        public override IActionResult Json(object json) => new JsonResult(json); // ApiController.Json(json);
+        public override IActionResult Json(object json) => new JsonResult(json);
 
         public override IActionResult Ok() => ApiController.Ok();
 
@@ -41,3 +42,4 @@ namespace ToSic.Sxc.Oqt.Server.WebApi
         }
     }
 }
+#endif
