@@ -15,25 +15,25 @@ namespace ToSic.Sxc.Data
 
         internal Field(IDynamicEntity parent, string name, DynamicEntity.MyServices services)
         {
-            _parent = parent;
+            Parent = parent as ITypedItem;
             _services = services;
             Name = name;
         }
-        private readonly IDynamicEntity _parent;
+
         private readonly DynamicEntity.MyServices _services;
 
         /// <inheritdoc />
         public string Name { get; }
 
-        public ITypedItem Parent => _parent;
+        public ITypedItem Parent { get; }
 
         /// <inheritdoc />
-        public object Raw => _raw.Get(() => _parent.Get(Name, convertLinks: false));
+        public object Raw => _raw.Get(() => Parent.Get(Name));
         private readonly GetOnce<object> _raw = new GetOnce<object>();
 
 
         /// <inheritdoc />
-        public object Value => _value.Get(() => _parent.Get(Name, convertLinks: true));
+        public object Value => _value.Get(() => (Parent as IDynamicEntity).Get(Name, convertLinks: true));
         private readonly GetOnce<object> _value = new GetOnce<object>();
 
         /// <inheritdoc />
@@ -45,7 +45,6 @@ namespace ToSic.Sxc.Data
         private readonly GetOnce<IMetadata> _dynMeta = new GetOnce<IMetadata>();
 
 
-        /// <inheritdoc />
         private IMetadataOf MetadataOfItem => _itemMd.Get(() =>
             {
                 if (!(Raw is string rawString) || string.IsNullOrWhiteSpace(rawString)) return null;

@@ -9,13 +9,19 @@ namespace ToSic.Sxc.Data
         /// Use it for edit-functionality or just to have a unique number for this item.
         /// </summary>
         /// <remarks>If the entity doesn't exist, it will return 0</remarks>
-        new int EntityId { get; }
+#if NETFRAMEWORK
+        new 
+#endif
+            int EntityId { get; }
 
         /// <summary>
         /// The guid of the underlying entity.
         /// </summary>
         /// <remarks>If the entity doesn't exist, it will return an empty guid</remarks>
-        new Guid EntityGuid { get; }
+#if NETFRAMEWORK
+        new 
+#endif
+            Guid EntityGuid { get; }
 
         /// <summary>
         /// The title of this item. This is always available no matter what the underlying field for the title is. 
@@ -26,7 +32,10 @@ namespace ToSic.Sxc.Data
         /// It can also be null if there is no underlying entity. 
         /// </returns>
         /// <remarks>This returns a string which is usually what's expected. In previous versions (before v15) 2sxc it returned an object.</remarks>
-        new string EntityTitle { get; }
+#if NETFRAMEWORK
+        new 
+#endif
+            string EntityTitle { get; }
 
         /// <summary>
         /// The type name of the current entity. This provides the nice name like "Person" and not the technical internal StaticName
