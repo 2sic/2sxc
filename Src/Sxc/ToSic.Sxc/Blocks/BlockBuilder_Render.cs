@@ -177,23 +177,28 @@ namespace ToSic.Sxc.Blocks
                     addEditCtx = features.Contains(BuiltInFeatures.ContextModule);
                 }
 
+                #region Add Custom Tags to the end if provided by the ModuleService - like TurnOn - not ideal yet
+
+                // This is not ideal, because it actually changes what's in the DIV
+                // We would rather add it to the end, but ATM that doesn't trigger turnOn in AJAX reload
+
+                var additionalTags = Services.ModuleService.MoreTags;
+                var bodyWithAddOns = additionalTags.Any()
+                    ? body + "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()))
+                    : body;
+
+                #endregion
+
+
                 // Wrap
                 var result = WrapInDiv
-                    ? RenderingHelper.WrapInContext(body,
+                    ? RenderingHelper.WrapInContext(bodyWithAddOns,
                         instanceId: Block.ParentId,
                         contentBlockId: Block.ContentBlockId,
                         editContext: addEditCtx, 
                         errorCode: errorCode,
                         exsOrNull: exceptions)
-                    : body;
-                #endregion
-
-                #region Add Custom Tags to the end if provided by the ModuleService
-
-                var additionalTags = Services.ModuleService.MoreTags;
-                if (additionalTags.Any()) 
-                    result += "\n" + string.Join("\n", additionalTags.Select(t => t?.ToString()));
-
+                    : bodyWithAddOns;
                 #endregion
 
                 return l.Return((result, err, exceptions));
