@@ -10,6 +10,7 @@ using ToSic.Lib.Logging;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
+    // TODO: @STV - PLS EXPLAIN what this does / what it's for
     /**
      * This is adjusted version of Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.
      * For reference, original AuthorizationMiddleware class is commented on the bottom of this file.

@@ -4,15 +4,16 @@ using Oqtane.Infrastructure;
 using Oqtane.Security;
 using System.Threading.Tasks;
 using ToSic.Eav.WebApi.Infrastructure;
+using ToSic.Lib.Documentation;
 using ToSic.Sxc.Context;
-using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
-    /**
-     * Extend Oqtane default PermissionHandler to provide Oqt required "entityId"
-     * if missing from header "moduleId", or query string, or route value.
-     */
+    /// <summary>
+    /// Extend Oqtane default PermissionHandler to provide Oqt required "entityId"
+    /// if missing from header "moduleId", or query string, or route value.
+    /// </summary>
+    [PrivateApi]
     public class AppApiPermissionHandler : PermissionHandler
     {
         private readonly IHttpContextAccessor _httpContextAccessor;

@@ -7,6 +7,7 @@ using ToSic.Eav.WebApi.Errors;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers.AppApi
 {
+    // TODO: @STV - PLS EXPLAIN what this does / what it's for
     public static class AppApiMiddleware
     {
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
