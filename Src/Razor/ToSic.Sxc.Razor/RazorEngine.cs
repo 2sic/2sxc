@@ -43,18 +43,31 @@ namespace ToSic.Sxc.Razor
         {
             var l = Log.Fn<(string, List<Exception>)>();
             var task = RenderTask();
-            task.Wait();
-            return l.ReturnAsOk((task.Result.ToString(), null));
+            try
+            {
+                task.Wait();
+                var result = task.Result;
+                // TODO: not yet clear how to best show errors
+                // ATM we're just showing the exception, but this may show information about the code
+                return result.Exception == null 
+                    ? l.ReturnAsOk((result.TextWriter.ToString(), null))
+                    : l.Return((result.TextWriter?.ToString() ?? result.Exception.ToString(), new() { result.Exception }));
+            }
+            catch (Exception ex)
+            {
+                var myEx = task.Exception?.InnerException ?? ex;
+                return l.Return((myEx.ToString(), new() { myEx }));
+            }
         }
 
         [PrivateApi]
-        public async Task<TextWriter> RenderTask()
+        private async Task<(TextWriter TextWriter, Exception Exception)> RenderTask()
         {
             Log.A("will render into TextWriter");
             RazorView page = null;
             try
             {
-                if (string.IsNullOrEmpty(TemplatePath)) return null;
+                if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
                 var dynCode = _dynCodeRootLazy.Value.InitDynCodeRoot(Block, Log, Constants.CompatibilityLevel12);
 
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
@@ -67,11 +80,11 @@ namespace ToSic.Sxc.Razor
                     });
                 var writer = new StringWriter();
                 await writer.WriteAsync(result);
-                return writer;
+                return (writer, null);
             }
             catch (Exception maybeIEntityCast)
             {
-                throw _errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page);
+                return (null, _errorHelp.Value.AddHelpIfKnownError(maybeIEntityCast, page));
             }
 
             // WIP https://github.com/dotnet/aspnetcore/blob/master/src/Mvc/Mvc.Razor.RuntimeCompilation/src/RuntimeViewCompiler.cs#L397-L404
