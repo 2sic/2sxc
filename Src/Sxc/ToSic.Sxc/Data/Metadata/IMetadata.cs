@@ -17,7 +17,7 @@ namespace ToSic.Sxc.Data
     ///     _Note that this is a breaking change, but we believe the type is never directly mentioned in any code_
     /// </remarks>
     [PublicApi]
-    public interface IMetadata: IDynamicEntity, IHasMetadata
+    public interface IMetadata: IDynamicEntity, IHasMetadata, ITypedItem
     {
         /// <summary>
         /// Ask if there is metadata of the type specified.
