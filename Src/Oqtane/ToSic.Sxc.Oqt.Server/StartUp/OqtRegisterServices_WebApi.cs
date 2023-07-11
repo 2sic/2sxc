@@ -4,6 +4,8 @@ using ToSic.Eav.WebApi.ApiExplorer;
 using ToSic.Sxc.Oqt.Server.Controllers;
 using ToSic.Sxc.Oqt.Server.WebApi;
 using ToSic.Sxc.Oqt.Server.WebApi.Admin;
+using ToSic.Sxc.WebApi.ActionFilters;
+using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.StartUp
 {

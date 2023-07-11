@@ -1,10 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc.Controllers;
+﻿#if NETCOREAPP
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.WebApi.ActionFilters
 {
-    // inspired by https://github.com/pranavkm/OptionalBodyBinding
+    /// <summary>
+    /// TODO: @STV pls document what this is for
+    /// </summary>
+    /// <remarks>
+    /// inspired by https://github.com/pranavkm/OptionalBodyBinding
+    /// </remarks>
+
+    [PrivateApi]
     public class OptionalBodyFilter : ActionFilterAttribute
     {
         public OptionalBodyFilter()
@@ -41,3 +50,4 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
     }
 }
+#endif

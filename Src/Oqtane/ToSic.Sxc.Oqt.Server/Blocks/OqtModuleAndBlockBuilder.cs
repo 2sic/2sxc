@@ -8,7 +8,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Oqt.Server.Context;
 using ToSic.Sxc.Oqt.Shared;
-using ToSic.Sxc.WebApi.Infrastructure;
 
 namespace ToSic.Sxc.Oqt.Server.Blocks
 {

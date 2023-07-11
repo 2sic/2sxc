@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#if NETCOREAPP
+using System;
+using System.Buffers;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -9,19 +13,20 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.Options;
-using System;
-using System.Buffers;
-using System.Linq;
 using ToSic.Eav.Serialization;
 using ToSic.Eav.WebApi.Serialization;
 using ToSic.Lib.DI;
-using ToSic.Sxc.WebApi;
+using ToSic.Lib.Documentation;
 using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.WebApi.ActionFilters
 {
+    /// <summary>
+    /// Make sure .net controllers behave the same in terms of JSON serialization like Newtonsoft
+    /// </summary>
     // https://blogs.taiga.nl/martijn/2020/05/28/system-text-json-and-newtonsoft-json-side-by-side-in-asp-net-core/
+    [PrivateApi]
     public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
     {
         public SystemTextJsonFormatterAttribute()
@@ -135,3 +140,4 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
 
     }
 }
+#endif

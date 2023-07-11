@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
+    // TODO: @STV WHAT IS THIS FOR? IT LOOKS LIKE IT WAS JUST A TEST?
+    // Or will we need this for CSP headers etc.?
     /// <summary>
     /// WIP: response rewrite for razor pages (CSP, meta, etc...)
     /// </summary>

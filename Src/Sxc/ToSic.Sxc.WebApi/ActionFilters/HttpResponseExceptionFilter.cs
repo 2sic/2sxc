@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿#if NETCOREAPP
 using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.WebApi.Errors;
+using ToSic.Lib.Documentation;
 
-namespace ToSic.Sxc.Oqt.Server.Controllers
+namespace ToSic.Sxc.WebApi.ActionFilters
 {
+    /// <summary>
+    /// TODO: @STV pls document what this is for
+    /// </summary>
+    [PrivateApi]
     public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
     {
         public int Order { get; } = int.MaxValue - 10;
@@ -34,3 +40,4 @@ namespace ToSic.Sxc.Oqt.Server.Controllers
         }
     }
 }
+#endif

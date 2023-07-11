@@ -57,7 +57,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
             services.TryAddTransient<OqtPageOutput>();
             services.TryAddTransient<OqtSxcViewBuilder>();
-            services.TryAddTransient<IBlockResourceExtractor, OqtBlockResourceExtractor>();
+            services.TryAddTransient<IBlockResourceExtractor, BlockResourceExtractorWithInline>();
             services.TryAddTransient<IValueConverter, OqtValueConverter>();
 
             // Views / Templates / Razor: View Builder

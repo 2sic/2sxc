@@ -4,6 +4,8 @@ using ToSic.Sxc.WebApi.Adam;
 
 namespace ToSic.Sxc.Oqt.Server.Adam
 {
+    // TODO: @STV - this doesn't seem to be used, as it's not even registered in DI
+    // Pls find out why, and if we don't need it, remove
     public class OqtAdamItemDtoMaker<TFolderId, TFileId> : AdamItemDtoMaker<TFolderId, TFileId>
     {
         #region Constructor / DI
