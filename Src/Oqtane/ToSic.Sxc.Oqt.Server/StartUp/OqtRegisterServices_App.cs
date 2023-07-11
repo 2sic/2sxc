@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ToSic.Eav.Apps.ImportExport;
-using ToSic.Eav.LookUp;
 using ToSic.Eav.Persistence.Interfaces;
 using ToSic.Eav.Security;
 using ToSic.Sxc.Adam;
@@ -17,8 +16,6 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         private static IServiceCollection AddOqtaneLookUpsAndSources(this IServiceCollection services)
         {
-            services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
-            //services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<OqtSiteLookUp>();
             services.TryAddTransient<OqtPageLookUp>();
             services.TryAddTransient<OqtModuleLookUp>();

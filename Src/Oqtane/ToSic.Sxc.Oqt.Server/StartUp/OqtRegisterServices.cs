@@ -22,6 +22,7 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
                 .AddSxcOqtApiParts()                        // Overrides etc. for Sxc Objects in the APIs
                 .AddSxcOqtDynCodeAndViews()                 // Stuff so the Dyn-Code and views work
                 .AddSxcOqtModule()                          // Module capabilities
+                .AddSxcOqtLookUps()
                 .AddRazorDependencies()                     // Razor functionality
                 .AddSxcOqtAdam()                            // Adam
                 ;

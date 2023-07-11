@@ -68,7 +68,6 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<BlockBase.MyServices>();
 
             // Configuration Provider WIP
-            services.TryAddTransient<QueryStringLookUp>();
             services.TryAddTransient<AppConfigDelegate>();
             services.TryAddTransient<App>();
             services.TryAddTransient<ImportExportEnvironmentBase.MyServices>();
@@ -178,6 +177,7 @@ namespace ToSic.Sxc.Startup
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services
+                .AddSxcCoreLookUps()
                 .AddServicesAndKits()
                 .AddCmsContext()
                 .ExternalConfig()
