@@ -52,6 +52,9 @@ namespace Custom.Hybrid
 
         #region Link & Edit - added to API in 2sxc 10.01; CmsContext, Resources, Settings (v12)
 
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+
         /// <inheritdoc cref="IDynamicCode.Link" />
         public ILinkService Link => _DynCodeRoot?.Link;
 

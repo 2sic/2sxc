@@ -60,8 +60,8 @@ namespace Custom.Hybrid
         // ReSharper disable once InconsistentNaming
         [PrivateApi] public IDynamicCodeRoot _DynCodeRoot => CtxHlp._DynCodeRoot;
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public new TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public new TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
         [PrivateApi("Not yet ready")]
         public IDevTools DevTools => _DynCodeRoot.DevTools;

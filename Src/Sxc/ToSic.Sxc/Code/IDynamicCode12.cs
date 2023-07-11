@@ -41,8 +41,8 @@ namespace ToSic.Sxc.Code
         // **************************************************
 
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        TService GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        TService GetService<TService>() where TService : class;
 
         /// <inheritdoc cref="IDynamicCode.App" />
         IApp App { get; }

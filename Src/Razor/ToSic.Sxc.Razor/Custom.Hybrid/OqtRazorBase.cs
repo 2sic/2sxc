@@ -39,8 +39,8 @@ namespace Custom.Hybrid
 
         #region GetService / Logs / DevTools
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public TService GetService<TService>() => _DynCodeRoot.GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => _DynCodeRoot.GetService<TService>();
 
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public ICodeLog Log => SysHlp.CodeLog;

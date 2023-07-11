@@ -19,8 +19,8 @@ namespace ToSic.Sxc.Code
     {
         #region Stuff basically inherited from v12/14
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}"/>
-        TService GetService<TService>();
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        TService GetService<TService>() where TService : class;
 
         /// <inheritdoc cref="IDynamicCode.Link"/>
         ILinkService Link { get; }

@@ -48,7 +48,7 @@ namespace ToSic.Sxc.WebApi
         /// <remarks>
         /// This will override the base functionality to ensure that any services created will be able to get the CodeContext.
         /// </remarks>
-        public TService GetService<TService>() => _DynCodeRoot != null
+        public TService GetService<TService>() where TService : class => _DynCodeRoot != null
             ? _DynCodeRoot.GetService<TService>()
             : _serviceProvider.Get(DnnStaticDi.GetPageScopedServiceProvider).Build<TService>(Log);
         // Must cache it, to be really sure we use the same ServiceProvider in the same request

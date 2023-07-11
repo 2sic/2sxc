@@ -52,6 +52,9 @@ namespace ToSic.Sxc.Dnn
         /// <inheritdoc cref="IDynamicCode.Data" />
         public IContextData Data => _DynCodeRoot.Data;
 
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+
 
         #region AsDynamic implementations
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />

@@ -53,6 +53,9 @@ namespace ToSic.SexyContent.WebApi
     {
         protected SxcApiController() : base("OldApi") { }
 
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+
         public new IDnnContext Dnn => base.Dnn;
 
         [Obsolete]

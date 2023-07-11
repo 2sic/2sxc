@@ -87,8 +87,8 @@ namespace ToSic.Sxc.Code
         #endregion
 
 
-        /// <inheritdoc cref="IDynamicCode.GetService{TService}" />
-        public TService GetService<TService>()
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class
         {
             var newService = _serviceProvider.Build<TService>(Log);
             if (newService is INeedsDynamicCodeRoot newWithNeeds)

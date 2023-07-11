@@ -53,6 +53,10 @@ namespace Custom.Hybrid
 
         #endregion
 
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+
+
         #region Content, Presentation, Header, App, Data
 
         /// <inheritdoc cref="IDynamicCode.Content" />

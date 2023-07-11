@@ -41,6 +41,9 @@ namespace Custom.Hybrid
 
         [PrivateApi] public int CompatibilityLevel => Constants.CompatibilityLevel12;
 
+        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        public TService GetService<TService>() where TService : class => SysHlp.GetService<TService>();
+
         #endregion
 
         #region Content, Presentation, Header, App, Data

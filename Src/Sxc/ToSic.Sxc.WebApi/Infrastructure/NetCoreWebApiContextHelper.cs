@@ -4,9 +4,9 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ToSic.Eav.Apps;
+using ToSic.Eav.Code;
 using ToSic.Eav.Context;
 using ToSic.Eav.Run;
-using ToSic.Eav.WebApi.Helpers;
 using ToSic.Eav.WebApi.Infrastructure;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
@@ -23,9 +23,9 @@ namespace ToSic.Sxc.WebApi.Infrastructure
     internal class NetCoreWebApiContextHelper: CodeHelperBase
     {
         private readonly ControllerBase _owner;
-        private readonly NetCoreControllersHelper _helper;
+        private readonly ICanGetService _helper;
 
-        public NetCoreWebApiContextHelper(ControllerBase owner, NetCoreControllersHelper helper) : base("Oqt.ApiHlp")
+        public NetCoreWebApiContextHelper(ControllerBase owner, ICanGetService helper) : base("Oqt.ApiHlp")
         {
             if (owner is IHasLog ownerWithLog)
                 this.LinkLog(ownerWithLog.Log);
