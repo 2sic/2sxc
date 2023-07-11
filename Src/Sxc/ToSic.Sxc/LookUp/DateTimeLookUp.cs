@@ -1,7 +1,8 @@
-﻿using System;
+﻿#if NETCOREAPP
+using System;
 using ToSic.Eav.LookUp;
 
-namespace ToSic.Sxc.Oqt.Server.LookUps
+namespace ToSic.Sxc.LookUp
 {
     public class DateTimeLookUp : LookUpBase
     {
@@ -22,3 +23,4 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
         }
     }
 }
+#endif

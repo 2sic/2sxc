@@ -4,11 +4,11 @@ using ToSic.Sxc.Oqt.Server.Context;
 
 namespace ToSic.Sxc.Oqt.Server.LookUps
 {
-    public class UserLookUp : LookUpBase
+    public class OqtUserLookUp : LookUpBase
     {
         private readonly OqtUser _oqtUser;
 
-        public UserLookUp(IUser oqtUser)
+        public OqtUserLookUp(IUser oqtUser)
         {
             Name = "User";
 

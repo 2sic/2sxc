@@ -19,10 +19,10 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
         {
             services.TryAddTransient<ILookUpEngineResolver, OqtGetLookupEngine>();
             //services.TryAddTransient<QueryStringLookUp>();
-            services.TryAddTransient<SiteLookUp>();
+            services.TryAddTransient<OqtSiteLookUp>();
             services.TryAddTransient<OqtPageLookUp>();
             services.TryAddTransient<OqtModuleLookUp>();
-            services.TryAddScoped<UserLookUp>();
+            services.TryAddScoped<OqtUserLookUp>();
 
             // New v15 for better DI/Logging
             services.TryAddTransient<OqtAssetsFileHelper>();

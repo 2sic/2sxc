@@ -1,6 +1,4 @@
-﻿using System;
-using ToSic.Lib.Logging;
-using ToSic.Eav.LookUp;
+﻿using ToSic.Eav.LookUp;
 using ToSic.Lib.DI;
 using ToSic.Lib.Services;
 using ToSic.Sxc.LookUp;
@@ -14,10 +12,10 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
 
         public OqtGetLookupEngine(
             LazySvc<QueryStringLookUp> queryStringLookUp,
-            LazySvc<SiteLookUp> siteLookUp,
+            LazySvc<OqtSiteLookUp> siteLookUp,
             LazySvc<OqtPageLookUp> pageLookUp,
             LazySvc<OqtModuleLookUp> moduleLookUp,
-            LazySvc<UserLookUp> userLookUp) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
+            LazySvc<OqtUserLookUp> userLookUp) : base($"{OqtConstants.OqtLogPrefix}.LookUp")
         {
             _queryStringLookUp = queryStringLookUp;
             _siteLookUp = siteLookUp;
@@ -26,27 +24,27 @@ namespace ToSic.Sxc.Oqt.Server.LookUps
             _userLookUp = userLookUp;
         }
         private readonly LazySvc<QueryStringLookUp> _queryStringLookUp;
-        private readonly LazySvc<SiteLookUp> _siteLookUp;
+        private readonly LazySvc<OqtSiteLookUp> _siteLookUp;
         private readonly LazySvc<OqtPageLookUp> _pageLookUp;
         private readonly LazySvc<OqtModuleLookUp> _moduleLookUp;
-        private readonly LazySvc<UserLookUp> _userLookUp;
+        private readonly LazySvc<OqtUserLookUp> _userLookUp;
 
         #endregion
 
         public ILookUpEngine GetLookUpEngine(int instanceId)
         {
-            var providers = new LookUpEngine(Log);
+            var luEngine = new LookUpEngine(Log);
 
-            providers.Add(_queryStringLookUp.Value);
-            providers.Add(new DateTimeLookUp());
-            providers.Add(new TicksLookUp());
+            luEngine.Add(_queryStringLookUp.Value);
+            luEngine.Add(new DateTimeLookUp());
+            luEngine.Add(new TicksLookUp());
 
-            providers.Add(_siteLookUp.Value);
-            providers.Add(_pageLookUp.Value);
-            providers.Add(_moduleLookUp.Value);
-            providers.Add(_userLookUp.Value);
+            luEngine.Add(_siteLookUp.Value);
+            luEngine.Add(_pageLookUp.Value);
+            luEngine.Add(_moduleLookUp.Value);
+            luEngine.Add(_userLookUp.Value);
 
-            return providers;
+            return luEngine;
         }
     }
 }
