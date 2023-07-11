@@ -35,18 +35,20 @@ namespace ToSic.Sxc.Code
             return ok ? typed : AsC.AsEntity(untyped);
         }
 
-        public ITypedItem Item(object maybe, ITypedItem fallback)
+        public ITypedItem Item(object maybe, string noParamOrder, ITypedItem fallback)
         {
+            Eav.Parameters.Protect(noParamOrder);
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItem(untyped);
+            return ok ? typed : AsC.AsItem(untyped, noParamOrder);
         }
 
-        public IEnumerable<ITypedItem> Items(object maybe, IEnumerable<ITypedItem> fallback)
+        public IEnumerable<ITypedItem> Items(object maybe, string noParamOrder, IEnumerable<ITypedItem> fallback)
         {
+            Eav.Parameters.Protect(noParamOrder);
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItems(untyped);
+            return ok ? typed : AsC.AsItems(untyped, noParamOrder);
         }
 
         public IToolbarBuilder Toolbar(object maybe, IToolbarBuilder fallback)
@@ -99,11 +101,11 @@ namespace ToSic.Sxc.Code
             return ok ? typed : null;
         }
 
-        public ITyped Typed(object maybe, ITyped fallback)
+        public ITyped Typed(object maybe, string noParamOrder, ITyped fallback)
         {
             var (typed, untyped, ok) = EvalInterface(maybe, fallback);
             // Try to convert, in case it's an IEntity or something; could also result in error
-            return ok ? typed : AsC.AsItem(untyped);
+            return ok ? typed : AsC.AsItem(untyped, noParamOrder);
         }
 
         #region Tags

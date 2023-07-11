@@ -21,13 +21,13 @@ namespace ToSic.Sxc.Code
             Data = data as ContextData;
         }
 
-        public ITypedItem MyItem => _myItem.Get(() => _codeRoot.AsC.AsItem(Data.MyItem));
+        public ITypedItem MyItem => _myItem.Get(() => _codeRoot.AsC.AsItem(Data.MyItem, Eav.Parameters.Protector));
         private readonly GetOnce<ITypedItem> _myItem = new GetOnce<ITypedItem>();
 
-        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _codeRoot.AsC.AsItems(Data.MyItem));
+        public IEnumerable<ITypedItem> MyItems => _myItems.Get(() => _codeRoot.AsC.AsItems(Data.MyItem, Eav.Parameters.Protector));
         private readonly GetOnce<IEnumerable<ITypedItem>> _myItems = new GetOnce<IEnumerable<ITypedItem>>();
 
-        public ITypedItem MyHeader => _myHeader.Get(() => _codeRoot.AsC.AsItem(Data.MyHeader));
+        public ITypedItem MyHeader => _myHeader.Get(() => _codeRoot.AsC.AsItem(Data.MyHeader, Eav.Parameters.Protector));
         private readonly GetOnce<ITypedItem> _myHeader = new GetOnce<ITypedItem>();
 
         public ITypedModel MyModel => _myModel.Get(() => new TypedModel(_myModelData, _codeRoot, _isRazor, _codeFileName));

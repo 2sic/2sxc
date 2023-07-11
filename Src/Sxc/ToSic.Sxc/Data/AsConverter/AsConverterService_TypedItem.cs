@@ -15,8 +15,11 @@ namespace ToSic.Sxc.Data.AsConverter
         #region AsTyped Implementations
 
 
-        public ITypedItem AsItem(object original, bool? required = default, ITypedItem fallback = default)
-            => AsItemInternal(original, MaxRecursions);
+        public ITypedItem AsItem(object original, string noParamOrder, bool? required = default, ITypedItem fallback = default)
+        {
+            Eav.Parameters.Protect(noParamOrder);
+            return AsItemInternal(original, MaxRecursions);
+        }
 
         private ITypedItem AsItemInternal(object target, int recursions)
         {
@@ -59,8 +62,11 @@ namespace ToSic.Sxc.Data.AsConverter
 
         }
 
-        public IEnumerable<ITypedItem> AsItems(object list, bool? required = default, IEnumerable<ITypedItem> fallback = default)
-            => AsItemList(list, required ?? true, fallback, MaxRecursions);
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default)
+        {
+            Eav.Parameters.Protect(noParamOrder);
+            return AsItemList(list, required ?? true, fallback, MaxRecursions);
+        }
 
         private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions)
         {

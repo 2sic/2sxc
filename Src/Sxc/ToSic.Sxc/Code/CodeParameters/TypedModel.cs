@@ -161,10 +161,10 @@ Either change the calling Html.Partial(""{_razorFileName}"", {{ {name} = ... }} 
         #region Entity and Item(s)
 
         public ITypedItem Item(string name, string noParamOrder = Protector, ITypedItem fallback = default, bool? required = default)
-            => _converter.Item(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Item(GetInternal(name, required, noParamOrder), noParamOrder, fallback);
 
         public IEnumerable<ITypedItem> Items(string name, string noParamOrder = Protector, IEnumerable<ITypedItem> fallback = default, bool? required = default)
-            => _converter.Items(GetInternal(name, required, noParamOrder), fallback);
+            => _converter.Items(GetInternal(name, required, noParamOrder), noParamOrder, fallback);
 
         #endregion
 

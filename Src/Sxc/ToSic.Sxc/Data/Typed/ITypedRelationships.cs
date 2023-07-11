@@ -12,8 +12,9 @@ namespace ToSic.Sxc.Data
         /// If the field doesn't exist or is empty, will return null.
         /// </summary>
         /// <param name="name">Name of the field</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <returns></returns>
-        ITypedItem Child(string name);
+        ITypedItem Child(string name, string noParamOrder = Protector);
 
         /// <summary>
         /// A **typed** list of sub-items. Important for LINQ style querying or just
@@ -24,10 +25,10 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="type">Optional type filter - would only return items of this type. </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="name">Optional field filter - would only return items that point to the current item in a specific field name.</param>
+        /// <param name="field">Optional field filter - would only return items that point to the current item in a specific field name.</param>
         /// <returns>A list of all items pointing here (filtered), converted to DynamicEntity for convenience.</returns>
         /// <remarks>Note that the parameter-order is reversed to the Parents()</remarks>
-        IEnumerable<ITypedItem> Children(string name = default, string noParamOrder = Protector, string type = default);
+        IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default);
 
         /// <summary>
         /// A **typed** list of entities which point to this item. Important for LINQ style querying or just

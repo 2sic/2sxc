@@ -134,10 +134,10 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object target, string noParamOrder = Protector) => _DynCodeRoot.AsC.AsItem(target);
+        public ITypedItem AsItem(object target, string noParamOrder = Protector) => _DynCodeRoot.AsC.AsItem(target, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector) => _DynCodeRoot.AsC.AsItems(list);
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector) => _DynCodeRoot.AsC.AsItems(list, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);

@@ -114,11 +114,11 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
         public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)
-            => _DynCodeRoot.AsC.AsItem(target);
+            => _DynCodeRoot.AsC.AsItem(target, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
-            => _DynCodeRoot.AsC.AsItems(list);
+            => _DynCodeRoot.AsC.AsItems(list, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);

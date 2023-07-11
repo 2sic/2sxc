@@ -18,16 +18,16 @@ namespace ToSic.Sxc.Data
         //    return string.Format(ErrNotSupported, cName);
         //}
 
-        ITypedItem ITypedStack.Child(string name)
+        ITypedItem ITypedStack.Child(string name, string noParamOrder)
         {
             var obj = Get(name);
-            return _Services.AsC.AsItem(obj);
+            return _Services.AsC.AsItem(obj, noParamOrder);
         }
 
-        IEnumerable<ITypedItem> ITypedStack.Children(string name, string noParamOrder, string type)
+        IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type)
         {
-            var obj = Get(name);
-            return _Services.AsC.AsItems(obj);
+            var obj = Get(field);
+            return _Services.AsC.AsItems(obj, noParamOrder);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace ToSic.Sxc.Data
         #region parents / children
 
         /// <inheritdoc cref="ITypedRelationships.Child"/>
-        ITypedItem Child(string name);
+        ITypedItem Child(string name, string noParamOrder = Protector);
 
         /// <inheritdoc cref="ITypedRelationships.Children"/>
         IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default);

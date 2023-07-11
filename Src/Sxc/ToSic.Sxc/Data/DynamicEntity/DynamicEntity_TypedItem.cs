@@ -45,7 +45,7 @@ namespace ToSic.Sxc.Data
         IEnumerable<ITypedItem> ITypedItem.Parents(string type, string noParamOrder, string field)
         {
             Protect(noParamOrder, $"{nameof(field)}");
-            return _Services.AsC.AsItems(Parents(type, field));
+            return _Services.AsC.AsItems(Parents(type, field), noParamOrder);
         }
 
         /// <inheritdoc />
@@ -54,7 +54,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(type)}");
             var dynChildren = Children(field, type);
-            var list = _Services.AsC.AsItems(dynChildren).ToList();
+            var list = _Services.AsC.AsItems(dynChildren, noParamOrder).ToList();
             if (list.Any()) return list;
 
             // Generate a marker/placeholder to remember what field this is etc.
@@ -64,6 +64,10 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedItem ITypedItem.Child(string field) => (this as ITypedItem).Children(field).FirstOrDefault();
+        ITypedItem ITypedItem.Child(string name, string noParamOrder)
+        {
+            Protect(noParamOrder);
+            return (this as ITypedItem).Children(name).FirstOrDefault();
+        }
     }
 }
