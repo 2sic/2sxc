@@ -22,9 +22,9 @@ using JsonOptions = ToSic.Eav.Serialization.JsonOptions;
 namespace ToSic.Sxc.Oqt.Server.Controllers
 {
     // https://blogs.taiga.nl/martijn/2020/05/28/system-text-json-and-newtonsoft-json-side-by-side-in-asp-net-core/
-    public class SystemTestJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
+    public class SystemTextJsonFormatterAttribute : ActionFilterAttribute, IControllerModelConvention, IActionModelConvention
     {
-        public SystemTestJsonFormatterAttribute()
+        public SystemTextJsonFormatterAttribute()
         {
             Order = -3001;
         }
