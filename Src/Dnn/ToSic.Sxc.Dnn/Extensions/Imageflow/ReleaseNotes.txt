@@ -1,6 +1,6 @@
 
 <h2>Imageflow extension for DNN</h2>
-<p>Version 01.02.00</p>
+<p>Version 01.02.01</p>
 <ul>
 	<li>dependent assemblies are in bin\Imageflow folder</li>
 </ul>
