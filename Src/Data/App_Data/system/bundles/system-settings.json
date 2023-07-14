@@ -9604,7 +9604,7 @@
         },
         {
           "Id": 130677,
-          "Version": 3,
+          "Version": 4,
           "Guid": "89184eb0-1d4d-4429-8c38-c453f8aa149d",
           "Type": {
             "Name": "⚙️Images",
@@ -9623,7 +9623,8 @@
                   "35d4e680-2f92-455a-90b7-4a5a936c287f",
                   "bdbff289-219d-46d6-b697-5d17050eebe9",
                   "8affa267-ec04-408f-af93-48c0ae693e5c",
-                  "8c454005-9a76-48b2-a63d-7e92a731bb80"
+                  "8c454005-9a76-48b2-a63d-7e92a731bb80",
+                  "6c155e30-43a4-4564-bf3f-0d80c925c4d7"
                 ]
               }
             }
@@ -10086,6 +10087,78 @@
                 "Target": "Entity",
                 "TargetType": 4,
                 "Guid": "8c454005-9a76-48b2-a63d-7e92a731bb80"
+              }
+            }
+          ]
+        },
+        {
+          "Id": 175300,
+          "Version": 1,
+          "Guid": "6c155e30-43a4-4564-bf3f-0d80c925c4d7",
+          "Type": {
+            "Name": "⚙️Image",
+            "Id": "1a86b080-9e0d-4207-97d2-04edf80b4f2f"
+          },
+          "Attributes": {
+            "String": {
+              "Advanced": {
+                "en-us": "{\r\n  \"recipe\": {\r\n    \"name\": \"default\",\r\n    \"variants\": \"2*, 1*, 3/4*, 1/2*\",\r\n    \"setWidth\": false,\r\n    \"attributes\": {\r\n      \"loading\": \"lazy\"\r\n    },\r\n    \"recipes\": [\r\n      {\r\n        \"name\": \"Bootstrap3\",\r\n        \"forCss\": \"bs3\",\r\n        \"attributes\": { \"class\": \"img-responsive\" },\r\n        \"setWidth\": false\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap4\",\r\n        \"forCss\": \"bs4\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true\r\n      },\r\n      {\r\n        \"name\": \"Bootstrap5\",\r\n        \"forCss\": \"bs5\",\r\n        \"attributes\": { \"class\": \"img-fluid\" },\r\n        \"setWidth\": true,\r\n        \"setHeight\" : true,\r\n        \"recipes\": [\r\n          { \r\n            \"forFactor\": \"12/12\", \r\n            \"width\": 1230,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 100vw, 1230px\"\r\n            }\r\n          },\r\n          { \"forFactor\": \"11/12\", \"width\": 1100 },\r\n          { \"forFactor\": \"10/12\", \"width\": 1000 },\r\n          { \"forFactor\": \"9/12\", \"width\": 900 },\r\n          { \"forFactor\": \"8/12\", \"width\": 800 },\r\n          { \"forFactor\": \"7/12\", \"width\": 700 },\r\n          { \r\n            \"forFactor\": \"6/12\", \r\n            \"width\": 600, \r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 50vw, (max-width: 576px) 100vw, 600px\" \r\n              }\r\n          },\r\n          { \"forFactor\": \"5/12\", \"width\": 500 },\r\n          { \r\n            \"forFactor\": \"4/12\", \r\n            \"width\": 390,\r\n            \"attributes\":{\r\n              \"sizes\": \"(max-width: 1400px) 34vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 390px\"\r\n            }\r\n           },\r\n          { \r\n            \"forFactor\": \"3/12\", \r\n            \"width\": 285,\r\n            \"attributes\": {\r\n              \"sizes\": \"(max-width: 1400px) 25vw, (max-width: 991px) 50vw, (max-width: 575px) 100vw, 285px\"\r\n              }\r\n          },\r\n          { \"forFactor\": \"2/12\", \"width\": 170 },\r\n          { \"forFactor\": \"1/12\", \"width\":  75 }\r\n        ]\r\n      }\r\n    ]\r\n  }\r\n}"
+              },
+              "Format": {
+                "en-us": ""
+              },
+              "ItemIdentifier": {
+                "en-us": "Square"
+              },
+              "ResizeMode": {
+                "en-us": "crop"
+              },
+              "ScaleMode": {
+                "en-us": "both"
+              },
+              "SettingsIdentifier": {
+                "en-us": "Images.Square"
+              }
+            },
+            "Number": {
+              "AspectRatio": {
+                "en-us": 1
+              },
+              "Height": {
+                "en-us": 865
+              },
+              "Quality": {
+                "en-us": 73
+              },
+              "Width": {
+                "en-us": 1400
+              }
+            }
+          },
+          "Owner": "dnn:userid=41",
+          "Metadata": [
+            {
+              "Id": 175301,
+              "Version": 1,
+              "Guid": "7d64cbc8-6c71-433f-b691-bb5e0dcab9fa",
+              "Type": {
+                "Name": "SystemExportDecorator",
+                "Id": "32698880-1c2e-41ab-bcfc-420091d3263f"
+              },
+              "Attributes": {
+                "Entity": {
+                  "Configuration": {
+                    "*": [
+                      "48e9f943-45da-49b4-9ceb-2b91bb6a54be"
+                    ]
+                  }
+                }
+              },
+              "Owner": "dnn:userid=41",
+              "For": {
+                "Target": "Entity",
+                "TargetType": 4,
+                "Guid": "6c155e30-43a4-4564-bf3f-0d80c925c4d7"
               }
             }
           ]
