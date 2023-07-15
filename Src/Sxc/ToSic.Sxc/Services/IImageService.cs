@@ -134,12 +134,10 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
+        /// - The name of a settings configuration, like "Content", "Screen", "Square", etc.
         /// - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
-        /// - The name of a settings configuration, like "Content" or "Screen"
         /// - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        /// - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
-        /// 
-        /// Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
+        /// - A strictly typed <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
         /// </param>
         /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="width">An optional, fixed width of the image</param>
@@ -164,9 +162,7 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <returns>A ResponsivePicture object which can be rendered directly. See [](xref:NetCode.Images.Index)</returns>
         /// <remarks>
-        /// History:
-        /// * Added in v13.03
-        /// * `picClass` added in v15.04
+        /// Added in v13.03
         /// </remarks>
         IResponsivePicture Picture(
             object link = null,
@@ -193,12 +189,10 @@ namespace ToSic.Sxc.Services
         /// </param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="settings">
+        ///     - The name of a settings configuration, like "Content", "Screen", "Square", etc.
         ///     - A standardized Image-Settings object like Settings.Images.Content - see https://go.2sxc.org/settings
-        ///     - The name of a settings configuration, like "Content" or "Screen"
         ///     - Or a dynamic object containing settings properties (this can also be a merged custom + standard settings)
-        ///     - Or a specially prepared <see cref="IResizeSettings"/> object containing all settings.
-        /// 
-        ///     Note: If you need to construct very custom settings, use <see cref="Settings">ResizeSettings</see> to create them
+        ///     - A strictly typed <see cref="IResizeSettings"/> object containing all settings created using <see cref="ToSic.Sxc.Services.IImageService.Settings">ResizeSettings</see> 
         /// </param>
         /// <param name="factor">An optional multiplier, usually used to create urls which resize to a part of the default content-size. Eg. 0.5. </param>
         /// <param name="width">An optional, fixed width of the image</param>
@@ -283,6 +277,7 @@ namespace ToSic.Sxc.Services
         /// * Added in v13.03
         /// * `picClass` added in v15.04
         /// </remarks>
+        [PrivateApi("Hidden in v16.03 as I think it's not exactly useful, so I won't encourage its use")]
         IResponsiveImage ImgOrPic(
             object link = null,
             object settings = null,

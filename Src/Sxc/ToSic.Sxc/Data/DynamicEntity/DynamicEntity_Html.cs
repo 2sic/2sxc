@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
+using ToSic.Sxc.Images;
 using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 
@@ -29,6 +32,30 @@ namespace ToSic.Sxc.Data
 
             return kit.Cms.Html(Field(name), container: container, classes: null, imageSettings: imageSettings, debug: debug, toolbar: toolbar);
         }
+
+        /// <inheritdoc/>
+        IResponsivePicture ITypedItem.Picture(
+            string name,
+            string noParamOrder,
+            object settings,
+            object factor,
+            object width,
+            string imgAlt,
+            string imgAltFallback,
+            string imgClass,
+            object recipe
+        )
+        {
+            Protect(noParamOrder, $"{nameof(settings)}, {nameof(factor)}, {nameof(width)}, {nameof(imgAlt)}...");
+            var kit = GetServiceKitOrThrow();
+            //if (!(this as ITypedItem).Type.Attributes.Any(a => a.Name.EqualsInsensitive(name)))
+            //    return null;
+            var field = Field(name);
+            return field.Url.IsEmptyOrWs()
+                ? null 
+                : kit.Image.Picture(field, settings: settings, factor: factor, width: width, imgAlt: imgAlt, imgAltFallback: imgAltFallback, imgClass: imgClass, recipe: recipe);
+        }
+
 
         private ServiceKit14 GetServiceKitOrThrow([CallerMemberName] string cName = default)
         {
