@@ -158,8 +158,10 @@ namespace ToSic.Sxc.Code
         /// Note that the class name in the file must match the file name, so `MyHelpers.cs` must have a `MyHelpers` class.
         /// </summary>
         /// <param name="path">The path, like `Helper.cs`, `./helper.cs` or `../../Helper.cs`</param>
-        /// <returns></returns>
-        dynamic GetCode(string path);
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="className">Optional class name, if it doesn't match the file name (new 16.03)</param>
+        /// <returns>Created in 16.02, `className` added in 16.03</returns>
+        dynamic GetCode(string path, string noParamOrder = Eav.Parameters.Protector, string className = default);
 
         #endregion
 

@@ -49,7 +49,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="ICreateInstance.CreateInstance"/>
         public dynamic CreateInstance(string virtualPath, string noParamOrder = Protector, string name = null, string relativePath = null, bool throwOnError = true)
-            => SysHlp.CreateInstance(virtualPath, Path, noParamOrder, name, relativePath, throwOnError);
+            => SysHlp.CreateInstance(virtualPath, noParamOrder, name, relativePath, throwOnError);
 
         #endregion
 

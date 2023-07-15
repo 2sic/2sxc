@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -9,6 +8,7 @@ using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 using Constants = ToSic.Sxc.Constants;
 
 // ReSharper disable ConvertToNullCoalescingCompoundAssignment
@@ -71,7 +71,7 @@ namespace Custom.Hybrid
         string IGetCodePath.CreateInstancePath { get; set; }
 
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-        public dynamic GetCode(string path) => SysHlp.CreateInstance(path);
+        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
 
         #endregion
@@ -113,11 +113,11 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)
+        public ITypedItem AsItem(object target, string noParamOrder = Protector)
             => _DynCodeRoot.AsC.AsItem(target, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector)
             => _DynCodeRoot.AsC.AsItems(list, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />

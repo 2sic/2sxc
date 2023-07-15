@@ -8,6 +8,7 @@ using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Razor
 {
@@ -90,18 +91,25 @@ namespace ToSic.Sxc.Razor
 
         #region Create Instance
 
+        public object GetCode(string path, string noParamOrder = Protector, string className = default)
+        {
+            Protect(noParamOrder, nameof(className));
+            return CreateInstance(path, /*_owner.Path,*/ name: className);
+        }
+
+
         /// <summary>
         /// Creates instances of the shared pages with the given relative path
         /// </summary>
         /// <returns></returns>
-        public dynamic CreateInstance(string virtualPath,
-            string razorPath,
-            string noParamOrder = ToSic.Eav.Parameters.Protector,
+        public object CreateInstance(string virtualPath,
+            //string razorPath,
+            string noParamOrder = Protector,
             string name = null,
             string relativePath = null,
             bool throwOnError = true)
         {
-            var directory = System.IO.Path.GetDirectoryName(razorPath)
+            var directory = System.IO.Path.GetDirectoryName(_owner.Path)
                             ?? throw new("Current directory seems to be null");
             var path = System.IO.Path.Combine(directory, virtualPath);
             VerifyFileExists(path);

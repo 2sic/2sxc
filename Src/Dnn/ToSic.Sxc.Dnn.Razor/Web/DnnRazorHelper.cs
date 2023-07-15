@@ -78,6 +78,12 @@ namespace ToSic.Sxc.Web
 
         #region Create Instance
 
+        public object GetCode(string path, string noParamOrder = Protector, string className = default)
+        {
+            Protect(noParamOrder, nameof(className));
+            return CreateInstance(path, name: className);
+        }
+
         public object CreateInstance(string virtualPath,
             string noParamOrder = Protector,
             string name = null,

@@ -14,6 +14,7 @@ using System.Web.Http;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using System.IO;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -109,7 +110,7 @@ namespace Custom.Hybrid
         //public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot.AsAdam(item, fieldName);
 
         /// <inheritdoc cref="IDynamicWebApi.SaveInAdam" />
-        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = ToSic.Eav.Parameters.Protector,
+        public new ToSic.Sxc.Adam.IFile SaveInAdam(string noParamOrder = Protector,
             Stream stream = null,
             string fileName = null,
             string contentType = null,
@@ -144,8 +145,11 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-        public dynamic GetCode(string path)
-            => _DynCodeRoot.CreateInstance(path, relativePath: ((IGetCodePath)this).CreateInstancePath);
+        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default)
+        {
+            Protect(noParamOrder, nameof(className));
+            return _DynCodeRoot.CreateInstance(path, relativePath: ((IGetCodePath)this).CreateInstancePath, name: className);
+        }
 
         #endregion
 
@@ -173,11 +177,11 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)
+        public ITypedItem AsItem(object target, string noParamOrder = Protector)
             => _DynCodeRoot.AsC.AsItem(target, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector)
             => _DynCodeRoot.AsC.AsItems(list, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
@@ -200,7 +204,7 @@ namespace Custom.Hybrid
         #region Net Core Compatibility Shims - Copy this entire section to WebApi Files
 
         /// <inheritdoc cref="IDynamicWebApi.File"/>
-        public dynamic File(string noParamOrder = ToSic.Eav.Parameters.Protector,
+        public dynamic File(string noParamOrder = Protector,
             bool? download = null,
             string virtualPath = null,
             string contentType = null,

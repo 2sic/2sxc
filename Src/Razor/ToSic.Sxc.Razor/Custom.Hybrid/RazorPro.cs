@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -9,6 +8,7 @@ using ToSic.Sxc.Context;
 using ToSic.Sxc.Data;
 using ToSic.Sxc.Engines;
 using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
 namespace Custom.Hybrid
@@ -74,11 +74,11 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object target, string noParamOrder = Parameters.Protector)
+        public ITypedItem AsItem(object target, string noParamOrder = Protector)
             => _DynCodeRoot.AsC.AsItem(target, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Parameters.Protector)
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector)
             => _DynCodeRoot.AsC.AsItems(list, noParamOrder);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
@@ -97,7 +97,7 @@ namespace Custom.Hybrid
 
 
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-        public dynamic GetCode(string path) => SysHlp.CreateInstance(path, Path);
+        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default) => SysHlp.GetCode(path, noParamOrder, className);
 
         #region MyContext
 

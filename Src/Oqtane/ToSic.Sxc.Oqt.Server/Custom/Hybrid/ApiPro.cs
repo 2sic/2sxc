@@ -156,7 +156,11 @@ namespace Custom.Hybrid
         public ITypedModel MyModel => CodeHelper.MyModel;
 
         /// <inheritdoc cref="IDynamicCode16.GetCode"/>
-        public dynamic GetCode(string path) => _DynCodeRoot.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath);
+        public dynamic GetCode(string path, string noParamOrder = Protector, string className = default)
+        {
+            Protect(noParamOrder, nameof(className));
+            return _DynCodeRoot.CreateInstance(path, relativePath: (this as IGetCodePath).CreateInstancePath, name: className);
+        }
 
         #region MyContext
 
