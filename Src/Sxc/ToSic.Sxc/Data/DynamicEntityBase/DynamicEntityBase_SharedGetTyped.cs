@@ -55,10 +55,7 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        string ITyped.ToString()
-        {
-            return "test / debug" + ToString();
-        }
+        string ITyped.ToString() => "test / debug: " + ToString();
 
         //#region TypedRead
 

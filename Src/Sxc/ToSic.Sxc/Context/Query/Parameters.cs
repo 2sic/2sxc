@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Context.Query
     /// This should provide cross-platform, neutral way to have page parameters in the Razor
     /// </summary>
     [PrivateApi("Hide implementation")]
-    public class Parameters : IParameters
+    public partial class Parameters : IParameters
     {
         #region Constructor
 
@@ -130,7 +130,7 @@ namespace ToSic.Sxc.Context.Query
             if (value.IsNumeric()) return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture);
             if (value is DateTime dtmVal)
             {
-                var result = DateTime.SpecifyKind(dtmVal, DateTimeKind.Utc).ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+                var result = System.DateTime.SpecifyKind(dtmVal, DateTimeKind.Utc).ToString("s", System.Globalization.CultureInfo.InvariantCulture);
                 // if the time is zero, trim that
                 if (result.EndsWith("T00:00:00")) return result.Substring(0, result.IndexOf('T'));
                 return result;
