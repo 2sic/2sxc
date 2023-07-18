@@ -112,19 +112,20 @@ namespace ToSic.Sxc.Code
         /// <summary>
         /// Creates a typed object to read the original passed into this function.
         /// This is usually used to process objects which the compiler can't know, such as anonymous objects returned from helper code etc.
-        ///
-        /// If you have an array of such objects, use <see cref="AsTypedList"/>.
         /// </summary>
         /// <param name="original"></param>
         /// <returns></returns>
+        /////
+        ///// If you have an array of such objects, use <see cref="AsTypedList"/>.
         ITyped AsTyped(object original);
 
-        /// <summary>
-        /// TODO: WIP NAME NOT FINAL
-        /// </summary>
-        /// <param name="original"></param>
-        /// <returns></returns>
-        IEnumerable<ITyped> AsTypedList(object original);
+        ///// <summary>
+        ///// TODO: WIP NAME NOT FINAL
+        ///// </summary>
+        ///// <param name="original"></param>
+        ///// <returns></returns>
+        //[PrivateApi]
+        //IEnumerable<ITyped> AsTypedList(object original);
 
         /// <summary>
         /// Create a typed object which will provide all the properties of the things wrapped inside it.

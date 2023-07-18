@@ -161,15 +161,15 @@ namespace Custom.Hybrid
         public IFolder AsAdam(ICanBeEntity item, string fieldName) => _DynCodeRoot?.AsAdam(item, fieldName);
 
 
-        /// <inheritdoc />
-        public ITypedItem AsTyped(object original, string noParamOrder = Protector, bool? required = default) => _DynCodeRoot.AsC.AsItem(original, noParamOrder);
+        ///// <inheritdoc />
+        //public ITypedItem AsTyped(object original, string noParamOrder = Protector, bool? required = default) => _DynCodeRoot.AsC.AsItem(original, noParamOrder);
 
-        /// <inheritdoc />
-        public IEnumerable<ITypedItem> AsTypedList(object list,
-            string noParamOrder = Protector,
-            bool? required = default,
-            IEnumerable<ITypedItem> fallback = default)
-            => _DynCodeRoot.AsC.AsItems(list, noParamOrder, required: required, fallback: fallback);
+        ///// <inheritdoc />
+        //public IEnumerable<ITypedItem> AsTypedList(object list,
+        //    string noParamOrder = Protector,
+        //    bool? required = default,
+        //    IEnumerable<ITypedItem> fallback = default)
+        //    => _DynCodeRoot.AsC.AsItems(list, noParamOrder, required: required, fallback: fallback);
 
     }
 }
