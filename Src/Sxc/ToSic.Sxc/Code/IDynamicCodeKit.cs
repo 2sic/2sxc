@@ -16,7 +16,11 @@ namespace ToSic.Sxc.Code
     public static class IDynamicCodeKitExtensions
     {
         public static TServiceKit GetKit<TServiceKit>(this IDynamicCodeRoot codeRoot) where TServiceKit : ServiceKit
-            => (codeRoot as IDynamicCodeKit<TServiceKit>)?.Kit ?? codeRoot.GetService<TServiceKit>();
+        {
+            if (codeRoot is IDynamicCodeKit<TServiceKit> withKit && withKit.Kit != null)
+                return withKit.Kit;
+            return codeRoot.GetService<TServiceKit>();
+        }
     }
 
 }

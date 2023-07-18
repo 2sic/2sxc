@@ -13,16 +13,14 @@ namespace ToSic.Sxc.Services
     /// * History: Added v14.04
     /// </remarks>
     [PublicApi]
-    public class ServiceKit14: ServiceKit
+    public class ServiceKit16: ServiceKit
     {
         [PrivateApi("Public constructor for DI")]
-        public ServiceKit14() : base("Sxc.Kit14")
+        public ServiceKit16() : base("Sxc.Kit14")
         {
         }
 
-        /// <summary>
-        /// The ADAM Service, used to retrieve files and maybe more. 
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Adam"/>
         public IAdamService Adam => _adam.Get(GetService<IAdamService>);
         private readonly GetOnce<IAdamService> _adam = new GetOnce<IAdamService>();
 
@@ -36,13 +34,10 @@ namespace ToSic.Sxc.Services
         /// <summary>
         /// The Convert Service, used to convert any kind of data type to another data type
         /// </summary>
-        public IConvertService Convert => _convert.Get(GetService<IConvertService>);
-        private readonly GetOnce<IConvertService> _convert = new GetOnce<IConvertService>();
+        public IConvertService16 Convert => _convert.Get(GetService<IConvertService16>);
+        private readonly GetOnce<IConvertService16> _convert = new GetOnce<IConvertService16>();
 
-        /// <summary>
-        /// The Koi CSS Service, used to detect the current CSS framework and other features.
-        /// See [ICss](xref:Connect.Koi.ICss)
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Css"/>
         public ICss Css => _css.Get(GetService<ICss>);
         private readonly GetOnce<ICss> _css = new GetOnce<ICss>();
 
@@ -57,45 +52,25 @@ namespace ToSic.Sxc.Services
         public IDataService Data => _data.Get(GetService<IDataService>);
         private readonly GetOnce<IDataService> _data = new GetOnce<IDataService>();
 
-        /// <summary>
-        /// The Edit service, same as the main Edit service
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Edit"/>
         public IEditService Edit => _edit.Get(GetService<IEditService>);
         private readonly GetOnce<IEditService> _edit = new GetOnce<IEditService>();
 
 
-        /// <summary>
-        /// The Features services, used to check if features are enabled
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Feature"/>
         public IFeaturesService Feature => _features.Get(GetService<IFeaturesService>);
         private readonly GetOnce<IFeaturesService> _features = new GetOnce<IFeaturesService>();
 
-        /// <summary>
-        /// The Razor Blade 4 HtmlTags service, to fluidly create Tags.
-        /// See [](xref:ToSic.Razor.Blade.IHtmlTagsService).
-        ///
-        /// > [!IMPORTANT]
-        /// > This is _similar but different_ to the [Razor.Blade.Tag](https://razor-blade.net/api/ToSic.Razor.Blade.Tag.html).
-        /// > The [](xref:ToSic.Razor.Blade.IHtmlTag) objects returned here are _immutable_.
-        /// > This means that chained commands like `...HtmlTags.Div().Id(...).Class(...)`
-        /// > all return new objects and don't modify the previous one.
-        /// >
-        /// > The older `Tag` helper created mutable objects where chaining always modified the original and returned it again.
-        /// </summary>
-        /// <remarks>Added in v15</remarks>
+        /// <inheritdoc cref="ServiceKit14.HtmlTags"/>
         public IHtmlTagsService HtmlTags => _ht.Get(GetService<IHtmlTagsService>);
         private readonly GetOnce<IHtmlTagsService> _ht = new GetOnce<IHtmlTagsService>();
 
-        /// <summary>
-        /// The Images service, used to create `img` and `picture` tags
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Image"/>
         public IImageService Image => _image.Get(GetService<IImageService>);
         private readonly GetOnce<IImageService> _image = new GetOnce<IImageService>();
 
 
-        /// <summary>
-        /// The JSON service, used to convert data to-and-from JSON
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Json"/>
         public IJsonService Json => _json.Get(GetService<IJsonService>);
         private readonly GetOnce<IJsonService> _json = new GetOnce<IJsonService>();
 
@@ -104,60 +79,47 @@ namespace ToSic.Sxc.Services
         public ILinkService Link => _link.Get(GetService<ILinkService>);
         private readonly GetOnce<ILinkService> _link = new GetOnce<ILinkService>();
 
-        /// <summary>
-        /// The System Log service, used to add log messages to the system (Dnn/Oqtane)
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.SystemLog"/>
         public ISystemLogService SystemLog => _sysLog.Get(GetService<ISystemLogService>);
         private readonly GetOnce<ISystemLogService> _sysLog = new GetOnce<ISystemLogService>();
 
-        /// <summary>
-        /// Note that this was used in Mobius / Events in a few releases, so we can't just change it.
-        /// If we create a Kit15, this should be removed
-        /// </summary>
-        [PrivateApi("was the official name before v15.06, probably never used publicly, but should stay in for a while")]
-        public new ISystemLogService Log => SystemLog;
+        // Removed for v16
+        ///// <summary>
+        ///// Note that this was used in Mobius / Events in a few releases, so we can't just change it.
+        ///// If we create a Kit15, this should be removed
+        ///// </summary>
+        //[PrivateApi("was the official name before v15.06, probably never used publicly, but should stay in for a while")]
+        //public new ISystemLogService Log => SystemLog;
 
 
-        /// <summary>
-        /// The Mail service, used to send mails
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Mail"/>
         public IMailService Mail => _mail.Get(GetService<IMailService>);
         private readonly GetOnce<IMailService> _mail = new GetOnce<IMailService>();
 
 
-        /// <summary>
-        /// The Page service, used to set headers, activate features etc.
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Page"/>
         public IPageService Page => _page.Get(GetService<IPageService>);
         private readonly GetOnce<IPageService> _page = new GetOnce<IPageService>();
 
 
-        /// <summary>
-        /// The Render service, used to render one or more dynamic content within other content
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Render"/>
         public IRenderService Render => _render.Get(GetService<IRenderService>);
         private readonly GetOnce<IRenderService> _render = new GetOnce<IRenderService>();
 
-        /// <summary>
-        /// The Secure Data service - mainly for reading / decrypting secrets. 
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.SecureData"/>
         public ISecureDataService SecureData => _secureData.Get(GetService<ISecureDataService>);
         private readonly GetOnce<ISecureDataService> _secureData = new GetOnce<ISecureDataService>();
 
-        /// <summary>
-        /// The Razor-Blade Scrub service, used to clean up HTML.
-        /// See [](xref:ToSic.Razor.Blade.IScrub)
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Scrub"/>
         public IScrub Scrub => _scrub.Get(GetService<IScrub>);
         private readonly GetOnce<IScrub> _scrub = new GetOnce<IScrub>();
 
 
-        /// <summary>
-        /// The toolbar service, used to generate advanced toolbars
-        /// </summary>
+        /// <inheritdoc cref="ServiceKit14.Toolbar"/>
         public IToolbarService Toolbar => _toolbar.Get(GetService<IToolbarService>);
         private readonly GetOnce<IToolbarService> _toolbar = new GetOnce<IToolbarService>();
 
+        /// <inheritdoc cref="ServiceKit14.Users"/>
         [PrivateApi("Experimental in v15.03")]
         public IUsersService Users => _users.Get(GetService<IUsersService>);
         private readonly GetOnce<IUsersService> _users = new GetOnce<IUsersService>();

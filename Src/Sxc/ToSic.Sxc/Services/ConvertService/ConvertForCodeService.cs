@@ -2,6 +2,7 @@
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
+using static ToSic.Eav.Parameters;
 
 // ReSharper disable MethodOverloadWithOptionalParameter
 
@@ -19,8 +20,9 @@ namespace ToSic.Sxc.Services
             );
         }
         
-        public string ForCode(object value, string fallback = default)
+        public string ForCode(object value, string noParamOrder = Protector, string fallback = default)
         {
+            Protect(noParamOrder, nameof(fallback));
             if (value == null) return null;
 
             // Pre-check special case of date-time which needs ISO encoding without time zone

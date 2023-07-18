@@ -41,6 +41,7 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ConvertValueService>();
             services.TryAddTransient<ConvertForCodeService>();
             services.TryAddTransient<IConvertService, ConvertService>();
+            services.TryAddTransient<IConvertService16, ConvertService16>();
 
             // New 12.05: SecureData
             services.TryAddTransient<ISecureDataService, SecureDataService>();
@@ -61,11 +62,6 @@ namespace ToSic.Sxc.Startup
             services.TryAddTransient<ToolbarBuilder.MyServices>();
             services.TryAddTransient<ToolbarButtonDecoratorHelper>();
 
-            // v14 Kits
-            services.TryAddTransient<ServiceKit>();
-            services.TryAddTransient<ServiceKit14>();
-            services.TryAddTransient<ServiceKitLight16>();
-
             // WIP v14
             services.TryAddTransient<IAdamService, AdamService>();
 
@@ -82,6 +78,12 @@ namespace ToSic.Sxc.Startup
 
             // v16 AsConverter
             services.TryAddTransient<AsConverterService>();
+
+            // Kits v14+
+            services.TryAddTransient<ServiceKit>();
+            services.TryAddTransient<ServiceKit14>();
+            services.TryAddTransient<ServiceKit16>();
+            services.TryAddTransient<ServiceKitLight16>();
 
             return services;
         }

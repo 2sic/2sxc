@@ -1,16 +1,16 @@
-﻿//using Microsoft.Extensions.DependencyInjection;
-//using Microsoft.Extensions.DependencyInjection.Extensions;
-//using ToSic.Sxc.Dnn.Web;
-//using ToSic.Sxc.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using ToSic.Sxc.Code;
+using ToSic.Sxc.Dnn.Code;
 
-//namespace ToSic.Sxc.Dnn
-//{
-//    public static class StartUpDnnCore
-//    {
-//        public static IServiceCollection AddDnnCore(this IServiceCollection services)
-//        {
-//            services.TryAddScoped<IJsApiService, DnnJsApiService>();
-//            return services;
-//        }
-//    }
-//}
+namespace ToSic.Sxc.Dnn
+{
+    public static class StartUpDnnCore
+    {
+        public static IServiceCollection AddDnnCore(this IServiceCollection services)
+        {
+            //services.TryAddScoped<CodeRootFactory, DnnCodeRootFactory>();
+            return services;
+        }
+    }
+}

@@ -16,7 +16,6 @@ using ToSic.SexyContent.Razor;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.Help;
 using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Web;
 
 namespace ToSic.Sxc.Engines
@@ -32,10 +31,10 @@ namespace ToSic.Sxc.Engines
         #region Constructor / DI
 
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-        private readonly DnnCodeRootFactory _codeRootFactory;
+        private readonly CodeRootFactory _codeRootFactory;
         private readonly LazySvc<DnnRazorSourceAnalyzer> _sourceAnalyzer;
 
-        public RazorEngine(MyServices helpers, DnnCodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
+        public RazorEngine(MyServices helpers, CodeRootFactory codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp, LazySvc<DnnRazorSourceAnalyzer> sourceAnalyzer) : base(helpers)
         {
             ConnectServices(
                 _codeRootFactory = codeRootFactory,

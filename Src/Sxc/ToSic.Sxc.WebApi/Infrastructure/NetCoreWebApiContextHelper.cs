@@ -58,15 +58,19 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             // base.OnActionExecuting(context);
             InitializeBlockContext(context);
 
+            var compatibilityLevel = (_owner as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel10;
+
             // Use the ServiceProvider of the current request to build DynamicCodeRoot
             // Note that BlockOptional was already retrieved in the base class
             var codeRoot = context.HttpContext.RequestServices
-                .Build<DynamicCodeRoot>()
-                .InitDynCodeRoot(BlockOptional, Log, (_owner as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel12);
+                .Build<CodeRootFactory>()
+                .BuildDynamicCodeRoot(_owner)
+                .InitDynCodeRoot(BlockOptional, Log, compatibilityLevel);
             ConnectToRoot(codeRoot);
 
-            AdamCode = _helper.GetService<AdamCode>();
-            AdamCode.ConnectToRoot(_DynCodeRoot, Log);
+            AdamCode = codeRoot.GetService<AdamCode>();
+            // 2023-07-18 2dm - shouldn't needed any more, verify and remove
+            //AdamCode.ConnectToRoot(_DynCodeRoot, Log);
 
             // In case SxcBlock was null, there is no instance, but we may still need the app
             if (_DynCodeRoot.App == null)

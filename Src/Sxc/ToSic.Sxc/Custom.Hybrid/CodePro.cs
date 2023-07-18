@@ -46,8 +46,9 @@ namespace Custom.Hybrid
 
         #endregion
 
-        public ServiceKit14 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit14>());
-        private readonly GetOnce<ServiceKit14> _kit = new GetOnce<ServiceKit14>();
+        /// <inheritdoc cref="IDynamicCode16.Kit"/>
+        public ServiceKit16 Kit => _kit.Get(() => _DynCodeRoot.GetKit<ServiceKit16>());
+        private readonly GetOnce<ServiceKit16> _kit = new GetOnce<ServiceKit16>();
 
         #region Stuff added by Code12
 

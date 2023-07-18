@@ -15,7 +15,7 @@ namespace ToSic.Sxc.Code
     /// Provides typed APIs to access Settings, Resources and more.
     /// </summary>
     [PrivateApi("Shouldn't be visible, as the real API is 100% visible on RazorPro, CodePro etc.")]
-    public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog
+    public interface IDynamicCode16 : IGetCodePath, ICompatibilityLevel, IHasLog, IDynamicCodeKit<ServiceKit16>
     {
         #region Stuff basically inherited from v12/14
 
@@ -24,6 +24,13 @@ namespace ToSic.Sxc.Code
 
         /// <inheritdoc cref="IDynamicCode.Link"/>
         ILinkService Link { get; }
+
+        #endregion
+
+        #region Kit
+
+        /// <inheritdoc cref="IDynamicCodeKit{TServiceKit}.Kit"/>
+        ServiceKit16 Kit { get; }
 
         #endregion
 

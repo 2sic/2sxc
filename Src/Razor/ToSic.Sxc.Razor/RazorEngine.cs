@@ -22,15 +22,15 @@ namespace ToSic.Sxc.Razor
     public partial class RazorEngine : EngineBase, IRazorEngine
     {
         private readonly LazySvc<CodeErrorHelpService> _errorHelp;
-        private readonly LazySvc<DynamicCodeRoot> _dynCodeRootLazy;
+        private readonly LazySvc<CodeRootFactory> _codeRootFactory;
         public IRazorRenderer RazorRenderer { get; }
 
         #region Constructor / DI
 
-        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<DynamicCodeRoot> dynCodeRootLazy, LazySvc<CodeErrorHelpService> errorHelp) : base(services)
+        public RazorEngine(MyServices services, IRazorRenderer razorRenderer, LazySvc<CodeRootFactory> codeRootFactory, LazySvc<CodeErrorHelpService> errorHelp) : base(services)
         {
             ConnectServices(
-                _dynCodeRootLazy = dynCodeRootLazy,
+                _codeRootFactory = codeRootFactory,
                 RazorRenderer = razorRenderer,
                 _errorHelp = errorHelp
             );
@@ -68,13 +68,17 @@ namespace ToSic.Sxc.Razor
             try
             {
                 if (string.IsNullOrEmpty(TemplatePath)) return (null, null);
-                var dynCode = _dynCodeRootLazy.Value.InitDynCodeRoot(Block, Log, Constants.CompatibilityLevel12);
 
                 var result = await RazorRenderer.RenderToStringAsync(TemplatePath, new object(),
                     rzv =>
                     {
                         page = rzv; // keep for better errors
                         if (rzv.RazorPage is not IRazor asSxc) return;
+
+                        var dynCode = _codeRootFactory.Value
+                            .BuildDynamicCodeRoot(asSxc)
+                            .InitDynCodeRoot(Block, Log, Constants.CompatibilityLevel12);
+
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+
                     });
