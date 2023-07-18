@@ -32,15 +32,17 @@ namespace ToSic.Sxc.Services
 
         /// <summary>
         /// If set to true (default) will optimize converting numbers.
-        /// For example, a string like "4.2" will properly convert to an int of 2.
+        /// For example, a string like "4.2" will properly convert to an int of 4.
         /// If set to false, this optimization doesn't happen and a string "4.2" would result in a 0 int
         /// </summary>
+        [PrivateApi("Set to private in 16.03 as it was never communicated and it's read-only anyhow, so it can't be in use")]
         bool OptimizeNumbers { get; }
 
         /// <summary>
         /// If set to true, will treat a number like 2 or -1 and strings like "2" as true.
         /// If set to false, only 1 will be true, other numbers will be false.
         /// </summary>
+        [PrivateApi("Set to private in 16.03 as it was never communicated and it's read-only anyhow, so it can't be in use")]
         bool OptimizeBoolean { get; }
 
         /// <summary>
