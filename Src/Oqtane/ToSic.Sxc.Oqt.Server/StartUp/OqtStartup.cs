@@ -72,6 +72,17 @@ namespace ToSic.Sxc.Oqt.Server.StartUp
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //#region Unhandled Errors (should be in the start off pipeline)
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/error"); // This will redirect to the ErrorLocalDevelopment action in ErrorController when an exception occurs
+            //}
+            //#endregion
+
             var serviceProvider = app.ApplicationServices;
 
             serviceProvider.Build<IDbConfiguration>().ConnectionString = Configuration.GetConnectionString("DefaultConnection");
