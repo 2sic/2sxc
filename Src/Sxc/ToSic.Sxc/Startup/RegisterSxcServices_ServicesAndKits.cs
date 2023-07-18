@@ -38,6 +38,8 @@ namespace ToSic.Sxc.Startup
 
             // WIP 12.05 - json converter
             services.TryAddTransient<IJsonService, JsonService>();
+            services.TryAddTransient<ConvertValueService>();
+            services.TryAddTransient<ConvertForCodeService>();
             services.TryAddTransient<IConvertService, ConvertService>();
 
             // New 12.05: SecureData

@@ -11,9 +11,14 @@ namespace ToSic.Sxc.Services
     [PrivateApi("Hide implementation")]
     internal class ConvertService: ServiceBase, IConvertService
     {
-        public ConvertService(LazySvc<IJsonService> json): base("Sxc.CnvSrv")
+        private readonly LazySvc<ConvertForCodeService> _code;
+        private readonly ConvertValueService _cnvSvc;
+
+        public ConvertService(ConvertValueService cnvSvc, LazySvc<ConvertForCodeService> code, LazySvc<IJsonService> json): base("Sxc.CnvSrv")
         {
             ConnectServices(
+                _cnvSvc = cnvSvc,
+                _code = code,
                 _jsonLazy = json
             );
         }
@@ -24,64 +29,37 @@ namespace ToSic.Sxc.Services
 
         public T To<T>(object value) => value.ConvertOrDefault<T>(numeric: OptimizeNumbers, truthy: OptimizeBoolean);
 
-        public T To<T>(object value,
-            string paramsMustBeNamed = Eav.Parameters.Protector,
-            T fallback = default)
-        {
-            Eav.Parameters.ProtectAgainstMissingParameterNames(paramsMustBeNamed, nameof(To), $"{nameof(fallback)}");
-            return value.ConvertOrFallback(fallback, numeric: OptimizeNumbers, truthy: OptimizeBoolean, fallbackOnDefault: false);
-        }
+        public T To<T>(object value, string noParamOrder = Eav.Parameters.Protector, T fallback = default) => _cnvSvc.To(value, noParamOrder, fallback);
 
-        public int ToInt(object value) => To<int>(value);
-        public int ToInt(object value, int fallback = 0) => To(value, fallback: fallback);
-        public Guid ToGuid(object value) => To<Guid>(value);
+        public int ToInt(object value) => _cnvSvc.To<int>(value);
+        public int ToInt(object value, int fallback = 0) => _cnvSvc.To(value, fallback: fallback);
 
-        public Guid ToGuid(object value, Guid fallback = default) => To(value, fallback: fallback);
+        public Guid ToGuid(object value) => _cnvSvc.To<Guid>(value);
+        public Guid ToGuid(object value, Guid fallback = default) => _cnvSvc.To(value, fallback: fallback);
 
-        public float ToFloat(object value) => To<float>(value);
-        public float ToFloat(object value, float fallback = 0F) => To(value, fallback: fallback);
+        public float ToFloat(object value) => _cnvSvc.To<float>(value);
+        public float ToFloat(object value, float fallback = default) => _cnvSvc.To(value, fallback: fallback);
 
-        public decimal ToDecimal(object value) => To<decimal>(value);
+        public decimal ToDecimal(object value) => _cnvSvc.To<decimal>(value);
+        public decimal ToDecimal(object value, decimal fallback = default) => _cnvSvc.To(value, fallback: fallback);
 
-        public decimal ToDecimal(object value, decimal fallback = 0m) => To(value, fallback: fallback);
+        public double ToDouble(object value) => _cnvSvc.To<double>(value);
+        public double ToDouble(object value, double fallback = default) => _cnvSvc.To(value, fallback: fallback);
 
-        public double ToDouble(object value) => To<double>(value);
-        public double ToDouble(object value, double fallback = 0D) => To(value, fallback: fallback);
-
-        public bool ToBool(object value) => To<bool>(value);
-        public bool ToBool(object value, bool fallback = false) => To(value, fallback: fallback);
+        public bool ToBool(object value) => _cnvSvc.To<bool>(value);
+        public bool ToBool(object value, bool fallback = false) => _cnvSvc.To(value, fallback: fallback);
         
-        public string ToString(object value) => To<string>(value);
+        public string ToString(object value) => _cnvSvc.To<string>(value);
 
-        public string ToString(object value, string fallback = null, string paramsMustBeNamed = Eav.Parameters.Protector, bool fallbackOnNull = true)
-        {
-            var result = To(value, fallback: fallback);
-            return result is null && fallbackOnNull ? fallback: result;
-        }
+        public string ToString(object value, string fallback = null, string noParamOrder = Eav.Parameters.Protector, bool fallbackOnNull = true) 
+            => _cnvSvc.ToString(value, noParamOrder, fallback, fallbackOnNull);
 
-        public string ForCode(object value) => ForCode(value, fallback: default);
-        public string ForCode(object value, string fallback = null)
-        {
-            if (value == null) return null;
-
-            // Pre-check special case of date-time which needs ISO encoding without time zone
-            if (value.GetType().UnboxIfNullable() == typeof(DateTime))
-            {
-                var dt = ((DateTime)value).ToString("O").Substring(0, 23) + "z";
-                return dt;
-            }
-
-            var result = To(value, fallback: fallback);
-            if (result is null) return null;
-
-            // If the original value was a boolean, we will do case changing as js expects "true" or "false" and not "True" or "False"
-            if (value.GetType().UnboxIfNullable() == typeof(bool)) result = result.ToLowerInvariant();
-
-            return result;
-        }
+        public string ForCode(object value) => _code.Value.ForCode(value);
+        public string ForCode(object value, string fallback = default) => _code.Value.ForCode(value, fallback);
+        
 
         public IJsonService Json => _jsonLazy.Value;
-        private LazySvc<IJsonService> _jsonLazy;
+        private readonly LazySvc<IJsonService> _jsonLazy;
 
         #region Invisible Converts for backward compatibility
 
