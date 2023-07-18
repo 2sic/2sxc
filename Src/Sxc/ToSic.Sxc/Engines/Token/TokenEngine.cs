@@ -74,12 +74,12 @@ namespace ToSic.Sxc.Engines
 
         #region Constructor / DI
 
-        private readonly LazySvc<DynamicCodeRoot> _dynCodeRootLazy;
+        private readonly LazySvc<CodeRootFactory> _codeRootFactory;
         private readonly Generator<AppConfigDelegate> _appConfigDelegateGenerator;
 
-        public TokenEngine(MyServices services, LazySvc<DynamicCodeRoot> dynCodeRootLazy, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
+        public TokenEngine(MyServices services, LazySvc<CodeRootFactory> codeRootFactory, Generator<AppConfigDelegate> appConfigDelegateGenerator) : base(services) =>
             ConnectServices(
-                _dynCodeRootLazy = dynCodeRootLazy,
+                _codeRootFactory = codeRootFactory,
                 _appConfigDelegateGenerator = appConfigDelegateGenerator
             );
 
@@ -97,7 +97,10 @@ namespace ToSic.Sxc.Engines
             InitTokenReplace();
         }
 
-        private void InitDataHelper() => _data = _dynCodeRootLazy.Value.InitDynCodeRoot(Block, Log, Constants.CompatibilityLevel9Old);
+        private void InitDataHelper() => _data = _codeRootFactory.Value
+            .BuildCodeRoot(null, Block, Log, Constants.CompatibilityLevel9Old);
+            //.InitDynCodeRoot(Block, Log) //, Constants.CompatibilityLevel9Old)
+            //.SetCompatibility(Constants.CompatibilityLevel9Old);
 
         private void InitTokenReplace()
         {

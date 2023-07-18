@@ -76,8 +76,9 @@ namespace ToSic.Sxc.Razor
                         if (rzv.RazorPage is not IRazor asSxc) return;
 
                         var dynCode = _codeRootFactory.Value
-                            .BuildDynamicCodeRoot(asSxc)
-                            .InitDynCodeRoot(Block, Log, Constants.CompatibilityLevel12);
+                            .BuildCodeRoot(asSxc, Block, Log, compatibilityFallback: Constants.CompatibilityLevel12);
+                            //.InitDynCodeRoot(Block, Log); //, Constants.CompatibilityLevel12)
+                            //.SetCompatibility(Constants.CompatibilityLevel12);
 
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+

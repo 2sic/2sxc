@@ -6,6 +6,7 @@ using ToSic.Eav.Context;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Blocks;
+using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
@@ -97,8 +98,11 @@ namespace ToSic.Sxc.Dnn
         public static IDnnDynamicCode DynamicCode(IBlockBuilder blockBuilder)
         {
             DnnStaticDi.CodeInfos.Warn(V13To17($"ToSic.Sxc.Dnn.Factory.{nameof(DynamicCode)}", "https://go.2sxc.org/brc-13-dnn-factory"));
-            return StaticBuild<DnnDynamicCodeRoot>().InitDynCodeRoot(blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10) as
-                DnnDynamicCodeRoot;
+            return StaticBuild<CodeRootFactory>()
+                    .BuildCodeRoot(customCodeOrNull: null, blockBuilder.Block, NewLog(), Constants.CompatibilityLevel10)
+                    //.InitDynCodeRoot(blockBuilder.Block, NewLog()) //, Constants.CompatibilityLevel10)
+                    //.SetCompatibility(Constants.CompatibilityLevel10)
+                as DnnDynamicCodeRoot;
         }
 
         /// <summary>

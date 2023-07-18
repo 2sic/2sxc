@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.WebPages;
-using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -185,7 +184,7 @@ namespace ToSic.Sxc.Engines
                 //compatibility = Constants.CompatibilityLevel10;
             }
 
-            var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
+            //var compatibility = (pageToInit as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel9Old;
             //if (pageToInit is IDynamicCode16)
             //    compatibility = Constants.CompatibilityLevel16;
             //else if (pageToInit is ICompatibleToCode12)
@@ -195,20 +194,24 @@ namespace ToSic.Sxc.Engines
 #pragma warning disable 618, CS0612
                 oldPage.InstancePurpose = (InstancePurposes)Purpose;
 #pragma warning restore 618, CS0612
-            InitHelpers(pageToInit, compatibility);
+            InitHelpers(pageToInit);
             return l.ReturnTrue("ok");
         }
 
-        private void InitHelpers(RazorComponentBase webPage, int compatibility)
+        private void InitHelpers(RazorComponentBase webPage)
         {
-            var l = Log.Fn($"{nameof(compatibility)}: {compatibility}");
-            var dynCode = _codeRootFactory.BuildDynamicCodeRoot(webPage);
-            dynCode.InitDynCodeRoot(Block, Log, compatibility);
+            var l = Log.Fn();
+            var dynCode = _codeRootFactory.BuildCodeRoot(webPage, Block, Log, compatibilityFallback: Constants.CompatibilityLevel9Old);
+            //dynCode.InitDynCodeRoot(Block, Log); //, compatibility)
+                //.SetCompatibility(compatibility);
             webPage.ConnectToRoot(dynCode);
 
             // New in 10.25 - ensure jquery is not included by default
-            if (compatibility > Constants.MaxLevelForAutoJQuery)
+            if (dynCode.AsC.CompatibilityLevel > Constants.MaxLevelForAutoJQuery)
+            {
+                l.A("Compatibility is new, don't need AutoJQuery");
                 CompatibilityAutoLoadJQueryAndRvt = false;
+            }
             l.Done();
         }
 

@@ -21,6 +21,12 @@ namespace ToSic.Sxc.Code
                 return withKit.Kit;
             return codeRoot.GetService<TServiceKit>();
         }
+
+        public static IDynamicCodeRoot SetCompatibility(this IDynamicCodeRoot codeRoot, int compatibility)
+        {
+            codeRoot.AsC.SetCompatibilityLevel(compatibility);
+            return codeRoot;
+        }
     }
 
 }

@@ -21,7 +21,6 @@ using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;
 using ToSic.Sxc.Dnn;
-using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Context;
 using ToSic.Sxc.Dnn.LookUp;
 using ToSic.Sxc.Engines;
@@ -47,7 +46,7 @@ namespace ToSic.Sxc.Search
         public SearchController(
             AppsCacheSwitch appsCache,
             Generator<CodeCompiler> codeCompiler,
-            Generator<DnnDynamicCodeRoot> dnnDynamicCodeRoot,
+            Generator<CodeRootFactory> codeRootFactory,
             Generator<ISite> siteGenerator,
             LazySvc<IModuleAndBlockBuilder> moduleAndBlockBuilder,
             LazySvc<DnnLookUpEngineResolver> dnnLookUpEngineResolver,
@@ -58,7 +57,7 @@ namespace ToSic.Sxc.Search
             ConnectServices(
                 _appsCache = appsCache,
                 _codeCompiler = codeCompiler,
-                _dnnDynamicCodeRoot = dnnDynamicCodeRoot,
+                _codeRootFactory = codeRootFactory,
                 _siteGenerator = siteGenerator,
                 _engineFactory = engineFactory,
                 _loaderTools = loaderTools,
@@ -70,7 +69,7 @@ namespace ToSic.Sxc.Search
 
         private readonly AppsCacheSwitch _appsCache;
         private readonly Generator<CodeCompiler> _codeCompiler;
-        private readonly Generator<DnnDynamicCodeRoot> _dnnDynamicCodeRoot;
+        private readonly Generator<CodeRootFactory> _codeRootFactory;
         private readonly Generator<ISite> _siteGenerator;
         private readonly EngineFactory _engineFactory;
         private readonly LazySvc<IAppLoaderTools> _loaderTools;
@@ -322,8 +321,9 @@ namespace ToSic.Sxc.Search
             return (streamsToIndex, $"{streamsToIndex.Length}");
         });
 
-        private ICustomizeSearch CreateAndInitViewController(DnnSite site, IBlock block) => Log.Func(() =>
+        private ICustomizeSearch CreateAndInitViewController(DnnSite site, IBlock block)
         {
+            var l = Log.Fn<ICustomizeSearch>();
             // 1. Get and compile the view.ViewController
             var path = Path
                 .Combine(Block.View.IsShared ? site.SharedAppsRootRelative : site.AppsRootRelative, block.Context.AppState.Folder)
@@ -334,18 +334,21 @@ namespace ToSic.Sxc.Search
             Log.A("got instance of compiled ViewController class");
 
             // 2. Check if it implements ToSic.Sxc.Search.ICustomizeSearch - otherwise just return the empty search results as shown above
-            if (!(instance is ICustomizeSearch customizeSearch)) return (null, "exit, class do not implements ICustomizeSearch");
+            if (!(instance is ICustomizeSearch customizeSearch)) return l.ReturnNull("exit, class do not implements ICustomizeSearch");
 
             // 3. Make sure it has the full context if it's based on DynamicCode (like Code12)
             if (instance is INeedsDynamicCodeRoot instanceWithContext)
             {
                 Log.A($"attach DynamicCode context to class instance");
-                var parentDynamicCodeRoot = _dnnDynamicCodeRoot.New().InitDynCodeRoot(block, Log, Constants.CompatibilityLevel10);
+                var parentDynamicCodeRoot = _codeRootFactory.New()
+                    .BuildCodeRoot(null, block, Log, Constants.CompatibilityLevel10);
+                    //.InitDynCodeRoot(block, Log) //, Constants.CompatibilityLevel10)
+                    //.SetCompatibility(Constants.CompatibilityLevel10);
                 instanceWithContext.ConnectToRoot(parentDynamicCodeRoot);
             }
 
-            return (customizeSearch, "instance ok");
-        });
+            return l.Return(customizeSearch, "instance ok");
+        }
 
         private string StripHtmlAndHtmlDecode(string text) => HttpUtility.HtmlDecode(Regex.Replace(text, "<.*?>", string.Empty));
 

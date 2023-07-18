@@ -97,12 +97,12 @@ namespace ToSic.Sxc.Code
         }
 
         [PrivateApi]
-        public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog, int compatibility)
+        public virtual IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog) //, int compatibility)
         {
             this.LinkLog(parentLog ?? block?.Log);
-            var cLog = Log.Fn<IDynamicCodeRoot>($"{nameof(compatibility)}: {compatibility}");
+            var cLog = Log.Fn<IDynamicCodeRoot>(); //$"{nameof(compatibility)}: {compatibility}");
 
-            AsC.SetCompatibilityLevel(compatibility);
+            //AsC.SetCompatibilityLevel(compatibility);
             if (block == null)
                 return cLog.Return(this, "no block");
 

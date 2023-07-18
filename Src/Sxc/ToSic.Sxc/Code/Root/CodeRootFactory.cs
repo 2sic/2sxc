@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using ToSic.Eav.Run;
 using ToSic.Lib.DI;
 using ToSic.Lib.Logging;
 using ToSic.Lib.Services;
+using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Code
@@ -19,14 +21,20 @@ namespace ToSic.Sxc.Code
         }
         private readonly IServiceProvider _serviceProvider;
 
-        public DynamicCodeRoot BuildDynamicCodeRoot(object customCode)
+        public DynamicCodeRoot BuildCodeRoot(object customCodeOrNull, IBlock blockOrNull, ILog parentLog, int compatibilityFallback)
         {
+            var compatibility = (customCodeOrNull as ICompatibilityLevel)?.CompatibilityLevel ?? compatibilityFallback;
+            var l = Log.Fn<DynamicCodeRoot>($"{nameof(compatibility)}: {compatibility}");
             // New v14 case - the Razor component implements IDynamicData<model, Kit>
             // Will return null if error or not such interface
-            var codeRoot = BuildGenericCodeRoot(customCode.GetType());
+            var codeRoot = customCodeOrNull != null ? BuildGenericCodeRoot(customCodeOrNull.GetType()) : null;
 
             // Default case / old case - just a non-generic DnnDynamicCodeRoot
-            return codeRoot ?? _serviceProvider.Build<DynamicCodeRoot>(Log);
+            codeRoot = codeRoot ?? _serviceProvider.Build<DynamicCodeRoot>(Log);
+
+            codeRoot.InitDynCodeRoot(blockOrNull, parentLog).SetCompatibility(compatibility);
+
+            return l.ReturnAsOk(codeRoot);
         }
 
         /// <summary>

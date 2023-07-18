@@ -51,21 +51,23 @@ namespace ToSic.Sxc.Code
         public class MyScopedServices: MyServicesBase
         {
             public Generator<App> AppGenerator { get; }
-            public Generator<DynamicCodeRoot> CodeRootGenerator { get; }
+            public Generator<CodeRootFactory> CodeRootGenerator { get; }
             public Generator<AppConfigDelegate> AppConfigDelegateGenerator { get; }
             public LazySvc<IModuleAndBlockBuilder> ModAndBlockBuilder { get; }
 
             public MyScopedServices(
-                Generator<DynamicCodeRoot> codeRootGenerator,
+                Generator<CodeRootFactory> codeRootGenerator,
                 Generator<App> appGenerator,
                 Generator<AppConfigDelegate> appConfigDelegateGenerator,
-                LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder
-            ) => ConnectServices(
-                CodeRootGenerator = codeRootGenerator,
-                AppGenerator = appGenerator,
-                AppConfigDelegateGenerator = appConfigDelegateGenerator,
-                ModAndBlockBuilder = modAndBlockBuilder
-            );
+                LazySvc<IModuleAndBlockBuilder> modAndBlockBuilder)
+            {
+                ConnectServices(
+                    CodeRootGenerator = codeRootGenerator,
+                    AppGenerator = appGenerator,
+                    AppConfigDelegateGenerator = appConfigDelegateGenerator,
+                    ModAndBlockBuilder = modAndBlockBuilder
+                );
+            }
         }
 
         public DynamicCodeService(MyServices services): this(services, $"{Constants.SxcLogName}.DCS") { }
