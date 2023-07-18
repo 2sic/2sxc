@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Oqtane.Models;
-using Oqtane.Modules;
 using Oqtane.Shared;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -48,27 +48,91 @@ namespace ToSic.Sxc.Oqt.App
 
         protected override async Task OnParametersSetAsync()
         {
-            await base.OnParametersSetAsync();
-
-            Log($"1: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
-
-            // Call 2sxc engine only when is necessary to render control.
-            if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
+            try
             {
-                RenderedUri = NavigationManager.Uri;
-                Log($"1.1: RenderUri:{RenderedUri}");
-                RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
-                Log($"1.2: Initialize2sxcContentBlock");
-                await Initialize2SxcContentBlock();
-                NewDataArrived = true;
-                ViewResults.SystemHtml = IsPreRendering() ? OqtPrerenderService.GetSystemHtml() : string.Empty;
-                Csp();
-                Log($"1.3: Csp");
+                await base.OnParametersSetAsync();
+
+                Log($"1: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+
+                // Call 2sxc engine only when is necessary to render control.
+                if (string.IsNullOrEmpty(RenderedUri) || (!NavigationManager.Uri.Equals(RenderedUri, InvariantCultureIgnoreCase) && NavigationManager.Uri.StartsWith(RenderedPage, InvariantCultureIgnoreCase)))
+                {
+                    RenderedUri = NavigationManager.Uri;
+                    Log($"1.1: RenderUri:{RenderedUri}");
+                    RenderedPage = NavigationManager.Uri.RemoveQueryAndFragment();
+                    Log($"1.2: Initialize2sxcContentBlock");
+                    await Initialize2SxcContentBlock();
+                    NewDataArrived = true;
+                    if (ViewResults != null)
+                    {
+                        ViewResults.SystemHtml = IsPreRendering() ? OqtPrerenderService?.GetSystemHtml() : string.Empty;
+                        Csp();
+                        Log($"1.3: Csp");
+                    }
+                }
+
+                Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
             }
-            
-            Log($"1 end: OnParametersSetAsync(NewDataArrived:{NewDataArrived},RenderedUri:{RenderedUri},RenderedPage:{RenderedPage})");
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            try
+            {
+                await base.OnAfterRenderAsync(firstRender);
+
+                Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
+
+                // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
+                if (IsSafeToRunJs && NewDataArrived && ViewResults != null)
+                {
+                    Log($"2.1: NewDataArrived");
+                    NewDataArrived = false;
+
+                    await StandardAssets();
+
+                    StateHasChanged();
+
+                    // Register ReloadModule
+                    _dotNetObjectReference = DotNetObjectReference.Create(this);
+                    await JSRuntime.InvokeVoidAsync($"{OqtConstants.PackageName}.registerReloadModule", _dotNetObjectReference, ModuleState.ModuleId);
+                }
+
+                Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+        private DotNetObjectReference<Index> _dotNetObjectReference = null;
+
+        // This is called from JS to reload module content from blazor instead of ajax that breaks blazor
+        [JSInvokable("ReloadModule")]
+        public async Task ReloadModule()
+        {
+            try
+            {
+                Log($"3: ReloadModule");
+                await Initialize2SxcContentBlock();
+                await StandardAssets();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
+        }
+
+        public void Dispose()
+        {
+            _dotNetObjectReference?.Dispose();
+        }
+ 
         /// <summary>
         /// prepare the html / headers for later rendering
         /// </summary>
@@ -86,62 +150,17 @@ namespace ToSic.Sxc.Oqt.App
                 IsPreRendering());
 
             if (!string.IsNullOrEmpty(ViewResults?.ErrorMessage))
-            {
-                Log($"1.2.1: ErrorMessage:{ViewResults.ErrorMessage}");
-                AddModuleMessage(ViewResults.ErrorMessage, MessageType.Warning);
-            }
+                LogError(ViewResults.ErrorMessage);
 
             Content = ViewResults?.FinalHtml;
 
-            Log($"1.2.2: Html:{ViewResults?.Html.Length}", ViewResults);
-        }
-
-        #region CSP
-
-        public bool ApplyCsp = true;
-
-        private void Csp()
-        {
-            if (IsPreRendering() && ApplyCsp) // executed only in prerender
-                OqtPageChangeService.ApplyHttpHeaders(ViewResults, this);
-
-            ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
-        }
-
-        #endregion
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-            
-            Log($"2: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
-
-            // 2sxc part should be executed only if new 2sxc data arrived from server (ounce per view)
-            if (IsSafeToRunJs && NewDataArrived && ViewResults != null)
-            {
-                Log($"2.1: NewDataArrived");
-                NewDataArrived = false;
-
-                await StandardAssets();
-
-                StateHasChanged();
-
-                // Register ReloadModule
-                _dotNetObjectReference = DotNetObjectReference.Create(this);
-                await JSRuntime.InvokeVoidAsync($"{OqtConstants.PackageName}.registerReloadModule", _dotNetObjectReference, ModuleState.ModuleId);
-            }
-
-            Log($"2 end: OnAfterRenderAsync(firstRender:{firstRender},NewDataArrived:{NewDataArrived},ViewResults:{ViewResults != null})");
-        }
-        private DotNetObjectReference<Index> _dotNetObjectReference = null;
-
-        public void Dispose()
-        {
-            _dotNetObjectReference?.Dispose();
+            Log($"1.2.2: Html:{ViewResults?.Html?.Length ?? -1}", ViewResults);
         }
 
         private async Task StandardAssets()
         {
+            if (ViewResults == null) return;
+
             #region 2sxc Standard Assets and Header
 
             // Add Context-Meta first, because it should be available when $2sxc loads
@@ -188,15 +207,18 @@ namespace ToSic.Sxc.Oqt.App
             #endregion
         }
 
-        
-        // This is called from JS to reload module content from blazor instead of ajax that breaks blazor
-        [JSInvokable("ReloadModule")]
-        public async Task ReloadModule()
+        #region CSP
+
+        public bool ApplyCsp = true;
+
+        private void Csp()
         {
-            Log($"3: ReloadModule");
-            await Initialize2SxcContentBlock();
-            await StandardAssets();
-            StateHasChanged();
+            if (IsPreRendering() && ApplyCsp) // executed only in prerender
+                OqtPageChangeService.ApplyHttpHeaders(ViewResults, this);
+
+            ApplyCsp = false; // flag to ensure that code is executed only first time in prerender
         }
+
+        #endregion
     }
 }

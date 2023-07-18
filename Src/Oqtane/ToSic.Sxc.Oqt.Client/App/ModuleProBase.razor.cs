@@ -8,7 +8,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Sxc.Oqt.Client;
+using ToSic.Sxc.Oqt.Shared.Helpers;
 using ToSic.Sxc.Oqt.Shared.Interfaces;
 
 // ReSharper disable once CheckNamespace
@@ -25,8 +28,12 @@ namespace ToSic.Sxc.Oqt.App
 
         #region Shared Variables
 
-        public bool IsSuperUser => _isSuperUser ??= UserSecurity.IsAuthorized(PageState.User, RoleNames.Host);
-        private bool? _isSuperUser;
+        public bool IsSuperUser => _isSuperUser.Get(() => UserSecurity.IsAuthorized(PageState.User, RoleNames.Host));
+        private readonly GetOnce<bool> _isSuperUser = new();
+
+        [InternalApi_DoNotUse_MayChangeWithoutNotice]
+        public bool IsAdmin => _isAdmin.Get(() => UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin));
+        private readonly GetOnce<bool> _isAdmin = new();
 
         public SxcInterop SxcInterop;
         public bool IsSafeToRunJs;
@@ -66,7 +73,6 @@ namespace ToSic.Sxc.Oqt.App
         }
 
         #region Log Helpers
-
         /// <summary>
         /// console.log
         /// </summary>
@@ -108,25 +114,65 @@ namespace ToSic.Sxc.Oqt.App
                     // browser is not ready, so store messages in queue
                     LogMessageQueue.Enqueue(message.ToArray());
                 }
+
+                // log to oqtane log if possible
+                try
+                {
+                    foreach (var item in message)
+                        logger.LogDebug($"{_logPrefix} {item}");
+                }
+                catch
+                {
+                    // sink
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error:{_logPrefix}:{ex.Message}");
-                if (IsSafeToRunJs)
-                    JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, ex.Message);
-                else
-                    LogMessageQueue.Enqueue(new List<object> { "Error:", _logPrefix, ex.Message }.ToArray());
+                LogError(ex);
             }
         }
+        
+        [InternalApi_DoNotUse_MayChangeWithoutNotice]
+        public void LogError(Exception ex) => LogError(ErrorHelper.ErrorMessage(ex, IsSuperUser || IsAdmin));
+        
+        [InternalApi_DoNotUse_MayChangeWithoutNotice]
+        public void LogError(string errorMessage)
+        {
+            try
+            {
+                // log to web server log
+                Console.WriteLine($"Error:{_logPrefix}:{errorMessage}");
 
+                // log to browser console
+                if (IsSafeToRunJs)
+                    JSRuntime.InvokeVoidAsync(ConsoleLogJs, "Error:", _logPrefix, errorMessage);
+                else
+                    LogMessageQueue.Enqueue(new List<object> { "Error:", _logPrefix, errorMessage }.ToArray());
+
+                // log error to oqtane log if possible
+                try
+                {
+                    logger.LogError(errorMessage);
+                }
+                catch
+                {
+                    // sink
+                }
+                AddModuleMessage(errorMessage, MessageType.Warning);
+            }
+            catch
+            {
+                // sink
+            }
+        }
+        
         private void ConsoleLog(object[] message)
         {
             var data = new List<object> { _logPrefix }.Concat(message);
             JSRuntime.InvokeVoidAsync(ConsoleLogJs, data.ToArray());
-        }
+        } 
         private string _logPrefix;
         private const string ConsoleLogJs = "console.log";
-
         #endregion
     }
 }
