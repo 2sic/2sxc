@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using ToSic.Lib.Documentation;
+using ToSic.Razor.Markup;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
@@ -144,9 +145,10 @@ namespace ToSic.Sxc.Data
         /// <returns>A url converted if possible. If the field contains anything else such as `hello` then it will not be modified.</returns>
         string Url(string name, string noParamOrder = Protector, string fallback = default);
 
-        #region Thing
+        #region Indexer WIP 16.03/04
 
-
+        [PrivateApi("experimental v16.03")]
+        IRawHtmlString this[string name] { get; }
 
         #endregion
 

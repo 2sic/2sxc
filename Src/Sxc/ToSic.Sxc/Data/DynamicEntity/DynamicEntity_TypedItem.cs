@@ -4,6 +4,7 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
+using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using static ToSic.Eav.Parameters;
 
@@ -39,6 +40,9 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         [PrivateApi]
         ITypedItem ITypedItem.Presentation => Presentation;
+
+        [PrivateApi]
+        IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
 
         /// <inheritdoc />
         [PrivateApi]

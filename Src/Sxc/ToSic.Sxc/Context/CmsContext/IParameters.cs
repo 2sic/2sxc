@@ -146,5 +146,9 @@ namespace ToSic.Sxc.Context
         /// <param name="name"></param>
         /// <returns></returns>
         IParameters Remove(string name);
+
+        [PrivateApi("experimental v16.03")] 
+        new string this[string name] { get; }
+
     }
 }

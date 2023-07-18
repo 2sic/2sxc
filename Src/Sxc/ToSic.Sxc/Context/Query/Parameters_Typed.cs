@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
@@ -50,6 +51,14 @@ namespace ToSic.Sxc.Context.Query
             var value = Get(name, noParamOrder: noParamOrder, fallback: fallback);
             return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
         }
+
+        /// <summary>
+        /// Note: this is implemented for the sake of the interface, but it won't be used.
+        /// Because IParameters has a string this[key] 
+        /// </summary>
+        [PrivateApi]
+        IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
+
 
         object ITyped.Get(string name) => Get(name);
     }

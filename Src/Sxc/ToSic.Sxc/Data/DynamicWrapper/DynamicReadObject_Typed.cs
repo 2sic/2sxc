@@ -2,6 +2,7 @@
 using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 
@@ -39,6 +40,10 @@ namespace ToSic.Sxc.Data
             var url = GetV(name, noParamOrder: noParamOrder, fallback);
             return Tags.SafeUrl(url).ToString();
         }
+
+        [PrivateApi]
+        IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
+
 
         TValue ITyped.Get<TValue>(string name) => GetV<TValue>(name, Eav.Parameters.Protector, default);
 

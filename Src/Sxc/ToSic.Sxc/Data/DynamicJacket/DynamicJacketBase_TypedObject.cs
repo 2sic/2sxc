@@ -70,5 +70,9 @@ namespace ToSic.Sxc.Data
             var url =  GetV(name, noParamOrder: noParamOrder, fallback: fallback);
             return Tags.SafeUrl(url).ToString();
         }
+
+        [PrivateApi]
+        IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
+
     }
 }

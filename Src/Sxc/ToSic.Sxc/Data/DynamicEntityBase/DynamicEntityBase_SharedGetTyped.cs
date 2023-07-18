@@ -55,6 +55,10 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
+        IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
+
+
+        [PrivateApi]
         string ITyped.ToString() => "test / debug: " + ToString();
 
         //#region TypedRead
