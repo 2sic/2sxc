@@ -27,8 +27,6 @@ namespace ToSic.Sxc.Code
             var cmsBlock = _myScopedServices.ModAndBlockBuilder.Value.GetProvider(pageId, moduleId).LoadBlock();
             var codeRoot = _myScopedServices.CodeRootGenerator.New()
                 .BuildCodeRoot(customCodeOrNull: null, cmsBlock, Log, Constants.CompatibilityLevel12);
-                //.InitDynCodeRoot(cmsBlock, Log) //, Constants.CompatibilityLevel12)
-                //.SetCompatibility(Constants.CompatibilityLevel12);
 
             return wrapLog.ReturnAsOk(codeRoot);
         }
@@ -46,8 +44,6 @@ namespace ToSic.Sxc.Code
             ActivateEditUi();
             var codeRoot = _myScopedServices.CodeRootGenerator.New()
                 .BuildCodeRoot(customCodeOrNull: null, null, Log, Constants.CompatibilityLevel12);
-                //.InitDynCodeRoot(null, Log) //, Constants.CompatibilityLevel12)
-                //.SetCompatibility(Constants.CompatibilityLevel12);
             var app = App(zoneId: zoneId, appId: appId);
             codeRoot.AttachApp(app);
             return wrapLog.ReturnAsOk(codeRoot);

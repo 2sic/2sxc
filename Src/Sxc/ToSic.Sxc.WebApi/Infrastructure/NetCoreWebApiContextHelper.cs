@@ -57,15 +57,11 @@ namespace ToSic.Sxc.WebApi.Infrastructure
             // base.OnActionExecuting(context);
             InitializeBlockContext(context);
 
-            //var compatibilityLevel = (_owner as ICompatibilityLevel)?.CompatibilityLevel ?? Constants.CompatibilityLevel10;
-
             // Use the ServiceProvider of the current request to build DynamicCodeRoot
             // Note that BlockOptional was already retrieved in the base class
             var codeRoot = context.HttpContext.RequestServices
                 .Build<CodeRootFactory>()
                 .BuildCodeRoot(_owner, BlockOptional, Log, compatibilityFallback: Constants.CompatibilityLevel12);
-                //.InitDynCodeRoot(BlockOptional, Log); //, compatibilityLevel)
-                //.SetCompatibility(compatibilityLevel);
             ConnectToRoot(codeRoot);
 
             AdamCode = codeRoot.GetService<AdamCode>();

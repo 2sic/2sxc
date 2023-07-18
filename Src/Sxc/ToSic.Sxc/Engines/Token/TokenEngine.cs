@@ -99,8 +99,6 @@ namespace ToSic.Sxc.Engines
 
         private void InitDataHelper() => _data = _codeRootFactory.Value
             .BuildCodeRoot(null, Block, Log, Constants.CompatibilityLevel9Old);
-            //.InitDynCodeRoot(Block, Log) //, Constants.CompatibilityLevel9Old)
-            //.SetCompatibility(Constants.CompatibilityLevel9Old);
 
         private void InitTokenReplace()
         {

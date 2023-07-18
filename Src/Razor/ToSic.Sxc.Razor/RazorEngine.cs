@@ -77,8 +77,6 @@ namespace ToSic.Sxc.Razor
 
                         var dynCode = _codeRootFactory.Value
                             .BuildCodeRoot(asSxc, Block, Log, compatibilityFallback: Constants.CompatibilityLevel12);
-                            //.InitDynCodeRoot(Block, Log); //, Constants.CompatibilityLevel12)
-                            //.SetCompatibility(Constants.CompatibilityLevel12);
 
                         asSxc.ConnectToRoot(dynCode);
                         // Note: Don't set the purpose here any more, it's a deprecated feature in 12+

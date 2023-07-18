@@ -20,11 +20,10 @@ namespace ToSic.Sxc.Oqt.Server.Blocks
             );
         }
 
-        public override IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog) //, int compatibility = Constants.CompatibilityLevel12)
+        public override IDynamicCodeRoot InitDynCodeRoot(IBlock block, ILog parentLog)
         {
             _siteStateInitializerLazy.Value.InitIfEmpty(block?.Context?.Site?.Id);
-            return base.InitDynCodeRoot(block, parentLog) //, compatibility)
-                ; //.SetCompatibility(Constants.CompatibilityLevel12);
+            return base.InitDynCodeRoot(block, parentLog);
         }
     }
 }
