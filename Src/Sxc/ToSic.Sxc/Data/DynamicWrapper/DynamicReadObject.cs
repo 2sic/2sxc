@@ -67,7 +67,7 @@ namespace ToSic.Sxc.Data
         {
             path = path.KeepOrNew().Add("DynReadObj", specs.Field);
             var result = FindValueOrNull(specs.Field);
-            return new PropReqResult(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
+            return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
         }
 
 

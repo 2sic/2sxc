@@ -82,7 +82,7 @@ namespace ToSic.Sxc.Data
         {
             path = path.KeepOrNew().Add("DynJacket", specs.Field);
             var result = FindValueOrNull(specs.Field, InvariantCultureIgnoreCase, specs.LogOrNull);
-            return new PropReqResult(result, path) { FieldType = Attributes.FieldIsDynamic, Source = this, Name = "dynamic" };
+            return new PropReqResult(result: result, fieldType: Attributes.FieldIsDynamic, path: path) { Source = this, Name = "dynamic" };
         }
 
         public abstract List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path);

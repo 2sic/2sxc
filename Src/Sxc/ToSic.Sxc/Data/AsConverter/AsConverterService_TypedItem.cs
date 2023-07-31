@@ -15,13 +15,13 @@ namespace ToSic.Sxc.Data.AsConverter
         #region AsTyped Implementations
 
 
-        public ITypedItem AsItem(object original, string noParamOrder, bool? required = default, ITypedItem fallback = default)
+        public ITypedItem AsItem(object original, string noParamOrder, bool? required = default, ITypedItem fallback = default, bool? strict = default)
         {
             Eav.Parameters.Protect(noParamOrder);
-            return AsItemInternal(original, MaxRecursions);
+            return AsItemInternal(original, MaxRecursions, strict: strict ?? false) ?? fallback;
         }
 
-        private ITypedItem AsItemInternal(object target, int recursions)
+        private ITypedItem AsItemInternal(object target, int recursions, bool strict)
         {
             var l = Log.Fn<ITypedItem>();
             if (recursions <= 0)
@@ -29,7 +29,7 @@ namespace ToSic.Sxc.Data.AsConverter
 
             ITypedItem ConvertOrNullAndLog(IEntity e, string typeName) => e == null
                 ? l.ReturnNull($"empty {typeName}")
-                : l.Return(new DynamicEntity(e, DynamicEntityServices), typeName);
+                : l.Return(new DynamicEntity(e, DynamicEntityServices, strict: strict), typeName);
 
             switch (target)
             {
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data.AsConverter
                 case string _:
                     throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
                 case ITypedItem alreadyCmsItem:
-                    return l.Return(alreadyCmsItem, "already ok");
+                    return ConvertOrNullAndLog(alreadyCmsItem.Entity, nameof(ITypedItem));
                 //case IDynamicEntity dynEnt:
                 //    return l.Return(new TypedItem(dynEnt), nameof(IDynamicEntity));
                 case IEntity entity:
@@ -55,20 +55,20 @@ namespace ToSic.Sxc.Data.AsConverter
                     var enumFirst = enumerable.Cast<object>().FirstOrDefault();
                     if (enumFirst is null) return l.ReturnNull($"{nameof(IEnumerable)} with null object");
                     // retry conversion
-                    return l.Return(AsItemInternal(enumFirst, recursions - 1));
+                    return l.Return(AsItemInternal(enumFirst, recursions - 1, strict: strict));
                 default:
                     throw l.Done(new ArgumentException($"Type '{target.GetType()}' cannot be converted to {nameof(ITypedItem)}"));
             }
 
         }
 
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default)
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder, bool? required = default, IEnumerable<ITypedItem> fallback = default, bool? strict = default)
         {
             Eav.Parameters.Protect(noParamOrder);
-            return AsItemList(list, required ?? true, fallback, MaxRecursions);
+            return AsItemList(list, required ?? true, fallback, MaxRecursions, strict: strict ?? false);
         }
 
-        private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions)
+        private IEnumerable<ITypedItem> AsItemList(object list, bool required, IEnumerable<ITypedItem> fallback, int recursions, bool strict)
         {
             var l = Log.Fn<IEnumerable<ITypedItem>>($"{nameof(list)}: '{list}'; {nameof(required)}: {required}; {nameof(recursions)}: {recursions}");
 
@@ -92,30 +92,31 @@ namespace ToSic.Sxc.Data.AsConverter
                     return FallbackOrErrorAndLog("string", "Got a string.");
                 // List of ITypedItem
                 case IEnumerable<ITypedItem> alreadyOk:
-                    return l.Return(alreadyOk, "already matches type");
+                    return l.Return(alreadyOk.Select(e => AsItemInternal(e, MaxRecursions, strict: strict)), nameof(IEnumerable<ITypedItem>));
+                    //return l.Return(alreadyOk, "already matches type");
                 //case IEnumerable<IDynamicEntity> dynIDynEnt:
                 //    return l.Return(dynIDynEnt.Select(e => AsTyped(e, services, MaxRecursions, log)), "IEnum<DynEnt>");
                 case IDataSource dsEntities:
-                    return l.Return(AsItemList(dsEntities.List, required, fallback, recursions - 1), "DataSource - convert list");
+                    return l.Return(AsItemList(dsEntities.List, required, fallback, recursions - 1, strict: strict), "DataSource - convert list");
                 case IDataStream dataStream:
-                    return l.Return(AsItemList(dataStream.List, required, fallback, recursions - 1), "DataSource - convert list");
+                    return l.Return(AsItemList(dataStream.List, required, fallback, recursions - 1, strict: strict), "DataStream - convert list");
                 case IEnumerable<IEntity> iEntities:
-                    return l.Return(iEntities.Select(e => AsItemInternal(e, MaxRecursions)), nameof(IEnumerable<IEntity>));
+                    return l.Return(iEntities.Select(e => AsItemInternal(e, MaxRecursions, strict: strict)), nameof(IEnumerable<IEntity>));
                 case IEnumerable<dynamic> dynEntities:
-                    return l.Return(dynEntities.Select(e => AsItemInternal(e as object, MaxRecursions)), nameof(IEnumerable<dynamic>));
+                    return l.Return(dynEntities.Select(e => AsItemInternal(e as object, MaxRecursions, strict: strict)), nameof(IEnumerable<dynamic>));
                 // Variations of single items - should be converted to list
                 case IEntity _:
                 case IDynamicEntity _:
                 case ITypedItem _:
                 case ICanBeEntity _:
-                    var converted = AsItemInternal(list, MaxRecursions);
+                    var converted = AsItemInternal(list, MaxRecursions, strict: strict);
                     return converted != null
                         ? l.Return(new List<ITypedItem> { converted }, "single item to list")
                         : l.Return(new List<ITypedItem>(), "typed but converted to null; empty list");
                 // Check for IEnumerable but make sure it's not a string
                 // Should come fairly late, because some things like DynamicEntities can also be enumerated
                 case IEnumerable asEnumerable when !(asEnumerable is string):
-                    return l.Return(asEnumerable.Cast<object>().Select(e => AsItemInternal(e, MaxRecursions)), "IEnumerable");
+                    return l.Return(asEnumerable.Cast<object>().Select(e => AsItemInternal(e, MaxRecursions, strict: strict)), "IEnumerable");
                 default:
                     return FallbackOrErrorAndLog($"can't convert '{list.GetType()}'", $"Type '{list.GetType()}' cannot be converted.");
             }

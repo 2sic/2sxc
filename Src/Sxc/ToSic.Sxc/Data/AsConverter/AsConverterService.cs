@@ -1,9 +1,7 @@
 ﻿using ToSic.Eav.Context;
-using ToSic.Eav.Data;
 using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Helpers;
-using ToSic.Lib.Logging;
 using ToSic.Sxc.Adam;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Context;

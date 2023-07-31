@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ToSic.Sxc.Data
 {
@@ -20,14 +21,16 @@ namespace ToSic.Sxc.Data
 
         ITypedItem ITypedStack.Child(string name, string noParamOrder)
         {
-            var obj = Get(name);
-            return _Services.AsC.AsItem(obj, noParamOrder);
+            var findResult = GetInternal(name, lookup: false);
+            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name));
+            return _Services.AsC.AsItem(findResult.Result, noParamOrder);
         }
 
         IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type)
         {
-            var obj = Get(field);
-            return _Services.AsC.AsItems(obj, noParamOrder);
+            var findResult = GetInternal(field, lookup: false);
+            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(field));
+            return _Services.AsC.AsItems(findResult.Result, noParamOrder);
         }
     }
 }

@@ -93,11 +93,13 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="strict">TODO:</param>
         /// <returns></returns>
         /// <remarks>New in v16.02</remarks>
         ITypedItem AsItem(
             object target,
-            string noParamOrder = Eav.Parameters.Protector
+            string noParamOrder = Eav.Parameters.Protector,
+            bool? strict = default
         );
 
         /// <summary>
@@ -105,11 +107,13 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="list"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="strict">TODO:</param>
         /// <returns></returns>
         /// <remarks>New in v16.01</remarks>
         IEnumerable<ITypedItem> AsItems(
             object list,
-            string noParamOrder = Eav.Parameters.Protector
+            string noParamOrder = Eav.Parameters.Protector,
+            bool? strict = default
         );
 
 

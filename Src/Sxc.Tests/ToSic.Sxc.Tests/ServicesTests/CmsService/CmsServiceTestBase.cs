@@ -55,7 +55,7 @@ namespace ToSic.Sxc.Tests.ServicesTests.CmsService
             return GetService<EntityBuilder>().TestCreate(appId: AppId, entityId: 1, contentType: contentType, values: values, titleField: SomeTextField);
         }
 
-        public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityServices);
+        public DynamicEntity DynEntity(IEntity entity = null) => new DynamicEntity(entity, DynamicEntityServices, strict: true);
 
         public IHtmlTag CmsServiceShow(string someHtmlValue)
         {

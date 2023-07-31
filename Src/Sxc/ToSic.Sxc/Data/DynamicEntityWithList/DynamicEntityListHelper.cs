@@ -13,26 +13,29 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     internal class DynamicEntityListHelper
     {
+        protected bool StrictGet { get; }
         public readonly IEntity ParentOrNull;
         public readonly string FieldOrNull;
         private readonly DynamicEntity.MyServices _services;
 
         private Func<bool?> _getDebug;
 
-        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, DynamicEntity.MyServices services)
+        public DynamicEntityListHelper(IDynamicEntity singleItem, Func<bool?> getDebug, bool strictGet, DynamicEntity.MyServices services)
         {
+            StrictGet = strictGet;
             _list = new List<IDynamicEntity> {singleItem ?? throw new ArgumentException(nameof(singleItem))};
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _getDebug = getDebug;
         }
         
-        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, DynamicEntity.MyServices services)
+        public DynamicEntityListHelper(IEnumerable<IEntity> entities, IEntity parentOrNull, string fieldOrNull, Func<bool?> getDebug, bool strictGet, DynamicEntity.MyServices services)
         {
             ParentOrNull = parentOrNull;
             FieldOrNull = fieldOrNull;
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _entities = entities?.ToArray() ?? throw new ArgumentNullException(nameof(entities));
             _getDebug = getDebug;
+            StrictGet = strictGet;
         }
         
         private List<IDynamicEntity> _list;
@@ -59,7 +62,7 @@ namespace ToSic.Sxc.Data
                         var blockEntity = reWrapWithListNumbering
                             ? EntityInBlockDecorator.Wrap(e, ParentOrNull.EntityGuid, FieldOrNull, i)
                             : e;
-                        return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _services, debug);
+                        return DynamicEntityBase.SubDynEntityOrNull(blockEntity, _services, debug, strictGet: StrictGet);
                     })
                     .ToList();
             }

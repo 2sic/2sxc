@@ -12,54 +12,64 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntityBase
     {
         [PrivateApi]
-        protected virtual object GetInternal(string field, string language = null, bool lookup = true)
+        protected virtual GetInternalResult GetInternal(string field, string language = null, bool lookup = true)
         {
             var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
-            return logOrNull.Func<object>(
-                $"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}",
-                l =>
-                {
-                    if (!field.HasValue())
-                        return (null, "field null/empty");
+            var l = logOrNull.Fn<GetInternalResult>($"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}");
 
-                    // This determines if we should access & store in cache
-                    // check if we already have it in the cache - but only in default case (no language, lookup=true)
-                    var useCache = language == null && lookup;
-                    if (useCache && _ValueCache.ContainsKey(field))
-                        return (_ValueCache[field], "cached");
+            if (!field.HasValue())
+                return l.Return(new GetInternalResult(null, false), "field null/empty");
 
-                    // use the standard dimensions or overload
-                    var languages = language == null ? _Services.Dimensions : new[] { language };
-                    l.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
+            // This determines if we should access & store in cache
+            // check if we already have it in the cache - but only in default case (no language, lookup=true)
+            var useCache = language == null && lookup;
+            if (useCache && _ValueCache.ContainsKey(field))
+                return l.Return(new GetInternalResult(_ValueCache[field], true), "cached");
 
-                    // Get the field or the path if it has one
-                    // Classic field case
-                    var specs = new PropReqSpecs(field, languages, logOrNull);
-                    var path = new PropertyLookupPath().Add("DynEntStart", field);
-                    var resultSet = FindPropertyInternal(specs, path);
+            // use the standard dimensions or overload
+            var languages = language == null ? _Services.Dimensions : new[] { language };
+            l.A($"{nameof(useCache)}: {useCache}, {nameof(languages)}:{languages}");
 
-                    // check Entity is null (in cases where null-objects are asked for properties)
-                    if (resultSet == null) return (null, "result null");
+            // Get the field or the path if it has one
+            // Classic field case
+            var specs = new PropReqSpecs(field, languages, logOrNull);
+            var path = new PropertyLookupPath().Add("DynEntStart", field);
+            var resultSet = FindPropertyInternal(specs, path);
 
-                    l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
+            // check Entity is null (in cases where null-objects are asked for properties)
+            if (resultSet == null)
+                return l.Return(new GetInternalResult(null, false), "result null");
 
-                    var result = ValueAutoConverted(resultSet, lookup, field, logOrNull);
+            l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
 
-                    // cache result, but only if using default languages
-                    if (useCache)
-                    {
-                        l.A("add to cache");
-                        _ValueCache.Add(field, result);
-                    }
+            var result = ValueAutoConverted(resultSet, lookup, field, logOrNull);
 
-                    return (result, "ok");
-                });
+            // cache result, but only if using default languages
+            if (useCache)
+            {
+                l.A("add to cache");
+                _ValueCache.Add(field, result);
+            }
+
+            return l.Return(new GetInternalResult(result, resultSet.FieldType != Attributes.FieldIsNotFound), "ok");
+        }
+
+        [PrivateApi]
+        public class GetInternalResult
+        {
+            public GetInternalResult(object result, bool found)
+            {
+                Result = result;
+                Found = found;
+            }
+            public bool Found;
+            public object Result;
         }
 
 
         protected object ValueAutoConverted(PropReqResult original, bool lookup, string field, ILog logOrNull)
         {
-            var safeWrap = logOrNull.Fn<object>($"..., {nameof(lookup)}: {lookup}, {nameof(field)}: {field}");
+            var l = logOrNull.Fn<object>($"..., {nameof(lookup)}: {lookup}, {nameof(field)}: {field}");
             var result = original.Result;
             var parent = original.Source as IEntity;
             // New mechanism to not use resolve-hyperlink
@@ -67,30 +77,30 @@ namespace ToSic.Sxc.Data
                        && original.FieldType == DataTypes.Hyperlink
                        && ValueConverterBase.CouldBeReference(strResult))
             {
-                safeWrap.A($"Try to convert value - HasValueConverter: {_Services.ValueConverterOrNull != null}");
+                l.A($"Try to convert value - HasValueConverter: {_Services.ValueConverterOrNull != null}");
                 result = _Services.ValueConverterOrNull?.ToValue(strResult, parent?.EntityGuid ?? Guid.Empty) ?? result;
-                return safeWrap.Return(result, "link-conversion");
+                return l.Return(result, "link-conversion");
             }
 
             // note 2021-06-07 previously in created sub-entities with modified language-list; I think this is wrong
             // Note 2021-06-08 if the parent is _not_ an IEntity, this will throw an error. Could happen in the DynamicStack, but that should never have such children
             if (result is IEnumerable<IEntity> children)
             {
-                safeWrap.A($"Convert entity list as {nameof(DynamicEntity)}");
-                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, _Services);
+                l.A($"Convert entity list as {nameof(DynamicEntity)}");
+                var dynEnt = new DynamicEntity(children.ToArray(), parent, field, null, strict: StrictGet, _Services);
                 if (Debug) dynEnt.Debug = true;
-                return safeWrap.Return(dynEnt, "ent-list, now dyn");
+                return l.Return(dynEnt, "ent-list, now dyn");
             }
 
             // special debug of path if possible
             try
             {
                 var finalPath = string.Join(" > ", original.Path?.Parts?.ToArray() ?? Array.Empty<string>());
-                safeWrap.A($"Debug path: {finalPath}");
+                l.A($"Debug path: {finalPath}");
             }
             catch {/* ignore */}
 
-            return safeWrap.Return(result, "unmodified");
+            return l.Return(result, "unmodified");
         }
 
     }

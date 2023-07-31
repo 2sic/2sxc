@@ -13,11 +13,18 @@ namespace ToSic.Sxc.Data
     [PrivateApi]
     public abstract partial class DynamicEntityBase : DynamicObject, IDynamicEntityBase, IPropertyLookup, ISxcDynamicObject, ICanDebug
     {
-        protected DynamicEntityBase(DynamicEntity.MyServices services) => _Services = services;
+        protected DynamicEntityBase(DynamicEntity.MyServices services, bool strict)
+        {
+            _Services = services;
+            StrictGet = strict;
+        }
 
         // ReSharper disable once InconsistentNaming
         [PrivateApi("Private, but public for debugging in emergencies")]
         public DynamicEntity.MyServices _Services { get; }
+
+        [PrivateApi]
+        protected bool StrictGet { get; }
 
         // ReSharper disable once InconsistentNaming
         protected readonly Dictionary<string, object> _ValueCache = new Dictionary<string, object>(InvariantCultureIgnoreCase);
@@ -31,12 +38,12 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="contents"></param>
         /// <returns></returns>
-        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Services, Debug);
+        protected IDynamicEntity SubDynEntityOrNull(IEntity contents) => SubDynEntityOrNull(contents, _Services, Debug, strictGet: StrictGet);
 
-        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntity.MyServices services, bool? debug)
+        internal static IDynamicEntity SubDynEntityOrNull(IEntity contents, DynamicEntity.MyServices services, bool? debug, bool strictGet)
         {
             if (contents == null) return null;
-            var result = new DynamicEntity(contents, services);
+            var result = new DynamicEntity(contents, services, strict: strictGet);
             if (debug == true) result.Debug = true;
             return result;
         }

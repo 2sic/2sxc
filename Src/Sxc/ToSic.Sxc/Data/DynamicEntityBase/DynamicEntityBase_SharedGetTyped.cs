@@ -1,18 +1,40 @@
 ﻿using System;
 using System.Net;
+using System.Runtime.CompilerServices;
+using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
     public abstract partial class DynamicEntityBase: ITyped
     {
+        /// <summary>
+        /// Get for typed G4T
+        /// </summary>
+        [PrivateApi]
+        protected TValue G4T<TValue>(string name,
+            string noParamOrder = Protector,
+            TValue fallback = default,
+            [CallerMemberName] string cName = default)
+        {
+            Protect(noParamOrder, nameof(fallback), methodName: cName);
+            var findResult = GetInternal(name, lookup: false);
+            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name));
+            return findResult.Result.ConvertOrFallback(fallback);
+        }
+
+        [PrivateApi]
+        protected static string ErrStrict(string name)
+            => $"Field of name '{name}' not found and 'strict' is true, meaning that an error is thrown. Either fix the field name, or use strict false is AsItem(...)";
+
         [PrivateApi]
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
         {
-            Eav.Parameters.Protect(noParamOrder, nameof(fallback));
-            var value = GetInternal(name, lookup: false);
+            Protect(noParamOrder, nameof(fallback));
+            var value = GetInternal(name, lookup: false).Result;
             var strValue = _Services.ForCode.ForCode(value, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
@@ -22,32 +44,32 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
         string ITyped.String(string name, string noParamOrder, string fallback, bool scrubHtml)
         {
-            var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+            var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback);
             return scrubHtml ? _Services.Scrub.All(value) : value;
         }
 
         [PrivateApi]
-        int ITyped.Int(string name, string noParamOrder, int fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        int ITyped.Int(string name, string noParamOrder, int fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        bool ITyped.Bool(string name, string noParamOrder, bool fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        bool ITyped.Bool(string name, string noParamOrder, bool fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        long ITyped.Long(string name, string noParamOrder, long fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        long ITyped.Long(string name, string noParamOrder, long fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        float ITyped.Float(string name, string noParamOrder, float fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        float ITyped.Float(string name, string noParamOrder, float fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
-        double ITyped.Double(string name, string noParamOrder, double fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        double ITyped.Double(string name, string noParamOrder, double fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
 
         [PrivateApi]
         string ITyped.Url(string name, string noParamOrder, string fallback)

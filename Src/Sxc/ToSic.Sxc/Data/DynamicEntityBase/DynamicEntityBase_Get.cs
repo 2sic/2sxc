@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using ToSic.Eav.Plumbing;
+﻿using ToSic.Eav.Plumbing;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
@@ -7,10 +6,10 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntityBase: ICanGetByName
     {
         /// <inheritdoc/>
-        public dynamic Get(string name) => GetInternal(name);
+        public dynamic Get(string name) => GetInternal(name).Result;
 
         /// <inheritdoc/>
-        public TValue Get<TValue>(string name) => GetInternal(name, lookup: false).ConvertOrDefault<TValue>();
+        public TValue Get<TValue>(string name) => GetInternal(name, lookup: false).Result.ConvertOrDefault<TValue>();
 
         /// <inheritdoc/>
         public TValue Get<TValue>(string name,
@@ -19,15 +18,7 @@ namespace ToSic.Sxc.Data
             TValue fallback = default)
         {
             Protect(noParamOrder, nameof(fallback));
-            return GetInternal(name, lookup: false).ConvertOrFallback(fallback);
-        }
-        private TValue GetV<TValue>(string name,
-            string noParamOrder = Protector,
-            TValue fallback = default,
-            [CallerMemberName] string cName = default)
-        {
-            Protect(noParamOrder, nameof(fallback), methodName: cName);
-            return GetInternal(name, lookup: false).ConvertOrFallback(fallback);
+            return GetInternal(name, lookup: false).Result.ConvertOrFallback(fallback);
         }
 
         /// <inheritdoc/>
@@ -42,7 +33,7 @@ namespace ToSic.Sxc.Data
 
             var debugBefore = Debug;
             if (debug != null) Debug = debug.Value;
-            var result = GetInternal(name, language, convertLinks);
+            var result = GetInternal(name, language, convertLinks).Result;
             if (debug != null) Debug = debugBefore;
 
             return result;

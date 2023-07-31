@@ -21,19 +21,19 @@ namespace ToSic.Sxc.Data
         /// Constructor with EntityModel and DimensionIds
         /// </summary>
         [PrivateApi]
-        public DynamicEntity(IEntity entity, MyServices services): base(services)
+        public DynamicEntity(IEntity entity, MyServices services, bool strict): base(services, strict: strict)
         {
             SetEntity(entity);
 
             // WIP new in 12.03
-            _ListHelper = new DynamicEntityListHelper(this, () => Debug, services);
+            _ListHelper = new DynamicEntityListHelper(this, () => Debug, strictGet: strict, services);
         }
 
-        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, MyServices services): base(services)
+        internal DynamicEntity(IEnumerable<IEntity> list, IEntity parent, string field, int? appIdOrNull, bool strict, MyServices services): base(services, strict: strict)
         {
             // Set the entity - if there was one, or if the list is empty, create a dummy Entity so toolbars will know what to do
             SetEntity(list.FirstOrDefault() ?? PlaceHolder(appIdOrNull, parent, field));
-            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, services);
+            _ListHelper = new DynamicEntityListHelper(list, parent, field, () => Debug, strictGet: strict, services);
         }
 
         private IEntity PlaceHolder(int? appIdOrNull, IEntity parent, string field)

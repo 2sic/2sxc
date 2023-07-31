@@ -12,7 +12,7 @@ namespace ToSic.Sxc.Data
     public class Metadata: DynamicEntity, IMetadata
     {
         internal Metadata(IMetadataOf metadata, IEntity parentOrNull, MyServices services)
-            : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, services)
+            : base(metadata, parentOrNull, "Metadata", Eav.Constants.TransientAppId, strict: false, services)
         {
             _metadata = metadata;
         }

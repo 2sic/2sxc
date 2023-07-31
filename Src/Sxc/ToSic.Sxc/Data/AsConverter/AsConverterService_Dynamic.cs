@@ -12,9 +12,11 @@ namespace ToSic.Sxc.Data.AsConverter
 
         #region Dynamic
 
-        public DynamicEntity AsDynamic(IEntity entity) => new DynamicEntity(entity, DynamicEntityServices);
+        public DynamicEntity AsDynamic(IEntity entity) 
+            => new DynamicEntity(entity, DynamicEntityServices, strict: false);
 
-        public DynamicEntity AsDynamic(IEnumerable<IEntity> list) => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, services: DynamicEntityServices);
+        public DynamicEntity AsDynamic(IEnumerable<IEntity> list) 
+            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, strict: false, services: DynamicEntityServices);
 
         public IEnumerable<dynamic> AsDynamicList(object list)
         {
@@ -54,7 +56,7 @@ namespace ToSic.Sxc.Data.AsConverter
                 case ISxcDynamicObject sxcDyn:
                     return l.Return(sxcDyn, "Dynamic Something");
                 case IEntity entity:
-                    return l.Return(new DynamicEntity(entity, DynamicEntityServices), "IEntity");
+                    return l.Return(new DynamicEntity(entity, DynamicEntityServices, strict: false), "IEntity");
                 case DynamicObject typedDynObject:
                     return l.Return(typedDynObject, "DynamicObject");
                 default:

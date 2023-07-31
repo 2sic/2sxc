@@ -76,12 +76,12 @@ namespace Custom.Hybrid
         #region As Conversions
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
-        public ITypedItem AsItem(object target, string noParamOrder = Protector)
-            => _DynCodeRoot.AsC.AsItem(target, noParamOrder);
+        public ITypedItem AsItem(object target, string noParamOrder = Protector, bool? strict = default)
+            => _DynCodeRoot.AsC.AsItem(target, noParamOrder, strict: strict);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
-        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector)
-            => _DynCodeRoot.AsC.AsItems(list, noParamOrder);
+        public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? strict = default)
+            => _DynCodeRoot.AsC.AsItems(list, noParamOrder, strict: strict);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);

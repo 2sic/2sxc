@@ -14,7 +14,7 @@ namespace ToSic.Sxc.Data
     [PrivateApi("Keep implementation hidden, only publish interface")]
     public partial class DynamicStack: DynamicEntityBase, IWrapper<IPropertyStack>, IDynamicStack
     {
-        public DynamicStack(string name, DynamicEntity.MyServices services, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources) : base(services)
+        public DynamicStack(string name, DynamicEntity.MyServices services, IReadOnlyCollection<KeyValuePair<string, IPropertyLookup>> sources) : base(services, strict: false)
         {
             var stack = new PropertyStack().Init(name, sources);
             UnwrappedStack = stack;
