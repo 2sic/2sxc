@@ -127,8 +127,8 @@ namespace Custom.Hybrid
         /// <inheritdoc cref="IDynamicCode16.AsTyped" />
         public ITyped AsTyped(object original) => _DynCodeRoot.AsC.AsTyped(original);
 
-        ///// <inheritdoc cref="IDynamicCode16.AsTypedList" />
-        //public IEnumerable<ITyped> AsTypedList(object list) => _DynCodeRoot.AsC.AsTypedList(list);
+        /// <inheritdoc cref="IDynamicCode16.AsTypedList" />
+        public IEnumerable<ITyped> AsTypedList(object list) => _DynCodeRoot.AsC.AsTypedList(list);
 
         /// <inheritdoc cref="IDynamicCode16.AsStack" />
         public ITypedStack AsStack(params object[] items) => _DynCodeRoot.AsC.AsStack(items);

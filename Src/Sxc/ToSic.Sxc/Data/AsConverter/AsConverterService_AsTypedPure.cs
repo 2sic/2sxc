@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
@@ -26,28 +29,28 @@ namespace ToSic.Sxc.Data.AsConverter
             throw l.Done(new ArgumentException($"Can't wrap/convert the original '{original.GetType()}'"));
         }
 
-        //private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
-        //public IEnumerable<ITyped> AsTypedList(object list, bool? required = false)
-        //{
-        //    var l = Log.Fn<IEnumerable<ITyped>>();
+        private const string NameOfAsTypedList = nameof(IDynamicCode16.AsTypedList) + "(...)";
+        public IEnumerable<ITyped> AsTypedList(object list, bool? required = false)
+        {
+            var l = Log.Fn<IEnumerable<ITyped>>();
 
-        //    if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, required == true))
-        //        return l.ReturnNull();
+            if (AsTypedPreflightReturnNull(list, NameOfAsTypedList, required == true))
+                return l.ReturnNull();
 
-        //    if (list is IEnumerable<ITyped> alreadyTyped)
-        //        return l.Return(alreadyTyped, "already typed");
+            if (list is IEnumerable<ITyped> alreadyTyped)
+                return l.Return(alreadyTyped, "already typed");
 
-        //    if (!(list is IEnumerable enumerable))
-        //        throw new ArgumentException($"The object provided to {NameOfAsTypedList} is not enumerable/array so it can't be converted.", nameof(list));
+            if (!(list is IEnumerable enumerable))
+                throw new ArgumentException($"The object provided to {NameOfAsTypedList} is not enumerable/array so it can't be converted.", nameof(list));
 
-        //    var itemsRequired = required != false;
-        //    var result = enumerable
-        //        .Cast<object>()
-        //        .Select((o, i) => AsTyped(o, itemsRequired, $"index: {i}"))
-        //        .ToList();
+            var itemsRequired = required != false;
+            var result = enumerable
+                .Cast<object>()
+                .Select((o, i) => AsTyped(o, itemsRequired, $"index: {i}"))
+                .ToList();
 
-        //    return result;
-        //}
+            return result;
+        }
 
         private bool AsTypedPreflightReturnNull(object original, string methodName, bool required, string detailsMessage = default)
         {
