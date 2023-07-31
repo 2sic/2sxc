@@ -18,13 +18,14 @@ namespace ToSic.Sxc.Data
             // Check special cases #1 Toolbar - only in DNN, not available in Oqtane
 #if NETFRAMEWORK
             // ReSharper disable once ConvertIfStatementToSwitchStatement
-            #pragma warning disable 618 // ignore Obsolete
+#pragma warning disable 618 // ignore Obsolete
             if (field == "Toolbar") return new GetInternalResult(Toolbar.ToString(), true);
-            #pragma warning restore 618
+#pragma warning restore 618
 #endif
 
             // Check #2 Presentation which the EAV doesn't know
-            if (field == ViewParts.Presentation)
+            // but only pre V16 (Pro) code. Newer code MUST use the .Presentation
+            if (_Services.AsC.CompatibilityLevel < Constants.CompatibilityLevel16 && field == ViewParts.Presentation)
                 return new GetInternalResult(Presentation, Presentation != null);
 
             return base.GetInternal(field, language, lookup);
