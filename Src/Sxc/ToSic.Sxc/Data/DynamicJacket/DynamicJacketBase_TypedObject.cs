@@ -5,7 +5,6 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Services;
 using static System.StringComparison;
 using static ToSic.Eav.Parameters;
 
@@ -18,9 +17,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback));
             var value = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
-            var strValue = ConvertForCodeService.DateForCode(value, out var dateString)
-                ? dateString
-                : value.ConvertOrFallback(fallback);
+            var strValue = WrapperFactory.ConvertForCode.ForCode(value, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 

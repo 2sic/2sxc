@@ -6,7 +6,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    internal class ConvertValueService: ServiceBase
+    public class ConvertValueService: ServiceBase
     {
         public ConvertValueService(): base("Sxc.CnvSrv")
         {

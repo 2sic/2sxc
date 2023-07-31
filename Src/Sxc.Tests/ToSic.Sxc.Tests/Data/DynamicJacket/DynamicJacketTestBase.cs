@@ -11,7 +11,7 @@ namespace ToSic.Sxc.Tests.Data.DynamicJacket
         }
         protected DynamicWrapperFactory Factory;
 
-        public dynamic AsDynamic(string jsonString) => Factory.AsDynamicJacket(jsonString);
+        public dynamic AsDynamic(string jsonString) => Factory.FromJson(jsonString);
 
         public dynamic AsDynamic(object obj) => AsDynamic(AsJson(obj));
 

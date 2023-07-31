@@ -19,6 +19,14 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicJacketBase: DynamicObject, IReadOnlyList<object>, IPropertyLookup, ISxcDynamicObject, ICanGetByName
     {
 
+        protected DynamicJacketBase(DynamicWrapperFactory wrapperFactory)
+        {
+            WrapperFactory = wrapperFactory;
+        }
+
+        [PrivateApi]
+        protected readonly DynamicWrapperFactory WrapperFactory;
+
         /// <summary>
         /// Check if it's an array.
         /// </summary>

@@ -64,9 +64,10 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback));
             var value = FindValueOrNull(name);
-            var strValue = ConvertForCodeService.DateForCode(value, out var dateString)
-                ? dateString
-                : value.ConvertOrFallback(fallback);
+            var strValue = WrapperFactory.ConvertForCode.ForCode(value, fallback: fallback);
+            //ConvertForCodeService.DateForCode(value, out var dateString)
+            //    ? dateString
+            //    : value.ConvertOrFallback(fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
     }

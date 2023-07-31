@@ -79,7 +79,7 @@ namespace ToSic.Sxc.Data.AsConverter
         #endregion
 
         public DynamicJacketBase AsDynamicFromJson(string json, string fallback = default) 
-            => _dynJacketFactory.Value.AsDynamicJacket(json, fallback, Log);
+            => _dynJacketFactory.Value.FromJson(json, fallback);
 
 
 

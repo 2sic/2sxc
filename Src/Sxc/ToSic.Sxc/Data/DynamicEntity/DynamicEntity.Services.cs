@@ -1,11 +1,11 @@
 ﻿using ToSic.Eav.Data;
-using ToSic.Eav.Data.Build;
 using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Razor.Blade;
 using ToSic.Sxc.Blocks;
 using ToSic.Sxc.Data.AsConverter;
+using ToSic.Sxc.Services;
 using IRenderService = ToSic.Sxc.Services.IRenderService;
 
 namespace ToSic.Sxc.Data
@@ -19,11 +19,17 @@ namespace ToSic.Sxc.Data
         [PrivateApi("this should all stay internal and never be public")]
         public class MyServices : MyServicesBase
         {
-            public MyServices(LazySvc<IValueConverter> valueConverterLazy, Generator<IRenderService> renderServiceGenerator, LazySvc<IScrub> scrub)
+            public MyServices(LazySvc<IValueConverter> valueConverterLazy,
+                Generator<IRenderService> renderServiceGenerator,
+                LazySvc<IScrub> scrub,
+                LazySvc<ConvertForCodeService> forCode)
             {
-                _valueConverterLazy = valueConverterLazy;
-                _renderServiceGenerator = renderServiceGenerator;
-                _scrub = scrub;
+                ConnectServices(
+                    _valueConverterLazy = valueConverterLazy,
+                    _renderServiceGenerator = renderServiceGenerator,
+                    _scrub = scrub,
+                    _forCode = forCode
+                );
             }
 
             internal MyServices Init(IBlock blockOrNull, string[] dimensions, AsConverterService asConverter)
@@ -53,6 +59,9 @@ namespace ToSic.Sxc.Data
 
             internal IScrub Scrub => _scrub.Value;
             private readonly LazySvc<IScrub> _scrub;
+
+            internal ConvertForCodeService ForCode => _forCode.Value;
+            private readonly LazySvc<ConvertForCodeService> _forCode;
         }
     }
 }

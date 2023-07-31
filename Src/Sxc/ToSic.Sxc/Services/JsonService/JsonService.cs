@@ -30,7 +30,7 @@ namespace ToSic.Sxc.Services
 
         /// <inheritdoc />
         public ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default) 
-            => _dynJacketFactory.Value.AsDynamicJacket(json, fallback, Log);
+            => _dynJacketFactory.Value.FromJson(json, fallback);
 
         /// <inheritdoc />
         public string ToJson(object item)

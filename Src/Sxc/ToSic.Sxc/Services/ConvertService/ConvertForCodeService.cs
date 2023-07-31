@@ -9,7 +9,7 @@ using static ToSic.Eav.Parameters;
 namespace ToSic.Sxc.Services
 {
     [PrivateApi("Hide implementation")]
-    internal class ConvertForCodeService: ServiceBase
+    public class ConvertForCodeService: ServiceBase
     {
         private readonly ConvertValueService _cnvSvc;
 
@@ -26,13 +26,11 @@ namespace ToSic.Sxc.Services
             if (value == null) return fallback;
 
             // Pre-check special case of date-time which needs ISO encoding without time zone
-            if (DateForCode(value, out var dateResult))
-                return dateResult;
-            //if (value.GetType().UnboxIfNullable() == typeof(DateTime))
-            //{
-            //    var dt = ((DateTime)value).ToString("O").Substring(0, 23) + "z";
-            //    return dt;
-            //}
+            if (value.GetType().UnboxIfNullable() == typeof(DateTime))
+            {
+                var dt = ((DateTime)value).ToString("O").Substring(0, 23) + "z";
+                return dt;
+            }
 
             var result = _cnvSvc.To(value, fallback: fallback);
             if (result is null) return null;
@@ -43,14 +41,5 @@ namespace ToSic.Sxc.Services
             return result;
         }
 
-        internal static bool DateForCode(object value, out string result)
-        {
-            // Pre-check special case of date-time which needs ISO encoding without time zone
-            var isDateOrNullableDate = value.GetType().UnboxIfNullable() == typeof(DateTime);
-            result = (isDateOrNullableDate)
-                ? ((DateTime)value).ToString("O").Substring(0, 23) + "z"
-                : null;
-            return isDateOrNullableDate;
-        }
     }
 }

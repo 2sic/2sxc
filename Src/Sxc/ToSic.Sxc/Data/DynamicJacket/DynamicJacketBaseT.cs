@@ -33,14 +33,10 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="originalData">the original data we're wrapping</param>
         [PrivateApi]
-        protected DynamicJacketBase(T originalData, DynamicWrapperFactory factory)
+        protected DynamicJacketBase(T originalData, DynamicWrapperFactory wrapperFactory): base(wrapperFactory)
         {
             UnwrappedContents = originalData;
-            Factory = factory;
         }
-
-        [PrivateApi]
-        protected readonly DynamicWrapperFactory Factory;
 
         ///// <summary>
         ///// Enable enumeration. When going through objects (properties) it will return the keys, not the values. <br/>

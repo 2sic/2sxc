@@ -40,7 +40,7 @@ namespace ToSic.Sxc.Data
                 }).Select(p => new
                 {
                     p.Field,
-                    CanDump = _factory.WrapIfPossible(p.Pdi.Property.Result, false, true, true) as IPropertyLookup
+                    CanDump = WrapperFactory.WrapIfPossible(p.Pdi.Property.Result, false, true, true) as IPropertyLookup
                 })
                 .Where(p => !(p.CanDump is null))
                 .ToList();

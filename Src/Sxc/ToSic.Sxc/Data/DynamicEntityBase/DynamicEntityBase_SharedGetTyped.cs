@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Net;
-using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Services;
 
 namespace ToSic.Sxc.Data
 {
@@ -15,10 +13,8 @@ namespace ToSic.Sxc.Data
         {
             Eav.Parameters.Protect(noParamOrder, nameof(fallback));
             var value = GetInternal(name, lookup: false);
-            var strValue = ConvertForCodeService.DateForCode(value, out var dateString)
-                ? dateString
-                : value.ConvertOrFallback(fallback);
-            return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
+            var strValue = _Services.ForCode.ForCode(value, fallback: fallback);
+            return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 
         [PrivateApi]

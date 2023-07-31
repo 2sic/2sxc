@@ -7,13 +7,17 @@ using System;
 using System.Collections.Generic;
 using ToSic.Eav.Data.PropertyLookup;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.DI;
+using ToSic.Lib.Services;
+using ToSic.Sxc.Services;
 using static ToSic.Eav.Serialization.JsonOptions;
 
 namespace ToSic.Sxc.Data
 {
     [PrivateApi]
-    public class DynamicWrapperFactory
+    public class DynamicWrapperFactory: ServiceBase
     {
+
         [PrivateApi]
         public const string EmptyJson = "{}";
         [PrivateApi]
@@ -23,11 +27,18 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         private const string JsonErrorCode = "error";
 
-        public DynamicWrapperFactory() { }
+        public DynamicWrapperFactory(LazySvc<ConvertForCodeService> forCodeConverter): base("Sxc.DWrpFk")
+        {
+            ConnectServices(
+                _forCodeConverter = forCodeConverter
+            );
+        }
 
+        internal ConvertForCodeService ConvertForCode => _forCodeConverter.Value;
+        private readonly LazySvc<ConvertForCodeService> _forCodeConverter;
 
-        internal DynamicJacketBase AsDynamicJacket(string json, string fallback = default, ILog log = default)
-            => TryToConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson), log).Jacket;
+        internal DynamicJacketBase FromJson(string json, string fallback = default)
+            => TryToConvertToJacket(AsJsonNode(json, fallback ?? EmptyJson)).Jacket;
 
         internal DynamicReadDictionary<TKey, TValue> FromDictionary<TKey, TValue>(IDictionary<TKey, TValue> original)
             => new DynamicReadDictionary<TKey, TValue>(original, this);
@@ -55,7 +66,7 @@ namespace ToSic.Sxc.Data
             if (value is Guid || value is DateTime) return value;
 
             // Check if the result is a JSON object which should support navigation again
-            var result = /*DynamicJacketFactory.*/WrapIfJObjectUnwrapIfJValue(value);
+            var result = WrapIfJObjectUnwrapIfJValue(value);
 
             // Check if the result already supports navigation... - which is the case if it's a DynamicJacket now
             switch (result)
@@ -107,9 +118,9 @@ namespace ToSic.Sxc.Data
                 : JsonNode.Parse(fallback, JsonNodeDefaultOptions, JsonDocumentDefaultOptions);
         }
 
-        private (DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind) TryToConvertToJacket(object original, ILog log = default)
+        private (DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind) TryToConvertToJacket(object original)
         {
-            var l = log.Fn<(DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind)>();
+            var l = Log.Fn<(DynamicJacketBase Jacket, bool Ok, JsonValueKind ValueKind)>();
             if (!(original is JsonNode jsonNode))
                 return l.Return((null, false, JsonValueKind.Undefined), "not json node");
 
@@ -144,11 +155,11 @@ namespace ToSic.Sxc.Data
         /// <param name="original"></param>
         /// <returns></returns>
         [PrivateApi]
-        internal /*static*/ object WrapIfJObjectUnwrapIfJValue(object original)
+        internal object WrapIfJObjectUnwrapIfJValue(object original)
         {
             if (!(original is JsonNode jsonNode)) return original;
 
-            var maybeJacket = TryToConvertToJacket(original, null);
+            var maybeJacket = TryToConvertToJacket(original);
             if (maybeJacket.Ok) return maybeJacket.Jacket;
 
             switch (jsonNode)
