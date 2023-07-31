@@ -52,12 +52,13 @@ namespace ToSic.Sxc.Context.Query
             return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
         }
 
-        /// <summary>
-        /// Note: this is implemented for the sake of the interface, but it won't be used.
-        /// Because IParameters has a string this[key] 
-        /// </summary>
-        [PrivateApi]
-        IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
+        // 2023-07-31 turned off again as not final and probably not a good idea #ITypedIndexer
+        ///// <summary>
+        ///// Note: this is implemented for the sake of the interface, but it won't be used.
+        ///// Because IParameters has a string this[key] 
+        ///// </summary>
+        //[PrivateApi]
+        //IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
 
 
         object ITyped.Get(string name) => Get(name);

@@ -54,8 +54,9 @@ namespace ToSic.Sxc.Data
             return Tags.SafeUrl(url).ToString();
         }
 
-        [PrivateApi]
-        IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
+        // 2023-07-31 turned off again as not final and probably not a good idea #ITypedIndexer
+        //[PrivateApi]
+        //IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
 
 
         [PrivateApi]

@@ -147,8 +147,9 @@ namespace ToSic.Sxc.Data
 
         #region Indexer WIP 16.03/04
 
-        [PrivateApi("experimental v16.03")]
-        IRawHtmlString this[string name] { get; }
+        // 2023-07-31 turned off again as not final and probably not a good idea #ITypedIndexer
+        //[PrivateApi("experimental v16.03")]
+        //IRawHtmlString this[string name] { get; }
 
         #endregion
 
