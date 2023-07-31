@@ -2,14 +2,18 @@
 using System.IO;
 using System.Web.Hosting;
 using System.Web.WebPages;
+using Custom.Hybrid;
 using ToSic.Eav;
 using ToSic.Eav.Code.Help;
 using ToSic.Lib.Documentation;
+using ToSic.Lib.Helpers;
 using ToSic.Lib.Logging;
 using ToSic.Sxc.Code;
 using ToSic.Sxc.Code.CodeHelpers;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Dnn.Code;
 using ToSic.Sxc.Dnn.Web;
+using ToSic.Sxc.Engines;
 using ToSic.Sxc.Engines.Razor;
 using static ToSic.Eav.Parameters;
 
@@ -123,6 +127,23 @@ namespace ToSic.Sxc.Web
             pageAsRcb?.SysHlp.ConfigurePage(Page, pageAsRcb.VirtualPath);
             return pageAsCode;
         }
+
+
+        #endregion
+
+        #region DynamicModel and Factory
+
+        private DynamicWrapperFactory DynamicWrapperFactory => _dynJacketFactory.Get(() => _DynCodeRoot.GetService<DynamicWrapperFactory>());
+        private readonly GetOnce<DynamicWrapperFactory> _dynJacketFactory = new GetOnce<DynamicWrapperFactory>();
+
+        /// <inheritdoc cref="IRazor14{TModel,TServiceKit}.DynamicModel"/>
+        public dynamic DynamicModel => _dynamicModel ?? (_dynamicModel = DynamicWrapperFactory.FromDictionary(Page.PageData));
+        // new DynamicReadDictionary<object, dynamic>(Page.PageData, _DynCodeRoot.GetService<DynamicJacketFactory>()));
+        private dynamic _dynamicModel;
+
+        internal void SetDynamicModel(object data) =>
+            _dynamicModel = DynamicWrapperFactory.FromObject(data, false, false);
+        // new DynamicReadObject(data, false, false, _DynCodeRoot.GetService<DynamicJacketFactory>());
 
         #endregion
     }

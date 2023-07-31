@@ -1,10 +1,17 @@
 ﻿using ToSic.Eav.Serialization;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Tests.Data.DynamicJacket
 {
-    public abstract class DynamicJacketTestBase
+    public abstract class DynamicJacketTestBase: TestBaseSxcDb
     {
-        public dynamic AsDynamic(string jsonString) => Sxc.Data.DynamicJacket.AsDynamicJacket(jsonString);
+        protected DynamicJacketTestBase()
+        {
+            Factory = GetService<DynamicWrapperFactory>();
+        }
+        protected DynamicWrapperFactory Factory;
+
+        public dynamic AsDynamic(string jsonString) => Factory.AsDynamicJacket(jsonString);
 
         public dynamic AsDynamic(object obj) => AsDynamic(AsJson(obj));
 

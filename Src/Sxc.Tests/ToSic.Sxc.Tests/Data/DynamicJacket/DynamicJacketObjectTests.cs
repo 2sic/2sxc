@@ -28,7 +28,7 @@ namespace ToSic.Sxc.Data.Tests
                 }
             });
  
-            var expectedType = (new DynamicJacket(new JsonObject())).GetType();
+            var expectedType = new DynamicJacket(new JsonObject(), Factory).GetType();
 
             IsFalse(test.Dyn.IsList);
 

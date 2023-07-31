@@ -33,7 +33,7 @@ namespace ToSic.Sxc.Data
                 .Where(p => p.Value is JsonObject)
                 .SelectMany(p =>
                 {
-                    var jacket = new DynamicJacket(p.Value.AsObject());
+                    var jacket = new DynamicJacket(p.Value.AsObject(), Factory);
                     return jacket._Dump(specs, path + PropertyDumpItem.Separator + p.Key);
                 })
                 .Where(p => !(p is null));

@@ -174,6 +174,9 @@ namespace ToSic.Sxc.Startup
             // v15
             services.TryAddTransient<DynamicCodeDataSources>();
 
+            // v16 DynamicJacket and DynamicRead factories
+            services.TryAddTransient<DynamicWrapperFactory>();
+
             // Add possibly missing fallback services
             // This must always be at the end here so it doesn't accidentally replace something we actually need
             services

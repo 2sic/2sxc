@@ -117,7 +117,7 @@ namespace ToSic.Sxc.Data.Tests
                 new object[] { true, 2, "c3"}
             });
 
-            var expectedType = (new DynamicJacketList(new JsonArray())).GetType();
+            var expectedType = new DynamicJacketList(new JsonArray(), Factory).GetType();
 
             IsTrue(dyn.IsList);
 

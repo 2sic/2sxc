@@ -232,7 +232,7 @@ namespace ToSic.SexyContent.Razor
 #pragma warning restore 618
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(string, string)" />
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
+        public dynamic AsDynamic(string json, string fallback = DynamicWrapperFactory.EmptyJson)
             => throw new Exception("The AsDynamic(string) is a new feature in 2sxc 10.20. To use it, change your template type to inherit from " 
                                    + nameof(RazorComponent) + " see https://go.2sxc.org/RazorComponent");
 

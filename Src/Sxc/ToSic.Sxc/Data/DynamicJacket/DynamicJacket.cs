@@ -24,7 +24,7 @@ namespace ToSic.Sxc.Data
     {
         /// <inheritdoc />
         [PrivateApi]
-        internal DynamicJacket(JsonObject originalData) : base(originalData) { }
+        internal DynamicJacket(JsonObject originalData, DynamicWrapperFactory factory) : base(originalData, factory) { }
 
         /// <inheritdoc />
         public override bool IsList => false;
@@ -84,7 +84,7 @@ namespace ToSic.Sxc.Data
             var found = UnwrappedContents.FirstOrDefault(
                     p => string.Equals(p.Key, name, comparison));
 
-            return WrapIfJObjectUnwrapIfJValue(found.IsNullOrDefault() ? null : found.Value);
+            return Factory.WrapIfJObjectUnwrapIfJValue(found.IsNullOrDefault() ? null : found.Value);
         }
 
         #endregion

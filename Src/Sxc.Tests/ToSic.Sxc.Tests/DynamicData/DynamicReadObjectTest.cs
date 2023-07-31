@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.CSharp.RuntimeBinder;
+using ToSic.Sxc.Data;
 using static ToSic.Sxc.Tests.DynamicData.TestAccessors;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace ToSic.Sxc.Tests.DynamicData
 {
     [TestClass]
-    public class DynamicReadObjectTest
+    public class DynamicReadObjectTest : TestBaseSxcDb
     {
         [TestMethod]
         public void BasicUseAndDataTypes()
@@ -22,7 +23,7 @@ namespace ToSic.Sxc.Tests.DynamicData
                 Truthy = true,
             };
 
-            var dynAnon = DynReadObjT(anon, false, false) as dynamic;
+            var dynAnon = GetService<DynamicWrapperFactory>().FromObject(anon, false, false) as dynamic;
 
             IsNull(dynAnon.NotExisting);
             AreEqual(anon.Name, dynAnon.Name);
@@ -44,7 +45,7 @@ namespace ToSic.Sxc.Tests.DynamicData
                 }
             };
 
-            var dynAnon = DynReadObjT(anon, false, false) as dynamic;
+            var dynAnon = GetService<DynamicWrapperFactory>().FromObject(anon, false, false) as dynamic;
             AreEqual(anon.Sub, dynAnon.Sub);
         }
 
@@ -104,7 +105,7 @@ namespace ToSic.Sxc.Tests.DynamicData
 
             // Test wrapping anonymous sub-objects only
             var msgPlus = $" - DynRead(..., {wrapChildren}, {wrapRealChildren})";
-            var dynWrapAnon = DynReadObjT(anon, wrapChildren, wrapRealChildren) as dynamic;
+            var dynWrapAnon = GetService<DynamicWrapperFactory>().FromObject(anon, wrapChildren, wrapRealChildren) as dynamic;
 
             // These tests should run in all cases
             AreNotEqual(anon, dynWrapAnon, $"wrapper should never be equal {msgPlus}");

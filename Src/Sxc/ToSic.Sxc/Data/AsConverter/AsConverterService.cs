@@ -14,6 +14,7 @@ namespace ToSic.Sxc.Data.AsConverter
     // todo: make internal once we have an interface
     public partial class AsConverterService: ServiceForDynamicCode
     {
+        private readonly LazySvc<DynamicWrapperFactory> _dynJacketFactory;
         private readonly LazySvc<DataBuilder> _dataBuilderLazy;
         private readonly LazySvc<DynamicEntity.MyServices> _dynamicEntityDependenciesLazy;
         private readonly LazySvc<AdamManager> _adamManagerLazy;
@@ -23,14 +24,15 @@ namespace ToSic.Sxc.Data.AsConverter
             LazySvc<DynamicEntity.MyServices> dynamicEntityDependencies,
             LazySvc<AdamManager> adamManager,
             LazySvc<IContextOfApp> contextOfApp,
-            LazySvc<DataBuilder> dataBuilderLazy
-            ) : base("Sxc.AsConv")
+            LazySvc<DataBuilder> dataBuilderLazy,
+            LazySvc<DynamicWrapperFactory> dynJacketFactory) : base("Sxc.AsConv")
         {
             ConnectServices(
                 _dynamicEntityDependenciesLazy = dynamicEntityDependencies,
                 _adamManagerLazy = adamManager,
                 _contextOfAppLazy = contextOfApp,
-                _dataBuilderLazy = dataBuilderLazy
+                _dataBuilderLazy = dataBuilderLazy,
+                _dynJacketFactory = dynJacketFactory
             );
         }
 
@@ -76,7 +78,8 @@ namespace ToSic.Sxc.Data.AsConverter
 
         #endregion
 
-        public DynamicJacketBase AsDynamicFromJson(string json, string fallback = default) => DynamicJacket.AsDynamicJacket(json, fallback, Log);
+        public DynamicJacketBase AsDynamicFromJson(string json, string fallback = default) 
+            => _dynJacketFactory.Value.AsDynamicJacket(json, fallback, Log);
 
 
 

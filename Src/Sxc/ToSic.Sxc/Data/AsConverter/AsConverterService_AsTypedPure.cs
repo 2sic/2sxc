@@ -22,7 +22,7 @@ namespace ToSic.Sxc.Data.AsConverter
             if (original is ITyped alreadyTyped)
                 return l.Return(alreadyTyped, "already typed");
 
-            var result = DynamicHelpers.WrapIfPossible(original, true, true, false);
+            var result = _dynJacketFactory.Value.WrapIfPossible(original, true, true, false);
             if (result is ITyped resTyped)
                 return l.Return(resTyped, "converted to dyn-read");
 

@@ -16,21 +16,21 @@ namespace ToSic.Sxc.Data
     public class DynamicJacketList : DynamicJacketBase<JsonArray>, IReadOnlyList<object>
     {
         /// <inheritdoc />
-        public DynamicJacketList(JsonArray originalData) :base(originalData) { }
+        public DynamicJacketList(JsonArray originalData, DynamicWrapperFactory factory) :base(originalData, factory) { }
 
         /// <inheritdoc />
         public override bool IsList => true;
 
         [PrivateApi]
         public override IEnumerator<object> GetEnumerator() 
-            => UnwrappedContents.Select(DynamicJacket.WrapIfJObjectUnwrapIfJValue).GetEnumerator();
+            => UnwrappedContents.Select(Factory.WrapIfJObjectUnwrapIfJValue).GetEnumerator();
 
         /// <summary>
         /// Access the items in this object - but only if the underlying object is an array. 
         /// </summary>
         /// <param name="index">array index</param>
         /// <returns>the item or an error if not found</returns>
-        public override object this[int index] => DynamicJacket.WrapIfJObjectUnwrapIfJValue(UnwrappedContents[index]);
+        public override object this[int index] => Factory.WrapIfJObjectUnwrapIfJValue(UnwrappedContents[index]);
 
         [PrivateApi("internal")]
         public override List<PropertyDumpItem> _Dump(PropReqSpecs specs, string path) 
@@ -63,7 +63,7 @@ namespace ToSic.Sxc.Data
                     return false;
                 });
 
-            return DynamicJacket.WrapIfJObjectUnwrapIfJValue(found);
+            return Factory.WrapIfJObjectUnwrapIfJValue(found);
         }
 
         private bool HasPropertyWithValue(JsonObject obj, string propertyName, string value, StringComparison comparison)

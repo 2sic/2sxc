@@ -14,7 +14,7 @@ namespace ToSic.SexyContent.WebApi
         #region new AsDynamic - not supported
 
         [PrivateApi]
-        public dynamic AsDynamic(string json, string fallback = DynamicJacket.EmptyJson)
+        public dynamic AsDynamic(string json, string fallback = DynamicWrapperFactory.EmptyJson)
             => throw new Exception($"The AsDynamic(string) is a new feature in 2sxc 10.20. {ApiController.ErrRecommendedNamespaces}");
 
 

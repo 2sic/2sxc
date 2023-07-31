@@ -35,10 +35,11 @@ namespace ToSic.Sxc.Data
         /// When using this for DynamicModel it should be false, otherwise usually true.
         /// </param>
         [PrivateApi]
-        public DynamicReadObject(object item, bool wrapChildren, bool wrapRealChildren)
+        internal DynamicReadObject(object item, bool wrapChildren, bool wrapRealChildren, DynamicWrapperFactory factory)
         {
             _wrapChildren = wrapChildren;
             _wrapRealChildren = wrapRealChildren;
+            _factory = factory;
             UnwrappedObject = item;
             if (item == null) return;
             
@@ -47,6 +48,7 @@ namespace ToSic.Sxc.Data
         }
         private readonly bool _wrapChildren;
         private readonly bool _wrapRealChildren;
+        private readonly DynamicWrapperFactory _factory;
         protected readonly object UnwrappedObject;
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
@@ -81,7 +83,7 @@ namespace ToSic.Sxc.Data
 
             // Probably re-wrap for further dynamic navigation!
             return _wrapChildren 
-                ? DynamicHelpers.WrapIfPossible(result, _wrapRealChildren, _wrapChildren, _wrapRealChildren) 
+                ? _factory.WrapIfPossible(result, _wrapRealChildren, _wrapChildren, _wrapRealChildren) 
                 : result;
         }
 

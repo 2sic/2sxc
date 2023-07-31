@@ -1,14 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ToSic.Sxc.Data;
 
 namespace ToSic.Sxc.Tests.DynamicData
 {
     [TestClass]
-    public class DynamicReadRealClass
+    public class DynamicReadRealClass: TestBaseSxcDb
     {
         [TestMethod]
         public void TestMethod1()
         {
-            var dynAnon = TestAccessors.DynReadObjT(new SimpleObject {NameAsProperty = "PropName", NameAsValue = "ValName"}, false, false) as dynamic;
+            var dynAnon = GetService<DynamicWrapperFactory>().FromObject(
+                new SimpleObject {NameAsProperty = "PropName", NameAsValue = "ValName"},
+                false, false) as dynamic;
             Assert.AreEqual("PropName", dynAnon.NameAsProperty);
 
             // Simple values shouldn't work, only properties

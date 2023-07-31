@@ -65,7 +65,7 @@ namespace ToSic.Sxc.Razor
 
         #region Dynamic Model / MyModel
 
-        public dynamic DynamicModel => _dynamicModel ??= new DynamicReadObject(_owner.Model, true, false);
+        public dynamic DynamicModel => _dynamicModel ??= _owner.GetService<DynamicWrapperFactory>().FromObject(_owner.Model, true, false);
         private dynamic _dynamicModel;
         private object _overridePageData;
 
@@ -73,7 +73,7 @@ namespace ToSic.Sxc.Razor
         {
             _overridePageData = data;
             //UpdateModel(data);
-            _dynamicModel = new DynamicReadObject(data, false, false);
+            _dynamicModel = _owner.GetService<DynamicWrapperFactory>().FromObject(data, false, false);
         }
 
         public TypedCode16Helper CodeHelper => _codeHelper ??= CreateCodeHelper();

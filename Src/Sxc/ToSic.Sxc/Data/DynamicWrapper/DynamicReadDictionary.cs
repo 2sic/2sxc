@@ -20,13 +20,16 @@ namespace ToSic.Sxc.Data
     public class DynamicReadDictionary<TKey, TVal>: DynamicObject, IWrapper<IDictionary<TKey, TVal>>
     {
         protected readonly IDictionary<TKey, TVal> UnwrappedDictionary;
+        private readonly DynamicWrapperFactory _factory;
+
         [PrivateApi]
         public IDictionary<TKey, TVal> GetContents() => UnwrappedDictionary;
         private readonly Dictionary<string, object> _ignoreCaseLookup = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
 
-        public DynamicReadDictionary(IDictionary<TKey, TVal> dictionary)
+        public DynamicReadDictionary(IDictionary<TKey, TVal> dictionary, DynamicWrapperFactory factory)
         {
             UnwrappedDictionary = dictionary;
+            _factory = factory;
             if (dictionary == null) return;
 
             foreach (var de in dictionary) 
@@ -42,7 +45,7 @@ namespace ToSic.Sxc.Data
             // if result is an anonymous object, re-wrap again for consistency with other APIs
             if (result is null) return true;
             if (result.IsAnonymous())
-                result = DynamicHelpers.WrapIfPossible(result, false, true, false);
+                result = _factory.WrapIfPossible(result, false, true, false);
 
             return true;
         }

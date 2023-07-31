@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using ToSic.Lib.DI;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Services;
 using ToSic.Sxc.Data;
@@ -10,9 +11,13 @@ namespace ToSic.Sxc.Services
     [PrivateApi("Hide implementation")]
     internal class JsonService: ServiceBase, IJsonService
     {
-        public JsonService(): base("Sxc.JsnSvc")
-        {
+        private readonly LazySvc<DynamicWrapperFactory> _dynJacketFactory;
 
+        public JsonService(LazySvc<DynamicWrapperFactory> dynJacketFactory): base("Sxc.JsnSvc")
+        {
+            ConnectServices(
+                _dynJacketFactory = dynJacketFactory
+            );
         }
 
         /// <inheritdoc />
@@ -25,7 +30,7 @@ namespace ToSic.Sxc.Services
 
         /// <inheritdoc />
         public ITyped ToTyped(string json, string noParamOrder = Protector, string fallback = default) 
-            => DynamicJacket.AsDynamicJacket(json, fallback, Log);
+            => _dynJacketFactory.Value.AsDynamicJacket(json, fallback, Log);
 
         /// <inheritdoc />
         public string ToJson(object item)
