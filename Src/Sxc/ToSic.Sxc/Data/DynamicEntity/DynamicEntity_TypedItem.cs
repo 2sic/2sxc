@@ -15,7 +15,13 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IFolder ITypedItem.Folder(string name) => _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
+        IFolder ITypedItem.Folder(string name)
+        {
+            if (StrictGet && !Entity.Attributes.ContainsKey(name))
+                throw new ArgumentException(ErrStrict(name));
+
+            return _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
+        }
 
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
@@ -58,6 +64,10 @@ namespace ToSic.Sxc.Data
         IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type)
         {
             Protect(noParamOrder, $"{nameof(type)}");
+
+            if (StrictGet && !Entity.Attributes.ContainsKey(field))
+                throw new ArgumentException(ErrStrict(field));
+
             var dynChildren = Children(field, type);
             var list = _Services.AsC.AsItems(dynChildren, noParamOrder).ToList();
             if (list.Any()) return list;

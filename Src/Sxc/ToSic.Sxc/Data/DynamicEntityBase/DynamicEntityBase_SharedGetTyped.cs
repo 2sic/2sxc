@@ -22,20 +22,21 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var findResult = GetInternal(name, lookup: false);
-            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name));
+            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name, cName));
             return findResult.Result.ConvertOrFallback(fallback);
         }
 
         [PrivateApi]
-        protected static string ErrStrict(string name)
-            => $"Field of name '{name}' not found and 'strict' is true, meaning that an error is thrown. Either fix the field name, or use strict false is AsItem(...)";
+        protected static string ErrStrict(string name, [CallerMemberName] string cName = default)
+            => $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. Correct the name '{name}', or use strict false is AsItem(...)";
 
         [PrivateApi]
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
         {
             Protect(noParamOrder, nameof(fallback));
-            var value = GetInternal(name, lookup: false).Result;
-            var strValue = _Services.ForCode.ForCode(value, fallback: fallback);
+            var findResult = GetInternal(name, lookup: false);
+            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name));
+            var strValue = _Services.ForCode.ForCode(findResult.Result, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 

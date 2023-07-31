@@ -48,8 +48,6 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(settings)}, {nameof(factor)}, {nameof(width)}, {nameof(imgAlt)}...");
             var kit = GetServiceKitOrThrow();
-            //if (!(this as ITypedItem).Type.Attributes.Any(a => a.Name.EqualsInsensitive(name)))
-            //    return null;
             var field = Field(name);
             return field.Url.IsEmptyOrWs()
                 ? null 

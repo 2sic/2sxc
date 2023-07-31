@@ -13,7 +13,13 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        public IField Field(string name) => new Field(this, name, _Services);
+        public IField Field(string name)
+        {
+            if (StrictGet && !Entity.Attributes.ContainsKey(name))
+                throw new ArgumentException(ErrStrict(name));
+
+            return new Field(this, name, _Services);
+        }
 
         /// <inheritdoc />
         public string EntityType => Entity?.Type?.Name;
