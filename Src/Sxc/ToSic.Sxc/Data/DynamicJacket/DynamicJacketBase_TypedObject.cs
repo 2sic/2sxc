@@ -5,7 +5,9 @@ using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Services;
 using static System.StringComparison;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -14,8 +16,12 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
         {
-            var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
-            return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
+            Protect(noParamOrder, nameof(fallback));
+            var value = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
+            var strValue = ConvertForCodeService.DateForCode(value, out var dateString)
+                ? dateString
+                : value.ConvertOrFallback(fallback);
+            return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 
         TValue ITyped.Get<TValue>(string name)
@@ -24,26 +30,26 @@ namespace ToSic.Sxc.Data
             return result.ConvertOrDefault<TValue>();
         }
         public TValue Get<TValue>(string name,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             TValue fallback = default)
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(fallback)}");
+            Protect(noParamOrder, nameof(fallback));
             var result = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
             return result.ConvertOrFallback(fallback);
         }
         private TValue GetV<TValue>(string name,
-            string noParamOrder = Eav.Parameters.Protector,
+            string noParamOrder = Protector,
             TValue fallback = default,
             [CallerMemberName] string cName = default)
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(fallback)}", methodName: cName);
+            Protect(noParamOrder, nameof(fallback), methodName: cName);
             var result = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
             return result.ConvertOrFallback(fallback);
         }
 
         dynamic ITyped.Dyn => this;
 
-        bool ITyped.Bool(string name, string noParamOrder , bool fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
+        bool ITyped.Bool(string name, string noParamOrder, bool fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
         DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
@@ -51,7 +57,7 @@ namespace ToSic.Sxc.Data
         {
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 #pragma warning disable CS0618
-            return scrubHtml ? Razor.Blade.Tags.Strip(value) : value;
+            return scrubHtml ? Tags.Strip(value) : value;
 #pragma warning restore CS0618
         }
 

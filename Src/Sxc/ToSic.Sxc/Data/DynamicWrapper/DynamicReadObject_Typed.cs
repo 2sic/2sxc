@@ -2,9 +2,10 @@
 using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
-using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
+using ToSic.Sxc.Services;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -46,23 +47,27 @@ namespace ToSic.Sxc.Data
         //IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
 
 
-        TValue ITyped.Get<TValue>(string name) => GetV<TValue>(name, Eav.Parameters.Protector, default);
+        TValue ITyped.Get<TValue>(string name) => GetV<TValue>(name, Protector, default);
 
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback)
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(fallback)}");
+            Protect(noParamOrder, nameof(fallback));
             return FindValueOrNull(name).ConvertOrFallback(fallback);
         }
         private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback, [CallerMemberName] string cName = default)
         {
-            Eav.Parameters.Protect(noParamOrder, $"{nameof(fallback)}", methodName: cName);
+            Protect(noParamOrder, nameof(fallback), methodName: cName);
             return FindValueOrNull(name).ConvertOrFallback(fallback);
         }
 
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
         {
-            var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
-            return value is null ? null : new RawHtmlString(WebUtility.HtmlEncode(value));
+            Protect(noParamOrder, nameof(fallback));
+            var value = FindValueOrNull(name);
+            var strValue = ConvertForCodeService.DateForCode(value, out var dateString)
+                ? dateString
+                : value.ConvertOrFallback(fallback);
+            return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
     }
 }

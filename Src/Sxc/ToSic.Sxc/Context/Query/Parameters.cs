@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
 using ToSic.Sxc.Web.Url;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Context.Query
 {
@@ -31,14 +33,27 @@ namespace ToSic.Sxc.Context.Query
 
         public string Get(string name) => OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
 
-        public TValue Get<TValue>(string name) => Get<TValue>(name, fallback: default);
+        public TValue Get<TValue>(string name) => GetV<TValue>(name, noParamOrder: Protector, fallback: default);
 
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        public TValue Get<TValue>(string name, string noParamOrder = Eav.Parameters.Protector, TValue fallback = default)
+        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default)
         {
-            if (!ContainsKey(name)) return fallback;
-            var temp = this[name];
-            return temp.ConvertOrFallback(fallback);
+            return GetV(name, noParamOrder, fallback);
+            //Protect(noParamOrder, nameof(fallback));
+            //return OriginalsAsDic.TryGetValue(name, out var value)
+            //    ? value.ConvertOrFallback(fallback) 
+            //    : fallback;
+            //if (!ContainsKey(name)) return fallback;
+            //var temp = this[name];
+            //return temp.ConvertOrFallback(fallback);
+        }
+
+        private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback = default, [CallerMemberName] string cName = default)
+        {
+            Protect(noParamOrder, nameof(fallback), methodName: cName);
+            return OriginalsAsDic.TryGetValue(name, out var value)
+                ? value.ConvertOrFallback(fallback) 
+                : fallback;
         }
 
         #endregion

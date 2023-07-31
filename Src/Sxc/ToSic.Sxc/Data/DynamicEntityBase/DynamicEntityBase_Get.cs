@@ -18,7 +18,7 @@ namespace ToSic.Sxc.Data
             string noParamOrder = Protector,
             TValue fallback = default)
         {
-            Protect(noParamOrder, $"{nameof(fallback)}");
+            Protect(noParamOrder, nameof(fallback));
             return GetInternal(name, lookup: false).ConvertOrFallback(fallback);
         }
         private TValue GetV<TValue>(string name,
@@ -26,7 +26,7 @@ namespace ToSic.Sxc.Data
             TValue fallback = default,
             [CallerMemberName] string cName = default)
         {
-            Protect(noParamOrder, $"{nameof(fallback)}", methodName: cName);
+            Protect(noParamOrder, nameof(fallback), methodName: cName);
             return GetInternal(name, lookup: false).ConvertOrFallback(fallback);
         }
 

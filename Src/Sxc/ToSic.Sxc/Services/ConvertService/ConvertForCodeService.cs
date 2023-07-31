@@ -23,14 +23,16 @@ namespace ToSic.Sxc.Services
         public string ForCode(object value, string noParamOrder = Protector, string fallback = default)
         {
             Protect(noParamOrder, nameof(fallback));
-            if (value == null) return null;
+            if (value == null) return fallback;
 
             // Pre-check special case of date-time which needs ISO encoding without time zone
-            if (value.GetType().UnboxIfNullable() == typeof(DateTime))
-            {
-                var dt = ((DateTime)value).ToString("O").Substring(0, 23) + "z";
-                return dt;
-            }
+            if (DateForCode(value, out var dateResult))
+                return dateResult;
+            //if (value.GetType().UnboxIfNullable() == typeof(DateTime))
+            //{
+            //    var dt = ((DateTime)value).ToString("O").Substring(0, 23) + "z";
+            //    return dt;
+            //}
 
             var result = _cnvSvc.To(value, fallback: fallback);
             if (result is null) return null;
@@ -40,6 +42,15 @@ namespace ToSic.Sxc.Services
 
             return result;
         }
-        
+
+        internal static bool DateForCode(object value, out string result)
+        {
+            // Pre-check special case of date-time which needs ISO encoding without time zone
+            var isDateOrNullableDate = value.GetType().UnboxIfNullable() == typeof(DateTime);
+            result = (isDateOrNullableDate)
+                ? ((DateTime)value).ToString("O").Substring(0, 23) + "z"
+                : null;
+            return isDateOrNullableDate;
+        }
     }
 }
