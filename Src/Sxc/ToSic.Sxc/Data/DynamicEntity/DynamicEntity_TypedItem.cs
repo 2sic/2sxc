@@ -82,6 +82,8 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedItem.Child(string name, string noParamOrder)
         {
             Protect(noParamOrder);
+            if (StrictGet && !Entity.Attributes.ContainsKey(name))
+                throw new ArgumentException(ErrStrict(name));
             return (this as ITypedItem).Children(name).FirstOrDefault();
         }
     }
