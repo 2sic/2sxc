@@ -139,7 +139,7 @@ namespace ToSic.Sxc.Code
         #region AsEntity
 
         /// <summary>
-        /// Unwraps a dynamic entity back into the underlying <see cref="IEntity"/>
+        /// Unwraps a dynamic entity or <see cref="ITypedItem"/> back into the underlying <see cref="IEntity"/>
         /// </summary>
         /// <param name="dynamicEntity">the wrapped IEntity</param>
         /// <returns>A normal IEntity</returns>

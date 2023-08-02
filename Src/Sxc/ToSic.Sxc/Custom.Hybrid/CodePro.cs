@@ -17,10 +17,7 @@ using Constants = ToSic.Sxc.Constants;
 namespace Custom.Hybrid
 {
     /// <summary>
-    /// Base class for v16 Dynamic Code files.
-    /// 
-    /// Will provide the <see cref="ServiceKit14"/> on property `Kit`.
-    /// This contains all the popular services used in v14/16, so that your code can be lighter. 
+    /// Base class for v16 Pro Dynamic Code files.
     /// </summary>
     [WorkInProgressApi("WIP 16.02")]
     public abstract class CodePro : DynamicCodeBase, IHasCodeLog, IDynamicCode16
@@ -29,9 +26,10 @@ namespace Custom.Hybrid
         #region Constructor / Setup
 
         /// <summary>
-        /// Main constructor. May never have parameters, otherwise inheriting code will run into problems. 
+        /// Main constructor.
+        /// Doesn't have parameters so it can easily be inherited.
         /// </summary>
-        protected CodePro() : base("Sxc.Code14") { }
+        protected CodePro() : base("Sxc.Code16") { }
 
         /// <inheritdoc cref="IHasCodeLog.Log" />
         public new ICodeLog Log => SysHlp.CodeLog;

@@ -9,7 +9,7 @@ namespace ToSic.Sxc.Code
     public interface IHasCodeLog
     {
         /// <summary>
-        /// The logger for the current Razor / WebApi
+        /// The logger for the current Razor / WebApi which allows you to add logs to Insights.
         /// </summary>
         ICodeLog Log { get; }
     }

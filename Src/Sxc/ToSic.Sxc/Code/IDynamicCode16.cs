@@ -56,6 +56,10 @@ namespace ToSic.Sxc.Code
 
         #region App, Resources, Settings
 
+        /// <summary>
+        /// The current App object (with strictly typed Settings/Resources).
+        /// Use it to access App properties such as `Path` or any data in the App.
+        /// </summary>
         IAppTyped App { get; }
 
         /// <summary>
@@ -103,9 +107,9 @@ namespace ToSic.Sxc.Code
         );
 
         /// <summary>
-        /// 
+        /// Convert an object containing a list of Entities or similar to a list of <see cref="ITypedItem"/>s.
         /// </summary>
-        /// <param name="list"></param>
+        /// <param name="list">The original list which is usually a list of <see cref="IEntity"/> objects.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="strict">TODO:</param>
         /// <returns></returns>
@@ -150,17 +154,49 @@ namespace ToSic.Sxc.Code
 
         #region My... Stuff
 
+        /// <summary>
+        /// The main Item belonging to this Template/Module.
+        /// This data is edited by the user directly on this specific module.
+        /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+        ///
+        /// If this view can have a list of items (more than one) then this contains the first item.
+        /// To get all the items, see <see cref="MyItems"/>
+        /// </summary>
         ITypedItem MyItem {get; }
 
+        /// <summary>
+        /// List of all Items belonging to this Template/Module.
+        /// This data is edited by the user directly on this specific module.
+        /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+        ///
+        /// If this view is configured to only have one item, then this list will only contain one item.
+        /// Otherwise it will have as many items as the editor added.
+        /// </summary>
         IEnumerable<ITypedItem> MyItems { get; }
 
+        /// <summary>
+        /// The Header-Item belonging to this Template/Module.
+        /// This data is edited by the user directly on this specific module.
+        /// In some cases it can also be a pre-set item configured in the View to be used if the user has not added any data himself.
+        /// </summary>
         ITypedItem MyHeader { get; }
 
+        /// <summary>
+        /// All the data which the current Template received, based on the View configuration.
+        /// There are a few common scenarios:
+        ///
+        /// 1. If it's a simple view, then this will just contain streams with the main Item(s) and Header
+        /// 1. If the view expects no data, it will just contain a `Default` stream containing no items
+        /// 1. If the view has a Query behind it, then MyData will have all the streams provided by the Query
+        /// </summary>
         IContextData MyData { get; }
 
         #endregion
 
-
+        /// <summary>
+        /// Data passed to this Razor template by a caller.
+        /// This is typical for Razor components which are re-used, and called from other Razor templates using `@Html.Partial("filename.cshtml", new { thing = 7 })`.
+        /// </summary>
         ITypedModel MyModel { get; }
 
         #region SharedCode

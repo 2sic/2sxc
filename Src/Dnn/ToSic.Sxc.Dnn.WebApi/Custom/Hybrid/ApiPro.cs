@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System;
-using ToSic.Eav;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
@@ -14,6 +13,9 @@ using System.Web.Http;
 using ToSic.Sxc.Code.DevTools;
 using ToSic.Sxc.Context;
 using System.IO;
+using System.Net.Http;
+using System.Web.Http.Results;
+using ToSic.Eav.WebApi;
 using static ToSic.Eav.Parameters;
 
 // ReSharper disable once CheckNamespace
@@ -36,9 +38,17 @@ namespace Custom.Hybrid
     {
         #region Setup
 
-        protected ApiPro() : base("Hyb14") { }
+        /// <summary>
+        /// Main constructor.
+        /// Doesn't have parameters so it can easily be inherited.
+        /// </summary>
+        protected ApiPro() : base(EavWebApiConstants.HistoryNameWebApi) { }
 
-        protected ApiPro(string logSuffix) : base(logSuffix) { }
+        /// <summary>
+        /// Alternate constructor to use when inheriting, placing the Insights logs in an own section.
+        /// </summary>
+        /// <param name="insightsGroup">Name of the section in Insights</param>
+        protected ApiPro(string insightsGroup) : base("Api16", insightsGroup) { }
 
         /// <inheritdoc cref="IDynamicCodeKit{ServiceKit14}.Kit" />
         /// <inheritdoc cref="IDynamicCode16.Kit"/>
@@ -216,14 +226,15 @@ namespace Custom.Hybrid
         private WebApiCoreShim Shim => new WebApiCoreShim(Request);
 
         /// <inheritdoc cref="WebApiCoreShim.Ok()"/>
-        [NonAction] public new dynamic Ok() => Shim.Ok();
+        [NonAction]
+        public new OkResult Ok() => base.Ok(); // Shim.Ok();
 
         /// <inheritdoc cref="WebApiCoreShim.Ok(object)"/>
-        [NonAction] public dynamic Ok(object value) => Shim.Ok(value);
+        [NonAction] public HttpResponseMessage Ok(object value) => Shim.Ok(value);
 
         /// <inheritdoc cref="WebApiCoreShim.NoContent()"/>
         [NonAction]
-        public dynamic NoContent() => Shim.NoContent();
+        public HttpResponseMessage NoContent() => Shim.NoContent();
 
         // TODO: this Shim could now be implemented after 16.02 - since we don't have the Content property any more
         #region Content (ca. 5 overloads) can't be implemented, because it conflicts with our property "Content"
@@ -231,45 +242,49 @@ namespace Custom.Hybrid
         #endregion
 
         /// <inheritdoc cref="WebApiCoreShim.Redirect"/>
-        [NonAction] public new dynamic Redirect(string url) => Shim.Redirect(url);
+        [NonAction]
+        public new RedirectResult Redirect(string url) => base.Redirect(url); // Shim.Redirect(url);
 
         /// <inheritdoc cref="WebApiCoreShim.RedirectPermanent"/>
-        [NonAction] public dynamic RedirectPermanent(string url) => Shim.RedirectPermanent(url);
+        [NonAction] public HttpResponseMessage RedirectPermanent(string url) => Shim.RedirectPermanent(url);
 
 
         /// <inheritdoc cref="WebApiCoreShim.StatusCode(int)"/>
-        [NonAction] public dynamic StatusCode(int statusCode) => Shim.StatusCode(statusCode);
+        [NonAction] public HttpResponseMessage StatusCode(int statusCode) => Shim.StatusCode(statusCode);
 
         /// <inheritdoc cref="WebApiCoreShim.StatusCode(int, object)"/>
-        [NonAction] public dynamic StatusCode(int statusCode, object value) => Shim.StatusCode(statusCode, value);
+        [NonAction] public HttpResponseMessage StatusCode(int statusCode, object value) => Shim.StatusCode(statusCode, value);
 
 
         /// <inheritdoc cref="WebApiCoreShim.Unauthorized()"/>
-        [NonAction] public dynamic Unauthorized() => Shim.Unauthorized();
+        [NonAction] public HttpResponseMessage Unauthorized() => Shim.Unauthorized();
 
         /// <inheritdoc cref="WebApiCoreShim.Unauthorized(object)"/>
-        [NonAction] public dynamic Unauthorized(object value) => Shim.Unauthorized(value);
+        [NonAction] public HttpResponseMessage Unauthorized(object value) => Shim.Unauthorized(value);
 
         /// <inheritdoc cref="WebApiCoreShim.NotFound()"/>
-        [NonAction] public new dynamic NotFound() => Shim.NotFound();
+        [NonAction]
+        public new NotFoundResult NotFound() => base.NotFound();// Shim.NotFound();
 
         /// <inheritdoc cref="WebApiCoreShim.NotFound(object)"/>
-        [NonAction] public dynamic NotFound(object value) => Shim.NotFound(value);
+        [NonAction] public HttpResponseMessage NotFound(object value) => Shim.NotFound(value);
 
         /// <inheritdoc cref="WebApiCoreShim.BadRequest()"/>
-        [NonAction] public new dynamic BadRequest() => Shim.BadRequest();
+        [NonAction]
+        public new BadRequestResult BadRequest() => base.BadRequest(); // Shim.BadRequest();
 
         /// <inheritdoc cref="WebApiCoreShim.Conflict()"/>
-        [NonAction] public new dynamic Conflict() => Shim.Conflict();
+        [NonAction]
+        public new ConflictResult Conflict() => base.Conflict(); // Shim.Conflict();
 
         /// <inheritdoc cref="WebApiCoreShim.Conflict(object)"/>
-        [NonAction] public dynamic Conflict(object error) => Shim.Conflict(error);
+        [NonAction] public HttpResponseMessage Conflict(object error) => Shim.Conflict(error);
 
         /// <inheritdoc cref="WebApiCoreShim.Accepted()"/>
-        [NonAction] public dynamic Accepted() => Shim.Accepted();
+        [NonAction] public HttpResponseMessage Accepted() => Shim.Accepted();
 
         /// <inheritdoc cref="WebApiCoreShim.Forbid()"/>
-        [NonAction] public dynamic Forbid() => Shim.Forbid();
+        [NonAction] public HttpResponseMessage Forbid() => Shim.Forbid();
 
         #endregion
 

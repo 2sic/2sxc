@@ -30,7 +30,7 @@ namespace ToSic.Sxc.WebApi
         protected DynamicApiController() : this("DynApi") { }
 
         [PrivateApi]
-        protected DynamicApiController(string logSuffix) : base(logSuffix) { }
+        protected DynamicApiController(string logSuffix, string insightsGroup = default) : base(logSuffix, insightsGroup) { }
 
         [PrivateApi]
         protected override void Initialize(HttpControllerContext controllerContext)

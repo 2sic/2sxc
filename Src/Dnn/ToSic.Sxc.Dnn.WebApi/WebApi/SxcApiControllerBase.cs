@@ -14,7 +14,7 @@ namespace ToSic.Sxc.WebApi
     [PrivateApi("This was only ever used as an internal base class, so it can be modified as needed - just make sure the derived types don't break")]
     public abstract class SxcApiControllerBase: DnnApiControllerWithFixes
     {
-        protected SxcApiControllerBase(string logSuffix) : base(logSuffix) { }
+        protected SxcApiControllerBase(string logSuffix, string insightsGroup = default) : base(logSuffix, insightsGroup) { }
 
         protected override void Initialize(HttpControllerContext controllerContext)
         {
