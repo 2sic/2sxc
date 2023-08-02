@@ -15,7 +15,6 @@ namespace ToSic.Sxc.Data
         /// <returns>
         /// True if this is the item configured in the view-settings, false if not.
         /// </returns>
-        /// <remarks>New in 10.07 on IDynamicEntity, new in 16.02 on ITypedEntity</remarks>
         bool IsDemoItem { get; }
 
         /// <summary>

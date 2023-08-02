@@ -28,7 +28,12 @@ namespace ToSic.Sxc.Data
         /// </remarks>
         IMetadata Metadata { get; }
 
-
+        /// <summary>
+        /// Get a special info-object describing a specific field in this item.
+        /// This is a rich object used by other operations which need a lot of context about the item and the field.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         IField Field(string name);
 
 

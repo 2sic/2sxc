@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using ToSic.Lib.Documentation;
-using ToSic.Razor.Markup;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
@@ -29,11 +28,6 @@ namespace ToSic.Sxc.Data
         /// </summary>
         dynamic Dyn { get; }
 
-
-        // Important: Shared definitions
-        // These properties are shared: ITypedEntity, IDynamicEntity, IDynamicEntityBase, IDynamicStack
-        // Make sure they always stay in sync
-
         /// <summary>
         /// Get a property and return the value as a `bool`.
         /// If conversion fails, will return default `false` or what is specified in the `fallback`.
@@ -42,7 +36,6 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `bool`</returns>
-        /// <remarks>Added in 16.01</remarks>
         bool Bool(string name, string noParamOrder = Protector, bool fallback = default);
 
 
@@ -54,7 +47,6 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `DateTime`</returns>
-        /// <remarks>Added in 16.01</remarks>
         DateTime DateTime(string name, string noParamOrder = Protector, DateTime fallback = default);
 
         /// <summary>
@@ -66,7 +58,6 @@ namespace ToSic.Sxc.Data
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <param name="scrubHtml">If true, will remove all HTML tags from the string. This is the same as using `Kit.Scrub.All(...)`. For more detailed scrubbing, use the `Kit.Scrub`</param>
         /// <returns>Value as `string`</returns>
-        /// <remarks>Added in 16.01</remarks>
         string String(string name, string noParamOrder = Protector, string fallback = default, bool scrubHtml = default);
 
         #region Numbers
@@ -82,7 +73,6 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `int`</returns>
-        /// <remarks>Added in 16.01</remarks>
         int Int(string name, string noParamOrder = Protector, int fallback = default);
 
 
@@ -94,7 +84,6 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `long`</returns>
-        /// <remarks>Added in 16.01</remarks>
         long Long(string name, string noParamOrder = Protector, long fallback = default);
 
         /// <summary>
@@ -105,7 +94,6 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `float`</returns>
-        /// <remarks>Added in 16.01</remarks>
         float Float(string name, string noParamOrder = Protector, float fallback = default);
 
 
@@ -117,7 +105,6 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `decimal`</returns>
-        /// <remarks>Added in 16.01</remarks>
         decimal Decimal(string name, string noParamOrder = Protector, decimal fallback = default);
 
         /// <summary>
@@ -128,7 +115,6 @@ namespace ToSic.Sxc.Data
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">_optional_ fallback if conversion fails</param>
         /// <returns>Value as `double`</returns>
-        /// <remarks>Added in 16.01</remarks>
         double Double(string name, string noParamOrder = Protector, double fallback = default);
 
         #endregion
@@ -155,6 +141,7 @@ namespace ToSic.Sxc.Data
 
         #region Debugging
 
+        [PrivateApi]
         string ToString();
 
         #endregion
