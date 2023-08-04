@@ -9,9 +9,7 @@ namespace ToSic.Sxc.Data
         /// </summary>
         /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">
-        /// Change if strict names are required. `true` means error if the property doesn't exist; use `false` to not be strict if the object were otherwise strict.
-        /// </param>
+        /// <param name="strict">change if strict names-checks are applied.</param>
         /// <returns>The result if found or null; or error if the object is in strict mode</returns>
         object Get(string name,
             string noParamOrder = Protector,
@@ -42,9 +40,7 @@ namespace ToSic.Sxc.Data
         /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">the fallback value to provide if not found</param>
-        /// <param name="strict">
-        /// Change if strict names are required. `true` means error if the property doesn't exist; use `false` to not be strict if the object were otherwise strict.
-        /// </param>
+        /// <param name="strict">change if strict names-checks are applied.</param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
         TValue Get<TValue>(string name,
