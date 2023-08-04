@@ -28,7 +28,12 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         protected static string ErrStrict(string name, [CallerMemberName] string cName = default)
-            => $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. Correct the name '{name}', or use strict false is AsItem(...)";
+        {
+            var help = $"Correct the name '{name}', or use strict false is AsItem(...)";
+            return cName == "." 
+                ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {help}"
+                : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {help}";
+        }
 
         [PrivateApi]
         IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)

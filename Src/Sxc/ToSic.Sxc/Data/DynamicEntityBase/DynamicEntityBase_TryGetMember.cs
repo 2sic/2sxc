@@ -1,4 +1,5 @@
-﻿using System.Dynamic;
+﻿using System;
+using System.Dynamic;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -8,12 +9,11 @@ namespace ToSic.Sxc.Data
         /// <inheritdoc />
         [PrivateApi]
         public override bool TryGetMember(GetMemberBinder binder, out object result)
-            => TryGetMember(binder.Name, out result);
-
-        [PrivateApi]
-        internal bool TryGetMember(string memberName, out object result)
         {
-            result = GetInternal(memberName).Result;
+            var findResult = GetInternal(binder.Name);
+            // ReSharper disable once ExplicitCallerInfoArgument
+            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(binder.Name, "."));
+            result = findResult.Result;
             return true;
         }
 
