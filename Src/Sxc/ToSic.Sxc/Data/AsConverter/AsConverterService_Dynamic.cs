@@ -12,22 +12,39 @@ namespace ToSic.Sxc.Data.AsConverter
 
         #region Dynamic
 
-        public DynamicEntity AsDynamic(IEntity entity) 
+        /// <summary>
+        /// Implement AsDynamic for DynamicCode - not to be used in internal APIs.
+        /// Always assumes Strict is false
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public DynamicEntity CodeAsDyn(IEntity entity)
             => new DynamicEntity(entity, DynamicEntityServices, strict: false);
 
-        public DynamicEntity AsDynamic(IEnumerable<IEntity> list) 
-            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, strict: false, services: DynamicEntityServices);
+        public DynamicEntity AsDynamic(IEntity entity, bool strict)
+            => new DynamicEntity(entity, DynamicEntityServices, strict: strict);
 
-        public IEnumerable<dynamic> AsDynamicList(object list)
+        /// <summary>
+        /// Convert a list of Entities into a DynamicEntity.
+        /// Only used in DynamicCodeRoot.
+        /// </summary>
+        internal DynamicEntity AsDynamicFromEntities(IEnumerable<IEntity> list, bool strict) 
+            => new DynamicEntity(list: list, parent: null, field: null, appIdOrNull: null, strict: strict, services: DynamicEntityServices);
+
+        /// <summary>
+        /// Convert any object into a dynamic list.
+        /// Only used in Dynamic Code for the public API.
+        /// </summary>
+        public IEnumerable<dynamic> CodeAsDynList(object list, bool strict = false)
         {
             switch (list)
             {
                 case null:
                     return new List<dynamic>();
                 case IDataSource dsEntities:
-                    return AsDynamicList(dsEntities.List);
+                    return CodeAsDynList(dsEntities.List);
                 case IEnumerable<IEntity> iEntities:
-                    return iEntities.Select(AsDynamic);
+                    return iEntities.Select(e => AsDynamic(e, strict: strict));
                 case IEnumerable<IDynamicEntity> dynIDynEnt:
                     return dynIDynEnt;
                 case IEnumerable<dynamic> dynEntities:
@@ -38,7 +55,11 @@ namespace ToSic.Sxc.Data.AsConverter
         }
 
 
-        public object AsDynamicInternal(object dynObject)
+        /// <summary>
+        /// Convert any object into a dynamic object.
+        /// Only used in Dynamic Code for the public API.
+        /// </summary>
+        public object AsDynamicFromObject(object dynObject, bool strict = false)
         {
             var l = Log.Fn<object>();
             //var typed = AsTypedInternal(dynObject);
@@ -56,7 +77,7 @@ namespace ToSic.Sxc.Data.AsConverter
                 case ISxcDynamicObject sxcDyn:
                     return l.Return(sxcDyn, "Dynamic Something");
                 case IEntity entity:
-                    return l.Return(new DynamicEntity(entity, DynamicEntityServices, strict: false), "IEntity");
+                    return l.Return(new DynamicEntity(entity, DynamicEntityServices, strict: strict), "IEntity");
                 case DynamicObject typedDynObject:
                     return l.Return(typedDynObject, "DynamicObject");
                 default:
@@ -82,7 +103,7 @@ namespace ToSic.Sxc.Data.AsConverter
         public dynamic MergeDynamic(params object[] entities)
         {
             if (entities == null || !entities.Any()) return null;
-            if (entities.Length == 1) return AsDynamicInternal(entities[0]);
+            if (entities.Length == 1) return AsDynamicFromObject(entities[0]);
 
             return AsStack(entities);
             //// New case: many items found, must create a stack

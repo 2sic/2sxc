@@ -25,10 +25,10 @@ namespace ToSic.Sxc.Code
         public dynamic AsDynamic(string json, string fallback = default) => AsC.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-        public dynamic AsDynamic(IEntity entity) => AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => AsC.CodeAsDyn(entity);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-        public dynamic AsDynamic(object dynamicEntity) => AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => AsC.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
         public dynamic AsDynamic(params object[] entities) => AsC.MergeDynamic(entities);
@@ -42,7 +42,7 @@ namespace ToSic.Sxc.Code
         #region AsList
 
         /// <inheritdoc cref="IDynamicCode.AsList" />
-        public IEnumerable<dynamic> AsList(object list) => AsC.AsDynamicList(list);
+        public IEnumerable<dynamic> AsList(object list) => AsC.CodeAsDynList(list);
 
         #endregion
 

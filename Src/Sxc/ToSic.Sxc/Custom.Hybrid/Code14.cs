@@ -124,10 +124,10 @@ namespace Custom.Hybrid
         public dynamic AsDynamic(string json, string fallback = default) => _DynCodeRoot?.AsC.AsDynamicFromJson(json, fallback);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.CodeAsDyn(entity);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
         public dynamic AsDynamic(params object[] entities) => _DynCodeRoot?.AsC.MergeDynamic(entities);
@@ -140,7 +140,7 @@ namespace Custom.Hybrid
         #region AsList
 
         /// <inheritdoc cref="IDynamicCode.AsList" />
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.AsDynamicList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.CodeAsDynList(list);
 
         #endregion
 

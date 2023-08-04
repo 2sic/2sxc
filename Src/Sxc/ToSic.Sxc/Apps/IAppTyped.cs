@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using ToSic.Eav.DataSource;
-using ToSic.Lib.Documentation;
+﻿using ToSic.Lib.Documentation;
 using ToSic.Sxc.Apps.Paths;
 using ToSic.Sxc.Data;
-using static ToSic.Eav.Parameters;
 
 // ReSharper disable UnusedMemberInSuper.Global
 

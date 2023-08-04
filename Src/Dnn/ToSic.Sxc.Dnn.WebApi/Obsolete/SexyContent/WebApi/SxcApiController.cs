@@ -81,10 +81,10 @@ namespace ToSic.SexyContent.WebApi
         #region AsDynamic implementations
 
         /// <inheritdoc />
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot.AsC.CodeAsDyn(entity);
 
         /// <inheritdoc />
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot.AsC.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc />
         [PublicApi("Careful - still Experimental in 12.02")]
@@ -92,31 +92,31 @@ namespace ToSic.SexyContent.WebApi
 
         /// <inheritdoc />
         [PrivateApi("old api, only available in old API controller")]
-        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.AsC.AsDynamic(entityKeyValuePair.Value);
+        public dynamic AsDynamic(KeyValuePair<int, IEntity> entityKeyValuePair) => _DynCodeRoot.AsC.CodeAsDyn(entityKeyValuePair.Value);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.AsC.AsDynamicList(stream.List);
+        public IEnumerable<dynamic> AsDynamic(IDataStream stream) => _DynCodeRoot.AsC.CodeAsDynList(stream.List);
 
         /// <inheritdoc />
         public IEntity AsEntity(object dynamicEntity) =>  _DynCodeRoot.AsC.AsEntity(dynamicEntity);
 
         /// <inheritdoc />
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  _DynCodeRoot.AsC.AsDynamicList(entities);
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<IEntity> entities) =>  _DynCodeRoot.AsC.CodeAsDynList(entities);
         #endregion
 
         #region Compatibility with Eav.Interfaces.IEntity - introduced in 10.10
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.AsC.AsDynamic(entity as IEntity);
+        public dynamic AsDynamic(Eav.Interfaces.IEntity entity) => _DynCodeRoot.AsC.CodeAsDyn(entity as IEntity);
 
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.AsC.AsDynamic(entityKeyValuePair.Value as IEntity);
+        public dynamic AsDynamic(KeyValuePair<int, Eav.Interfaces.IEntity> entityKeyValuePair) => _DynCodeRoot.AsC.CodeAsDyn(entityKeyValuePair.Value as IEntity);
 
         [PrivateApi]
         [Obsolete("for compatibility only, avoid using this and cast your entities to ToSic.Eav.Data.IEntity")]
-        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.AsC.AsDynamicList(entities.Cast<IEntity>());
+        public IEnumerable<dynamic> AsDynamic(IEnumerable<Eav.Interfaces.IEntity> entities) => _DynCodeRoot.AsC.CodeAsDynList(entities.Cast<IEntity>());
         #endregion
 
 

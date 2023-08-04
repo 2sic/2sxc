@@ -17,24 +17,22 @@ namespace ToSic.Sxc.Apps
         public AppConfiguration Configuration => _appConfig.Get(() => new AppConfiguration(AppConfiguration, Log));
         private readonly GetOnce<AppConfiguration> _appConfig = new GetOnce<AppConfiguration>();
 
-        private dynamic MakeDynProperty(IEntity contents)
+        private dynamic MakeDynProperty(IEntity contents, bool strict)
         {
             var wrapped = CmsEditDecorator.Wrap(contents, false);
-            return (_asc ?? _asConverter.Value).AsDynamic(wrapped);
+            // TODO: FIGURE OUT IF STRICT
+            return (_asc ?? _asConverter.Value).AsDynamic(wrapped, strict: false);
         }
 
-        internal void AddDynamicEntityServices(AsConverterService asc)
-        {
-            _asc = asc;
-        }
+        internal void SetupAsConverter(AsConverterService asc) => _asc = asc;
         private AsConverterService _asc;
 
         /// <inheritdoc cref="IDynamicCode12.Settings" />
-        public dynamic Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings));
+        public dynamic Settings => AppSettings == null ? null : _settings.Get(() => MakeDynProperty(AppSettings, strict: false));
         private readonly GetOnce<dynamic> _settings = new GetOnce<dynamic>();
 
         /// <inheritdoc cref="IDynamicCode12.Resources" />
-        public dynamic Resources => AppResources == null ? null : _res.Get(() => MakeDynProperty(AppResources));
+        public dynamic Resources => AppResources == null ? null : _res.Get(() => MakeDynProperty(AppResources, strict: false));
         private readonly GetOnce<dynamic> _res = new GetOnce<dynamic>();
 
         #endregion

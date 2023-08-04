@@ -97,11 +97,11 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(IEntity)" />
         [NonAction]
-        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.AsDynamic(entity);
+        public dynamic AsDynamic(IEntity entity) => _DynCodeRoot?.AsC.CodeAsDyn(entity);
 
         /// <inheritdoc cref="IDynamicCode.AsDynamic(object)" />
         [NonAction]
-        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicInternal(dynamicEntity);
+        public dynamic AsDynamic(object dynamicEntity) => _DynCodeRoot?.AsC.AsDynamicFromObject(dynamicEntity);
 
         /// <inheritdoc cref="IDynamicCode12.AsDynamic(object[])" />
         [NonAction]
@@ -109,7 +109,7 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode.AsList" />
         [NonAction]
-        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.AsDynamicList(list);
+        public IEnumerable<dynamic> AsList(object list) => _DynCodeRoot?.AsC.CodeAsDynList(list);
 
         #endregion
 

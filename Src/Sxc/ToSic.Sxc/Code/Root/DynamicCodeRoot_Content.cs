@@ -28,14 +28,14 @@ namespace ToSic.Sxc.Code
 
         private dynamic TryToBuildFirstOfStream(string sourceStream)
         {
-            var wrapLog = Log.Fn<object>(sourceStream);
-            if (Data == null || Block.View == null) return wrapLog.ReturnNull("no data/block");
-            if (!Data.Out.ContainsKey(sourceStream)) return wrapLog.ReturnNull("stream not found");
+            var l = Log.Fn<object>(sourceStream);
+            if (Data == null || Block.View == null) return l.ReturnNull("no data/block");
+            if (!Data.Out.ContainsKey(sourceStream)) return l.ReturnNull("stream not found");
 
             var list = Data[sourceStream].List.ToList();
             return !list.Any()
-                ? wrapLog.ReturnNull("first is null") 
-                : wrapLog.Return(AsC.AsDynamic(list), "found");
+                ? l.ReturnNull("first is null") 
+                : l.Return(AsC.AsDynamicFromEntities(list, false), "found");
         }
         
         #endregion

@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Code
         [PrivateApi]
         public void AttachApp(IApp app)
         {
-            if (app is App typedApp) typedApp.AddDynamicEntityServices(AsC);
+            if (app is App typedApp) typedApp.SetupAsConverter(AsC);
             App = app;
         }
 
