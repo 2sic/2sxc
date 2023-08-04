@@ -11,19 +11,34 @@ namespace ToSic.Sxc.Data
 {
     public abstract partial class DynamicEntityBase: ITyped
     {
+        [PrivateApi]
+        object ITyped.Get(string name, string noParamOrder, bool? strict)
+        {
+            Protect(noParamOrder, nameof(strict));
+            var findResult = GetInternal(name, lookup: false);
+            return findResult.Found || !(strict ?? StrictGet)
+                ? findResult.Result
+                : throw new ArgumentException(ErrStrict(name));
+        }
+
+        //[PrivateApi]
+        //TValue ITyped.Get<TValue>(string name) => G4T<TValue>(name, noParamOrder: Protector, fallback: default);
+
+        [PrivateApi]
+        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? strict)
+            => G4T(name, noParamOrder, fallback: fallback, strict: strict);
+
         /// <summary>
         /// Get for typed G4T
         /// </summary>
         [PrivateApi]
-        protected TValue G4T<TValue>(string name,
-            string noParamOrder = Protector,
-            TValue fallback = default,
-            [CallerMemberName] string cName = default)
+        protected TValue G4T<TValue>(string name, string noParamOrder, TValue fallback, bool? strict = default, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var findResult = GetInternal(name, lookup: false);
-            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name, cName));
-            return findResult.Result.ConvertOrFallback(fallback);
+            return findResult.Found || !(strict ?? StrictGet)
+                ? findResult.Result.ConvertOrFallback(fallback)
+                : throw new ArgumentException(ErrStrict(name, cName));
         }
 
         [PrivateApi]
@@ -36,11 +51,11 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? strict)
         {
             Protect(noParamOrder, nameof(fallback));
             var findResult = GetInternal(name, lookup: false);
-            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name));
+            if (!findResult.Found && (strict ?? StrictGet)) throw new ArgumentException(ErrStrict(name));
             var strValue = _Services.ForCode.ForCode(findResult.Result, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }

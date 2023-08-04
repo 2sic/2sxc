@@ -13,20 +13,20 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntity
     {
         [PrivateApi]
-        protected override GetInternalResult GetInternal(string field, string language = null, bool lookup = true)
+        protected override TryGetResult GetInternal(string field, string language = null, bool lookup = true)
         {
             // Check special cases #1 Toolbar - only in DNN, not available in Oqtane
 #if NETFRAMEWORK
             // ReSharper disable once ConvertIfStatementToSwitchStatement
 #pragma warning disable 618 // ignore Obsolete
-            if (field == "Toolbar") return new GetInternalResult(Toolbar.ToString(), true);
+            if (field == "Toolbar") return new TryGetResult(Toolbar.ToString(), true);
 #pragma warning restore 618
 #endif
 
             // Check #2 Presentation which the EAV doesn't know
             // but only pre V16 (Pro) code. Newer code MUST use the .Presentation
             if (_Services.AsC.CompatibilityLevel < Constants.CompatibilityLevel16 && field == ViewParts.Presentation)
-                return new GetInternalResult(Presentation, Presentation != null);
+                return new TryGetResult(Presentation, Presentation != null);
 
             return base.GetInternal(field, language, lookup);
         }

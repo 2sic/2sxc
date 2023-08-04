@@ -13,7 +13,7 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicJacketBase: ITyped
     {
         [PrivateApi]
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? strict)
         {
             Protect(noParamOrder, nameof(fallback));
             var value = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
@@ -21,19 +21,25 @@ namespace ToSic.Sxc.Data
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
 
-        TValue ITyped.Get<TValue>(string name)
+        [PrivateApi]
+        object ITyped.Get(string name, string noParamOrder, bool? strict)
         {
-            var result = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
-            return result.ConvertOrDefault<TValue>();
+            Protect(noParamOrder, nameof(strict));
+            return FindValueOrNull(name, InvariantCultureIgnoreCase, null);
         }
-        public TValue Get<TValue>(string name,
-            string noParamOrder = Protector,
-            TValue fallback = default)
-        {
-            Protect(noParamOrder, nameof(fallback));
-            var result = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
-            return result.ConvertOrFallback(fallback);
-        }
+
+        //TValue ITyped.Get<TValue>(string name)
+        //{
+        //    var result = FindValueOrNull(name, InvariantCultureIgnoreCase, null);
+        //    return result.ConvertOrDefault<TValue>();
+        //}
+
+        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default) 
+            => GetV(name, noParamOrder, fallback);
+
+        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? strict) 
+            => GetV(name, noParamOrder, fallback);
+
         private TValue GetV<TValue>(string name,
             string noParamOrder = Protector,
             TValue fallback = default,

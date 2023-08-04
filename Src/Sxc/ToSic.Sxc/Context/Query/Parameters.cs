@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
 using ToSic.Lib.Documentation;
+using ToSic.Sxc.Data;
 using ToSic.Sxc.Web.Url;
 using static ToSic.Eav.Parameters;
 
@@ -36,24 +37,20 @@ namespace ToSic.Sxc.Context.Query
         public TValue Get<TValue>(string name) => GetV<TValue>(name, noParamOrder: Protector, fallback: default);
 
         // ReSharper disable once MethodOverloadWithOptionalParameter
-        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default)
-        {
-            return GetV(name, noParamOrder, fallback);
-            //Protect(noParamOrder, nameof(fallback));
-            //return OriginalsAsDic.TryGetValue(name, out var value)
-            //    ? value.ConvertOrFallback(fallback) 
-            //    : fallback;
-            //if (!ContainsKey(name)) return fallback;
-            //var temp = this[name];
-            //return temp.ConvertOrFallback(fallback);
-        }
+        public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default) 
+            => GetV(name, noParamOrder, fallback);
 
-        private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback = default, [CallerMemberName] string cName = default)
+        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? strict) 
+            => GetV(name, noParamOrder, fallback);
+
+        private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback, bool? strict = default, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             return OriginalsAsDic.TryGetValue(name, out var value)
-                ? value.ConvertOrFallback(fallback) 
-                : fallback;
+                ? value.ConvertOrFallback(fallback)
+                : (strict ?? false)
+                    ? throw new ArgumentException($"Can't find {name} and {nameof(strict)} is true; use {nameof(strict)}: false if this is intended")
+                    : fallback;
         }
 
         #endregion

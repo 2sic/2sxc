@@ -1,44 +1,57 @@
-﻿namespace ToSic.Sxc.Data
+﻿using static ToSic.Eav.Parameters;
+
+namespace ToSic.Sxc.Data
 {
     public partial interface ITyped
     {
-        /*
-         IMPORTANT
-         KEEP THIS DEFINITION AND DOCS IN SYNC BETWEEN IDynamicEntity, IDynamicEntityBase, IDynamicStack, ITypedItem
-         Master copy should always be IDynamicEntity
-        */
-        object Get(string name);
-
         /// <summary>
-        /// Get a value using the name - and cast it to the expected strong type.
-        /// For example to get an int even though it's stored as decimal.
+        /// Get a property.
         /// </summary>
-        /// <typeparam name="TValue">The expected type, like `string`, `int`, etc.</typeparam>
-        /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
-        /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
-        /// <remarks>Added in v15</remarks>
-        TValue Get<TValue>(string name);
+        /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="strict">
+        /// Change if strict names are required. `true` means error if the property doesn't exist; use `false` to not be strict if the object were otherwise strict.
+        /// </param>
+        /// <returns>The result if found or null; or error if the object is in strict mode</returns>
+        object Get(string name,
+            string noParamOrder = Protector,
+            bool? strict = default);
+
+        // 2023-08-04 2dm removed/disabled, not useful as we should always be able to specify strict
+        ///// <summary>
+        ///// Get a value using the name - and cast it to the expected strong type.
+        ///// For example to get an int even though it's stored as decimal.
+        ///// </summary>
+        ///// <typeparam name="TValue">The expected type, like `string`, `int`, etc.</typeparam>
+        ///// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
+        ///// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
+        ///// <remarks>Added in v15</remarks>
+        //TValue Get<TValue>(string name);
 
         /// <summary>
         /// Get a value using the name - and cast it to the expected strong type.
         /// For example to get an int even though it's stored as decimal.
         /// 
         /// Since the parameter `fallback` determines the type `TValue` you can just write this like
-        /// `Content.Get("Title", fallback: "no title")
+        /// `something.Get("Title", fallback: "no title")
         /// </summary>
         /// <typeparam name="TValue">
         /// The expected type, like `string`, `int`, etc.
         /// Note that you don't need to specify it, if you specify the `fallback` property.
         /// </typeparam>
-        /// <param name="name">the property name like `Image` - or path like `Author.Name` (new v15)</param>
+        /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
         /// <param name="fallback">the fallback value to provide if not found</param>
+        /// <param name="strict">
+        /// Change if strict names are required. `true` means error if the property doesn't exist; use `false` to not be strict if the object were otherwise strict.
+        /// </param>
         /// <returns>The typed value, or the `default` like `null` or `0` if casting isn't possible.</returns>
         /// <remarks>Added in v15</remarks>
         TValue Get<TValue>(string name,
             // ReSharper disable once MethodOverloadWithOptionalParameter
-            string noParamOrder = Eav.Parameters.Protector,
-            TValue fallback = default);
+            string noParamOrder = Protector,
+            TValue fallback = default,
+            bool? strict = default);
 
 
     }

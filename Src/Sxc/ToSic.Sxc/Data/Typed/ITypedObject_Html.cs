@@ -1,4 +1,5 @@
 ﻿using ToSic.Razor.Markup;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -13,10 +14,10 @@ namespace ToSic.Sxc.Data
         /// 1. Ensure numbers are in a neutral format such as `14.27` and never `14,27`
         /// 1. Html encode any characters which would cause trouble such as quotes
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Name of the property</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="fallback"></param>
+        /// <param name="fallback">Value to use if the property specified by `name` doesn't exist</param>
         /// <returns></returns>
-        IRawHtmlString Attribute(string name, string noParamOrder = ToSic.Eav.Parameters.Protector, string fallback = default);
+        IRawHtmlString Attribute(string name, string noParamOrder = Protector, string fallback = default, bool? strict = default);
     }
 }

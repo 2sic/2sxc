@@ -12,19 +12,19 @@ namespace ToSic.Sxc.Data
     public partial class DynamicEntityBase
     {
         [PrivateApi]
-        protected virtual GetInternalResult GetInternal(string field, string language = null, bool lookup = true)
+        protected virtual TryGetResult GetInternal(string field, string language = null, bool lookup = true)
         {
             var logOrNull = LogOrNull.SubLogOrNull("Dyn.EntBas", Debug);
-            var l = logOrNull.Fn<GetInternalResult>($"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}");
+            var l = logOrNull.Fn<TryGetResult>($"Type: {GetType().Name}, {nameof(field)}:{field}, {nameof(language)}:{language}, {nameof(lookup)}:{lookup}");
 
             if (!field.HasValue())
-                return l.Return(new GetInternalResult(null, false), "field null/empty");
+                return l.Return(new TryGetResult(null, false), "field null/empty");
 
             // This determines if we should access & store in cache
             // check if we already have it in the cache - but only in default case (no language, lookup=true)
             var useCache = language == null && lookup;
             if (useCache && _ValueCache.ContainsKey(field))
-                return l.Return(new GetInternalResult(_ValueCache[field], true), "cached");
+                return l.Return(new TryGetResult(_ValueCache[field], true), "cached");
 
             // use the standard dimensions or overload
             var languages = language == null ? _Services.Dimensions : new[] { language };
@@ -38,7 +38,7 @@ namespace ToSic.Sxc.Data
 
             // check Entity is null (in cases where null-objects are asked for properties)
             if (resultSet == null)
-                return l.Return(new GetInternalResult(null, false), "result null");
+                return l.Return(new TryGetResult(null, false), "result null");
 
             l.A($"Result... IsFinal: {resultSet.IsFinal}, Source Name: {resultSet.Name}, SourceIndex: {resultSet.SourceIndex}, FieldType: {resultSet.FieldType}");
 
@@ -51,19 +51,7 @@ namespace ToSic.Sxc.Data
                 _ValueCache.Add(field, result);
             }
 
-            return l.Return(new GetInternalResult(result, resultSet.FieldType != Attributes.FieldIsNotFound), "ok");
-        }
-
-        [PrivateApi]
-        public class GetInternalResult
-        {
-            public GetInternalResult(object result, bool found)
-            {
-                Result = result;
-                Found = found;
-            }
-            public bool Found;
-            public object Result;
+            return l.Return(new TryGetResult(result, resultSet.FieldType != Attributes.FieldIsNotFound), "ok");
         }
 
 

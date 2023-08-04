@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Net;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
 using ToSic.Sxc.Data;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Context.Query
 {
     public partial class Parameters: ITyped
     {
         public dynamic Dyn => this;
+
+        [PrivateApi]
+        object ITyped.Get(string name, string noParamOrder, bool? strict)
+        {
+            Protect(noParamOrder, nameof(strict));
+            return OriginalsAsDic.TryGetValue(name, out var value) ? value : null;
+        }
+
 
         bool ITyped.Bool(string name, string noParamOrder, bool fallback)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
@@ -45,7 +55,7 @@ namespace ToSic.Sxc.Context.Query
             return Tags.SafeUrl(url).ToString();
         }
 
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? strict)
         {
             // Note: we won't do special date processing, since all values in the Parameters are strings
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
@@ -60,7 +70,5 @@ namespace ToSic.Sxc.Context.Query
         //[PrivateApi]
         //IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
 
-
-        object ITyped.Get(string name) => Get(name);
     }
 }

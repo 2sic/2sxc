@@ -2,9 +2,9 @@
 using System.Net;
 using System.Runtime.CompilerServices;
 using ToSic.Eav.Plumbing;
+using ToSic.Lib.Documentation;
 using ToSic.Razor.Blade;
 using ToSic.Razor.Markup;
-using ToSic.Sxc.Services;
 using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
@@ -12,6 +12,14 @@ namespace ToSic.Sxc.Data
     public partial class DynamicReadObject: ITyped
     {
         dynamic ITyped.Dyn => this;
+
+        [PrivateApi]
+        object ITyped.Get(string name, string noParamOrder, bool? strict)
+        {
+            Protect(noParamOrder, nameof(strict));
+            return FindValueOrNull(name);
+        }
+
 
         bool ITyped.Bool(string name, string noParamOrder, bool fallback) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
@@ -47,27 +55,22 @@ namespace ToSic.Sxc.Data
         //IRawHtmlString ITyped.this[string name] => new TypedItemValue(Get(name));
 
 
-        TValue ITyped.Get<TValue>(string name) => GetV<TValue>(name, Protector, default);
+        //TValue ITyped.Get<TValue>(string name) => GetV<TValue>(name, Protector, default);
 
-        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback)
-        {
-            Protect(noParamOrder, nameof(fallback));
-            return FindValueOrNull(name).ConvertOrFallback(fallback);
-        }
+        TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? strict)
+            => GetV(name, noParamOrder, fallback);
+
         private TValue GetV<TValue>(string name, string noParamOrder, TValue fallback, [CallerMemberName] string cName = default)
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             return FindValueOrNull(name).ConvertOrFallback(fallback);
         }
 
-        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback)
+        IRawHtmlString ITyped.Attribute(string name, string noParamOrder, string fallback, bool? strict)
         {
             Protect(noParamOrder, nameof(fallback));
             var value = FindValueOrNull(name);
             var strValue = WrapperFactory.ConvertForCode.ForCode(value, fallback: fallback);
-            //ConvertForCodeService.DateForCode(value, out var dateString)
-            //    ? dateString
-            //    : value.ConvertOrFallback(fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
     }
