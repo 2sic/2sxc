@@ -4,7 +4,6 @@ using System.Linq;
 using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
-using ToSic.Razor.Markup;
 using ToSic.Sxc.Adam;
 using static ToSic.Eav.Parameters;
 
@@ -15,9 +14,9 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IFolder ITypedItem.Folder(string name)
+        IFolder ITypedItem.Folder(string name, string noParamOrder, bool? strict)
         {
-            if (StrictGet && !Entity.Attributes.ContainsKey(name))
+            if ((strict ?? StrictGet) && !Entity.Attributes.ContainsKey(name))
                 throw new ArgumentException(ErrStrict(name));
 
             return _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
@@ -25,10 +24,13 @@ namespace ToSic.Sxc.Data
 
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
-        IFile ITypedItem.File(string name)
+        IFile ITypedItem.File(string name, string noParamOrder, bool? strict)
         {
-            var file = GetServiceKitOrThrow().Adam.File(Field(name));
-            return file ?? (this as ITypedItem).Folder(name).Files.FirstOrDefault();
+            var typedThis = this as ITypedItem;
+            // Case 1: The field contains a direct reference to a file
+            var file = GetServiceKitOrThrow().Adam.File(typedThis.Field(name, strict: strict));
+            // Case 2: No direct reference, just get the first file in the folder of this field
+            return file ?? typedThis.Folder(name).Files.FirstOrDefault();
         }
 
         [PrivateApi]
@@ -61,11 +63,11 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type)
+        IEnumerable<ITypedItem> ITypedItem.Children(string field, string noParamOrder, string type, bool? strict)
         {
-            Protect(noParamOrder, $"{nameof(type)}");
+            Protect(noParamOrder, $"{nameof(type)}, {nameof(strict)}");
 
-            if (StrictGet && !Entity.Attributes.ContainsKey(field))
+            if ((strict ?? StrictGet) && !Entity.Attributes.ContainsKey(field))
                 throw new ArgumentException(ErrStrict(field));
 
             var dynChildren = Children(field, type);
@@ -79,10 +81,10 @@ namespace ToSic.Sxc.Data
 
         /// <inheritdoc />
         [PrivateApi]
-        ITypedItem ITypedItem.Child(string name, string noParamOrder)
+        ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? strict)
         {
-            Protect(noParamOrder);
-            if (StrictGet && !Entity.Attributes.ContainsKey(name))
+            Protect(noParamOrder, nameof(strict));
+            if ((strict ?? StrictGet) && !Entity.Attributes.ContainsKey(name))
                 throw new ArgumentException(ErrStrict(name));
             return (this as ITypedItem).Children(name).FirstOrDefault();
         }

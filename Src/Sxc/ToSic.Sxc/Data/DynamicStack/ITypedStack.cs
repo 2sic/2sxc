@@ -9,9 +9,9 @@ namespace ToSic.Sxc.Data
     public interface ITypedStack: ITyped, ICanDebug
     {
         /// <inheritdoc cref="ITypedRelationships.Child"/>
-        ITypedItem Child(string name, string noParamOrder = Protector);
+        ITypedItem Child(string name, string noParamOrder = Protector, bool? strict = default);
 
         /// <inheritdoc cref="ITypedRelationships.Children"/>
-        IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default);
+        IEnumerable<ITypedItem> Children(string field = default, string noParamOrder = Protector, string type = default, bool? strict = default);
     }
 }

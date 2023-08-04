@@ -13,9 +13,11 @@ namespace ToSic.Sxc.Data
 
 
         /// <inheritdoc />
-        public IField Field(string name)
+        public IField Field(string name) => (this as ITypedItem).Field(name, strict: null);
+
+        IField ITypedItem.Field(string name, string noParamOrder, bool? strict)
         {
-            if (StrictGet && !Entity.Attributes.ContainsKey(name))
+            if ((strict ?? StrictGet) && !Entity.Attributes.ContainsKey(name))
                 throw new ArgumentException(ErrStrict(name));
 
             return new Field(this, name, _Services);

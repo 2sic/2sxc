@@ -19,17 +19,18 @@ namespace ToSic.Sxc.Data
         //    return string.Format(ErrNotSupported, cName);
         //}
 
-        ITypedItem ITypedStack.Child(string name, string noParamOrder)
+        ITypedItem ITypedStack.Child(string name, string noParamOrder, bool? strict)
         {
             var findResult = GetInternal(name, lookup: false);
-            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(name));
+            if (!findResult.Found && (strict ?? StrictGet)) throw new ArgumentException(ErrStrict(name));
             return _Services.AsC.AsItem(findResult.Result, noParamOrder);
         }
 
-        IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type)
+        IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type, bool? strict)
         {
+            // TODO: @2DM - type-filter of children is not applied
             var findResult = GetInternal(field, lookup: false);
-            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(field));
+            if (!findResult.Found && (strict ?? StrictGet)) throw new ArgumentException(ErrStrict(field));
             return _Services.AsC.AsItems(findResult.Result, noParamOrder);
         }
     }

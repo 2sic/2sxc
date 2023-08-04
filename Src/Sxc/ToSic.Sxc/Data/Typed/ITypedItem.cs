@@ -1,5 +1,6 @@
 ﻿using ToSic.Eav.Data;
 using ToSic.Lib.Documentation;
+using static ToSic.Eav.Parameters;
 
 namespace ToSic.Sxc.Data
 {
@@ -32,9 +33,14 @@ namespace ToSic.Sxc.Data
         /// Get a special info-object describing a specific field in this item.
         /// This is a rich object used by other operations which need a lot of context about the item and the field.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Name of the property</param>
+        /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
+        /// <param name="strict">change if strict names-checks are applied.</param>
         /// <returns></returns>
-        IField Field(string name);
+        IField Field(string name,
+            string noParamOrder = Protector,
+            bool? strict = default);
+
 
 
     }
