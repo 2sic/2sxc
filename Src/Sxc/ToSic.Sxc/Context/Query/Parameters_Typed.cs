@@ -20,13 +20,13 @@ namespace ToSic.Sxc.Context.Query
         }
 
 
-        bool ITyped.Bool(string name, string noParamOrder, bool fallback)
+        bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? strict)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback)
+        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? strict)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        string ITyped.String(string name, string noParamOrder, string fallback, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? strict, bool scrubHtml)
         {
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 #pragma warning disable CS0618
@@ -34,22 +34,22 @@ namespace ToSic.Sxc.Context.Query
 #pragma warning restore CS0618
         }
 
-        int ITyped.Int(string name, string noParamOrder, int fallback)
+        int ITyped.Int(string name, string noParamOrder, int fallback, bool? strict)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        long ITyped.Long(string name, string noParamOrder, long fallback)
+        long ITyped.Long(string name, string noParamOrder, long fallback, bool? strict)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        float ITyped.Float(string name, string noParamOrder, float fallback)
+        float ITyped.Float(string name, string noParamOrder, float fallback, bool? strict)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback)
+        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? strict)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        double ITyped.Double(string name, string noParamOrder, double fallback)
+        double ITyped.Double(string name, string noParamOrder, double fallback, bool? strict)
             => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
-        string ITyped.Url(string name, string noParamOrder, string fallback)
+        string ITyped.Url(string name, string noParamOrder, string fallback, bool? strict)
         {
             var url = GetV(name, noParamOrder: noParamOrder, fallback);
             return Tags.SafeUrl(url).ToString();

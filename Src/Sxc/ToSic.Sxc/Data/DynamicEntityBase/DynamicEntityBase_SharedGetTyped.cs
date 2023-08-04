@@ -65,36 +65,42 @@ namespace ToSic.Sxc.Data
 
 
         [PrivateApi]
-        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? strict)
+            => G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
 
         [PrivateApi]
-        string ITyped.String(string name, string noParamOrder, string fallback, bool scrubHtml)
+        string ITyped.String(string name, string noParamOrder, string fallback, bool? strict, bool scrubHtml)
         {
-            var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+            var value = G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
             return scrubHtml ? _Services.Scrub.All(value) : value;
         }
 
         [PrivateApi]
-        int ITyped.Int(string name, string noParamOrder, int fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        int ITyped.Int(string name, string noParamOrder, int fallback, bool? strict)
+            => G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
 
         [PrivateApi]
-        bool ITyped.Bool(string name, string noParamOrder, bool fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? strict) 
+            => G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
 
         [PrivateApi]
-        long ITyped.Long(string name, string noParamOrder, long fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        long ITyped.Long(string name, string noParamOrder, long fallback, bool? strict)
+            => G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
 
         [PrivateApi]
-        float ITyped.Float(string name, string noParamOrder, float fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        float ITyped.Float(string name, string noParamOrder, float fallback, bool? strict)
+            => G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
 
         [PrivateApi]
-        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
 
         [PrivateApi]
-        double ITyped.Double(string name, string noParamOrder, double fallback) => G4T(name, noParamOrder: noParamOrder, fallback: fallback);
+        double ITyped.Double(string name, string noParamOrder, double fallback, bool? strict) => G4T(name, noParamOrder: noParamOrder, fallback: fallback, strict: strict);
 
         [PrivateApi]
-        string ITyped.Url(string name, string noParamOrder, string fallback)
+        string ITyped.Url(string name, string noParamOrder, string fallback, bool? strict)
         {
+            // TODO: STRICT
             var url = Get(name, noParamOrder: noParamOrder, convertLinks: true) as string;
             return Tags.SafeUrl(url).ToString();
         }
@@ -106,33 +112,5 @@ namespace ToSic.Sxc.Data
 
         [PrivateApi]
         string ITyped.ToString() => "test / debug: " + ToString();
-
-        //#region TypedRead
-
-        //[PrivateApi]
-        //ITyped Read(string name, object fallback = default)
-        //{
-        //    var inner = GetV(name, fallback: fallback);
-
-        //    if (inner is null) return null;
-        //    if (inner is ITyped alreadyTyped)
-        //        return alreadyTyped;
-        //    if (inner is string innerStr)
-        //        return DynamicJacket.AsDynamicJacket(innerStr, fallback as string);
-        //    if (inner is ICanBeEntity)
-        //        return _Services.AsC.AsItem(inner);
-        //    if (inner is IEnumerable innerEnum)
-        //    {
-        //        var first = innerEnum.Cast<object>().FirstOrDefault();
-        //        if (first == null) return null;
-        //        if (first is ITyped t2) return t2;
-        //        if (first is ICanBeEntity) return _Services.AsC.AsItem(first);
-        //    }
-        //    // todo: case object - rewrap into read
-        //    // todo: use shared conversion code for this
-        //    return null;
-        //}
-
-        //#endregion
     }
 }
