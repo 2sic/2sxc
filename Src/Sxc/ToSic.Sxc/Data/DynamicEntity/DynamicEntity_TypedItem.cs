@@ -14,8 +14,24 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         bool ITyped.Has(string name)
         {
-            // todo: improve with path checks
-            return Entity.Attributes.ContainsKey(name);
+            var parts = PropertyStack.SplitPathIntoParts(name);
+            if (!parts.Any()) return false;
+
+            var parentEntity = Entity;
+            var max = parts.Length - 1;
+            for (var i = 0; i < parts.Length; i++)
+            {
+                var key = parts[i];
+                var has = parentEntity.Attributes.ContainsKey(key);
+                if (i == max || !has) return has;
+
+                // has = true, and we have more nodes, so we must check the children
+                var children = parentEntity.Children(key);
+                if (!children.Any()) return false;
+                parentEntity = children[0];
+            }
+
+            return false;
         }
 
         [PrivateApi]

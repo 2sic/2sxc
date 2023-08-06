@@ -41,7 +41,7 @@ namespace ToSic.Sxc.Data
             if (!specs.Field.HasValue()) return l.ReturnNull("no path");
 
             path = path.KeepOrNew().Add("DynEnt", specs.Field);
-            var isPath = specs.Field.Contains(".");
+            var isPath = specs.Field.Contains(PropertyStack.PathSeparator);
             var propRequest = !isPath
                 ? Entity.FindPropertyInternal(specs, path)
                 : PropertyStack.TraversePath(specs, path, Entity);
