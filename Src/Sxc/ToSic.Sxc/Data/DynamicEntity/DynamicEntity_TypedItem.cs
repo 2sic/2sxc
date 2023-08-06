@@ -11,21 +11,33 @@ namespace ToSic.Sxc.Data
 {
     public partial class DynamicEntity: ITypedItem
     {
+        [PrivateApi]
+        bool ITyped.Has(string name)
+        {
+            // todo: improve with path checks
+            return Entity.Attributes.ContainsKey(name);
+        }
+
+        [PrivateApi]
+        protected bool IsErrStrict(string name, bool? strict, bool strictGetDefault)
+            => !(this as ITyped).Has(name) && (strict ?? strictGetDefault);
+
 
         /// <inheritdoc />
         [PrivateApi]
         IFolder ITypedItem.Folder(string name, string noParamOrder, bool? strict)
         {
-            if ((strict ?? StrictGet) && !Entity.Attributes.ContainsKey(name))
-                throw new ArgumentException(ErrStrict(name));
-
-            return _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
+            Protect(noParamOrder, nameof(strict));
+            return IsErrStrict(name, strict, StrictGet)
+                ? throw ErrStrict(name)
+                : _adamCache.Get(name, () => _Services.AsC.Folder(Entity, name));
         }
 
         private readonly GetOnceNamed<IFolder> _adamCache = new GetOnceNamed<IFolder>();
 
         IFile ITypedItem.File(string name, string noParamOrder, bool? strict)
         {
+            Protect(noParamOrder, nameof(strict));
             var typedThis = this as ITypedItem;
             // Case 1: The field contains a direct reference to a file
             var file = GetServiceKitOrThrow().Adam.File(typedThis.Field(name, strict: strict));
@@ -57,7 +69,7 @@ namespace ToSic.Sxc.Data
         [PrivateApi]
         IEnumerable<ITypedItem> ITypedItem.Parents(string type, string noParamOrder, string field)
         {
-            Protect(noParamOrder, $"{nameof(field)}");
+            Protect(noParamOrder, nameof(field));
             return _Services.AsC.AsItems(Parents(type, field), noParamOrder);
         }
 
@@ -67,8 +79,8 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, $"{nameof(type)}, {nameof(strict)}");
 
-            if ((strict ?? StrictGet) && !Entity.Attributes.ContainsKey(field))
-                throw new ArgumentException(ErrStrict(field));
+            if (IsErrStrict(field, strict, StrictGet))
+                throw ErrStrict(field);
 
             var dynChildren = Children(field, type);
             var list = _Services.AsC.AsItems(dynChildren, noParamOrder).ToList();
@@ -84,9 +96,9 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedItem.Child(string name, string noParamOrder, bool? strict)
         {
             Protect(noParamOrder, nameof(strict));
-            if ((strict ?? StrictGet) && !Entity.Attributes.ContainsKey(name))
-                throw new ArgumentException(ErrStrict(name));
-            return (this as ITypedItem).Children(name).FirstOrDefault();
+            return IsErrStrict(name, strict, StrictGet)
+                ? throw ErrStrict(name)
+                : (this as ITypedItem).Children(name).FirstOrDefault();
         }
     }
 }

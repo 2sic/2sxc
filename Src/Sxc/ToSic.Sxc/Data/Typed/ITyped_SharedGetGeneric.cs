@@ -5,6 +5,14 @@ namespace ToSic.Sxc.Data
     public partial interface ITyped
     {
         /// <summary>
+        /// WIP CHECK if this typed object has a property of this specified name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <remarks>Adding (WIP) in 16.03</remarks>
+        bool Has(string name);
+
+        /// <summary>
         /// Get a property.
         /// </summary>
         /// <param name="name">the property name like `Image` - or path to sub-property like `Author.Name` (new v15)</param>

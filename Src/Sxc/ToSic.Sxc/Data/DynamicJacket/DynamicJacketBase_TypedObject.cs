@@ -22,6 +22,12 @@ namespace ToSic.Sxc.Data
         }
 
         [PrivateApi]
+        bool ITyped.Has(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? strict)
         {
             Protect(noParamOrder, nameof(strict));
@@ -37,9 +43,11 @@ namespace ToSic.Sxc.Data
         public TValue Get<TValue>(string name, string noParamOrder = Protector, TValue fallback = default) 
             => GetV(name, noParamOrder, fallback);
 
+        [PrivateApi]
         TValue ITyped.Get<TValue>(string name, string noParamOrder, TValue fallback, bool? strict) 
             => GetV(name, noParamOrder, fallback);
 
+        [PrivateApi]
         private TValue GetV<TValue>(string name,
             string noParamOrder = Protector,
             TValue fallback = default,
@@ -50,12 +58,16 @@ namespace ToSic.Sxc.Data
             return result.ConvertOrFallback(fallback);
         }
 
+        [PrivateApi]
         dynamic ITyped.Dyn => this;
 
+        [PrivateApi] 
         bool ITyped.Bool(string name, string noParamOrder, bool fallback, bool? strict) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
+        [PrivateApi]
         DateTime ITyped.DateTime(string name, string noParamOrder, DateTime fallback, bool? strict) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
+        [PrivateApi]
         string ITyped.String(string name, string noParamOrder, string fallback, bool? strict, bool scrubHtml)
         {
             var value = GetV(name, noParamOrder: noParamOrder, fallback: fallback);
@@ -64,16 +76,22 @@ namespace ToSic.Sxc.Data
 #pragma warning restore CS0618
         }
 
+        [PrivateApi]
         int ITyped.Int(string name, string noParamOrder, int fallback, bool? strict) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
+        [PrivateApi]
         long ITyped.Long(string name, string noParamOrder, long fallback, bool? strict) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
+        [PrivateApi]
         float ITyped.Float(string name, string noParamOrder, float fallback, bool? strict) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
+        [PrivateApi]
         decimal ITyped.Decimal(string name, string noParamOrder, decimal fallback, bool? strict) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
+        [PrivateApi]
         double ITyped.Double(string name, string noParamOrder, double fallback, bool? strict) => GetV(name, noParamOrder: noParamOrder, fallback: fallback);
 
+        [PrivateApi]
         string ITyped.Url(string name, string noParamOrder, string fallback, bool? strict)
         {
             var url =  GetV(name, noParamOrder: noParamOrder, fallback: fallback);

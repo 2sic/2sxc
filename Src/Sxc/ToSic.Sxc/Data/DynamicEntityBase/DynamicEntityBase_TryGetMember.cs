@@ -1,5 +1,4 @@
-﻿using System;
-using System.Dynamic;
+﻿using System.Dynamic;
 using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
@@ -12,7 +11,7 @@ namespace ToSic.Sxc.Data
         {
             var findResult = GetInternal(binder.Name);
             // ReSharper disable once ExplicitCallerInfoArgument
-            if (!findResult.Found && StrictGet) throw new ArgumentException(ErrStrict(binder.Name, "."));
+            if (!findResult.Found && StrictGet) throw ErrStrict(binder.Name, ".");
             result = findResult.Result;
             return true;
         }

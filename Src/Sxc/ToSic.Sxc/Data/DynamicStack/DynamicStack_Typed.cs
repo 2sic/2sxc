@@ -1,10 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using ToSic.Lib.Documentation;
 
 namespace ToSic.Sxc.Data
 {
     public partial class DynamicStack: ITypedStack
     {
+        [PrivateApi]
+        bool ITyped.Has(string name)
+        {
+            throw new NotImplementedException($"Not yet implemented on {nameof(ITypedStack)}");
+            // todo: improve with path checks
+            return false;
+        }
+
         ///// <summary>
         ///// This error is used a lot, when accessing primary properties of ITypedItem, since it's simply not supported.
         ///// </summary>
@@ -22,16 +31,18 @@ namespace ToSic.Sxc.Data
         ITypedItem ITypedStack.Child(string name, string noParamOrder, bool? strict)
         {
             var findResult = GetInternal(name, lookup: false);
-            if (!findResult.Found && (strict ?? StrictGet)) throw new ArgumentException(ErrStrict(name));
-            return _Services.AsC.AsItem(findResult.Result, noParamOrder);
+            return IsErrStrict(findResult.Found, strict, StrictGet)
+                ? throw ErrStrict(name)
+                : _Services.AsC.AsItem(findResult.Result, noParamOrder);
         }
 
         IEnumerable<ITypedItem> ITypedStack.Children(string field, string noParamOrder, string type, bool? strict)
         {
             // TODO: @2DM - type-filter of children is not applied
             var findResult = GetInternal(field, lookup: false);
-            if (!findResult.Found && (strict ?? StrictGet)) throw new ArgumentException(ErrStrict(field));
-            return _Services.AsC.AsItems(findResult.Result, noParamOrder);
+            return IsErrStrict(findResult.Found, strict, StrictGet)
+                ? throw ErrStrict(field)
+                : _Services.AsC.AsItems(findResult.Result, noParamOrder);
         }
     }
 }

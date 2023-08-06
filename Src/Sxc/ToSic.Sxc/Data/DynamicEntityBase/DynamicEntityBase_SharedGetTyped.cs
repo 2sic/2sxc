@@ -12,13 +12,19 @@ namespace ToSic.Sxc.Data
     public abstract partial class DynamicEntityBase: ITyped
     {
         [PrivateApi]
+        bool ITyped.Has(string name)
+        {
+            return false; // must be overriden by implementation
+        }
+
+        [PrivateApi]
         object ITyped.Get(string name, string noParamOrder, bool? strict)
         {
             Protect(noParamOrder, nameof(strict));
             var findResult = GetInternal(name, lookup: false);
-            return findResult.Found || !(strict ?? StrictGet)
-                ? findResult.Result
-                : throw new ArgumentException(ErrStrict(name));
+            return IsErrStrict(findResult.Found, strict, StrictGet)
+                ? throw ErrStrict(name)
+                : findResult.Result;
         }
 
         //[PrivateApi]
@@ -36,18 +42,24 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback), methodName: cName);
             var findResult = GetInternal(name, lookup: false);
-            return findResult.Found || !(strict ?? StrictGet)
-                ? findResult.Result.ConvertOrFallback(fallback)
-                : throw new ArgumentException(ErrStrict(name, cName));
+            return IsErrStrict(findResult.Found, strict, StrictGet)
+                ? throw ErrStrict(name, cName)
+                : findResult.Result.ConvertOrFallback(fallback);
         }
 
+
         [PrivateApi]
-        protected static string ErrStrict(string name, [CallerMemberName] string cName = default)
+        protected bool IsErrStrict(bool found, bool? strict, bool strictGetDefault) 
+            => !found && (strict ?? strictGetDefault);
+
+        [PrivateApi]
+        protected static ArgumentException ErrStrict(string name, [CallerMemberName] string cName = default)
         {
             var help = $"Correct the name '{name}', or use strict false is AsItem(...)";
-            return cName == "." 
+            var msg = cName == "."
                 ? $".{name} not found and 'strict' is true, meaning that an error is thrown. {help}"
                 : $"{cName}('{name}', ...) not found and 'strict' is true, meaning that an error is thrown. {help}";
+            return new ArgumentException(msg, nameof(name));
         }
 
         [PrivateApi]
@@ -55,7 +67,7 @@ namespace ToSic.Sxc.Data
         {
             Protect(noParamOrder, nameof(fallback));
             var findResult = GetInternal(name, lookup: false);
-            if (!findResult.Found && (strict ?? StrictGet)) throw new ArgumentException(ErrStrict(name));
+            if (IsErrStrict(findResult.Found, strict, StrictGet)) throw ErrStrict(name);
             var strValue = _Services.ForCode.ForCode(findResult.Result, fallback: fallback);
             return strValue is null ? null : new RawHtmlString(WebUtility.HtmlEncode(strValue));
         }
