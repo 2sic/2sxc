@@ -19,7 +19,7 @@ namespace ToSic.Sxc.Code
     {
         #region Stuff basically inherited from v12/14
 
-        /// <inheritdoc cref="ToSic.Eav.Code.ICanGetService.GetService{TService}"/>
+        /// <inheritdoc cref="Eav.Code.ICanGetService.GetService{TService}"/>
         TService GetService<TService>() where TService : class;
 
         /// <inheritdoc cref="IDynamicCode.Link"/>
@@ -97,7 +97,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="target"></param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">TODO:</param>
+        /// <param name="strict">determine if the items returned will do strict property-name checking; default is true</param>
         /// <returns></returns>
         /// <remarks>New in v16.02</remarks>
         ITypedItem AsItem(
@@ -111,7 +111,7 @@ namespace ToSic.Sxc.Code
         /// </summary>
         /// <param name="list">The original list which is usually a list of <see cref="IEntity"/> objects.</param>
         /// <param name="noParamOrder">see [](xref:NetCode.Conventions.NamedParameters)</param>
-        /// <param name="strict">TODO:</param>
+        /// <param name="strict">determine if the items returned will do strict property-name checking; default is true</param>
         /// <returns></returns>
         /// <remarks>New in v16.01</remarks>
         IEnumerable<ITypedItem> AsItems(

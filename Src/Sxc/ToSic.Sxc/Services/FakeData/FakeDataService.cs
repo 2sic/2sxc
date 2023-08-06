@@ -10,7 +10,7 @@ namespace ToSic.Sxc.Services.FakeData
         {
         }
 
-        public ITypedItem EmptyItem => _emptyItem.Get(() => _DynCodeRoot.AsC.AsItem(EmptyEntity, Eav.Parameters.Protector));
+        public ITypedItem EmptyItem => _emptyItem.Get(() => _DynCodeRoot.AsC.AsItem(EmptyEntity, Eav.Parameters.Protector, strict: false));
         private readonly GetOnce<ITypedItem> _emptyItem = new GetOnce<ITypedItem>();
 
         public IEntity EmptyEntity => _emptyEntity.Get(() => _DynCodeRoot.AsC.FakeEntity(_DynCodeRoot.App?.AppId));

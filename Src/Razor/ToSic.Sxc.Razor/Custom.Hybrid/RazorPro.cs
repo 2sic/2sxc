@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ToSic.Eav.Data;
-using ToSic.Eav.Run;
 using ToSic.Lib.Documentation;
 using ToSic.Lib.Helpers;
 using ToSic.Sxc.Apps;
@@ -77,11 +76,11 @@ namespace Custom.Hybrid
 
         /// <inheritdoc cref="IDynamicCode16.AsItem" />
         public ITypedItem AsItem(object target, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.AsC.AsItem(target, noParamOrder, strict: strict);
+            => _DynCodeRoot.AsC.AsItem(target, noParamOrder, strict: strict ?? true);
 
         /// <inheritdoc cref="IDynamicCode16.AsItems" />
         public IEnumerable<ITypedItem> AsItems(object list, string noParamOrder = Protector, bool? strict = default)
-            => _DynCodeRoot.AsC.AsItems(list, noParamOrder, strict: strict);
+            => _DynCodeRoot.AsC.AsItems(list, noParamOrder, strict: strict ?? true);
 
         /// <inheritdoc cref="IDynamicCode16.AsEntity" />
         public IEntity AsEntity(ICanBeEntity thing) => _DynCodeRoot.AsC.AsEntity(thing);
